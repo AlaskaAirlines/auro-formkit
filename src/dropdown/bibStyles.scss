@@ -1,0 +1,17 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// layout styles - define any layout specifications for UI that is contained WITHIN the component
+// never define layout that would cause effect on element outside the scope of this component
+
+// Support for fallback values
+@import "./../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+/* stylelint-disable no-descending-specificity, selector-max-attribute */
+
+.container {
+  background-color: pink; // stylelint-disable-line
+  color: maroon; // stylelint-disable-line
+}

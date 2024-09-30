@@ -1,0 +1,7 @@
+@import './../../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+.inputElement-helpText {
+  margin: var(--ds-size-50, $ds-size-50) 0;
+  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+  line-height: var(--ds-size-200, $ds-size-200);
+}

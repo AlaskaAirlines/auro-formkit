@@ -1,0 +1,55 @@
+/* stylelint-disable
+  selector-max-class,
+  scss/selector-no-redundant-nesting-selector,
+  max-nesting-depth,
+  selector-max-combinators,
+  selector-max-compound-selectors,
+  no-descending-specificity,
+  at-rule-no-unknown,
+  selector-no-qualifying-type,
+  declaration-block-no-redundant-longhand-properties,
+  declaration-no-important
+*/
+
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// Import Auro tokens
+@import './../../node_modules/@aurodesignsystem/webcorestylesheets/src/core';
+
+// Support for fallback values
+@import './../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+// Support for auroElement styles
+@import './../../node_modules/@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
+
+@import './styles/notificationIcons';
+@import './styles/helpText';
+@import './styles/borders';
+@import './styles/label';
+
+// container styles - defines the look of the outer custom component
+:host {
+  --size-lgsm: 1.875rem;
+  --size-xlsm: 2.75rem;
+  --size-mdxxs: 1.2rem;
+
+  position: relative;
+  display: block;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  flex: 1;
+}
+
+@import './styles/input';

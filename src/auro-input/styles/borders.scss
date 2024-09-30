@@ -1,0 +1,66 @@
+/* stylelint-disable no-duplicate-selectors, max-nesting-depth, no-descending-specificity */
+
+@import './../../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import './../../../node_modules/@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+input {
+  border: unset;
+}
+
+.wrapper {
+  border-style: solid;
+  overflow: hidden;
+  position: relative;
+}
+
+:host(:not([bordered], [borderless])) {
+  .wrapper {
+    border-width: 1px 0;
+  }
+}
+
+:host([bordered]) {
+  .wrapper {
+    border-width: 1px;
+    border-radius: var(--ds-border-radius, $ds-border-radius);
+  }
+}
+
+// Handle highlighting the border during focus and invalid stat
+
+@mixin border-highlight {
+  &:before {
+    display: block;
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    /* stylelint-disable declaration-block-no-redundant-longhand-properties */
+    
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+
+    /* stylelint-enable declaration-block-no-redundant-longhand-properties */
+  }
+}
+
+// FOCUS STATE
+
+:host(:not([borderless])) {
+  .wrapper {
+    &:focus-within {
+      @include border-highlight;
+    }
+  }
+}
+
+// INVALID STATE
+
+:host([validity]:not([validity='valid'])) {
+  .wrapper {
+    &:before {
+      border-bottom: 0;
+    }
+  }
+}
