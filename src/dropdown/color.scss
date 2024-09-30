@@ -1,0 +1,101 @@
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// Support for fallback values
+@import './../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+/* stylelint-disable no-descending-specificity, declaration-empty-line-before */
+
+.popover {
+  border-color: var(--ds-auro-dropdown-popover-border-color);
+  background-color: var(--ds-auro-dropdown-popover-container-color);
+  box-shadow: -2px 0 5px 2px rgba(0 0 0 / .08), 0 2px 5px 1px rgba(0 0 0 / .08);
+  color: var(--ds-auro-dropdown-popover-text-color);
+}
+
+.label {
+  color: var(--ds-auro-dropdown-label-text-color);
+}
+
+.trigger {
+  border-color: var(--ds-auro-dropdown-trigger-border-color);
+  background-color: var(--ds-auro-dropdown-trigger-container-color);
+  color: var(--ds-auro-dropdown-trigger-text-color);
+
+  &:focus-within,
+  &:active {
+    --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
+  }
+
+  &:focus-within {
+    &:not(:active) {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-ui-default-default, #{$ds-color-ui-default-default});
+      box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
+    }
+  }
+}
+
+.helpText {
+  color: var(--ds-auro-dropdown-help-text-color);
+}
+
+:host([disabled]) {
+  --ds-auro-dropdown-trigger-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+  --ds-auro-dropdown-label-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+}
+
+:host([error]) {
+  --ds-auro-dropdown-help-text-color: var(--ds-color-text-error-default, #{$ds-color-text-error-default});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
+
+  .trigger {
+    box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
+
+    &:focus-within {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      box-shadow: none;
+    }
+
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
+    }
+  }
+}
+
+:host([common]),
+:host([bordered]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-secondary-default, #{$ds-color-border-secondary-default});
+
+  .trigger {
+    &:active,
+    &:focus-within {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+    }
+  }
+}
+
+:host([disabled][common]),
+:host([disabled][bordered]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
+}
+
+:host([common][error]),
+:host([bordered][error]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
+
+  .trigger {
+    box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
+
+    &:focus-within {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      box-shadow: none;
+    }
+
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
+    }
+  }
+}
