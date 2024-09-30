@@ -1,0 +1,33 @@
+// Support for fallback values
+@import './../../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+input {
+  flex: 1;
+  position: relative;
+
+  min-height: calc(var(--ds-size-700, $ds-size-700) + var(--ds-size-25, $ds-size-25));
+  max-height: calc(var(--ds-size-700, $ds-size-700) + var(--ds-size-25, $ds-size-25));
+
+  padding: var(--ds-size-400, $ds-size-400) 0 var(--ds-size-50, $ds-size-50);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  margin: 0;
+  font-family: var(--ds-font-family-default, $ds-font-family-default);
+  font-size: var(--ds-size-200, $ds-size-200);
+  transition: all .3s cubic-bezier(.215, .61, .355, 1);
+  outline: none;
+
+  // this is to disable the toggle-password feature in MS Edge only
+  &::-ms-reveal,
+  &::-ms-clear {
+    display: none;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    background: none;
+  }
+}

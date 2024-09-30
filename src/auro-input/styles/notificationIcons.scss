@@ -1,0 +1,101 @@
+@import './../../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+/* stylelint-disable  selector-max-attribute, max-nesting-depth, selector-max-class, selector-max-combinators, selector-max-compound-selectors */
+
+.typeIcon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  [auro-icon] {
+    height: var(--ds-size-300, $ds-size-300);
+    width: var(--ds-size-300, $ds-size-300);
+    margin-right: var(--ds-size-100, $ds-size-100);
+  }
+}
+
+.notificationIcons {
+  display: flex;
+  flex-direction: row;
+  padding-right: var(--ds-size-100, $ds-size-100);
+}
+
+:host([bordered]) {
+  .typeIcon {
+    padding-left: var(--ds-size-100, $ds-size-100);
+  }
+
+  .notificationIcons {
+    align-items: center;
+  }
+}
+
+.notification {
+  &:not(:first-of-type) {
+    margin-left: var(--ds-size-100, $ds-size-100);
+  }
+}
+
+.alertNotification {
+  height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25));
+  width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25)); 
+}
+
+.clearBtn {
+  height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25));
+  width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25)); 
+}
+
+.passwordBtn {
+  height: calc(var(--ds-size-300, $ds-size-300));
+  width: calc(var(--ds-size-300, $ds-size-300));
+}
+
+.notificationBtn {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: unset;
+  cursor: pointer;
+  height: var(--ds-size-200, $ds-size-200);
+  width: var(--ds-size-200, $ds-size-200);
+
+  [auro-icon] {
+    display: block;
+    height: var(--ds-size-200, $ds-size-200);
+    width: var(--ds-size-200, $ds-size-200);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+:host(:not([bordered])) {
+  .typeIcon,
+  .notificationIcons {
+    align-items: flex-end;
+    padding-bottom: var(--ds-size-50, $ds-size-50);
+  }
+}
+
+// Determine which icons to show based on focus state
+
+@mixin hidden-notification {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+:host(:focus-within[type="password"]) {
+  .notificationIcons {
+    &[hasValue] {
+      .alertNotification {
+        @include hidden-notification;
+      }
+    }
+  }
+}

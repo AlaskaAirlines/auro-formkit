@@ -1,0 +1,75 @@
+@import './../../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+/* stylelint-disable no-duplicate-selectors, max-nesting-depth, no-descending-specificity, selector-max-combinators, selector-max-compound-selectors, selector-no-qualifying-type */
+
+label {
+  position: absolute;
+  transition: all .3s cubic-bezier(.215, .61, .355, 1);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+:host(:not([bordered])) {
+  label {
+    top: calc(100% - var(--ds-size-25, $ds-size-25));
+    transform: translateY(-100%);
+  }
+
+  label {
+    &.withIcon {
+      left: var(--ds-size-400, $ds-size-400);
+    }
+  }
+}
+
+:host([bordered]) {
+  label {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  label {
+    &.withIcon {
+      left: var(--ds-size-500, $ds-size-500);
+    }
+  }
+
+  label {
+    &:not(label.withIcon) {
+      left: var(--ds-size-100, $ds-size-100);
+    }
+  }
+}
+
+// active label for non-bordered inputs
+@mixin active-label {
+  top: var(--ds-size-25, $ds-size-25);
+  transform: unset;
+  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+}
+
+:host {
+  .wrapper {
+    &:focus-within {
+      label {
+        @include active-label;
+      }
+    }
+  }
+
+  label {
+    &.withValue {
+      @include active-label;
+    }
+  }
+}
+
+:host([activeLabel]) {
+  .wrapper {
+    label {
+      @include active-label;
+    }
+  }
+}

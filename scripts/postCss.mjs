@@ -1,62 +1,58 @@
+import fs from 'fs/promises';
+import path from 'path';
 import autoprefixer from 'autoprefixer';
 import postcss from 'postcss';
 import comments from 'postcss-discard-comments';
-import path from 'path';
-import fs from 'fs';
-const __dirname = new URL('.', import.meta.url).pathname;
-const directoryPath = path.join(__dirname, '../src');
+
+// Path to the directory containing CSS files
+const directoryPath = new URL('../src', import.meta.url).pathname;
 
 /**
- * Default postCSS run
- * Locates all CSS files within the directory and loop
- * through the standardProcessor() function.
+ * Recursively process CSS files in a directory and its subdirectories
+ * @param {string} dir - Directory to process
  */
-fs.readdir(directoryPath, function (err, files) {
-  //handling error
-  if (err) {
-      return console.log('Unable to scan directory: ' + err);
-  }
-  //listing all files using forEach
-  files.forEach(function (file) {
-    if (file.includes(".css")) {
-      standardProcessor(file);
+async function processCssFiles(dir) {
+  try {
+    // Read contents of directory
+    const files = await fs.readdir(dir, { withFileTypes: true });
+    for (const file of files) {
+      const fullPath = path.join(dir, file.name);
+      // If it's a directory, recursively process it
+      if (file.isDirectory()) {
+        await processCssFiles(fullPath);
+      // If it's a CSS file, process it
+      } else if (path.extname(file.name).toLowerCase() === '.css') {
+        await processPostCss(fullPath);
+      }
     }
-  });
-});
-
-/**
- * The standardProcessor function applies tokens for fallback selectors
- * and completes a post cleanup.
- * @param {string} file
- */
-function standardProcessor(file) {
- fs.readFile(`src/${file}`, (err, css) => {
-   postcss([autoprefixer, comments])
-   .use(comments({
-     remove: function(comment) { return comment[0] == "@"; }
-   }))
-   .process(css, { from: `src/${file}`, to: `src/${file}` })
-   .then(result => {
-     fs.writeFile(`src/${file}`, result.css, () => true)
-   })
- });
+  } catch (err) {
+    console.error('Processing failed:', err);
+  }
 }
 
 /**
- * ALTERNATE script:
- * The following is a static builder for rendering one
- * CSS file at a time if that is required.
+ * Process CSS file(s) with PostCSS
+ * Applies autoprefixer and removes comments starting with '@'
+ * @param {string} filePath - Full path of CSS file to process
  */
-// fs.readFile('src/style.css', (err, css) => {
-//   postcss([autoprefixer, comments])
-//     .use(comments({
-//       remove: function(comment) { return comment[0] == "@"; }
-//     }))
-//     .process(css, { from: 'src/style.css', to: 'src/style.css' })
-//     .then(result => {
-//       fs.writeFile('src/style.css', result.css, () => true)
-//       if ( result.map ) {
-//         fs.writeFile('src/style.map', result.map, () => true)
-//       }
-//     })
-// });
+async function processPostCss(filePath) {
+  try {
+    // Read CSS file
+    const css = await fs.readFile(filePath, 'utf8');
+    // Process CSS with PostCSS plugins
+    const result = await postcss([
+      autoprefixer,
+      comments({
+        remove: comment => comment[0] === '@'
+      })
+    ]).process(css, { from: filePath, to: filePath });
+    // Write processed CSS back to the file
+    await fs.writeFile(filePath, result.css);
+    console.log(`Processed: ${filePath}`);
+  } catch (err) {
+    console.error(`Error processing ${filePath}:`, err);
+  }
+}
+
+// Process CSS
+processCssFiles(directoryPath);

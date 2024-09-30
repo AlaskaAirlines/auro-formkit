@@ -1,0 +1,107 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// layout styles - define any layout specifications for UI that is contained WITHIN the component
+// never define layout that would cause effect on element outside the scope of this component
+
+// Support for fallback values
+@import "./../../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+/* stylelint-disable no-descending-specificity, selector-max-attribute */
+
+:host {
+  position: relative;
+}
+
+.popover {
+  display: inline-block;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.label {
+  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+  line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  white-space: normal;
+}
+
+.trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-width: 1px;
+  border-style: solid;
+}
+
+@media (hover: hover) {
+  .trigger {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.triggerContentWrapper {
+  overflow: hidden;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#showStateIcon {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  margin-left: var(--ds-size-100, $ds-size-100);
+
+  [auro-icon] {
+    height: var(--ds-size-300, $ds-size-300);
+    line-height: var(--ds-size-300, $ds-size-300);
+  }
+
+  &[data-expanded='true'] {
+    [auro-icon] {
+      transform: rotate(-180deg);
+    }
+  }
+}
+
+.helpText {
+  margin-top: var(--ds-size-50, $ds-size-50);
+  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+  line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
+}
+
+:host(:not([data-show])) {
+  .popover {
+    display: none;
+  }
+}
+
+:host([data-show]) {
+  .popover {
+    z-index: var(--ds-depth-tooltip, $ds-depth-tooltip);
+  }
+}
+
+:host([common]),
+:host([rounded]) {
+  .trigger,
+  .popover {
+    border-radius: var(--ds-border-radius, $ds-border-radius);
+  }
+}
+
+:host([common]),
+:host([inset]) {
+  .trigger {
+    padding: var(--ds-size-100, $ds-size-100) var(--ds-size-150, $ds-size-150);
+  }
+}
+
+:host([disabled]) {
+  pointer-events: none;
+}
