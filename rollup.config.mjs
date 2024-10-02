@@ -5,33 +5,45 @@ import path from 'path';
 
 const production = !process.env.ROLLUP_WATCH;
 
-// Function to get additional entry points
-const getAdditionalEntryPoints = () => {
+// Get entry points for each component
+const getComponentEntryPoints = () => {
   const files = glob.sync('src/*/index.js');
-  return files.reduce((acc, file) => {
+  return files.map(file => {
     const name = path.basename(path.dirname(file));
-    acc[`${name}__bundled`] = file;
-    return acc;
-  }, {});
+    return {
+      name,
+      input: file,
+      output: `dist/${name}`
+    };
+  });
 };
 
-const modernConfig = {
-  input: {
-    ['auro-form__bundled']: './index.js',
-    ...getAdditionalEntryPoints()
-  },
+const createConfig = (name, input, output) => ({
+  input: { [`${name}__bundled`]: input },
   output: {
     format: 'esm',
-    dir: 'dist/'
+    dir: output,
+    chunkFileNames: '[name]-[hash].js'
   },
   plugins: [
-    nodeResolve(),
+    nodeResolve({
+      browser: true,
+      dedupe: ['lit', 'lit-element', 'lit-html'],
+      preferBuiltins: false,
+      moduleDirectories: ['node_modules']
+    }),
     !production &&
       serve({
         open: true,
         openPage: '/docs/'
       })
   ]
-};
+});
 
-export default [modernConfig];
+const mainConfig = createConfig('auro-form', './index.js', 'dist');
+
+const componentConfigs = getComponentEntryPoints().map(({ name, input, output }) => 
+  createConfig(name, input, output)
+);
+
+export default [mainConfig, ...componentConfigs];
