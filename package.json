@@ -20,8 +20,11 @@
     "node": "^18.x || ^20.x "
   },
   "dependencies": {
+    "@aurodesignsystem/auro-button": "^8.0.0",
+    "@aurodesignsystem/auro-formvalidation": "^1.0.3",
     "@aurodesignsystem/auro-icon": "^5.0.0",
     "@floating-ui/dom": "^1.6.11",
+    "cleave.js": "^1.6.0",
     "lit": "^3.2.0"
   },
   "peerDependencies": {
