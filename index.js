@@ -1,5 +1,6 @@
 import { AuroForm } from './src/auro-form.js';
 import { AuroDropdown } from './src/dropdown/auro-dropdown.js';
+import { AuroInput } from './src/input/auro-input.js';
 import { MySelect } from './src/dropdown/select.js';
 
 /**
