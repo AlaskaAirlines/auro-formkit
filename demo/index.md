@@ -28,3 +28,9 @@ _Note: if the dropdown content in your implementation is not interactive (e.g. a
 <br /><br /><br />
 <my-select></my-select>
 <br /><br /><br /><br />
+
+# Input
+
+<auro-input required placeholder="John Doe">
+    <span slot="label">Full name</span>
+</auro-input>
