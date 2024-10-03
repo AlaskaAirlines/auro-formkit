@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*.js"], // process the generated J
+  "include": ["components/**/*.js"], // process the generated J
   "exclude": [],
   "compilerOptions": {
     // Tells TypeScript to read JS files, as
@@ -13,6 +13,30 @@
     "outDir": "dist",
     // go to js file when using IDE functions like
     // "Go to Definition" in VSCode
-    "declarationMap": true
+    "declarationMap": true,
+    
+    // enable js modules with es6 for chai imports
+    "esModuleInterop": true,
+    
+    // skip type checking for *.d.ts in node_modules
+    "skipLibCheck": true,
+    
+    // 'node' matches Node.js module resolution mechanism
+    "moduleResolution": "node",
+    
+    "target": "ES2020",
+    
+    "module": "ES2020",
+    
+    // include type definitions for mocha and chai testing
+    "types": ["mocha", "chai"],
+    
+    // base directory for resolving non-relative module names
+    "baseUrl": ".",
+    
+    // map module imports to locations in node_modules
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   }
 }

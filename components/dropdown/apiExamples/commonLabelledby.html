@@ -1,0 +1,17 @@
+<p id="foo">The element is labelled by content external to the element.</p>
+
+<auro-dropdown id="commonAdvanced" aria-labelledby="foo" bordered rounded inset chevron>
+  <div style="padding: var(--ds-size-150);">
+    Lorem ipsum solar
+    <br />
+    <auro-button onclick="document.querySelector('#commonAdvanced').hide()">
+      Dismiss Dropdown
+    </auro-button>
+  </div>
+  <span slot="helpText">
+    Help text
+  </span>
+  <div slot="trigger">
+    Trigger
+  </div>
+</auro-dropdown>
