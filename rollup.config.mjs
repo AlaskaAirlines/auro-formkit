@@ -46,4 +46,19 @@ const componentConfigs = getComponentEntryPoints().map(({ name, input, output })
   createConfig(name, input, output)
 );
 
-export default [mainConfig, ...componentConfigs];
+
+function createExampleConfig(componentName, entryPoint) {
+  return {
+    input: {
+      [`${entryPoint}.min`]: `./components/${componentName}/demo/${entryPoint}.js`,
+    },
+    output: {
+      format: 'esm',
+      dir: `./components/${componentName}/demo/`,
+    },  
+  };
+}
+
+const docConfig = [createExampleConfig('form', 'index'), createExampleConfig('form', 'api')];
+
+export default [mainConfig, ...componentConfigs, ...docConfig];
