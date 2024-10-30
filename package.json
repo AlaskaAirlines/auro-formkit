@@ -149,7 +149,7 @@
    "dev": "npm run dev:input",
    "build": "npm-run-all build:input build:dropdown build:sass sass:render types",
    "build:test": "npm-run-all test linters",
-   "build:release": "npm-run-all build build:test build:api build:docs postinstall",
+   "build:release": "npm-run-all build build:test build:api build:docs bundler postinstall",
    "build:ci": "npm-run-all sweep build:release",
    "postinstall": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postinstall.mjs",
    "types": "tsc",
@@ -214,7 +214,7 @@
    "build:input:release": "npm-run-all build:input:full build:test build:demo:input",
    "build:dropdown:release": "npm-run-all build:dropdown:full build:test build:demo:dropdown",
 
-   "sweep": "find ./demo ./dist ./src ./components -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
+   "sweep": "rm -rf dist && find ./demo ./src ./components -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
 
    "test": "wtr --coverage",
     "test:watch": "wtr --watch",
@@ -229,6 +229,11 @@
 
     "linters:input": "npm-run-all scssLint:input esLint:input",
     "scssLint:input": "stylelint \"./components/input/**/*.scss\"",
-    "esLint:input": "./node_modules/.bin/eslint components/input/**/*.js --ignore-pattern 'components/**/*Version.js'"
+    "esLint:input": "./node_modules/.bin/eslint components/input/**/*.js --ignore-pattern 'components/**/*Version.js'",
+
+    "bundler": "rollup -c",
+    "bundler:test": "rollup -c -w",
+
+    "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs"
   }
 }

@@ -6,9 +6,9 @@
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
-import styleCss from "./bibStyles-css.js";
-// import colorCss from "./color-css.js";
-// import tokensCss from "./tokens-css.js";
+import styleCss from "./styles/bibStyles-css.js";
+// import colorCss from "./styles/color-css.js";
+// import tokensCss from "./styles/tokens-css.js";
 
 export class AuroDropdownBib extends LitElement {
 

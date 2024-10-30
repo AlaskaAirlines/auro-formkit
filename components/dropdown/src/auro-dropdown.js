@@ -11,18 +11,18 @@ import { LitElement } from "lit";
 // import {computePosition, detectOverflow, autoUpdate, offset, autoPlacement, flip, shift, limitShift} from '@floating-ui/dom';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFloatingUI from '../src/floatingUI.mjs';
+import AuroFloatingUI from './floatingUI.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
-import iconVersion from '../src/iconVersion.js';
+import iconVersion from './iconVersion.js';
 
-import styleCss from "./style-css.js";
-import colorCss from "./color-css.js";
-import tokensCss from "./tokens-css.js";
+import styleCss from "./styles/style-css.js";
+import colorCss from "./styles/color-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
-import { AuroDropdownBib } from '../src/auro-dropdownBib.js';
+import { AuroDropdownBib } from './auro-dropdownBib.js';
 
 // default internal definition
 if (!customElements.get("auro-dropdownbib")) {

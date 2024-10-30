@@ -8,9 +8,6 @@
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
-import { AuroDropdown } from "./auro-dropdown.js";
-
-
 export class MySelect extends LitElement {
   constructor() {
     super();
