@@ -214,7 +214,7 @@
    "build:input:release": "npm-run-all build:input:full build:test build:demo:input",
    "build:dropdown:release": "npm-run-all build:dropdown:full build:test build:demo:dropdown",
 
-   "sweep": "rm -rf dist && find ./demo ./src ./components -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
+   "sweep": "rm -rf dist && find ./demo ./src ./components -not -path \"*/node_modules/*\" -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
 
    "test": "wtr --coverage",
     "test:watch": "wtr --watch",
