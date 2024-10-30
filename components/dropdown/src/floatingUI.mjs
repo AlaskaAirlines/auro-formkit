@@ -3,6 +3,12 @@
 import {autoUpdate, computePosition, offset, autoPlacement, flip} from '@floating-ui/dom';
 
 export default class AuroFloatingUI {
+  constructor() {
+    // Store bound event listener references for cleanup
+    this.boundFocusInHandler = null;
+    this.boundClickHandler = null;
+  }
+
   position() {
     // Define the middlware for the floater configuration
     const middleware = [
@@ -31,21 +37,20 @@ export default class AuroFloatingUI {
     });
   }
 
-  updateState() { 
+  updateState() {
     this.element.trigger.setAttribute('aria-expanded', this.element.isPopoverVisible);
 
     if (this.element.isPopoverVisible) {
-      // this.element.bib.removeAttribute('hidden');
       this.element.bib.style.display = 'block';
     } else {
-      // this.element.bib.setAttribute('hidden', true);
       this.element.bib.style.display = 'none';
+      // Clean up event listeners when hiding the popover
+      this.cleanupHideHandlers();
     }
 
     if (!this.element.isPopoverVisible) {
-      try {  
-        this.element.cleanup();
-        // this.element.bib.remove(); // is this doing anything? Seems like it's doing the wrong thing
+      try {
+        this.element.cleanup?.();
       } catch (error) {
         // do nothing
       }
@@ -53,21 +58,40 @@ export default class AuroFloatingUI {
   }
 
   setupHideHandlers() {
-    // Hide when focus moves outside the dropdown (unless the element has `noHideOnThisFocusLoss`)
-    document.activeElement.addEventListener('focusin', () => { // cleanup this event listener when it closes
-      if (!this.element.noHideOnThisFocusLoss && !this.element.hasAttribute('noHideOnThisFocusLoss')) { // is this the right place to do this?
-        if (document.activeElement !== document.querySelector('body') && !this.element.contains(document.activeElement) && !this.element.bibContent.contains(document.activeElement)) {
+    // Create bound event handler functions and store references
+    this.boundFocusInHandler = (event) => {
+      if (!this.element.noHideOnThisFocusLoss && !this.element.hasAttribute('noHideOnThisFocusLoss')) {
+        if (document.activeElement !== document.querySelector('body') && 
+            !this.element.contains(document.activeElement) && 
+            !this.element.bibContent.contains(document.activeElement)) {
           this.hideBib();
         }
       }
-    });
+    };
 
-    // Hide when you click anywhere outside the dropdown
-    window.addEventListener("click", (evt) => {
-      if (!evt.composedPath().includes(this.element.trigger) && !evt.composedPath().includes(this.element.bibContent)) {
+    this.boundClickHandler = (evt) => {
+      if (!evt.composedPath().includes(this.element.trigger) && 
+          !evt.composedPath().includes(this.element.bibContent)) {
         this.hideBib();
       }
-    });
+    };
+
+    // Add event listeners using the stored references
+    document.addEventListener('focusin', this.boundFocusInHandler);
+    window.addEventListener('click', this.boundClickHandler);
+  }
+
+  cleanupHideHandlers() {
+    // Remove event listeners if they exist
+    if (this.boundFocusInHandler) {
+      document.removeEventListener('focusin', this.boundFocusInHandler);
+      this.boundFocusInHandler = null;
+    }
+
+    if (this.boundClickHandler) {
+      window.removeEventListener('click', this.boundClickHandler);
+      this.boundClickHandler = null;
+    }
   }
 
   handleUpdate(changedProperties) {
@@ -90,6 +114,9 @@ export default class AuroFloatingUI {
       this.updateCurrentExpandedDropdown();
       this.element.isPopoverVisible = true;
       this.position();
+      
+      // Clean up any existing handlers before setting up new ones
+      this.cleanupHideHandlers();
       this.setupHideHandlers();
 
       // setup auto update to handle resize and scroll
@@ -100,23 +127,22 @@ export default class AuroFloatingUI {
   }
 
   hideBib() {
-    if (this.element.isPopoverVisible && !this.element.disabled && !this.element.noToggle) { // do we really want noToggle here?
+    if (this.element.isPopoverVisible && !this.element.disabled && !this.element.noToggle) {
       this.element.isPopoverVisible = false;
     }
   }
 
   handleClick() {
-    if (this.isPopoverVisible) {
+    if (this.element.isPopoverVisible) {
       this.hideBib();
     } else {
       this.showBib();
     }
 
-    // should this be left in dropdown?
     const event = new CustomEvent('auroDropdown-triggerClick', {
       composed: true,
       details: {
-        expanded: this.isPopoverVisible
+        expanded: this.element.isPopoverVisible
       }
     });
 
@@ -138,13 +164,19 @@ export default class AuroFloatingUI {
           break;
         case 'focus':
           if (this.element.focusShow) {
-            // this needs to better handle clicking that gives focus - currently it shows and then immediately hides the bib
+            /*
+              this needs to better handle clicking that gives focus - 
+              currently it shows and then immediately hides the bib 
+            */
             this.showBib();
           }
           break;
         case 'blur':
-          // this likely needs to be improved to handle focus within the bib for datepicker
-          if (!this.element.noHideOnThisFocusLoss && !this.element.hasAttribute('noHideOnThisFocusLoss')) { // why do we have to do both here?
+          /*
+            this likely needs to be improved to handle focus 
+            within the bib for datepicker
+          */
+          if (!this.element.noHideOnThisFocusLoss && !this.element.hasAttribute('noHideOnThisFocusLoss')) {
             this.hideBib();
           }
           break;
@@ -153,19 +185,19 @@ export default class AuroFloatingUI {
           break;
         default:
           // do nothing
-        // add cases for show and toggle by keyboard space and enter key - maybe this is handled already?
+          /*
+            add cases for show and toggle by keyboard space and 
+            enter key - maybe this is handled already?
+          */
       }
     }
   }
 
-  /**
-   * Make sure no content in the trigger is focusable (only the trigger element itself should be focusable)
-   */
   handleTriggerTabIndex() {
     const focusableElementSelectors = [
       'a',
       'button',
-      'input:not([type="hidden])', // why not just do all inputs anyways?
+      'input:not([type="hidden"])',
       'select',
       'textarea',
       '[tabindex]:not([tabindex="-1"])',
@@ -180,7 +212,6 @@ export default class AuroFloatingUI {
       // check if the trigger node element itself is focusable
       if (triggerNodeTagName === selector) {
         triggerNode.tabIndex = -1;
-
         return;
       }
 
@@ -199,9 +230,10 @@ export default class AuroFloatingUI {
     this.element.trigger = this.element.shadowRoot.querySelector('#trigger');
     this.element.bib = this.element.shadowRoot.querySelector('#bib');
 
+    // @TODO: don't hardcode values
     this.element.bib.style.display = 'none';
     this.element.bib.style.position = 'absolute';
-    this.element.bib.style.zIndex = '1'; // make this configurable
+    this.element.bib.style.zIndex = '1';
 
     this.element.bib.setAttribute('hidden', true);
 
@@ -212,5 +244,19 @@ export default class AuroFloatingUI {
     this.element.trigger.addEventListener('mouseleave', (event) => this.handleEvent(event));
     this.element.trigger.addEventListener('focus', (event) => this.handleEvent(event));
     this.element.trigger.addEventListener('blur', (event) => this.handleEvent(event));
+  }
+
+  disconnect() {
+    this.cleanupHideHandlers();
+    this.element.cleanup?.();
+    
+    // Clean up trigger event listeners
+    if (this.element?.trigger) {
+      this.element.trigger.removeEventListener('click', (event) => this.handleEvent(event));
+      this.element.trigger.removeEventListener('mouseenter', (event) => this.handleEvent(event));
+      this.element.trigger.removeEventListener('mouseleave', (event) => this.handleEvent(event));
+      this.element.trigger.removeEventListener('focus', (event) => this.handleEvent(event));
+      this.element.trigger.removeEventListener('blur', (event) => this.handleEvent(event));
+    }
   }
 }
