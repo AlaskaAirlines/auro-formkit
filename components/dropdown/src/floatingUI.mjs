@@ -60,12 +60,12 @@ export default class AuroFloatingUI {
   setupHideHandlers() {
     // Create bound event handler functions and store references
     this.boundFocusInHandler = (event) => {
-      if (!this.element.noHideOnThisFocusLoss && !this.element.hasAttribute('noHideOnThisFocusLoss')) {
-        if (document.activeElement !== document.querySelector('body') && 
-            !this.element.contains(document.activeElement) && 
-            !this.element.bibContent.contains(document.activeElement)) {
-          this.hideBib();
-        }
+      if (!this.element.noHideOnThisFocusLoss && 
+        !this.element.hasAttribute('noHideOnThisFocusLoss') && 
+        document.activeElement !== document.querySelector('body') &&
+        !this.element.contains(document.activeElement) &&
+        !this.element.bibContent.contains(document.activeElement)) {
+      this.hideBib();
       }
     };
 
