@@ -4,7 +4,7 @@ import {autoUpdate, computePosition, offset, autoPlacement, flip} from '@floatin
 
 export default class AuroFloatingUI {
   constructor() {
-    // Store bound event listener references for cleanup
+    // Store event listener references for cleanup
     this.focusHandler = null;
     this.clickHandler = null;
     this.keyDownHandler = null;
@@ -71,7 +71,7 @@ export default class AuroFloatingUI {
   }
 
   setupHideHandlers() {
-    // Define handlers using arrow functions to preserve 'this' context
+    // Define handlers & store references
     this.focusHandler = () => this.handleFocusLoss();
 
     this.clickHandler = (evt) => {
@@ -119,7 +119,7 @@ export default class AuroFloatingUI {
   }
 
   updateCurrentExpandedDropdown() {
-    // First, close any other dropdown that is already open
+    // Close any other dropdown that is already open
     if (document.expandedAuroDropdown) {
       this.hideBib(document.expandedAuroDropdown);
     }
