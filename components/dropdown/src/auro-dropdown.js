@@ -114,6 +114,22 @@ export class AuroDropdown extends LitElement {
     this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
   }
 
+  /**
+   * Public method to hide the dropdown
+   * @returns {void}
+   */
+  hide() {
+    this.floater.hideBib();
+  }
+
+  /**
+   * Public method to show the dropdown
+   * @returns {void}
+   */
+  show() {
+    this.floater.showBib();
+  }
+
   // function to define props used within the scope of this component
   static get properties() {
 
