@@ -52,17 +52,25 @@ export default class AuroFloatingUI {
     }
   }
 
+  handleFocusLoss() {
+    if (this.element.noHideOnThisFocusLoss || 
+        this.element.hasAttribute('noHideOnThisFocusLoss')) {
+      return;
+    }
+
+    const activeElement = document.activeElement;
+    if (activeElement === document.querySelector('body') ||
+        this.element.contains(activeElement) ||
+        this.element.bibContent?.contains(activeElement)) {
+      return;
+    }
+
+    this.hideBib();
+  }
+
   setupHideHandlers() {
     // Create bound event handler functions and store references
-    this.boundFocusInHandler = (event) => {
-      if (!this.element.noHideOnThisFocusLoss && 
-        !this.element.hasAttribute('noHideOnThisFocusLoss') && 
-        document.activeElement !== document.querySelector('body') &&
-        !this.element.contains(document.activeElement) &&
-        !this.element.bibContent.contains(document.activeElement)) {
-      this.hideBib();
-      }
-    };
+    this.boundFocusInHandler = () => this.handleFocusLoss();
 
     this.boundClickHandler = (evt) => {
       if (!evt.composedPath().includes(this.element.trigger) && 
@@ -167,13 +175,7 @@ export default class AuroFloatingUI {
           }
           break;
         case 'blur':
-          /*
-            this likely needs to be improved to handle focus 
-            within the bib for datepicker
-          */
-          if (!this.element.noHideOnThisFocusLoss && !this.element.hasAttribute('noHideOnThisFocusLoss')) {
-            this.hideBib();
-          }
+          this.handleFocusLoss();
           break;
         case 'click':
           this.handleClick();
