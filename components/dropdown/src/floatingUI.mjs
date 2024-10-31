@@ -5,9 +5,9 @@ import {autoUpdate, computePosition, offset, autoPlacement, flip} from '@floatin
 export default class AuroFloatingUI {
   constructor() {
     // Store bound event listener references for cleanup
-    this.boundFocusInHandler = null;
-    this.boundClickHandler = null;
-    this.boundKeyDownHandler = null;
+    this.focusHandler = null;
+    this.clickHandler = null;
+    this.keyDownHandler = null;
   }
 
   position() {
@@ -71,10 +71,10 @@ export default class AuroFloatingUI {
   }
 
   setupHideHandlers() {
-    // Create bound event handler functions and store references
-    this.boundFocusInHandler = () => this.handleFocusLoss();
+    // Define handlers using arrow functions to preserve 'this' context
+    this.focusHandler = () => this.handleFocusLoss();
 
-    this.boundClickHandler = (evt) => {
+    this.clickHandler = (evt) => {
       if (!evt.composedPath().includes(this.element.trigger) && 
           !evt.composedPath().includes(this.element.bibContent)) {
         this.hideBib();
@@ -82,33 +82,33 @@ export default class AuroFloatingUI {
     };
 
     // ESC key handler
-    this.boundKeyDownHandler = (evt) => {
+    this.keyDownHandler = (evt) => {
       if (evt.key === 'Escape' && this.element.isPopoverVisible) {
         this.hideBib();
       }
     };
 
     // Add event listeners using the stored references
-    document.addEventListener('focusin', this.boundFocusInHandler);
-    window.addEventListener('click', this.boundClickHandler);
-    document.addEventListener('keydown', this.boundKeyDownHandler);
+    document.addEventListener('focusin', this.focusHandler);
+    window.addEventListener('click', this.clickHandler);
+    document.addEventListener('keydown', this.keyDownHandler);
   }
 
   cleanupHideHandlers() {
     // Remove event listeners if they exist
-    if (this.boundFocusInHandler) {
-      document.removeEventListener('focusin', this.boundFocusInHandler);
-      this.boundFocusInHandler = null;
+    if (this.focusHandler) {
+      document.removeEventListener('focusin', this.focusHandler);
+      this.focusHandler = null;
     }
 
-    if (this.boundClickHandler) {
-      window.removeEventListener('click', this.boundClickHandler);
-      this.boundClickHandler = null;
+    if (this.clickHandler) {
+      window.removeEventListener('click', this.clickHandler);
+      this.clickHandler = null;
     }
 
-    if (this.boundKeyDownHandler) {
-      document.removeEventListener('keydown', this.boundKeyDownHandler);
-      this.boundKeyDownHandler = null;
+    if (this.keyDownHandler) {
+      document.removeEventListener('keydown', this.keyDownHandler);
+      this.keyDownHandler = null;
     }
   }
 
