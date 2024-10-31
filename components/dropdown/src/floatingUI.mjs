@@ -40,6 +40,7 @@ export default class AuroFloatingUI {
   updateState() {
     const isVisible = this.element.isPopoverVisible;
     this.element.trigger.setAttribute('aria-expanded', isVisible);
+    // @TODO: Don't hardcode values
     this.element.bib.style.display = isVisible ? 'block' : 'none';
   
     if (!isVisible) {
@@ -47,7 +48,7 @@ export default class AuroFloatingUI {
       try {
         this.element.cleanup?.();
       } catch (error) {
-        // do nothing
+        // Do nothing
       }
     }
   }
@@ -122,7 +123,7 @@ export default class AuroFloatingUI {
       this.cleanupHideHandlers();
       this.setupHideHandlers();
 
-      // setup auto update to handle resize and scroll
+      // Setup auto update to handle resize and scroll
       this.element.cleanup = autoUpdate(this.element.trigger, this.element.bib, () => {
         this.position();
       });
@@ -176,7 +177,7 @@ export default class AuroFloatingUI {
         case 'focus':
           if (this.element.focusShow) {
             /*
-              this needs to better handle clicking that gives focus - 
+              This needs to better handle clicking that gives focus - 
               currently it shows and then immediately hides the bib 
             */
             this.showBib();
@@ -189,7 +190,7 @@ export default class AuroFloatingUI {
           this.handleClick();
           break;
         default:
-          // do nothing - we've now handled keyboard events above
+          // Do nothing
       }
     }
   }
@@ -210,13 +211,13 @@ export default class AuroFloatingUI {
     const triggerNodeTagName = triggerNode.tagName.toLowerCase();
 
     focusableElementSelectors.forEach((selector) => {
-      // check if the trigger node element itself is focusable
+      // Check if the trigger node element is focusable
       if (triggerNodeTagName === selector) {
         triggerNode.tabIndex = -1;
         return;
       }
 
-      // check if any child is focusable
+      // Check if any child is focusable
       const nestedFocusableElements = triggerNode.querySelectorAll(selector);
       if (nestedFocusableElements) {
         nestedFocusableElements.forEach((nestedFocusableElement) => {
@@ -231,7 +232,7 @@ export default class AuroFloatingUI {
     this.element.trigger = this.element.shadowRoot.querySelector('#trigger');
     this.element.bib = this.element.shadowRoot.querySelector('#bib');
 
-    // @TODO: don't hardcode values
+    // @TODO: Don't hardcode values
     this.element.bib.style.display = 'none';
     this.element.bib.style.position = 'absolute';
     this.element.bib.style.zIndex = '1';
@@ -240,7 +241,6 @@ export default class AuroFloatingUI {
 
     this.handleTriggerTabIndex();
 
-    // Add keydown event listener for keyboard accessibility
     this.element.trigger.addEventListener('keydown', (event) => this.handleEvent(event));
     this.element.trigger.addEventListener('click', (event) => this.handleEvent(event));
     this.element.trigger.addEventListener('mouseenter', (event) => this.handleEvent(event));
@@ -253,7 +253,7 @@ export default class AuroFloatingUI {
     this.cleanupHideHandlers();
     this.element.cleanup?.();
     
-    // Clean up trigger event listeners including keydown
+    // Remove event & keyboard listeners
     if (this.element?.trigger) {
       this.element.trigger.removeEventListener('keydown', (event) => this.handleEvent(event));
       this.element.trigger.removeEventListener('click', (event) => this.handleEvent(event));
