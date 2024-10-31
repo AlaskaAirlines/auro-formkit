@@ -5,7 +5,7 @@
 
 ### Basic
 
-The most basic, simple version of auro-drodown.
+The most basic, simple version of `auro-dropdown`.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/basic.html) -->
