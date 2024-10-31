@@ -38,17 +38,12 @@ export default class AuroFloatingUI {
   }
 
   updateState() {
-    this.element.trigger.setAttribute('aria-expanded', this.element.isPopoverVisible);
-
-    if (this.element.isPopoverVisible) {
-      this.element.bib.style.display = 'block';
-    } else {
-      this.element.bib.style.display = 'none';
-      // Clean up event listeners when hiding the popover
+    const isVisible = this.element.isPopoverVisible;
+    this.element.trigger.setAttribute('aria-expanded', isVisible);
+    this.element.bib.style.display = isVisible ? 'block' : 'none';
+  
+    if (!isVisible) {
       this.cleanupHideHandlers();
-    }
-
-    if (!this.element.isPopoverVisible) {
       try {
         this.element.cleanup?.();
       } catch (error) {
