@@ -155,6 +155,14 @@ export default class AuroFloatingUI {
   handleEvent(event) {
     if (!this.element.disableEventShow) {
       switch (event.type) {
+        case 'keydown':
+          // Support both Enter and Space keys for accessibility
+          // Space is included as it's expected behavior for interactive elements
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault(); // Prevent page scroll on space
+            this.handleClick();
+          }
+          break;
         case 'mouseenter':
           if (this.element.hoverToggle) {
             this.showBib();
@@ -181,11 +189,7 @@ export default class AuroFloatingUI {
           this.handleClick();
           break;
         default:
-          // do nothing
-          /*
-            add cases for show and toggle by keyboard space and 
-            enter key - maybe this is handled already?
-          */
+          // do nothing - we've now handled keyboard events above
       }
     }
   }
@@ -236,6 +240,8 @@ export default class AuroFloatingUI {
 
     this.handleTriggerTabIndex();
 
+    // Add keydown event listener for keyboard accessibility
+    this.element.trigger.addEventListener('keydown', (event) => this.handleEvent(event));
     this.element.trigger.addEventListener('click', (event) => this.handleEvent(event));
     this.element.trigger.addEventListener('mouseenter', (event) => this.handleEvent(event));
     this.element.trigger.addEventListener('mouseleave', (event) => this.handleEvent(event));
@@ -247,8 +253,9 @@ export default class AuroFloatingUI {
     this.cleanupHideHandlers();
     this.element.cleanup?.();
     
-    // Clean up trigger event listeners
+    // Clean up trigger event listeners including keydown
     if (this.element?.trigger) {
+      this.element.trigger.removeEventListener('keydown', (event) => this.handleEvent(event));
       this.element.trigger.removeEventListener('click', (event) => this.handleEvent(event));
       this.element.trigger.removeEventListener('mouseenter', (event) => this.handleEvent(event));
       this.element.trigger.removeEventListener('mouseleave', (event) => this.handleEvent(event));
