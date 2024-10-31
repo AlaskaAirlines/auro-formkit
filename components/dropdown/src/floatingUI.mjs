@@ -7,6 +7,7 @@ export default class AuroFloatingUI {
     // Store bound event listener references for cleanup
     this.boundFocusInHandler = null;
     this.boundClickHandler = null;
+    this.boundKeyDownHandler = null;
   }
 
   position() {
@@ -80,9 +81,17 @@ export default class AuroFloatingUI {
       }
     };
 
+    // ESC key handler
+    this.boundKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape' && this.element.isPopoverVisible) {
+        this.hideBib();
+      }
+    };
+
     // Add event listeners using the stored references
     document.addEventListener('focusin', this.boundFocusInHandler);
     window.addEventListener('click', this.boundClickHandler);
+    document.addEventListener('keydown', this.boundKeyDownHandler);
   }
 
   cleanupHideHandlers() {
@@ -95,6 +104,11 @@ export default class AuroFloatingUI {
     if (this.boundClickHandler) {
       window.removeEventListener('click', this.boundClickHandler);
       this.boundClickHandler = null;
+    }
+
+    if (this.boundKeyDownHandler) {
+      document.removeEventListener('keydown', this.boundKeyDownHandler);
+      this.boundKeyDownHandler = null;
     }
   }
 
