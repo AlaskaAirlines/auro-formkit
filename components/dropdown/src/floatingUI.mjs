@@ -59,7 +59,7 @@ export default class AuroFloatingUI {
       return;
     }
 
-    const activeElement = document.activeElement;
+    const {activeElement} = document;
     if (activeElement === document.querySelector('body') ||
         this.element.contains(activeElement) ||
         this.element.bibContent?.contains(activeElement)) {
