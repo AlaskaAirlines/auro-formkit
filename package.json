@@ -225,11 +225,11 @@
 
     "linters": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./components/**/*.scss\"",
-    "esLint": "./node_modules/.bin/eslint components/**/*.js --ignore-pattern 'components/**/*Version.js'",
+    "esLint": "eslint 'components/**/*.js'",
 
     "linters:input": "npm-run-all scssLint:input esLint:input",
     "scssLint:input": "stylelint \"./components/input/**/*.scss\"",
-    "esLint:input": "./node_modules/.bin/eslint components/input/**/*.js --ignore-pattern 'components/**/*Version.js'",
+    "esLint:input": "eslint 'components/input/**/*.js'",
 
     "bundler": "rollup -c",
     "bundler:test": "rollup -c -w",
