@@ -12,7 +12,7 @@ import { LitElement, html } from "lit";
 // import AuroElement from '@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
 
 // Import touch detection lib
-import styleCss from "./style-css.js";
+import styleCss from "./styles/style-css.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**

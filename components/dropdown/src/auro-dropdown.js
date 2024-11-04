@@ -115,7 +115,7 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * Public method to hide the dropdown
+   * Public method to hide the dropdown.
    * @returns {void}
    */
   hide() {
@@ -123,7 +123,7 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * Public method to show the dropdown
+   * Public method to show the dropdown.
    * @returns {void}
    */
   show() {

@@ -25,7 +25,7 @@ export default class Popover {
       tooltip: this.anchor,
       placement: this.options.placement,
       strategy: 'absolute'
-    })
+    });
   }
 
   hide() {
