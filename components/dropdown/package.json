@@ -20,7 +20,7 @@
     "node": "^18 || ^20"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-icon": "^5.0.0",
+    "@aurodesignsystem/auro-icon": "^5.0.2",
     "@aurodesignsystem/auro-library": "^2.8.0",
     "@popperjs/core": "^2.11.8",
     "chalk": "^5.2.0",
