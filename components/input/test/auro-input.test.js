@@ -66,16 +66,20 @@ describe('auro-input', () => {
       <auro-input value="other value" label="First name"></auro-input>
     `);
 
-    console.log('initial value', el.value);
-
     const clearButton = el.shadowRoot.querySelector('.clearBtn');
+    const input = el.shadowRoot.querySelector('input');
+
+    expect(el.value).to.equal('other value');
+    
     clearButton.click();
 
+    input.dispatchEvent(new InputEvent('input'));
+    
+    // Wait for component to update
     await elementUpdated(el);
 
-    console.log('value after update', el.value);
-
     expect(el.value).to.equal('');
+    expect(input.value).to.equal('');
   });
 
   it('flips hide-password bit', async () => {
