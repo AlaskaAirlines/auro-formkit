@@ -1,7 +1,9 @@
 {
   "include": [
-    "*.js",                    // process root level JS files
-    "components/*/src/*.js"    // process the generated JS
+    // process root level JS files
+    "*.js",
+    // process the sub-component JS
+    "components/*/src/*.js"
   ],
   "exclude": [],
   "compilerOptions": {
