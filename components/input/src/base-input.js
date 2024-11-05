@@ -9,9 +9,9 @@
 import { LitElement, css } from "lit";
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import styleCss from "./styles/style-css.js";
-import colorCss from "./styles/color-css.js";
-import tokensCss from "./styles/tokens-css.js";
+import styleCss from "./style-css.js";
+import colorCss from "./color-css.js";
+import tokensCss from "./tokens-css.js";
 
 import Cleave from 'cleave.js';
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
