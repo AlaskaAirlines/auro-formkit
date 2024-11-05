@@ -9,7 +9,7 @@ const production = !process.env.ROLLUP_WATCH;
 const getComponentEntryPoints = () => {
   const files = glob.sync('components/*/src/index.js');
   return files.map(file => {
-    const name = path.basename(path.dirname(file));
+    const name = path.basename(path.dirname(path.dirname(file)));
     return {
       name,
       input: file,
@@ -33,16 +33,15 @@ const createConfig = (name, input, output) => ({
       moduleDirectories: ['node_modules']
     }),
     !production &&
-      serve({
-        open: true,
-        openPage: '/docs/'
-      })
+    serve({
+      open: true,
+      openPage: '/docs/'
+    })
   ]
 });
 
 const mainConfig = createConfig('auro-form', './index.js', 'dist');
-
-const componentConfigs = getComponentEntryPoints().map(({ name, input, output }) => 
+const componentConfigs = getComponentEntryPoints().map(({ name, input, output }) =>
   createConfig(name, input, output)
 );
 
