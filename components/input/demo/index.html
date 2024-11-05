@@ -28,12 +28,7 @@
         });
     </script>
     
-    <script type="module">
-      import { AuroInput } from '../src/auro-input.js';
-      import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-
-      RuntimeUtils.default.prototype.registerComponent('custom-input', AuroInput);
-
+    <script type="module" data-demo-script="true">
       import { initExamples } from "./index.min.js";
 
       initExamples();
