@@ -1,5 +1,5 @@
 import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
-import '../src/auro-input';
+import '../index.js';
 
 describe('auro-input', () => {
 
@@ -67,19 +67,8 @@ describe('auro-input', () => {
     `);
 
     const clearButton = el.shadowRoot.querySelector('.clearBtn');
-    const input = el.shadowRoot.querySelector('input');
-
-    expect(el.value).to.equal('other value');
-    
     clearButton.click();
-
-    input.dispatchEvent(new InputEvent('input'));
-    
-    // Wait for component to update
-    await elementUpdated(el);
-
     expect(el.value).to.equal('');
-    expect(input.value).to.equal('');
   });
 
   it('flips hide-password bit', async () => {

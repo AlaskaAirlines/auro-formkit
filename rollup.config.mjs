@@ -3,6 +3,7 @@ import serve from 'rollup-plugin-serve';
 import glob from 'glob';
 import path from 'path';
 
+const COMP_LIST = ['form', 'input'];
 const production = !process.env.ROLLUP_WATCH;
 
 // Get entry points for each component
@@ -56,9 +57,10 @@ function createExampleConfig(componentName, entryPoint) {
       format: 'esm',
       dir: `./components/${componentName}/demo/`,
     },  
+    plugins: [nodeResolve()],
   };
 }
 
-const docConfig = [createExampleConfig('form', 'index'), createExampleConfig('form', 'api')];
+const docConfig = COMP_LIST.map(comp => [createExampleConfig(comp, 'index'), createExampleConfig(comp, 'api')]).flat();
 
 export default [mainConfig, ...componentConfigs, ...docConfig];

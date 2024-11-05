@@ -153,25 +153,20 @@
     "build:ci": "npm-run-all sweep build:release",
     "postinstall": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postinstall.mjs",
     "types": "tsc",
-
     "build:api": "wca analyze src/auro-dropdown.js --outFiles docs/api.md",
     "build:api:form": "wca analyze \"./components/form/src/*.js\" --outFiles docs/api.md",
     "build:api:input": "wca analyze \"./components/input/src/*.js\" --outFiles docs/api.md",
     "build:api:dropdown": "wca analyze \"./components/dropdown/src/*.js\" --outFiles docs/api.md",
-    
     "build:form": "npm-run-all build:version:form build:sass:form sass:render:form types",
     "build:input": "npm-run-all build:version:input build:sass:input sass:render:input types",
     "build:dropdown": "npm-run-all build:version:dropdown build:sass:dropdown sass:render:dropdown types",
-    
     "dev:form": "concurrently --kill-others \"npm run build:watch:form\" \"npm run serve:form\"",
     "dev:input": "concurrently --kill-others \"npm run build:watch:input\" \"npm run serve:input\"",
     "dev:dropdown": "concurrently --kill-others \"npm run build:watch:dropdown\" \"npm run serve:dropdown\"",
-    
     "build:demo": "npm-run-all build demo:rm:build demo:new:build demo:copy:index:input demo:copy:demo:input demo:update:index",
     "build:demo:form": "npm-run-all build:form demo:rm:build demo:new:build demo:copy:index:form demo:copy:demo:form demo:update:index",
     "build:demo:input": "npm-run-all build:input demo:rm:build demo:new:build demo:copy:index:input demo:copy:demo:input demo:update:index",
     "build:demo:dropdown": "npm-run-all build:dropdown demo:rm:build demo:new:build demo:copy:index:dropdown demo:copy:demo:dropdown demo:update:index",
-    
     "demo:copy:demo:form": "copyfiles -u 1 -V \"./components/form/src/demo/**/*\" ./build/demo",
     "demo:copy:demo:input": "copyfiles -u 1 -V \"./components/input/src/demo/**/*\" ./build/demo",
     "demo:copy:demo:dropdown": "copyfiles -u 1 -V \"./components/dropdown/src/demo/**/*\" ./build/demo",
@@ -181,59 +176,46 @@
     "demo:new:build": "mkdir -p ./build/css ./build/demo",
     "demo:rm:build": "rm -rf ./build",
     "demo:update:index": "node ./scripts/prepForBuild",
-
     "build:dev:assets": "npm-run-all build:sass:input build:sass:dropdown postCss:input postCss:dropdown sass:render",
     "build:dev:assets:form": "npm-run-all build:sass:form postCss:form sass:render:form",
     "build:dev:assets:input": "npm-run-all build:sass:input postCss:input sass:render:input",
     "build:dev:assets:dropdown": "npm-run-all build:sass:dropdown postCss:dropdown sass:render:dropdown",
-    
     "build:docs": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
     "build:docs:form": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
     "build:docs:input": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
     "build:docs:dropdown": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
-    
     "build:sass": "npm-run-all build:sass:input build:sass:dropdown postCss:input postCss:dropdown sass:render",
     "build:sass:form": "sass --no-source-map --load-path=node_modules --load-path=. \"./components/form/src:./components/form/src\"",
     "build:sass:input": "sass --no-source-map --load-path=node_modules --load-path=. \"./components/input/src:./components/input/src\"",
     "build:sass:dropdown": "sass --no-source-map --load-path=node_modules --load-path=. \"./components/dropdown/src:./components/dropdown/src\"",
-    
     "build:version:form": "cross-env npm_config_component=form node ./components/form/src/scripts/version.mjs",
     "build:version:input": "cross-env npm_config_component=input node ./components/input/src/scripts/version.mjs",
     "build:version:dropdown": "cross-env npm_config_component=dropdown node ./components/dropdown/src/scripts/version.mjs",
-    
     "build:watch:form": "nodemon -e scss,js --watch \"./components/form/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:form\"",
     "build:watch:input": "nodemon -e scss,js --watch \"./components/input/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:input\"",
     "build:watch:dropdown": "nodemon -e scss,js --watch \"./components/dropdown/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:dropdown\"",
-    
     "dist:js": "copyfiles -u 1 -V './components/**/*.js' ./dist",
     "dist:js:form": "copyfiles -u 1 -V \"./components/form/src/**/*.js\" ./dist",
     "dist:js:input": "copyfiles -u 1 -V \"./components/input/src/**/*.js\" ./dist",
     "dist:js:dropdown": "copyfiles -u 1 -V \"./components/dropdown/src/**/*.js\" ./dist",
-    
     "postCss:form": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "postCss:input": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "postCss:dropdown": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
-    
     "sass:render": "sass-render --load-path=node_modules \"components/**/*.css\" -t ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "sass:render:form": "sass-render --load-path=node_modules \"./components/form/src/**/*.css\" -t ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "sass:render:input": "sass-render --load-path=node_modules \"./components/input/src/**/*.css\" -t ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "sass:render:dropdown": "sass-render --load-path=node_modules \"./components/dropdown/src/**/*.css\" -t ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
-    
     "serve": "web-dev-server --open demo/ --node-resolve --watch",
     "serve:form": "web-dev-server --open components/form/demo/ --node-resolve --watch --app-index \"./components/form/demo/index.html\"",
     "serve:input": "web-dev-server --open components/input/demo/ --node-resolve --watch --app-index \"./components/input/demo/index.html\"",
     "serve:dropdown": "web-dev-server --open components/dropdown/demo/ --node-resolve --watch --app-index \"./components/dropdown/demo/index.html\"",
-
     "build:form:full": "npm-run-all build:form build:api:form build:docs:form build:dev:assets:form",
     "build:input:full": "npm-run-all build:input build:api:input build:docs:input build:dev:assets:input",
     "build:dropdown:full": "npm-run-all build:dropdown build:api:dropdown build:docs:dropdown build:dev:assets:dropdown",
-    
     "build:form:release": "npm-run-all build:form:full build:test build:demo:form",
     "build:input:release": "npm-run-all build:input:full build:test build:demo:input",
     "build:dropdown:release": "npm-run-all build:dropdown:full build:test build:demo:dropdown",
-
     "sweep": "rm -rf dist && find ./demo ./src ./components -not -path \"*/node_modules/*\" -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
-
     "test": "wtr --coverage",
     "test:watch": "wtr --watch",
     "test:form": "wtr \"./components/form/test/**/*.test.js\" --coverage",
@@ -242,18 +224,14 @@
     "test:input:watch": "wtr \"./components/input/test/**/*.test.js\" --watch",
     "test:dropdown": "wtr \"./components/dropdown/test/**/*.test.js\" --coverage",
     "test:dropdown:watch": "wtr \"./components/dropdown/test/**/*.test.js\" --watch",
-
     "linters": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./components/**/*.scss\"",
     "esLint": "eslint 'components/**/*.js'",
-
     "linters:input": "npm-run-all scssLint:input esLint:input",
     "scssLint:input": "stylelint \"./components/input/**/*.scss\"",
     "esLint:input": "eslint 'components/input/**/*.js'",
-
     "bundler": "rollup -c",
     "bundler:test": "rollup -c -w",
-
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "postversion": "npm-run-all build:api build:docs",
     "prepare": "husky install"

@@ -19,7 +19,7 @@
     <script type="module">
       import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js';
       import 'https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js';
-      fetch('./index.md')
+      fetch('/demo/index.md')
         .then((response) => response.text())
         .then((text) => {
           const rawHtml = marked.parse(text);
@@ -28,12 +28,7 @@
         });
     </script>
     
-    <script type="module">
-      import { AuroInput } from '../src/auro-input.js';
-      import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-
-      RuntimeUtils.default.prototype.registerComponent('custom-input', AuroInput);
-
+    <script type="module" data-demo-script="true">
       import { initExamples } from "./index.min.js";
 
       initExamples();
