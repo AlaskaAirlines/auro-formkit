@@ -7,7 +7,7 @@ const production = !process.env.ROLLUP_WATCH;
 
 // Get entry points for each component
 const getComponentEntryPoints = () => {
-  const files = glob.sync('components/*/src/*.js');
+  const files = glob.sync('components/*/src/index.js');
   return files.map(file => {
     const name = path.basename(path.dirname(file));
     return {
