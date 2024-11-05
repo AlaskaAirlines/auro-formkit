@@ -1,4 +1,3 @@
-import { AuroForm } from './auro-form.js';
-import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-
-RuntimeUtils.default.prototype.registerComponent('custom-form', AuroForm);
+import { AuroDropdown } from './components/dropdown/src/';
+import { AuroForm } from './components/form/src/';
+import { AuroInput } from './components/input/src/';
