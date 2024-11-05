@@ -19,7 +19,8 @@ export default [
     'components/**/*Version.js',
     'components/**/apiExamples/**',
     'components/**/test/**',
-    'components/**/demo/**'
+    'components/**/demo/**',
+    'components/**/dist/**'
     ]
 },
 ...compat.extends("@aurodesignsystem/eslint-config")
