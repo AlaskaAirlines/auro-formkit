@@ -11,7 +11,6 @@ import { LitElement } from "lit";
 export class AuroForm extends LitElement {
   constructor() {
     super();
-    console.log('auro-form mounted');
   }
 }
 
