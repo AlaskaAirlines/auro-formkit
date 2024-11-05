@@ -1,7 +1,7 @@
 {
   "include": [
-    // process root level JS files
-    "*.js",
+    // process root level JS entry file
+    "index.js",
     // process the sub-component JS
     "components/*/src/*.js"
   ],
