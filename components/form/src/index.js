@@ -1,4 +1,4 @@
-import { AuroForm } from './src/auro-form.js';
+import { AuroForm } from './auro-form.js';
 
 /**
  * Register Custom Element.
