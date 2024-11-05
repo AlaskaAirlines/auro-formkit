@@ -4,3 +4,4 @@
 // import { AuroInput } from './components/input/src/';
 
 import './components/dropdown/src/index.js';
+import './components/checkbox/src/index.js';
