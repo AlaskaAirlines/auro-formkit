@@ -1,4 +1,4 @@
-import { AuroForm } from './src/auro-form.js';
+import { Form } from './src/auro-component-form.js';
 
 /**
  * Register Custom Element.
@@ -8,7 +8,7 @@ import { AuroForm } from './src/auro-form.js';
 const registerComponent = (name = 'custom-form') => {
   // alias definition
   if (!customElements.get(name)) {
-    customElements.define(name, class extends AuroForm {});
+    customElements.define(name, class extends Form {});
   }
 };
 

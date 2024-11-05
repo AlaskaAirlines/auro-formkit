@@ -23,7 +23,7 @@ import styleCss from "./styles/style-css.js";
  */
 
 // build the component class
-export class AuroForm extends LitElement {
+export class Form extends LitElement {
   // constructor() {
   //   super();
   // }
@@ -60,6 +60,6 @@ export class AuroForm extends LitElement {
 }
 
 // default internal definition
-if (!customElements.get("auro-form")) {
-  customElements.define("auro-form", AuroForm);
+if (!customElements.get("auro-component-form")) {
+  customElements.define("auro-component-form", Form);
 }
