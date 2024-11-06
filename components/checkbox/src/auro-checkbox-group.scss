@@ -1,0 +1,38 @@
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable no-descending-specificity,
+   no-duplicate-selectors
+   declaration-empty-line-before,
+   comment-whitespace-inside,
+   selector-max-combinators,
+   selector-max-compound-selectors,
+   selector-max-type,
+   scss/selector-nest-combinators,
+   selector-class-pattern */
+
+@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+:host {
+  display: block;
+  padding-bottom: var(--ds-size-150, $ds-size-150);
+}
+
+.displayFlex {
+  legend + slot {
+    display: flex;
+    white-space: nowrap;
+  }
+}
+
+fieldset {
+  all: unset;
+
+}
+
+legend {
+  margin-bottom: var(--ds-size-150, $ds-size-150);
+}
+
