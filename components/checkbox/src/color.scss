@@ -1,0 +1,118 @@
+// Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable selector-class-pattern, order/properties-order, no-descending-specificity */
+
+@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+:host {
+  .label {
+    color: var(--ds-auro-checkbox-label-color);
+  }
+
+  .label--cbx {
+    &:after {
+      background-color: var(--ds-auro-checkbox-container-color);
+      border-color: var(--ds-auro-checkbox-border-color);
+      outline-color: var(--ds-auro-checkbox-outline-color);
+    }
+
+    &:hover {
+      --ds-auro-checkbox-container-color: var(--ds-color-container-ui-secondary-hover-default, #{$ds-color-container-ui-secondary-hover-default});
+    }
+  }
+
+  .svg--cbx {
+    color: var(--ds-auro-checkbox-checkmark-color);
+  }
+  
+}
+
+:host(:focus-within) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+  --ds-auro-checkbox-outline-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+}
+
+:host([checked]) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-ui-default-default, #{$ds-color-border-ui-default-default});
+  --ds-auro-checkbox-container-color: var(--ds-color-container-ui-primary-default-default, #{$ds-color-container-ui-primary-default-default});
+
+  .label--cbx {
+    &:hover {
+      --ds-auro-checkbox-border-color: var(--ds-color-border-ui-hover-default, #{$ds-color-border-ui-hover-default});
+      --ds-auro-checkbox-container-color: var(--ds-color-container-ui-primary-hover-default, #{$ds-color-container-ui-primary-hover-default});
+    }
+  }
+}
+
+:host([checked]:focus-within) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-subtle-default, #{$ds-color-border-subtle-default});
+
+  .label--cbx {
+    &:hover {
+      --ds-auro-checkbox-border-color: var(--ds-color-border-subtle-default, #{$ds-color-border-subtle-default});
+      --ds-auro-checkbox-container-color: var(--ds-color-container-ui-primary-hover-default, #{$ds-color-container-ui-primary-hover-default});
+    }
+  }
+}
+
+:host([disabled]) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
+  --ds-auro-checkbox-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
+  --ds-auro-checkbox-label-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+
+  .label--cbx {
+    &:hover {
+      --ds-auro-checkbox-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
+      --ds-auro-checkbox-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
+    }
+  }
+}
+
+:host([disabled][checked]) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
+  --ds-auro-checkbox-checkmark-color: var(--ds-color-icon-ui-primary-disabled-default, #{$ds-color-icon-ui-primary-disabled-default});
+  --ds-auro-checkbox-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
+
+  .label--cbx {
+    &:hover {
+      --ds-auro-checkbox-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
+      --ds-auro-checkbox-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
+    }
+  }
+}
+
+:host([error]) {
+  --ds-auro-checkbox-border-color: var(--ds-color-utility-error-default, #{$ds-color-utility-error-default});
+  --ds-auro-checkbox-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
+}
+
+:host([error]:not([checked]):focus-within) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-ui-active-default, #{$ds-color-border-ui-active-default});
+  --ds-auro-checkbox-outline-color: var(--ds-color-border-ui-active-default, #{$ds-color-border-ui-active-default});
+}
+
+:host([error][checked]) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
+  --ds-auro-checkbox-container-color: var(--ds-color-utility-error-default, #{$ds-color-utility-error-default});
+
+  .label--cbx {
+    &:hover {
+      --ds-auro-checkbox-border-color: var(--ds-color-container-error-inverse, #{$ds-color-container-error-inverse});
+      --ds-auro-checkbox-container-color: var(--ds-color-container-error-inverse, #{$ds-color-alert-error-default});
+    }
+  }
+}
+
+:host([error][checked]:focus-within) {
+  --ds-auro-checkbox-border-color: var(--ds-color-border-subtle-default, #{$ds-color-border-subtle-default});
+
+  .label--cbx {
+    &:hover {
+      --ds-auro-checkbox-border-color: var(--ds-color-border-subtle-default, #{$ds-color-border-subtle-default});
+      --ds-auro-checkbox-container-color: var(--ds-color-utility-error-default, #{$ds-color-utility-error-default});
+    }
+  }
+}
