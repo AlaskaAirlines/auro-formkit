@@ -19,7 +19,7 @@ const getComponentEntryPoints = () => {
 };
 
 const createConfig = (name, input, output) => ({
-  input: { [`${name}__bundled`]: input },
+  input: { [`auro-${name}__bundled`]: input },
   output: {
     format: 'esm',
     dir: output,
@@ -40,7 +40,7 @@ const createConfig = (name, input, output) => ({
   ]
 });
 
-const mainConfig = createConfig('auro-form', './index.js', 'dist');
+const mainConfig = createConfig('formkit', './index.js', 'dist');
 const componentConfigs = getComponentEntryPoints().map(({ name, input, output }) =>
   createConfig(name, input, output)
 );
