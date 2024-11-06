@@ -13,7 +13,7 @@ const getComponentEntryPoints = () => {
     return {
       name,
       input: file,
-      output: `dist/${name}`
+      output: `dist/components/${name}`
     };
   });
 };
