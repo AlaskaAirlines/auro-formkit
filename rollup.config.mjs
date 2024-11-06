@@ -23,7 +23,7 @@ const createConfig = (name, input, output) => ({
   output: {
     format: 'esm',
     dir: output,
-    chunkFileNames: '[name]-[hash].js'
+    entryFileNames: '[name].js'
   },
   plugins: [
     nodeResolve({
@@ -33,10 +33,10 @@ const createConfig = (name, input, output) => ({
       moduleDirectories: ['node_modules']
     }),
     !production &&
-    serve({
-      open: true,
-      openPage: '/docs/'
-    })
+      serve({
+        open: true,
+        openPage: '/docs/'
+      })
   ]
 });
 
