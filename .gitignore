@@ -22,3 +22,6 @@ build/
 
 ## Code coverage reports
 coverage/
+
+## Turborepo
+.turbo

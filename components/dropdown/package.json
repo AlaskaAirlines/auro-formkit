@@ -144,6 +144,8 @@
     "postinstall": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postinstall.mjs",
     "sass:render": "sass-render --load-path=node_modules 'src/**/*.css' 'components/**/*.css' -t ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "serve": "web-dev-server --open demo/ --node-resolve --watch",
-    "types": "tsc"
+    "types": "tsc",
+
+    "check-types": "tsc --noEmit"
   }
 }
