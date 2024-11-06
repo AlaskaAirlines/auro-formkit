@@ -1,0 +1,66 @@
+// Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable declaration-empty-line-before */
+
+@import './../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import './../node_modules/@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+/* stylelint-disable declaration-no-important, order/properties-order */
+
+:host {
+  display: flex;
+
+  align-items: center;
+
+  padding: var(--ds-size-50, $ds-size-50) var(--ds-size-200, $ds-size-200) var(--ds-size-50, $ds-size-50) 0;
+
+  cursor: pointer;
+
+  user-select: none;
+
+  -webkit-tap-highlight-color: transparent;
+
+  slot {
+    display: block;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  [auro-icon] {
+    --ds-auro-icon-size: var(--ds-size-300, #{$ds-size-300});
+    margin-right: var(--ds-size-150, $ds-size-150);
+    margin-left: var(--ds-size-100, $ds-size-100);
+  }
+
+  ::slotted(.nestingSpacer) {
+    display: inline-block;
+    width: var(--ds-size-300, $ds-size-300);
+  }
+
+  ::slotted(strong) {
+    font-weight: 700;
+  }
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([static]) {
+  pointer-events: none;
+}
+
+:host([disabled]:hover) {
+  cursor: auto;
+}
+
+:host([disabled]) {
+  user-select: none;
+  pointer-events: none;
+}

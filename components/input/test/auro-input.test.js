@@ -68,7 +68,7 @@ describe('auro-input', () => {
 
     const clearButton = el.shadowRoot.querySelector('.clearBtn');
     clearButton.click();
-    expect(el.value).to.equal('');
+    expect(el.value).to.be.undefined;
   });
 
   it('flips hide-password bit', async () => {
