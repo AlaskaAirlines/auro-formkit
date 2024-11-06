@@ -151,6 +151,9 @@
     "web components"
   ],
   "packageManager": "npm@8.5.0",
+  "workspaces": [
+    "components/*"
+  ],
   "scripts": {
     "dev": "npm run dev:input",
     "build": "npm-run-all build:form build:input build:dropdown build:checkbox build:menu build:radio build:select build:combobox build:datepicker build:sass sass:render bundler types",
