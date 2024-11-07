@@ -5,4 +5,5 @@
 import './components/dropdown/src/index.js';
 import './components/checkbox/src/index.js';
 import './components/input/src/index.js';
+import './components/form/src/index.js';
 import './components/menu/src/index.js';

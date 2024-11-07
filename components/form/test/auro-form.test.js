@@ -1,5 +1,5 @@
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/auro-form';
+import '../src/index.js';
 
 describe('auro-form', () => {
   it('sets the CSS class on auro-form > div element', async () => {
