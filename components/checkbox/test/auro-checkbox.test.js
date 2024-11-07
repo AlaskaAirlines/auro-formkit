@@ -5,7 +5,7 @@
 /* eslint-disable no-unused-expressions */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 
-import '../index.js';
+import '../src/index.js';
 
 describe('auro-checkbox-group', () => {
   it('has the expected properties and validity in required state', async () => {
