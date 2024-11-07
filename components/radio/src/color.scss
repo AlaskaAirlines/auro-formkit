@@ -1,0 +1,56 @@
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable
+   no-duplicate-selectors,
+   declaration-empty-line-before,
+   selector-max-class,
+   scss/selector-nest-combinators,
+   order/properties-order,
+   selector-class-pattern,
+   max-nesting-depth,
+   selector-max-combinators,
+   selector-max-compound-selectors,
+   scss/selector-no-redundant-nesting-selector,
+   no-descending-specificity,
+   rule-empty-line-before */
+
+// Import Auro tokens
+@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+.label {
+  color: var(--ds-auro-radio-label-color);
+
+  &:after {
+    background-color: var(--ds-auro-radio-btn-fill-color);
+    border-color: var(--ds-auro-radio-btn-border-color);
+    box-shadow: inset 0 0 0 3px var(--ds-auro-radio-btn-inset-color);
+    outline-color: var(--ds-auro-radio-btn-border-color);
+    
+    -webkit-tap-highlight-color: var(--ds-auro-radio-tap-color);
+  }
+}
+
+:host([checked]) {
+  --ds-auro-radio-btn-inset-color: var(--ds-color-background-primary-100-default, #{$ds-color-background-primary-100-default});
+  --ds-auro-radio-btn-fill-color: var(--ds-color-border-ui-default-default);
+  --ds-auro-radio-btn-border-color: var(--ds-color-border-ui-default-default);
+}
+
+:host([error]) {
+  --ds-auro-radio-btn-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
+}
+
+:host([checked][error]) {
+  --ds-auro-radio-btn-fill-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
+}
+
+:host([disabled]) {
+  --ds-auro-radio-btn-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
+}
+
+:host(.focus-visible) {
+  --ds-auro-radio-btn-border-color: var(--ds-color-border-ui-default-default, #{$ds-color-border-ui-default-default});
+}
