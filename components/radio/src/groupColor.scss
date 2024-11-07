@@ -1,0 +1,33 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable
+   selector-max-combinators,
+   selector-max-compound-selectors,
+   selector-max-type,
+   scss/selector-nest-combinators,
+   selector-class-pattern */
+
+// Import Auro tokens
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
+
+:host {
+  legend {
+    color: var(--ds-auro-radio-group-label-color);
+  }
+}
+
+:host([disabled]) {
+  --ds-auro-radio-group-label-color: var(--ds-color-text-disabled-default, $ds-color-text-disabled-default);
+}
+
+.radioGroupElement-helpText {
+  color: var(--ds-auro-radio-group-help-text-color);
+}
+
+:host([validity]:not([validity='valid'])) {
+  --ds-auro-radio-group-help-text-color: var(--ds-color-alert-error-default, #{$ds-color-alert-error-default});
+}
