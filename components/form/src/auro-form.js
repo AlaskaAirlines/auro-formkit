@@ -14,6 +14,8 @@ import { LitElement, html } from "lit";
 // Import touch detection lib
 import styleCss from "./styles/style-css.js";
 
+import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The auro-form element provides users a way to ... (it would be great if you fill this out).
@@ -44,6 +46,18 @@ export class AuroForm extends LitElement {
     return [styleCss];
   }
 
+  /**
+   * This will register this element with the browser.
+   * @param {string} [name="auro-form"] - The name of element that you want to register to.
+   *
+   * @example
+   * AuroForm.register("custom-form") // this will register this element to <custom-form/>
+   *
+   */
+  static register(name = "auro-form") {
+    AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroForm);
+  }
+
   // When using auroElement, use the following attribute and function when hiding content from screen readers.
   // aria-hidden="${this.hideAudible(this.hiddenAudible)}"
 
@@ -57,9 +71,4 @@ export class AuroForm extends LitElement {
       </div>
     `;
   }
-}
-
-// default internal definition
-if (!customElements.get("auro-form")) {
-  customElements.define("auro-form", AuroForm);
 }
