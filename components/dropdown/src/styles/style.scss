@@ -51,6 +51,8 @@
   white-space: nowrap;
 }
 
+
+/* stylelint-disable selector-id-pattern */
 #showStateIcon {
   display: flex;
   height: 100%;
@@ -68,6 +70,7 @@
     }
   }
 }
+/* stylelint-enable selector-id-pattern */
 
 .helpText {
   margin-top: var(--ds-size-50, $ds-size-50);
