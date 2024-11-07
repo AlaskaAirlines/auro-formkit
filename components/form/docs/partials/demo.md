@@ -44,13 +44,14 @@ Having a closing statement about your example helps to really complete the thoug
 
 ## Recommended Use and Version Control
 
-There are two important parts of every Auro component. The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom clement. The class is exported and then used as part of defining the Web Component. When importing this component as described in the <a href="#install">install</a> section, the class is imported and the `auro-form` custom element is defined automatically.
+There are two important parts of every Auro component. The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element. The class is exported and then used as part of defining the Web Component. When importing this component as described in the <a href="#install">install</a> section, the class is imported and the `auro-form` custom element is defined automatically.
 
-To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our `registerComponent(name)` method and pass in a unique name.
+To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our `AuroForm.register(name)` method and pass in a unique name.
 
 ```js
-import './node_modules/@aurodesignsystem/auro-form';
-registerComponent('custom-form');
+import { AuroForm } from './node_modules/@aurodesignsystem/auro-form/src/auro-form';
+
+AuroForm.register('custom-form');
 ```
 
 This will create a new custom element that you can use in your HTML that will function identically to the `auro-form` element.

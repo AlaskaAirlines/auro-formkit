@@ -1,1 +1,3 @@
-import '../src/index.js';
+import { AuroForm } from "../src/auro-form.js"
+
+AuroForm.register();
