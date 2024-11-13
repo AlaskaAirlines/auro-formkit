@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 import { mkdir, writeFile, existsSync } from 'fs';
-import path, { dirname } from 'path';
+import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
@@ -10,17 +10,11 @@ const auroSubNameIndex = 5;
  * Writes a version file for the specified dependency package.
  * @param {string} pkg Dependency to write version file for
  */
-export function writeDepVersionFile(pkg) {
-  let pkgPath = pkg;
-  const interanlRegex = /^\@\/components/;
-  const isInternal = !!pkg.match(interanlRegex);
-  if (isInternal) {
-    pkgPath = path.resolve(process.cwd(), pkg.replace("@", "."));
-  }
-  const packageJsonPath = `${pkgPath}/package.json`;
-  const json = require(packageJsonPath);
+export function writeDepVersionFile(pkg: string): void {
+  const path = `${pkg}/package.json`;
+  const json = require(path);
   const { version } = json;
-  const elemSubName = isInternal ? 'internal/' + pkg.replace(interanlRegex, "").replace("/", "") : pkg.substring(pkg.indexOf('auro-') + auroSubNameIndex);
+  const elemSubName = pkg.substring(pkg.indexOf('auro-') + auroSubNameIndex);
   
   const callerPath = fileURLToPath(import.meta.url);
   
