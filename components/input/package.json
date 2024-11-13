@@ -18,6 +18,25 @@
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-input"
   },
+  "dependencies": {
+    "@aurodesignsystem/auro-button": "^8.1.2",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@auro-formkit/build-tools": "workspace:*",
+    "@auro-formkit/config": "workspace:*",
+    "@auro-formkit/typescript": "workspace:*",
+    "@aurodesignsystem/design-tokens": "^4.9.2",
+    "@web/dev-server": "^0.4.6",
+    "@web/test-runner": "^0.19.0"
+  },
+  "peerDependencies": {
+    "@aurodesignsystem/design-tokens": "^4.9.2",
+    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "npm-run-all build:version build:sass build:js types",
     "dev": "concurrently --kill-others 'npm run build:watch' 'npm run serve'",
@@ -38,24 +57,5 @@
     "demo:copy": "npm-run-all demo:copy:*",
     "demo:copy:html": "copyfiles -u 1 './demo/index.html' ./build",
     "demo:copy:md": "copyfiles -u 1 './demo/index.md' ./build/demo"
-  },
-  "dependencies": {
-    "@aurodesignsystem/auro-button": "^8.1.2",
-    "lit": "^3.2.0"
-  },
-  "devDependencies": {
-    "@auro-formkit/build-tools": "workspace:*",
-    "@auro-formkit/config": "workspace:*",
-    "@auro-formkit/typescript": "workspace:*",
-    "@aurodesignsystem/design-tokens": "^4.9.2",
-    "@web/dev-server": "^0.4.6",
-    "@web/test-runner": "^0.19.0"
-  },
-  "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.9.2",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }
