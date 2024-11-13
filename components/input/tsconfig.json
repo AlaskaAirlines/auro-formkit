@@ -1,5 +1,5 @@
 {
-  "extends": "@auro-formkit/typescript/base.json",
+  "extends": "../../packages/typescript/base.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src"
