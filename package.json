@@ -19,7 +19,8 @@
     "node": "^18.x || ^20.x"
   },
   "workspaces": [
-    "components/*"
+    "components/*",
+    "packages/*"
   ],
   "packageManager": "npm@10.0.0",
   "scripts": {
