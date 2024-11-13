@@ -6,10 +6,10 @@
   "description": "Shared configurations for auro-formkit monorepo",
   "main": "index.js",
   "files": [
-    "rollup",
+    "commitlint",
     "eslint",
+    "rollup",
     "stylelint",
-    "tsconfig",
     "wtr"
   ],
   "scripts": {
