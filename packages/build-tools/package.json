@@ -1,5 +1,6 @@
 {
   "name": "@auro-formkit/build-tools",
+  "description": "Shared build tools for auro-formkit monorepo",
   "version": "0.0.0",
   "private": true,
   "type": "module",
