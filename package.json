@@ -12,6 +12,13 @@
   "engines": {
     "node": "^18.x || ^20.x"
   },
+<<<<<<< HEAD
+=======
+  "workspaces": [
+    "components/*",
+    "packages/*"
+  ],
+>>>>>>> 4c18a29 (Initial packages workspace integration)
   "packageManager": "npm@10.0.0",
   "workspaces": [
     "components/*",
