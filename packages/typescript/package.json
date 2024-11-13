@@ -1,0 +1,19 @@
+{
+  "name": "@auro-formkit/typescript",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf .turbo && rm -rf node_modules"
+  },
+  "peerDependencies": {
+    "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.2",
+    "@types/mocha": "^10.0.9",
+    "@types/chai": "^5.0.0"
+  },
+  "engines": {
+    "node": "^18.x || ^20.x"
+  }
+}
