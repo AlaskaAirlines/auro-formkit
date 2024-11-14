@@ -5,6 +5,13 @@
   "type": "module",
   "description": "Shared configurations for auro-formkit monorepo",
   "main": "index.js",
+  "exports": {
+    "./commitlint": "./commitlint/commitlint.config.cjs",
+    "./eslint": "./eslint/.eslint.config.mjs",
+    "./rollup": "./rollup/rollup.config.mjs",
+    "./stylelint": "./stylelint/.stylelintrc.config.json",
+    "./wtr": "./wtr/web-test-runner.config.mjs"
+  },
   "files": [
     "commitlint",
     "eslint",
