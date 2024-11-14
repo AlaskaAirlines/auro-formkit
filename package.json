@@ -9,20 +9,21 @@
   "name": "@aurodesignsystem/auro-formkit",
   "version": "0.0.0",
   "description": "Auro Form Components Kit",
+  "type": "module",
+  "private": false,
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AlaskaAirlines/auro-form"
+    "url": "https://github.com/AlaskaAirlines/auro-formkit"
   },
-  "private": false,
-  "type": "module",
   "engines": {
     "node": "^18.x || ^20.x"
   },
+  "packageManager": "npm@10.0.0",
   "workspaces": [
     "components/*",
     "packages/*"
   ],
-  "packageManager": "npm@10.0.0",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -30,10 +31,8 @@
     "test": "turbo run test",
     "clean": "turbo run clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    
     "postinstall": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postinstall.mjs",
     "build:docs": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
-    
     "sweep": "rm -rf dist && find ./components -not -path \"*/node_modules/*\" -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky install"
@@ -62,12 +61,9 @@
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@open-wc/testing": "^4.0.0",
-    "@rollup/plugin-node-resolve": "^15.3.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^12.0.1",
-    "@types/chai": "^5.0.0",
-    "@types/mocha": "^10.0.9",
     "@web/dev-server": "^0.4.6",
     "@web/test-runner": "^0.19.0",
     "autoprefixer": "^10.4.20",
@@ -110,6 +106,7 @@
     "wc-sass-render": {
       "sass": "$sass"
     }
+    "turbo": "^2.2.3"
   },
   "browserslist": [
     "last 2 Chrome versions",
