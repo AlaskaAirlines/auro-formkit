@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@aurodesignsystem/auro-button": "^8.1.3",
+    "@aurodesignsystem/auro-dropdown": "^3.2.0",
     "@aurodesignsystem/auro-formvalidation": "^1.0.4",
     "@aurodesignsystem/auro-icon": "^6.0.3",
     "@aurodesignsystem/auro-library": "^3.0.2",
@@ -263,7 +264,7 @@
     "build:dropdown:release": "npm-run-all build:dropdown:full build:test build:demo:dropdown",
     "build:menu:release": "npm-run-all build:menu:full build:test build:demo:menu",
     "sweep": "rm -rf dist && find ./demo ./src ./components -not -path \"*/node_modules/*\" -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
-    "test": "npm-run-all test:input test:dropdown test:form test:checkbox test:menu",
+    "test": "npm-run-all test:input test:dropdown test:form test:checkbox test:menu test:radio",
     "test:watch": "wtr --watch",
     "test:form": "wtr \"./components/form/test/**/*.test.js\" --coverage",
     "test:form:watch": "wtr \"./components/form/test/**/*.test.js\" --watch",
@@ -293,6 +294,28 @@
     "bundler:test": "rollup -c -w",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "postversion": "npm-run-all build:api build:docs",
-    "prepare": "husky install"
+    "prepare": "husky install",
+
+    "dev:select": "concurrently --kill-others \"npm run build:watch:select\" \"npm run serve:select\"",
+    "build:select": "npm-run-all build:version:select build:sass:select sass:render:select types",
+    "build:demo:select": "npm-run-all build:select demo:rm:build demo:new:build demo:copy:index:select demo:copy:demo:select demo:update:index",
+    "demo:copy:demo:select": "copyfiles -u 1 -V \"./components/select/src/demo/**/*\" ./build/demo",
+    "demo:copy:index:select": "copyfiles -u 1 -V \"./components/select/src/demo/index.html\" ./build",
+    "build:dev:assets:select": "npm-run-all build:sass:select postCss:select sass:render:select",
+    "build:docs:select": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
+    "build:sass:select": "sass --no-source-map --load-path=node_modules --load-path=. \"./components/select/src:./components/select/src\"",
+    "build:version:select": "cross-env npm_config_component=select node ./components/select/src/scripts/version.mjs",
+    "build:watch:select": "nodemon -e scss,js --watch \"./components/select/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:select\"",
+    "dist:js:select": "copyfiles -u 1 -V \"./components/select/src/**/*.js\" ./dist",
+    "postCss:select": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
+    "sass:render:select": "sass-render --load-path=node_modules \"./components/select/src/**/*.css\" -t ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "serve:select": "web-dev-server --open components/select/demo/ --node-resolve --watch --app-index \"./components/select/demo/index.html\"",
+    "build:select:full": "npm-run-all build:select build:api:select build:docs:select build:dev:assets:select",
+    "build:select:release": "npm-run-all build:select:full build:test build:demo:select",
+    "test:select": "wtr \"./components/select/test/**/*.test.js\" --coverage",
+    "test:select:watch": "wtr \"./components/select/test/**/*.test.js\" --watch",
+    "linters:select": "npm-run-all scssLint:select esLint:select",
+    "scssLint:select": "stylelint \"./components/select/**/*.scss\"",
+    "esLint:select": "eslint 'components/select/**/*.js'"
   }
 }
