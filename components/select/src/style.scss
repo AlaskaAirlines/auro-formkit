@@ -1,0 +1,67 @@
+// Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// Import Auro tokens
+@import './../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+@import './../node_modules/@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@import './../node_modules/@aurodesignsystem/webcorestylesheets/src/core';
+@import './../node_modules/@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+
+/* stylelint-disable selector-class-pattern */
+
+[slot='trigger'] {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+
+  .nestingSpacer {
+    display: none;
+  }
+}
+
+:host {
+  [auro-dropdown] {
+    position: relative;
+
+    &::part(trigger) {
+      min-height: var(--ds-size-500, $ds-size-500);
+      max-height: var(--ds-size-500, $ds-size-500);
+    }
+
+    &::part(popover) {
+      max-width: -webkit-fill-available;
+      overflow-y: scroll;
+    }
+  }
+}
+
+:host([disabled]) {
+  * {
+    user-select: none;
+  }
+}
+
+.outerWrapper {
+  position: relative;
+}
+
+auro-menuoption {
+  pointer-events: none;
+}
+
+.menuWrapper {
+  padding: var(--ds-size-50, $ds-size-50) 0;
+}
+
+.selectElement-helpText {
+  margin: var(--ds-size-50, $ds-size-50) 0;
+  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+  line-height: 1rem;
+}
