@@ -1,4 +1,4 @@
-import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, oneEvent, nextFrame } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-input', () => {
@@ -68,7 +68,8 @@ describe('auro-input', () => {
 
     const clearButton = el.shadowRoot.querySelector('.clearBtn');
     clearButton.click();
-    expect(el.value).to.be.undefined;
+    await elementUpdated();
+    expect(el.value).to.equal('');
   });
 
   it('flips hide-password bit', async () => {
@@ -183,6 +184,7 @@ describe('auro-input', () => {
     input.blur();
 
     await elementUpdated(el);
+    await nextFrame();
 
     expect(el.hasAttribute('validity')).to.be.true;
   });
