@@ -212,7 +212,7 @@
     "build:watch:input": "nodemon -e scss,js --watch \"./components/input/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:input\"",
     "build:watch:checkbox": "nodemon -e scss,js --watch \"./components/checkbox/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:checkbox\"",
     "build:watch:dropdown": "nodemon -e scss,js --watch \"./components/dropdown/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:dropdown\"",
-    "build:watch:menu": "nodemon -e scss,js --watch \"./components/dropdown/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:menu\"",
+    "build:watch:menu": "nodemon -e scss,js --watch \"./components/menu/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:menu\"",
     "dist:js": "copyfiles -u 1 -V './components/**/*.js' ./dist",
     "dist:js:form": "copyfiles -u 1 -V \"./components/form/src/**/*.js\" ./dist",
     "dist:js:input": "copyfiles -u 1 -V \"./components/input/src/**/*.js\" ./dist",
