@@ -1,0 +1,107 @@
+// Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+/* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before */
+
+@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+
+[auro-input] {
+  &::part(iconContainer) {
+    top: 0;
+
+    display: flex;
+    height: 100%;
+
+    align-items: center;
+  }
+
+  &::part(accentIcon) {
+    transition: all .3s cubic-bezier(.215, .61, .355, 1);
+  }
+
+  &::part(helpText) {
+    display: none;
+  }
+
+  &::part(wrapper) {
+    border-width: 0 !important;
+  }
+}
+
+.outerWrapper {
+  position: relative;
+}
+
+.datepickerElement-helpText {
+  margin: var(--ds-size-50, $ds-size-50) 0;
+  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+  line-height: 1rem;
+}
+
+.dpTriggerContent {
+  display: flex;
+  flex-direction: row;
+
+  [auro-input] {
+    flex: 1;
+
+    &:first-of-type {
+      margin-right: var(--ds-size-150, $ds-size-150);
+    }
+
+    &:nth-child(2) {
+      margin-left: var(--ds-size-150, $ds-size-150);
+
+      &::part(accentIcon) {
+        display: none;
+      }
+
+      &::part(label) {
+        left: 0;
+        width: 100%;
+      }
+
+      &::part(input) {
+        padding-left: 0;
+      }
+
+      &:before {
+        position: absolute;
+        top: 13px;
+        left: calc(var(--ds-size-150, $ds-size-150) * -1);
+        display: block;
+        width: 1px;
+        height: 2rem;
+        content: '';
+      }
+    }
+  }
+}
+
+:host([range]) {
+  [auro-input] {
+    max-width: 50%;
+  }
+}
+
+@include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+  ::part(popover) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin-bottom: var(--ds-size-200, $ds-size-200);
+    transform: unset !important;
+  }
+
+  .calendarWrapper {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
