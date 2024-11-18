@@ -20,7 +20,8 @@ export default [
     'components/**/apiExamples/**',
     'components/**/test/**',
     'components/**/demo/**',
-    'components/**/dist/**'
+    'components/**/dist/**',
+    "components/**/vendor/**"
     ]
 },
 ...compat.extends("@aurodesignsystem/eslint-config")

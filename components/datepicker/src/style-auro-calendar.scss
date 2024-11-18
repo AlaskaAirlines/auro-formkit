@@ -1,0 +1,190 @@
+// // Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// // See LICENSE in the project root for license information.
+
+// // ---------------------------------------------------------------------
+
+@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+/* stylelint-disable color-function-notation, at-rule-empty-line-before, order/properties-order, declaration-empty-line-before, declaration-block-no-duplicate-properties */
+
+:host {
+  --calendar-width: 336px;
+  --mobile-footer-height: 150px;
+  --mobile-header-height: 68px;
+
+  height: 100vh;
+  height: 100dvh; /* dvh = dynamic viewport height */
+
+  @include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+    width: 100%;
+  }
+}
+
+.calendarNavBtn {
+  display: flex;
+  width: var(--ds-size-500, $ds-size-500);
+  height: var(--ds-size-500, $ds-size-500);
+
+  align-items: center;
+  justify-content: center;
+
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+
+.prevMonth,
+.nextMonth {
+  position: absolute;
+  top: var(--ds-size-200, $ds-size-200);
+}
+
+.prevMonth {
+  left: var(--ds-size-50, $ds-size-50);
+}
+
+.nextMonth {
+  right: var(--ds-size-50, $ds-size-50);
+}
+
+.headerActions {
+  padding: 0 var(--ds-size-200, $ds-size-200);
+}
+
+.mobileHeader {
+  display: none;
+  width: 100%;
+  height: var(--mobile-header-height);
+  z-index: +1;
+
+  align-items: center;
+  flex-direction: row;
+}
+
+.headerDateFrom {
+  display: flex;
+  height: var(--mobile-header-height);
+
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 0 var(--ds-size-150, $ds-size-150) 0 var(--ds-size-200, $ds-size-200);
+}
+
+.mobileDateLabel {
+  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+}
+
+.headerDateTo {
+  height: calc(var(--mobile-header-height) - var(--ds-size-300, $ds-size-300));
+
+  padding: var(--ds-size-300, $ds-size-300) var(--ds-size-100, $ds-size-100) 0 var(--ds-size-200, $ds-size-200);
+}
+
+:host(:not([noRange])) {
+  .headerDateTo {
+    position: relative;
+
+    display: flex;
+
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+
+    &:after {
+      position: absolute;
+      top: calc(50% + 10px);
+      left: 0;
+
+      display: block;
+      width: 1px;
+      height: var(--ds-size-300, $ds-size-300);
+
+      content: '';
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.mobileFooter {
+  display: none;
+  width: 100%;
+
+  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.mobileFooterActions {
+  position: relative;
+  bottom: 0;
+  left: 50%;
+
+  display: none;
+  width: calc(100% - calc(var(--ds-size-200, $ds-size-200) * 2));
+
+  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  padding: var(--ds-size-150) calc(var(--ds-size-200, $ds-size-200));
+
+  transform: translateX(-50%);
+
+  auro-button {
+    width: 100%;
+  }
+}
+
+@include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+  .prevMonth,
+  .nextMonth {
+    display: none;
+  }
+
+  .mobileHeader,
+  .mobileFooter,
+  .mobileFooterActions {
+    display: flex;
+  }
+
+  .calendarWrapper {
+    display: flex;
+    height: 100%;
+
+    flex-direction: column;
+    overflow: auto hidden;
+  }
+
+  .calendars {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    align-items: center;
+    width: 100%;
+
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+
+    &:after {
+      display: block;
+      width: 100%;
+      height: var(--mobile-footer-height);
+
+      content: '';
+    }
+  }
+}
+
+@include auro_breakpoint($min: $ds-grid-breakpoint-sm) {
+  .calendars {
+    display: flex;
+
+    flex-direction: row;
+  }
+}
