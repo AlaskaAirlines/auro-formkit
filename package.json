@@ -12,6 +12,9 @@
   "type": "module",
   "private": false,
   "license": "Apache-2.0",
+  "exports": {
+    "./input": "./components/input/src/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-formkit"
@@ -53,6 +56,8 @@
   "peerDependencies": {
     "@aurodesignsystem/design-tokens": "^4.9.2",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+    "@aurodesignsystem/auro-library": "^2.10.1",
+    "lit": "^3.2.1"
   },
   "devDependencies": {
     "@aurodesignsystem/design-tokens": "^4.9.2",
