@@ -19,44 +19,64 @@
     "url": "https://github.com/AlaskaAirlines/auro-input"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-button": "^8.1.2",
-    "lit": "^3.2.0"
-  },
-  "devDependencies": {
-    "@auro-formkit/build-tools": "workspace:*",
-    "@auro-formkit/config": "workspace:*",
-    "@auro-formkit/typescript": "workspace:*",
-    "@aurodesignsystem/design-tokens": "^4.9.2",
-    "@web/dev-server": "^0.4.6",
-    "@web/test-runner": "^0.19.0"
+    "@aurodesignsystem/auro-button": "^8.1.3",
+    "@aurodesignsystem/auro-formvalidation": "^1.0.4",
+    "@aurodesignsystem/auro-icon": "^6.0.2",
+    "@aurodesignsystem/auro-library": "~2.8",
+    "chalk": "^5.3.0",
+    "cleave.js": "^1.6.0",
+    "lit": "^3.2.1"
   },
   "peerDependencies": {
+    "@alaskaairux/icons": "^4.43.0",
     "@aurodesignsystem/design-tokens": "^4.9.2",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+  },
+  "devDependencies": {
+    "@alaskaairux/icons": "^4.44.1",
+    "@aurodesignsystem/design-tokens": "^4.10.1",
+    "@aurodesignsystem/webcorestylesheets": "^5.1.2",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "backstopjs": "^6.3.25",
+    "concat": "^1.0.3",
+    "core-js": "^3.39.0",
+    "rollup": "^4.25.0",
+    "rollup-plugin-serve": "^2.0.3",
+    "sinon": "^19.0.2",
+    "wc-sass-render": "^1.4.0",
+    "web-component-analyzer": "^2.0.0",
+    "whatwg-fetch": "^3.6.20",
+    "yaml-lint": "^1.7.0"
+  },
+  "overrides": {
+    "wc-sass-render": {
+      "sass": "$sass"
+    }
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "*-css.js",
+      "*.css"
+    ]
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "npm-run-all build:version build:sass build:js types",
-    "dev": "concurrently --kill-others 'npm run build:watch' 'npm run serve'",
-    "test": "wtr --config @auro-formkit/config/wtr",
-    "lint": "npm-run-all lint:js lint:scss",
-    "commitlint": "commitlint --config @auro-formkit/config/commitlint",
-    "clean": "rm -rf dist build .turbo",
-    "build:js": "rollup -c @auro-formkit/config/rollup",
-    "build:sass": "sass --no-source-map --load-path=../../node_modules --load-path=. \"./src/styles:./dist/styles\"",
-    "build:version": "auro-form-version",
-    "build:watch": "nodemon -e scss,js --watch src --exec npm run build:sass",
-    "lint:js": "eslint . --config @auro-formkit/config/eslint",
-    "lint:scss": "stylelint \"**/*.scss\" --config @auro-formkit/config/stylelint",
-    "test:watch": "wtr --watch",
+    "build": "npm-run-all build:version build:sass sass:render bundler types",
+    "build:sass": "npm-run-all build:sass:component postCss:component sass:render",
+    "build:sass:component": "sass --no-source-map src:src",
+    "build:version": "node ./src/scripts/version.mjs",
+    "build:watch": "nodemon -e scss,js --watch src --exec npm run build:dev:assets",
+    "build:dev:assets": "npm-run-all build:sass:component postCss:component sass:render",
+    "bundler": "rollup -c",
+    "postCss:component": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
+    "sass:render": "sass-render 'src/**/*.css' 'components/**/*.css' -t node ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "serve": "web-dev-server --open demo/ --node-resolve --watch",
-    "build:demo": "npm-run-all demo:clean demo:mkdir demo:copy",
-    "demo:clean": "rm -rf ./build",
-    "demo:mkdir": "mkdir -p ./build/css ./build/demo",
-    "demo:copy": "npm-run-all demo:copy:*",
-    "demo:copy:html": "copyfiles -u 1 './demo/index.html' ./build",
-    "demo:copy:md": "copyfiles -u 1 './demo/index.md' ./build/demo"
+    "types": "tsc",
+    "vrt:approve": "backstop approve",
+    "vrt:ref": "backstop reference",
+    "vrt:report": "backstop openReport",
+    "vrt:test": "backstop test"
   }
 }
