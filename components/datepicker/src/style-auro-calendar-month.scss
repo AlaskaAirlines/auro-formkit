@@ -1,0 +1,141 @@
+// Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// Import Auro tokens
+@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@import '@aurodesignsystem/webcorestylesheets/src/core';
+
+/* stylelint-disable selector-class-pattern, property-no-vendor-prefix, order/properties-order, no-descending-specificity, color-function-notation, max-line-length, declaration-empty-line-before */
+
+$calendar-width: 336px;
+$calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
+
+:host {
+  position: relative;
+
+  display: block;
+  width: calc(100% - var(--ds-size-200, $ds-size-200) - var(--ds-size-200, $ds-size-200));
+
+  margin: 0 var(--ds-size-200, $ds-size-200);
+
+  @include auro_grid-breakpoint--sm {
+    width: $calendar-width;
+
+    padding: $calendar-padding-desktop;
+  }
+}
+
+:host(:not(:last-of-type)) {
+  @include auro_grid-breakpoint--sm {
+    &:after {
+      position: absolute;
+
+      top: $calendar-padding-desktop;
+      right: calc(-1 * var(--ds-size-200, $ds-size-200));
+
+      height: calc(100% - $calendar-padding-desktop - $calendar-padding-desktop);
+
+      display: block;
+      width: 1px;
+
+      content: '';
+    }
+  }
+}
+
+.header {
+  $header-padding: calc(var(--ds-size-100, $ds-size-100) + var(--ds-size-50, $ds-size-50) + var(--ds-size-25, $ds-size-25));
+  display: flex;
+
+  align-items: center;
+  flex-direction: row;
+
+  padding: $header-padding 0 $header-padding;
+
+  text-align: center;
+}
+
+.headerTitle {
+  display: flex;
+
+  align-items: center;
+  flex: 1;
+  flex-direction: row;
+  justify-content: center;
+
+  font-size: var(--ds-text-heading-400-size, $ds-text-heading-400-size);
+  font-weight: var(--ds-text-heading-400-weight, $ds-text-heading-400-weight);
+  line-height: var(--ds-text-heading-400-height, $ds-text-heading-400-height);
+
+  div {
+    &:first-child {
+      margin-right: var(--ds-size-100, $ds-size-100);
+    }
+  }
+}
+
+.calendarNavBtn {
+  position: relative;
+
+  display: flex;
+  width: var(--ds-size-500, $ds-size-500);
+  height: var(--ds-size-500, $ds-size-500);
+
+  align-items: center;
+  justify-content: center;
+
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+
+.table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.thead {
+  margin-bottom: var(--ds-size-100, $ds-size-100);
+}
+
+.th {
+  display: flex;
+  flex: 1;
+
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 700;
+}
+
+.tbody {
+  width: 100%;
+
+  transition: all 0ms;
+  transform: translateX(0);
+  
+  @include auro_grid-breakpoint--sm {
+    height: 384px; // height is fixed to always leave room for months spanning 6 rows
+  }
+}
+
+.td {
+  flex: 1;
+
+  margin: 0;
+  padding: 0;
+}
+
+.tr {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+}
