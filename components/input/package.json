@@ -32,6 +32,9 @@
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
   "devDependencies": {
+    "@auro-formkit/build-tools": "workspace:*",
+    "@auro-formkit/config": "workspace:*",
+    "@auro-formkit/typescript": "workspace:*",
     "@alaskaairux/icons": "^4.44.1",
     "@aurodesignsystem/design-tokens": "^4.10.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
