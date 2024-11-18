@@ -15,6 +15,7 @@ const auroSubNameIndex = 5;
  */
 export function writeDepVersionFile(pkg) {
   const path = `${pkg}/package.json`;
+  console.log(path);
   const json = require(path);
   const { version } = json;
   const elemSubName = pkg.substring(pkg.indexOf('auro-') + auroSubNameIndex);
