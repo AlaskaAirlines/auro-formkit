@@ -20,6 +20,7 @@
     "lit": "^3.2.1"
   },
   "peerDependencies": {
+    "@alaskaairux/icons": "^4.43.0",
     "@aurodesignsystem/design-tokens": "^4.9.2",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
