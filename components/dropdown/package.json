@@ -16,30 +16,45 @@
   "type": "module",
   "main": "index.js",
   "module": "index.js",
-  "types": "index.d.ts",
+  "types": "tsc",
   "license": "Apache-2.0",
+  "dependencies": {
+    "@aurodesignsystem/auro-icon": "^5.0.0",
+    "@popperjs/core": "^2.11.8",
+    "chalk": "^5.2.0"
+  },
+  "peerDependencies": {
+    "@aurodesignsystem/design-tokens": "^4.9.2",
+    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+  },
+  "devDependencies": {
+    "@aurodesignsystem/auro-library": "^2.8.0",
+    "@aurodesignsystem/design-tokens": "^4.9.2",
+    "@aurodesignsystem/webcorestylesheets": "^5.1.2",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "concurrently": "^9.0.1",
+    "npm-run-all": "^4.1.5",
+    "postcss-selector-replace": "^1.0.2",
+    "rollup": "^4.22.4",
+    "rollup-plugin-serve": "^2.0.2",
+    "wc-sass-render": "^1.4.0",
+    "web-component-analyzer": "^2.0.0",
+    "whatwg-fetch": "^3.6.20",
+    "yaml-lint": "^1.7.0"
+  },
   "scripts": {
     "build": "npm-run-all build:version build:sass postCss:component sass:render bundler types",
-    "build:version": "node ./scripts/version.mjs",
-    "build:sass": "sass --no-source-map --load-path=node_modules --load-path=../../ \"./src:./src\"",
+    "build:version": "node ./src/scripts/version.mjs",
+    "build:sass": "sass --no-source-map --load-path=node_modules \"./src:./src\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
     "bundler": "rollup -c",
     "clean": "rm -rf dist build",
     "dev": "concurrently --kill-others \"npm run build:watch\" \"npm run serve\"",
-    "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
-    "sass:render": "sass-render --load-path=node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "postCss:component": "node @aurodesignsystem/auro-library/scripts/build/postCss.mjs",
+    "sass:render": "sass-render --load-path=node_modules 'src/**/*.css' -t @aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "serve": "web-dev-server --open demo/ --node-resolve --watch",
     "test": "wtr --coverage",
     "test:watch": "wtr --watch",
     "types": "tsc"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "keywords": [
-    "alaska airlines",
-    "auro",
-    "design system",
-    "web components"
-  ]
+  }
 }
