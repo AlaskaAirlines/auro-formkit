@@ -149,7 +149,7 @@
   ],
   "scripts": {
     "dev": "npm run dev:input",
-    "build": "npm-run-all build:form build:input build:dropdown build:checkbox build:menu build:radio build:select build:sass sass:render bundler types",
+    "build": "npm-run-all build:form build:input build:dropdown build:checkbox build:menu build:radio build:select build:combobox build:sass sass:render bundler types",
     "build:test": "npm-run-all test linters",
     "build:release": "npm-run-all build build:test build:api build:docs bundler postinstall",
     "build:ci": "npm-run-all sweep build:release",
@@ -264,7 +264,7 @@
     "build:dropdown:release": "npm-run-all build:dropdown:full build:test build:demo:dropdown",
     "build:menu:release": "npm-run-all build:menu:full build:test build:demo:menu",
     "sweep": "rm -rf dist && find ./demo ./src ./components -not -path \"*/node_modules/*\" -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
-    "test": "npm-run-all test:input test:dropdown test:form test:checkbox test:menu test:radio test:select",
+    "test": "npm-run-all test:input test:dropdown test:form test:checkbox test:menu test:radio test:select test:combobox",
     "test:watch": "wtr --watch",
     "test:form": "wtr \"./components/form/test/**/*.test.js\" --coverage",
     "test:form:watch": "wtr \"./components/form/test/**/*.test.js\" --watch",
@@ -295,6 +295,7 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "postversion": "npm-run-all build:api build:docs",
     "prepare": "husky install",
+    
     "dev:select": "concurrently --kill-others \"npm run build:watch:select\" \"npm run serve:select\"",
     "build:select": "npm-run-all build:version:select build:sass:select sass:render:select types",
     "build:demo:select": "npm-run-all build:select demo:rm:build demo:new:build demo:copy:index:select demo:copy:demo:select demo:update:index",
@@ -315,6 +316,28 @@
     "test:select:watch": "wtr \"./components/select/test/**/*.test.js\" --watch",
     "linters:select": "npm-run-all scssLint:select esLint:select",
     "scssLint:select": "stylelint \"./components/select/**/*.scss\"",
-    "esLint:select": "eslint 'components/select/**/*.js'"
+    "esLint:select": "eslint 'components/select/**/*.js'",
+
+    "dev:combobox": "concurrently --kill-others \"npm run build:watch:combobox\" \"npm run serve:combobox\"",
+    "build:combobox": "npm-run-all build:version:combobox build:sass:combobox sass:render:combobox types",
+    "build:demo:combobox": "npm-run-all build:combobox demo:rm:build demo:new:build demo:copy:index:combobox demo:copy:demo:combobox demo:update:index",
+    "demo:copy:demo:combobox": "copyfiles -u 1 -V \"./components/combobox/src/demo/**/*\" ./build/demo",
+    "demo:copy:index:combobox": "copyfiles -u 1 -V \"./components/combobox/src/demo/index.html\" ./build",
+    "build:dev:assets:combobox": "npm-run-all build:sass:combobox postCss:combobox sass:render:combobox",
+    "build:docs:combobox": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
+    "build:sass:combobox": "sass --no-source-map --load-path=node_modules --load-path=. \"./components/combobox/src:./components/combobox/src\"",
+    "build:version:combobox": "cross-env npm_config_component=combobox node ./components/combobox/src/scripts/version.mjs",
+    "build:watch:combobox": "nodemon -e scss,js --watch \"./components/combobox/src\" --ignore \"*.css\" --ignore \"*-css.js\" --ignore \"*.version.js\" --ignore \"*Version.js\" --exec \"npm run build:combobox\"",
+    "dist:js:combobox": "copyfiles -u 1 -V \"./components/combobox/src/**/*.js\" ./dist",
+    "postCss:combobox": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
+    "sass:render:combobox": "sass-render --load-path=node_modules \"./components/combobox/src/**/*.css\" -t ./node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "serve:combobox": "web-dev-server --open components/combobox/demo/ --node-resolve --watch --app-index \"./components/combobox/demo/index.html\"",
+    "build:combobox:full": "npm-run-all build:combobox build:api:combobox build:docs:combobox build:dev:assets:combobox",
+    "build:combobox:release": "npm-run-all build:combobox:full build:test build:demo:combobox",
+    "test:combobox": "wtr \"./components/combobox/test/**/*.test.js\" --coverage",
+    "test:combobox:watch": "wtr \"./components/combobox/test/**/*.test.js\" --watch",
+    "linters:combobox": "npm-run-all scssLint:combobox esLint:combobox",
+    "scssLint:combobox": "stylelint \"./components/combobox/**/*.scss\"",
+    "esLint:combobox": "eslint 'components/combobox/**/*.js'"
   }
 }
