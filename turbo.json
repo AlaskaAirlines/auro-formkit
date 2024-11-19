@@ -3,18 +3,44 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "build:sass"],
-      "outputs": ["dist/**"]
+      "dependsOn": ["^build", "build:sass", "build:version", "postCss:component", "sass:render", "bundler", "types"],
+      "outputs": [
+        "dist/**",
+        "build/**",
+        "src/**/*.css",
+        "*-css.js"
+      ]
+    },
+    "build:version": {
+      "outputs": ["src/version.js"]
     },
     "build:sass": {
       "outputs": ["src/**/*.css"],
       "inputs": ["src/**/*.scss"]
+    },
+    "postCss:component": {
+      "dependsOn": ["build:sass"],
+      "inputs": ["src/**/*.css"],
+      "outputs": ["src/**/*.css"]
+    },
+    "sass:render": {
+      "dependsOn": ["postCss:component"],
+      "inputs": ["src/**/*.css"],
+      "outputs": ["*-css.js"]
+    },
+    "bundler": {
+      "dependsOn": ["sass:render"],
+      "outputs": ["dist/**"]
+    },
+    "types": {
+      "outputs": ["tsc/**"]
     },
     "build:watch": {
       "dependsOn": ["^build"],
       "persistent": true
     },
     "dev": {
+      "dependsOn": ["build"],
       "cache": false,
       "persistent": true
     },
