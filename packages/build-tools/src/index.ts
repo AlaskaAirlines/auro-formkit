@@ -1,1 +1,0 @@
-export { writeDepVersionFile } from './formVersionWriter';
