@@ -29,9 +29,9 @@
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
   "devDependencies": {
-    "@auro-formkit/build-tools": "workspace:*",
-    "@auro-formkit/config": "workspace:*",
-    "@auro-formkit/typescript": "workspace:*",
+    "@auro-formkit/build-tools": "*",
+    "@auro-formkit/config": "*",
+    "@auro-formkit/typescript": "*",
     "@aurodesignsystem/design-tokens": "^4.9.2",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
