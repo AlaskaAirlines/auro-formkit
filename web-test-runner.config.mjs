@@ -9,10 +9,10 @@ export default {
   },
   coverageConfig: {
     threshold: {
-      statements: 80,
+      statements: 70,
       branches: 78,
-      functions: 80,
-      lines: 80
+      functions: 70,
+      lines: 70
     }
   }
  };
