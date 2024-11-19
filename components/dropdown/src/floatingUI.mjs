@@ -1,6 +1,6 @@
 /* eslint-disable line-comment-position, no-inline-comments */
 
-import {autoUpdate, computePosition, offset, autoPlacement, flip} from '@floating-ui/dom';
+import { autoUpdate, computePosition, offset, autoPlacement, flip } from '@floating-ui/dom';
 
 export default class AuroFloatingUI {
   constructor() {
@@ -131,6 +131,8 @@ export default class AuroFloatingUI {
     if (!this.element.disabled && !this.element.isPopoverVisible) {
       this.updateCurrentExpandedDropdown();
       this.element.isPopoverVisible = true;
+      this.element.triggerChevron?.setAttribute('data-expanded', true);
+      this.dispatchEventDropdownToggle();
       this.position();
       
       // Clean up any existing handlers before setting up new ones
@@ -147,7 +149,24 @@ export default class AuroFloatingUI {
   hideBib() {
     if (this.element.isPopoverVisible && !this.element.disabled && !this.element.noToggle) {
       this.element.isPopoverVisible = false;
+      this.element.triggerChevron?.removeAttribute('data-expanded');
+      this.dispatchEventDropdownToggle();
     }
+  }
+
+  /**
+   * @private
+   * @returns {void} Dispatches event with an object showing the state of the dropdown.
+   */
+  dispatchEventDropdownToggle() {
+    const event = new CustomEvent('auroDropdown-toggled', {
+      detail: {
+        expanded: this.isPopoverVisible,
+      },
+      composed: true
+    });
+
+    this.element.dispatchEvent(event);
   }
 
   handleClick() {
@@ -221,22 +240,20 @@ export default class AuroFloatingUI {
       'auro-input',
       'auro-hyperlink'
     ];
+
     const triggerNode = this.element.querySelectorAll('[slot="trigger"]')[0];
     const triggerNodeTagName = triggerNode.tagName.toLowerCase();
 
     focusableElementSelectors.forEach((selector) => {
       // Check if the trigger node element is focusable
       if (triggerNodeTagName === selector) {
-        triggerNode.tabIndex = -1;
+        this.element.tabIndex = -1;
         return;
       }
 
       // Check if any child is focusable
-      const nestedFocusableElements = triggerNode.querySelectorAll(selector);
-      if (nestedFocusableElements) {
-        nestedFocusableElements.forEach((nestedFocusableElement) => {
-          nestedFocusableElement.tabIndex = -1;
-        });
+      if (triggerNode.querySelector(selector)) {
+        this.element.tabIndex = -1;
       }
     });
   }
@@ -245,6 +262,7 @@ export default class AuroFloatingUI {
     this.element = elem;
     this.element.trigger = this.element.shadowRoot.querySelector('#trigger');
     this.element.bib = this.element.shadowRoot.querySelector('#bib');
+    this.element.triggerChevron = this.element.shadowRoot.querySelector('#showStateIcon');
 
     // @TODO: Don't hardcode values
     this.element.bib.style.display = 'none';

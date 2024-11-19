@@ -1,35 +1,8 @@
-import { fixture, html, expect, oneEvent } from '@open-wc/testing';
+import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
 import '../src/auro-dropdown.js';
 
-/* @TODO: remove, this is just a placeholder */
-describe('auro-dropdown', () => {
-  it('passes coverage requirements', async () => {
-    const el = await fixture(html`
-      <auro-dropdown chevron>
-        <span slot="label">Label</span>
-        <button slot="trigger">Trigger</button>
-      </auro-dropdown>
-    `);
-
-    await el.show();
-    await el.hide();
-    el.click();
-  });
-
-  it('handles keyboard events', async () => {
-    const el = await fixture(html`
-      <auro-dropdown>
-        <button slot="trigger">Trigger</button>
-      </auro-dropdown>
-    `);
-
-    const trigger = el.shadowRoot.querySelector('#trigger');
-    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
-  });
-});
-
 /* @TODO: remove skip, and continue writing test*/
-describe.skip('auro-dropdown', () => {
+describe('auro-dropdown', () => {
   it('auro-dropdown is accessible', async () => {
     const el = await fixture(html`
       <auro-dropdown>
@@ -55,7 +28,7 @@ describe.skip('auro-dropdown', () => {
 
     const chevronEl = el.shadowRoot.querySelector('#showStateIcon');
     expect(chevronEl).to.be.visible;
-  })
+  });
 
   it('auro-dropdown with non-focusable trigger', async () => {
     const el = await fixture(html`
@@ -65,7 +38,7 @@ describe.skip('auro-dropdown', () => {
     `);
 
     await expect (el.shadowRoot.querySelector('#trigger').getAttribute('tabindex')).to.equal('0');
-  })
+  });
 
   it('auro-dropdown with focusable trigger', async () => {
     const el = await fixture(html`
@@ -75,7 +48,7 @@ describe.skip('auro-dropdown', () => {
     `);
 
     await expect (el.shadowRoot.querySelector('#trigger').getAttribute('tabindex')).to.equal('-1');
-  })
+  });
 
   it('auro-dropdown with focusable trigger child element', async () => {
     const el = await fixture(html`
@@ -87,7 +60,7 @@ describe.skip('auro-dropdown', () => {
     `);
 
     await expect (el.shadowRoot.querySelector('#trigger').getAttribute('tabindex')).to.equal('-1');
-  })
+  });
 
   it('auro-dropdown aria rules with label slot content', async () => {
     const el = await fixture(html`
@@ -102,7 +75,7 @@ describe.skip('auro-dropdown', () => {
     const triggerEl = el.shadowRoot.querySelector('.trigger');
     expect(triggerEl).to.have.attribute('aria-labelledby', 'triggerLabel');
     expect(triggerEl).to.have.attribute('aria-controls', 'popover');
-  })
+  });
 
   it('auro-dropdown shows only with click when using noToggle attribute', async () => {
     const el = await fixture(html`
@@ -119,7 +92,7 @@ describe.skip('auro-dropdown', () => {
 
     trigger.click();
     expectPopoverShown(el);
-  })
+  });
 
   it('auro-dropdown toggle with click', async () => {
     const el = await fixture(html`
@@ -136,7 +109,7 @@ describe.skip('auro-dropdown', () => {
 
     trigger.click();
     expectPopoverHidden(el);
-  })
+  });
 
   it('auro-dropdown programmatically hide', async () => {
     const el = await fixture(html`
@@ -157,7 +130,7 @@ describe.skip('auro-dropdown', () => {
     el.hide();
     expectPopoverHidden(el);
     expect(chevron).to.not.have.attribute('data-expanded');
-  })
+  });
 
   it('auro-dropdown fires event - auroDropdown-triggerClick', async () => {
     const el = await fixture(html`
@@ -174,7 +147,7 @@ describe.skip('auro-dropdown', () => {
     const { result } = await listener;
 
     expect(result).to.equal(undefined);
-  })
+  });
 
   it('auro-dropdown fires event - auroDropdown-toggled', async () => {
     const el = await fixture(html`
@@ -195,7 +168,7 @@ describe.skip('auro-dropdown', () => {
     trigger.click();
 
     expect(result).to.equal(undefined);
-  })
+  });
 
   it('auro-dropdown toggles with spacebar', async () => {
     const el = await fixture(html`
@@ -211,7 +184,7 @@ describe.skip('auro-dropdown', () => {
     }));
 
     expectPopoverShown(el);
-  })
+  });
 
   it('auro-dropdown toggles with enter key', async () => {
     const el = await fixture(html`
@@ -223,11 +196,11 @@ describe.skip('auro-dropdown', () => {
     const trigger = el.shadowRoot.querySelector('#trigger');
 
     trigger.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'enter'
+      'key': 'Enter'
     }));
 
     expectPopoverShown(el);
-  })
+  });
 
   it('auro-dropdown shows with spacebar', async () => {
     const el = await fixture(html`
@@ -243,7 +216,7 @@ describe.skip('auro-dropdown', () => {
     }));
 
     expectPopoverShown(el);
-  })
+  });
 
   it('auro-dropdown shows with enter key', async () => {
     const el = await fixture(html`
@@ -255,15 +228,15 @@ describe.skip('auro-dropdown', () => {
     const trigger = el.shadowRoot.querySelector('#trigger');
 
     trigger.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'enter'
+      'key': 'Enter'
     }));
 
     expectPopoverShown(el);
-  })
+  });
 
   it('auro-dropdown hides with esc key', async () => {
     const el = await fixture(html`
-      <auro-dropdown toggle>
+      <auro-dropdown>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -274,18 +247,18 @@ describe.skip('auro-dropdown', () => {
 
     expectPopoverShown(el);
 
-    trigger.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'escape'
+    document.dispatchEvent(new KeyboardEvent('keydown', {
+      'key': 'Escape'
     }));
 
     expectPopoverHidden(el);
-  })
+  });
 });
 
 function expectPopoverShown(el) {
-  expect(el.hasAttribute('data-show')).to.equal(true);
+  expect(el.isPopoverVisible).to.equal(true);
 }
 
 function expectPopoverHidden(el) {
-  expect(el.hasAttribute('data-show')).to.equal(false);
+  expect(el.isPopoverVisible).to.equal(false);
 }

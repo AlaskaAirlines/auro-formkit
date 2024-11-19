@@ -3,12 +3,11 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit-a11y/accessible-name */
+/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions,
+arrow-body-style, no-extra-parens, block-spacing, brace-style, curly, template-curly-spacing */
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
-// import Popover from "../lib/popover";
-// import {computePosition, detectOverflow, autoUpdate, offset, autoPlacement, flip, shift, limitShift} from '@floating-ui/dom';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFloatingUI from './floatingUI.mjs';
@@ -22,16 +21,11 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import { AuroDropdownBib } from './auro-dropdownBib.js';
-
-// default internal definition
-if (!customElements.get("auro-dropdownbib")) {
-  customElements.define("auro-dropdownbib", AuroDropdownBib);
-}
-
+import './auro-dropdownBib.js';
 
 /**
  * @attr { Boolean } bordered - If declared, applies a border around the trigger slot.
+ * @attr { Boolean } common - If declared, the dropdown will be styled with the common theme.
  * @attr { Boolean } chevron - If declared, the dropdown displays an display state chevron on the right.
  * @attr { Boolean } disabled - If declared, the dropdown is not interactive.
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
@@ -53,7 +47,6 @@ if (!customElements.get("auro-dropdownbib")) {
  * @csspart helpText - The helpText content container.
  * @csspart popover - The bib content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
- * @event dropdownToggled - (DEPRECATED) Notifies that the visibility of the dropdown bib has changed.
  * @event auroDropdown-ready - Notifies that the component has finished initializing.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
  */
@@ -64,9 +57,6 @@ export class AuroDropdown extends LitElement {
     this.isPopoverVisible = false;
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
-
-    // this.trigger = undefined;
-    // this.tooltip = undefined;
 
     this.privateDefaults();
   }
@@ -132,7 +122,6 @@ export class AuroDropdown extends LitElement {
 
   // function to define props used within the scope of this component
   static get properties() {
-
     return {
       bordered: {
         type: Boolean,
@@ -167,6 +156,10 @@ export class AuroDropdown extends LitElement {
         reflect: true
       },
       rounded: {
+        type: Boolean,
+        reflect: true
+      },
+      common: {
         type: Boolean,
         reflect: true
       },
@@ -218,39 +211,6 @@ export class AuroDropdown extends LitElement {
     super.disconnectedCallback();
   }
 
-  // handleTriggerTabIndex() {
-  // const triggerSlotContentRoot = this.querySelector('[slot="trigger"');
-
-  // // Don't overwrite any tabindex coded directly into the slotted trigger content
-  // if (!triggerSlotContentRoot.getAttribute('tabindex')) {
-  //   const focusableElementSelectors = [
-  //     'a',
-  //     'button',
-  //     'input:not([type="hidden])',
-  //     'select',
-  //     'textarea',
-  //     '[tabindex]:not([tabindex="-1"])',
-  //     'auro-button',
-  //     'auro-input',
-  //     'auro-hyperlink'
-  //   ];
-
-  //   focusableElementSelectors.forEach((selector) => {
-  //     // check if the trigger root element itself is focusable
-  //     if (triggerSlotContentRoot.matches(selector)) {
-  //       this.tabIndex = -1;
-
-  //       return;
-  //     }
-
-  //     // check if any child content is focusable
-  //     if (triggerSlotContentRoot.querySelector(selector)) {
-  //       this.tabIndex = -1;
-  //     }
-  //   });
-  // }
-  // }
-
   updated(changedProperties) {
     this.floater.handleUpdate(changedProperties);
   }
@@ -261,100 +221,43 @@ export class AuroDropdown extends LitElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
 
-    // this.fixWidth();
-
-    // this.trigger = this.shadowRoot.querySelector(`#trigger`);
-
-    // this.triggerChevron = this.shadowRoot.querySelector(`#showStateIcon`);
-
-    // this.auroPopover = this.shadowRoot.querySelector('#popover');
-
-    // const hideByKeyboard = (event) => {
-    //   const key = event.key.toLowerCase();
-
-    //   if (key === 'escape') {
-    //     this.toggleHide();
-    //   }
-    // };
-
-    // const showByKeyboard = (event) => {
-    //   const key = event.key.toLowerCase();
-    //   if (key === ' ' || key === 'enter') {
-    //     event.preventDefault();
-    //     handleShow();
-    //   }
-    // };
-
-    // const toggleByKeyboard = (event) => {
-    //   const key = event.key.toLowerCase();
-
-    //   if (key === ' ' || key === 'enter') {
-    //     event.preventDefault();
-    //     toggleDropdown(); /* eslint-disable-line no-unused-expressions */
-    //   }
-    // };
-
-    // const notifyTriggerClicked = () => {
-    //   const event = new CustomEvent('auroDropdown-triggerClick', {
-    //     composed: true
-    //   });
-
-    //   this.dispatchEvent(event);
-    // };
-
-    // // this.trigger.addEventListener('keydown', hideByKeyboard);
-    // // this.auroPopover.addEventListener('keydown', hideByKeyboard);
-
     this.bibContent = this.shadowRoot.querySelector('auro-dropdownbib');
 
     document.body.append(this.bibContent);
+
+    this.notifyReady();
   }
 
-  // /**
-  //  * @private
-  //  * @returns {void} Dispatches event with an object showing the state of the dropdown.
-  //  */
-  // dispatchEventDropdownToggle() {
-  //   const eventDeprecated = new CustomEvent('dropdownToggled', {
-  //     detail: {
-  //       expanded: this.isPopoverVisible,
-  //     },
-  //     composed: true
-  //   });
+  /**
+   * Marks the component as ready and sends event.
+   * @private
+   * @returns {void}
+   */
+  notifyReady() {
+    this.ready = true;
 
-  //   this.dispatchEvent(eventDeprecated);
+    this.dispatchEvent(new CustomEvent('auroDropdown-ready', {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+    }));
+  }
 
-  //   const event = new CustomEvent('auroDropdown-toggled', {
-  //     detail: {
-  //       expanded: this.isPopoverVisible,
-  //     },
-  //     composed: true
-  //   });
+  /**
+   * Exposes CSS parts for styling from parent components.
+   * @private
+   * @returns {void}
+   */
+  exposeCssParts() {
+    this.setAttribute('exportparts', 'trigger:dropdownTrigger, chevron:dropdownChevron, helpText:dropdownHelpText, popover:dropdownPopover');
+  }
 
-  //   this.dispatchEvent(event);
-  // }
-
-  // applyBibContentFunctionality(bibElem) {
-  //   console.warn('bibElem ----- ', bibElem);
-
-  //   this.testInput = bibElem.querySelector('#testInput');
-
-  //   this.testInput.addEventListener('input', () => {
-  //     console.info('input value changed', this.testInput.value);
-  //   });
-
-
-  //   // console.info(bibElem);
-  //   this.testInput2 = bibElem.querySelector('#testInputTwo');
-
-  //   console.info('this.testInput2', this.testInput2);
-
-  //   this.testInput2.addEventListener('input', () => {
-  //     console.info('input 2 value changed', this.testInput2.value);
-  //   });
-
-  // }
-
+  /**
+   * Determines if content is within a custom slot.
+   * @private
+   * @param {HTMLElement} element - The element to check.
+   * @returns {Boolean}
+   */
   isCustomSlotContent(element) {
     let path = []; // eslint-disable-line prefer-const
     let currentElement = element;
@@ -373,8 +276,17 @@ export class AuroDropdown extends LitElement {
     return inCustomSlot;
   }
 
+  /**
+   * Handles the default slot content.
+   * @private
+   * @returns {void}
+   */
   handleDefaultSlot() {
-    const allSlotContent = this.querySelectorAll(':not([slot])');
+    const allSlotContent = Array.from(this.childNodes).filter((node) => {
+      // Include text nodes and elements without a slot attribute
+      return node.nodeType === Node.TEXT_NODE || (node.nodeType === Node.ELEMENT_NODE && !node.hasAttribute('slot'));
+    });
+
     this.defaultSlotContent = [];
 
     allSlotContent.forEach((item) => {
@@ -394,25 +306,56 @@ export class AuroDropdown extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
-
     return html`
       <div>
         <div
           id="trigger"
+          class="trigger"
+          part="trigger"
+          role="button"
+          aria-labelledby="triggerLabel"
+          aria-controls="popover"
           tabindex="${this.tabIndex}"
-          aria-describedby="tooltip">
-          <slot name="trigger"></slot>
+          >
+          <div class="triggerContentWrapper">
+            <label class="label" id="triggerLabel">
+              <slot name="label"></slot>
+            </label>
+            <div class="triggerContent">
+              <slot
+                name="trigger"
+                @slotchange="${() => {if (this.ready) this.floater.handleTriggerTabIndex(); }}"></slot>
+            </div>
+          </div>
+          ${this.chevron || this.common ? html`
+              <div
+                id="showStateIcon"
+                part="chevron">
+                <${this.iconTag}
+                  category="interface"
+                  name="chevron-down"
+                  customColor
+                  ?disabled=${this.disabled}
+                  >
+                </${this.iconTag}>
+              </div>
+            ` : undefined }
         </div>
         <div
           class="helpText"
           part="helpText">
           <slot name="helpText"></slot>
-      </div>
-      <div class="slotContent">
-        <slot @slotchange="${this.handleDefaultSlot}"></slot>
-      </div>
-      <auro-dropdownbib id="bib" role="tooltip">
-      </auro-dropdownbib>
+        </div>
+        <div class="slotContent">
+          <slot @slotchange="${this.handleDefaultSlot}"></slot>
+        </div>
+        <auro-dropdownbib
+          id="bib"
+          role="tooltip"
+          ?common="${this.common}"
+          ?rounded="${this.common || this.rounded}"
+          ?inset="${this.common || this.inset}">
+        </auro-dropdownbib>
       </div>
     `;
   }

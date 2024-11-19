@@ -7,13 +7,6 @@
 
 /* stylelint-disable no-descending-specificity, declaration-empty-line-before */
 
-.popover {
-  border-color: var(--ds-auro-dropdown-popover-border-color);
-  background-color: var(--ds-auro-dropdown-popover-container-color);
-  box-shadow: -2px 0 5px 2px rgba(0 0 0 / .08), 0 2px 5px 1px rgba(0 0 0 / .08);
-  color: var(--ds-auro-dropdown-popover-text-color);
-}
-
 .label {
   color: var(--ds-auro-dropdown-label-text-color);
 }
@@ -30,9 +23,13 @@
 
   &:focus-within {
     &:not(:active) {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-ui-default-default, #{$ds-color-ui-default-default});
-      box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      box-shadow: inset 0 0 0 1px var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
     }
+  }
+
+  &:hover {
+    --ds-auro-dropdown-trigger-container-color: var(--ds-color-container-ui-secondary-hover-default, #{$ds-color-container-ui-secondary-hover-default});
   }
 }
 
@@ -43,6 +40,18 @@
 :host([disabled]) {
   --ds-auro-dropdown-trigger-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
   --ds-auro-dropdown-label-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+}
+
+:host([common]),
+:host([bordered]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-primary-default, #{$ds-color-border-primary-default});
+
+  .trigger {
+    &:active,
+    &:focus-within {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+    }
+  }
 }
 
 :host([error]) {
@@ -64,38 +73,7 @@
   }
 }
 
-:host([common]),
-:host([bordered]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-secondary-default, #{$ds-color-border-secondary-default});
-
-  .trigger {
-    &:active,
-    &:focus-within {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-    }
-  }
-}
-
 :host([disabled][common]),
 :host([disabled][bordered]) {
   --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
-}
-
-:host([common][error]),
-:host([bordered][error]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
-
-  .trigger {
-    box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
-
-    &:focus-within {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-      box-shadow: none;
-    }
-
-    &:active {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-      box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
-    }
-  }
 }

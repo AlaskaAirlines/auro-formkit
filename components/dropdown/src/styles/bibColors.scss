@@ -9,23 +9,10 @@
 // Support for fallback values
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute */
+/* stylelint-disable no-descending-specificity */
 
 .container {
-  display: inline-block;
-  box-sizing: border-box;
-}
-
-:host([common]),
-:host([rounded]) {
-  .container {
-    border-radius: var(--ds-border-radius, $ds-border-radius);
-  }
-}
-
-:host([common]),
-:host([inset]) {
-  .container {
-    padding: var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100);
-  }
+  background-color: var(--ds-auro-dropdownbib-container-color);
+  box-shadow: var(--ds-auro-dropdownbib-boxshadow-color);
+  color: var(--ds-auro-dropdownbib-text-color);
 }
