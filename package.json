@@ -43,7 +43,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "postinstall": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postinstall.mjs",
     "build:docs": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/generateDocs.mjs",
-    "sweep": "rm -rf dist && find ./components -not -path \"*/node_modules/*\" -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
+    "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky install"
   },
