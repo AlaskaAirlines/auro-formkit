@@ -140,6 +140,11 @@
     "last 2 Edge versions",
     "last 2 Safari major versions"
   ],
+  "sass": {
+    "includePaths": [
+      "./node_modules"
+    ]
+  },
   "release": {
     "branches": [
       {

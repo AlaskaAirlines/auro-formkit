@@ -10,7 +10,7 @@ const auroSubNameIndex = 5;
  * Writes a version file for the specified dependency package.
  * @param {string} pkg Dependency to write version file for
  */
-export function writeDepVersionFile(pkg: string): void {
+export function writeDepVersionFile(pkg) {
   const path = `${pkg}/package.json`;
   const json = require(path);
   const { version } = json;
