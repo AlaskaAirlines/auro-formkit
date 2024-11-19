@@ -247,7 +247,7 @@
     "build:dropdown:release": "npm-run-all build:dropdown:full build:test build:demo:dropdown",
     "build:menu:release": "npm-run-all build:menu:full build:test build:demo:menu",
     "sweep": "rm -rf dist && find ./demo ./src ./components -not -path \"*/node_modules/*\" -type f \\( -name \"*.css\" -o -name \"*-css.js\" \\) -delete",
-    "test": "wtr --coverage",
+    "test": "npm-run-all test:input test:dropdown test:form test:checkbox",
     "test:watch": "wtr --watch",
     "test:form": "wtr \"./components/form/test/**/*.test.js\" --coverage",
     "test:form:watch": "wtr \"./components/form/test/**/*.test.js\" --watch",

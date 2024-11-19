@@ -184,7 +184,6 @@ describe('auro-input', () => {
     input.blur();
 
     await elementUpdated(el);
-    await nextFrame();
 
     expect(el.hasAttribute('validity')).to.be.true;
   });
