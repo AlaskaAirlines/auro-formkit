@@ -46,7 +46,7 @@
     "yaml-lint": "^1.7.0"
   },
   "scripts": {
-    "build": "turbo run build --filter=@aurodesignsystem/auro-dropdown",
+    "build": "run-s build:version build:sass bundler types",
     "build:version": "node ./src/scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
