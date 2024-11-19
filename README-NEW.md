@@ -2,9 +2,9 @@
 
 ### Best practices for dependency installation
 
-When you install a dependency in your repository, you should install it directly in the package that uses it. 
+When you install a dependency in a component or package in `auro-formkit`, you should install it directly in the package that uses it. 
 
-The component's `package.json` will have every dependency that it needs. This is true for both external and internal dependencies.
+The package's `package.json` will have every dependency that it needs. This is true for both external and internal dependencies.
 
 - External dependencies come from the `npm` registry.
 
