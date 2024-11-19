@@ -66,7 +66,7 @@
   },
   "scripts": {
     "build": "npm-run-all build:version build:sass sass:render bundler types",
-    "build:sass": "npm-run-all build:sass:component postCss:component sass:render",
+    "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:sass:component": "sass --no-source-map src:src",
     "build:version": "node ./src/scripts/version.mjs",
     "build:watch": "nodemon -e scss,js --watch src --exec npm run build:dev:assets",
