@@ -36,7 +36,7 @@
     "sass:render": "turbo run sass:render",
     "bundler": "turbo run bundler",
     "types": "turbo run types",
-    "dev": "turbo run dev",
+    "dev": "node ./packages/build-tools/src/devPorts.mjs",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
