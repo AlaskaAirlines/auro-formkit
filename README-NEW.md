@@ -12,6 +12,19 @@ npm i
 npm run dev
 ```
 
+#### Filtering
+
+Running the `dev` command will run all components in development.
+
+To only develop a single component, use the `--filter` flag:
+
+```
+turbo dev --filter=@aurodesignsystem/auro-input
+
+@TODO:
+npm run dev --filter=@aurodesignsystem/auro-input
+```
+
 ### Testing
 
 ```
