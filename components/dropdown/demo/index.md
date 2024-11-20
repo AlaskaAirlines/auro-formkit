@@ -318,11 +318,11 @@ This will create a new custom element that you can use in your HTML that will fu
 <div class="exampleWrapper exampleWrapper--flex">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/custom.html) -->
   <!-- The below content is automatically added from ./../../apiExamples/custom.html -->
-  <custom-dropdown id="common" common aria-label="Label content for screen reader">
+  <custom-dropdown id="customCommon" common aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#common').hide()">
+      <auro-button onclick="document.querySelector('#customCommon').hide()">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -341,11 +341,11 @@ This will create a new custom element that you can use in your HTML that will fu
 <!-- The below code snippet is automatically added from ./../../apiExamples/custom.html -->
 
 ```html
-<custom-dropdown id="common" common aria-label="Label content for screen reader">
+<custom-dropdown id="customCommon" common aria-label="Label content for screen reader">
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#common').hide()">
+    <auro-button onclick="document.querySelector('#customCommon').hide()">
       Dismiss Dropdown
     </auro-button>
   </div>
