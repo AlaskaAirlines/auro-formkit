@@ -203,6 +203,18 @@ export class AuroDropdown extends LitElement {
     ];
   }
 
+  /**
+   * This will register this element with the browser.
+   * @param {string} [name="auro-dropdown"] - The name of element that you want to register to.
+   *
+   * @example
+   * AuroDropdown.register("custom-dropdown") // this will register this element to <custom-dropdown/>
+   *
+   */
+  static register(name = "auro-dropdown") {
+    AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroDropdown);
+  }
+
   connectedCallback() {
     super.connectedCallback();
   }
@@ -359,9 +371,4 @@ export class AuroDropdown extends LitElement {
       </div>
     `;
   }
-}
-
-// default internal definition
-if (!customElements.get("auro-dropdown")) {
-  customElements.define("auro-dropdown", AuroDropdown);
 }
