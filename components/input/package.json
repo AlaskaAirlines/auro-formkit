@@ -152,7 +152,6 @@
     "demo:copy:index": "copyfiles -u 1 -V './demo/index.html' ./build",
     "demo:new:build": "mkdir ./build && mkdir ./build/css && mkdir ./build/demo",
     "demo:rm:build": "rm -rf ./build",
-    "demo:update:index": "node ./scripts/prepForBuild",
     "dev": "concurrently --kill-others 'npm run build:watch' 'npm run serve'",
     "dist:js": "copyfiles -u 1 -V './src/**/*.js' ./dist",
     "postCss:component": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
