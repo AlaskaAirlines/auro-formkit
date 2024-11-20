@@ -16,6 +16,16 @@
   box-sizing: border-box;
 }
 
+:host {
+  position: absolute;
+  z-index: 1;
+  display: none;
+}
+
+:host([data-show]) {
+  display: block;
+}
+
 :host([common]),
 :host([rounded]) {
   .container {
