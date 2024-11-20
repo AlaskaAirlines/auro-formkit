@@ -1,3 +1,36 @@
+## Getting started
+
+### Installation
+
+```
+npm i
+```
+
+### Development
+
+```
+npm run dev
+```
+
+### Testing
+
+```
+npm run test
+```
+
+### Linting
+
+```
+npm run lint
+```
+
+### Build
+
+```
+npm run build
+```
+
+
 ## Managing dependencies
 
 ### Best practices for dependency installation
