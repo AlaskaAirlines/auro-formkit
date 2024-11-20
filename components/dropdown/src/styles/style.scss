@@ -69,18 +69,6 @@
   line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
 }
 
-:host(:not([data-show])) {
-  .popover {
-    display: none;
-  }
-}
-
-:host([data-show]) {
-  .popover {
-    z-index: var(--ds-depth-tooltip, $ds-depth-tooltip);
-  }
-}
-
 :host([disabled]) {
   pointer-events: none;
 }

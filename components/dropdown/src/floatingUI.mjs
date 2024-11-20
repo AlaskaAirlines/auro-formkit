@@ -41,9 +41,13 @@ export default class AuroFloatingUI {
   updateState() {
     const isVisible = this.element.isPopoverVisible;
     this.element.trigger.setAttribute('aria-expanded', isVisible);
-    // @TODO: Don't hardcode values
-    this.element.bib.style.display = isVisible ? 'block' : 'none';
-  
+
+    if (isVisible) {
+      this.element.bib.setAttribute('data-show', true);
+    } else {
+      this.element.bib.removeAttribute('data-show');
+    }
+
     if (!isVisible) {
       this.cleanupHideHandlers();
       try {
@@ -263,13 +267,6 @@ export default class AuroFloatingUI {
     this.element.trigger = this.element.shadowRoot.querySelector('#trigger');
     this.element.bib = this.element.shadowRoot.querySelector('#bib');
     this.element.triggerChevron = this.element.shadowRoot.querySelector('#showStateIcon');
-
-    // @TODO: Don't hardcode values
-    this.element.bib.style.display = 'none';
-    this.element.bib.style.position = 'absolute';
-    this.element.bib.style.zIndex = '1';
-
-    this.element.bib.setAttribute('hidden', true);
 
     this.handleTriggerTabIndex();
 

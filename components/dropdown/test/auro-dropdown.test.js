@@ -1,7 +1,6 @@
 import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
 import '../src/index.js';
 
-/* @TODO: remove skip, and continue writing test*/
 describe('auro-dropdown', () => {
   it('auro-dropdown is accessible', async () => {
     const el = await fixture(html`
