@@ -21,12 +21,15 @@
     "postCss:component": {
       "dependsOn": ["build:sass"],
       "inputs": ["src/**/*.css"],
-      "outputs": ["src/**/*.css"]
+      "outputs": [
+        "src/**/*.css",
+        "src/**/*-css.js"
+      ]
     },
     "sass:render": {
       "dependsOn": ["postCss:component"],
       "inputs": ["src/**/*.css"],
-      "outputs": ["*-css.js"]
+      "outputs": ["src/**/*-css.js"]
     },
     "bundler": {
       "dependsOn": ["sass:render"],
