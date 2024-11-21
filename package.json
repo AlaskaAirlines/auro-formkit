@@ -172,6 +172,7 @@
     "dev:checkbox": "concurrently --kill-others \"npm run build:watch:checkbox\" \"npm run serve:checkbox\"",
     "dev:dropdown": "concurrently --kill-others \"npm run build:watch:dropdown\" \"npm run serve:dropdown\"",
     "dev:menu": "concurrently --kill-others \"npm run build:watch:menu\" \"npm run serve:menu\"",
+    "dev:radio": "concurrently --kill-others \"npm run build:watch:radio\" \"npm run serve:radio\"",
     "build:demo": "npm-run-all build demo:rm:build demo:new:build demo:copy:index:input demo:copy:demo:input demo:update:index",
     "build:demo:form": "npm-run-all build:form demo:rm:build demo:new:build demo:copy:index:form demo:copy:demo:form demo:update:index",
     "build:demo:input": "npm-run-all build:input demo:rm:build demo:new:build demo:copy:index:input demo:copy:demo:input demo:update:index",
