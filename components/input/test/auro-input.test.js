@@ -1,4 +1,4 @@
-import { fixture, html, expect, elementUpdated, oneEvent, nextFrame } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-input', () => {
