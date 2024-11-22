@@ -14,15 +14,46 @@ export default class AuroFloatingUI {
     // mobileView 
     if (this.element.bib.mobileBreakpoint) {
       const mobileQuery = window.matchMedia(`(max-width: ${this.element.bib.mobileBreakpoint})`);
-
       if (mobileQuery.matches) {
         // no need to calc the position in mobile view
         this.element.bib.setAttribute('fullscreen', true);
         this.element.bib.style.top = "0px";
         this.element.bib.style.left = "0px";
+        [...this.element.bib.children].forEach(ch => {
+          if (ch.style.display) {
+            ch.dataset.display = ch.style.display;
+            ch.style.display = 'flex';
+          }
+          if (ch.style.width) {
+            ch.dataset.width = ch.style.width;
+            ch.style.width = '';
+          }
+          if (ch.style.maxHeight) {
+            ch.dataset.maxHeight = ch.style.maxHeight;
+            ch.style.maxHeight = '';
+          }
+          if (ch.style.overflow) {
+            ch.dataset.overflow = ch.style.overflow;
+            ch.style.overflow = "auto";
+          }
+        })
         return;
       } else {
         this.element.bib.removeAttribute('fullscreen');
+        [...this.element.bib.children].forEach(ch => {
+          if (ch.dataset.display) {
+            ch.style.display = ch.dataset.display;
+          }
+          if (ch.dataset.width) {
+            ch.style.width = ch.dataset.width;
+          }
+          if (ch.dataset.maxHeight) {
+            ch.style.maxHeight = ch.dataset.maxHeight;
+          }
+          if (ch.dataset.overflow) {
+            ch.style.overflow = ch.dataset.overflow;
+          }
+        })
       }
     }
 
