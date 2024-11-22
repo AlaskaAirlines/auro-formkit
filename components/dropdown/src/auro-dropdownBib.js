@@ -40,6 +40,10 @@ export class AuroDropdownBib extends LitElement {
       rounded: {
         type: Boolean,
         reflect: true
+      },
+      mobileBreakpoint: {
+        type: String,
+        reflect: false
       }
     };
   }
