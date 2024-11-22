@@ -1,5 +1,21 @@
 # Semantic Release Automated Changelog
 
+## [1.0.1](https://github.com/AlaskaAirlines/auro-form/compare/v1.0.0...v1.0.1) (2024-11-22)
+
+
+### Bug Fixes
+
+* improve custom registration example ([bbfbe1a](https://github.com/AlaskaAirlines/auro-form/commit/bbfbe1a0cc12a406064150e019ebd345eaaef4c0))
+* update version path to the root version file ([1813c14](https://github.com/AlaskaAirlines/auro-form/commit/1813c147954b1bb252b4147d755b6c5b240e8d06))
+
+
+### Performance Improvements
+
+* implement initial desktop styles and functionality [#20](https://github.com/AlaskaAirlines/auro-form/issues/20) ([a361b4c](https://github.com/AlaskaAirlines/auro-form/commit/a361b4cfdd9a2aba5f04af5e24c5bfb01517a866))
+* refactor hard-coded bib styles ([5c6e53f](https://github.com/AlaskaAirlines/auro-form/commit/5c6e53fe14401b4d52c1faf04b8c07ccf219103b))
+* update component registration handling ([082128e](https://github.com/AlaskaAirlines/auro-form/commit/082128e5e13cdf9b8f408cfdae4e5f39470e2471))
+* update dependencies ([96decb1](https://github.com/AlaskaAirlines/auro-form/commit/96decb1a446236ff9b95de2f7f7d596d43ee74c8))
+
 # 1.0.0 (2024-11-07)
 
 
