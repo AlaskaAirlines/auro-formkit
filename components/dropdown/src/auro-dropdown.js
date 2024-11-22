@@ -229,13 +229,12 @@ export class AuroDropdown extends LitElement {
 
   firstUpdated() {
     this.floater.configure(this);
+    this.bibContent = this.floater.element.bib;
+    // var(--ds-grid-breakpoint-sm)
+    this.bibContent.mobileBreakpoint = '576px';
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
-
-    this.bibContent = this.shadowRoot.querySelector('auro-dropdownbib');
-
-    document.body.append(this.bibContent);
 
     this.notifyReady();
   }
