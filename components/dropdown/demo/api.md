@@ -874,9 +874,14 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 ### Other Examples
 
-#### Width inheritance
+#### Width and Sizing Behavior
 
+##### Width
 `auro-dropdown` will consume all available width of the parent container. `auro-dropdown` can be made narrower by wrapping it in a container of the desired width.
+
+##### Dropdown Content Sizing
+If the dropdown's content size should not exceed a certain height, you can control it using CSS. Add a `max-height` property and set `overflow: scroll` to enable scrollability for content that exceeds the specified height.
+
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions100.html) -->
@@ -928,6 +933,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
   <!-- The below content is automatically added from ./../../apiExamples/customDimensions300.html -->
