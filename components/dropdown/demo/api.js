@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers */
 import { showExample } from './../apiExamples/programmaticallyShow.js';
 import { hideExample } from './../apiExamples/programmaticallyHide.js';
-import './index.js';
+import '../src/index.js';
 
 export function initExamples(initialCount = 0) {
   try {
