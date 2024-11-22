@@ -11,6 +11,21 @@ export default class AuroFloatingUI {
   }
 
   position() {
+    // mobileView 
+    if (this.element.bib.mobileBreakpoint) {
+      const mobileQuery = window.matchMedia(`(max-width: ${this.element.bib.mobileBreakpoint})`);
+
+      if (mobileQuery.matches) {
+        // no need to calc the position in mobile view
+        this.element.bib.setAttribute('fullscreen', true);
+        this.element.bib.style.top = "0px";
+        this.element.bib.style.left = "0px";
+        return;
+      } else {
+        this.element.bib.removeAttribute('fullscreen');
+      }
+    }
+
     // Define the middlware for the floater configuration
     const middleware = [
       offset(this.element.floaterConfig.offset || 0),
@@ -265,8 +280,10 @@ export default class AuroFloatingUI {
   configure(elem) {
     this.element = elem;
     this.element.trigger = this.element.shadowRoot.querySelector('#trigger');
-    this.element.bib = this.element.shadowRoot.querySelector('#bib');
     this.element.triggerChevron = this.element.shadowRoot.querySelector('#showStateIcon');
+    this.element.bib = this.element.shadowRoot.querySelector('#bib');
+    
+    document.body.append(this.element.bib);
 
     this.handleTriggerTabIndex();
 
