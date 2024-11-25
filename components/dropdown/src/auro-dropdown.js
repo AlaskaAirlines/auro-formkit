@@ -365,6 +365,7 @@ export class AuroDropdown extends LitElement {
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>
+        <div id="bibSizer" part="bibSizer" style="position: absolute; pointer-events: none; opacity: 0; z-index: -1;"></div>
         <auro-dropdownbib
           id="bib"
           role="tooltip"

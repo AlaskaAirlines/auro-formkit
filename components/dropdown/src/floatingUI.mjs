@@ -11,6 +11,14 @@ export default class AuroFloatingUI {
   }
 
   position() {
+    // mirror the boxsize from bibSizer
+    const sizerStyle = window.getComputedStyle(this.element.bibSizer);
+    const bibContent = this.element.bib.shadowRoot.querySelector(".container");
+    if (sizerStyle.width !== '0px') bibContent.style.width = sizerStyle.width;
+    if (sizerStyle.height !== '0px') bibContent.style.height = sizerStyle.height;
+    bibContent.style.maxWidth = sizerStyle.maxWidth;
+    bibContent.style.maxHeight = sizerStyle.maxHeight;
+
     // fullscreen on mobileView 
     if (!this.element.noFullscreenOnMobile && this.element.bib.mobileBreakpoint) {
       const mobileQuery = window.matchMedia(`(max-width: ${this.element.bib.mobileBreakpoint})`);
@@ -282,6 +290,7 @@ export default class AuroFloatingUI {
     this.element.trigger = this.element.shadowRoot.querySelector('#trigger');
     this.element.triggerChevron = this.element.shadowRoot.querySelector('#showStateIcon');
     this.element.bib = this.element.shadowRoot.querySelector('#bib');
+    this.element.bibSizer = this.element.shadowRoot.querySelector('#bibSizer');
     
     document.body.append(this.element.bib);
 

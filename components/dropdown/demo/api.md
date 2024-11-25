@@ -876,19 +876,29 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 #### Width and Sizing Behavior
 
-##### Width
-`auro-dropdown` will consume all available width of the parent container. `auro-dropdown` can be made narrower by wrapping it in a container of the desired width.
+- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bibSizer` part.
 
-##### Dropdown Content Sizing
-If the dropdown's content size should not exceed a certain height, you can control it using CSS. Add a `max-height` property and set `overflow: scroll` to enable scrollability for content that exceeds the specified height.
+- **Styling Options:** Only the following styles can be applied to the `bibSizer` part:
+  - `width`
+  - `height`
+  - `maxWidth`
+  - `maxHeight`
+
+- **Scroll Behavior:** When the content exceeds the specified size, the browser will provide a scroll for the overflow.
 
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions100.html) -->
   <!-- The below content is automatically added from ./../../apiExamples/customDimensions100.html -->
+  <style>
+  #customDropdown100::part(bibSizer) {
+    width: 100px;
+    max-height: 200px;
+  }
+  </style>
   <div style="width: 100px;" aria-label="custom label">
-    <auro-dropdown inset bordered rounded chevron>
-      <div style="width: 100px; max-height: 200px; overflow: scroll;">
+    <auro-dropdown id="customDropdown100" inset bordered rounded chevron>
+      <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </p>
@@ -912,9 +922,15 @@ If the dropdown's content size should not exceed a certain height, you can contr
 <!-- The below code snippet is automatically added from ./../../apiExamples/customDimensions100.html -->
 
 ```html
+<style>
+  #customDropdown100::part(dropdownSizer) {
+    width: 100px;
+    max-height: 200px;
+  }
+</style>
 <div style="width: 100px;" aria-label="custom label">
-  <auro-dropdown inset bordered rounded chevron>
-    <div style="width: 100px; max-height: 200px; overflow: scroll;">
+  <auro-dropdown id="customDropdown100" inset bordered rounded chevron>
+    <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </p>
@@ -934,12 +950,28 @@ If the dropdown's content size should not exceed a certain height, you can contr
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+### No Fullscreen Effect on Mobile View
+
+On mobile view, adding the `noFullscreenOnMobile` attribute will prevent the dropdown from switching to fullscreen mode. 
+
+This is useful in scenarios where:
+- Fullscreen mode does not provide significant benefits to the user.
+- The dropdown needs to maintain a custom size and stay within its defined dimensions.
+
+
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
   <!-- The below content is automatically added from ./../../apiExamples/customDimensions300.html -->
+
+  <style>
+  #customDropdown300::part(bibSizer) {
+    width: 300px;
+    max-height: 200px;
+  }
+  </style>
   <div style="width: 300px;" aria-label="custom label">
-    <auro-dropdown inset bordered rounded chevron noFullscreenOnMobile="false">
-      <div style="width: 300px; max-height: 200px; overflow: scroll;">
+    <auro-dropdown id="customDropdown300" inset bordered rounded chevron noFullscreenOnMobile="false">
+      <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </p>
@@ -963,9 +995,15 @@ If the dropdown's content size should not exceed a certain height, you can contr
 <!-- The below code snippet is automatically added from ./../../apiExamples/customDimensions300.html -->
 
 ```html
+  <style>
+  #customDropdown300::part(bibSizer) {
+    width: 300px;
+    max-height: 200px;
+  }
+  </style>
 <div style="width: 300px;" aria-label="custom label">
-  <auro-dropdown inset bordered rounded chevron fullscreenOnMobile="false">
-    <div style="width: 300px; max-height: 200px; overflow: scroll;">
+  <auro-dropdown id="customDropdown300" inset bordered rounded chevron fullscreenOnMobile="false">
+    <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </p>
