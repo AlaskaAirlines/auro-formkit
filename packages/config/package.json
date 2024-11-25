@@ -7,9 +7,9 @@
   "main": "index.js",
   "exports": {
     "./commitlint": "./src/commitlint.config.cjs",
-    "./eslint": "./src/.eslint.config.mjs",
+    "./eslint": "./src/eslint.config.mjs",
     "./rollup": "./src/rollup.config.mjs",
-    "./stylelint": "./src/.stylelintrc.config.json",
+    "./stylelint": "./src/stylelintrc.config.json",
     "./wtr": "./src/web-test-runner.config.mjs"
   },
   "files": [
