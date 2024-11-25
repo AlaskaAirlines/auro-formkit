@@ -6,7 +6,7 @@
     " 2. Go to http://localhost:8000",
     "================================================================================"
   ],
-  "name": "@aurodesignsystem/auro-form",
+  "name": "@auro-formkit/auro-form",
   "version": "1.0.0",
   "description": "auro-form HTML custom element",
   "type": "module",
