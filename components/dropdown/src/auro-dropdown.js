@@ -76,6 +76,7 @@ export class AuroDropdown extends LitElement {
     this.ready = false;
     this.tabIndex = 0;
     this.noToggle = false;
+    this.noFullscreenOnMobile = false;
 
     /**
      * @private
@@ -176,6 +177,10 @@ export class AuroDropdown extends LitElement {
       onSlotChange: {
         type: Function,
         reflect: false
+      },
+      noFullscreenOnMobile: {
+        type: Boolean,
+        reflect: true,
       },
 
       /**

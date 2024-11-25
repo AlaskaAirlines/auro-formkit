@@ -11,8 +11,8 @@ export default class AuroFloatingUI {
   }
 
   position() {
-    // mobileView 
-    if (this.element.bib.mobileBreakpoint) {
+    // fullscreen on mobileView 
+    if (!this.element.noFullscreenOnMobile && this.element.bib.mobileBreakpoint) {
       const mobileQuery = window.matchMedia(`(max-width: ${this.element.bib.mobileBreakpoint})`);
 
       if (mobileQuery.matches) {
