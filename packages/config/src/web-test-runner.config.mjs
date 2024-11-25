@@ -1,7 +1,7 @@
 export default {
   files: [
-    'components/**/test/*.test.js',
-    '!./components/**/node_modules/**'
+    'test/**/*.test.js',
+    '!**/node_modules/**'
   ],
   nodeResolve: {
     moduleDirectories: ['node_modules', 'components'],
