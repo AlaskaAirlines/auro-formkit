@@ -12,7 +12,7 @@
       ]
     },
     "build:version": {
-      "outputs": ["src/"]
+      "outputs": ["src/*.js", "src/**/*.js"]
     },
     "build:sass": {
       "outputs": ["src/**/*.css"],
