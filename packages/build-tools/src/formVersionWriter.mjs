@@ -17,17 +17,15 @@ export function writeDepVersionFile(pkg) {
   const elemSubName = pkg.substring(pkg.indexOf('auro-') + auroSubNameIndex);
   
   const callerPath = fileURLToPath(import.meta.url);
-  
   const pathParts = callerPath.split('/');
   const componentsIndex = pathParts.indexOf('components');
   const componentName = componentsIndex !== -1 ? pathParts[componentsIndex + 1] : null;
   
-  const basePath = componentName 
+  const basePath = componentName
     ? `components/${componentName}/src`
     : 'src';
-  
+    
   const versionFilePath = `./${basePath}/${elemSubName}Version.js`;
-  
   console.log(`Writing version file to: ${versionFilePath}`);
   
   const directory = dirname(versionFilePath);
@@ -36,8 +34,11 @@ export function writeDepVersionFile(pkg) {
       if (err) throw err;
     });
   }
+
+  // Add semicolon and newline to the end of the content
+  const fileContent = `export default '${version}';\n`;
   
-  writeFile(versionFilePath, `export default '${version}'`, (err) => {
+  writeFile(versionFilePath, fileContent, (err) => {
     if (err) {
       console.error(`Error writing file: ${err.message}`);
       throw err;
