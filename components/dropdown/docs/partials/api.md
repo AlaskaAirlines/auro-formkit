@@ -358,14 +358,17 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 </auro-accordion>
 
 ### Other Examples
-
 #### Width and Sizing Behavior
 
-##### Width
-`auro-dropdown` will consume all available width of the parent container. `auro-dropdown` can be made narrower by wrapping it in a container of the desired width.
+- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bibSizer` part.
 
-##### Dropdown Content Sizing
-If the dropdown's content size should not exceed a certain height, you can control it using CSS. Add a `max-height` property and set `overflow: scroll` to enable scrollability for content that exceeds the specified height.
+- **Styling Options:** Only the following styles can be applied to the `bibSizer` part:
+  - `width`
+  - `height`
+  - `maxWidth`
+  - `maxHeight`
+
+- **Scroll Behavior:** When the content exceeds the specified size, the browser will provide a scroll for the overflow.
 
 
 <div class="exampleWrapper">
@@ -379,6 +382,17 @@ If the dropdown's content size should not exceed a certain height, you can contr
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
+
+
+### No Fullscreen Effect on Mobile View
+
+On mobile view, adding the `noFullscreenOnMobile` attribute will prevent the dropdown from switching to fullscreen mode. 
+
+This is useful in scenarios where:
+- Fullscreen mode does not provide significant benefits to the user.
+- The dropdown needs to maintain a custom size and stay within its defined dimensions.
+
+
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
