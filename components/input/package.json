@@ -77,6 +77,9 @@
     "serve": "web-dev-server",
     "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage",
     "test:watch": "wtr --watch",
-    "types": "tsc"
+    "types": "tsc",
+    "lint": "npm-run-all scssLint esLint",
+    "scssLint": "stylelint \"./src/**/*.scss\"",
+    "esLint": "eslint \"./src/**/*.js\""
   }
 }
