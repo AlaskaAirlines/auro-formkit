@@ -1,5 +1,29 @@
 # Semantic Release Automated Changelog
 
+# [1.1.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.0.1...v1.1.0) (2024-11-25)
+
+
+### Bug Fixes
+
+* fix stylelint error on dropdown ([0b1e274](https://github.com/AlaskaAirlines/auro-form/commit/0b1e2740cc996cedbf972808c471059e3a024064))
+
+
+### Features
+
+* add checkbox into components [#27](https://github.com/AlaskaAirlines/auro-form/issues/27) ([3af6779](https://github.com/AlaskaAirlines/auro-form/commit/3af67794d7272b2318eae9733f5ee822c869f3b9))
+* add menu [#28](https://github.com/AlaskaAirlines/auro-form/issues/28) ([2fe16fd](https://github.com/AlaskaAirlines/auro-form/commit/2fe16fdc8e75e2aa95e98e94386bbd13e1f1ce8e))
+* **api:** add register static method [#21](https://github.com/AlaskaAirlines/auro-form/issues/21) ([9953da2](https://github.com/AlaskaAirlines/auro-form/commit/9953da21bbb1ac0db2ca35122b5d83f52daace07))
+* update input to 4.1.1 ([4b1d182](https://github.com/AlaskaAirlines/auro-form/commit/4b1d182aa42595f41b323983a52695912b9d6953))
+
+
+### Performance Improvements
+
+* update .stylelint to be same as generator's ([49adec0](https://github.com/AlaskaAirlines/auro-form/commit/49adec0c2eec451c832c00168b5422857de1ebc9))
+* update auro-icon to `6.0.3` ([c586d37](https://github.com/AlaskaAirlines/auro-form/commit/c586d37474ad8a6412e48293e4f6f4625d556d7b))
+* update stylelint and following changes on scss ([9fd61ab](https://github.com/AlaskaAirlines/auro-form/commit/9fd61ab8579aef5f0fbd4d745b8ab9de26e563ff))
+* upgrade input to 4.1.3 ([433fb27](https://github.com/AlaskaAirlines/auro-form/commit/433fb27b5ee99cfa51f5422f880b11a2bf7037c6))
+* upgrade input to 4.2.0 ([cbb6530](https://github.com/AlaskaAirlines/auro-form/commit/cbb6530f3d887b974d7a8701ddafff6218323bff))
+
 ## [1.0.1](https://github.com/AlaskaAirlines/auro-form/compare/v1.0.0...v1.0.1) (2024-11-22)
 
 
