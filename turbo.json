@@ -36,7 +36,7 @@
       "outputs": ["dist/**"]
     },
     "types": {
-      "outputs": ["tsc/**"]
+      "outputs": ["dist/**"]
     },
     "build:watch": {
       "dependsOn": ["^build"],
