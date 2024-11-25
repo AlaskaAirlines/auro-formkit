@@ -119,24 +119,7 @@
     "stylelint-config-standard-scss": "^13.1.0",
     "stylelint-order": "^6.0.4",
     "stylelint-scss": "^6.9.0",
-    "stylelint": "^16.9.0",
-    "stylelint-config-idiomatic-order": "^10.0.0",
-    "stylelint-config-standard": "^36.0.1",
-    "stylelint-config-standard-scss": "^13.1.0",
-    "stylelint-order": "^6.0.4",
-    "stylelint-scss": "^6.9.0",
-    "turbo": "^2.2.3",
-    "typescript": "^5.6.2",
-    "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0",
-    "whatwg-fetch": "^3.6.20",
-    "yaml-lint": "^1.7.0"
-  },
-  "overrides": {
-    "wc-sass-render": {
-      "sass": "$sass"
-    }
-    "turbo": "^2.2.3",
+    "turbo": "^2.3.1",
     "typescript": "^5.6.3"
   },
   "browserslist": [
