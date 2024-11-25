@@ -56,7 +56,7 @@
     "dev": "web-dev-server",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
-    "serve": "web-dev-server --open demo/ --node-resolve --watch",
+    "serve": "web-dev-server",
     "test": "wtr --coverage",
     "test:watch": "wtr --watch",
     "types": "tsc"
