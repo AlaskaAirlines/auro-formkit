@@ -8,7 +8,6 @@
   "types": "tsc",
   "exports": {
     ".": "./src/index.js",
-    "./formVersionWriter": "./src/formVersionWriter.mjs",
-    "./devPorts": "./src/devPorts.mjs"
+    "./formVersionWriter": "./src/formVersionWriter.mjs"
   }
 }
