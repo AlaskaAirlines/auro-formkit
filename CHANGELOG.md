@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.2.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.1.0...v1.2.0) (2024-11-26)
+
+
+### Features
+
+* add radio into components [#26](https://github.com/AlaskaAirlines/auro-form/issues/26) ([aaf2758](https://github.com/AlaskaAirlines/auro-form/commit/aaf2758f08f1733fbfd401cb0dc50b37e8dd033e))
+
 # [1.1.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.0.1...v1.1.0) (2024-11-25)
 
 

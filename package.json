@@ -7,7 +7,7 @@
     "================================================================================"
   ],
   "name": "@aurodesignsystem/auro-form",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "auro-formkit",
   "repository": {
     "type": "git",
@@ -274,27 +274,21 @@
     "test:dropdown": "wtr \"./components/dropdown/test/**/*.test.js\" --coverage",
     "test:dropdown:watch": "wtr \"./components/dropdown/test/**/*.test.js\" --watch",
     "test:menu": "wtr \"./components/menu/test/**/*.test.js\" --coverage",
-
     "linters": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./components/**/*.scss\"",
     "esLint": "eslint 'components/**/*.js'",
-
     "linters:input": "npm-run-all scssLint:input esLint:input",
     "scssLint:input": "stylelint \"./components/input/**/*.scss\"",
     "esLint:input": "eslint 'components/input/**/*.js'",
-
     "linters:checkbox": "npm-run-all scssLint:checkbox esLint:checkbox",
     "scssLint:checkbox": "stylelint \"./components/checkbox/**/*.scss\"",
     "esLint:checkbox": "eslint 'components/checkbox/**/*.js'",
-
     "linters:menu": "npm-run-all scssLint:menu esLint:menu",
     "scssLint:menu": "stylelint \"./components/menu/**/*.scss\"",
     "esLint:menu": "eslint 'components/menu/**/*.js'",
-
     "linters:radio": "npm-run-all scssLint:radio esLint:radio",
     "scssLint:radio": "stylelint \"./components/radio/**/*.scss\"",
     "esLint:radio": "eslint 'components/radio/**/*.js'",
-
     "bundler": "rollup -c",
     "bundler:test": "rollup -c -w",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
