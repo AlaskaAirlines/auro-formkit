@@ -384,13 +384,14 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 </auro-accordion>
 
 
-### No Fullscreen Effect on Mobile View
+### Fullscreen Effect on Mobile View
 
-On mobile view, adding the `fullscreenOnMobile="false"` attribute will prevent the dropdown from switching to fullscreen mode. 
+On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will prevent the dropdown from switching to fullscreen mode. 
 
 This is useful in scenarios where:
 - Fullscreen mode does not provide significant benefits to the user.
 - The dropdown needs to maintain a custom size and stay within its defined dimensions.
+
 
 
 <div class="exampleWrapper">

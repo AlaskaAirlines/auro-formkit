@@ -28,6 +28,15 @@
  position: fixed;
  top: 0;
  left: 0;
+
+ .container {
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+ }
 }
 
 :host([data-show]) {
