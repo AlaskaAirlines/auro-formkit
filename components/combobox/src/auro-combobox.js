@@ -17,7 +17,7 @@ import { AuroDropdown } from '@aurodesignsystem/auro-dropdown/src/auro-dropdown.
 import dropdownVersion from '../../../src/dropdownVersion.js';
 
 import { AuroInput } from '../../input/src/auro-input.js';
-import inputVersion from '../../../src/form/components/inputVersion.js';
+import inputVersion from '../../../src/internal/inputVersion.js';
 
 // Import touch detection lib
 import styleCss from "./style-css.js";
