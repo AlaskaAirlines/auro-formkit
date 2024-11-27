@@ -11,16 +11,17 @@
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
 
-.container {
-  display: inline-block;
-  overflow: auto;
-  box-sizing: border-box;
-}
-
 :host {
   position: absolute;
   z-index: 1;
   display: none;
+
+  .container {
+    display: inline-block;
+    overflow: auto;
+    box-sizing: border-box;
+  }
+
 }
 
 :host([isfullscreen]) {
