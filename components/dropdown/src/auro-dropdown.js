@@ -21,6 +21,8 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+import dsVariableFlat from "@aurodesignsystem/design-tokens/dist/tokens/JSONVariablesFlat.json";
+
 import './auro-dropdownBib.js';
 
 /**
@@ -76,7 +78,6 @@ export class AuroDropdown extends LitElement {
     this.ready = false;
     this.tabIndex = 0;
     this.noToggle = false;
-    this.noFullscreenOnMobile = false;
 
     /**
      * @private
@@ -178,8 +179,8 @@ export class AuroDropdown extends LitElement {
         type: Function,
         reflect: false
       },
-      noFullscreenOnMobile: {
-        type: Boolean,
+      mobileFullscreenBreakpoint: {
+        type: String,
         reflect: true,
       },
 
@@ -235,8 +236,10 @@ export class AuroDropdown extends LitElement {
   firstUpdated() {
     this.floater.configure(this);
     this.bibContent = this.floater.element.bib;
-    // var(--ds-grid-breakpoint-sm)
-    this.bibContent.mobileBreakpoint = '576px';
+    if (this.mobileFullscreenBreakpoint) {
+      const breakpointValue = dsVariableFlat[this.mobileFullscreenBreakpoint.replace(/^\-\-/, "")];
+      this.bibContent.mobileFullscreenBreakpoint = breakpointValue;
+    }
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');

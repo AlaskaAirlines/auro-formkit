@@ -950,9 +950,9 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-### No Fullscreen Effect on Mobile View
+### Fullscreen Effect on Mobile View
 
-On mobile view, adding the `noFullscreenOnMobile` attribute will prevent the dropdown from switching to fullscreen mode. 
+On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will prevent the dropdown from switching to fullscreen mode. 
 
 This is useful in scenarios where:
 - Fullscreen mode does not provide significant benefits to the user.
@@ -970,7 +970,7 @@ This is useful in scenarios where:
   }
   </style>
   <div style="width: 300px;" aria-label="custom label">
-    <auro-dropdown id="customDropdown300" inset bordered rounded chevron noFullscreenOnMobile="false">
+    <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="--ds-grid-breakpoint-sm">
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -1002,7 +1002,7 @@ This is useful in scenarios where:
   }
   </style>
 <div style="width: 300px;" aria-label="custom label">
-  <auro-dropdown id="customDropdown300" inset bordered rounded chevron fullscreenOnMobile="false">
+    <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="--ds-grid-breakpoint-sm">
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
