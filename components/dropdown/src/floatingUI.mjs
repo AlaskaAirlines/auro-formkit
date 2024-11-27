@@ -15,10 +15,10 @@ export default class AuroFloatingUI {
     const sizerStyle = window.getComputedStyle(this.element.bibSizer);
     const bibContent = this.element.bib.shadowRoot.querySelector(".container");
     if (fullscreen) {
-      bibContent.style.width = '100dvw';
-      bibContent.style.height = '100dvh';
-      bibContent.style.maxWidth = 'none';
-      bibContent.style.maxHeight = 'none';
+      bibContent.style.width = '';
+      bibContent.style.height = '';
+      bibContent.style.maxWidth = '';
+      bibContent.style.maxHeight = '';
     } else {
       if (sizerStyle.width !== '0px') bibContent.style.width = sizerStyle.width;
       if (sizerStyle.height !== '0px') bibContent.style.height = sizerStyle.height;
@@ -73,7 +73,7 @@ export default class AuroFloatingUI {
       this.element.bib.style.top = "0px";
       this.element.bib.style.left = "0px";
     } else {
-      this.element.bib.removeAttribute('fullscreen');
+      this.element.bib.removeAttribute('isFullscreen');
     }
   }
 
