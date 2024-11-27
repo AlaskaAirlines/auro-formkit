@@ -10,29 +10,34 @@ export default class AuroFloatingUI {
     this.keyDownHandler = null;
   }
 
-  position() {
+  mirrorSize(fullscreen) {
     // mirror the boxsize from bibSizer
     const sizerStyle = window.getComputedStyle(this.element.bibSizer);
     const bibContent = this.element.bib.shadowRoot.querySelector(".container");
-    if (sizerStyle.width !== '0px') bibContent.style.width = sizerStyle.width;
-    if (sizerStyle.height !== '0px') bibContent.style.height = sizerStyle.height;
-    bibContent.style.maxWidth = sizerStyle.maxWidth;
-    bibContent.style.maxHeight = sizerStyle.maxHeight;
+    if (fullscreen) {
+      bibContent.style.width = '100dvw';
+      bibContent.style.height = '100dvh';
+      bibContent.style.maxWidth = 'none';
+      bibContent.style.maxHeight = 'none';
+    } else {
+      if (sizerStyle.width !== '0px') bibContent.style.width = sizerStyle.width;
+      if (sizerStyle.height !== '0px') bibContent.style.height = sizerStyle.height;
+      bibContent.style.maxWidth = sizerStyle.maxWidth;
+      bibContent.style.maxHeight = sizerStyle.maxHeight;
+    }
+  }
 
+  position() {
     // fullscreen on mobileView 
-    if (!this.element.noFullscreenOnMobile && this.element.bib.mobileBreakpoint) {
-      const mobileQuery = window.matchMedia(`(max-width: ${this.element.bib.mobileBreakpoint})`);
-
-      if (mobileQuery.matches) {
-        // no need to calc the position in mobile view
-        this.element.bib.setAttribute('fullscreen', true);
-        this.element.bib.style.top = "0px";
-        this.element.bib.style.left = "0px";
+    if (this.element.bib.mobileFullscreenBreakpoint) {
+      const isMobile = window.matchMedia(`(max-width: ${this.element.bib.mobileFullscreenBreakpoint})`).matches;
+      this.handleMobileFullscreen(isMobile);
+      if (isMobile) {
+        this.mirrorSize(true);
         return;
-      } else {
-        this.element.bib.removeAttribute('fullscreen');
       }
     }
+    this.mirrorSize(false);
 
     // Define the middlware for the floater configuration
     const middleware = [
@@ -59,6 +64,17 @@ export default class AuroFloatingUI {
         top: `${y}px`,
       });
     });
+  }
+
+  handleMobileFullscreen(isMobile) {
+    if (isMobile) {
+      this.element.bib.setAttribute('isFullscreen', "true");
+      // reset the prev position
+      this.element.bib.style.top = "0px";
+      this.element.bib.style.left = "0px";
+    } else {
+      this.element.bib.removeAttribute('fullscreen');
+    }
   }
 
   updateState() {
