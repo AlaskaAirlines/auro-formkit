@@ -876,9 +876,9 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 #### Width and Sizing Behavior
 
-- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bibSizer` part.
+- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bib` part.
 
-- **Styling Options:** Only the following styles can be applied to the `bibSizer` part:
+- **Styling Options:** Only the following styles can be applied to the `bib` part:
   - `width`
   - `height`
   - `maxWidth`
@@ -891,7 +891,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions100.html) -->
   <!-- The below content is automatically added from ./../../apiExamples/customDimensions100.html -->
   <style>
-  #customDropdown100::part(bibSizer) {
+  #customDropdown100::part(bib) {
     width: 100px;
     max-height: 200px;
   }
@@ -923,7 +923,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 ```html
 <style>
-  #customDropdown100::part(bibSizer) {
+  #customDropdown100::part(bib) {
     width: 100px;
     max-height: 200px;
   }
@@ -964,7 +964,7 @@ This is useful in scenarios where:
   <!-- The below content is automatically added from ./../../apiExamples/customDimensions300.html -->
 
   <style>
-  #customDropdown300::part(bibSizer) {
+  #customDropdown300::part(bib) {
     width: 300px;
     max-height: 200px;
   }
@@ -996,7 +996,7 @@ This is useful in scenarios where:
 
 ```html
   <style>
-  #customDropdown300::part(bibSizer) {
+  #customDropdown300::part(bib) {
     width: 300px;
     max-height: 200px;
   }

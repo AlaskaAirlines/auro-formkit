@@ -362,7 +362,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 - **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bibSizer` part.
 
-- **Styling Options:** Only the following styles can be applied to the `bibSizer` part:
+- **Styling Options:** Only the following styles can be applied to the `bib` part:
   - `width`
   - `height`
   - `maxWidth`

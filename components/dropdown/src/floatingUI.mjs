@@ -20,8 +20,12 @@ export default class AuroFloatingUI {
       bibContent.style.maxWidth = '';
       bibContent.style.maxHeight = '';
     } else {
-      if (sizerStyle.width !== '0px') bibContent.style.width = sizerStyle.width;
-      if (sizerStyle.height !== '0px') bibContent.style.height = sizerStyle.height;
+      if (sizerStyle.width !== '0px') {
+        bibContent.style.width = sizerStyle.width;
+      }
+      if (sizerStyle.height !== '0px') {
+        bibContent.style.height = sizerStyle.height;
+      }
       bibContent.style.maxWidth = sizerStyle.maxWidth;
       bibContent.style.maxHeight = sizerStyle.maxHeight;
     }
