@@ -7,7 +7,7 @@
     "================================================================================"
   ],
   "name": "@aurodesignsystem/auro-form",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "auro-formkit",
   "repository": {
     "type": "git",
@@ -295,7 +295,6 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "postversion": "npm-run-all build:api build:docs",
     "prepare": "husky install",
-
     "dev:select": "concurrently --kill-others \"npm run build:watch:select\" \"npm run serve:select\"",
     "build:select": "npm-run-all build:version:select build:sass:select sass:render:select types",
     "build:demo:select": "npm-run-all build:select demo:rm:build demo:new:build demo:copy:index:select demo:copy:demo:select demo:update:index",

@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.3.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.2.0...v1.3.0) (2024-11-27)
+
+
+### Features
+
+* add `auro-select@3.3.0` [#43](https://github.com/AlaskaAirlines/auro-form/issues/43) ([868d9e9](https://github.com/AlaskaAirlines/auro-form/commit/868d9e99619a4183dbdbe2087917de361e07e93d))
+
 # [1.2.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.1.0...v1.2.0) (2024-11-26)
 
 
