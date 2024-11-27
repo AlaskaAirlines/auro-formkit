@@ -21,7 +21,7 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import dsVariableFlat from "@aurodesignsystem/design-tokens/dist/tokens/JSONVariablesFlat.json";
+import dsVariableFlat from "./ds-grid-breakpoint.js";
 
 import './auro-dropdownBib.js';
 
@@ -237,7 +237,7 @@ export class AuroDropdown extends LitElement {
     this.floater.configure(this);
     this.bibContent = this.floater.element.bib;
     if (this.mobileFullscreenBreakpoint) {
-      const breakpointValue = dsVariableFlat[this.mobileFullscreenBreakpoint.replace(/^\-\-/, "")];
+      const breakpointValue = dsVariableFlat[this.mobileFullscreenBreakpoint.replace(/^[-][-]/u, "")];
       this.bibContent.mobileFullscreenBreakpoint = breakpointValue;
     }
 

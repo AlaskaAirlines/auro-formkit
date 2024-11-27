@@ -923,7 +923,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 ```html
 <style>
-  #customDropdown100::part(dropdownSizer) {
+  #customDropdown100::part(bibSizer) {
     width: 100px;
     max-height: 200px;
   }
