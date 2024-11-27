@@ -1,7 +1,7 @@
 import { writeDepVersionFile } from '../../../../scripts/formVersionWriter.js'
 import path from "node:path";
 
-writeDepVersionFile('@aurodesignsystem/auro-dropdown');
 writeDepVersionFile('@aurodesignsystem/auro-popover');
-writeDepVersionFile(path.resolve('./components/input'));
+writeDepVersionFile('@aurodesignsystem/auro-dropdown');
+writeDepVersionFile(path.resolve(process.cwd(), './components/input'));
 
