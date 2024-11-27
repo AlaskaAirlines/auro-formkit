@@ -29,7 +29,7 @@ import { AuroDropdown } from '@aurodesignsystem/auro-dropdown/src/auro-dropdown.
 import dropdownVersion from '../../../src/dropdownVersion.js';
 
 import { AuroInput } from '../../input/src/auro-input.js';
-import inputVersion from '../../../src/form/components/inputVersion.js';
+import inputVersion from '../../../src/internal/inputVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**

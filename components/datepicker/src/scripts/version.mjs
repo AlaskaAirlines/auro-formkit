@@ -3,5 +3,5 @@ import path from "node:path";
 
 writeDepVersionFile('@aurodesignsystem/auro-popover');
 writeDepVersionFile('@aurodesignsystem/auro-dropdown');
-writeDepVersionFile(path.resolve(process.cwd(), './components/input'));
+writeDepVersionFile('@/components/input');
 
