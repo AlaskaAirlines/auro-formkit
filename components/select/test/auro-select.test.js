@@ -54,13 +54,12 @@ describe('auro-select', () => {
 
     trigger.click();
     await expect(dropdown.isPopoverVisible).to.be.true;
-
-    const menu = el.querySelector('auro-menu');
-    const menuOptions = menu.querySelectorAll('auro-menuoption');
-
     el.dispatchEvent(new KeyboardEvent('keydown', {
       'key': 'ArrowDown'
     }));
+
+    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     await expect(menuOptions[0].classList.contains('active')).to.be.true;
     await expect(menuOptions[1].classList.contains('active')).to.be.false;
@@ -84,7 +83,8 @@ describe('auro-select', () => {
   it('makes a selection programatically', async () => {
     const el = await defaultFixture();
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let selectedOptions = [];
 
@@ -134,14 +134,16 @@ describe('auro-select', () => {
   it('default to checkmark on selected option', async () => {
     const el = await defaultFixture();
 
-    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.false;
   });
 
   it('selected options have nocheckmark when nocheckmark attribute is present', async () => {
     const el = await noCheckmarkFixture();
 
-    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.true;
   });
 

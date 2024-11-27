@@ -14,8 +14,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
-import { AuroDropdown } from '@aurodesignsystem/auro-dropdown/src/auro-dropdown.js';
-import dropdownVersion from '../../../src/dropdownVersion.js';
+import { AuroDropdown } from '../../dropdown/src/auro-dropdown.js';
+import dropdownVersion from '../../../src/internal/dropdownVersion.js';
 
 import styleCss from "./style-css.js";
 import colorCss from "./color-css.js";
@@ -176,6 +176,7 @@ export class AuroSelect extends LitElement {
    */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+    this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
 
     if (this.customBibWidth) {
       this.dropdown.dropdownWidth = this.customBibWidth;
@@ -309,6 +310,9 @@ export class AuroSelect extends LitElement {
    * @returns {void}
    */
   configureSelect() {
+    // inject menu into menuWrapper
+    this.menuWrapper.append(this.menu);
+
     this.addEventListener('keydown', (evt) => {
       if (evt.key === 'ArrowUp') {
         evt.preventDefault();
@@ -578,7 +582,6 @@ export class AuroSelect extends LitElement {
             ${this.value ? this.displayValue : html`<span class="placeholder">${this.placeholder}</span>`}
           </span>
           <div class="menuWrapper">
-            <slot></slot>
           </div>
           <slot name="label" slot="label"></slot>
           <span slot="helpText">
