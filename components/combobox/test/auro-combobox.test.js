@@ -20,7 +20,8 @@ describe('auro-combobox', () => {
   it('noFilter attribute results in no suggestion filtering', async () => {
     const el = await noFilterFixture();
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let visibleMenuOptions = [];
 
@@ -150,7 +151,8 @@ describe('auro-combobox', () => {
 
     await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     setInputValue(el, 'a');
@@ -184,7 +186,8 @@ describe('auro-combobox', () => {
   it('typing filters list of options', async () => {
     const el = await defaultFixture();
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let visibleMenuOptions = [];
 
@@ -203,7 +206,8 @@ describe('auro-combobox', () => {
   it('using the nomatch attribute with a matching value', async () => {
     const el = await noMatchFixture();
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let visibleMenuOptions = [];
 
@@ -222,7 +226,8 @@ describe('auro-combobox', () => {
   it('using the nomatch attribute with no matching value', async () => {
     const el = await noMatchFixture();
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let visibleMenuOptions = [];
 
@@ -241,7 +246,8 @@ describe('auro-combobox', () => {
   it('using the persistent attribute always displays the persistent option', async () => {
     const el = await persistentFixture();
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let visibleMenuOptions = [];
 
@@ -261,7 +267,8 @@ describe('auro-combobox', () => {
   it('using the suggest attribute matches additional options', async () => {
     const el = await suggestFixture();
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let visibleMenuOptions = [];
 
@@ -283,7 +290,8 @@ describe('auro-combobox', () => {
 
     await waitUntil(() => el.ready);
 
-    const menu = el.querySelector('auro-menu')
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     let selectedOptions = [];
 
@@ -314,7 +322,8 @@ describe('auro-combobox', () => {
 
   it('makes a selection using the keyboard', async () => {
     const el = await defaultFixture();
-    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     setInputValue(el, 'a');
@@ -373,14 +382,16 @@ describe('auro-combobox', () => {
   it('default to nocheckmark on selected option', async () => {
     const el = await defaultFixture();
 
-    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     await expect(menu.hasAttribute('nocheckmark')).to.be.true;
   });
 
   it('selected options have checkmark when checkmark attribute is present', async () => {
     const el = await checkmarkFixture();
 
-    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu')
     await expect(menu.hasAttribute('nocheckmark')).to.be.false;
   });
 });
