@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [1.5.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.4.0...v1.5.0) (2024-11-29)
+
+
+### Features
+
+* integrate combobox with internal dropdown - part of [#45](https://github.com/AlaskaAirlines/auro-form/issues/45) ([949350e](https://github.com/AlaskaAirlines/auro-form/commit/949350e65b4926d4f719a7e9f3cbfa070d6870c9))
+* integrate select with internal dropdown - part of [#45](https://github.com/AlaskaAirlines/auro-form/issues/45) ([2f5c5e8](https://github.com/AlaskaAirlines/auro-form/commit/2f5c5e8867aa4376891e28e0fdfa9503a6dc2f99))
+
 # [1.4.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.3.0...v1.4.0) (2024-11-29)
 
 
