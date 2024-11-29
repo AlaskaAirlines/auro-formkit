@@ -14,7 +14,7 @@ import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/valida
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown/src/auro-dropdown.js';
-import dropdownVersion from '../../../src/dropdownVersion.js';
+import dropdownVersion from '../../../src/internal/dropdownVersion.js';
 
 import { AuroInput } from '../../input/src/auro-input.js';
 import inputVersion from '../../../src/internal/inputVersion.js';
