@@ -7,7 +7,7 @@
     "================================================================================"
   ],
   "name": "@aurodesignsystem/auro-form",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "auro-formkit",
   "repository": {
     "type": "git",
@@ -297,7 +297,6 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "postversion": "npm-run-all build:api build:docs",
     "prepare": "husky install",
-
     "dev:select": "concurrently --kill-others \"npm run build:watch:select\" \"npm run serve:select\"",
     "build:select": "npm-run-all build:version:select build:sass:select sass:render:select types",
     "build:demo:select": "npm-run-all build:select demo:rm:build demo:new:build demo:copy:index:select demo:copy:demo:select demo:update:index",
@@ -319,7 +318,6 @@
     "linters:select": "npm-run-all scssLint:select esLint:select",
     "scssLint:select": "stylelint \"./components/select/**/*.scss\"",
     "esLint:select": "eslint 'components/select/**/*.js'",
-
     "dev:combobox": "concurrently --kill-others \"npm run build:watch:combobox\" \"npm run serve:combobox\"",
     "build:combobox": "npm-run-all build:version:combobox build:sass:combobox sass:render:combobox types",
     "build:demo:combobox": "npm-run-all build:combobox demo:rm:build demo:new:build demo:copy:index:combobox demo:copy:demo:combobox demo:update:index",
@@ -341,7 +339,6 @@
     "linters:combobox": "npm-run-all scssLint:combobox esLint:combobox",
     "scssLint:combobox": "stylelint \"./components/combobox/**/*.scss\"",
     "esLint:combobox": "eslint 'components/combobox/**/*.js'",
-    
     "dev:datepicker": "concurrently --kill-others \"npm run build:watch:datepicker\" \"npm run serve:datepicker\"",
     "build:datepicker": "npm-run-all build:version:datepicker build:sass:datepicker sass:render:datepicker types",
     "build:demo:datepicker": "npm-run-all build:datepicker demo:rm:build demo:new:build demo:copy:index:datepicker demo:copy:demo:datepicker demo:update:index",

@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [1.4.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.3.0...v1.4.0) (2024-11-29)
+
+
+### Features
+
+* add `auro-combobox@2.1.4` ([0e21bc4](https://github.com/AlaskaAirlines/auro-form/commit/0e21bc4a9671ba5635f411d7996c9d0e220dcaff))
+* add `auro-datepicker@3.2.0` ([bdcde1d](https://github.com/AlaskaAirlines/auro-form/commit/bdcde1d30ce82c293bcdd0a22de7bc54cb8b201e))
+
 # [1.3.0](https://github.com/AlaskaAirlines/auro-form/compare/v1.2.0...v1.3.0) (2024-11-27)
 
 
