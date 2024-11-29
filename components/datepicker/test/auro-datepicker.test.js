@@ -299,7 +299,8 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
 
     const calendarCell = calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell');
@@ -324,7 +325,8 @@ describe('auro-datepicker', () => {
 
   await elementUpdated(el);
 
-  const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
 
     const calendarCell = calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell');
@@ -359,7 +361,8 @@ describe('auro-datepicker', () => {
 
   await elementUpdated(el);
 
-  const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
 
     const calendarCell = calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell');
@@ -393,7 +396,8 @@ describe('auro-datepicker', () => {
       <auro-datepicker calendarStartDate="${fullDate}"></auro-datepicker>
     `);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
 
     await expect(calendar.showPrevMonthBtn).to.be.false;
   });
@@ -403,7 +407,8 @@ describe('auro-datepicker', () => {
       <auro-datepicker maxDate="04/17/2023"></auro-datepicker>
     `);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
 
     await expect(calendar.showNextMonthBtn).to.be.false;
   });
@@ -489,7 +494,8 @@ describe('auro-datepicker', () => {
       <auro-datepicker></auro-datepicker>
     `);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
 
     await expect(calendar.numCalendars).to.be.equal(1);
   });
@@ -499,7 +505,8 @@ describe('auro-datepicker', () => {
       <auro-datepicker range></auro-datepicker>
     `);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
 
     await expect(calendar.numCalendars).to.be.equal(2);
   });
@@ -511,7 +518,8 @@ describe('auro-datepicker', () => {
       <auro-datepicker></auro-datepicker>
     `);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
 
     await expect(calendar.numCalendars).to.be.equal(12);
   });
@@ -547,7 +555,8 @@ describe('auro-datepicker', () => {
       <auro-datepicker range calendarStartDate="03/04/2023" calendarEndDate="05/05/2023"></auro-datepicker>
     `);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
 
     await expect(calendar.numCalendars).to.equal(3);
   });
@@ -559,7 +568,8 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const prevMonthBth = calendar.shadowRoot.querySelector('.prevMonth');
 
     const central = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
@@ -590,7 +600,8 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const nextMonthBth = calendar.shadowRoot.querySelector('.nextMonth');
 
     const central = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
@@ -635,7 +646,8 @@ describe('auro-datepicker', () => {
       <auro-datepicker></auro-datepicker>
     `);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const input = getInput(el, 0);
 
     const closeBtn = calendar.shadowRoot.querySelector('.mobileFooterActions auro-button');
@@ -656,7 +668,8 @@ describe('auro-datepicker', () => {
   it('datepicker correctly parses date slot name and passes content down to cell correctly', async () => {
     const el = await dateSlotFixture();
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
     const calendarCell = [...calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell')];
 
@@ -681,7 +694,8 @@ describe('auro-datepicker', () => {
   it('datepicker passes popover slot content down to cell correctly', async () => {
     const el = await popoverSlotFixture();
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
     const calendarCell = [...calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell')];
 
@@ -710,7 +724,8 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const calendar = el.shadowRoot.querySelector('auro-calendar');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
     const calendarCell = [...calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell')];
 

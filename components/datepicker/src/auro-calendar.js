@@ -9,8 +9,6 @@ import { RangeDatepicker } from './vendor/wc-range-datepicker/range-datepicker.j
 import chevronLeft from '@alaskaairux/icons/dist/icons/interface/chevron-left.mjs';
 import chevronRight from '@alaskaairux/icons/dist/icons/interface/chevron-right.mjs';
 
-import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-
 import { AuroDatepickerUtilities } from './utilities.js';
 import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
@@ -30,7 +28,6 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
  * - 'narrow' (e.g., T).
  * Default is 'short'.
  * @event auroCalendar-dateSelected - Notifies that a date has been selected in the calendar.
- * @event auroCalendar-ready - Notifies that the component has finished initializing.
  * @event auroCalendar-monthChanged - Notifies that the visible calendar month(s) have changed.
  */
 
@@ -40,11 +37,6 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 export class AuroCalendar extends RangeDatepicker {
   constructor() {
     super();
-
-    /**
-     * @private
-     */
-    this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
     /**
      * @private
@@ -61,7 +53,6 @@ export class AuroCalendar extends RangeDatepicker {
      */
     this.utilCalRender = new UtilitiesCalendarRender();
 
-    this.datepicker = this.runtimeUtils.closestElement('auro-datepicker', this);
     this.calendarStartDate = undefined;
     this.calendarEndDate = undefined;
     this.centralDate = undefined;
