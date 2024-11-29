@@ -65,7 +65,6 @@ import inputVersion from './formkit/auro-inputVersion.js';
  * @csspart calendar - Use for customizing the style of the calendar.
  * @csspart helpTextSpan - Use for customizing the style of the datepicker help text span.
  * @csspart helpText - Use for customizing the style of the datepicker help text.
- * @event auroDatePicker-ready - Notifies that the component has finished initializing.
  * @event auroDatePicker-valueSet - Notifies that the component has a new value set.
  * @event auroDatePicker-toggled - Notifies that the calendar dropdown has been opened/closed.
  * @event auroDatePicker-monthChanged - Notifies that the visible calendar month(s) have changed.
@@ -526,6 +525,7 @@ export class AuroDatePicker extends LitElement {
    */
   configureCalendar() {
     this.calendar = this.shadowRoot.querySelector('auro-calendar');
+    this.calendar.datepicker = this;
 
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
       if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
@@ -585,13 +585,17 @@ export class AuroDatePicker extends LitElement {
 
     // Close the datepicker when clicking outside it
     document.addEventListener('click', (evt) => {
-      if (!evt.composedPath().includes(this) && this.dropdown.isPopoverVisible) {
+      if (!evt.composedPath().includes(this) &&
+      !evt.composedPath().includes(this.dropdown.bibContent) &&
+      this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
       }
     });
 
     document.activeElement.addEventListener('focusin', () => {
-      if (document.activeElement !== document.querySelector('body') && !this.contains(document.activeElement)) {
+      if (document.activeElement !== document.querySelector('body') &&
+      !this.contains(document.activeElement) &&
+      !this.dropdown.bibContent.contains(document.activeElement)) {
         this.dropdown.hide();
       }
     });
@@ -603,21 +607,6 @@ export class AuroDatePicker extends LitElement {
     if (this.hasAttribute('valueEnd') && this.getAttribute('valueEnd').length > 0) {
       this.calendar.dateTo = new Date(this.valueEnd).getTime();
     }
-  }
-
-  /**
-   * Marks the component as ready and sends event.
-   * @private
-   * @returns {void}
-   */
-  notifyReady() {
-    this.ready = true;
-
-    this.dispatchEvent(new CustomEvent('auroDatePicker-ready', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
   }
 
   /**
@@ -869,7 +858,6 @@ export class AuroDatePicker extends LitElement {
     this.configureInput();
     this.configureCalendar();
     this.configureDatepicker();
-    this.notifyReady();
 
     window.addEventListener('resize', () => {
       this.handleReadOnly();

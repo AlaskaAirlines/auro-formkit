@@ -36,6 +36,7 @@ export class AuroCalendarCell extends LitElement {
     this._locale = null;
     this.dateStr = null;
     this.renderForDateSlot = false; // When false, the numerical date will render vertically centered. When true, the date will render off-center to the top and leave room below for the slot content.
+
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
     /**
@@ -311,19 +312,21 @@ export class AuroCalendarCell extends LitElement {
   }
 
   firstUpdated() {
-    this.datepicker = this.runtimeUtils.closestElement('auro-datepicker', this) ||
-      this.runtimeUtils.closestElement('[auro-datepicker]', this);
+    const calendarMonth = this.runtimeUtils.closestElement('auro-calendar-month', this);
+    const calendar = this.runtimeUtils.closestElement('auro-calendar', calendarMonth);
 
-    if (this.datepicker) {
-      this.datepicker.addEventListener('auroDatePicker-newSlotContent', () => {
-        this.handleSlotContent();
-      });
+    if (!calendar) {
+      setTimeout(() => this.firstUpdated(), 0);
+      return;
     }
+    this.datepicker = calendar.datepicker;
+    this.datepicker.addEventListener('auroDatePicker-newSlotContent', () => {
+      this.handleSlotContent();
+    });
 
-    this.calendarMonth = this.runtimeUtils.closestElement('auro-calendar-month', this);
     this.auroPopover = this.shadowRoot.querySelector(this.popoverTag._$litStatic$);
 
-    this.auroPopover.boundary = this.calendarMonth;
+    this.auroPopover.boundary = calendarMonth;
   }
 
   updated(properties) {
