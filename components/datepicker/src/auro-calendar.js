@@ -5,7 +5,7 @@ import colorCss from './styles/color-calendar-css.js';
 import tokensCss from './styles/tokens-css.js';
 
 import './auro-calendar-month.js';
-import { RangeDatepicker } from './../vendor/wc-range-datepicker/range-datepicker.js';
+import { RangeDatepicker } from './vendor/wc-range-datepicker/range-datepicker.js';
 import chevronLeft from '@alaskaairux/icons/dist/icons/interface/chevron-left.mjs';
 import chevronRight from '@alaskaairux/icons/dist/icons/interface/chevron-right.mjs';
 
