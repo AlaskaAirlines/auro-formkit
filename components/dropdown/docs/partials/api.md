@@ -360,7 +360,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 ### Other Examples
 #### Width and Sizing Behavior
 
-- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bibSizer` part.
+- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bib` part.
 
 - **Styling Options:** Only the following styles can be applied to the `bib` part:
   - `width`

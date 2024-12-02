@@ -31,16 +31,23 @@ export default class AuroFloatingUI {
     }
   }
 
-  position() {
-    // fullscreen on mobileView 
+  getPositioningStrategy() {
     if (this.element.bib.mobileFullscreenBreakpoint) {
       const isMobile = window.matchMedia(`(max-width: ${this.element.bib.mobileFullscreenBreakpoint})`).matches;
-      this.handleMobileFullscreen(isMobile);
-      if (isMobile) {
-        this.mirrorSize(true);
-        return;
-      }
+      return isMobile ? 'fullscreen' : 'floating';
     }
+    return 'floating';
+  }
+
+  position() {
+    const strategy = this.getPositioningStrategy();
+    if (strategy === 'fullscreen') {
+      this.handleMobileFullscreen(true);
+      this.mirrorSize(true);
+      return;
+    }
+
+    this.handleMobileFullscreen(false);
     this.mirrorSize(false);
 
     // Define the middlware for the floater configuration
