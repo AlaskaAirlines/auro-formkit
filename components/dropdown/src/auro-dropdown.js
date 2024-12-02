@@ -21,7 +21,8 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import dsVariableFlat from "./ds-grid-breakpoint.js";
+
+const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
 
 import './auro-dropdownBib.js';
 
@@ -39,6 +40,7 @@ import './auro-dropdownBib.js';
  * @attr { Boolean } noToggle - If declared, the trigger will only show the the dropdown bib.
  * @attr { Boolean } focusShow - if declared, the the bib will display when focus is applied to the trigger.
  * @attr { Boolean } noHideOnThisFocusLoss - If declared, the dropdown will not hide when moving focus outside the element.
+ * @attr { String } mobileFullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. The dropdown will automatically display in fullscreen mode when the screen size is equal to or smaller than the selected breakpoint.
  * @prop { Boolean } isPopoverVisible - If true, the dropdown bib is displayed.
  * @slot - Default slot for the popover content.
  * @slot label - Defines the content of the label.
@@ -237,7 +239,11 @@ export class AuroDropdown extends LitElement {
     this.floater.configure(this);
     this.bibContent = this.floater.element.bib;
     if (this.mobileFullscreenBreakpoint) {
-      const breakpointValue = dsVariableFlat[this.mobileFullscreenBreakpoint.replace(/^[-][-]/u, "")];
+      const docStyle = getComputedStyle(document.documentElement);
+      const breakpointValue = docStyle.getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + this.mobileFullscreenBreakpoint);
+      // if (!breakpointValue) {
+      //   console.warn('There is no breakpoint token called', DESIGN_TOKEN_BREAKPOINT_PREFIX + this.mobileFullscreenBreakpoint);
+      // }
       this.bibContent.mobileFullscreenBreakpoint = breakpointValue;
     }
 
