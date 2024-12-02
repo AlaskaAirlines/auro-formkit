@@ -4,11 +4,11 @@
 // ---------------------------------------------------------------------
 
 // Import Auro tokens
-@import './../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
 
-@import './../node_modules/@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import './../node_modules/@aurodesignsystem/webcorestylesheets/src/core';
-@import './../node_modules/@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@import '@aurodesignsystem/webcorestylesheets/src/core';
+@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
 /* stylelint-disable max-nesting-depth, selector-class-pattern */
 
