@@ -6,7 +6,7 @@
     "  2. Go to http://localhost:8000",
     "================================================================================"
   ],
-  "name": "@aurodesignsystem/auro-formkit.menu",
+  "name": "@auro-formkit/auro-menu",
   "version": "4.1.4",
   "description": "auro-menu HTML custom element",
   "type": "module",

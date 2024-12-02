@@ -1,4 +1,4 @@
 import { writeDepVersionFile } from '@auro-formkit/build-tools/formVersionWriter';
 
-writeDepVersionFile('@/components/dropdown');
-writeDepVersionFile('@/components/input');
+writeDepVersionFile('@auro-formkit/auro-dropdown');
+writeDepVersionFile('@auro-formkit/auro-input');
