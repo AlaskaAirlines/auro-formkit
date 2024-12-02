@@ -41,7 +41,6 @@ import tokensCss from "./styles/tokens-css.js";
  * @slot - Default slot for the menu content.
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
- * @event auroSelect-ready - Notifies that the component has finished initializing.
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  * @csspart helpText - Apply CSS to the help text.
@@ -184,10 +183,6 @@ export class AuroSelect extends LitElement {
 
     // Exposes the CSS parts from the dropdown for styling
     this.dropdown.exposeCssParts();
-
-    this.dropdown.addEventListener('auroDropdown-ready', () => {
-      this.auroDropdownReady = true;
-    });
   }
 
   /**
@@ -253,10 +248,6 @@ export class AuroSelect extends LitElement {
     this.menu.setAttribute('aria-hidden', 'true');
 
     this.generateOptionsArray();
-
-    this.menu.addEventListener('auroMenu-ready', () => {
-      this.auroMenuReady = true;
-    });
 
     this.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
@@ -375,51 +366,6 @@ export class AuroSelect extends LitElement {
   }
 
   /**
-   * Marks the component as ready and sends event.
-   * @private
-   * @returns {void}
-   */
-  notifyReady() {
-    this.ready = true;
-
-    this.dispatchEvent(new CustomEvent('auroSelect-ready', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
-  }
-
-  /**
-   * Monitors readiness of peer dependencies and begins work that should only start when ready.
-   * @private
-   * @returns {void}
-   */
-  async checkReadiness() {
-    if (this.auroDropdownReady && this.auroMenuReady) {
-      this.readyActions();
-      this.notifyReady();
-    } else {
-      // Start a retry counter to limit the retry count
-      if (!this.readyRetryCount && this.readyRetryCount !== 0) {
-        this.readyRetryCount = 0;
-      } else {
-        this.readyRetryCount += 1;
-      }
-
-      const readyTimer = 0;
-      const readyRetryLimit = 200;
-
-      if (this.readyRetryCount <= readyRetryLimit) {
-
-        const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
-
-        await sleep(readyTimer);
-        this.checkReadiness();
-      }
-    }
-  }
-
-  /**
    * Determines the element error state based on the `required` attribute and input value.
    * @private
    * @returns {void}
@@ -429,18 +375,6 @@ export class AuroSelect extends LitElement {
       this.options = [...this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]')];
     } else {
       this.options = [];
-    }
-  }
-
-  /**
-   * Functionality that should not be performed until the combobox is in a ready state.
-   * @private
-   * @returns {void}
-   */
-  readyActions() {
-    // Set the initial value in auro-menu if defined
-    if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      this.menu.value = this.value;
     }
   }
 
@@ -478,24 +412,23 @@ export class AuroSelect extends LitElement {
     this.configureDropdown();
     this.configureSelect();
 
-    this.checkReadiness();
+    // Set the initial value in auro-menu if defined
+    if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
+      this.menu.value = this.value;
+    }
   }
 
   updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
-    if (this.ready && changedProperties.has('value')) {
+    if (changedProperties.has('value')) {
       if (this.value) {
         this.menu.value = this.value;
       } else {
         this.menu.value = undefined;
       }
-    }
 
-    if (changedProperties.has('value')) {
       this.validation.validate(this);
-    }
 
-    if (changedProperties.has('value')) {
       this.dispatchEvent(new CustomEvent('auroSelect-valueSet', {
         bubbles: true,
         cancelable: false,

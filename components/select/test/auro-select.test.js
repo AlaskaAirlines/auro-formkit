@@ -104,7 +104,6 @@ describe('auro-select', () => {
 
   it('make invalid selection programmatically results in error ui', async () => {
     const el = await presetValueFixture();
-    await waitUntil(() => el.ready);
 
     await expect(el.value).to.be.equal('price');
 
@@ -122,7 +121,6 @@ describe('auro-select', () => {
 
   it('reset selection value programmatically', async () => {
     const el = await presetValueFixture();
-    await waitUntil(() => el.ready);
 
     el.value = undefined;
 
@@ -149,8 +147,6 @@ describe('auro-select', () => {
 
   it('removing error attribute reruns validity even when value is undefined', async () => {
     const el = await errorFixture();
-
-    await waitUntil(() => el.ready);
 
     await expect(el.getAttribute('validity')).to.be.equal('customError');
 

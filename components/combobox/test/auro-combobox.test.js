@@ -84,7 +84,6 @@ describe('auro-combobox', () => {
 
   it('hides the bib when making a selection', async () => {
     const el = await defaultFixture();
-    await waitUntil(() => el.ready);
 
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
@@ -142,7 +141,7 @@ describe('auro-combobox', () => {
 
   it('navigates menu with up and down arrow keys', async () => {
     const el = await defaultFixture();
-
+    el.focus();
     // Validate bib is shown when hitting enter but there is a value in the input
     setInputValue(el, 'pp');
     el.dispatchEvent(new KeyboardEvent('keydown', {
@@ -288,8 +287,6 @@ describe('auro-combobox', () => {
   it('makes a selection programmatically', async () => {
     const el = await defaultFixture();
 
-    await waitUntil(() => el.ready);
-
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu')
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -311,7 +308,6 @@ describe('auro-combobox', () => {
 
   it('reset selection value programmatically', async () => {
     const el = await presetValueFixture();
-    await waitUntil(() => el.ready);
 
     el.value = undefined;
 
@@ -345,7 +341,6 @@ describe('auro-combobox', () => {
 
   it('Does not throw an error state when trying to programmatically set a value that doesn\'t match an option', async () => {
     const el = await defaultFixture();
-    await waitUntil(() => el.ready);
 
     const menu = el.querySelector('auro-menu')
 

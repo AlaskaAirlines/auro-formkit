@@ -48,7 +48,6 @@ import './auro-dropdownBib.js';
  * @csspart helpText - The helpText content container.
  * @csspart popover - The bib content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
- * @event auroDropdown-ready - Notifies that the component has finished initializing.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
  */
 export class AuroDropdown extends LitElement {
@@ -74,7 +73,6 @@ export class AuroDropdown extends LitElement {
     this.inset = false;
     this.placement = 'bottom-start';
     this.rounded = false;
-    this.ready = false;
     this.tabIndex = 0;
     this.noToggle = false;
 
@@ -173,7 +171,6 @@ export class AuroDropdown extends LitElement {
         reflect: true
       },
       isPopoverVisible: { type: Boolean },
-      ready:            { type: Boolean },
       onSlotChange: {
         type: Function,
         reflect: false
@@ -243,22 +240,9 @@ export class AuroDropdown extends LitElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
 
-    this.notifyReady();
-  }
+    this.bibContent = this.shadowRoot.querySelector('auro-dropdownbib');
 
-  /**
-   * Marks the component as ready and sends event.
-   * @private
-   * @returns {void}
-   */
-  notifyReady() {
-    this.ready = true;
-
-    this.dispatchEvent(new CustomEvent('auroDropdown-ready', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
+    document.body.append(this.bibContent);
   }
 
   /**
@@ -342,7 +326,7 @@ export class AuroDropdown extends LitElement {
             <div class="triggerContent">
               <slot
                 name="trigger"
-                @slotchange="${() => {if (this.ready) this.floater.handleTriggerTabIndex(); }}"></slot>
+                @slotchange="${() => {this.floater.handleTriggerTabIndex(); }}"></slot>
             </div>
           </div>
           ${this.chevron || this.common ? html`

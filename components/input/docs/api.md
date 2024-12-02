@@ -62,7 +62,6 @@
 | Event                       | Type               | Description                                      |
 |-----------------------------|--------------------|--------------------------------------------------|
 | `auroFormElement-validated` |                    | Notifies that the `validity` and `errorMessage` value has changed. |
-| `auroInput-ready`           | `CustomEvent<any>` |                                                  |
 | `auroInput-validityChange`  | `CustomEvent<any>` |                                                  |
 | `input`                     |                    | Event fires when the value of an `auro-input` has been changed. |
 
