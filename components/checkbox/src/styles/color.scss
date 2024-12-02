@@ -5,7 +5,7 @@
 
 /* stylelint-disable selector-class-pattern, order/properties-order, no-descending-specificity */
 
-@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 
 :host {
   .label {

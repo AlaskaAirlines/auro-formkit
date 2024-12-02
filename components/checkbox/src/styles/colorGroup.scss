@@ -5,7 +5,7 @@
 
 /* stylelint-disable selector-class-pattern */
 
-@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 
 :host {
   color: var(--ds-auro-checkbox-group-text-color);

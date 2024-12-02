@@ -13,7 +13,7 @@
    scss/selector-nest-combinators,
    selector-class-pattern */
 
-@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 
 :host {
   display: block;
