@@ -6,9 +6,10 @@
 // ---------------------------------------------------------------------
 import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
-import styleCss from "./style-menuoption-css.js";
-import colorCss from "./color-menuoption-css.js";
-import tokensCss from "./tokens-css.js";
+
+import styleCss from "./styles/style-menuoption-css.js";
+import colorCss from "./styles/color-menuoption-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';

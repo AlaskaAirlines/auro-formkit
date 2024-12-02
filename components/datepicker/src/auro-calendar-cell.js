@@ -4,9 +4,9 @@ import { classMap } from 'lit/directives/class-map.js';
 import { format, startOfDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 
-import styleCss from './style-auro-calendar-cell-css.js';
-import colorCss from './color-cell-css.js';
-import tokensCss from './tokens-css.js';
+import styleCss from './styles/style-auro-calendar-cell-css.js';
+import colorCss from './styles/color-cell-css.js';
+import tokensCss from './styles/tokens-css.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 

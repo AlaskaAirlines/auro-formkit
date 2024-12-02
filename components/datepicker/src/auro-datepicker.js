@@ -19,9 +19,9 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 // Import touch detection lib
-import styleCss from "./style-css.js";
-import colorCss from "./color-css.js";
-import tokensCss from "./tokens-css.js";
+import styleCss from "./styles/style-css.js";
+import colorCss from "./styles/color-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 import './auro-calendar.js';
 

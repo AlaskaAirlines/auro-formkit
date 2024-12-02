@@ -20,7 +20,7 @@ import { AuroInput } from '../../input/src/auro-input.js';
 import inputVersion from '../../../src/internal/inputVersion.js';
 
 // Import touch detection lib
-import styleCss from "./style-css.js";
+import styleCss from "./styles/style-css.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
