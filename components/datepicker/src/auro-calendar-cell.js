@@ -11,7 +11,7 @@ import tokensCss from './styles/tokens-css.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroPopover } from '@aurodesignsystem/auro-popover/src/auro-popover.js';
-import popoverVersion from '../../../src/popoverVersion.js';
+import popoverVersion from './popoverVersion.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
