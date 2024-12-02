@@ -10,10 +10,20 @@ import styleCss from "./styles/bibStyles-css.js";
 import colorCss from "./styles/bibColors-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+
+const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
+const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
+  'lg',
+  'md',
+  'sm',
+  'xs',
+];
+
 /**
  * @attr { Boolean } common - If declared, will apply all styles for the common theme.
  * @attr { Boolean } rounded - If declared, will apply border-radius to the bib.
  * @attr { Boolean } inset - If declared, will apply extra padding to bib content.
+ * @attr { String } mobileFullscreenBreakpoint - passed down from dropdown, which the dropdown switches to fullscreen mode on mobile
  * @csspart bibContainer - Apply css to the bib container.
  */
 
@@ -41,9 +51,17 @@ export class AuroDropdownBib extends LitElement {
         type: Boolean,
         reflect: true
       },
-      mobileBreakpoint: {
+      mobileFullscreenBreakpoint: {
         type: String,
-        reflect: false
+        converter: (value) => {
+          const validatedValue = DESIGN_TOKEN_BREAKPOINT_OPTIONS.includes(value) ? value : undefined;
+          if (!validatedValue) {
+            return undefined;
+          }
+          const docStyle = getComputedStyle(document.documentElement);
+          return docStyle.getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + value);
+        },
+        reflect: false,
       }
     };
   }
