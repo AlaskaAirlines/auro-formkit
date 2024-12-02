@@ -15,7 +15,7 @@ import AuroFloatingUI from './floatingUI.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
-import iconVersion from '../../../src/iconVersion.js';
+import iconVersion from './iconVersion.js';
 
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
