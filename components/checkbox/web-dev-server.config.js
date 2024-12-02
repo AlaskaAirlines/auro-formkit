@@ -2,5 +2,5 @@ export default {
   open: 'demo/',
   nodeResolve: true,
   watch: true,
-  port: 8006
+  port: 8001
 }
