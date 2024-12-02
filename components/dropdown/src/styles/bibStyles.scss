@@ -30,12 +30,12 @@
  left: 0;
 
  .container {
-    top: 0;
-    left: 0;
     width: 100dvw;
     max-width: none;
     height: 100dvh;
     max-height: none;
+    border-radius: unset;
+    box-shadow: unset;
  }
 }
 
@@ -43,8 +43,8 @@
   display: block;
 }
 
-:host([common]),
-:host([rounded]) {
+:host([common]:not([isfullscreen])),
+:host([rounded]:not([isfullscreen])) {
   .container {
     border-radius: var(--ds-border-radius, $ds-border-radius);
   }
@@ -54,5 +54,13 @@
 :host([inset]) {
   .container {
     padding: var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100);
+  }
+}
+
+:host([common][isfullscreen]),
+:host([rounded][isfullscreen]) {
+  .container {
+    border-radius: unset;
+    box-shadow: unset;
   }
 }
