@@ -952,12 +952,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 ### Fullscreen Effect on Mobile View
 
-On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will prevent the dropdown from switching to fullscreen mode. 
-
-This is useful in scenarios where:
-- Fullscreen mode does not provide significant benefits to the user.
-- The dropdown needs to maintain a custom size and stay within its defined dimensions.
-
+On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
