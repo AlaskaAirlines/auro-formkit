@@ -27,7 +27,6 @@
 
 | Event                       | Type               | Description                                      |
 |-----------------------------|--------------------|--------------------------------------------------|
-| `auroCombobox-ready`        | `CustomEvent<any>` | Notifies that the component has finished initializing. |
 | `auroCombobox-valueSet`     | `CustomEvent<any>` | Notifies that the component has a new value set. |
 | `auroFormElement-validated` |                    | Notifies that the component value(s) have been validated. |
 

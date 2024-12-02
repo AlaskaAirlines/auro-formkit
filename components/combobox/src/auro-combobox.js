@@ -39,7 +39,6 @@ import styleCss from "./styles/style-css.js";
  * @slot - Default slot for the menu content.
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
- * @event auroCombobox-ready - Notifies that the component has finished initializing.
  * @event auroCombobox-valueSet - Notifies that the component has a new value set.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
@@ -293,9 +292,6 @@ export class AuroCombobox extends LitElement {
     this.menuWrapper.append(this.menu);
 
     this.dropdown.setAttribute('role', 'combobox');
-    this.dropdown.addEventListener('auroDropdown-ready', () => {
-      this.auroDropdownReady = true;
-    });
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
@@ -331,15 +327,6 @@ export class AuroCombobox extends LitElement {
     } else {
       this.menu.setAttribute('nocheckmark', '');
     }
-
-    if (this.noFilter) {
-      this.auroMenuReady = true;
-    } else {
-      this.menu.addEventListener('auroMenu-ready', () => {
-        this.auroMenuReady = true;
-      });
-    }
-
 
     // handle the menu event for an option selection
     this.menu.addEventListener('auroMenu-selectedOption', () => {
@@ -401,10 +388,6 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   configureInput() {
-    this.input.addEventListener('auroInput-ready', () => {
-      this.auroInputReady = true;
-    });
-
     this.input.addEventListener('keyup', (evt) => {
       if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
         this.showBib();
@@ -428,21 +411,19 @@ export class AuroCombobox extends LitElement {
       this.menu.matchWord = this.input.value;
       this.optionActive = null;
 
-      if (this.ready) {
-        if (this.value !== this.input.value) {
-          this.value = this.input.value;
-        }
-
-        if (this.value !== this.menu.value) {
-          this.menu.value = this.value;
-        }
-
-        if (this.optionSelected && this.input.value !== this.optionSelected.innerText) {
-          this.optionSelected = undefined;
-        }
-
-        this.menu.resetOptionsStates();
+      if (this.value !== this.input.value) {
+        this.value = this.input.value;
       }
+
+      if (this.value !== this.menu.value) {
+        this.menu.value = this.value;
+      }
+
+      if (this.optionSelected && this.input.value !== this.optionSelected.innerText) {
+        this.optionSelected = undefined;
+      }
+
+      this.menu.resetOptionsStates();
 
       this.handleMenuOptions();
 
@@ -577,57 +558,6 @@ export class AuroCombobox extends LitElement {
     this.configureDropdown();
     this.configureCombobox();
 
-    this.checkReadiness();
-  }
-
-  /**
-   * @private
-   * @returns {void} Marks the component as ready and sends event.
-   */
-  notifyReady() {
-    this.ready = true;
-
-    this.dispatchEvent(new CustomEvent('auroCombobox-ready', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
-  }
-
-  /**
-   * Monitors readiness of peer dependencies and begins work that should only start when ready.
-   * @private
-   * @returns {void}
-   */
-  checkReadiness() {
-    if (this.auroDropdownReady && this.auroInputReady && this.auroMenuReady) {
-      this.readyActions();
-      this.notifyReady();
-    } else {
-      // Start a retry counter to limit the retry count
-      if (!this.readyRetryCount && this.readyRetryCount !== 0) {
-        this.readyRetryCount = 0;
-      } else {
-        this.readyRetryCount += 1;
-      }
-
-      const readyTimer = 0;
-      const readyRetryLimit = 200;
-
-      if (this.readyRetryCount <= readyRetryLimit) {
-        setTimeout(() => {
-          this.checkReadiness();
-        }, readyTimer);
-      }
-    }
-  }
-
-  /**
-   * Functionality that should not be performed until the combobox is in a ready state.
-   * @private
-   * @returns {void}
-   */
-  readyActions() {
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
       this.menu.value = this.value;
@@ -644,7 +574,7 @@ export class AuroCombobox extends LitElement {
 
   updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
-    if (this.ready && changedProperties.has('value')) {
+    if (changedProperties.has('value')) {
       if (this.value) {
         if (this.optionSelected && this.optionSelected.value === this.value) {
           // If value updates and the previously selected option already matches the new value
@@ -682,16 +612,14 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   handleSlotChange() {
-    if (this.auroMenuReady) {
-      this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
-      this.options.forEach((opt) => {
-        if (this.checkmark) {
-          opt.removeAttribute('nocheckmark');
-        } else {
-          opt.setAttribute('nocheckmark', '');
-        }
-      });
-    }
+    this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
+    this.options.forEach((opt) => {
+      if (this.checkmark) {
+        opt.removeAttribute('nocheckmark');
+      } else {
+        opt.setAttribute('nocheckmark', '');
+      }
+    });
 
     this.handleMenuOptions();
   }

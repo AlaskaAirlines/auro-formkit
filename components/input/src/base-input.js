@@ -42,7 +42,6 @@ import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/valida
  * @attr {String}  name - Populates the `name` attribute on the input.
  * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
  * @attr {Boolean} readonly - Makes the input read-only, but can be set programmatically.
- * @prop {Boolean} ready - When false the component API should not be called.
  * @attr {Boolean} required - Populates the `required` attribute on the input. Used for client-side validation.
  * @attr {String}  pattern - Specifies a regular expression the form control's value should match.
  * @attr {String}  placeholder - Define custom placeholder text, only supported by date input formats.
@@ -89,7 +88,6 @@ export default class BaseInput extends LitElement {
     this.maxLength = undefined;
     this.minLength = undefined;
     this.label = 'Input label is undefined';
-    this.ready = false;
     this.activeLabel = false;
 
     this.setCustomValidityForType = undefined;
@@ -196,7 +194,6 @@ export default class BaseInput extends LitElement {
       showPassword:            { state: true },
       validateOnInput:         { type: Boolean },
       readonly:                { type: Boolean },
-      ready:                   { type: Boolean },
       error:                   {
         type: String,
         reflect: true
@@ -437,8 +434,6 @@ export default class BaseInput extends LitElement {
         }
       }
     });
-
-    this.notifyReady();
   }
 
   /**
@@ -537,20 +532,6 @@ export default class BaseInput extends LitElement {
    */
   notifyValidityChange() {
     this.dispatchEvent(new CustomEvent('auroInput-validityChange', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
-  }
-
-  /**
-   * @private
-   * @returns {void} Marks the component as ready and sends event.
-   */
-  notifyReady() {
-    this.ready = true;
-
-    this.dispatchEvent(new CustomEvent('auroInput-ready', {
       bubbles: true,
       cancelable: false,
       composed: true,

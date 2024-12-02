@@ -21,7 +21,6 @@ import './auro-menuoption.js';
  * @attr {Boolean} disabled - When true, the entire menu and all options are disabled;
  * @attr {Boolean} noCheckmark - When true, selected option will not show the checkmark.
  * @attr {String} value - Value selected for the menu.
- * @prop {Boolean} ready - When false the component API should not be called.
  * @event auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @event selectedOption - (DEPRECATED) Notifies that a new menuoption selection has been made.
  * @event auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
@@ -30,7 +29,6 @@ import './auro-menuoption.js';
  * @event auroMenuSelectValueFailure - (DEPRECATED) Notifies that a an attempt to select a menuoption by matching a value has failed.
  * @event auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event auroMenuCustomEventFired - (DEPRECATED) Notifies that a custom event has been fired.
- * @event auroMenu-ready - Notifies that the component has finished initializing.
  * @event auroMenu-selectValueReset - Notifies that the component value has been reset.
  * @slot Slot for insertion of menu options.
  */
@@ -44,7 +42,6 @@ export class AuroMenu extends LitElement {
     this.optionSelected = undefined;
     this.matchWord = undefined;
     this.noCheckmark = false;
-    this.ready = false;
     this.optionActive = undefined;
 
     /**
@@ -76,7 +73,6 @@ export class AuroMenu extends LitElement {
       optionSelected: { type: Object },
       optionActive:   { type: Object },
       matchWord:      { type: String },
-      ready:          { type: Boolean },
       value:          { type: String }
     };
   }
@@ -512,26 +508,10 @@ export class AuroMenu extends LitElement {
         this.index = this.items.indexOf(evt.target);
         this.updateActiveOption(this.index);
       });
-
-      this.notifyReady();
     } else {
       // make sure to update all menuoption noCheckmark attributes when the menu is dynamically changed
       this.handleNoCheckmarkAttr();
     }
-  }
-
-  /**
-   * @private
-   * @returns {void} Marks the component as ready and sends event.
-   */
-  notifyReady() {
-    this.ready = true;
-
-    this.dispatchEvent(new CustomEvent('auroMenu-ready', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
   }
 
   render() {
