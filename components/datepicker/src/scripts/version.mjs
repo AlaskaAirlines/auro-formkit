@@ -1,5 +1,4 @@
-import { writeDepVersionFile } from '../../../../scripts/formVersionWriter.js'
-import path from "node:path";
+import { writeDepVersionFile } from '@auro-formkit/build-tools/formVersionWriter';
 
 writeDepVersionFile('@aurodesignsystem/auro-popover');
 writeDepVersionFile('@aurodesignsystem/auro-dropdown');
