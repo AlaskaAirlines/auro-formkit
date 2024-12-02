@@ -68,6 +68,7 @@
     "eslint-plugin-jsdoc": "^50.5.0",
     "husky": "^8.0.0",
     "lodash": "^4.17.21",
+    "markdown-magic": "^2.6.1",
     "nodemon": "^3.1.7",
     "postcss": "^8.4.49",
     "postcss-custom-properties": "^14.0.4",
