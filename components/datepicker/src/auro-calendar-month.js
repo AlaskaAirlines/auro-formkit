@@ -1,6 +1,6 @@
-import styleCss from "./style-auro-calendar-month-css.js";
-import colorCss from "./color-month-css.js";
-import tokensCss from "./tokens-css.js";
+import styleCss from "./styles/style-auro-calendar-month-css.js";
+import colorCss from "./styles/color-month-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 import { html } from 'lit';
 
