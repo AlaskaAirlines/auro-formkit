@@ -37,7 +37,6 @@
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "concurrently": "^9.0.1",
-    "npm-run-all": "^4.1.5",
     "postcss-selector-replace": "^1.0.2",
     "rollup": "^4.22.4",
     "rollup-plugin-serve": "^2.0.2",
