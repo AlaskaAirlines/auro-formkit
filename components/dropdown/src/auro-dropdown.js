@@ -21,9 +21,6 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-
-const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
-
 import './auro-dropdownBib.js';
 
 /**
@@ -40,7 +37,7 @@ import './auro-dropdownBib.js';
  * @attr { Boolean } noToggle - If declared, the trigger will only show the the dropdown bib.
  * @attr { Boolean } focusShow - if declared, the the bib will display when focus is applied to the trigger.
  * @attr { Boolean } noHideOnThisFocusLoss - If declared, the dropdown will not hide when moving focus outside the element.
- * @attr { String } mobileFullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. The dropdown will automatically display in fullscreen mode when the screen size is equal to or smaller than the selected breakpoint.
+ * @attr { String } mobileFullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
  * @prop { Boolean } isPopoverVisible - If true, the dropdown bib is displayed.
  * @slot - Default slot for the popover content.
  * @slot label - Defines the content of the label.
@@ -233,19 +230,14 @@ export class AuroDropdown extends LitElement {
 
   updated(changedProperties) {
     this.floater.handleUpdate(changedProperties);
+    if (changedProperties.has('mobileFullscreenBreakpoint')) {
+      this.bibContent.setAttribute('mobileFullscreenBreakpoint', this.mobileFullscreenBreakpoint);
+    }
   }
 
   firstUpdated() {
     this.floater.configure(this);
     this.bibContent = this.floater.element.bib;
-    if (this.mobileFullscreenBreakpoint) {
-      const docStyle = getComputedStyle(document.documentElement);
-      const breakpointValue = docStyle.getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + this.mobileFullscreenBreakpoint);
-      // if (!breakpointValue) {
-      //   console.warn('There is no breakpoint token called', DESIGN_TOKEN_BREAKPOINT_PREFIX + this.mobileFullscreenBreakpoint);
-      // }
-      this.bibContent.mobileFullscreenBreakpoint = breakpointValue;
-    }
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
@@ -374,7 +366,7 @@ export class AuroDropdown extends LitElement {
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>
-        <div id="bibSizer" part="bib" style="position: absolute; pointer-events: none; opacity: 0; z-index: -1;"></div>
+        <div id="bibSizer" part="bib"></div>
         <auro-dropdownbib
           id="bib"
           role="tooltip"
