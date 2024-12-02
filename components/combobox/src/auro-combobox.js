@@ -14,10 +14,10 @@ import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/valida
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
 import { AuroDropdown } from '../../dropdown/src/auro-dropdown.js';
-import dropdownVersion from '../../../src/internal/dropdownVersion.js';
+import dropdownVersion from './formkit/auro-dropdownVersion.js';
 
 import { AuroInput } from '../../input/src/auro-input.js';
-import inputVersion from '../../../src/internal/inputVersion.js';
+import inputVersion from './formkit/auro-inputVersion.js';
 
 // Import touch detection lib
 import styleCss from "./styles/style-css.js";
