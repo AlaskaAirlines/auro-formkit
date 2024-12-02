@@ -6,7 +6,7 @@
     "  2. Go to http://localhost:8000",
     "================================================================================"
   ],
-  "name": "@aurodesignsystem/auro-formkit.combobox",
+  "name": "@auro-formkit/auro-combobox",
   "version": "2.1.4",
   "description": "auro-combobox HTML custom element",
   "type": "module",

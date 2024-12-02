@@ -6,7 +6,7 @@
     " 2. Go to http://localhost:8000",
     "================================================================================"
   ],
-  "name": "@aurodesignsystem/auro-formkit.input",
+  "name": "@auro-formkit/auro-input",
   "version": "4.2.0",
   "description": "auro-input HTML custom element",
   "type": "module",

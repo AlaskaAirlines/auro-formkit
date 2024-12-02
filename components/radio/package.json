@@ -6,7 +6,7 @@
     "  2. Go to http://localhost:8000",
     "================================================================================"
   ],
-  "name": "@aurodesignsystem/auro-formkit.radio",
+  "name": "@auro-formkit/auro-radio",
   "version": "4.1.1",
   "description": "auro-radio HTML custom element",
   "type": "module",

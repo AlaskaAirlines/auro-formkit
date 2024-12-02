@@ -6,7 +6,7 @@
     "  2. Go to http://localhost:8000",
     "================================================================================"
   ],
-  "name": "@aurodesignsystem/auro-formkit.datepicker",
+  "name": "@auro-formkit/auro-datepicker",
   "version": "3.2.0",
   "description": "auro-datepicker HTML custom element",
   "type": "module",
