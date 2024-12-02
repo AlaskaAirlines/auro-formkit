@@ -230,9 +230,6 @@ export class AuroDropdown extends LitElement {
 
   updated(changedProperties) {
     this.floater.handleUpdate(changedProperties);
-    if (changedProperties.has('mobileFullscreenBreakpoint')) {
-      this.bibContent.setAttribute('mobileFullscreenBreakpoint', this.mobileFullscreenBreakpoint);
-    }
   }
 
   firstUpdated() {
@@ -366,13 +363,14 @@ export class AuroDropdown extends LitElement {
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>
-        <div id="bibSizer" part="bib"></div>
+        <div id="bibSizer" part="size"></div>
         <auro-dropdownbib
           id="bib"
           role="tooltip"
           ?common="${this.common}"
           ?rounded="${this.common || this.rounded}"
-          ?inset="${this.common || this.inset}">
+          ?inset="${this.common || this.inset}"
+          mobileFullscreenBreakpoint="${this.mobileFullscreenBreakpoint}">
         </auro-dropdownbib>
       </div>
     `;

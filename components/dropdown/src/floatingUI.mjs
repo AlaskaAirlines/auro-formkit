@@ -53,17 +53,9 @@ export default class AuroFloatingUI {
     // Define the middlware for the floater configuration
     const middleware = [
       offset(this.element.floaterConfig.offset || 0),
+      ...(this.element.floaterConfig.flip ? [flip()] : []), // Add flip middleware if flip is enabled
+      ...(this.element.floaterConfig.autoPlacement ? [autoPlacement()] : []), // Add autoPlacement middleware if autoPlacement is enabled
     ];
-
-    // Add flip middleware if flip is enabled
-    if (this.element.floaterConfig.flip) {
-      middleware.push(flip());
-    }
-
-    // Add autoPlacement middleware if autoPlacement is enabled
-    if (this.element.floaterConfig.autoPlacement) {
-      middleware.push(autoPlacement());
-    }
 
     // Compute the position of the bib
     computePosition(this.element.trigger, this.element.bib, {

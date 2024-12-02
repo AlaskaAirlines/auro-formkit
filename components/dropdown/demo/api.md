@@ -632,6 +632,74 @@ In cases where it is desired behavior for `auro-dropdown` to only show, not togg
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+#### mobileFullscreenBreakpoint
+
+On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
+  <!-- The below content is automatically added from ./../../apiExamples/customDimensions300.html -->
+
+  <style>
+  #customDropdown300::part(size) {
+    width: 300px;
+    max-height: 200px;
+  }
+  </style>
+  <div style="width: 300px;" aria-label="custom label">
+    <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="sm">
+      <div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+      </div>
+      <div slot="trigger">
+        Trigger
+      </div>
+    </auro-dropdown>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/customDimensions300.html) -->
+<!-- The below code snippet is automatically added from ./../../apiExamples/customDimensions300.html -->
+
+```html
+  <style>
+  #customDropdown300::part(size) {
+    width: 300px;
+    max-height: 200px;
+  }
+  </style>
+<div style="width: 300px;" aria-label="custom label">
+    <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="sm">
+    <div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
+    <div slot="trigger">
+      Trigger
+    </div>
+  </auro-dropdown>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ### Slot Examples
 
 #### trigger & default
@@ -876,9 +944,9 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 #### Width and Sizing Behavior
 
-- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bib` part.
+- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `size` part.
 
-- **Styling Options:** Only the following styles can be applied to the `bib` part:
+- **Styling Options:** Only the following styles can be applied to the `size` part:
   - `width`
   - `height`
   - `maxWidth`
@@ -891,7 +959,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions100.html) -->
   <!-- The below content is automatically added from ./../../apiExamples/customDimensions100.html -->
   <style>
-  #customDropdown100::part(bib) {
+  #customDropdown100::part(size) {
     width: 100px;
     max-height: 200px;
   }
@@ -923,81 +991,13 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 ```html
 <style>
-  #customDropdown100::part(bib) {
+  #customDropdown100::part(size) {
     width: 100px;
     max-height: 200px;
   }
 </style>
 <div style="width: 100px;" aria-label="custom label">
   <auro-dropdown id="customDropdown100" inset bordered rounded chevron>
-    <div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
-    </div>
-    <div slot="trigger">
-      Trigger
-    </div>
-  </auro-dropdown>
-</div>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
-### Fullscreen Effect on Mobile View
-
-On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/customDimensions300.html -->
-
-  <style>
-  #customDropdown300::part(bib) {
-    width: 300px;
-    max-height: 200px;
-  }
-  </style>
-  <div style="width: 300px;" aria-label="custom label">
-    <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="sm">
-      <div>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-      </div>
-      <div slot="trigger">
-        Trigger
-      </div>
-    </auro-dropdown>
-  </div>
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/customDimensions300.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/customDimensions300.html -->
-
-```html
-  <style>
-  #customDropdown300::part(bib) {
-    width: 300px;
-    max-height: 200px;
-  }
-  </style>
-<div style="width: 300px;" aria-label="custom label">
-    <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="sm">
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

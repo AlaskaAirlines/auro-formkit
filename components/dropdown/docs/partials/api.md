@@ -257,6 +257,22 @@ In cases where it is desired behavior for `auro-dropdown` to only show, not togg
 
 </auro-accordion>
 
+#### mobileFullscreenBreakpoint
+
+On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/customDimensions300.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Slot Examples
 
 #### trigger & default
@@ -360,9 +376,9 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 ### Other Examples
 #### Width and Sizing Behavior
 
-- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `bib` part.
+- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `size` part.
 
-- **Styling Options:** Only the following styles can be applied to the `bib` part:
+- **Styling Options:** Only the following styles can be applied to the `size` part:
   - `width`
   - `height`
   - `maxWidth`
@@ -379,23 +395,6 @@ This example demonstrations collapsing the dropdown by clicking a button within 
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/customDimensions100.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-
-### Fullscreen Effect on Mobile View
-
-On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/customDimensions300.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
