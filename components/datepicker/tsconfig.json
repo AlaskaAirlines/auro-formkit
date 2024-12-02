@@ -2,11 +2,13 @@
   "extends": "@auro-formkit/typescript/base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDirs": ["src", "vendor"]
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.js"
+    "src/**/*.js",
+    "vendor/**/*.ts",
+    "vendor/**/*.js"
   ],
   "exclude": [
     "node_modules",
