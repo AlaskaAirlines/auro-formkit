@@ -9,9 +9,9 @@ import { classMap } from 'lit/directives/class-map.js';
 import 'focus-visible/dist/focus-visible.min.js';
 
 // Import the processed CSS file into the scope of the component
-import styleCss from "./auro-radio-group-css.js";
-import colorCss from './groupColor-css.js';
-import tokenCss from './tokens-css.js';
+import styleCss from "./styles/auro-radio-group-css.js";
+import colorCss from './styles/groupColor-css.js';
+import tokenCss from './styles/tokens-css.js';
 
 // Import formvalidation class
 import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/validation.js';

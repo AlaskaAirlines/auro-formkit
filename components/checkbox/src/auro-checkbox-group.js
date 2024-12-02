@@ -12,9 +12,9 @@ import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/valida
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 // Import the processed CSS file into the scope of the component
-import styleCss from "./auro-checkbox-group-css.js";
-import colorCss from "./colorGroup-css.js";
-import tokensCss from "./tokens-css.js";
+import styleCss from "./styles/auro-checkbox-group-css.js";
+import colorCss from "./styles/colorGroup-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.

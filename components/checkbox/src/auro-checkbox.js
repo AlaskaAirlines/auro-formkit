@@ -7,9 +7,9 @@ import { LitElement, html } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import styleCss from "./auro-checkbox-css.js";
-import colorCss from "./color-css.js";
-import tokensCss from "./tokens-css.js";
+import styleCss from "./styles/auro-checkbox-css.js";
+import colorCss from "./styles/color-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
 

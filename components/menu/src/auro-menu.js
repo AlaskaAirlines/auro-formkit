@@ -5,9 +5,9 @@
 
 import { LitElement, html } from "lit";
 
-import styleCss from "./style-menu-css.js";
-import colorCss from "./color-menu-css.js";
-import tokensCss from "./tokens-css.js";
+import styleCss from "./styles/style-menu-css.js";
+import colorCss from "./styles/color-menu-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
