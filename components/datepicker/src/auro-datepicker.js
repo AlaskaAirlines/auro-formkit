@@ -28,7 +28,7 @@ import './auro-calendar.js';
 import { AuroDropdown } from '@auro-formkit/auro-dropdown';
 import dropdownVersion from './formkit/auro-dropdownVersion.js';
 
-import { AuroInput } from '../../input/src/auro-input.js';
+import { AuroInput } from '@auro-formkit/auro-input';
 import inputVersion from './formkit/auro-inputVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
