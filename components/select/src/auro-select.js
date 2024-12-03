@@ -14,7 +14,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
-import { AuroDropdown } from '../../dropdown/src/auro-dropdown.js';
+import { AuroDropdown } from '@auro-formkit/auro-dropdown';
 import dropdownVersion from './formkit/auro-dropdownVersion.js';
 
 import styleCss from "./styles/style-css.js";
