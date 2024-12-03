@@ -3,12 +3,26 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "build:sass", "build:version", "postCss:component", "sass:render", "bundler", "types"],
+      "dependsOn": [
+        "^build", 
+        "build:sass", 
+        "build:version", 
+        "postCss:component", 
+        "sass:render", 
+        "bundler", 
+        "types"
+      ],
       "outputs": [
         "dist/**",
         "build/**",
         "src/**/*.css",
         "*-css.js"
+      ]
+    },
+    "@auro-formkit/combobox#build": {
+      "dependsOn": [
+        "@auro-formkit/input#build",
+        "@auro-formkit/dropbox#build"
       ]
     },
     "build:version": {
