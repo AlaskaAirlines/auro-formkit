@@ -1,11 +1,4 @@
 {
-  "//": [
-    "================================================================================",
-    "# To work within the development environment, run the following tasks",
-    "  1. $ npm run dev",
-    "  2. Go to http://localhost:8000",
-    "================================================================================"
-  ],
   "name": "@auro-formkit/auro-combobox",
   "version": "2.1.4",
   "description": "auro-combobox HTML custom element",
