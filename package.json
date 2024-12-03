@@ -10,7 +10,7 @@
   "version": "0.0.0",
   "description": "Auro Form Components Kit",
   "type": "module",
-  "private": false,
+  "private": true,
   "license": "Apache-2.0",
   "exports": {
     "./dropdown": "./components/dropdown/src/index.js",
