@@ -1,13 +1,6 @@
 {
-  "//": [
-    "================================================================================",
-    "# To work within the development environment, run the following tasks",
-    "  1. $ npm run dev",
-    "  2. Go to http://localhost:8000",
-    "================================================================================"
-  ],
   "name": "@aurodesignsystem/auro-formkit",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Auro Form Components Kit",
   "type": "module",
   "private": true,
