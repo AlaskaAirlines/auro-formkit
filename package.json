@@ -5,10 +5,6 @@
   "type": "module",
   "private": true,
   "license": "Apache-2.0",
-  "exports": {
-    "./dropdown": "./components/dropdown/src/index.js",
-    "./input": "./components/input/src/index.js"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-formkit"
