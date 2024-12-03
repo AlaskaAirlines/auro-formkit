@@ -251,7 +251,7 @@ export class AuroDropdown extends LitElement {
    * @returns {void}
    */
   exposeCssParts() {
-    this.setAttribute('exportparts', 'trigger:dropdownTrigger, chevron:dropdownChevron, helpText:dropdownHelpText, popover:dropdownPopover');
+    this.setAttribute('exportparts', 'trigger:dropdownTrigger, chevron:dropdownChevron, helpText:dropdownHelpText, size:dropdownSize');
   }
 
   /**

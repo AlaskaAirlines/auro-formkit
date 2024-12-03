@@ -84,7 +84,7 @@ Applying the `noCheckmark` attribute will prevent the checkmark icon from being 
 
 This example shows how to set a custom height for the bib from `<auro-dropdown>`. 
 
-Custom height dimensions are set by using the `dropdownPopover` CSS Part and then applying a `max-height` rule and value.
+Custom height dimensions are set by using the `dropdownSize` CSS Part and then applying a `max-height` rule and value.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/customBibHeight.html) -->
