@@ -26,15 +26,10 @@
     "@aurodesignsystem/design-tokens": "^4.10.0",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
-    "concat": "^1.0.3",
-    "concurrently": "^9.0.1",
-    "core-js": "^3.38.1",
     "rollup": "^4.24.0",
     "rollup-plugin-serve": "^2.0.3",
     "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0",
-    "whatwg-fetch": "^3.6.20",
-    "yaml-lint": "^1.7.0"
+    "web-component-analyzer": "^2.0.0"
   },
   "overrides": {
     "wc-sass-render": {

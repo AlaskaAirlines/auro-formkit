@@ -29,14 +29,11 @@
     "@aurodesignsystem/design-tokens": "^4.9.2",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
-    "concurrently": "^9.0.1",
     "postcss-selector-replace": "^1.0.2",
     "rollup": "^4.22.4",
     "rollup-plugin-serve": "^2.0.2",
     "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0",
-    "whatwg-fetch": "^3.6.20",
-    "yaml-lint": "^1.7.0"
+    "web-component-analyzer": "^2.0.0"
   },
   "scripts": {
     "build": "run-s build:version build:sass bundler types",
