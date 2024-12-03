@@ -352,6 +352,8 @@ export default class AuroFloatingUI {
     this.element.bibSizer = this.element.shadowRoot.querySelector('#bibSizer');
     this.element.triggerChevron = this.element.shadowRoot.querySelector('#showStateIcon');
 
+    document.body.append(this.element.bib);
+
     this.handleTriggerTabIndex();
 
     this.element.trigger.addEventListener('keydown', (event) => this.handleEvent(event));
