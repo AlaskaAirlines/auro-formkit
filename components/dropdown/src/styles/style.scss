@@ -79,6 +79,12 @@
   line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
 }
 
+:host([matchwidth]) {
+  #bibSizer {
+    width: 100%;
+  }
+}
+
 :host([disabled]) {
   pointer-events: none;
 }
