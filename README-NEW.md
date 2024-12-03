@@ -19,10 +19,10 @@ Running the `dev` command will run all components in development.
 To only develop a single component, use the `--filter` flag:
 
 ```
-turbo dev --filter=@aurodesignsystem/auro-input
+turbo dev --filter=@auro-formkit/auro-input
 
 @TODO:
-npm run dev --filter=@aurodesignsystem/auro-input
+npm run dev --filter=@auro-formkit/auro-input
 ```
 
 ### Testing
