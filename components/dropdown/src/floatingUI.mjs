@@ -43,6 +43,15 @@ export default class AuroFloatingUI {
     }
   }
 
+  /**
+   * @private
+   * Determines the positioning strategy based on the current viewport size and mobile breakpoint.
+   *
+   * This method checks if the current viewport width is less than or equal to the specified mobile fullscreen breakpoint 
+   * defined in the bib element. If it is, the strategy is set to 'fullscreen'; otherwise, it defaults to 'floating'.
+   *
+   * @returns {String} The positioning strategy, either 'fullscreen' or 'floating'.
+   */
   getPositioningStrategy() {
     let strategy = 'floating';
     if (this.element.bib.mobileFullscreenBreakpoint) {
@@ -54,36 +63,53 @@ export default class AuroFloatingUI {
     return strategy;
   }
 
+  /**
+   * @private
+   * Positions the bib element based on the current configuration and positioning strategy.
+   *
+   * This method determines the appropriate positioning strategy (fullscreen or not) and configures the bib accordingly. 
+   * It also sets up middleware for the floater configuration, computes the position of the bib relative to the trigger element, 
+   * and applies the calculated position to the bib's style.
+   */
   position() {
     const strategy = this.getPositioningStrategy();
     if (strategy === 'fullscreen') {
       this.configureBibFullscreen(true);
       this.mirrorSize(true);
-      return;
-    }
+    } else {
+      this.configureBibFullscreen(false);
+      this.mirrorSize(false);
 
-    this.configureBibFullscreen(false);
-    this.mirrorSize(false);
+      // Define the middlware for the floater configuration
+      const middleware = [
+        offset(this.element.floaterConfig.offset || 0),
+        ...(this.element.floaterConfig.flip ? [flip()] : []), // Add flip middleware if flip is enabled
+        ...(this.element.floaterConfig.autoPlacement ? [autoPlacement()] : []), // Add autoPlacement middleware if autoPlacement is enabled
+      ];
 
-    // Define the middlware for the floater configuration
-    const middleware = [
-      offset(this.element.floaterConfig.offset || 0),
-      ...(this.element.floaterConfig.flip ? [flip()] : []), // Add flip middleware if flip is enabled
-      ...(this.element.floaterConfig.autoPlacement ? [autoPlacement()] : []), // Add autoPlacement middleware if autoPlacement is enabled
-    ];
-
-    // Compute the position of the bib
-    computePosition(this.element.trigger, this.element.bib, {
-      placement: this.element.floaterConfig.placement || 'bottom',
-      middleware: middleware || []
-    }).then(({x, y}) => { // eslint-disable-line id-length
-      Object.assign(this.element.bib.style, {
-        left: `${x}px`,
-        top: `${y}px`,
+      // Compute the position of the bib
+      computePosition(this.element.trigger, this.element.bib, {
+        placement: this.element.floaterConfig.placement || 'bottom',
+        middleware: middleware || []
+      }).then(({x, y}) => { // eslint-disable-line id-length
+        Object.assign(this.element.bib.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+        });
       });
-    });
+    }
   }
 
+  /**
+   * @private
+   * Configures the bib element for fullscreen mode based on the mobile status.
+   *
+   * This method sets the 'isFullscreen' attribute on the bib element to "true" if the `isMobile` parameter is true, 
+   * and resets its position to the top-left corner of the viewport. If `isMobile` is false, it removes the 
+   * 'isFullscreen' attribute, indicating that the bib is not in fullscreen mode.
+   *
+   * @param {boolean} isMobile - A flag indicating whether the current device is mobile.
+   */
   configureBibFullscreen(isMobile) {
     if (isMobile) {
       this.element.bib.setAttribute('isFullscreen', "true");

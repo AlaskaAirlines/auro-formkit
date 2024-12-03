@@ -62,11 +62,6 @@ export class AuroDropdownBib extends LitElement {
         type: Boolean,
         reflect: true
       },
-      mobileFullscreenBreakpoint: {
-        type: String,
-        converter: AuroDropdownBib.getBreakpointValue,
-        reflect: false,
-      }
     };
   }
 
@@ -75,12 +70,11 @@ export class AuroDropdownBib extends LitElement {
     const validatedValue = DESIGN_TOKEN_BREAKPOINT_OPTIONS.includes(value) ? value : undefined;
     if (!validatedValue) {
       this._mobileBreakpointValue = undefined;
-      return;
+    } else {
+      // get the pixel value for the defined breakpoint
+      const docStyle = getComputedStyle(document.documentElement);
+      this._mobileBreakpointValue = docStyle.getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + value);
     }
-
-    // get the pixel value for the defined breakpoint
-    const docStyle = getComputedStyle(document.documentElement);
-    this._mobileBreakpointValue = docStyle.getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + value);
   }
 
   get mobileFullscreenBreakpoint() {
