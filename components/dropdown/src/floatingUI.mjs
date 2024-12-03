@@ -10,6 +10,18 @@ export default class AuroFloatingUI {
     this.keyDownHandler = null;
   }
 
+  /**
+   * @private
+   * Adjusts the size of the bib content based on the bibSizer dimensions.
+   *
+   * This method retrieves the computed styles of the bibSizer element and applies them to the bib content.
+   * If the fullscreen parameter is true, it resets the dimensions to their default values. Otherwise, it
+   * mirrors the width and height from the bibSizer, ensuring that they are not set to zero.
+   *
+   * @param {boolean} fullscreen - A flag indicating whether to reset the dimensions for fullscreen mode.
+   *                               If true, the bib content dimensions are cleared; if false, they are set
+   *                               based on the bibSizer's computed styles.
+   */
   mirrorSize(fullscreen) {
     // mirror the boxsize from bibSizer
     const sizerStyle = window.getComputedStyle(this.element.bibSizer);
@@ -32,22 +44,25 @@ export default class AuroFloatingUI {
   }
 
   getPositioningStrategy() {
+    let strategy = 'floating';
     if (this.element.bib.mobileFullscreenBreakpoint) {
       const isMobile = window.matchMedia(`(max-width: ${this.element.bib.mobileFullscreenBreakpoint})`).matches;
-      return isMobile ? 'fullscreen' : 'floating';
+      if (isMobile) {
+        strategy = 'fullscreen';
+      }
     }
-    return 'floating';
+    return strategy;
   }
 
   position() {
     const strategy = this.getPositioningStrategy();
     if (strategy === 'fullscreen') {
-      this.handleMobileFullscreen(true);
+      this.configureBibFullscreen(true);
       this.mirrorSize(true);
       return;
     }
 
-    this.handleMobileFullscreen(false);
+    this.configureBibFullscreen(false);
     this.mirrorSize(false);
 
     // Define the middlware for the floater configuration
@@ -69,7 +84,7 @@ export default class AuroFloatingUI {
     });
   }
 
-  handleMobileFullscreen(isMobile) {
+  configureBibFullscreen(isMobile) {
     if (isMobile) {
       this.element.bib.setAttribute('isFullscreen', "true");
       // reset the prev position
@@ -307,11 +322,9 @@ export default class AuroFloatingUI {
   configure(elem) {
     this.element = elem;
     this.element.trigger = this.element.shadowRoot.querySelector('#trigger');
-    this.element.triggerChevron = this.element.shadowRoot.querySelector('#showStateIcon');
     this.element.bib = this.element.shadowRoot.querySelector('#bib');
     this.element.bibSizer = this.element.shadowRoot.querySelector('#bibSizer');
-    
-    document.body.append(this.element.bib);
+    this.element.triggerChevron = this.element.shadowRoot.querySelector('#showStateIcon');
 
     this.handleTriggerTabIndex();
 
