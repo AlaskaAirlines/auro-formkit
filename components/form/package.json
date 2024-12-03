@@ -31,15 +31,11 @@
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "backstopjs": "^6.3.25",
-    "concat": "^1.0.3",
-    "core-js": "^3.39.0",
     "rollup": "^4.25.0",
     "rollup-plugin-serve": "^2.0.3",
     "sinon": "^19.0.2",
     "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0",
-    "whatwg-fetch": "^3.6.20",
-    "yaml-lint": "^1.7.0"
+    "web-component-analyzer": "^2.0.0"
   },
   "overrides": {
     "wc-sass-render": {
