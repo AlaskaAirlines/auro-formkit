@@ -25,7 +25,7 @@ import tokensCss from "./styles/tokens-css.js";
 
 import './auro-calendar.js';
 
-import { AuroDropdown } from '@aurodesignsystem/auro-dropdown/src/auro-dropdown.js';
+import { AuroDropdown } from '@auro-formkit/auro-dropdown';
 import dropdownVersion from './formkit/auro-dropdownVersion.js';
 
 import { AuroInput } from '../../input/src/auro-input.js';
