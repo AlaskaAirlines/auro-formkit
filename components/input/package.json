@@ -1,11 +1,4 @@
 {
-  "//": [
-    "================================================================================",
-    "# To work within the development environment, run the following tasks",
-    " 1. $ npm run dev",
-    " 2. Go to http://localhost:8000",
-    "================================================================================"
-  ],
   "name": "@auro-formkit/auro-input",
   "version": "4.2.0",
   "description": "auro-input HTML custom element",
