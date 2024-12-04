@@ -3,8 +3,6 @@ import serve from 'rollup-plugin-serve';
 
 const production = !process.env.ROLLUP_WATCH;
 
-// Get entry points for each component
-
 const createConfig = (input, output) => ({
   input,
   output: {
