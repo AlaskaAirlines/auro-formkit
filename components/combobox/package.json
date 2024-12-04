@@ -17,7 +17,6 @@
   "@auro-formkit/auro-input": "*",
   "@auro-formkit/auro-menu": "*",
   "@aurodesignsystem/auro-formvalidation": "^1.0.4",
-  "@aurodesignsystem/auro-library": "^3.0.2",
   "chalk": "^5.3.0",
   "lit": "^3.2.1"
   },
