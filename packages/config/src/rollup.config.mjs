@@ -29,7 +29,8 @@ const createConfig = (name, input, output) => ({
   ]
 });
 
-const mainConfig = createConfig('formkit', './src/index.js', 'dist');
+const dirname = path.basename(process.cwd());
+const mainConfig = createConfig(dirname, './src/index.js', 'dist');
 
 function createExampleConfig(entryPoint) {
   return {
