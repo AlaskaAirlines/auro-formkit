@@ -1,14 +1,12 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
-import glob from 'glob';
-import path from 'path';
 
 const production = !process.env.ROLLUP_WATCH;
 
 // Get entry points for each component
 
-const createConfig = (name, input, output) => ({
-  input: { [`auro-${name}__bundled`]: input },
+const createConfig = (input, output) => ({
+  input,
   output: {
     format: 'esm',
     dir: output,
@@ -29,8 +27,7 @@ const createConfig = (name, input, output) => ({
   ]
 });
 
-const dirname = path.basename(process.cwd());
-const mainConfig = createConfig(dirname, './src/index.js', 'dist');
+const mainConfig = createConfig('./src/index.js', 'dist');
 
 function createExampleConfig(entryPoint) {
   return {
