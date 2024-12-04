@@ -8,8 +8,8 @@ This file is generated based on a template fetched from `./docs/partials/index.m
 
 # Dropdown
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./description.md) -->
-<!-- The below content is automatically added from ./description.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
+<!-- The below content is automatically added from ./../docs/partials/description.md -->
 The `auro-dropdown` component is a trigger and dropdown element combination intended to be used with dropdown content that is interactive. `auro-dropdown` is content agnostic and any valid HTML can be placed in either the trigger or the dropdown.
 
 _Note: if the dropdown content in your implementation is not interactive (e.g. a tooltip) [auro-popover](http://auro.alaskaair.com/components/auro/popover) may better serve your needs._
@@ -17,8 +17,8 @@ _Note: if the dropdown content in your implementation is not interactive (e.g. a
 
 ## Dropdown use cases
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./useCases.md) -->
-<!-- The below content is automatically added from ./useCases.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
+<!-- The below content is automatically added from ./../docs/partials/useCases.md -->
 The `auro-dropdown` element should be used in situations where users may:
 
 * interact with an element to get clarification on content offering
@@ -41,8 +41,8 @@ Not including one of the above options will result in your UI being non-complian
 This first common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `aria-label` attribute is used to define a string value that labels an interactive element.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/common.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/common.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/common.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/common.html -->
   <auro-dropdown id="common" common aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
@@ -62,8 +62,8 @@ This first common example uses the default `auro-dropdown` element with the attr
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/common.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/common.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/common.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/common.html -->
 
 ```html
 <auro-dropdown id="common" common aria-label="Label content for screen reader">
@@ -90,8 +90,8 @@ This first common example uses the default `auro-dropdown` element with the attr
 This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `aria-labelledby` attribute to identify the element that labels the element it is applied to.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/commonLabelledby.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/commonLabelledby.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonLabelledby.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/commonLabelledby.html -->
   <p id="foo">The element is labelled by content external to the element.</p>
   <auro-dropdown id="commonAdvanced" aria-labelledby="foo" bordered rounded inset chevron>
     <div style="padding: var(--ds-size-150);">
@@ -112,8 +112,8 @@ This common example uses the default `auro-dropdown` element with the attributes
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/commonLabelledby.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/commonLabelledby.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonLabelledby.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/commonLabelledby.html -->
 
 ```html
 <p id="foo">The element is labelled by content external to the element.</p>
@@ -141,8 +141,8 @@ This common example uses the default `auro-dropdown` element with the attributes
 This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `slot` content container to define a string value that labels the interactive element.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/commonSlot.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/commonSlot.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonSlot.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/commonSlot.html -->
   <auro-dropdown id="commonSlot" bordered rounded inset chevron>
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
@@ -165,8 +165,8 @@ This common example uses the default `auro-dropdown` element with the attributes
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/commonSlot.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/commonSlot.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonSlot.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/commonSlot.html -->
 
 ```html
 <auro-dropdown id="commonSlot" bordered rounded inset chevron>
@@ -196,8 +196,8 @@ This common example uses the default `auro-dropdown` element with the attributes
 This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the trigger is full width of the containing element and the popover content is set to a width wider than the trigger.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/widerPopover.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/widerPopover.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/widerPopover.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/widerPopover.html -->
   <div style="width: 250px;">
     <auro-dropdown common aria-label="Label content for screen reader">
       <div style="padding: var(--ds-size-150); width: 500px;">
@@ -215,8 +215,8 @@ This common example uses the default `auro-dropdown` element with the attributes
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/widerPopover.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/widerPopover.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/widerPopover.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/widerPopover.html -->
 
 ```html
 <div style="width: 250px;">
@@ -241,8 +241,8 @@ This common example uses the default `auro-dropdown` element with the attributes
 This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally  `matchWidth` attribute is used to make the popover match the width of the trigger.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/commonMatchWidth.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/commonMatchWidth.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonMatchWidth.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/commonMatchWidth.html -->
   <auro-dropdown id="common" common matchWidth aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
@@ -262,8 +262,8 @@ This common example uses the default `auro-dropdown` element with the attributes
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/commonMatchWidth.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/commonMatchWidth.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonMatchWidth.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/commonMatchWidth.html -->
 
 ```html
 <auro-dropdown id="common" common matchWidth aria-label="Label content for screen reader">
@@ -302,22 +302,21 @@ The dropdown can be closed with the following actions:
 
 ## Recommended Use and Version Control
 
-There are two important parts of every Auro component. The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom clement. The class is exported and then used as part of defining the Web Component. When importing this component as described in the <a href="#install">install</a> section, the class is imported and the `auro-dropdown` custom element is defined automatically.
+There are two important parts of every Auro component. The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element. The class is exported and then used as part of defining the Web Component. When importing this component as described in the <a href="#install">install</a> section, the class is imported and the `auro-dropdown` custom element is defined automatically.
 
-To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our `registerComponent(name)` method and pass in a unique name.
+To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our `AuroDropdown.register(name)` method and pass in a unique name.
 
 ```js
 import { AuroDropdown } from './src/auro-dropdown.js';
-import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-RuntimeUtils.default.prototype.registerComponent('custom-dropdown', AuroDropdown);
+AuroDropdown.register('custom-dropdown');
 ```
 
 This will create a new custom element that you can use in your HTML that will function identically to the `<auro-dropdown>` element.
 
 <div class="exampleWrapper exampleWrapper--flex">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/custom.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/custom.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/custom.html -->
   <custom-dropdown id="customCommon" common aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
@@ -337,8 +336,8 @@ This will create a new custom element that you can use in your HTML that will fu
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/custom.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/custom.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/custom.html -->
 
 ```html
 <custom-dropdown id="customCommon" common aria-label="Label content for screen reader">

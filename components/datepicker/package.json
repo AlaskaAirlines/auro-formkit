@@ -58,10 +58,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "run-s build:version build:sass bundler types",
+    "build": "run-s build:version build:sass bundler build:docs types",
     "build:version": "node ./src/scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "build:docs": "node ../../packages/build-tools/src/docProcessor.mjs --component datepicker",
     "bundler": "rollup -c node:@auro-formkit/config/rollup",
     "clean": "rm -rf dist build",
     "dev": "web-dev-server",

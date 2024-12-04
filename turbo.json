@@ -27,6 +27,9 @@
         "sass:render"
       ]
     },
+    "build:docs": {
+      "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
+    },
     "build:version": {
       "outputs": ["src/*.js", "src/**/*.js"]
     },
