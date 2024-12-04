@@ -6,7 +6,7 @@
   "description": "Shared configurations for auro-formkit monorepo",
   "main": "index.js",
   "exports": {
-    "./commitlint": "./src/commitlint.config.cjs",
+    "./commitlint": "./src/commitlint.config.js",
     "./eslint": "./src/eslint.config.mjs",
     "./rollup": "./src/rollup.config.mjs",
     "./stylelint": "./src/stylelintrc.config.json",
