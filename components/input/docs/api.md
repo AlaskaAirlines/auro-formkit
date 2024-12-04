@@ -1,5 +1,7 @@
 # auro-input
 
+Generate unique names for dependency components.
+
 ## Attributes
 
 | Attribute    | Type      | Description                    |
@@ -34,7 +36,6 @@
 | `pattern`                         | `pattern`                         | `String`  |                            | Specifies a regular expression the form control's value should match. |
 | `placeholder`                     | `placeholder`                     | `String`  |                            | Define custom placeholder text, only supported by date input formats. |
 | `readonly`                        | `readonly`                        | `Boolean` |                            | Makes the input read-only, but can be set programmatically. |
-| `ready`                           | `ready`                           | `Boolean` | false                      | When false the component API should not be called. |
 | `required`                        | `required`                        | `Boolean` | false                      | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`               | `setCustomValidity`               | `String`  |                            | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityBadInput`       | `setCustomValidityBadInput`       | `String`  |                            | Custom help text message to display when validity = `badInput`. |
@@ -53,9 +54,10 @@
 
 ## Methods
 
-| Method     | Type       | Description                              |
-|------------|------------|------------------------------------------|
-| `validate` | `(): void` | Public method force validation of input. |
+| Method       | Type          | Description                              |
+|--------------|---------------|------------------------------------------|
+| `isDateType` | `(): boolean` |                                          |
+| `validate`   | `(): void`    | Public method force validation of input. |
 
 ## Events
 

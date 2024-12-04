@@ -262,13 +262,13 @@ In cases where it is desired behavior for `auro-dropdown` to only show, not togg
 On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customDimensions300.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customDimensions300.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/customDimensions300.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/customDimensions300.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
