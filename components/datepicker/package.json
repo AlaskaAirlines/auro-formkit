@@ -14,7 +14,6 @@
   "dependencies": {
     "@alaskaairux/icons": "^4.44.1",
     "@aurodesignsystem/auro-formvalidation": "^1.0.4",
-    "@aurodesignsystem/auro-library": "^3.0.2",
     "@aurodesignsystem/auro-popover": "^4.1.0",
     "@auro-formkit/auro-dropdown": "*",
     "@auro-formkit/auro-input": "*",
