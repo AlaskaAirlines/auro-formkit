@@ -22,7 +22,9 @@
     "@auro-formkit/auro-combobox#build": {
       "dependsOn": [
         "@auro-formkit/auro-input#build",
-        "@auro-formkit/auro-dropdown#build"
+        "@auro-formkit/auro-dropdown#build",
+        "postCss:component",
+        "sass:render"
       ]
     },
     "build:version": {
@@ -46,7 +48,7 @@
       "outputs": ["src/**/*-css.js"]
     },
     "bundler": {
-      "dependsOn": ["sass:render"],
+      "dependsOn": ["sass:render", "postCss:component"],
       "outputs": ["dist/**"]
     },
     "types": {
