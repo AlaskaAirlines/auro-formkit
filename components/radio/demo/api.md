@@ -5,19 +5,19 @@
 
 ## Properties
 
-| Property                        | Attribute                       | Type          | Default     | Description                                      |
-|---------------------------------|---------------------------------|---------------|-------------|--------------------------------------------------|
-| [disabled](#disabled)                      | `disabled`                      | `boolean`     | false       |                                                  |
-| [error](#error)                         | `error`                         | `String`      |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
-| [horizontal](#horizontal)                    | `horizontal`                    | `boolean`     | false       |                                                  |
-| [noValidate](#noValidate)                    | `noValidate`                    | `Boolean`     |             | If set, disables auto-validation on blur.        |
-| [optionSelected](#optionSelected)                | `optionSelected`                | `Object`      | "undefined" | Specifies the current selected radio button.     |
-| [required](#required)                      | `required`                      | `Boolean`     | false       | Populates the `required` attribute on the element. Used for client-side validation. |
-| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `String`      |             | Sets a custom help text message to display for all validityStates. |
-| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `String`      |             | Custom help text message to display when validity = `customError`. |
-| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `String`      |             | Custom help text message to display when validity = `valueMissing`. |
-| [validity](#validity)                      | `validity`                      | `String`      | "undefined" | Specifies the `validityState` this element is in. |
-| [value](#value)                         | `value`                         | `array`       | "undefined" |                                                  |
+| Property                        | Attribute                       | Type      | Default     | Description                                      |
+|---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
+| [disabled](#disabled)                      | `disabled`                      | `boolean` | false       |                                                  |
+| [error](#error)                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| [horizontal](#horizontal)                    | `horizontal`                    | `boolean` | false       |                                                  |
+| [noValidate](#noValidate)                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
+| [optionSelected](#optionSelected)                | `optionSelected`                | `Object`  | "undefined" | Specifies the current selected radio button.     |
+| [required](#required)                      | `required`                      | `Boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
+| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `String`  |             | Sets a custom help text message to display for all validityStates. |
+| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
+| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
+| [validity](#validity)                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
+| [value](#value)                         | `value`                         | `array`   | "undefined" |                                                  |
 
 ## Methods
 
