@@ -6,15 +6,15 @@ This file is generated based on a template fetched from `./docs/partials/index.m
 
 # Checkbox
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./description.md) -->
-<!-- The below content is automatically added from ./description.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
+<!-- The below content is automatically added from ./../docs/partials/description.md -->
 `<auro-checkbox>` is a [HTML custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) for the purpose of allowing users to select one or more options of a limited number of choices.
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## auro-checkbox use cases
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./useCases.md) -->
-<!-- The below content is automatically added from ./useCases.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
+<!-- The below content is automatically added from ./../docs/partials/useCases.md -->
 The `<auro-checkbox>` element should be used in situations where users may:
 
 * Be filling out a form
@@ -28,8 +28,8 @@ The `<auro-checkbox>` element should be used in situations where users may:
 ### Default
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/basic.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/basic.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/basic.html -->
   <auro-checkbox-group>
     <span slot="legend">Form label goes here</span>
     <auro-checkbox value="checkbox option" name="example1" id="checkbox-basic1">Checkbox option</auro-checkbox>
@@ -41,8 +41,8 @@ The `<auro-checkbox>` element should be used in situations where users may:
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/basic.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/basic.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 ```html
 <auro-checkbox-group>
@@ -65,8 +65,8 @@ Use the `disabled` attribute to disable individual `<auro-checkbox>` elements or
 The `disabled` attribute used to disable the entire `<auro-checkbox-group>`.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/disabledGroup.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/disabledGroup.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabledGroup.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/disabledGroup.html -->
   <auro-checkbox-group disabled>
     <span slot="legend">Form label goes here</span>
     <auro-checkbox value="disabled checkbox option" name="example1" id="checkbox-disabledGroup1">Disabled checkbox option</auro-checkbox>
@@ -78,8 +78,8 @@ The `disabled` attribute used to disable the entire `<auro-checkbox-group>`.
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/disabledGroup.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/disabledGroup.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabledGroup.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/disabledGroup.html -->
 
 ```html
 <auro-checkbox-group disabled>
@@ -98,8 +98,8 @@ The `disabled` attribute used to disable the entire `<auro-checkbox-group>`.
 The `disabled` attribute used to disable a single `<auro-checkbox>` element.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/disabled.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/disabled.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/disabled.html -->
   <auro-checkbox-group>
     <span slot="legend">Form label goes here</span>
     <auro-checkbox value="disabled checkbox option" name="example1" id="checkbox-disabled1">Checkbox option</auro-checkbox>
@@ -111,8 +111,8 @@ The `disabled` attribute used to disable a single `<auro-checkbox>` element.
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/disabled.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/disabled.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/disabled.html -->
 
 ```html
 <auro-checkbox-group>
@@ -131,8 +131,8 @@ The `disabled` attribute used to disable a single `<auro-checkbox>` element.
 When present, the `required` attribute specifies that at least one or more `<auro-checkbox>` elements within the `<auro-checkbox-group>` must be checked.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/required.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/required.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/required.html -->
   <auro-checkbox-group required setCustomValidityValueMissing="Please select an option">
     <span slot="legend">Form label goes here</span>
     <auro-checkbox value="checked option" name="example1" id="checkbox-required1">Checkbox option</auro-checkbox>
@@ -144,8 +144,8 @@ When present, the `required` attribute specifies that at least one or more `<aur
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/required.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/required.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/required.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/required.html -->
 
 ```html
 <auro-checkbox-group required setCustomValidityValueMissing="Please select an option">
@@ -168,8 +168,8 @@ Use the `error` attribute to force an error state on the element.
 The `error` attribute used to set error state on the entire `<auro-checkbox-group>`. If using the `error` attribute on an `<auro-checkbox-group>`, a string with the error message needs to be passed along with the attribute.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/errorGroup.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/errorGroup.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/errorGroup.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/errorGroup.html -->
   <auro-checkbox-group error="custom error">
     <span slot="legend">Form label goes here</span>
     <auro-checkbox value="error checkbox option" name="example1" id="checkbox-errorGroup1">Error checkbox option</auro-checkbox>
@@ -181,8 +181,8 @@ The `error` attribute used to set error state on the entire `<auro-checkbox-grou
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/errorGroup.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/errorGroup.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/errorGroup.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/errorGroup.html -->
 
 ```html
 <auro-checkbox-group error="custom error">
@@ -201,8 +201,8 @@ The `error` attribute used to set error state on the entire `<auro-checkbox-grou
 Using the `horizontal` attribute will render the checkbox options on a horizontal line.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/horizontal.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/horizontal.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/horizontal.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/horizontal.html -->
   <auro-checkbox-group horizontal>
     <span slot="legend">Form label goes here</span>
     <auro-checkbox value="checkbox option" value="yes" id="checkbox-horizontal1">Yes</auro-checkbox>
@@ -213,8 +213,8 @@ Using the `horizontal` attribute will render the checkbox options on a horizonta
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/horizontal.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/horizontal.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/horizontal.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/horizontal.html -->
 
 ```html
 <auro-checkbox-group horizontal>
@@ -232,8 +232,8 @@ Using the `horizontal` attribute will render the checkbox options on a horizonta
 Using the `horizontal` attribute has a limit of 3 options. Beyond three, options will be listed in vertically.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/horizontalLimit.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/horizontalLimit.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/horizontalLimit.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/horizontalLimit.html -->
   <auro-checkbox-group horizontal>
     <span slot="legend">Form label goes here</span>
     <auro-checkbox value="checkbox option" value="yes" id="checkbox-horizontalLimit1">Yes</auro-checkbox>
@@ -245,8 +245,8 @@ Using the `horizontal` attribute has a limit of 3 options. Beyond three, options
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/horizontalLimit.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/horizontalLimit.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/horizontalLimit.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/horizontalLimit.html -->
 
 ```html
 <auro-checkbox-group horizontal>
@@ -277,8 +277,8 @@ AuroCheckboxGroup.register('custom-checkbox-group');
 This will create a new custom element that you can use in your HTML that will function identically to the `<auro-checkbox>` element.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../apiExamples/customCheckbox.html) -->
-  <!-- The below content is automatically added from ./../../apiExamples/customCheckbox.html -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customCheckbox.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/customCheckbox.html -->
   <custom-checkbox-group>
     <span slot="legend">Form label goes here</span>
     <custom-checkbox value="checkbox option" name="example1" id="checkbox-custom1">Custom checkbox option</custom-checkbox>
@@ -290,8 +290,8 @@ This will create a new custom element that you can use in your HTML that will fu
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../apiExamples/customCheckbox.html) -->
-<!-- The below code snippet is automatically added from ./../../apiExamples/customCheckbox.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/customCheckbox.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/customCheckbox.html -->
 
 ```html
 <custom-checkbox-group>

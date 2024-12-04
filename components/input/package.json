@@ -24,8 +24,8 @@
     "@aurodesignsystem/design-tokens": "^4.9.2",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
-  "devDependencies": {
-   "@auro-formkit/build-tools": "*",
+    "devDependencies": {
+    "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
     "@alaskaairux/icons": "^4.44.1",
@@ -54,11 +54,12 @@
     "access": "public"
   },
   "scripts": {
-    "build": "run-s build:version build:sass bundler types",
+    "build": "run-s build:version build:sass bundler build:docs types",
     "build:version": "node ./src/scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
     "bundler": "rollup -c node:@auro-formkit/config/rollup",
+    "build:docs": "node ../../packages/build-tools/src/docProcessor.mjs --component input",
     "clean": "rm -rf dist build",
     "dev": "web-dev-server",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
