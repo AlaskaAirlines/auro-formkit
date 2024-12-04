@@ -58,7 +58,7 @@
     "build:version": "node ./src/scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
-    "bundler": "rollup -c node:@auro-formkit/config/rollup --input src/index.js",
+    "bundler": "rollup -c node:@auro-formkit/config/rollup",
     "clean": "rm -rf dist build",
     "dev": "web-dev-server",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
