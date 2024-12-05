@@ -16,7 +16,6 @@
     "@auro-formkit/auro-dropdown": "*",
     "@auro-formkit/auro-input": "*",
     "@auro-formkit/auro-menu": "*",
-    "@aurodesignsystem/auro-formvalidation": "^1.0.4",
     "chalk": "^5.3.0",
     "lit": "^3.2.1"
   },
@@ -27,6 +26,7 @@
   "devDependencies": {
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
+    "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
     "@aurodesignsystem/design-tokens": "^4.10.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",

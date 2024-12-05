@@ -1,1 +1,1 @@
-export { writeDepVersionFile } from './formVersionWriter';
+export { writeDepVersionFile } from './formVersionWriter.js';

@@ -3,15 +3,15 @@
 
 // ---------------------------------------------------------------------
 
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
+
 // If using litElement base class
 import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/validation.js';
-
-/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
+import AuroFormValidation from '@auro-formkit/form-validation';
 
 import { AuroDropdown } from '@auro-formkit/auro-dropdown';
 import dropdownVersion from './formkit/auro-dropdownVersion.js';

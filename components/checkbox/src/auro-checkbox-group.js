@@ -8,7 +8,7 @@
 import { LitElement, html } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 
-import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/validation.js';
+import AuroFormValidation from '@auro-formkit/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 // Import the processed CSS file into the scope of the component

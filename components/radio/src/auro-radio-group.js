@@ -14,7 +14,7 @@ import colorCss from './styles/groupColor-css.js';
 import tokenCss from './styles/tokens-css.js';
 
 // Import formvalidation class
-import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/validation.js';
+import AuroFormValidation from '@auro-formkit/form-validation';
 
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
