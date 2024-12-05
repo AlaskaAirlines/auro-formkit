@@ -8,6 +8,7 @@
   "types": "tsc",
   "exports": {
     ".": "./src/index.js",
-    "./formVersionWriter": "./src/formVersionWriter.mjs"
+    "./formVersionWriter": "./src/formVersionWriter.mjs",
+    "./docProcessor": "./src/docProcessor.mjs"
   }
 }
