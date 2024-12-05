@@ -1,6 +1,6 @@
 {
   "name": "@auro-formkit/auro-counter",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "description": "auro-counter HTML custom element",
   "repository": {
     "type": "git",
