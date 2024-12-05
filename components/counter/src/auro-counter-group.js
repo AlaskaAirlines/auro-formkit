@@ -6,9 +6,9 @@
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
-import styleCss from "./styles/countergroup-css.js";
+import styleCss from "./styles/counter-group-css.js";
 
-export class AuroCountergroup extends LitElement {
+export class AuroCounterGroup extends LitElement {
 
   static get styles() {
     return [styleCss];
@@ -39,4 +39,10 @@ export class AuroCountergroup extends LitElement {
       </div>
     `;
   }
+}
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-counter-group")) {
+  customElements.define("auro-counter-group", AuroCounterGroup);
 }
