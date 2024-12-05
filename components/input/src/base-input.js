@@ -15,7 +15,8 @@ import tokensCss from "./styles/tokens-css.js";
 
 import Cleave from 'cleave.js';
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
-import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/validation.js';
+
+import AuroFormValidation from '@auro-formkit/form-validation';
 
 /**
  * Auro-input provides users a way to enter data into a text field.

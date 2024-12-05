@@ -10,7 +10,7 @@
 import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
 
-import AuroFormValidation from '@aurodesignsystem/auro-formvalidation/src/validation.js';
+import AuroFormValidation from '@auro-formkit/form-validation';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import { AuroDatepickerUtilities } from './utilities.js';
