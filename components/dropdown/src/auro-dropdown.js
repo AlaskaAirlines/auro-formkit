@@ -239,10 +239,6 @@ export class AuroDropdown extends LitElement {
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
-
-    this.bibContent = this.shadowRoot.querySelector('auro-dropdownbib');
-
-    document.body.append(this.bibContent);
   }
 
   /**

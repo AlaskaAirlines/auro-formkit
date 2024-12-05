@@ -12,7 +12,7 @@
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aurodesignsystem/auro-icon": "^5.0.0",
+    "@aurodesignsystem/auro-icon": "^6.1.1",
     "@floating-ui/dom": "^1.6.11",
     "@popperjs/core": "^2.11.8",
     "chalk": "^5.2.0",
@@ -30,7 +30,7 @@
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "postcss-selector-replace": "^1.0.2",
-    "rollup": "^4.22.4",
+    "rollup": "^4.25.0",
     "rollup-plugin-serve": "^2.0.2",
     "wc-sass-render": "^1.4.0",
     "web-component-analyzer": "^2.0.0"
