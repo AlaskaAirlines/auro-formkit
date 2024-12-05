@@ -21,3 +21,9 @@ export class AuroCounter extends LitElement {
     `;
   }
 }
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-counter")) {
+  customElements.define("auro-counter", AuroCounter);
+}
