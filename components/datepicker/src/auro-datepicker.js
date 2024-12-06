@@ -460,6 +460,8 @@ export class AuroDatePicker extends LitElement {
       this.setAttribute('aria-expanded', this.dropdown.isPopoverVisible);
       this.notifyDatepickerToggled();
 
+      this.calendar.toggleVisibility(this.dropdown.isPopoverVisible);
+
       if (this.dropdown.getAttribute('data-show')) {
         if (this.forceScrollOnNextMobileCalendarRender) {
           this.calendar.scrollMonthIntoView(this.calendarFocusDate);
@@ -542,6 +544,12 @@ export class AuroDatePicker extends LitElement {
     });
 
     this.calendar.addEventListener('auroCalendar-centralDateChanged', (event) => {
+      const match = this.util.datesMatch(event.detail.date, this.centralDate);
+
+      if (!match) {
+        this.calendarRenderUtil.updateCentralDate(this, event.detail.date);
+      }
+
       this.notifyMonthChanged(event);
     });
   }
@@ -850,6 +858,11 @@ export class AuroDatePicker extends LitElement {
     }
   }
 
+  handleSlotToSlot(event) {
+    const slot = this.querySelector(`[slot='${event.target.name}']`);
+    this.calendar.injectSlot(event.target.name, slot.cloneNode(true));
+  }
+
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-datepicker');
@@ -876,6 +889,7 @@ export class AuroDatePicker extends LitElement {
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow
           noHideOnThisFocusLoss
+          mobileFullscreenBreakpoint="sm"
           part="dropdown">
           <div slot="trigger" class="dpTriggerContent" part="trigger">
             <${this.inputTag}
@@ -921,9 +935,8 @@ export class AuroDatePicker extends LitElement {
               .maxDate="${this.maxDate}"
               .minDate="${this.minDate}"
               part="calendar"
-              @auroCalendar-centralDateChanged="${this.handleCalendarCentralDateChange}"
             >
-              <slot slot="mobileDateLabel" name="mobileDateLabel"></slot>
+              <slot slot="mobileDateLabel" name="mobileDateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
               <span slot="mobileDateFromStr">${this.value ? this.getMobileDateStr(this.value) : html`<span class="placeholderDate">MM/DD/YYYY</span>`}</span>
               ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd ? this.getMobileDateStr(this.valueEnd) : html`<span class="placeholderDate">MM/DD/YYYY</span>`}</span>` : undefined}
             </auro-calendar>

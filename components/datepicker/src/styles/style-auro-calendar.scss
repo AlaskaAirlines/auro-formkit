@@ -155,6 +155,7 @@
   .calendarWrapper {
     display: flex;
     height: 100%;
+    max-height: 100dvh;
 
     flex-direction: column;
     overflow: auto hidden;
