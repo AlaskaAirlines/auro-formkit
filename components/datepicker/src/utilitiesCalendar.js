@@ -133,7 +133,6 @@ export class CalendarUtilities {
 
     // calculate the new central date
     const newCentralDate = new Date(elem.centralDate).setMonth(new Date(elem.centralDate).getMonth() + increment);
-
     // set the new central date to the first day of the month
     elem.centralDate = this.util.convertDateToFirstOfMonth(newCentralDate);
   }

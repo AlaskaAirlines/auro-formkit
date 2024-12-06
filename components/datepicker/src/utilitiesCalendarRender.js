@@ -41,10 +41,11 @@ export class UtilitiesCalendarRender {
   /**
    * Determines how many calendar months can be rendered based on the screen size and defined range.
    * @param {Object} elem - The auro-calendar element.
+   * @param {Boolean} isMobile - true if it's to render for mobile view
    * @private
    * @returns {Number} Returns the maximum number of months that can be rendered.
    */
-  maximumRenderableMonths(elem) {
+  maximumRenderableMonths(elem, isMobile) {
     const definedRangeMonths = this.determineDefinedCalendarRange(elem);
 
     // number of calendars that could be rendered at a time
@@ -56,7 +57,7 @@ export class UtilitiesCalendarRender {
     }
 
     // change the max calendar number when viewed on mobile
-    if (window.innerWidth < elem.mobileBreakpoint) {
+    if (isMobile) {
       // use definedRangeMonths if we have it otherwise default to 12
       numCalendars = definedRangeMonths || 12; // eslint-disable-line no-magic-numbers
     }
@@ -74,13 +75,14 @@ export class UtilitiesCalendarRender {
   /**
    * Determines the number of months rendered inside the calendar.
    * @param {Object} elem - The auro-calendar element.
+   * @param {Boolean} isMobile - true if it's to render for mobile view
    * @private
    * @returns {void}
    */
-  determineNumCalendarsToRender(elem) {
+  determineNumCalendarsToRender(elem, isMobile) {
     // 1. Determine the maximum number of months that can be rendered.
     //    This is based on the screen size and the defined range of months.
-    const maxRenderableMonths = this.maximumRenderableMonths(elem);
+    const maxRenderableMonths = this.maximumRenderableMonths(elem, isMobile);
 
     // 2. Start by assuming we can render the max number of months.
     let calendarCount = maxRenderableMonths;
