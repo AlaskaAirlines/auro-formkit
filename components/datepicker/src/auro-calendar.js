@@ -155,6 +155,7 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {Object} Returns the auro-calendar-months HTML.
    */
   renderAllCalendars() {
+    let renderedHtml = undefined;
     if (this.isVisible) {
       this.utilCalRender.setFirstRenderableMonthDate(this);
 
@@ -163,7 +164,6 @@ export class AuroCalendar extends RangeDatepicker {
       const mobileLayout = dropdownbib.hasAttribute('isfullscreen');
       this.utilCalRender.determineNumCalendarsToRender(this, mobileLayout);
 
-      let renderedHtml = undefined;
 
       // Determine which month to render first
       let dateMatches = undefined;
@@ -228,11 +228,8 @@ export class AuroCalendar extends RangeDatepicker {
 
         renderedHtml = html`${renderedHtml}${this.utilCalRender.renderCalendar(this, newMonth, newYear)}`;
       }
-
-      this.allCalendarHtml = renderedHtml;
-    } else {
-      this.allCalendarHtml = null;
     }
+    return renderedHtml;
   }
 
   /**
@@ -263,17 +260,13 @@ export class AuroCalendar extends RangeDatepicker {
         composed: true,
       }));
     });
-
-    window.addEventListener('resize', () => {
-      this.renderAllCalendars();
-    });
   }
 
   toggleVisibility(visibility) {
     this.isVisible = visibility;
 
     // wait for dropdownbib's fullscreen attribute
-    setTimeout(() => this.renderAllCalendars());
+    setTimeout(() => this.requestUpdate());
   }
 
   injectSlot(slotName, nodes) {
@@ -296,8 +289,6 @@ export class AuroCalendar extends RangeDatepicker {
     if (changedProperties.has('centralDate')) {
       this.utilCal.centralDateChanged(this);
     }
-
-    this.renderAllCalendars();
   }
 
   render() {
@@ -311,7 +302,7 @@ export class AuroCalendar extends RangeDatepicker {
           <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>
         </div>
         <div class="calendars">
-          ${this.allCalendarHtml}
+          ${this.renderAllCalendars()}
         </div>
         <div class="mobileFooter">
           <div class="mobileFooterActions">
