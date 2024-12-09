@@ -268,6 +268,7 @@ export class AuroDropdown extends LitElement {
 
       if (currentElement && currentElement.hasAttribute('slot')) {
         inCustomSlot = true;
+        break;
       }
     }
 
@@ -275,27 +276,18 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * Handles the default slot content.
-   * @private
-   * @returns {void}
+   * Handles the default slot change event and updates the content.
+   *
+   * This method retrieves all nodes assigned to the default slot of the event target and appends them
+   * to the `bibContent` element. If a callback function `onSlotChange` is defined, it is invoked to
+   * notify about the slot change.
+   *
+   * @method handleDefaultSlot
+   * @param {Event} event - The event object representing the slot change.
+   * @fires Function#onSlotChange - Optional callback invoked when the slot content changes.
    */
-  handleDefaultSlot() {
-    const allSlotContent = Array.from(this.childNodes).filter((node) => {
-      // Include text nodes and elements without a slot attribute
-      return node.nodeType === Node.TEXT_NODE || (node.nodeType === Node.ELEMENT_NODE && !node.hasAttribute('slot'));
-    });
-
-    this.defaultSlotContent = [];
-
-    allSlotContent.forEach((item) => {
-      if (!this.isCustomSlotContent(item)) {
-        this.defaultSlotContent.push(item);
-      }
-    });
-
-    this.defaultSlotContent.forEach((item) => {
-      this.bibContent.append(item);
-    });
+  handleDefaultSlot(event) {
+    [...event.target.assignedNodes()].forEach((node) => this.bibContent.append(node));
 
     if (this.onSlotChange) {
       this.onSlotChange();

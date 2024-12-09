@@ -15,6 +15,7 @@
     "@alaskaairux/icons": "^4.44.1",
     "@auro-formkit/auro-dropdown": "*",
     "@auro-formkit/auro-input": "*",
+    "@auro-formkit/form-validation": "*",
     "@aurodesignsystem/auro-popover": "^4.1.0",
     "@material/mwc-icon-button": "^0.27.0",
     "@material/mwc-list": "^0.27.0",
@@ -31,7 +32,6 @@
   "devDependencies": {
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
-    "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
     "@aurodesignsystem/design-tokens": "^4.10.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",

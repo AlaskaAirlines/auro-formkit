@@ -28,10 +28,11 @@
 
 ## Methods
 
-| Method | Type       | Description                         |
-|--------|------------|-------------------------------------|
-| `hide` | `(): void` | Public method to hide the dropdown. |
-| `show` | `(): void` | Public method to show the dropdown. |
+| Method              | Type                   | Description                                      |
+|---------------------|------------------------|--------------------------------------------------|
+| `handleDefaultSlot` | `(event: Event): void` | Handles the default slot change event and updates the content.<br /><br />This method retrieves all nodes assigned to the default slot of the event target and appends them<br />to the `bibContent` element. If a callback function `onSlotChange` is defined, it is invoked to<br />notify about the slot change.<br /><br />**event**: The event object representing the slot change. |
+| `hide`              | `(): void`             | Public method to hide the dropdown.              |
+| `show`              | `(): void`             | Public method to show the dropdown.              |
 
 ## Events
 

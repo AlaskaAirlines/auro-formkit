@@ -31,10 +31,11 @@
 
 ## Methods
 
-| Method | Type       | Description                         |
-|--------|------------|-------------------------------------|
-| [hide](#hide) | `(): void` | Public method to hide the dropdown. |
-| [show](#show) | `(): void` | Public method to show the dropdown. |
+| Method              | Type                   | Description                                      |
+|---------------------|------------------------|--------------------------------------------------|
+| [handleDefaultSlot](#handleDefaultSlot) | `(event: Event): void` | Handles the default slot change event and updates the content.<br /><br />This method retrieves all nodes assigned to the default slot of the event target and appends them<br />to the `bibContent` element. If a callback function `onSlotChange` is defined, it is invoked to<br />notify about the slot change.<br /><br />**event**: The event object representing the slot change. |
+| [hide](#hide)              | `(): void`             | Public method to hide the dropdown.              |
+| [show](#show)              | `(): void`             | Public method to show the dropdown.              |
 
 ## Events
 
@@ -965,7 +966,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
     }
   </style>
   <div style="width: 100px;" aria-label="custom label">
-    <auro-dropdown inset bordered rounded chevron>
+    <auro-dropdown id="customDropdown100" inset bordered rounded chevron>
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -997,7 +998,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
   }
 </style>
 <div style="width: 100px;" aria-label="custom label">
-  <auro-dropdown inset bordered rounded chevron>
+  <auro-dropdown id="customDropdown100" inset bordered rounded chevron>
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -1017,71 +1018,6 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<<<<<<< HEAD
-=======
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customDimensions300.html) -->
-  <!-- The below content is automatically added from ./../apiExamples/customDimensions300.html -->
-  <style>
-    #customDropdown300::part(size) {
-      width: 300px;
-      max-height: 200px;
-    }
-    </style>
-  <div style="width: 300px;" aria-label="custom label">
-    <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="sm">
-      <div>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-      </div>
-      <div slot="trigger">
-        Trigger
-      </div>
-    </auro-dropdown>
-  </div>
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/customDimensions300.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/customDimensions300.html -->
-
-```html
-<style>
-  #customDropdown300::part(size) {
-    width: 300px;
-    max-height: 200px;
-  }
-  </style>
-<div style="width: 300px;" aria-label="custom label">
-  <auro-dropdown id="customDropdown300" inset bordered rounded chevron mobileFullscreenBreakpoint="sm">
-    <div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
-    </div>
-    <div slot="trigger">
-      Trigger
-    </div>
-  </auro-dropdown>
-</div>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
->>>>>>> 2f42ee7 (feat: add `docProcessor` to generate docs for each components)
 
 #### Truncated trigger component with fixed width
 
@@ -1124,6 +1060,89 @@ This example demonstrations collapsing the dropdown by clicking a button within 
     </div>
   </auro-dropdown>
 </div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+#### in Dialog
+
+The focus method will apply focus state to the datepicker's input field.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/inDialog.html -->
+  <div>
+    <auro-button id="dropdown-dialog-opener">Dropdown in Dialog</auro-button>
+    <auro-dialog id="dropdown-dialog">
+      <span slot="header">Dropdown in Dialog</span>
+      <div slot="content">
+        <auro-dropdown id="commonSlot" common bordered rounded inset chevron>
+          <div style="padding: var(--ds-size-150);">
+            Lorem ipsum solar
+            <br />
+            <auro-button onclick="document.querySelector('#commonSlot').hide()">
+              Dismiss Dropdown
+            </auro-button>
+          </div>
+          <span slot="helpText">
+            Help text
+          </span>
+          <span slot="label">
+            Element label (default text will be read by screen reader)
+          </span>
+          <div slot="trigger">
+            Dropdown Trigger in Dialog
+          </div>
+        </auro-dropdown>
+      </div>
+    </auro-dialog>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.html -->
+
+```html
+<div>
+  <auro-button id="dropdown-dialog-opener">Dropdown in Dialog</auro-button>
+  <auro-dialog id="dropdown-dialog">
+    <span slot="header">Dropdown in Dialog</span>
+    <div slot="content">
+      <auro-dropdown id="commonSlot" common bordered rounded inset chevron>
+        <div style="padding: var(--ds-size-150);">
+          Lorem ipsum solar
+          <br />
+          <auro-button onclick="document.querySelector('#commonSlot').hide()">
+            Dismiss Dropdown
+          </auro-button>
+        </div>
+        <span slot="helpText">
+          Help text
+        </span>
+        <span slot="label">
+          Element label (default text will be read by screen reader)
+        </span>
+        <div slot="trigger">
+          Dropdown Trigger in Dialog
+        </div>
+      </auro-dropdown>
+    </div>
+  </auro-dialog>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.js -->
+
+```js
+export function inDialogExample() {
+  document.querySelector("#dropdown-dialog-opener").addEventListener("click", () => {
+    const dialog = document.querySelector("#dropdown-dialog");
+    dialog.open = true;
+  });
+};
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
