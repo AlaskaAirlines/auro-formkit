@@ -6,6 +6,7 @@ import { populateSlotContentExample } from './../apiExamples/dynamicSlot.js';
 import { updateMaxDateExample } from './../apiExamples/updateMaxDate';
 import { updateMinDateExample } from './../apiExamples/updateMinDate';
 import { validityExample } from './../apiExamples/validity';
+import { inDialogExample } from '../apiExamples/inDialog.js';
 import '../src/index.js';
 
 export function initExamples(initCount) {
@@ -20,6 +21,7 @@ export function initExamples(initCount) {
     updateMaxDateExample();
     updateMinDateExample();
     validityExample();
+    inDialogExample();
   } catch (error) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called

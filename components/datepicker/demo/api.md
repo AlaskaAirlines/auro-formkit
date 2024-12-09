@@ -29,10 +29,11 @@
 
 ## Methods
 
-| Method            | Type                         | Description                                      |
-|-------------------|------------------------------|--------------------------------------------------|
-| [focus](#focus)           | `(focusInput: string): void` | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
-| [pushSlotContent](#pushSlotContent) | `(): void`                   | Emits an event to notify the calendar cells to fetch their slot content. |
+| Method             | Type                         | Description                                      |
+|--------------------|------------------------------|--------------------------------------------------|
+| [focus](#focus)            | `(focusInput: string): void` | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
+| [handleSlotToSlot](#handleSlotToSlot) | `(event: any): void`         |                                                  |
+| [pushSlotContent](#pushSlotContent)  | `(): void`                   | Emits an event to notify the calendar cells to fetch their slot content. |
 
 ## Events
 
@@ -1083,6 +1084,55 @@ export function alertValueExample() {
     alert(`Select value changed to: ${valueAlertExample.value}`);
   })
 }
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+#### in Dialog
+
+The focus method will apply focus state to the datepicker's input field.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/inDialog.html -->
+  <div>
+    <auro-button id="datepicker-dialog-opener">Datepicker in Dialog</auro-button>
+    <auro-dialog id="datepicker-dialog">
+      <span slot="header">Datepicker in Dialog</span>
+      <div slot="content">
+        <auro-datepicker />
+      </div>
+    </auro-dialog>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.html -->
+
+```html
+<div>
+  <auro-button id="datepicker-dialog-opener">Datepicker in Dialog</auro-button>
+  <auro-dialog id="datepicker-dialog">
+    <span slot="header">Datepicker in Dialog</span>
+    <div slot="content">
+      <auro-datepicker />
+    </div>
+  </auro-dialog>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.js -->
+
+```js
+export function inDialogExample() {
+  document.querySelector("#datepicker-dialog-opener").addEventListener("click", () => {
+    const dialog = document.querySelector("#datepicker-dialog");
+    dialog.open = true;
+  });
+};
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>

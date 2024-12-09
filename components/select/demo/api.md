@@ -662,6 +662,75 @@ export function valueAlert(elem) {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+#### in Dialog
+
+The focus method will apply focus state to the datepicker's input field.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/inDialog.html -->
+  <div>
+    <auro-button id="select-dialog-opener">Select in Dialog</auro-button>
+    <auro-dialog id="select-dialog">
+      <span slot="header">Select in Dialog</span>
+      <div slot="content">
+        <auro-select id="valueExample" value="price">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>
+            <auro-menuoption id="option-1" value="price">Price</auro-menuoption>
+            <auro-menuoption id="option-2" value="duration">Duration</auro-menuoption>
+            <auro-menuoption id="option-3" value="departure">Departure</auro-menuoption>
+            <auro-menuoption id="option-4" value="arrival">Arrival</auro-menuoption>
+            <auro-menuoption id="option-5" value="prefer alaska">Prefer Alaska</auro-menuoption>
+          </auro-menu>
+        </auro-select>
+      </div>
+    </auro-dialog>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.html -->
+
+```html
+<div>
+  <auro-button id="select-dialog-opener">Select in Dialog</auro-button>
+  <auro-dialog id="select-dialog">
+    <span slot="header">Select in Dialog</span>
+    <div slot="content">
+      <auro-select id="valueExample" value="price">
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>
+          <auro-menuoption id="option-1" value="price">Price</auro-menuoption>
+          <auro-menuoption id="option-2" value="duration">Duration</auro-menuoption>
+          <auro-menuoption id="option-3" value="departure">Departure</auro-menuoption>
+          <auro-menuoption id="option-4" value="arrival">Arrival</auro-menuoption>
+          <auro-menuoption id="option-5" value="prefer alaska">Prefer Alaska</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    </div>
+  </auro-dialog>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.js -->
+
+```js
+export function inDialogExample() {
+  document.querySelector("#select-dialog-opener").addEventListener("click", () => {
+    const dialog = document.querySelector("#select-dialog");
+    dialog.open = true;
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ### Theme Support
 
 The component may be restyled using the following code sample and changing the values of the following token(s).

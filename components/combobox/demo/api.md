@@ -672,3 +672,72 @@ Sets the help text displayed below the trigger. The `helpText` slot can be used 
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+
+#### in Dialog
+
+The focus method will apply focus state to the datepicker's input field.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/inDialog.html -->
+  <div>
+    <auro-button id="combobox-dialog-opener">Combobox in Dialog</auro-button>
+    <auro-dialog id="combobox-dialog">
+      <span slot="header">Combobox in Dialog</span>
+      <div slot="content">
+        <auro-combobox id="focusExample">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+            <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+            <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+            <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+            <auro-menuoption static nomatch>No matching option</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      </div>
+    </auro-dialog>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.html -->
+
+```html
+<div>
+  <auro-button id="combobox-dialog-opener">Combobox in Dialog</auro-button>
+  <auro-dialog id="combobox-dialog">
+    <span slot="header">Combobox in Dialog</span>
+    <div slot="content">
+      <auro-combobox id="focusExample">
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+          <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+          <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+          <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+          <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+          <auro-menuoption static nomatch>No matching option</auro-menuoption>
+        </auro-menu>
+      </auro-combobox>
+    </div>
+  </auro-dialog>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inDialog.js -->
+
+```js
+export function inDialogExample() {
+  document.querySelector("#combobox-dialog-opener").addEventListener("click", () => {
+    const dialog = document.querySelector("#combobox-dialog");
+    dialog.open = true;
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>

@@ -27,6 +27,21 @@
         "sass:render"
       ]
     },
+    "@auro-formkit/auro-datepicker#build": {
+      "dependsOn": [
+        "@auro-formkit/auro-input#build",
+        "@auro-formkit/auro-dropdown#build",
+        "postCss:component",
+        "sass:render"
+      ]
+    },
+    "@auro-formkit/auro-select#build": {
+      "dependsOn": [
+        "@auro-formkit/auro-dropdown#build",
+        "postCss:component",
+        "sass:render"
+      ]
+    },
     "build:docs": {
       "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
     },

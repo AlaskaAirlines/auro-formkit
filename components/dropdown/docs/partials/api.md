@@ -398,20 +398,6 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
-<<<<<<< HEAD
-=======
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customDimensions300.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/customDimensions300.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
->>>>>>> 2f42ee7 (feat: add `docProcessor` to generate docs for each components)
 
 #### Truncated trigger component with fixed width
 
@@ -425,6 +411,25 @@ This example demonstrations collapsing the dropdown by clicking a button within 
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/truncatedText.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### in Dialog
+
+The focus method will apply focus state to the datepicker's input field.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.js) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

@@ -224,3 +224,22 @@ Sets the help text displayed below the trigger. The `helpText` slot can be used 
 
 </auro-accordion>
 
+
+#### in Dialog
+
+The focus method will apply focus state to the datepicker's input field.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inDialog.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>

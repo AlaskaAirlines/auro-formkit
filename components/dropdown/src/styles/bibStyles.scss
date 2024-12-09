@@ -13,7 +13,7 @@
 
 :host {
   position: absolute;
-  z-index: 1;
+  z-index: calc(var(--depth-tooltip, $ds-depth-tooltip) + 200);
   display: none;
 }
 

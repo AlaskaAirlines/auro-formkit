@@ -30,11 +30,6 @@
   [auro-dropdown] {
     position: relative;
 
-    &::part(trigger) {
-      min-height: var(--ds-size-500, $ds-size-500);
-      max-height: var(--ds-size-500, $ds-size-500);
-    }
-
     &::part(popover) {
       max-width: -webkit-fill-available;
       overflow-y: scroll;
