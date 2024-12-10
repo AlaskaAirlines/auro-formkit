@@ -460,7 +460,7 @@ export class AuroDatePicker extends LitElement {
       this.setAttribute('aria-expanded', this.dropdown.isPopoverVisible);
       this.notifyDatepickerToggled();
 
-      this.calendar.toggleVisibility(this.dropdown.isPopoverVisible);
+      this.calendar.visible = this.dropdown.isPopoverVisible;
 
       if (this.dropdown.getAttribute('data-show')) {
         if (this.forceScrollOnNextMobileCalendarRender) {
