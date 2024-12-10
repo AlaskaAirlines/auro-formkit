@@ -26,6 +26,7 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
  * @prop {Date | undefined} selectedDate - The selected date, usually synchronized with datepicker-input.
  * Not to be confused with the focused date (therefore not necessarily in active month view).
  * @prop {string} weekdayHeaderNotation - Weekday header notation, based on Intl DatetimeFormat:
+ * @prop {Boolean} visible - Flag indicating if the calendar is visible.
  * - 'short' (e.g., Thu)
  * - 'narrow' (e.g., T).
  * Default is 'short'.
@@ -77,10 +78,7 @@ export class AuroCalendar extends RangeDatepicker {
     this.numCalendars = undefined;
 
 
-    /**
-     * @private
-     */
-    this.isVisible = false;
+    this.visible = false;
 
 
     /**
@@ -128,6 +126,10 @@ export class AuroCalendar extends RangeDatepicker {
         type: String,
         reflect: true
       },
+      visible: {
+        type: Boolean,
+        reflect: false
+      }
     };
   }
 
@@ -156,7 +158,7 @@ export class AuroCalendar extends RangeDatepicker {
    */
   renderAllCalendars() {
     let renderedHtml = undefined;
-    if (this.isVisible) {
+    if (this.visible) {
       this.utilCalRender.setFirstRenderableMonthDate(this);
 
       const dropdown = AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdown, [auro-dropdown]', this);
@@ -262,13 +264,6 @@ export class AuroCalendar extends RangeDatepicker {
     });
   }
 
-  toggleVisibility(visibility) {
-    this.isVisible = visibility;
-
-    // wait for dropdownbib's fullscreen attribute
-    setTimeout(() => this.requestUpdate());
-  }
-
   injectSlot(slotName, nodes) {
     this.slots[slotName] = nodes;
   }
@@ -288,6 +283,10 @@ export class AuroCalendar extends RangeDatepicker {
 
     if (changedProperties.has('centralDate')) {
       this.utilCal.centralDateChanged(this);
+    }
+
+    if (changedProperties.has('visible')) {
+      setTimeout(() => this.requestUpdate());
     }
   }
 

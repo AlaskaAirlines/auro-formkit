@@ -664,7 +664,7 @@ export function valueAlert(elem) {
 
 #### in Dialog
 
-The focus method will apply focus state to the datepicker's input field.
+THe component can be in a dialog.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->

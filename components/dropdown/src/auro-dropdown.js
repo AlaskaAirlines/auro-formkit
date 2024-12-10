@@ -282,6 +282,7 @@ export class AuroDropdown extends LitElement {
    * to the `bibContent` element. If a callback function `onSlotChange` is defined, it is invoked to
    * notify about the slot change.
    *
+   * @private
    * @method handleDefaultSlot
    * @param {Event} event - The event object representing the slot change.
    * @fires Function#onSlotChange - Optional callback invoked when the slot content changes.

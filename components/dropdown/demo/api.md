@@ -31,11 +31,10 @@
 
 ## Methods
 
-| Method              | Type                   | Description                                      |
-|---------------------|------------------------|--------------------------------------------------|
-| [handleDefaultSlot](#handleDefaultSlot) | `(event: Event): void` | Handles the default slot change event and updates the content.<br /><br />This method retrieves all nodes assigned to the default slot of the event target and appends them<br />to the `bibContent` element. If a callback function `onSlotChange` is defined, it is invoked to<br />notify about the slot change.<br /><br />**event**: The event object representing the slot change. |
-| [hide](#hide)              | `(): void`             | Public method to hide the dropdown.              |
-| [show](#show)              | `(): void`             | Public method to show the dropdown.              |
+| Method | Type       | Description                         |
+|--------|------------|-------------------------------------|
+| [hide](#hide) | `(): void` | Public method to hide the dropdown. |
+| [show](#show) | `(): void` | Public method to show the dropdown. |
 
 ## Events
 
@@ -1066,7 +1065,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 
 #### in Dialog
 
-The focus method will apply focus state to the datepicker's input field.
+The component can be in a dialog
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
