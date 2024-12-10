@@ -46,7 +46,7 @@
       "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
     },
     "build:docs:kit": {
-      "inputs": ["docs/partials/**/*"],
+      "inputs": ["../../docs/partials/**/*", "../../docs/templates/**/*"],
       "outputs": ["README.md"]
     },
     "build:version": {
