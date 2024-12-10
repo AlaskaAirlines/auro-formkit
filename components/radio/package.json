@@ -21,12 +21,12 @@
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
   "devDependencies": {
+    "@alaskaairux/design-tokens": "^3.15.5",
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@alaskaairux/design-tokens": "^3.15.5",
-    "@aurodesignsystem/design-tokens": "^4.10.0",
+    "@aurodesignsystem/design-tokens": "^4.12.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "rollup": "^4.24.0",

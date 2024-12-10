@@ -20,7 +20,7 @@
     "lit": "^3.2.1"
   },
   "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.9.2",
+    "@aurodesignsystem/design-tokens": "^4.12.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^4.10.1",
+    "@aurodesignsystem/design-tokens": "^4.12.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "rollup": "^4.24.4",
