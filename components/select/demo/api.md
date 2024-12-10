@@ -664,7 +664,7 @@ export function valueAlert(elem) {
 
 #### in Dialog
 
-THe component can be in a dialog.
+The component can be in a dialog.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inDialog.html) -->
