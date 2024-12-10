@@ -26,11 +26,9 @@
 
 ## Methods
 
-| Method             | Type                         | Description                                      |
-|--------------------|------------------------------|--------------------------------------------------|
-| `focus`            | `(focusInput: string): void` | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
-| `handleSlotToSlot` | `(event: any): void`         |                                                  |
-| `pushSlotContent`  | `(): void`                   | Emits an event to notify the calendar cells to fetch their slot content. |
+| Method  | Type                         | Description                                      |
+|---------|------------------------------|--------------------------------------------------|
+| `focus` | `(focusInput: string): void` | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
 
 ## Events
 

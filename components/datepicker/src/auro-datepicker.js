@@ -682,6 +682,7 @@ export class AuroDatePicker extends LitElement {
 
   /**
    * Emits an event to notify the calendar cells to fetch their slot content.
+   * @private
    * @returns {void}
    */
   pushSlotContent() {
@@ -858,6 +859,14 @@ export class AuroDatePicker extends LitElement {
     }
   }
 
+  /**
+   * Handles the transfer of content between slots in the component.
+   *
+   * @private
+   * @method handleSlotToSlot
+   * @param {Event} event - The event object containing information about the slot transfer.
+   * @throws {Error} Throws an error if the slot cannot be found or injected.
+   */
   handleSlotToSlot(event) {
     const slot = this.querySelector(`[slot='${event.target.name}']`);
     this.calendar.injectSlot(event.target.name, slot.cloneNode(true));
