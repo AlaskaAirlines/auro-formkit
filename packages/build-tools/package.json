@@ -9,6 +9,10 @@
   "exports": {
     ".": "./src/index.js",
     "./formVersionWriter": "./src/formVersionWriter.mjs",
-    "./docProcessor": "./src/docProcessor.mjs"
+    "./docProcessor": "./src/docProcessor.mjs",
+    "./kitDocProcessor": "./src/kitDocProcessor.mjs"
+  },
+  "scripts": {
+    "build:docs:kit": "node src/kitDocProcessor.mjs"
   }
 }
