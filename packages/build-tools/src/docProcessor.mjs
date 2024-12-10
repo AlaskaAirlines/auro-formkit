@@ -40,7 +40,7 @@ export const fileConfigs = (config) => [
     identifier: 'README.md',
     input: {
       remoteUrl: generateReadmeUrl(config.remoteReadmeVersion, config.remoteReadmeVariant),
-      fileName: fromAuroComponentRoot(`components/${config.component}//docTemplates/README.md`),
+      fileName: fromAuroComponentRoot(`components/${config.component}/docTemplates/README.md`),
       overwrite: config.overwriteLocalCopies
     },
     output: fromAuroComponentRoot(`components/${config.component}/README.md`)
