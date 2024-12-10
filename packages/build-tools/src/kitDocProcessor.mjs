@@ -1,7 +1,6 @@
 import { Logger } from "@aurodesignsystem/auro-library/scripts/utils/logger.mjs";
 import {
   fromAuroComponentRoot,
-  generateReadmeUrl,
   processContentForFile,
   templateFiller
 } from "@aurodesignsystem/auro-library/scripts/utils/sharedFileProcessorUtils.mjs";
