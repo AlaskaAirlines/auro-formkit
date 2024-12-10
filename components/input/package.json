@@ -20,16 +20,16 @@
   },
   "peerDependencies": {
     "@alaskaairux/icons": "^4.43.0",
-    "@aurodesignsystem/design-tokens": "^4.9.2",
+    "@aurodesignsystem/design-tokens": "^4.12.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
-    "devDependencies": {
+  "devDependencies": {
+    "@alaskaairux/icons": "^4.44.1",
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@alaskaairux/icons": "^4.44.1",
-    "@aurodesignsystem/design-tokens": "^4.10.1",
+    "@aurodesignsystem/design-tokens": "^4.12.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "backstopjs": "^6.3.25",

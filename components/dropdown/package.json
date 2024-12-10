@@ -26,7 +26,7 @@
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^4.9.2",
+    "@aurodesignsystem/design-tokens": "^4.12.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "postcss-selector-replace": "^1.0.2",
