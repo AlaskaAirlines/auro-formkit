@@ -38,11 +38,7 @@ export const fileConfigs = (config) => [
   // README.md
   {
     identifier: 'README.md',
-    input: {
-      remoteUrl: generateReadmeUrl(config.remoteReadmeVersion, config.remoteReadmeVariant),
-      fileName: fromAuroComponentRoot(`docTemplates/README.md`),
-      overwrite: config.overwriteLocalCopies
-    },
+    input: fromAuroComponentRoot(`docs/templates/README.md`),
     output: fromAuroComponentRoot(`README.md`)
   }
 ];
