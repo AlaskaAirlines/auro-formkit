@@ -6,7 +6,7 @@ npm run test
 
 #### WTR & Workspaces
 
-`web-test-runner` does not support the `node:` prefix. Therefor, this does not work:
+`web-test-runner` does not support the `node:` prefix. Therefore, this does not work:
 
 ```
 "test": "wtr --config node:@auro-formkit/config/wtr --coverage"
