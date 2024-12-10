@@ -45,7 +45,7 @@
     "build:docs": {
       "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
     },
-    "build:docs:kit": {
+    "@auro-formkit/build-tools#build:docs:kit": {
       "inputs": ["../../docs/partials/**/*", "../../docs/templates/**/*", "src/kitDocProcessor.mjs"],
       "outputs": ["../../README.md"]
     },
