@@ -40,28 +40,10 @@ export const fileConfigs = (config) => [
     identifier: 'README.md',
     input: {
       remoteUrl: generateReadmeUrl(config.remoteReadmeVersion, config.remoteReadmeVariant),
-      fileName: fromAuroComponentRoot(`components/${config.component}/docTemplates/README.md`),
+      fileName: fromAuroComponentRoot(`docTemplates/README.md`),
       overwrite: config.overwriteLocalCopies
     },
-    output: fromAuroComponentRoot(`components/${config.component}/README.md`)
-  },
-  // index.md
-  {
-    identifier: 'index.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/index.md`),
-    output: fromAuroComponentRoot(`components/${config.component}/demo/index.md`),
-    mdMagicConfig: {
-      output: {
-        directory: fromAuroComponentRoot(`components/${config.component}/demo`)
-      }
-    }
-  },
-  // api.md
-  {
-    identifier: 'api.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/api.md`),
-    output: fromAuroComponentRoot(`components/${config.component}/demo/api.md`),
-    preProcessors: [templateFiller.formatApiTable],
+    output: fromAuroComponentRoot(`README.md`)
   }
 ];
 
@@ -70,35 +52,20 @@ export const fileConfigs = (config) => [
  * @param {ProcessorConfig} config - The configuration for this processor.
  * @return {Promise<void>}
  */
-export async function processDocFiles(componentName) {
-  const config = { ...defaultDocsProcessorConfig };
-  if (componentName) {
-    config.component = componentName;
-    // setup
-    await templateFiller.extractNames();
+export async function processDocFiles(config = defaultDocsProcessorConfig) {
+  // setup
+  await templateFiller.extractNames();
 
-    for (const fileConfig of fileConfigs(config)) {
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        await processContentForFile(fileConfig);
-      } catch (err) {
-        Logger.error(`Error processing ${fileConfig.identifier}: ${err.message}`);
-      }
+  for (const fileConfig of fileConfigs(config)) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await processContentForFile(fileConfig);
+    } catch (err) {
+      Logger.error(`Error processing ${fileConfig.identifier}: ${err.message}`);
     }
-  } else {
-    Logger.error('no component name provided');
   }
 }
 
-function main() {
-  const optionIndex = process.argv.indexOf('--component');
-  const componentName = process.argv[optionIndex + 1];
-  processDocFiles(componentName).then(() => {
-    Logger.log('Docs processed successfully for ' + componentName);
-  }).
-    catch((err) => {
-      Logger.error(`Error processing docs: ${err.message}`);
-  });
-}
-
-main();
+processDocFiles().catch(err => {
+  Logger.error(`Failed to process docs: ${err}`);
+});
