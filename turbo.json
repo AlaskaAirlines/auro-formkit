@@ -47,7 +47,7 @@
     },
     "build:docs:kit": {
       "inputs": ["../../docs/partials/**/*", "../../docs/templates/**/*"],
-      "outputs": ["README.md"]
+      "outputs": ["../../README.md"]
     },
     "build:version": {
       "outputs": ["src/*.js", "src/**/*.js"]
