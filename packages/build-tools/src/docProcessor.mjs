@@ -32,7 +32,7 @@ export const defaultDocsProcessorConfig = {
 
 /**
  * @param {ProcessorConfig} config - The configuration for this processor.
- * @returns {import('../utils/sharedFileProcessorUtils').FileProcessorConfig[]}
+ * @returns {import('@aurodesignsystem/auro-library/scripts/utils/sharedFileProcessorUtils').FileProcessorConfig[]}
  */
 export const fileConfigs = (config) => [
   // README.md
