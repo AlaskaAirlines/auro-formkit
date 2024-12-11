@@ -21,6 +21,7 @@
   display: inline-block;
   overflow: auto;
   box-sizing: border-box;
+  margin-top: var(--ds-size-50, $ds-size-50);
 }
 
 :host([isfullscreen]) {
@@ -34,6 +35,7 @@
     height: 100dvh;
     max-height: none;
     border-radius: unset;
+    margin-top: 0;
     box-shadow: unset;
  }
 }
