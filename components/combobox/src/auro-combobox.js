@@ -638,6 +638,7 @@ export class AuroCombobox extends LitElement {
         </div>
         <${this.dropdownTag}
           for="dropdownMenu"
+          fluid
           bordered
           rounded
           matchWidth

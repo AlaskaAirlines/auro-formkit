@@ -15,6 +15,7 @@
 | `common`                     | `common`                     | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
 | `disabled`                   | `disabled`                   | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
 | `error`                      | `error`                      | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
+| `fluid`                      | `fluid`                      | `Boolean`   |         | Alters the shape of the button to be full width of its parent container |
 | `focusShow`                  | `focusShow`                  | ` Boolean ` |         | if declared, the the bib will display when focus is applied to the trigger. |
 | `hoverToggle`                | `hoverToggle`                | ` Boolean ` |         | if declared, the trigger will toggle the big on mouseover/mouseout. |
 | `inset`                      | `inset`                      | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |

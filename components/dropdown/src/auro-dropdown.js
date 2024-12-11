@@ -30,6 +30,7 @@ import './auro-dropdownBib.js';
  * @attr { Boolean } disabled - If declared, the dropdown is not interactive.
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
  * @attr { Boolean } error - If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
+ * @attr {Boolean} fluid - Alters the shape of the button to be full width of its parent container
  * @attr { Boolean } matchWidth - If declared, the popover and trigger will be set to the same width.
  * @attr { Boolean } inset - If declared, will apply padding around trigger slot content.
  * @attr { Boolean } rounded - If declared, will apply border-radius to trigger and default slots.
@@ -137,6 +138,10 @@ export class AuroDropdown extends LitElement {
       error: {
         type: Boolean,
         reflect: true
+      },
+      fluid: {
+        type: Boolean,
+        reflect: true,
       },
       focusShow: {
         type: Boolean,

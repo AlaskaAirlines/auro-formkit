@@ -18,6 +18,7 @@
 | [common](#common)                     | `common`                     | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
 | [disabled](#disabled)                   | `disabled`                   | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
 | [error](#error)                      | `error`                      | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
+| [fluid](#fluid)                      | `fluid`                      | `Boolean`   |         | Alters the shape of the button to be full width of its parent container |
 | [focusShow](#focusShow)                  | `focusShow`                  | ` Boolean ` |         | if declared, the the bib will display when focus is applied to the trigger. |
 | [hoverToggle](#hoverToggle)                | `hoverToggle`                | ` Boolean ` |         | if declared, the trigger will toggle the big on mouseover/mouseout. |
 | [inset](#inset)                      | `inset`                      | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
@@ -852,7 +853,7 @@ The `show` method may also be called from anywhere in your code by executing `do
   <auro-input id="showExampleTriggerInput" required>
     <span slot="label">Enter a value to show the dropdown</span>
   </auro-input>
-  <auro-dropdown id="showMethodExample" aria-label="custom label" rounded bordered inset>
+  <auro-dropdown id="showMethodExample" aria-label="custom label" fluid rounded bordered inset>
     <p>
       Lorem ipsum solar
     </p>
@@ -869,7 +870,7 @@ The `show` method may also be called from anywhere in your code by executing `do
 <auro-input id="showExampleTriggerInput" required>
   <span slot="label">Enter a value to show the dropdown</span>
 </auro-input>
-<auro-dropdown id="showMethodExample" aria-label="custom label" rounded bordered inset>
+<auro-dropdown id="showMethodExample" aria-label="custom label" fluid rounded bordered inset>
   <p>
     Lorem ipsum solar
   </p>
@@ -904,7 +905,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/programmaticallyHide.html) -->
   <!-- The below content is automatically added from ./../apiExamples/programmaticallyHide.html -->
-  <auro-dropdown id="hideExample" aria-label="custom label" rounded bordered inset>
+  <auro-dropdown id="hideExample" aria-label="custom label" fluid rounded bordered inset>
     <p>
       Lorem ipsum solar
     </p>
@@ -924,7 +925,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
 <!-- The below code snippet is automatically added from ./../apiExamples/programmaticallyHide.html -->
 
 ```html
-<auro-dropdown id="hideExample" aria-label="custom label" rounded bordered inset>
+<auro-dropdown id="hideExample" aria-label="custom label" fluid rounded bordered inset>
   <p>
     Lorem ipsum solar
   </p>

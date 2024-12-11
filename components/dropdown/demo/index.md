@@ -85,57 +85,6 @@ This first common example uses the default `auro-dropdown` element with the attr
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-## Common use with aria-labelledby
-
-This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `aria-labelledby` attribute to identify the element that labels the element it is applied to.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonLabelledby.html) -->
-  <!-- The below content is automatically added from ./../apiExamples/commonLabelledby.html -->
-  <p id="foo">The element is labelled by content external to the element.</p>
-  <auro-dropdown id="commonAdvanced" aria-labelledby="foo" bordered rounded inset chevron>
-    <div style="padding: var(--ds-size-150);">
-      Lorem ipsum solar
-      <br />
-      <auro-button onclick="document.querySelector('#commonAdvanced').hide()">
-        Dismiss Dropdown
-      </auro-button>
-    </div>
-    <span slot="helpText">
-      Help text
-    </span>
-    <div slot="trigger">
-      Trigger
-    </div>
-  </auro-dropdown>
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonLabelledby.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/commonLabelledby.html -->
-
-```html
-<p id="foo">The element is labelled by content external to the element.</p>
-<auro-dropdown id="commonAdvanced" aria-labelledby="foo" bordered rounded inset chevron>
-  <div style="padding: var(--ds-size-150);">
-    Lorem ipsum solar
-    <br />
-    <auro-button onclick="document.querySelector('#commonAdvanced').hide()">
-      Dismiss Dropdown
-    </auro-button>
-  </div>
-  <span slot="helpText">
-    Help text
-  </span>
-  <div slot="trigger">
-    Trigger
-  </div>
-</auro-dropdown>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
 ## Common use using the label content slot
 
 This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `slot` content container to define a string value that labels the interactive element.
@@ -243,7 +192,7 @@ This common example uses the default `auro-dropdown` element with the attributes
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonMatchWidth.html) -->
   <!-- The below content is automatically added from ./../apiExamples/commonMatchWidth.html -->
-  <auro-dropdown id="common" common matchWidth aria-label="Label content for screen reader">
+  <auro-dropdown id="common" common fluid matchWidth aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
@@ -266,7 +215,7 @@ This common example uses the default `auro-dropdown` element with the attributes
 <!-- The below code snippet is automatically added from ./../apiExamples/commonMatchWidth.html -->
 
 ```html
-<auro-dropdown id="common" common matchWidth aria-label="Label content for screen reader">
+<auro-dropdown id="common" common fluid matchWidth aria-label="Label content for screen reader">
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
@@ -281,6 +230,101 @@ This common example uses the default `auro-dropdown` element with the attributes
     Trigger
   </div>
 </auro-dropdown>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+## Common use with its width matching the trigger
+
+To make the dropdown to be just big as the trigger's content, style the `auro-dropdown` width `display: inline-block`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inline.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/inline.html -->
+  <table style="text-align: center;">
+    <thead>
+      <tr>
+        <td>Icon Only</td>
+        <td>Text Only</td>
+        <td>Text with Icon</td>
+      </tr>
+    </thead>
+    <tr>
+      <td>
+        <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+          Icon Only Dropdown
+          <div slot="trigger">
+            <auro-icon category="interface" name="arrow-down"></auro-icon>
+          </div>
+        </auro-dropdown>
+      </td>
+      <td>
+        <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+          Text Only Dropdown
+          <div slot="trigger">
+            Trigger Text
+          </div>
+        </auro-dropdown>
+      </td>
+      <td>
+        <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+          Icon and Text Dropdown
+          <div slot="trigger">
+            <div style="white-space:nowrap">
+              Trigger Text
+              <auro-icon category="interface" name="arrow-down"></auro-icon>
+            </div>
+          </div>
+        </auro-dropdown>
+      </td>
+    </tr>
+  </table>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inline.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/inline.html -->
+
+```html
+<table style="text-align: center;">
+  <thead>
+    <tr>
+      <td>Icon Only</td>
+      <td>Text Only</td>
+      <td>Text with Icon</td>
+    </tr>
+  </thead>
+  <tr>
+    <td>
+      <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+        Icon Only Dropdown
+        <div slot="trigger">
+          <auro-icon category="interface" name="arrow-down"></auro-icon>
+        </div>
+      </auro-dropdown>
+    </td>
+    <td>
+      <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+        Text Only Dropdown
+        <div slot="trigger">
+          Trigger Text
+        </div>
+      </auro-dropdown>
+    </td>
+    <td>
+      <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+        Icon and Text Dropdown
+        <div slot="trigger">
+          <div style="white-space:nowrap">
+            Trigger Text
+            <auro-icon category="interface" name="arrow-down"></auro-icon>
+          </div>
+        </div>
+      </auro-dropdown>
+    </td>
+  </tr>
+</table>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>

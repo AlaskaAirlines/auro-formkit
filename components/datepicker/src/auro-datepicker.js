@@ -892,6 +892,7 @@ export class AuroDatePicker extends LitElement {
       <div class="outerWrapper">
         <${this.dropdownTag}
           for="dropdownMenu"
+          fluid
           bordered
           rounded
           ?disabled="${this.disabled}"
