@@ -15,14 +15,15 @@
 | `common`                     | `common`                     | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
 | `disabled`                   | `disabled`                   | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
 | `error`                      | `error`                      | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
-| `focusShow`                  | `focusShow`                  | ` Boolean ` |         | if declared, the the bib will display when focus is applied to the trigger. |
+| `fluid`                      | `fluid`                      | `Boolean`   |         | Alters the shape of the button to be full width of its parent container |
+| `focusShow`                  | `focusShow`                  | ` Boolean ` |         | if declared, the bib will display when focus is applied to the trigger. |
 | `hoverToggle`                | `hoverToggle`                | ` Boolean ` |         | if declared, the trigger will toggle the big on mouseover/mouseout. |
 | `inset`                      | `inset`                      | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
 | `isPopoverVisible`           | `isPopoverVisible`           | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
 | `matchWidth`                 | `matchWidth`                 | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |
 | `mobileFullscreenBreakpoint` | `mobileFullscreenBreakpoint` | ` String `  |         | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `noHideOnThisFocusLoss`      | `noHideOnThisFocusLoss`      | ` Boolean ` | false   | If declared, the dropdown will not hide when moving focus outside the element. |
-| `noToggle`                   | `noToggle`                   | ` Boolean ` |         | If declared, the trigger will only show the the dropdown bib. |
+| `noToggle`                   | `noToggle`                   | ` Boolean ` |         | If declared, the trigger will only show the dropdown bib. |
 | `onSlotChange`               | `onSlotChange`               |             |         |                                                  |
 | `rounded`                    | `rounded`                    | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
 

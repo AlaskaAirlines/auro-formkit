@@ -508,6 +508,7 @@ export class AuroSelect extends LitElement {
           for="selectmenu"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           common
+          fluid
           ?matchWidth="${!this.flexMenuWidth}"
           chevron
           part="dropdown">

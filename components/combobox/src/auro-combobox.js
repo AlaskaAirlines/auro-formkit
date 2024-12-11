@@ -428,7 +428,7 @@ export class AuroCombobox extends LitElement {
       this.handleMenuOptions();
 
       this.handleInputValueChange();
-      // validate only if the the value was set programmatically
+      // validate only if the value was set programmatically
       if (document.activeElement !== this) {
         this.validation.validate(this);
       }
@@ -638,6 +638,7 @@ export class AuroCombobox extends LitElement {
         </div>
         <${this.dropdownTag}
           for="dropdownMenu"
+          fluid
           bordered
           rounded
           matchWidth
