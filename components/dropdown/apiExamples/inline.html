@@ -1,0 +1,38 @@
+<table style="text-align: center;">
+  <thead>
+    <tr>
+      <td>Icon Only</td>
+      <td>Text Only</td>
+      <td>Text with Icon</td>
+    </tr>
+  </thead>
+  <tr>
+    <td>
+      <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+        Icon Only Dropdown
+        <div slot="trigger">
+          <auro-icon category="interface" name="arrow-down"></auro-icon>
+        </div>
+      </auro-dropdown>
+    </td>
+    <td>
+      <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+        Text Only Dropdown
+        <div slot="trigger">
+          Trigger Text
+        </div>
+      </auro-dropdown>
+    </td>
+    <td>
+      <auro-dropdown aria-div="custom div" inset style="display: inline-block;">
+        Icon and Text Dropdown
+        <div slot="trigger">
+          <div style="white-space:nowrap">
+            Trigger Text
+            <auro-icon category="interface" name="arrow-down"></auro-icon>
+          </div>
+        </div>
+      </auro-dropdown>
+    </td>
+  </tr>
+</table>
