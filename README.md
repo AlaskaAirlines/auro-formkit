@@ -99,8 +99,7 @@ The package's `package.json` will have every dependency that it needs. This is t
   {
     "devDependencies": {
       "typescript": "^5.0.0",
-      "@open-wc/testing": "^4.0.0",
-      "@auro-formkit/input": "workspace:*"  // Internal dev dependency
+      "@open-wc/testing": "^4.0.0"  // Internal dev dependency
     }
   }
   ```
@@ -126,7 +125,7 @@ Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
   "devDependencies": {
-    // Testing utilities
+    // Build utilities
     "rollup": "^4.24.4",
     "@auro-formkit/build-tools": "*",
   }
