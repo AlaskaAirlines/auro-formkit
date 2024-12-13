@@ -24,14 +24,16 @@ The following sections are editable by making changes to the following files:
 
 It is a monorepo that contains the following components:
 
-- `@auro-formkit/auro-input`
-- `@auro-formkit/auro-dropdown`
+- `@auro-formkit/auro-checkbox`
 - `@auro-formkit/auro-combobox`
+- `@auro-formkit/auro-counter`
+- `@auro-formkit/auro-datepicker`
+- `@auro-formkit/auro-dropdown`
+- `@auro-formkit/auro-form`
+- `@auro-formkit/auro-input`
 - `@auro-formkit/auro-menu`
 - `@auro-formkit/auro-radio`
-- `@auro-formkit/auro-checkbox`
 - `@auro-formkit/auro-select`
-- `@auro-formkit/auro-counter`
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -47,6 +49,95 @@ This monorepo is managed using [Turborepo](https://turborepo.org/).
 When you install a dependency in a component or package in `auro-formkit`, you should install it directly in the package that uses it. 
 
 The package's `package.json` will have every dependency that it needs. This is true for both external and internal dependencies.
+
+### Types of Dependencies by Source
+
+#### External Dependencies
+- These are packages fetched from the `npm` registry (e.g., Lit, Rollup, Sass)
+- Declared in `package.json` using exact versions or version ranges
+- Installed in `node_modules` during `npm install` or `yarn install`
+
+#### Internal Dependencies
+- These are packages from within the `auro-formkit` monorepo
+- Allow sharing code between different packages in your repository
+- Example: The `@auro-formkit/combobox` package might depend on `@auro-formkit/input`
+- Must be declared in `package.json` just like external dependencies
+- Use workspace protocols (e.g., `"workspace:*"` or `"workspace:^1.0.0"`)
+
+### Types of Dependencies by Purpose
+
+#### Dependencies (`dependencies`)
+- Required for the package to function in production
+- Example:
+  ```json
+  {
+    "dependencies": {
+      "lit.js": "^3.0.0",                    // External dependency
+      "@auro-formkit/input": "workspace:*"  // Internal dependency
+    }
+  }
+  ```
+
+#### Peer Dependencies (`peerDependencies`)
+- Packages that your library expects the consuming application to provide
+- Common for plugins or UI component libraries
+- Example:
+  ```json
+  {
+    "peerDependencies": {
+      "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+      "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    }
+  }
+  ```
+
+### Development Dependencies (`devDependencies`)
+- Only needed during development, testing, or building
+- Not included in the production bundle
+- Example:
+  ```json
+  {
+    "devDependencies": {
+      "typescript": "^5.0.0",
+      "@open-wc/testing": "^4.0.0",
+      "@auro-formkit/input": "workspace:*"  // Internal dev dependency
+    }
+  }
+  ```
+
+## Example: Component Dependencies
+
+Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
+
+```json
+{
+  "name": "@auro-formkit/combobox",
+  "dependencies": {
+    // Internal dependencies
+    "@auro-formkit/auro-dropdown": "*",     // Required UI component
+    "@auro-formkit/auro-input": "*",        // Required UI component
+
+    // External dependencies
+    "@alaskaairux/icons": "^4.44.1",  // Required UI component
+    "lit": "^3.2.1"                   // Framework
+  },
+  "peerDependencies": {
+    "@aurodesignsystem/design-tokens": "^4.12.1",
+    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+  },
+  "devDependencies": {
+    // Testing utilities
+    "rollup": "^4.24.4",
+    "@auro-formkit/build-tools": "*",
+  }
+}
+```
+
+This structure ensures that:
+1. The package explicitly declares all its dependencies
+2. Internal dependencies are properly tracked and versioned
+3. Development tools are separated from production dependencies
+4. Peer dependencies are clearly communicated to consumers
 
 - External dependencies come from the `npm` registry.
 
@@ -96,7 +187,7 @@ Installing as a direct, dev or peer dependency is up to the user installing the 
 
 ### Filtering
 
-Running the `dev` command will run all components in development.
+Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
 
 To only develop a single component, use the `--filter` flag:
 
