@@ -18,9 +18,6 @@ The following sections are editable by making changes to the following files:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
 ## Install
 
 <!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
@@ -39,4 +36,7 @@ The following sections are editable by making changes to the following files:
 ### Testing
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/testing.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->

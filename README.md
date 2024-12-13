@@ -35,6 +35,67 @@ It is a monorepo that contains the following components:
 - `@auro-formkit/auro-radio`
 - `@auro-formkit/auro-select`
 <!-- AURO-GENERATED-CONTENT:END -->
+
+## Install
+
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
+[![Build Status](https://img.shields.io/github/actions/workflow/status/AlaskaAirlines/-formkit/-formkit/build-tools/testPublish.yml?style=for-the-badge)](https://github.com/AlaskaAirlines/-formkit/-formkit/build-tools/actions/workflows/testPublish.yml)
+[![See it on NPM!](https://img.shields.io/npm/v/@auro-formkit/-formkit/-formkit/build-tools?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@auro-formkit/-formkit/-formkit/build-tools)
+[![License](https://img.shields.io/npm/l/@auro-formkit/-formkit/-formkit/build-tools?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
+![ESM supported](https://img.shields.io/badge/ESM-compatible-FFE900?style=for-the-badge)
+
+```shell
+$ npm i @auro-formkit/-formkit/-formkit/build-tools
+```
+
+Installing as a direct, dev or peer dependency is up to the user installing the package. If you are unsure as to what type of dependency you should use, consider reading this [stack overflow](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies) answer.
+
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Development
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/developmentDescription.md) -->
+<!-- The below content is automatically added from ./docs/partials/developmentDescription.md -->
+
+### Filtering
+
+Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
+
+To only develop a single component, use the `--filter` flag:
+
+```
+turbo dev --filter=@auro-formkit/auro-input
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+
+### Start development environment
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/localhost.md) -->
+<!-- The below content is automatically added from ./docs/partials/localhost.md -->
+
+## Local Development
+<!-- AURO-GENERATED-CONTENT:END -->
+
+### Testing
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/testing.md) -->
+<!-- The below content is automatically added from ./docs/partials/testing.md -->
+```
+npm run test
+```
+
+#### Port configuration
+
+Turbo will attempt to test components in parallel which will lead to port conflicts.
+
+Setting the `concurrency` to `1` will prevent Turbo from running tests in parallel:
+
+```
+"test": "turbo run test --concurrency=1",
+```
+
+`turbo.json`does not support `--concurrency` yet. See [this issue](https://github.com/vercel/turborepo/discussions/7493).
+<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
 
@@ -161,65 +222,4 @@ The only dependencies that belong in the root `package.json` are **tools for man
 Some examples of dependencies that make sense to install in the root are `turbo`, `husky`, or `stylelint`.
 
 Conversely, dependencies Auro components rely on should be installed in their respective packages, such as `Lit`, `Rollup`, or other `auro-formkit` dependencies.
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Install
-
-<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
-[![Build Status](https://img.shields.io/github/actions/workflow/status/AlaskaAirlines/-formkit/-formkit/build-tools/testPublish.yml?style=for-the-badge)](https://github.com/AlaskaAirlines/-formkit/-formkit/build-tools/actions/workflows/testPublish.yml)
-[![See it on NPM!](https://img.shields.io/npm/v/@auro-formkit/-formkit/-formkit/build-tools?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@auro-formkit/-formkit/-formkit/build-tools)
-[![License](https://img.shields.io/npm/l/@auro-formkit/-formkit/-formkit/build-tools?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
-![ESM supported](https://img.shields.io/badge/ESM-compatible-FFE900?style=for-the-badge)
-
-```shell
-$ npm i @auro-formkit/-formkit/-formkit/build-tools
-```
-
-Installing as a direct, dev or peer dependency is up to the user installing the package. If you are unsure as to what type of dependency you should use, consider reading this [stack overflow](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies) answer.
-
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Development
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/developmentDescription.md) -->
-<!-- The below content is automatically added from ./docs/partials/developmentDescription.md -->
-
-### Filtering
-
-Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
-
-To only develop a single component, use the `--filter` flag:
-
-```
-turbo dev --filter=@auro-formkit/auro-input
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-
-### Start development environment
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/localhost.md) -->
-<!-- The below content is automatically added from ./docs/partials/localhost.md -->
-
-## Local Development
-<!-- AURO-GENERATED-CONTENT:END -->
-
-### Testing
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/testing.md) -->
-<!-- The below content is automatically added from ./docs/partials/testing.md -->
-```
-npm run test
-```
-
-#### Port configuration
-
-Turbo will attempt to test components in parallel which will lead to port conflicts.
-
-Setting the `concurrency` to `1` will prevent Turbo from running tests in parallel:
-
-```
-"test": "turbo run test --concurrency=1",
-```
-
-`turbo.json`does not support `--concurrency` yet. See [this issue](https://github.com/vercel/turborepo/discussions/7493).
 <!-- AURO-GENERATED-CONTENT:END -->
