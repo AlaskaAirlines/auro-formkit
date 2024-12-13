@@ -9,7 +9,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AlaskaAirlines/auro-form"
+    "url": "https://github.com/AlaskaAirlines/auro-formkit"
   },
   "dependencies": {
     "chalk": "^5.3.0",
