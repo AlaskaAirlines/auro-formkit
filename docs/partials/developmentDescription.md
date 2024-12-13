@@ -1,6 +1,6 @@
 ### Filtering
 
-Running the `dev` command will open a development server for all components in the monorepo at once.
+Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
 
 To only develop a single component, use the `--filter` flag:
 
