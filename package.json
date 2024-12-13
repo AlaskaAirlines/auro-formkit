@@ -1,7 +1,7 @@
 {
   "name": "@aurodesignsystem/auro-formkit",
   "version": "1.0.0",
-  "description": "Auro Form Components Kit",
+  "description": "A collection of web components used to build forms.",
   "type": "module",
   "private": true,
   "license": "Apache-2.0",
