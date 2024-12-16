@@ -74,6 +74,25 @@ The `auro-menu` component supports the use of the `matchWord` attribute to highl
 
 </auro-accordion>
 
+#### Loading<a name="loading"></a>
+While the content in menu is loading, you can either does not show anytning or show a loading placeholder
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Common Use Cases
 
 #### Scroll

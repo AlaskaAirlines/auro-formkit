@@ -20,6 +20,7 @@ import './auro-menuoption.js';
  * @attr {String} matchWord - Specifies the a string used to highlight matched string parts in options.
  * @attr {Boolean} disabled - When true, the entire menu and all options are disabled;
  * @attr {Boolean} noCheckmark - When true, selected option will not show the checkmark.
+ * @attr {Boolean} loading - When true, loading slot will be showing
  * @attr {String} value - Value selected for the menu.
  * @event auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @event selectedOption - (DEPRECATED) Notifies that a new menuoption selection has been made.
@@ -43,6 +44,7 @@ export class AuroMenu extends LitElement {
     this.matchWord = undefined;
     this.noCheckmark = false;
     this.optionActive = undefined;
+    this.loading = false;
 
     /**
      * @private
@@ -58,6 +60,11 @@ export class AuroMenu extends LitElement {
      * @private
      */
     this.nestingSpacer = '<span class="nestingSpacer"></span>';
+
+    /**
+     * @private
+     */
+    this.loadingSlots = new Set();
   }
 
   static get properties() {
@@ -67,6 +74,10 @@ export class AuroMenu extends LitElement {
         reflect: true
       },
       disabled:    {
+        type: Boolean,
+        reflect: true
+      },
+      loading:     {
         type: Boolean,
         reflect: true
       },
@@ -482,6 +493,17 @@ export class AuroMenu extends LitElement {
   }
 
   /**
+   * Used for @slotchange event on slotted loading placeholder element./**
+   * @private
+   * @method handleLoadingSlotItems
+   * @param {Event} event - The event object containing information about the slot change.
+   */
+  handleLoadingSlotItems(event) {
+    this.loadingSlots.add(event.target.getAttribute("name"), event.target.assignedNodes);
+    this.requestUpdate();
+  }
+
+  /**
    * Used for @slotchange event on slotted element.
    * @private
    */
@@ -514,8 +536,16 @@ export class AuroMenu extends LitElement {
   }
 
   render() {
-    return html`
-      <slot @slotchange=${this.handleSlotItems}></slot>
-    `;
+    if (this.loading) {
+      return html`
+        <auro-menuoption disabled loadingplaceholder class="${this.loadingSlots.size ? '' : 'empty'}">
+          <div>
+            <slot name="loadingIcon" @slotchange="${this.handleLoadingSlotItems}"></slot>
+            <slot name="loadingText" @slotchange="${this.handleLoadingSlotItems}"></slot>
+          </div>
+        </auro-menuoption>
+      `;
+    }
+    return html`<slot @slotchange=${this.handleSlotItems}></slot>`;
   }
 }
