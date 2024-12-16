@@ -17,7 +17,6 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
-
 import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.mjs';
 
 /**
@@ -40,9 +39,9 @@ export class AuroMenuOption extends LitElement {
     const versioning = new AuroDependencyVersioning();
     this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
 
+    this.selected = false;
     this.nocheckmark = false;
     this.disabled = false;
-    this.selected = false;
 
     /**
      * @private
@@ -105,6 +104,7 @@ export class AuroMenuOption extends LitElement {
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
 
     this.setAttribute('role', 'option');
+    this.setAttribute('aria-selected', 'false');
 
     this.addEventListener('mouseover', () => {
       this.dispatchEvent(new CustomEvent('auroMenuOption-mouseover', {
@@ -116,6 +116,12 @@ export class AuroMenuOption extends LitElement {
     });
   }
 
+  // observer for selected property changes
+  updated(changedProperties) {
+    if (changedProperties.has('selected')) {
+      this.setAttribute('aria-selected', this.selected.toString());
+    }
+  }
 
   /**
    * Generates an HTML element containing an SVG icon based on the provided `svgContent`.
