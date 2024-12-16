@@ -1,6 +1,6 @@
 {
   "name": "@aurodesignsystem/auro-formkit",
-  "version": "1.6.0-beta.1",
+  "version": "1.6.0-beta.2",
   "description": "A collection of web components used to build forms.",
   "type": "module",
   "private": true,

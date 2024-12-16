@@ -1,5 +1,14 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2024-12-16)
+
+
+### Performance Improvements
+
+* add husky override to commit-msg ([15b8170](https://github.com/AlaskaAirlines/auro-formkit/commit/15b8170186320c4c1603063d95be64c67220b35a))
+* unset hooks ([9974d1a](https://github.com/AlaskaAirlines/auro-formkit/commit/9974d1a7a9d29adc81ff1fc9bd0581622d52e527))
+* update husky configs ([ab4f8b2](https://github.com/AlaskaAirlines/auro-formkit/commit/ab4f8b20260f8fae740de6135df06877bf6a6618))
+
 # [1.6.0-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.5.0...v1.6.0-beta.1) (2024-12-16)
 
 
