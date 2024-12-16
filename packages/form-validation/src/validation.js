@@ -26,10 +26,15 @@ export default class AuroFormValidation {
         elem.validity = 'badInput';
         elem.setCustomValidity = elem.setCustomValidityBadInput || '';
       }
-    } else if (elem.value && elem.value.length > 0 && elem.value.length < elem.minLength) {
+    }
+
+    // Length > 0 is required to prevent the error message from showing when the input is empty
+    if (elem.value?.length > 0 && elem.value?.length < elem.minLength) {
       elem.validity = 'tooShort';
       elem.setCustomValidity = elem.setCustomValidityTooShort || '';
-    } else if (elem.value && elem.value.length > elem.maxLength) {
+    }
+    
+    if (elem.value?.length > elem.maxLength) {
       elem.validity = 'tooLong';
       elem.setCustomValidity = elem.setCustomValidityTooLong || '';
     }
