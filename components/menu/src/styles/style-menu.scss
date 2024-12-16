@@ -10,7 +10,7 @@
 @import '@aurodesignsystem/design-tokens/dist/tokens/SassCustomProperties';
 @import '@aurodesignsystem/webcorestylesheets/src/core';
 
-/* stylelint-disable declaration-no-important, order/properties-order */
+/* stylelint-disable declaration-no-important, order/properties-order, selector-max-attribute, selector-no-qualifying-type, scss/selector-nest-combinators */
 
 // container styles - defines the look of the outer custom component
 :host {
@@ -56,3 +56,24 @@
 :host([root]) {
   overflow-y: auto;
 }
+
+[loadingplaceholder] {
+  padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
+  color: var(--ds-color-text-secondary-default, $ds-color-text-secondary-default);
+
+  &.empty {
+    opacity: 0;
+    position: absolute;
+  }
+
+  slot[name="loadingIcon"]{
+    vertical-align: middle;
+    line-height: 1;
+    display: inline-block;
+
+    &::slotted(*) {
+      margin-right: var(--ds-size-150, $ds-size-150);
+    }
+  }
+}
+
