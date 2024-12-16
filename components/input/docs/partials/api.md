@@ -123,7 +123,7 @@ Note: Setting the `value` to `undefined` will also reset the element.
 
 ### Max <a name="max"></a>
 
-Use the `max` attribute to define a maximum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `numeric` or any date format.
+Use the `max` attribute to define a maximum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `number` or any date format.
 
 The `max` attribute should be used in combination with the `setCustomValidityRangeOverflow` attribute to define help text used when the `max` attribute validation fails.
 
@@ -142,24 +142,24 @@ The `max` attribute should be used in combination with the `setCustomValidityRan
 
 </auro-accordion>
 
-#### Numeric Example
+#### Number Example
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/maxNumeric.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/maxNumber.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/maxNumeric.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/maxNumber.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
 
 ### Min <a name="min"></a>
 
-Use the `min` attribute to define a minimum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for numeric or any date format.
+Use the `min` attribute to define a minimum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `number` or any date format.
 
 The `min` attribute should be used in combination with the `setCustomValidityRangeUnderflow` attribute to define help text used when the `min` attribute validation fails.
 
@@ -178,17 +178,17 @@ The `min` attribute should be used in combination with the `setCustomValidityRan
 
 </auro-accordion>
 
-#### Numeric Example
+#### Number Example
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/minNumeric.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/minNumber.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/minNumeric.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/minNumber.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
