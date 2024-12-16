@@ -35,7 +35,7 @@
     "build:docs:kit": "turbo run --filter=@auro-formkit/build-tools build:docs:kit",
     "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@aurodesignsystem/auro-library": "^3.0.2"
@@ -61,7 +61,7 @@
     "core-js": "^3.38.1",
     "eslint": "^9.14.0",
     "eslint-plugin-jsdoc": "^50.5.0",
-    "husky": "^8.0.0",
+    "husky": "^9.1.7",
     "lodash": "^4.17.21",
     "markdown-magic": "^2.6.1",
     "nodemon": "^3.1.7",

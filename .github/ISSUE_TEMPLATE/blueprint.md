@@ -2,7 +2,7 @@
 name: Component Blueprint
 about: Checklist for releasing a new component blueprint
 title: '[Component Blueprint]'
-labels: 'auro-form, Type: Design, not-reviewed'
+labels: 'auro-formkit, Type: Design, not-reviewed'
 assignees: leeejune
 ---
 
