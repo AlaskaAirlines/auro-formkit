@@ -185,7 +185,7 @@ export class AuroMenu extends LitElement {
       this.items.forEach((item) => {
         item.classList.remove('active');
         item.removeAttribute('selected');
-        item.removeAttribute('aria-selected');
+        item.setAttribute('aria-selected', 'false');
       });
     }
   }
