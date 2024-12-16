@@ -60,7 +60,7 @@ export default class AuroFormValidation {
           elem.validity = 'tooShort';
           elem.setCustomValidity = elem.setCustomValidityForType || '';
         }
-      } else if (elem.type === 'number' || elem.type === 'numeric') { // 'numeric` is a deprecated alias for number'
+      } else if (elem.type === 'number') {
         if (elem.max !== undefined && Number(elem.max) < Number(elem.value)) {
           elem.validity = 'rangeOverflow';
           elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeOverflow') || '';
