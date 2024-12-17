@@ -13,6 +13,9 @@
     "node": "^18.x || ^20.x"
   },
   "packageManager": "npm@10.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "workspaces": [
     "components/*",
     "packages/*"
