@@ -33,7 +33,6 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @attr {String}  helpText - Deprecated, see `slot`.
  * @attr {Boolean} icon - If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
  * @attr {String}  id - Sets the unique ID of the element.
- * @attr {String}  isValid - (DEPRECATED - Please use validity) Can be accessed to determine if the input validity. Returns true when validity has not yet been checked or validity = 'valid', all other cases return false. Not intended to be set by the consumer.
  * @attr {String}  label - Deprecated, see `slot`.
  * @attr {String}  lang - defines the language of an element.
  * @attr {String}  max - The maximum value allowed. This only applies for inputs with a type of `number` and all date formats.
@@ -77,8 +76,6 @@ export default class BaseInput extends LitElement {
 
   constructor() {
     super();
-
-    this.isValid = false;
 
     this.icon = false;
     this.disabled = false;
@@ -201,10 +198,6 @@ export default class BaseInput extends LitElement {
         reflect: true
       },
       errorMessage:            { type: String },
-      isValid: {
-        type: String,
-        reflect: true
-      },
       validity:                {
         type: String,
         reflect: true

@@ -24,7 +24,6 @@ Generate unique names for dependency components.
 | `helpText`                        | `helpText`                        | `String`  |                            | Deprecated, see `slot`.                          |
 | `icon`                            | `icon`                            | `Boolean` | false                      | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
 | `id`                              | `id`                              | `String`  |                            | Sets the unique ID of the element.               |
-| `isValid`                         | `isValid`                         | `String`  | false                      | (DEPRECATED - Please use validity) Can be accessed to determine if the input validity. Returns true when validity has not yet been checked or validity = 'valid', all other cases return false. Not intended to be set by the consumer. |
 | `label`                           | `label`                           | `String`  | "Input label is undefined" | Deprecated, see `slot`.                          |
 | `lang`                            | `lang`                            | `String`  |                            | defines the language of an element.              |
 | `max`                             | `max`                             | `String`  | "undefined"                | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |

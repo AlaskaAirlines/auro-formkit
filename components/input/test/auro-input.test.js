@@ -49,7 +49,6 @@ describe('auro-input', () => {
 
     await elementUpdated(el);
 
-    expect(el.isValid).to.not.be.true;
     expect(text).to.contain(`that is not a valid entry`);
 
     input.focus();
@@ -58,7 +57,7 @@ describe('auro-input', () => {
 
     await elementUpdated(el);
 
-    expect(el.isValid).to.be.true;
+    expect(el.getAttribute('validity')).to.equal('valid');
   });
 
   it('clears the value when clicked', async () => {
