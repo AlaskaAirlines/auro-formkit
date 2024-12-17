@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.3...v1.6.0-beta.4) (2024-12-17)
+
+
+### Performance Improvements
+
+* remove package.json private property ([088007e](https://github.com/AlaskaAirlines/auro-formkit/commit/088007efef7f4728ebad90286dc004490d32cb26))
+
 # [1.6.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.2...v1.6.0-beta.3) (2024-12-17)
 
 
