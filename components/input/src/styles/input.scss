@@ -27,3 +27,9 @@ input {
     pointer-events: none;
   }
 }
+
+:host([bordered]) {
+  input {
+    padding: var(--ds-size-400, $ds-size-400) 0 var(--ds-size-100, $ds-size-100);
+  }
+}

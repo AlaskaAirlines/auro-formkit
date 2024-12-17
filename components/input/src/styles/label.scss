@@ -43,9 +43,8 @@ label {
   }
 }
 
-// active label for non-bordered inputs
 @mixin active-label {
-  top: var(--ds-size-25, $ds-size-25);
+  top: var(--ds-size-100, $ds-size-100);
   font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
   transform: unset;
 }
