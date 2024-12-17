@@ -11,8 +11,6 @@ import tokensCss from "./styles/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import './auro-menuoption.js';
-
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The auro-menu element provides users a way to select from a list of options.

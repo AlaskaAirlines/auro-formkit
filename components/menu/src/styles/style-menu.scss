@@ -23,7 +23,8 @@
   vertical-align: middle;
 
   ::slotted(auro-menuoption),
-  ::slotted([auro-menuoption]) {
+  ::slotted([auro-menuoption]),
+  auro-menuoption[loadingplaceholder] {
     padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
   }
 
@@ -48,7 +49,8 @@
 }
 
 :host([nocheckmark]) {
-  ::slotted(auro-menuoption) {
+  ::slotted(auro-menuoption),
+  auro-menuoption[loadingplaceholder] {
     padding-left: var(--ds-size-200, $ds-size-200);
   }
 }
@@ -58,7 +60,7 @@
 }
 
 [loadingplaceholder] {
-  padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
+  // padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
   color: var(--ds-color-text-secondary-default, $ds-color-text-secondary-default);
 
   &.empty {
