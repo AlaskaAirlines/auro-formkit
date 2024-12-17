@@ -671,7 +671,7 @@ While content is loading, the menu can either remain empty or display a loading 
   <auro-select id="loadingExample">
     <span slot="label">Please select a preference</span>
     <auro-menu id="loadingExampleSelectMenu">
-      <auro-loader slot="loadingIcon" orbit xs></auro-loader><span slot="loadingText">Loading...</span>
+      <!-- <auro-loader slot="loadingIcon" orbit xs></auro-loader><span slot="loadingText">Loading...</span> -->
     </auro-menu>
   </auro-select>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -718,7 +718,7 @@ export function auroMenuLoadingExample() {
 <auro-select id="loadingExample">
   <span slot="label">Please select a preference</span>
   <auro-menu id="loadingExampleSelectMenu">
-    <auro-loader slot="loadingIcon" orbit xs></auro-loader><span slot="loadingText">Loading...</span>
+    <!-- <auro-loader slot="loadingIcon" orbit xs></auro-loader><span slot="loadingText">Loading...</span> -->
   </auro-menu>
 </auro-select>
 ```

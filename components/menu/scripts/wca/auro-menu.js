@@ -7,8 +7,9 @@ import { AuroMenu } from '../../src/auro-menu.js';
  * @attr {String} matchWord - Specifies the a string used to highlight matched string parts in options.
  * @attr {Boolean} disabled - When true, the entire menu and all options are disabled;
  * @attr {Boolean} noCheckmark - When true, selected option will not show the checkmark.
- * @attr {Boolean} loading - When true, loading slot will be showing
+ * @attr {Boolean} loading - When true, displays a loading state using the loadingIcon and loadingText slots if provided.
  * @attr {String} value - Value selected for the menu.
+ * @property {Boolean} hasLoadingPlaceholder - indicator if menu has loadingIcon or loadingText to render while loading
  * @event auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @event selectedOption - (DEPRECATED) Notifies that a new menuoption selection has been made.
  * @event auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
@@ -18,6 +19,7 @@ import { AuroMenu } from '../../src/auro-menu.js';
  * @event auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event auroMenuCustomEventFired - (DEPRECATED) Notifies that a custom event has been fired.
  * @event auroMenu-selectValueReset - Notifies that the component value has been reset.
+ * @event auroMenu-loadingChange - Notifies when the loading attribute is changed.
  * @slot loadingText - text to show while loading attribute is set
  * @slot loadingIcon - icon to show while loading attribute is set
  * @slot Slot for insertion of menu options.
