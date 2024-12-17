@@ -15,7 +15,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 /**
  * The auro-menu element provides users a way to select from a list of options.
  * @attr {Object} optionSelected - Specifies the current selected menuOption.
- * @attr {String} matchWord - Specifies the a string used to highlight matched string parts in options.
+ * @attr {String} matchWord - Specifies a string used to highlight matched string parts in options.
  * @attr {Boolean} disabled - When true, the entire menu and all options are disabled;
  * @attr {Boolean} noCheckmark - When true, selected option will not show the checkmark.
  * @attr {Boolean} loading - When true, displays a loading state using the loadingIcon and loadingText slots if provided.
@@ -158,7 +158,7 @@ export class AuroMenu extends LitElement {
     }
 
     if (changedProperties.has('loading')) {
-      const event = new Event("auroMenu-loadingChange");
+      const event = new CustomEvent("auroMenu-loadingChange");
       event.detail = {
         loading: this.loading,
         hasLoadingPlaceholder:
