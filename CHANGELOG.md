@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.2...v1.6.0-beta.3) (2024-12-17)
+
+
+### Performance Improvements
+
+* enable publishConfig ([07eacb6](https://github.com/AlaskaAirlines/auro-formkit/commit/07eacb681a781861a81fb159c245b65751ce7342))
+
 # [1.6.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2024-12-16)
 
 
