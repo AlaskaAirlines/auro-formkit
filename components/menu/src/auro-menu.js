@@ -64,7 +64,7 @@ export class AuroMenu extends LitElement {
     /**
      * @private
      */
-    this.loadingSlots = new Set();
+    this.loadingSlots = new Map();
   }
 
   static get properties() {
@@ -499,7 +499,7 @@ export class AuroMenu extends LitElement {
    * @param {Event} event - The event object containing information about the slot change.
    */
   handleLoadingSlotItems(event) {
-    this.loadingSlots.add(event.target.getAttribute("name"), event.target.assignedNodes);
+    this.loadingSlots.set(event.target.getAttribute("name"), event.target.assignedNodes);
     this.requestUpdate();
   }
 
