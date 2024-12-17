@@ -165,14 +165,10 @@ export default class AuroFormValidation {
 
     if (validationShouldRun || elem.hasAttribute('error')) {
       if (elem.validity && elem.validity !== 'valid') {
-        elem.isValid = false;
-
         // Use the validity message override if it is declared
         if (elem.ValidityMessageOverride) {
           elem.setCustomValidity = elem.ValidityMessageOverride;
         }
-      } else {
-        elem.isValid = true;
       }
 
       this.getErrorMessage(elem);
