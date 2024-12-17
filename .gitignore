@@ -4,8 +4,10 @@ docTemplates/
 .cache/
 
 ## Demo support files
-demo/*.css
-demo/*.css.map
+components/**/demo/*.css
+components/**/demo/*.css.map
+components/**/demo/*.md
+components/**/demo/*.min.js
 
 ## CSS built from Sass process
 src/**/*.css
