@@ -10,7 +10,7 @@ The auro-menu element provides users a way to select from a list of options.
 | Property         | Attribute        | Type      | Default     | Description                                      |
 |------------------|------------------|-----------|-------------|--------------------------------------------------|
 | [disabled](#disabled)       | `disabled`       | `Boolean` |             | When true, the entire menu and all options are disabled; |
-| [loading](#loading)        | `loading`        | `Boolean` | false       | When true, loading slot will be showing          |
+| [loading](#loading)        | `loading`        | `Boolean` | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
 | [matchWord](#matchWord)      | `matchWord`      | `String`  | "undefined" | Specifies the a string used to highlight matched string parts in options. |
 | [noCheckmark](#noCheckmark)    | `noCheckmark`    | `Boolean` | false       | When true, selected option will not show the checkmark. |
 | [optionActive](#optionActive)   | `optionActive`   | `object`  | "undefined" |                                                  |
@@ -311,7 +311,7 @@ export function auroMenuMatchWordExample() {
 </auro-accordion>
 
 #### Loading<a name="loading"></a>
-While the content in menu is loading, you can either does not show anytning or show a loading placeholder
+While content is loading, the menu can either remain empty or display a loading placeholder
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
