@@ -18,6 +18,8 @@ import { AuroMenu } from '../../src/auro-menu.js';
  * @event auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event auroMenuCustomEventFired - (DEPRECATED) Notifies that a custom event has been fired.
  * @event auroMenu-selectValueReset - Notifies that the component value has been reset.
+ * @slot loadingText - text to show while loading attribute is set
+ * @slot loadingIcon - icon to show while loading attribute is set
  * @slot Slot for insertion of menu options.
  */
 class AuroMenuWCA extends AuroMenu {}

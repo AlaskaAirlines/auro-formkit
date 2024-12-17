@@ -60,7 +60,6 @@
 }
 
 [loadingplaceholder] {
-  // padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
   color: var(--ds-color-text-secondary-default, $ds-color-text-secondary-default);
 
   &.empty {
