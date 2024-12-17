@@ -342,8 +342,8 @@ export class AuroCombobox extends LitElement {
           this.value = this.optionSelected.value;
         }
 
-        if (this.input.value !== this.optionSelected.innerText) {
-          this.input.value = this.optionSelected.innerText;
+        if (this.input.value !== this.optionSelected.textContent) {
+          this.input.value = this.optionSelected.textContent;
         }
 
         if (this.menu.matchWord !== this.input.value) {
@@ -419,7 +419,7 @@ export class AuroCombobox extends LitElement {
         this.menu.value = this.value;
       }
 
-      if (this.optionSelected && this.input.value !== this.optionSelected.innerText) {
+      if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
         this.optionSelected = undefined;
       }
 
@@ -578,8 +578,8 @@ export class AuroCombobox extends LitElement {
       if (this.value) {
         if (this.optionSelected && this.optionSelected.value === this.value) {
           // If value updates and the previously selected option already matches the new value
-          // just update the input value to use the innerText of the optionSelected
-          this.input.value = this.optionSelected.innerText;
+          // just update the input value to use the textContent of the optionSelected
+          this.input.value = this.optionSelected.textContent;
         } else {
           // Otherwise just enter the value into the input
           this.optionSelected = undefined;
@@ -635,7 +635,7 @@ export class AuroCombobox extends LitElement {
         <div aria-live="polite" class="util_displayHiddenVisually">
           ${this.optionActive && this.availableOptions.length > 0
             ? html`
-              ${`${this.optionActive.innerText}, selected, ${this.availableOptions.indexOf(this.optionActive) + 1} of ${this.availableOptions.length}`}
+              ${`${this.optionActive.textContent}, selected, ${this.availableOptions.indexOf(this.optionActive) + 1} of ${this.availableOptions.length}`}
             `
             : undefined
           }

@@ -251,7 +251,7 @@ The following example listens for the `selectedOption` event. Once triggered, `e
 
 
 #### Loading<a name="loading"></a>
-While the content in menu is loading, you can either does not show anytning or show a loading placeholder
+While content is loading, the menu can either remain empty or display a loading placeholder
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
