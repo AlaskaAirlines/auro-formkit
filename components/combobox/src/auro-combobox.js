@@ -200,7 +200,7 @@ export class AuroCombobox extends LitElement {
       this.noMatchOption = undefined;
 
       this.options.forEach((option) => {
-        let matchString = option.innerText.toLowerCase();
+        let matchString = option.textContent.toLowerCase();
 
         if (option.hasAttribute('nomatch')) {
           this.noMatchOption = option;
@@ -276,7 +276,7 @@ export class AuroCombobox extends LitElement {
       return;
     }
     if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
-      if ((this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
+      if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
         this.dropdown.show();
       }
     }
@@ -320,7 +320,7 @@ export class AuroCombobox extends LitElement {
       return;
     }
 
-    this.menu.shadowRoot.addEventListener('slotchange', () => this.handleSlotChange());
+    this.menu.shadowRoot.addEventListener('slotchange', (event) => this.handleSlotChange(event));
 
     if (this.checkmark) {
       this.menu.removeAttribute('nocheckmark');
@@ -609,19 +609,23 @@ export class AuroCombobox extends LitElement {
   /**
    * Watch for slot changes and recalculate the menuoptions.
    * @private
+   * @param {Event} event - slotchange event
    * @returns {void}
    */
-  handleSlotChange() {
-    this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
-    this.options.forEach((opt) => {
-      if (this.checkmark) {
-        opt.removeAttribute('nocheckmark');
-      } else {
-        opt.setAttribute('nocheckmark', '');
-      }
-    });
+  handleSlotChange(event) {
+    // treat only generic menuoptions
+    if (!event.target.name) {
+      this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
+      this.options.forEach((opt) => {
+        if (this.checkmark) {
+          opt.removeAttribute('nocheckmark');
+        } else {
+          opt.setAttribute('nocheckmark', '');
+        }
+      });
 
-    this.handleMenuOptions();
+      this.handleMenuOptions();
+    }
   }
 
   // function that renders the HTML and CSS into  the scope of the component

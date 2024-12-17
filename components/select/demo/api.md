@@ -686,13 +686,8 @@ export function auroMenuLoadingExample() {
   const select = document.querySelector("#loadingExample");
   const menu = document.querySelector("#loadingExampleSelectMenu");
   const emptyMenu = () => {
-
-    const menuoptions = menu.children;
-    for (let i = menuoptions.length - 1; i >= 0; i--) {
-      if (menuoptions[i].value) {
-        menu.removeChild(menuoptions[i]);
-      }
-    }
+    const menuoptions = menu.querySelectorAll('auro-menuoption');
+    menuoptions.forEach(mo => menu.removeChild(mo));
   }
   const fillMenu = () => {
       menu.innerHTML += `
