@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.5...v1.6.0-beta.6) (2024-12-18)
+
+
+### Bug Fixes
+
+* add `fluid` attribute to dropdown and make its default display `inline-block` [#107](https://github.com/AlaskaAirlines/auro-formkit/issues/107) [#117](https://github.com/AlaskaAirlines/auro-formkit/issues/117) ([57c65df](https://github.com/AlaskaAirlines/auro-formkit/commit/57c65df917d3d8525303c52fc8bb90571cea1ba8))
+
 # [1.6.0-beta.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.4...v1.6.0-beta.5) (2024-12-18)
 
 
