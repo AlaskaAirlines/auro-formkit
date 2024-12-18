@@ -61,14 +61,13 @@
   .trigger {
     box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
 
-    &:focus-within {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-      box-shadow: none;
+    &:focus-within,
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
     }
 
     &:active {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-      box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-border-color);
+      box-shadow: none;
     }
   }
 }
