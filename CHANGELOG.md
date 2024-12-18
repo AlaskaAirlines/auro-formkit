@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.4...v1.6.0-beta.5) (2024-12-18)
+
+
+### Bug Fixes
+
+* make `README.md` to have the correct npm path [#286](https://github.com/AlaskaAirlines/auro-formkit/issues/286) ([19fc981](https://github.com/AlaskaAirlines/auro-formkit/commit/19fc981603898c14771861b8cdce0d9cfe307469))
+
 # [1.6.0-beta.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.3...v1.6.0-beta.4) (2024-12-17)
 
 
