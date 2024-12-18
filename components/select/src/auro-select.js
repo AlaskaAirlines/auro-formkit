@@ -353,11 +353,18 @@ export class AuroSelect extends LitElement {
   }
 
   /**
+   * Manages the visibility of the dropdown based on loading state changes.
+   *
+   * This method listens for loading state changes and adjusts the visibility of the dropdown accordingly.
+   * If the dropdown is visible and loading is true without any loading placeholders, it hides the dropdown
+   * and sets a flag to indicate it is hidden while loading. If loading is false and the dropdown was previously
+   * hidden, it checks if the active element is within the dropdown and shows it again if true.
+   *
    * @private
-   * @method handleMenuLoadingChange
    * @param {CustomEvent} event - The event object containing details about the loading state change.
    * @param {boolean} event.detail.loading - Indicates whether the menu is currently loading.
    * @param {boolean} event.detail.hasLoadingPlaceholder - Indicates if there are loading placeholders present.
+   * @returns {void}
    */
   handleMenuLoadingChange(event) {
     if (this.dropdown.isPopoverVisible && event.detail.loading && !event.detail.hasLoadingPlaceholder) {

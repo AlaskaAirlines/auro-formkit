@@ -7,7 +7,7 @@ The auro-menu element provides users a way to select from a list of options.
 | Property                | Attribute        | Type      | Default     | Description                                      |
 |-------------------------|------------------|-----------|-------------|--------------------------------------------------|
 | `disabled`              | `disabled`       | `Boolean` |             | When true, the entire menu and all options are disabled; |
-| `hasLoadingPlaceholder` |                  | `Boolean` |             | indicator if menu has loadingIcon or loadingText to render while loading |
+| `hasLoadingPlaceholder` |                  | `Boolean` |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
 | `loading`               | `loading`        | `Boolean` | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
 | `matchWord`             | `matchWord`      | `String`  | "undefined" | Specifies a string used to highlight matched string parts in options. |
 | `noCheckmark`           | `noCheckmark`    | `Boolean` | false       | When true, selected option will not show the checkmark. |

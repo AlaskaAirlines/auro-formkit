@@ -8,10 +8,10 @@ import {
 /**
  * Processor config object.
  * @typedef {Object} ProcessorConfig
- * @property {String} [component=undefined] - The name of component to process docs.
- * @property {boolean} [overwriteLocalCopies=true] - The release version tag to use instead of master.
- * @property {string} [remoteReadmeVersion="master"] - The release version tag to use instead of master.
- * @property {string} [remoteReadmeVariant=""] - The variant string to use for the README source.
+ * @prop {String} [component=undefined] - The name of component to process docs.
+ * @prop {boolean} [overwriteLocalCopies=true] - The release version tag to use instead of master.
+ * @prop {string} [remoteReadmeVersion="master"] - The release version tag to use instead of master.
+ * @prop {string} [remoteReadmeVariant=""] - The variant string to use for the README source.
  * (like "_esm" to make README_esm.md).
  */
 

@@ -685,10 +685,12 @@ While content is loading, the menu can either remain empty or display a loading 
 export function auroMenuLoadingExample() {
   const select = document.querySelector("#loadingExample");
   const menu = document.querySelector("#loadingExampleSelectMenu");
+
   const emptyMenu = () => {
     const menuoptions = menu.querySelectorAll('auro-menuoption');
     menuoptions.forEach(mo => menu.removeChild(mo));
   }
+
   const fillMenu = () => {
       menu.innerHTML += `
       <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -698,6 +700,7 @@ export function auroMenuLoadingExample() {
       <auro-menuoption value="arrival">Arrival</auro-menuoption>
       <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>`;
   }
+
   select.addEventListener("click", () => {
     if (!menu.hasAttribute('loading')) {
       emptyMenu();
