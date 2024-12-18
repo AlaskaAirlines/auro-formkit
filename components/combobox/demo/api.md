@@ -696,10 +696,12 @@ While content is loading, the menu can either remain empty or display a loading 
 export function auroMenuLoadingExample() {
   const combobox = document.querySelector("#loadingExample");
   const menu = document.querySelector("#loadingExampleComboboxMenu");
+
   const emptyMenu = () => {
     const menuoptions = menu.querySelectorAll('auro-menuoption');
     menuoptions.forEach(mo => menu.removeChild(mo));
   }
+
   const fillMenu = () => {
     menu.innerHTML += `
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -721,6 +723,7 @@ export function auroMenuLoadingExample() {
     }, 1000);
 
   }
+
   combobox.addEventListener("input", (e) => {
     if (e.target.value) {
       load();
