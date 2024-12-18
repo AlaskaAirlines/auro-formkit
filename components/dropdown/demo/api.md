@@ -18,7 +18,7 @@
 | [common](#common)                     | `common`                     | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
 | [disabled](#disabled)                   | `disabled`                   | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
 | [error](#error)                      | `error`                      | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
-| [fluid](#fluid)                      | `fluid`                      | `Boolean`   |         | Alters the shape of the button to be full width of its parent container |
+| [fluid](#fluid)                      | `fluid`                      | `Boolean`   |         | Makes the trigger to be full width of its parent container |
 | [focusShow](#focusShow)                  | `focusShow`                  | ` Boolean ` |         | if declared, the bib will display when focus is applied to the trigger. |
 | [hoverToggle](#hoverToggle)                | `hoverToggle`                | ` Boolean ` |         | if declared, the trigger will toggle the big on mouseover/mouseout. |
 | [inset](#inset)                      | `inset`                      | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
@@ -154,40 +154,6 @@ The most basic, simple version of `auro-dropdown`.
       fluid>
       Dropdown
     </auro-button>
-  </div>
-</auro-dropdown>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicInput.html) -->
-<!-- The below content is automatically added from ./../apiExamples/basicInput.html -->
-<auro-dropdown aria-label="custom label">
-  Lorem ipsum solar
-  <div slot="trigger">
-    <auro-input
-      borderless
-      slot="trigger"
-      id="inputExampleTrigger">
-    </auro-input>
-  </div>
-</auro-dropdown>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicInput.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/basicInput.html -->
-
-```html
-<auro-dropdown aria-label="custom label">
-  Lorem ipsum solar
-  <div slot="trigger">
-    <auro-input
-      borderless
-      slot="trigger"
-      id="inputExampleTrigger">
-    </auro-input>
   </div>
 </auro-dropdown>
 ```
@@ -502,9 +468,48 @@ Adds the error state UI to the trigger.
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+#### fluid
+
+The `fluid` property makes the trigger to have the full width.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fluid.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/fluid.html -->
+  <auro-dropdown aria-label="custom label" fluid>
+    Lorem ipsum solar
+    <div slot="trigger">
+      <auro-input
+        borderless
+        slot="trigger"
+        id="inputExampleTrigger">
+      </auro-input>
+    </div>
+  </auro-dropdown>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fluid.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/fluid.html -->
+
+```html
+<auro-dropdown aria-label="custom label" fluid>
+  Lorem ipsum solar
+  <div slot="trigger">
+    <auro-input
+      borderless
+      slot="trigger"
+      id="inputExampleTrigger">
+    </auro-input>
+  </div>
+</auro-dropdown>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 #### inset
 
-The `inset` property applies a predefined amount of CSS `padding` to the `trigger` slot content.
+The `inset` property applies a predefined amount of CSS `padding` to the `trigger` slot content. Use this property to apply borderless style.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inset.html) -->

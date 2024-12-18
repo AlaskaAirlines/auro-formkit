@@ -46,19 +46,6 @@ The most basic, simple version of `auro-dropdown`.
 
 </auro-accordion>
 
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicInput.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicInput.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
 ### Property Examples
 
 #### bordered
@@ -194,9 +181,26 @@ Adds the error state UI to the trigger.
 
 </auro-accordion>
 
+#### fluid
+
+The `fluid` property makes the trigger to have the full width.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fluid.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fluid.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### inset
 
-The `inset` property applies a predefined amount of CSS `padding` to the `trigger` slot content.
+The `inset` property applies a predefined amount of CSS `padding` to the `trigger` slot content. Use this property to apply borderless style.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inset.html) -->
