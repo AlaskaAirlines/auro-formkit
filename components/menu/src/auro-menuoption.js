@@ -27,7 +27,7 @@ import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.
  * @attr {Boolean} disabled - When true specifies that the menuoption is disabled.
  * @attr {Boolean} selected - Specifies that an option is selected.
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
- * @slot Specifies text for an option, but is not the value.
+ * @slot - Specifies text for an option, but is not the value.
  */
 export class AuroMenuOption extends LitElement {
   constructor() {

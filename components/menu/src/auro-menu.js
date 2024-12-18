@@ -31,9 +31,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @event auroMenuCustomEventFired - (DEPRECATED) Notifies that a custom event has been fired.
  * @event auroMenu-selectValueReset - Notifies that the component value has been reset.
  * @event auroMenu-loadingChange - Notifies when the loading attribute is changed.
- * @slot loadingText - text to show while loading attribute is set
- * @slot loadingIcon - icon to show while loading attribute is set
- * @slot Slot for insertion of menu options.
+ * @slot loadingText - Text to show while loading attribute is set
+ * @slot loadingIcon - Icon to show while loading attribute is set
+ * @slot - Slot for insertion of menu options.
  */
 
 /* eslint-disable no-magic-numbers, max-lines */
