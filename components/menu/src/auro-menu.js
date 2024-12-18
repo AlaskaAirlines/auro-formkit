@@ -164,6 +164,7 @@ export class AuroMenu extends LitElement {
         hasLoadingPlaceholder:
         this.hasLoadingPlaceholder
       };
+      this.setAttribute("aria-busy", this.hasAttribute("loading"));
       this.dispatchEvent(event);
     }
   }
