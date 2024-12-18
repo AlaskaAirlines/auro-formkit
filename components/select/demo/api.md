@@ -702,7 +702,7 @@ export function auroMenuLoadingExample() {
   }
 
   select.addEventListener("click", () => {
-    if (!menu.hasAttribute('loading')) {
+    if (!menu.hasAttribute('loading') && !select.value) {
       emptyMenu();
       menu.setAttribute('loading', 'loading');
       setTimeout(() => {

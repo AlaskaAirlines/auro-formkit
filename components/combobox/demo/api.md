@@ -725,7 +725,7 @@ export function auroMenuLoadingExample() {
   }
 
   combobox.addEventListener("input", (e) => {
-    if (e.target.value) {
+    if (e.target.value && e.target.value !== e.target.optionSelected?.textContent) {
       load();
     }
   });
