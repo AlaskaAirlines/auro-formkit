@@ -158,12 +158,13 @@ export class AuroMenu extends LitElement {
     }
 
     if (changedProperties.has('loading')) {
-      const event = new CustomEvent("auroMenu-loadingChange");
-      event.detail = {
-        loading: this.loading,
-        hasLoadingPlaceholder:
-        this.hasLoadingPlaceholder
-      };
+      const event = new CustomEvent("auroMenu-loadingChange", {
+        detail: {
+          loading: this.loading,
+          hasLoadingPlaceholder:
+          this.hasLoadingPlaceholder
+        }
+      });
       this.setAttribute("aria-busy", this.hasAttribute("loading"));
       this.dispatchEvent(event);
     }

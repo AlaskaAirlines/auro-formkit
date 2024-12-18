@@ -25,18 +25,18 @@ The auro-menu element provides users a way to select from a list of options.
 
 ## Events
 
-| Event                         | Type                   | Description                                      |
-|-------------------------------|------------------------|--------------------------------------------------|
-| `auroMenu-activatedOption`    | `CustomEvent<Element>` | Notifies that a menuoption has been made `active`. |
-| `auroMenu-customEventFired`   | `CustomEvent<any>`     | Notifies that a custom event has been fired.     |
-| `auroMenu-loadingChange`      | `CustomEvent<any>`     | Notifies when the loading attribute is changed.  |
-| `auroMenu-selectValueFailure` | `CustomEvent<any>`     | Notifies that a an attempt to select a menuoption by matching a value has failed. |
-| `auroMenu-selectValueReset`   | `CustomEvent<any>`     | Notifies that the component value has been reset. |
-| `auroMenu-selectedOption`     | `CustomEvent<any>`     | Notifies that a new menuoption selection has been made. |
-| `auroMenuActivatedOption`     | `CustomEvent<Element>` | (DEPRECATED) Notifies that a menuoption has been made `active`. |
-| `auroMenuCustomEventFired`    | `CustomEvent<any>`     | (DEPRECATED) Notifies that a custom event has been fired. |
-| `auroMenuSelectValueFailure`  | `CustomEvent<any>`     | (DEPRECATED) Notifies that a an attempt to select a menuoption by matching a value has failed. |
-| `selectedOption`              | `CustomEvent<any>`     | (DEPRECATED) Notifies that a new menuoption selection has been made. |
+| Event                         | Type                                             | Description                                      |
+|-------------------------------|--------------------------------------------------|--------------------------------------------------|
+| `auroMenu-activatedOption`    | `CustomEvent<Element>`                           | Notifies that a menuoption has been made `active`. |
+| `auroMenu-customEventFired`   | `CustomEvent<any>`                               | Notifies that a custom event has been fired.     |
+| `auroMenu-loadingChange`      | `CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>` | Notifies when the loading attribute is changed.  |
+| `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that a an attempt to select a menuoption by matching a value has failed. |
+| `auroMenu-selectValueReset`   | `CustomEvent<any>`                               | Notifies that the component value has been reset. |
+| `auroMenu-selectedOption`     | `CustomEvent<any>`                               | Notifies that a new menuoption selection has been made. |
+| `auroMenuActivatedOption`     | `CustomEvent<Element>`                           | (DEPRECATED) Notifies that a menuoption has been made `active`. |
+| `auroMenuCustomEventFired`    | `CustomEvent<any>`                               | (DEPRECATED) Notifies that a custom event has been fired. |
+| `auroMenuSelectValueFailure`  | `CustomEvent<any>`                               | (DEPRECATED) Notifies that a an attempt to select a menuoption by matching a value has failed. |
+| `selectedOption`              | `CustomEvent<any>`                               | (DEPRECATED) Notifies that a new menuoption selection has been made. |
 
 ## Slots
 
