@@ -14,21 +14,20 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ## Properties
 
-| Property                        | Attribute                       | Type      | Default                | Description                                      |
-|---------------------------------|---------------------------------|-----------|------------------------|--------------------------------------------------|
-| [disabled](#disabled)                      | `disabled`                      | `Boolean` |                        | When attribute is present element shows disabled state. |
-| [error](#error)                         | `error`                         | `String`  |                        | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
-| [flexMenuWidth](#flexMenuWidth)                 | `flexMenuWidth`                 | `Boolean` |                        | If set, makes dropdown bib width match the size of the content, rather than the width of the trigger. |
-| [noCheckmark](#noCheckmark)                   | `noCheckmark`                   | `Boolean` |                        | When true, checkmark on selected option will no longer be present. |
-| [noValidate](#noValidate)                    | `noValidate`                    | `Boolean` |                        | If set, disables auto-validation on blur.        |
-| [optionSelected](#optionSelected)                | `optionSelected`                | `Object`  | "undefined"            | Specifies the current selected menuOption.       |
-| [placeholder](#placeholder)                   | `placeholder`                   | `String`  | "Please select option" | Define placeholder text to display before a value is manually selected. |
-| [required](#required)                      | `required`                      | `Boolean` |                        | Populates the `required` attribute on the element. Used for client-side validation. |
-| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `String`  |                        | Sets a custom help text message to display for all validityStates. |
-| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `String`  |                        | Custom help text message to display when validity = `customError`. |
-| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `String`  |                        | Custom help text message to display when validity = `valueMissing`. |
-| [validity](#validity)                      | `validity`                      | `String`  | "undefined"            | Specifies the `validityState` this element is in. |
-| [value](#value)                         | `value`                         | `String`  |                        | Value selected for the component.                |
+| Property                        | Attribute                       | Type      | Default     | Description                                      |
+|---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
+| [disabled](#disabled)                      | `disabled`                      | `Boolean` |             | When attribute is present element shows disabled state. |
+| [error](#error)                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| [flexMenuWidth](#flexMenuWidth)                 | `flexMenuWidth`                 | `Boolean` |             | If set, makes dropdown bib width match the size of the content, rather than the width of the trigger. |
+| [noCheckmark](#noCheckmark)                   | `noCheckmark`                   | `Boolean` |             | When true, checkmark on selected option will no longer be present. |
+| [noValidate](#noValidate)                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
+| [optionSelected](#optionSelected)                | `optionSelected`                | `Object`  | "undefined" | Specifies the current selected menuOption.       |
+| [required](#required)                      | `required`                      | `Boolean` |             | Populates the `required` attribute on the element. Used for client-side validation. |
+| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `String`  |             | Sets a custom help text message to display for all validityStates. |
+| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
+| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
+| [validity](#validity)                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
+| [value](#value)                         | `value`                         | `String`  |             | Value selected for the component.                |
 
 ## Methods
 
@@ -45,11 +44,12 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ## Slots
 
-| Name       | Description                          |
-|------------|--------------------------------------|
-|            | Default slot for the menu content.   |
-| [helpText](#helpText) | Defines the content of the helpText. |
-| [label](#label)    | Defines the content of the label.    |
+| Name          | Description                                      |
+|---------------|--------------------------------------------------|
+|               | Default slot for the menu content.               |
+| [helpText](#helpText)    | Defines the content of the helpText.             |
+| [label](#label)       | Defines the content of the label.                |
+| [placeholder](#placeholder) | Defines the content of the placeholder to be shown when there is no value |
 
 ## CSS Shadow Parts
 
@@ -172,7 +172,8 @@ Use the `placeholder` string attribute to inject a custom placeholder option wit
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customPlaceholder.html) -->
   <!-- The below content is automatically added from ./../apiExamples/customPlaceholder.html -->
-  <auro-select placeholder="Please select your preferred option">
+  <auro-select>
+    <label slot="placeholder">Please select your preferred option</label>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -190,7 +191,8 @@ Use the `placeholder` string attribute to inject a custom placeholder option wit
 <!-- The below code snippet is automatically added from ./../apiExamples/customPlaceholder.html -->
 
 ```html
-<auro-select placeholder="Please select your preferred option">
+<auro-select>
+  <label slot="placeholder">Please select your preferred option</label>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
@@ -423,8 +425,9 @@ The `label` slot and `placeholder` attribute may be used together.
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/labelWithPlaceholder.html) -->
   <!-- The below content is automatically added from ./../apiExamples/labelWithPlaceholder.html -->
-  <auro-select placeholder="Placeholder Text">
+  <auro-select>
     <span slot="label">Label Text</span>
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -442,8 +445,9 @@ The `label` slot and `placeholder` attribute may be used together.
 <!-- The below code snippet is automatically added from ./../apiExamples/labelWithPlaceholder.html -->
 
 ```html
-<auro-select placeholder="Placeholder Text">
+<auro-select>
   <span slot="label">Label Text</span>
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
