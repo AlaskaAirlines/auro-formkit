@@ -7,24 +7,23 @@ The auro-menu element provides users a way to select from a list of options.
 
 ## Properties
 
-| Property                | Attribute        | Type      | Default     | Description                                      |
-|-------------------------|------------------|-----------|-------------|--------------------------------------------------|
-| [disabled](#disabled)              | `disabled`       | `Boolean` |             | When true, the entire menu and all options are disabled; |
-| [hasLoadingPlaceholder](#hasLoadingPlaceholder) |                  | `Boolean` |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
-| [loading](#loading)               | `loading`        | `Boolean` | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
-| [matchWord](#matchWord)             | `matchWord`      | `String`  | "undefined" | Specifies a string used to highlight matched string parts in options. |
-| [noCheckmark](#noCheckmark)           | `noCheckmark`    | `Boolean` | false       | When true, selected option will not show the checkmark. |
-| [optionActive](#optionActive)          | `optionActive`   | `object`  | "undefined" |                                                  |
-| [optionSelected](#optionSelected)        | `optionSelected` | `Object`  | "undefined" | Specifies the current selected menuOption.       |
-| [value](#value)                 | `value`          | `String`  | "undefined" | Value selected for the menu.                     |
+| Property                | Attribute        | Type                            | Default     | Description                                      |
+|-------------------------|------------------|---------------------------------|-------------|--------------------------------------------------|
+| [disabled](#disabled)              | `disabled`       | `boolean`                       |             | When true, the entire menu and all options are disabled; |
+| [hasLoadingPlaceholder](#hasLoadingPlaceholder) |                  | `boolean`                       |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| [loading](#loading)               | `loading`        | `boolean`                       | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
+| [matchWord](#matchWord)             | `matchword`      | `string`                        | "undefined" | Specifies a string used to highlight matched string parts in options. |
+| [multiSelect](#multiSelect)           | `multiselect`    | `boolean`                       | false       | When true, the selected option can be multiple options. |
+| [noCheckmark](#noCheckmark)           | `nocheckmark`    | `boolean`                       | false       | When true, selected option will not show the checkmark. |
+| [optionActive](#optionActive)          | `optionactive`   | `object`                        | "undefined" | Specifies the current active menuOption.         |
+| [optionSelected](#optionSelected)        | `optionselected` | `Array<HTMLElement>\|undefined` | "undefined" | An array of currently selected menu options. In single-select mode, the array will contain only one HTMLElement. `undefined` when no options are selected. |
+| [value](#value)                 | `value`          | `Array<string>\|undefined`      | "undefined" | Value selected for the menu. `undefined` when no selection has been made, otherwise an array of strings. In single-select mode, the array will contain only one value. |
 
 ## Methods
 
-| Method               | Type                            | Description                                      |
-|----------------------|---------------------------------|--------------------------------------------------|
-| [makeSelection](#makeSelection)      | `(): void`                      | Process actions for making making a menuoption selection. |
-| [resetOptionsStates](#resetOptionsStates) | `(): void`                      | Reset the menu and all options.                  |
-| [selectNextItem](#selectNextItem)     | `(moveDirection: string): void` | Using value of current this.index evaluates index<br />of next :focus to set based on array of this.items ignoring items<br />with disabled attr.<br /><br />The event.target is not used as the function needs to know where to go,<br />versus knowing where it is.<br /><br />**moveDirection**: Up or Down based on keyboard event. |
+| Method  | Type       | Description                                      |
+|---------|------------|--------------------------------------------------|
+| [reset](#reset) | `(): void` | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
 
 ## Events
 
@@ -33,7 +32,7 @@ The auro-menu element provides users a way to select from a list of options.
 | `auroMenu-activatedOption`    | `CustomEvent<Element>`                           | Notifies that a menuoption has been made `active`. |
 | `auroMenu-customEventFired`   | `CustomEvent<any>`                               | Notifies that a custom event has been fired.     |
 | `auroMenu-loadingChange`      | `CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>` | Notifies when the loading attribute is changed.  |
-| `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that a an attempt to select a menuoption by matching a value has failed. |
+| `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that an attempt to select a menuoption by matching a value has failed. |
 | `auroMenu-selectValueReset`   | `CustomEvent<any>`                               | Notifies that the component value has been reset. |
 | `auroMenu-selectedOption`     | `CustomEvent<any>`                               | Notifies that a new menuoption selection has been made. |
 
@@ -302,6 +301,38 @@ export function auroMenuMatchWordExample() {
     <auro-menuoption value="oranges">Oranges</auro-menuoption>
     <auro-menuoption value="peaches">Peaches</auro-menuoption>
   </auro-menu>
+  <auro-menuoption value="arrival">Arrival</auro-menuoption>
+</auro-menu>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+### Multi Select<a name="multiSelect"></a>
+The `auro-menu` supports a multi-select option. To use, place the `multiselect` attribute on the `<auro-menu>` element tag. When applied, the `value` attribute will become an Array versus String value.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multiSelect.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/multiSelect.html -->
+  <auro-menu multiselect>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+    <auro-menuoption value="arrival">Arrival</auro-menuoption>
+  </auro-menu>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multiSelect.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/multiSelect.html -->
+
+```html
+<auro-menu multiselect>
+  <auro-menuoption value="stops">Stops</auro-menuoption>
+  <auro-menuoption value="price">Price</auro-menuoption>
+  <auro-menuoption value="duration">Duration</auro-menuoption>
+  <auro-menuoption value="departure">Departure</auro-menuoption>
   <auro-menuoption value="arrival">Arrival</auro-menuoption>
 </auro-menu>
 ```
@@ -878,8 +909,8 @@ export function auroMenuResetExample() {
 
   if (resetExampleElem && resetExampleBtnElem) {
     resetExampleBtnElem.addEventListener('click', () => {
-      resetExampleElem.value = undefined;
-    })
+      resetExampleElem.reset();
+    });
   }
 }
 ```
