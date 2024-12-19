@@ -10,8 +10,80 @@
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute */
-
-:host {
+:host{
   position: relative;
+
+  .counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ds-counter-text-default);
+    column-gap: var(--ds-size-150);
+    font-family: var(--ds-font-family-default, $ds-font-family-default);
+    font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  }
+  
+  .counterContent {
+    display: flex;
+    flex-flow: column;  
+  }
+  
+  .counterLabel {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .subLabel {
+    color: var(--ds-counter-text-secondary);
+    font-size: .75rem;
+    line-height: 1rem;
+  }
+
+  &::part(counterControl) {
+    display: flex;
+    line-height: 0;
+  }
+  
+  &::part(controlIcon) {
+    color: var(--ds-counter-icon-color-default)
+  }
+
+  .quantityWrapper {
+    width: var(--ds-size-400);
+    height: 34px;
+    align-content: center;
+    background-color: var(--ds-counter-control-ui-bkg);
+    font-size: var(--ds-size-250);
+    text-align: center;    
+  }
+
+  .counterQuantity {
+    transform: translateY(0.1rem);
+  }
+
+  &::part(controlMinus) {
+    --ds-counter-control-border-radius: var(--ds-size-500, #{$ds-size-500}) 0 0 var(--ds-size-500, #{$ds-size-500});
+    --ds-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100});
+  }
+
+  &::part(controlPlus) {
+    --ds-counter-control-border-radius: 0 var(--ds-size-500, #{$ds-size-500}) var(--ds-size-500, #{$ds-size-500}) 0;
+    --ds-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50});
+  }
+}
+
+auro-counter-button {
+  display: flex;
+}
+
+:host([disabled]) {
+  &::part(controlIcon) {
+    color: var(--ds-counter-control-ui-disabled);
+  }
+
+  label,
+  .subLabel,
+  &::part(counterControl) {
+    color: var(--ds-counter-text-disabled);
+  }
 }

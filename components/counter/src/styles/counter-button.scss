@@ -1,0 +1,51 @@
+// Support for fallback values
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+:host {  
+    --ds-counter-control-ui-hover: var(--ds-color-ui-bkg-hover-default, #{$ds-color-ui-bkg-hover-default});
+    --ds-counter-control-ui-active: var(--ds-color-ui-active-default, #{$ds-color-ui-active-default});
+    --ds-counter-control-border-active: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
+    --ds-counter-control-border-hover: var(--ds-color-ui-bkg-hover-default, #{$ds-color-ui-bkg-hover-default});
+    --ds-counter-control-ui-bkg: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
+}
+  
+.auroButton {
+    overflow: visible;
+    width: 36px;
+    min-width: unset;
+    height: 34px;
+    min-height: unset;
+    padding: var(--ds-counter-control-padding);
+    border: none;
+    border-radius: var(--ds-counter-control-border-radius, $ds-size-500);
+    background-color: var(--ds-counter-control-ui-bkg);
+    line-height: unset;
+
+    &:hover {
+        background-color: var(--ds-counter-control-ui-hover);
+    }
+
+    &:focus-visible, &:active {
+        &:not(&:disabled) {
+            outline: var(--ds-counter-control-border-active) solid 2px;
+            outline-offset: 0;
+            transform: unset;
+        }
+    }
+
+    &:after {
+        // no way around level 5 specificity with current lint rules
+        border: none !important; /* stylelint-disable-line declaration-no-important */
+    }
+    
+}
+
+.contentWrapper {
+    display: flex;
+    align-items: center;
+
+    span {
+        display: block;
+        height: 24px;
+    }
+}

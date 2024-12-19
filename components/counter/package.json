@@ -13,7 +13,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "chalk": "^5.2.0",
-    "lit": "^3.2.1"
+    "lit": "^3.2.1",
+    "@aurodesignsystem/auro-button": "^8.2.1"
   },
   "peerDependencies": {
     "@aurodesignsystem/design-tokens": "^4.12.1",
@@ -33,10 +34,13 @@
     "web-component-analyzer": "^2.0.0"
   },
   "scripts": {
-    "build": "run-s build:sass bundler types",
+    "build": "run-s sass bundler build:docs types",
+    "build:version": "node ./src/scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component counter",
     "bundler": "rollup -c node:@auro-formkit/config/rollup",
+    "sass": "run-s build:sass sass:render",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
@@ -44,7 +48,7 @@
     "serve": "web-dev-server --open demo/ --node-resolve --watch",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
-    "scssLint": "stylelint \"./src/**/*.scss\"",
+    "scssLint": "stylelint \"./src/**/*.scss\" --fix",
     "esLint": "eslint \"./src/**/*.js\""
   }
 }
