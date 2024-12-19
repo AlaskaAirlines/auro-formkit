@@ -1,0 +1,24 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// layout styles - define any layout specifications for UI that is contained WITHIN the component
+// never define layout that would cause effect on element outside the scope of this component
+
+// Support for fallback values
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+
+:host {
+  --ds-counter-text-default: var(--ds-color-text-primary-default, #{$ds-color-text-primary-default});
+  --ds-counter-text-secondary: var(--ds-color-text-secondary-default, #{$ds-color-text-secondary-default});
+  --ds-counter-text-disabled: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});;
+  --ds-counter-control-ui-active: var(--ds-color-ui-active-default, #{$ds-color-ui-active-default});
+  --ds-counter-control-ui-hover: var(--ds-color-ui-hover-default, #{$ds-color-ui-hover-default});
+  --ds-counter-control-ui-disabled: var(--ds-color-ui-disabled-default, #{$ds-color-ui-disabled-default});
+  --ds-counter-control-ui-bkg: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
+  --ds-counter-control-line-height: var(--ds-text-body-size-sm, #{$ds-text-body-size-sm});
+  --ds-counter-icon-color-default: var(--ds-color-ui-default-default, #{$ds-color-ui-default-default});
+}
