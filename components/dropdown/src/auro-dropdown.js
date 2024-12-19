@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------
 
 /* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions,
-arrow-body-style, no-extra-parens, block-spacing, brace-style, curly, template-curly-spacing */
+arrow-body-style, no-extra-parens, block-spacing, brace-style, curly, template-curly-spacing, no-underscore-dangle */
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
@@ -76,6 +76,16 @@ export class AuroDropdown extends LitElement {
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
+
+    /**
+     * @private
+     */
+    this._hasTriggerContent = false;
+
+    /**
+     * @private
+     */
+    this.triggerContentSlot = undefined;
 
     /**
      * @private
@@ -211,6 +221,37 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Sets the value of the hasTriggerContent property and requests an update if changed.
+   *
+   * This setter updates the internal `_hasTriggerContent` property only if the new value differs
+   * from the current value. If a change is detected, it triggers a request for the component to
+   * update, ensuring that UI elements are refreshed accordingly.
+   *
+   * @private
+   * @setter hasTriggerContent
+   * @param {boolean} value - The new value indicating whether the trigger content is present.
+   * @returns {void}
+   */
+  set hasTriggerContent(value) {
+    if (value !== this._hasTriggerContent) {
+      this._hasTriggerContent = value;
+      this.requestUpdate();
+    }
+  }
+
+  /**
+   * Retrieves the value of the hasTriggerContent property.
+   *
+   * @private
+   * @getter hasTriggerContent
+   * @type {boolean}
+   * @returns {boolean} The current value of the hasTriggerContent property.
+   */
+  get hasTriggerContent() {
+    return this._hasTriggerContent;
+  }
+
+  /**
    * This will register this element with the browser.
    * @param {string} [name="auro-dropdown"] - The name of element that you want to register to.
    *
@@ -235,6 +276,12 @@ export class AuroDropdown extends LitElement {
 
     if (changedProperties.has('mobileFullscreenBreakpoint')) {
       this.bibContent.mobileFullscreenBreakpoint = this.mobileFullscreenBreakpoint;
+    }
+
+    if (this.triggerContentSlot) {
+      this.hasTriggerContent = this.triggerContentSlot.reduce((old, sl) => old || Boolean(sl.textContent.trim()), false);
+    } else {
+      this.hasTriggerContent = false;
     }
   }
 
@@ -281,6 +328,25 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Handles changes to the trigger content slot and updates related properties.
+   *
+   * It first updates the floater settings
+   * Then, it retrieves the assigned nodes from the event target and checks if any of
+   * the nodes contain non-empty text content, updating the `hasTriggerContent` property accordingly.
+   *
+   * @private
+   * @method handleTriggerContentSlotChange
+   * @param {Event} event - native slotchange event
+   * @returns {void}
+   */
+  handleTriggerContentSlotChange(event) {
+    this.floater.handleTriggerTabIndex();
+
+    this.triggerContentSlot = event.target.assignedNodes();
+    this.hasTriggerContent = this.triggerContentSlot.reduce((old, sl) => old || Boolean(sl.textContent.trim()), false);
+  }
+
+  /**
    * Handles the default slot change event and updates the content.
    *
    * This method retrieves all nodes assigned to the default slot of the event target and appends them
@@ -314,13 +380,13 @@ export class AuroDropdown extends LitElement {
           tabindex="${this.tabIndex}"
           >
           <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel">
+            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
               <slot name="label"></slot>
             </label>
             <div class="triggerContent">
               <slot
                 name="trigger"
-                @slotchange="${() => {this.floater.handleTriggerTabIndex(); }}"></slot>
+                @slotchange="${(event) => this.handleTriggerContentSlotChange(event)}"></slot>
             </div>
           </div>
           ${this.chevron || this.common ? html`

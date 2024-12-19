@@ -32,7 +32,12 @@
 .label {
   font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
   line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
   white-space: normal;
+
+  &[hasTrigger='false'] {
+    font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  }
 }
 
 .trigger {

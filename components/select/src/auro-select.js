@@ -51,7 +51,7 @@ export class AuroSelect extends LitElement {
   constructor() {
     super();
 
-    this.placeholder = 'Please select option';
+    this.placeholder = '';
     this.optionSelected = undefined;
     this.validity = undefined;
 
@@ -460,6 +460,9 @@ export class AuroSelect extends LitElement {
       }
 
       this.validation.validate(this);
+
+      // notify dropdown as trigger content is changed
+      this.dropdown.requestUpdate();
 
       this.dispatchEvent(new CustomEvent('auroSelect-valueSet', {
         bubbles: true,
