@@ -33,7 +33,6 @@ import tokensCss from "./styles/tokens-css.js";
  * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
  * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
  * @attr {Boolean} flexMenuWidth - If set, makes dropdown bib width match the size of the content, rather than the width of the trigger.
- * @prop {String} placeholder - Define placeholder text to display before a value is manually selected.
  * @prop {String} value - Value selected for the component.
  * @prop {Boolean} disabled - When attribute is present element shows disabled state.
  * @prop {Boolean} noCheckmark - When true, checkmark on selected option will no longer be present.
@@ -41,6 +40,7 @@ import tokensCss from "./styles/tokens-css.js";
  * @slot - Default slot for the menu content.
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
+ * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  * @csspart helpText - Apply CSS to the help text.
@@ -51,7 +51,6 @@ export class AuroSelect extends LitElement {
   constructor() {
     super();
 
-    this.placeholder = 'Please select option';
     this.optionSelected = undefined;
     this.validity = undefined;
 
@@ -150,7 +149,6 @@ export class AuroSelect extends LitElement {
         type: Boolean,
         reflect: true
       },
-      placeholder: { type: String },
 
       /**
        * @private
@@ -202,36 +200,37 @@ export class AuroSelect extends LitElement {
   }
 
   /**
-   * Updates the displayed value in an Auro dropdown component based on the provided option.
-   * @param {string|HTMLElement} option - The option to display. If a string, a new span element with the value string is created. If an HTMLElement, the selected option is cloned and non-styling attributes are removed.
+   * Updates the displayed value in an Auro dropdown component based on optionSelected
    * @private
    * @returns {void}
    */
-  updateDisplayedValue(option) {
+  updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
 
     // remove all existing rendered value(s)
-    triggerContentEl.querySelectorAll('auro-menuoption, [valuestr], [auro-menuoption]').forEach((elm) => {
+    triggerContentEl.querySelectorAll('auro-menuoption, [auro-menuoption]').forEach((elm) => {
       elm.remove();
     });
 
-    if (typeof option === 'string' && option !== this.placeholder) {
+    if (!this.optionSelected) {
       // create a new span element with the value string
       const valueElem = document.createElement('span');
-      valueElem.setAttribute('valuestr', true);
-      valueElem.textContent = option;
+      valueElem.textContent = "";
 
       // append the new element into the trigger content
       triggerContentEl.appendChild(valueElem);
-    } else if (typeof option === 'object') {
+    } else {
       // clone the selected option and remove attributes that style it
-      const clone = option.cloneNode(true);
+      const clone = this.optionSelected.cloneNode(true);
       clone.removeAttribute('selected');
       clone.removeAttribute('class');
 
       // insert the non-styled clone into the trigger
       triggerContentEl.appendChild(clone);
     }
+
+    // notify dropdown as trigger content is changed
+    this.dropdown.requestUpdate();
   }
 
   /**
@@ -262,8 +261,6 @@ export class AuroSelect extends LitElement {
       this.optionSelected = this.menu.optionSelected;
       this.value = this.optionSelected.value;
 
-      this.updateDisplayedValue(this.optionSelected);
-
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
       }
@@ -278,7 +275,11 @@ export class AuroSelect extends LitElement {
      */
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
       this.reset();
-      this.updateDisplayedValue(this.placeholder);
+    });
+
+    this.menu.addEventListener('auroMenu-selectValueReset', () => {
+      this.optionSelected = this.menu.optionSelected;
+      this.validation.validate(this);
     });
   }
 
@@ -329,8 +330,6 @@ export class AuroSelect extends LitElement {
     this.addEventListener('blur', () => {
       this.validation.validate(this);
     });
-
-    this.labelForSr();
   }
 
   /**
@@ -449,6 +448,10 @@ export class AuroSelect extends LitElement {
       }));
     }
 
+    if (changedProperties.has('optionSelected')) {
+      this.updateDisplayedValue();
+    }
+
     if (changedProperties.has('error')) {
       this.validation.validate(this, true);
     }
@@ -460,47 +463,6 @@ export class AuroSelect extends LitElement {
    */
   reset() {
     this.validation.reset(this);
-  }
-
-  /**
-   * Handles reading of auro-select by screen readers.
-   * @private
-   * @returns {void}
-   */
-  labelForSr() {
-    const placeholderLabel = document.createElement("div");
-    const textId = "label";
-
-    placeholderLabel.setAttribute("id", textId);
-    placeholderLabel.setAttribute("aria-live", "polite");
-
-    const styles = {
-      position: 'absolute',
-      overflow: 'hidden',
-      clipPath: 'inset(1px, 1px, 1px, 1px)',
-      width: '1px',
-      height: '1px',
-      padding: '0',
-      border: '0'
-    };
-
-    Object.assign(placeholderLabel.style, styles);
-
-    this.addEventListener('focus', () => {
-      document.body.appendChild(placeholderLabel);
-
-      if (!this.optionSelected) {
-        document.getElementById(textId).innerHTML = this.placeholder;
-      } else {
-        document.getElementById(textId).innerHTML = `${this.optionSelected.innerText}, ${this.placeholder}`;
-      }
-    });
-
-    this.addEventListener('blur', () => {
-      if (document.contains(placeholderLabel)) {
-        document.body.removeChild(placeholderLabel);
-      }
-    });
   }
 
   // When using auroElement, use the following attribute and function when hiding content from screen readers.
@@ -534,7 +496,7 @@ export class AuroSelect extends LitElement {
           chevron
           part="dropdown">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
-            ${this.value ? this.displayValue : html`<span class="placeholder">${this.placeholder}</span>`}
+            ${!this.value ? html`<slot name="placeholder"></slot>` : null}
           </span>
           <div class="menuWrapper">
           </div>

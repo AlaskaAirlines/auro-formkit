@@ -10,7 +10,7 @@
 @import '@aurodesignsystem/webcorestylesheets/src/core';
 @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-class-pattern, selector-max-attribute */
 
 [slot='trigger'] {
   width: 100%;
@@ -24,7 +24,16 @@
   .nestingSpacer {
     display: none;
   }
-}
+
+  .placeholder {
+    transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
+    will-change: font-size;
+
+    &[hasValue='true'] {
+      font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+    }
+  }
+} 
 
 :host {
   [auro-dropdown] {
