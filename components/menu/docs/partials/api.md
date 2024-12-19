@@ -74,6 +74,23 @@ The `auro-menu` component supports the use of the `matchWord` attribute to highl
 
 </auro-accordion>
 
+### Multi Select<a name="multiSelect"></a>
+
+The `auro-menu` supports a multi-select option. To use, place the `multiselect` attribute on the `<auro-menu>` element tag. When applied, the `value` attribute will become an Array versus String value.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multiSelect.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multiSelect.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### Loading<a name="loading"></a>
 While content is loading, the menu can either remain empty or display a loading placeholder
 
