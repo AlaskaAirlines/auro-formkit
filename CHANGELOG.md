@@ -1,5 +1,24 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.7](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.6...v1.6.0-beta.7) (2024-12-19)
+
+
+### Bug Fixes
+
+* replace set to map for loadingslots in menu ([373ee72](https://github.com/AlaskaAirlines/auro-formkit/commit/373ee720a97161d89466aa65a76ec8fcc6ea2f8a))
+
+
+### Features
+
+* add loading-placeholder in menu ([2bb2986](https://github.com/AlaskaAirlines/auro-formkit/commit/2bb2986056bd0c0e9051ee71a6636a8eeae286c7))
+* hide bib while loading when there is no loading placeholder to show ([a6ebc21](https://github.com/AlaskaAirlines/auro-formkit/commit/a6ebc21116ab60bee8a2b2810e654ef6d80f8431))
+* support loading state in combobox and menu ([01bd9b9](https://github.com/AlaskaAirlines/auro-formkit/commit/01bd9b92e3c7a81bd913c7501d8ccbbbd972b00c))
+
+
+### Performance Improvements
+
+* replace `innerText` with `textContent` for better performance ([c3f99f1](https://github.com/AlaskaAirlines/auro-formkit/commit/c3f99f1abbae071ebeebdd3090fe070608659641))
+
 # [1.6.0-beta.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.5...v1.6.0-beta.6) (2024-12-18)
 
 
