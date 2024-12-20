@@ -2,7 +2,6 @@ import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testin
 import '../src/index.js';
 
 describe('auro-input', () => {
-
   it('web component is successfully created in the document', async () => {
     // This test fails when attributes are put onto the component before it is attached to the DOM
     const el = document.createElement('auro-input');
@@ -510,7 +509,7 @@ describe('auro-input', () => {
 
   it('type numeric checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="numeric" min="10"></auro-input>
+      <auro-input type="number" min="10"></auro-input>
     `)
 
     el.value = '10';
@@ -528,7 +527,7 @@ describe('auro-input', () => {
 
   it('type numeric checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="numeric" max="10"></auro-input>
+      <auro-input type="number" max="10"></auro-input>
     `)
 
     el.value = '10';
@@ -576,6 +575,21 @@ describe('auro-input', () => {
     expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.have.attribute('spellcheck', 'true');
     expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.not.have.attribute('autocorrect');
     expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.not.have.attribute('autocapitalize');
+  });
+
+  it('reset method clears the value and validity state', async () => {
+    const el = await fixture(html`
+      <auro-input required minlength="12" value="Auro Team"></auro-input>
+    `);
+
+    expect(el.getAttribute('validity')).to.be.equal('tooShort');
+
+    el.reset();
+
+    await elementUpdated(el);
+
+    expect(el.hasAttribute('validity')).to.be.false;
+    expect(el.value).to.equal(undefined);
   });
 
   describe('handles date formatting', () => {

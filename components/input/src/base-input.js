@@ -159,10 +159,7 @@ export default class BaseInput extends LitElement {
       name:                    { type: String },
       type:                    { type: String,
         reflect: true },
-      value:                   {
-        type: String,
-        reflect: true
-      },
+      value:                   { type: String },
       lang:                    { type: String },
       pattern:                 {
         type: String,
@@ -691,6 +688,13 @@ export default class BaseInput extends LitElement {
     this.validation.validate(this);
   }
 
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.validation.reset(this);
+  }
 
   /**
    * Sets configuration data used elsewhere based on the `type` attribute.

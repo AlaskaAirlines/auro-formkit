@@ -604,6 +604,26 @@ Use the `type="fullYear"` attribute for a date formatted input.
 
 ## Additional Use Cases
 
+### Reset State
+
+Use the `reset()` method to reset the `<auro-input>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/resetState.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/resetState.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/resetState.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Swapping Values Between Inputs
 
 Example illustrates using a JavaScript function attached to an `auro-button` component `click` event to swap the values of two `auro-input` elements. An example of this use case would be swapping the departure and arrival airports in a flight search form.

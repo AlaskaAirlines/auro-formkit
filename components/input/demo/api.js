@@ -3,6 +3,7 @@ import { customError } from "../apiExamples/error";
 import { setReadonlyValue } from "../apiExamples/readonly";
 import { swapInputValues } from "../apiExamples/swapValue";
 import { programmaticallySetValue } from "../apiExamples/value";
+import { resetStateExample } from "../apiExamples/resetState";
 import './index.js';
 
 export function initExamples(initCount) {
@@ -14,6 +15,7 @@ export function initExamples(initCount) {
     setReadonlyValue();
     swapInputValues();
     programmaticallySetValue();
+    resetStateExample();
   } catch (error) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called

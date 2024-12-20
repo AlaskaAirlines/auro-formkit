@@ -56,6 +56,7 @@ Generate unique names for dependency components.
 | Method       | Type          | Description                              |
 |--------------|---------------|------------------------------------------|
 | `isDateType` | `(): boolean` |                                          |
+| `reset`      | `(): void`    | Resets component to initial state.       |
 | `validate`   | `(): void`    | Public method force validation of input. |
 
 ## Events
