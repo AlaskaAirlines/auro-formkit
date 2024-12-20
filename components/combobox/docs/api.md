@@ -22,6 +22,7 @@
 | Method  | Type       | Description                         |
 |---------|------------|-------------------------------------|
 | `focus` | `(): void` | Focuses the combobox trigger input. |
+| `reset` | `(): void` | Resets component to initial state.  |
 
 ## Events
 

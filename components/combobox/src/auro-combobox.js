@@ -443,7 +443,7 @@ export class AuroCombobox extends LitElement {
       }
 
       // hide the menu if the value is empty otherwise show if there are available suggestions
-      if (this.input.value.length === 0) {
+      if (this.input.value && this.input.value.length === 0) {
         this.hideBib();
         this.classList.remove('combobox-filled');
       } else if (!this.dropdown.isPopoverVisible && this.availableOptions) {
@@ -602,6 +602,18 @@ export class AuroCombobox extends LitElement {
    */
   focus() {
     this.input.focus();
+  }
+
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    // Resets the help text of the combobox
+    this.auroInputHelpText = undefined;
+
+    this.input.reset();
+    this.validation.reset(this);
   }
 
   updated(changedProperties) {
