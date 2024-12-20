@@ -13,6 +13,21 @@ export default class AuroFormValidation {
   }
 
   /**
+   * Resets the element to its initial state.
+   * @private
+   * @param {object} elem - HTML element to reset.
+   * @returns {void}
+   */
+  reset(elem) {
+    elem.validity = undefined;
+    elem.value = undefined;
+
+    // Runs validation to handle error attribute
+    this.validate(elem);
+  }
+  
+
+  /**
    * Determines the validity state of the element based on the common attribute restrictions (pattern).
    * @private
    * @param {object} elem - HTML element to validate.
