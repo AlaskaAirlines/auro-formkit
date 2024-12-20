@@ -2,7 +2,7 @@
 name: Publish Component
 about: Create a ticket to drive compliance before publishing a new component to Auro Design System
 title: 'Publish to Auro Design System'
-labels: 'auro-form, not-reviewed'
+labels: 'auro-formkit, not-reviewed'
 ---
 
 # Publish Component
@@ -53,7 +53,7 @@ labels: 'auro-form, not-reviewed'
     - [ ] All work is reviewed by Auro team
 1. __Publishing__
     - [ ] Removed all references to `auroLabs` from the repository
-    - [ ] Component properly named,  e.g. `auro-form`
+    - [ ] Component properly named,  e.g. `auro-formkit`
     - [ ] GitHub Repository properly named
     - Updated `readme.md`
       - [ ] Install information updated to published namespace
