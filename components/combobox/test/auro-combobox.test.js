@@ -389,6 +389,23 @@ describe('auro-combobox', () => {
     const menu = dropdown.bibContent.querySelector('auro-menu')
     await expect(menu.hasAttribute('nocheckmark')).to.be.false;
   });
+
+  it('reset method clears the value and validity state', async () => {
+    const el = await requiredFixture();
+
+    el.focus();
+    el.shadowRoot.activeElement.blur();
+
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+
+    el.reset();
+
+    await elementUpdated(el);
+
+    await expect(el.hasAttribute('validity')).to.be.false;
+    await expect(el.value).to.equal(undefined);
+  });
 });
 
 async function defaultFixture() {

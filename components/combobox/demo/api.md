@@ -25,6 +25,7 @@
 | Method  | Type       | Description                         |
 |---------|------------|-------------------------------------|
 | [focus](#focus) | `(): void` | Focuses the combobox trigger input. |
+| [reset](#reset) | `(): void` | Resets component to initial state.  |
 
 ## Events
 
@@ -622,6 +623,64 @@ export function focusExample() {
     <auro-menuoption static nomatch>No matching option</auro-menuoption>
   </auro-menu>
 </auro-combobox>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+#### reset
+
+Use the `reset()` method to reset the `<auro-combobox>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/resetState.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/resetState.html -->
+  <auro-button id="resetStateBtn">Reset</auro-button>
+  <br /><br />
+  <auro-combobox id="resetStateExample" required>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+      <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+      <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+      <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+      <auro-menuoption static nomatch>No matching option</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/resetState.html -->
+
+```html
+<auro-button id="resetStateBtn">Reset</auro-button>
+<br /><br />
+<auro-combobox id="resetStateExample" required>
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+    <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+    <auro-menuoption static nomatch>No matching option</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/resetState.js -->
+
+```js
+export function resetStateExample() {
+  const elem = document.querySelector('#resetStateExample');
+
+  document.querySelector('#resetStateBtn').addEventListener('click', () => {
+    elem.reset();
+  });
+}
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>

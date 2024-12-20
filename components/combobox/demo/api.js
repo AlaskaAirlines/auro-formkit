@@ -3,8 +3,9 @@
 import { dynamicMenuExample } from '../apiExamples/dynamicMenu';
 import { valueExample } from '../apiExamples/value';
 import { focusExample } from '../apiExamples/focus';
-import { inDialogExample } from '../apiExamples/inDialog.js';
-import { auroMenuLoadingExample } from '../apiExamples/loading.js';
+import { inDialogExample } from '../apiExamples/inDialog';
+import { resetStateExample } from '../apiExamples/resetState';
+import { auroMenuLoadingExample } from '../apiExamples/loading';
 
 
 import { AuroCombobox } from '../src/auro-combobox.js';
@@ -21,6 +22,7 @@ export function initExamples(initCount) {
     valueExample();
     focusExample();
     inDialogExample();
+    resetStateExample();
     auroMenuLoadingExample();
   } catch (err) {
     if (initCount <= 20) {
