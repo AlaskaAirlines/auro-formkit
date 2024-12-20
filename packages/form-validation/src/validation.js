@@ -22,6 +22,10 @@ export default class AuroFormValidation {
     elem.validity = undefined;
     elem.value = undefined;
 
+    if (elem.valueEnd) {
+      elem.valueEnd = undefined;
+    }
+
     // Runs validation to handle error attribute
     this.validate(elem);
   }
