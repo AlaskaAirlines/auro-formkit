@@ -2,8 +2,9 @@ import { customErrorValidityExample } from "../apiExamples/customErrorValidity";
 import { setErrorExample } from "../apiExamples/errorApi";
 import { valueExample } from "../apiExamples/value";
 import { valueExtractionExample } from "../apiExamples/valueExtraction";
-import { inDialogExample } from '../apiExamples/inDialog.js';
-import { auroMenuLoadingExample } from "../apiExamples/loading.js";
+import { inDialogExample } from '../apiExamples/inDialog';
+import { resetStateExample } from "../apiExamples/resetState";
+import { auroMenuLoadingExample } from "../apiExamples/loading";
 
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 import { AuroSelect } from '../src/auro-select.js';
@@ -21,6 +22,7 @@ export function initExamples(initCount) {
     valueExample();
     valueExtractionExample();
     inDialogExample();
+    resetStateExample();
     auroMenuLoadingExample();
   } catch (err) {
     if (initCount <= 20) {
