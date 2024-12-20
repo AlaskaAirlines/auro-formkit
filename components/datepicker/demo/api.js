@@ -7,6 +7,7 @@ import { updateMaxDateExample } from './../apiExamples/updateMaxDate';
 import { updateMinDateExample } from './../apiExamples/updateMinDate';
 import { validityExample } from './../apiExamples/validity';
 import { inDialogExample } from '../apiExamples/inDialog.js';
+import { resetStateExample } from '../apiExamples/resetState.js';
 import '../src/index.js';
 
 export function initExamples(initCount) {
@@ -22,6 +23,7 @@ export function initExamples(initCount) {
     updateMinDateExample();
     validityExample();
     inDialogExample();
+    resetStateExample();
   } catch (error) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called

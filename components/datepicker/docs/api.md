@@ -29,6 +29,7 @@
 | Method  | Type                         | Description                                      |
 |---------|------------------------------|--------------------------------------------------|
 | `focus` | `(focusInput: string): void` | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
+| `reset` | `(): void`                   | Resets component to initial state.               |
 
 ## Events
 

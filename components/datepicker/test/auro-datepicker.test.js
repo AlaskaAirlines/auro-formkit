@@ -795,6 +795,25 @@ describe('auro-datepicker', () => {
 
     await expect(cell.hovered).to.be.true;
   });
+
+  // Test needs to be skipped until cleave.js issue is resolved
+  it.skip('reset method clears the value and validity state', async () => {
+    const el = await fixture(html`
+      <auro-datepicker range minDate="06/30/2025" value="02/14/2025" valueEnd="04/05/2025"></auro-datepicker>
+    `);
+
+    await expect(el.value).to.be.equal('02/14/2025');
+    await expect(el.valueEnd).to.be.equal('04/05/2025');
+    await expect(el.validity).to.be.equal('rangeUnderflow');
+
+    el.reset();
+
+    await elementUpdated(el);
+
+    await expect(el.hasAttribute('validity')).to.be.false;
+    await expect(el.value).to.be.equal(undefined);
+    await expect(el.valueEnd).to.be.equal(undefined);
+  });
 });
 
 async function dateSlotFixture() {

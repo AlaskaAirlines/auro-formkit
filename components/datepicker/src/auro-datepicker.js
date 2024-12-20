@@ -689,6 +689,18 @@ export class AuroDatePicker extends LitElement {
     this.dispatchEvent(new CustomEvent('auroDatePicker-newSlotContent'));
   }
 
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.inputList.forEach((input) => {
+      input.reset();
+    });
+
+    this.validation.reset(this);
+  }
+
   updated(changedProperties) {
     if (changedProperties.has('calendarFocusDate')) {
       this.handleFocusDateChange();
