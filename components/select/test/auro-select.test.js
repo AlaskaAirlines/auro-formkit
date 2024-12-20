@@ -156,6 +156,22 @@ describe('auro-select', () => {
 
     await expect(el.getAttribute('validity')).to.equal('valid');
   });
+
+  it('reset method clears the value and validity state', async () => {
+    const el = await badInputFixture();
+
+    await expect(el.value).to.be.equal('Carrot');
+    await expect(el.optionSelected).to.be.equal(undefined);
+    await expect(el.getAttribute('validity')).to.equal('badInput');
+
+    el.reset();
+
+    await elementUpdated(el);
+
+    await expect(el.hasAttribute('validity')).to.be.false;
+    await expect(el.value).to.be.equal(undefined);
+    await expect(el.optionSelected).to.be.equal(undefined);
+  });
 });
 
 async function defaultFixture() {
@@ -209,3 +225,16 @@ async function errorFixture() {
   </auro-select>
   `);
 }
+
+async function badInputFixture() {
+  return await fixture(html`
+  <auro-select value="Carrot">
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+

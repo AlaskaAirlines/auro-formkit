@@ -20,6 +20,12 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `validity`                      | `validity`                      | `String`  | "undefined"            | Specifies the `validityState` this element is in. |
 | `value`                         | `value`                         | `String`  |                        | Value selected for the component.                |
 
+## Methods
+
+| Method  | Type       | Description                        |
+|---------|------------|------------------------------------|
+| `reset` | `(): void` | Resets component to initial state. |
+
 ## Events
 
 | Event                       | Type               | Description                                      |

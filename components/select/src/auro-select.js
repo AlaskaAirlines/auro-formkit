@@ -474,6 +474,14 @@ export class AuroSelect extends LitElement {
   }
 
   /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.validation.reset(this);
+  }
+
+  /**
    * Handles reading of auro-select by screen readers.
    * @private
    * @returns {void}

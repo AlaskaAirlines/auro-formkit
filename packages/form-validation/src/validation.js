@@ -22,8 +22,14 @@ export default class AuroFormValidation {
     elem.validity = undefined;
     elem.value = undefined;
 
+    // Resets the second value of the datepicker in range state
     if (elem.valueEnd) {
       elem.valueEnd = undefined;
+    }
+
+    // Resets selected option of element
+    if (elem.optionSelected) {
+      elem.optionSelected = undefined;
     }
 
     // Runs validation to handle error attribute

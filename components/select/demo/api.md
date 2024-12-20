@@ -30,6 +30,12 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | [validity](#validity)                      | `validity`                      | `String`  | "undefined"            | Specifies the `validityState` this element is in. |
 | [value](#value)                         | `value`                         | `String`  |                        | Value selected for the component.                |
 
+## Methods
+
+| Method  | Type       | Description                        |
+|---------|------------|------------------------------------|
+| [reset](#reset) | `(): void` | Resets component to initial state. |
+
 ## Events
 
 | Event                       | Type               | Description                                      |
@@ -497,6 +503,64 @@ Use the `helptext` slot to provide additional information back to your user abou
 
 ## Functional Examples
 
+### Reset State
+
+Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/resetState.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/resetState.html -->
+  <auro-button id="resetStateBtn">Reset</auro-button>
+  <br/><br/>
+  <auro-select id="resetStateExample" required value="price">
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="duration">Duration</auro-menuoption>
+      <auro-menuoption value="departure">Departure</auro-menuoption>
+      <auro-menuoption value="arrival">Arrival</auro-menuoption>
+      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/resetState.html -->
+
+```html
+<auro-button id="resetStateBtn">Reset</auro-button>
+<br/><br/>
+<auro-select id="resetStateExample" required value="price">
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+    <auro-menuoption value="arrival">Arrival</auro-menuoption>
+    <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+  </auro-menu>
+</auro-select>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/resetState.js -->
+
+```js
+export function resetStateExample() {
+  const elem = document.querySelector('#resetStateExample');
+
+  document.querySelector('#resetStateBtn').addEventListener('click', () => {
+    elem.reset();
+  });
+}
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ### Extract value
 
 The following example illustrates how a user may query the `element.value` or `element.optionSelected` for the current value or complete option object that is selected.
@@ -519,23 +583,6 @@ The following example illustrates how a user may query the `element.value` or `e
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueExtraction.js) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/valueExtraction.js -->
-
-```js
-export function valueExtractionExample() {
-  const valueExtractionExample = document.querySelector('#valueExtraction');
-  const valueExtractionBtn = document.querySelector('#valueExtractionBtn');
-
-  valueExtractionBtn.addEventListener('click', () => {
-    console.warn('Value selected:', valueExtractionExample.value);
-    console.warn('Option selected:', valueExtractionExample.optionSelected);
-
-    alert(`Value selected: ${valueExtractionExample.value}`);
-  })
-}
-```
-<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueExtraction.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/valueExtraction.html -->
 
@@ -551,6 +598,23 @@ export function valueExtractionExample() {
   </auro-menu>
 </auro-select>
 <auro-button id="valueExtractionBtn">Get current value</auro-button>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueExtraction.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/valueExtraction.js -->
+
+```js
+export function valueExtractionExample() {
+  const valueExtractionExample = document.querySelector('#valueExtraction');
+  const valueExtractionBtn = document.querySelector('#valueExtractionBtn');
+
+  valueExtractionBtn.addEventListener('click', () => {
+    console.warn('Value selected:', valueExtractionExample.value);
+    console.warn('Option selected:', valueExtractionExample.optionSelected);
+
+    alert(`Value selected: ${valueExtractionExample.value}`);
+  })
+}
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
