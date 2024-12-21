@@ -1,4 +1,4 @@
-/* eslint-disable no-console, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable lit/binding-positions, lit/no-invalid-html */
 // Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -37,6 +37,15 @@ export class AuroCounter extends LitElement {
     /** @type {boolean} Determines whether the counter is interactive or disabled */
     this.disabled = false;
 
+    /** @type {number} Value of the counter */
+    this.value = 0;
+
+    /** @type {number} Minimum value of the counter */
+    this.min = 0;
+
+    /** @type {number} Maximum value of the counter */
+    this.max = 9;
+
     /**
      * Generate unique names for dependency components.
      * @private
@@ -62,6 +71,12 @@ export class AuroCounter extends LitElement {
         type: Boolean,
         reflect: true,
       },
+      value: {
+        type: Number,
+        reflect: true,
+      },
+      min: { type: Number },
+      max: { type: Number }
     };
   }
 
@@ -82,38 +97,58 @@ export class AuroCounter extends LitElement {
     ];
   }
 
+  incrementValue() {
+    if (this.value < this.max) {
+      this.value += 1;
+    }
+  }
+
+  decrementValue() {
+    if (this.value > this.min) {
+      this.value -= 1;
+    }
+  }
+
+  get isDecrementDisabled() {
+    return this.value <= this.min;
+  }
+
+  get isIncrementDisabled() {
+    return this.value >= this.max;
+  }
+
   renderCounterControl() {
     return html`
       <div part="counterControl">
         <auro-counter-button
           part="controlMinus"
-          @click="${() => console.log("click")}"
-          ?disabled="${this.disabled}"
+          @click="${this.decrementValue}"
+          ?disabled="${this.disabled || this.isDecrementDisabled}"
           >
 
           <${this.iconTag}
             category="interface"
             name="minus-lg"
-            part="controlIcon"
+            class="controlIcon"
             slot="icon"
           >
           </${this.iconTag}>
         </auro-counter-button>
 
         <div class="quantityWrapper">
-          <div class="counterQuantity">1</div>
+          <div class="counterQuantity">${this.value}</div>
         </div>
 
         <auro-counter-button
           part="controlPlus"
-          @click="${() => console.log("click")}"
-          ?disabled="${this.disabled}"
+          @click="${this.incrementValue}"
+          ?disabled="${this.disabled || this.isIncrementDisabled}"
           >
 
           <${this.iconTag}
             category="interface"
             name="plus-lg"
-            part="controlIcon"
+            class="controlIcon"
             slot="icon"
           >
           </${this.iconTag}>
