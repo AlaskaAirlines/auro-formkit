@@ -21,11 +21,13 @@
     background-color: var(--ds-counter-control-ui-bkg);
     line-height: unset;
 
-    &:hover {
-        background-color: var(--ds-counter-control-ui-hover);
+    &:hover{
+        :not(:disabled) {
+            background-color: var(--ds-counter-control-ui-hover);
+        }
     }
 
-    &:focus-visible, &:active {
+    &:focus-visible {
         &:not(&:disabled) {
             outline: var(--ds-counter-control-border-active) solid 2px;
             outline-offset: 0;
