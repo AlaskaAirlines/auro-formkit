@@ -35,7 +35,6 @@ export default class AuroFormValidation {
     // Runs validation to handle error attribute
     this.validate(elem);
   }
-  
 
   /**
    * Determines the validity state of the element based on the common attribute restrictions (pattern).

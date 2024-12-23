@@ -130,6 +130,15 @@ export class AuroCheckbox extends LitElement {
     return this.svg;
   }
 
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.checked = false;
+    this.error = false;
+  }
+
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-checkbox');
