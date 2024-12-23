@@ -212,7 +212,7 @@ export class AuroCheckboxGroup extends LitElement {
   handlePreselectedItems() {
     let preSelectedValues = false;
 
-    this.items.forEach((item) => {
+    this.checkboxes.forEach((item) => {
       if (item.hasAttribute('checked') && this.value === undefined) {
         preSelectedValues = true;
       }
@@ -223,7 +223,7 @@ export class AuroCheckboxGroup extends LitElement {
         this.value = [];
       }
 
-      this.items.forEach((item) => {
+      this.checkboxes.forEach((item) => {
         this.handleValueUpdate(item.getAttribute('value'), Boolean(item.hasAttribute('checked')));
       });
     }
@@ -238,11 +238,23 @@ export class AuroCheckboxGroup extends LitElement {
     const groupTagName = this.tagName.toLowerCase();
     const checkboxTagName = groupTagName.substring(0, groupTagName.indexOf('-group'));
 
-    this.items = Array.from(this.querySelectorAll(checkboxTagName));
+    this.checkboxes = Array.from(this.querySelectorAll(checkboxTagName));
 
     this.handlePreselectedItems();
 
     this.validation.validate(this);
+  }
+
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.checkboxes.forEach((checkbox) => {
+      checkbox.reset();
+    });
+
+    this.validation.reset(this);
   }
 
   /**
@@ -252,7 +264,7 @@ export class AuroCheckboxGroup extends LitElement {
    */
   updated(changedProperties) {
     if (changedProperties.has('disabled')) {
-      this.items.forEach((el) => {
+      this.checkboxes.forEach((el) => {
         if (this.disabled) {
           el.setAttribute('disabled', true);
         } else {
@@ -262,7 +274,7 @@ export class AuroCheckboxGroup extends LitElement {
     }
 
     if (changedProperties.has('validity')) {
-      this.items.forEach((el) => {
+      this.checkboxes.forEach((el) => {
         if (this.validity && this.validity !== 'valid') {
           el.setAttribute('error', true);
         } else {
@@ -292,7 +304,7 @@ export class AuroCheckboxGroup extends LitElement {
 
   render() {
     const groupClasses = {
-      'displayFlex': this.horizontal && this.items.length <= this.maxNumber
+      'displayFlex': this.horizontal && this.checkboxes.length <= this.maxNumber
     };
 
     return html`

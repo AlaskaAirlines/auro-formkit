@@ -94,6 +94,28 @@ The `error` attribute used to set error state on the entire `<auro-checkbox-grou
 
 </auro-accordion>
 
+### Functional Examples
+
+#### Reset State
+
+Use the `reset()` method to reset the `<auro-checkbox-group>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/resetState.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Theme Support
 
 The component may be restyled using the following code sample and changing the values of the following token(s).

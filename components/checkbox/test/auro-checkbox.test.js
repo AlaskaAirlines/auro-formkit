@@ -273,6 +273,59 @@ describe('auro-checkbox-group', () => {
     expect(alaskaCheckbox.disabled).to.be.false;
     expect(washingtonCheckbox.disabled).to.be.false;
   });
+
+  it('exposes .value as an array of strings', async () => {
+    const el = await fixture(html`
+      <auro-checkbox-group>
+        <auro-checkbox
+          id="alaska"
+          name="states"
+          value="alaska"
+        ></auro-checkbox>
+        <auro-checkbox
+          id="washington"
+          name="states"
+          type="radio"
+          value="washington"
+        ></auro-checkbox>
+      </auro-checkbox-group>
+    `),
+      alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
+      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
+      
+    // Click the first checkbox
+    alaskaCheckboxInput.click();
+    expect(el.value).to.eql(['alaska']);
+  });
+  
+  it('resets value to empty array when calling reset()', async () => {
+    const el = await fixture(html`
+      <auro-checkbox-group>
+        <auro-checkbox
+          id="alaska"
+          name="states"
+          value="alaska"
+        ></auro-checkbox>
+        <auro-checkbox
+          id="washington"
+          name="states"
+          type="radio"
+          value="washington"
+        ></auro-checkbox>
+      </auro-checkbox-group>
+    `),
+      alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
+      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
+    const group = document.querySelector('auro-checkbox-group');
+    // Click the first checkbox
+    alaskaCheckboxInput.click();
+    await elementUpdated(el);
+    expect(alaskaCheckbox.checked).to.be.true;
+    expect(group.value).to.eql(['alaska']);
+    group.reset();
+    await elementUpdated(el);
+    expect(group.value).to.eql([]);
+  });
 });
 
 describe('auro-checkbox', () => {
