@@ -151,6 +151,15 @@ export class AuroRadio extends LitElement {
     }));
   }
 
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.checked = false;
+    this.error = false;
+  }
+
   updated(changedProperties) {
     if (changedProperties.has('checked')) {
       this.dispatchEvent(new CustomEvent('resetRadio', {

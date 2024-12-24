@@ -80,7 +80,7 @@ describe('auro-radio', () => {
 
   it('handles resetting all radio buttons', async () => {
     const el = await fixture(html`
-      <auro-radio-group>
+      <auro-radio-group id="resetGroupTest" required>
         <span slot="legend">Form label goes here</span>
         <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes" checked></auro-radio>
         <auro-radio id="radio2" label="No" name="radioDemo" value="no" checked></auro-radio>
@@ -96,6 +96,10 @@ describe('auro-radio', () => {
 
     await expect(radioButtonOne.hasAttribute('checked')).to.be.false;
     await expect(radioButtonTwo.hasAttribute('checked')).to.be.false;
+  
+    await expect(el.value).to.equal(undefined);
+    await expect(el.optionSelected).to.equal(undefined);
+    await expect(el.hasAttribute('validity')).to.be.false;
   });
 
   it('selects radio button by keyboard', async () => {

@@ -141,6 +141,26 @@ The `<auro-radio-group>` supports an `optionalLabel` slot, where users can can o
 
 </auro-accordion>
 
+### Reset State
+
+Use the `reset()` method to reset the `<auro-radio-group>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/resetState.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Dynamic Example
 
 This example demonstrates a data drive approach to rendering `<auro-radio>` buttons.
