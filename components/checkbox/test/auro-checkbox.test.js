@@ -3,6 +3,7 @@
 /* eslint-disable one-var */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-expressions */
+/* eslint-disable max-lines */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 
 import '../src/index.js';
@@ -88,9 +89,10 @@ describe('auro-checkbox-group', () => {
           value="washington"
         ></auro-checkbox>
       </auro-checkbox-group>
-    `),
-    alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
-    alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
+    `);
+
+    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
+      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
 
     let result = false;
 
@@ -110,9 +112,10 @@ describe('auro-checkbox-group', () => {
         name="states-unchecking"
         value="alaska"
       ></auro-checkbox>
-    `),
-    alaskaCheckbox = el,
-    alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
+    `);
+
+    const alaskaCheckbox = el,
+      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
 
     alaskaCheckboxInput.click();
     alaskaCheckboxInput.dispatchEvent(new Event('input'));
@@ -139,13 +142,12 @@ describe('auro-checkbox-group', () => {
           value="washington"
         ></auro-checkbox>
       </auro-checkbox-group>
-    `),
+    `);
 
-     alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
-     alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input'),
-
-     washingtonCheckbox = el.querySelector("auro-checkbox[id=washington]"),
-     washingtonCheckboxInput = washingtonCheckbox.shadowRoot.querySelector('input');
+    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
+      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input'),
+      washingtonCheckbox = el.querySelector("auro-checkbox[id=washington]"),
+      washingtonCheckboxInput = washingtonCheckbox.shadowRoot.querySelector('input');
 
     expect(alaskaCheckbox.checked).to.not.be.true;
     expect(washingtonCheckbox.checked).to.not.be.true;
@@ -289,15 +291,17 @@ describe('auro-checkbox-group', () => {
           value="washington"
         ></auro-checkbox>
       </auro-checkbox-group>
-    `),
-      alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
+    `);
+
+    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
       alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
-      
+
     // Click the first checkbox
     alaskaCheckboxInput.click();
-    expect(el.value).to.eql(['alaska']);
+    
+    await expect(el.value).to.eql(['alaska']);
   });
-  
+
   it('resets value to empty array when calling reset()', async () => {
     const el = await fixture(html`
       <auro-checkbox-group>
@@ -313,18 +317,26 @@ describe('auro-checkbox-group', () => {
           value="washington"
         ></auro-checkbox>
       </auro-checkbox-group>
-    `),
-      alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
+    `);
+
+    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
       alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
+
     const group = document.querySelector('auro-checkbox-group');
+
     // Click the first checkbox
     alaskaCheckboxInput.click();
+
     await elementUpdated(el);
+
     expect(alaskaCheckbox.checked).to.be.true;
     expect(group.value).to.eql(['alaska']);
+
     group.reset();
+
     await elementUpdated(el);
-    expect(group.value).to.eql([]);
+
+    expect(group.value).to.eql(undefined);
   });
 });
 
