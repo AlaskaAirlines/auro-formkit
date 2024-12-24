@@ -216,20 +216,20 @@ export class AuroRadioGroup extends LitElement {
   }
 
   /**
-   * Method for a total reset of the radio element.
+   * Resets component to initial state.
    * @returns {void}
    */
   reset() {
-    this.value = undefined;
+    // Sets first radio button to receive focus during keyboard navigation
     this.index = 0;
-    this.optionSelected = undefined;
+
     const buttons = this.querySelectorAll('auro-radio, [auro-radio]');
 
     buttons.forEach((button) => {
-      button.checked = false;
+      button.reset();
     });
 
-    this.validation.validate(this);
+    this.validation.reset(this);
   }
 
   /**

@@ -18,9 +18,9 @@
 
 ## Methods
 
-| Method  | Type       | Description                                    |
-|---------|------------|------------------------------------------------|
-| `reset` | `(): void` | Method for a total reset of the radio element. |
+| Method  | Type       | Description                        |
+|---------|------------|------------------------------------|
+| `reset` | `(): void` | Resets component to initial state. |
 
 ## Events
 
@@ -58,6 +58,12 @@
 | `required` | `required` | `Boolean` | false   | Defines element as required.                     |
 | `tabIndex` | `tabIndex` | `number`  | -1      |                                                  |
 | `value`    | `value`    | `string`  |         |                                                  |
+
+## Methods
+
+| Method  | Type       | Description                        |
+|---------|------------|------------------------------------|
+| `reset` | `(): void` | Resets component to initial state. |
 
 ## Events
 
