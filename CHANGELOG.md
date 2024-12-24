@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.8](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.7...v1.6.0-beta.8) (2024-12-24)
+
+
+### Performance Improvements
+
+* update auro-library ([d086276](https://github.com/AlaskaAirlines/auro-formkit/commit/d086276ea40a6d990d547ef0304da7e641f11521))
+* update refs from v18-v20 to v20-v22 ([4aeecaf](https://github.com/AlaskaAirlines/auro-formkit/commit/4aeecafbd5a30db48de7f07da11f4d821be2e745))
+
 # [1.6.0-beta.7](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.6...v1.6.0-beta.7) (2024-12-19)
 
 
