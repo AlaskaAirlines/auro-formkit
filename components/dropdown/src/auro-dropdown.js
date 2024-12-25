@@ -278,10 +278,8 @@ export class AuroDropdown extends LitElement {
       this.bibContent.mobileFullscreenBreakpoint = this.mobileFullscreenBreakpoint;
     }
 
-    if (this.triggerContentSlot) {
-      this.hasTriggerContent = this.triggerContentSlot.reduce((old, sl) => old || Boolean(sl.textContent.trim()), false);
-    } else {
-      this.hasTriggerContent = false;
+    if (changedProperties.size === 0) {
+      this.handleTriggerContentSlotChange();
     }
   }
 
@@ -342,8 +340,15 @@ export class AuroDropdown extends LitElement {
   handleTriggerContentSlotChange(event) {
     this.floater.handleTriggerTabIndex();
 
-    this.triggerContentSlot = event.target.assignedNodes();
-    this.hasTriggerContent = this.triggerContentSlot.reduce((old, sl) => old || Boolean(sl.textContent.trim()), false);
+    if (event) {
+      this.triggerContentSlot = event.target.assignedNodes();
+    }
+
+    if (this.triggerContentSlot) {
+      this.hasTriggerContent = this.triggerContentSlot.some((slot) => Boolean(slot.textContent.trim()));
+    } else {
+      this.hasTriggerContent = false;
+    }
   }
 
   /**
