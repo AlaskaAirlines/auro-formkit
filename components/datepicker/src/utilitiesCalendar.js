@@ -40,7 +40,6 @@ export class CalendarUtilities {
 
   /**
    * Handles the visibility of the previous and next month buttons.
-   * @private
    * @param {Object} elem - The auro-calendar element.
    * @returns {void}
    */
