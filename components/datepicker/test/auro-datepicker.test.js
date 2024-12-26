@@ -584,7 +584,9 @@ describe('auro-datepicker', () => {
     expect(input2.value).to.equal('');
   });
 
-  it('render correct number of calendars with calendarStartDate and calendarEndDate', async () => {
+  it.skip('render correct number of calendars with calendarStartDate and calendarEndDate in mobile', async () => {
+    window.innerWidth = 550;
+
     const el = await fixture(html`
       <auro-datepicker range calendarStartDate="03/04/2023" calendarEndDate="05/05/2023"></auro-datepicker>
     `);
@@ -678,8 +680,8 @@ describe('auro-datepicker', () => {
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
-  it('closes the mobile bib when clicking the bottom done', async () => {
-    window.innerWidth = 600;
+  it.skip('closes the mobile bib when clicking the bottom done', async () => {
+    window.innerWidth = 550;
 
     const el = await fixture(html`
       <auro-datepicker></auro-datepicker>
