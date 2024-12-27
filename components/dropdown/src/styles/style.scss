@@ -62,6 +62,7 @@
 /* stylelint-disable selector-id-pattern */
 #showStateIcon {
   display: flex;
+  overflow: hidden;
   height: 100%;
   align-items: center;
   margin-left: var(--ds-size-100, $ds-size-100);
