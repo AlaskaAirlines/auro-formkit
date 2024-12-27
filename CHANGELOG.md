@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.9](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.8...v1.6.0-beta.9) (2024-12-27)
+
+
+### Bug Fixes
+
+* update `showPrevMonthBtn` and `showNextMonthBtn` properly ([fd7b97d](https://github.com/AlaskaAirlines/auro-formkit/commit/fd7b97d9fd075e7179ebd473c5f9cda8eef3bcdb))
+
 # [1.6.0-beta.8](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.7...v1.6.0-beta.8) (2024-12-24)
 
 
