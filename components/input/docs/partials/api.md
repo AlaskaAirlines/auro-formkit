@@ -125,7 +125,7 @@ Note: Setting the `value` to `undefined` will also reset the element.
 
 Use the `max` attribute to define a maximum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `number` or any date format.
 
-The `max` attribute should be used in combination with the `setCustomValidityRangeOverflow` attribute to define help text used when the `max` attribute validation fails.
+The `setCustomValidityRangeOverflow` attribute may optionally be used in combination with the `max` attribute to define custom help text used when the input value is greater than the value of the `max` attribute.
 
 #### Date Example
 
@@ -157,11 +157,30 @@ The `max` attribute should be used in combination with the `setCustomValidityRan
 
 </auro-accordion>
 
+#### Max Length <a name="maxLength"></a>
+
+Use the `maxlength` attribute to control the length of the input entered.
+
+The `setCustomValidityTooLong` attribute may optionally be used in combination with the `maxLength` attribute to define custom help text used when the length of the input is too long.
+
+<div class="exampleWrapper exampleWrapper--flex">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/maxLength.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/maxLength.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Min <a name="min"></a>
 
 Use the `min` attribute to define a minimum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `number` or any date format.
 
-The `min` attribute should be used in combination with the `setCustomValidityRangeUnderflow` attribute to define help text used when the `min` attribute validation fails.
+The `setCustomValidityRangeUnderflow` attribute may optionally be used in combination with the `min` attribute to define custom help text used when the input value is less than the value of the `min` attribute.
 
 #### Date Example
 
@@ -189,6 +208,25 @@ The `min` attribute should be used in combination with the `setCustomValidityRan
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/minNumber.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Min Length <a name="minLength"></a>
+
+Use the `minlength` attribute to control the length of the input entered.
+
+The `setCustomValidityTooShort` attribute may optionally be used in combination with the `minLength` attribute to define custom help text used when the length of the input is not long enough.
+
+<div class="exampleWrapper exampleWrapper--flex">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/minLength.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/minLength.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -411,6 +449,8 @@ Default help text will be added to the input `type="email"` if custom help text 
 
 Use the `type="number"` attribute for a numeric style input and invoke a numeric virtual keyboard on handheld devices.
 
+This `number` input type should only be used for incremental numeric values, meaning values with decimals will be considered invalid. The `number` input type is not appropriate for values that happen to only consist of but aren't strictly speaking a number, such as postal codes in many countries or credit card numbers. See [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number) for more information.
+
 <div class="exampleWrapper exampleWrapper--flex">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/number.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -420,40 +460,6 @@ Use the `type="number"` attribute for a numeric style input and invoke a numeric
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/number.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-#### maxLength <a name="maxLength"></a>
-
-Use the `type="number"` in combination wit the `maxlength` attribute to control the length of the number entered.
-
-<div class="exampleWrapper exampleWrapper--flex">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/maxLength.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/maxLength.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-#### minLength <a name="minLength"></a>
-
-Use the `type="number"` in combination wit the `minlength` attribute to control the length of the number entered.
-
-<div class="exampleWrapper exampleWrapper--flex">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/minLength.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/minLength.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
