@@ -69,8 +69,7 @@ export class AuroMenuOption extends LitElement {
         reflect: true
       },
       value: {
-        type: String,
-        reflect: true
+        type: String
       },
       tabIndex: {
         type: Number,
