@@ -10,7 +10,7 @@ import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFloatingUI from './floatingUI.mjs';
+import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -239,7 +239,7 @@ export class AuroDropdown extends LitElement {
   }
 
   firstUpdated() {
-    this.floater.configure(this);
+    this.floater.configure(this, 'auroDropdown');
     this.bibContent = this.floater.element.bib;
 
     // Add the tag name as an attribute if it is different than the component name
