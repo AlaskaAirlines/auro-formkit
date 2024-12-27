@@ -202,12 +202,10 @@ export class AuroDatePicker extends LitElement {
         reflect: true
       },
       value: {
-        type: String,
-        reflect: true
+        type: String
       },
       valueEnd: {
-        type: String,
-        reflect: true
+        type: String
       },
       centralDate: {
         type: String

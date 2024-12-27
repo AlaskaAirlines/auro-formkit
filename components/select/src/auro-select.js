@@ -111,8 +111,7 @@ export class AuroSelect extends LitElement {
         type: Object
       },
       value: {
-        type: String,
-        reflect: true
+        type: String
       },
       noValidate: {
         type: Boolean,

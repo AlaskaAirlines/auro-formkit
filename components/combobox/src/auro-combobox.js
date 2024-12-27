@@ -129,8 +129,7 @@ export class AuroCombobox extends LitElement {
         reflect: true
       },
       value: {
-        type: String,
-        reflect: true
+        type: String
       },
       checkmark: {
         type: Boolean,
