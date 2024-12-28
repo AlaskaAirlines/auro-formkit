@@ -51,7 +51,7 @@ export class AuroSelect extends LitElement {
   constructor() {
     super();
 
-    this.placeholder = 'Please select option';
+    this.placeholder = '';
     this.optionSelected = undefined;
     this.validity = undefined;
 
@@ -556,7 +556,9 @@ export class AuroSelect extends LitElement {
           </span>
           <div class="menuWrapper">
           </div>
-          <slot name="label" slot="label"></slot>
+          <span slot="label" asPlaceholder="${!this.placeholder && !this.value}">
+            <slot name="label"></slot>
+          </span>
           <span slot="helpText">
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`

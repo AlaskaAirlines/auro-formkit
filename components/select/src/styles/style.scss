@@ -10,7 +10,7 @@
 @import '@aurodesignsystem/webcorestylesheets/src/core';
 @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-class-pattern, selector-max-attribute, scss/selector-nest-combinators */
 
 [slot='trigger'] {
   width: 100%;
@@ -45,6 +45,10 @@
   * {
     user-select: none;
   }
+}
+
+[slot='label'][asPlaceholder='true'] {
+  font-size: initial;
 }
 
 .outerWrapper {
