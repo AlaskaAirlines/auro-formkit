@@ -16,7 +16,7 @@
     "@auro-formkit/auro-dropdown": "*",
     "@auro-formkit/auro-input": "*",
     "@auro-formkit/form-validation": "*",
-    "@aurodesignsystem/auro-popover": "^4.1.0",
+    "@aurodesignsystem/auro-popover": "^4.1.2",
     "@material/mwc-icon-button": "^0.27.0",
     "@material/mwc-list": "^0.27.0",
     "@material/mwc-menu": "^0.27.0",
