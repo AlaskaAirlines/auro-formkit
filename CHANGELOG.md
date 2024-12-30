@@ -1,5 +1,20 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.10](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.9...v1.6.0-beta.10) (2024-12-30)
+
+
+### Bug Fixes
+
+* force focus state to dropdown.trigger as `document.activeElement` stays in body even with clicking [#129](https://github.com/AlaskaAirlines/auro-formkit/issues/129) ([ce65f18](https://github.com/AlaskaAirlines/auro-formkit/commit/ce65f185e90c652886bae07d62d1db4143153e73))
+* remove extra focus line on chrome ([681e1b4](https://github.com/AlaskaAirlines/auro-formkit/commit/681e1b47c931c607d58b5fd1e2530eb63604aa03))
+* replace `box-shadow` with `outline` ([70c3d3d](https://github.com/AlaskaAirlines/auro-formkit/commit/70c3d3deeb53477e6a2cb6f87190d8fe6e2950ae))
+
+
+### Performance Improvements
+
+* update auro-library to fix the focus issue ([1548d20](https://github.com/AlaskaAirlines/auro-formkit/commit/1548d2081b16987d824ad81b83574f17cc6fe226))
+* update component dependencies ([81dbb5b](https://github.com/AlaskaAirlines/auro-formkit/commit/81dbb5bcc45a8992eb008259c7a071e0b40030de))
+
 # [1.6.0-beta.9](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.8...v1.6.0-beta.9) (2024-12-27)
 
 
