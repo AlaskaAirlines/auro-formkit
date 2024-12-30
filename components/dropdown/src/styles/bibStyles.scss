@@ -51,13 +51,6 @@
   }
 }
 
-:host([common]),
-:host([inset]) {
-  .container {
-    padding: var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100);
-  }
-}
-
 :host([common][isfullscreen]),
 :host([rounded][isfullscreen]) {
   .container {
