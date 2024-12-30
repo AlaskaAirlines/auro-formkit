@@ -12,7 +12,7 @@
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
   "dependencies": {
-    "@aurodesignsystem/auro-icon": "^6.1.1",
+    "@aurodesignsystem/auro-icon": "^6.1.2",
     "@floating-ui/dom": "^1.6.11",
     "@popperjs/core": "^2.11.8",
     "chalk": "^5.2.0",
