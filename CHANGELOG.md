@@ -1,5 +1,37 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.11](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.10...v1.6.0-beta.11) (2024-12-31)
+
+
+### Bug Fixes
+
+* eslint rules, naming errors ([ca27f4c](https://github.com/AlaskaAirlines/auro-formkit/commit/ca27f4ce435c602d2e3f488139a43140c880b7fa))
+* remove any instances of type=numeric [#120](https://github.com/AlaskaAirlines/auro-formkit/issues/120) ([7ba5463](https://github.com/AlaskaAirlines/auro-formkit/commit/7ba5463a8132d1740a8f75f11920c72fcbf30b90))
+* update layout to match figma [#79](https://github.com/AlaskaAirlines/auro-formkit/issues/79) ([58dffaf](https://github.com/AlaskaAirlines/auro-formkit/commit/58dffaff7f7c1983c197572b1305599818ff2a37))
+* validate each individual attribute [#119](https://github.com/AlaskaAirlines/auro-formkit/issues/119) ([67bbb44](https://github.com/AlaskaAirlines/auro-formkit/commit/67bbb44feea941a8aa8598f8a5bffeda3c701b75))
+
+
+### Features
+
+* add reset function to validation script [#135](https://github.com/AlaskaAirlines/auro-formkit/issues/135) ([9119e06](https://github.com/AlaskaAirlines/auro-formkit/commit/9119e06bc602b0c72ab4f3a9da1638ea66196d53))
+* add reset functionality to checkbox ([292845e](https://github.com/AlaskaAirlines/auro-formkit/commit/292845e444cb4c0f63cc55bf591d5b6a575a7143))
+* add reset functionality to combobox ([6e8ea9b](https://github.com/AlaskaAirlines/auro-formkit/commit/6e8ea9b9aa91aabeb8b48f9994bcb1548cd139e4))
+* add reset functionality to datepicker ([b2b6a10](https://github.com/AlaskaAirlines/auro-formkit/commit/b2b6a102588f5b0cd81f86f4101a1e24c2e5d273))
+* add reset functionality to input ([2027706](https://github.com/AlaskaAirlines/auro-formkit/commit/202770648b38d0b905546a6c434d60736757c5d8))
+* add reset functionality to radio ([5b961dc](https://github.com/AlaskaAirlines/auro-formkit/commit/5b961dc1c67737df8ab875b27e1aeb0cb01904b2))
+* add reset functionality to select ([2f07d97](https://github.com/AlaskaAirlines/auro-formkit/commit/2f07d9740016eddf10bff8d5ab1da0cd98f3373f))
+
+
+### Performance Improvements
+
+* add min.js files ([503802e](https://github.com/AlaskaAirlines/auro-formkit/commit/503802e96225c30c276070a59f5cfdfe2e7bb04c))
+* hide input arrows for type=number ([9a56754](https://github.com/AlaskaAirlines/auro-formkit/commit/9a56754b2164057ce33ec27225ecc5ced149daf4))
+* improve documentation around type=number ([76718a9](https://github.com/AlaskaAirlines/auro-formkit/commit/76718a916d2be90c0838475b62955213b310c62d))
+* reflect value attribute onto input component ([ea3c731](https://github.com/AlaskaAirlines/auro-formkit/commit/ea3c73103e4b7d4a3a1d0c5c685f54603741dd3f))
+* remove all references of isValid attribute ([b66d47e](https://github.com/AlaskaAirlines/auro-formkit/commit/b66d47e193088eda4c14b7fabdc2a037a46dba95))
+* remove reflected value attribute from all components ([706f409](https://github.com/AlaskaAirlines/auro-formkit/commit/706f409196d55af415e230262832398976365968))
+* show clear icon on hover or focus [#158](https://github.com/AlaskaAirlines/auro-formkit/issues/158) ([3c48343](https://github.com/AlaskaAirlines/auro-formkit/commit/3c483438f9bc6bf732c170f9185c7444f05b2032))
+
 # [1.6.0-beta.10](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.9...v1.6.0-beta.10) (2024-12-30)
 
 
