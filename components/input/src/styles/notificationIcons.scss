@@ -45,6 +45,20 @@
 .clearBtn {
   width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25)); 
   height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25));
+  opacity: 0;
+  pointer-events: none;
+}
+
+:host {
+  .wrapper {
+    &:hover,
+    &:focus-within {
+      .clearBtn {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+  }
 }
 
 .passwordBtn {
