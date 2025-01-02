@@ -675,58 +675,7 @@ export function customErrorValidityExample(elem) {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-### Watch for value changes
-
-The following example listens for the `selectedOption` event. Once triggered, `element.value` or `element.optionSelected` may be queried for the new value or complete option object.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/valueAlert.html) -->
-  <!-- The below content is automatically added from ./../apiExamples/valueAlert.html -->
-  <auro-select id="valueAlert">
-    <auro-menu>
-      <auro-menuoption value="stops">Stops</auro-menuoption>
-      <auro-menuoption value="price">Price</auro-menuoption>
-      <auro-menuoption value="duration">Duration</auro-menuoption>
-      <auro-menuoption value="departure">Departure</auro-menuoption>
-      <auro-menuoption value="arrival">Arrival</auro-menuoption>
-      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-    </auro-menu>
-  </auro-select>
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./alertValue.js) -->
-<!-- The below code snippet is automatically added from ./alertValue.js -->
-
-```js
-export function valueAlert(elem) {
-  elem.addEventListener('selectedOption', () => {
-    console.warn('Select value changed to:', elem.value);
-    console.warn('Select optionSelected changed to:', elem.optionSelected);
-  })
-}
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueAlert.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/valueAlert.html -->
-
-```html
-<auro-select id="valueAlert">
-  <auro-menu>
-    <auro-menuoption value="stops">Stops</auro-menuoption>
-    <auro-menuoption value="price">Price</auro-menuoption>
-    <auro-menuoption value="duration">Duration</auro-menuoption>
-    <auro-menuoption value="departure">Departure</auro-menuoption>
-    <auro-menuoption value="arrival">Arrival</auro-menuoption>
-    <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-  </auro-menu>
-</auro-select>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
-#### Loading<a name="loading"></a>
+### Loading<a name="loading"></a>
 While content is loading, the menu can either remain empty or display a loading placeholder
 
 <div class="exampleWrapper">
@@ -857,6 +806,60 @@ export function inDialogExample() {
     dialog.open = true;
   });
 };
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+#### Watch for value changes
+
+The following example listens for the `auroMenu-selectedOption` event. Once triggered, element.value or element.optionSelected may be queried for the new value or complete option object.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/valueAlert.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/valueAlert.html -->
+  <auro-select id="valueAlert">
+    <auro-menu id="valueAlertMenu">
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="duration">Duration</auro-menuoption>
+      <auro-menuoption value="departure">Departure</auro-menuoption>
+      <auro-menuoption value="arrival">Arrival</auro-menuoption>
+      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueAlert.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/valueAlert.html -->
+
+```html
+<auro-select id="valueAlert">
+  <auro-menu id="valueAlertMenu">
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+    <auro-menuoption value="arrival">Arrival</auro-menuoption>
+    <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+  </auro-menu>
+</auro-select>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueAlert.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/valueAlert.js -->
+
+```js
+export function valueAlertExample() {
+  const select = document.querySelector('#valueAlert');
+  const menu = document.querySelector('#valueAlertMenu');
+
+  menu.addEventListener('auroMenu-selectedOption', () => {
+    console.warn('Select value changed to:', select.value);
+    console.warn('Select optionSelected changed to:', select.optionSelected);
+  });
+}
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>

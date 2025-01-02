@@ -30,10 +30,8 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @attr {Boolean} disabled - If set, disables the input.
  * @attr {String}  error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
  * @prop {String}  errorMessage - Contains the help text message for the current validity error.
- * @attr {String}  helpText - Deprecated, see `slot`.
  * @attr {Boolean} icon - If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
  * @attr {String}  id - Sets the unique ID of the element.
- * @attr {String}  label - Deprecated, see `slot`.
  * @attr {String}  lang - defines the language of an element.
  * @attr {String}  max - The maximum value allowed. This only applies for inputs with a type of `number` and all date formats.
  * @attr {Number}  maxLength - The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
@@ -85,9 +83,7 @@ export default class BaseInput extends LitElement {
     this.min = undefined;
     this.maxLength = undefined;
     this.minLength = undefined;
-    this.label = 'Input label is undefined';
     this.activeLabel = false;
-
     this.setCustomValidityForType = undefined;
   }
 
@@ -102,6 +98,7 @@ export default class BaseInput extends LitElement {
     this.showPassword = false;
     this.validationCCLength = undefined;
     this.hasValue = false;
+    this.label = 'Input label is undefined';
 
     this.allowedInputTypes = [
       "text",
@@ -155,7 +152,6 @@ export default class BaseInput extends LitElement {
   static get properties() {
     return {
       id:                      { type: String },
-      label:                   { type: String },
       name:                    { type: String },
       type:                    { type: String,
         reflect: true },
@@ -169,7 +165,6 @@ export default class BaseInput extends LitElement {
       disabled:                { type: Boolean },
       required:                { type: Boolean },
       noValidate:              { type: Boolean },
-      helpText:                { type: String },
       spellcheck:              { type: String },
       autocorrect:             { type: String },
       autocapitalize:          { type: String },
@@ -737,30 +732,28 @@ export default class BaseInput extends LitElement {
    */
   getHelpText(type) {
     if (type === 'password') {
-      this.helpText = i18n(this.lang, 'password');
+      return i18n(this.lang, 'password');
     } else if (type === 'email') {
-      this.helpText = i18n(this.lang, 'email');
+      return i18n(this.lang, 'email');
     } else if (type === 'credit-card') {
-      this.helpText = i18n(this.lang, 'creditcard');
+      return i18n(this.lang, 'creditcard');
     } else if (type === 'month-day-year') {
-      this.helpText = i18n(this.lang, 'dateMMDDYYYY');
+      return i18n(this.lang, 'dateMMDDYYYY');
     } else if (type === 'month-year') {
-      this.helpText = i18n(this.lang, 'dateMMYY');
+      return i18n(this.lang, 'dateMMYY');
     } else if (type === 'month-fullyear') {
-      this.helpText = i18n(this.lang, 'dateMMYYYY');
+      return i18n(this.lang, 'dateMMYYYY');
     } else if (type === 'year-month-day') {
-      this.helpText = i18n(this.lang, 'dateYYYYMMDD');
+      return i18n(this.lang, 'dateYYYYMMDD');
     } else if (type === 'month') {
-      this.helpText = i18n(this.lang, 'dateMM');
+      return i18n(this.lang, 'dateMM');
     } else if (type === 'year') {
-      this.helpText = i18n(this.lang, 'dateYY');
+      return i18n(this.lang, 'dateYY');
     } else if (type === 'fullYear') {
-      this.helpText = i18n(this.lang, 'dateYYYY');
-    } else {
-      this.helpText = '';
+      return i18n(this.lang, 'dateYYYY');
     }
 
-    return this.helpText;
+    return '';
   }
 
   /**

@@ -36,10 +36,6 @@ The auro-menu element provides users a way to select from a list of options.
 | `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that a an attempt to select a menuoption by matching a value has failed. |
 | `auroMenu-selectValueReset`   | `CustomEvent<any>`                               | Notifies that the component value has been reset. |
 | `auroMenu-selectedOption`     | `CustomEvent<any>`                               | Notifies that a new menuoption selection has been made. |
-| [auroMenuActivatedOption](#auroMenuActivatedOption)     | `CustomEvent<Element>`                           | (DEPRECATED) Notifies that a menuoption has been made `active`. |
-| [auroMenuCustomEventFired](#auroMenuCustomEventFired)    | `CustomEvent<any>`                               | (DEPRECATED) Notifies that a custom event has been fired. |
-| [auroMenuSelectValueFailure](#auroMenuSelectValueFailure)  | `CustomEvent<any>`                               | (DEPRECATED) Notifies that a an attempt to select a menuoption by matching a value has failed. |
-| [selectedOption](#selectedOption)              | `CustomEvent<any>`                               | (DEPRECATED) Notifies that a new menuoption selection has been made. |
 
 ## Slots
 

@@ -22,13 +22,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @attr {String} value - Value selected for the menu.
  * @prop {Boolean} hasLoadingPlaceholder - Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state.
  * @event auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
- * @event selectedOption - (DEPRECATED) Notifies that a new menuoption selection has been made.
  * @event auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
- * @event auroMenuActivatedOption - (DEPRECATED) Notifies that a menuoption has been made `active`.
  * @event auroMenu-selectValueFailure - Notifies that a an attempt to select a menuoption by matching a value has failed.
- * @event auroMenuSelectValueFailure - (DEPRECATED) Notifies that a an attempt to select a menuoption by matching a value has failed.
  * @event auroMenu-customEventFired - Notifies that a custom event has been fired.
- * @event auroMenuCustomEventFired - (DEPRECATED) Notifies that a custom event has been fired.
  * @event auroMenu-selectValueReset - Notifies that the component value has been reset.
  * @event auroMenu-loadingChange - Notifies when the loading attribute is changed.
  * @slot loadingText - Text to show while loading attribute is set
@@ -237,13 +233,6 @@ export class AuroMenu extends LitElement {
    * @return {void}
    */
   notifySelectionChange() {
-    // this event needs to be removed after select and combobox are updated to use the new standard name
-    this.dispatchEvent(new CustomEvent('selectedOption', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
-
     this.dispatchEvent(new CustomEvent('auroMenu-selectedOption', {
       bubbles: true,
       cancelable: false,
@@ -270,13 +259,6 @@ export class AuroMenu extends LitElement {
           // fire custom event if defined otherwise make selection
           if (option.hasAttribute('event')) {
             this.dispatchEvent(new CustomEvent(option.getAttribute('event'), {
-              bubbles: true,
-              cancelable: false,
-              composed: true,
-            }));
-
-            // this event needs to be removed after select and combobox are updated to use the new standard name
-            this.dispatchEvent(new CustomEvent('auroMenuCustomEventFired', {
               bubbles: true,
               cancelable: false,
               composed: true,
@@ -444,13 +426,6 @@ export class AuroMenu extends LitElement {
         // reset the menu to no selection
         this.index = undefined;
 
-        // this event needs to be removed after select and combobox are updated to use the new standard name
-        this.dispatchEvent(new CustomEvent('auroMenuSelectValueFailure', {
-          bubbles: true,
-          cancelable: false,
-          composed: true,
-        }));
-
         this.dispatchEvent(new CustomEvent('auroMenu-selectValueFailure', {
           bubbles: true,
           cancelable: false,
@@ -481,13 +456,6 @@ export class AuroMenu extends LitElement {
     });
     this.items[index].classList.add('active');
     this.optionActive = this.items[index];
-
-    this.dispatchEvent(new CustomEvent('auroMenuActivatedOption', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-      detail: this.items[index]
-    }));
 
     this.dispatchEvent(new CustomEvent('auroMenu-activatedOption', {
       bubbles: true,

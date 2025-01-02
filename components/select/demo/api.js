@@ -2,6 +2,7 @@ import { customErrorValidityExample } from "../apiExamples/customErrorValidity";
 import { setErrorExample } from "../apiExamples/errorApi";
 import { valueExample } from "../apiExamples/value";
 import { valueExtractionExample } from "../apiExamples/valueExtraction";
+import { valueAlertExample } from "../apiExamples/valueAlert.js";
 import { inDialogExample } from '../apiExamples/inDialog';
 import { resetStateExample } from "../apiExamples/resetState";
 import { auroMenuLoadingExample } from "../apiExamples/loading";
@@ -21,6 +22,7 @@ export function initExamples(initCount) {
     setErrorExample();
     valueExample();
     valueExtractionExample();
+    valueAlertExample();
     inDialogExample();
     resetStateExample();
     auroMenuLoadingExample();
