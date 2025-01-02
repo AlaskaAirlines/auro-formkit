@@ -254,11 +254,11 @@ export class AuroSelect extends LitElement {
 
     this.generateOptionsArray();
 
-    this.addEventListener('auroMenu-activatedOption', (evt) => {
+    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
     });
 
-    this.menu.addEventListener('selectedOption', () => {
+    this.menu.addEventListener('auroMenu-selectedOption', () => {
       this.optionSelected = this.menu.optionSelected;
       this.value = this.optionSelected.value;
 
