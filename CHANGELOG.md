@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [1.6.0-beta.12](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.11...v1.6.0-beta.12) (2025-01-02)
+
+
+### Bug Fixes
+
+* remove unnecessary padding from dropdown content [#31](https://github.com/AlaskaAirlines/auro-formkit/issues/31) ([bb994fc](https://github.com/AlaskaAirlines/auro-formkit/commit/bb994fc77b34970b8f2aaa3f7261ddcb2a56c118))
+
 # [1.6.0-beta.11](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.10...v1.6.0-beta.11) (2024-12-31)
 
 
