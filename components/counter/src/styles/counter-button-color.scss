@@ -1,0 +1,29 @@
+// stylelint-disable max-nesting-depth
+
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+.auroButton {
+  border-color: unset;
+  background-color: var(--ds-counter-control-ui-bkg);
+  color: var(--ds-auro-button-text-color);
+  -webkit-tap-highlight-color: var(--ds-auro-button-tap-color);
+
+  &:focus-visible {
+    &:not(&:disabled) {
+      outline-color: var(--ds-counter-control-border-active);
+    }
+  }
+
+  @media (hover: hover) {
+    &:active, &:hover{
+      &:not(:disabled) {
+        background-color: var(--ds-counter-control-ui-hover);
+      }
+    }
+  }
+}

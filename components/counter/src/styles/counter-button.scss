@@ -1,53 +1,86 @@
-// Support for fallback values
+// stylelint-disable selector-max-class
+
+// Import Auro Sass variables
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 
-:host {  
-    --ds-counter-control-ui-hover: var(--ds-color-ui-bkg-hover-default, #{$ds-color-ui-bkg-hover-default});
-    --ds-counter-control-ui-active: var(--ds-color-ui-active-default, #{$ds-color-ui-active-default});
-    --ds-counter-control-border-active: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
-    --ds-counter-control-border-hover: var(--ds-color-ui-bkg-hover-default, #{$ds-color-ui-bkg-hover-default});
-    --ds-counter-control-ui-bkg: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
+// general WCSS imports
+@import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
+@import "@aurodesignsystem/webcorestylesheets/src/core";
+@import "@aurodesignsystem/webcorestylesheets/src/animation";
+
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariableMap";
+
+$auro-inset-spacing-options: lg;
+$auro-inset-directions: '--squish';
+
+@import "@aurodesignsystem/webcorestylesheets/src/utilityMixins/insetUtility";
+
+// adjust alignment for slotted SVG icon
+::slotted(svg) {
+  vertical-align: middle;
 }
-  
-.auroButton {
-    overflow: visible;
-    width: 36px;
-    min-width: unset;
-    height: 34px;
-    min-height: unset;
-    padding: var(--ds-counter-control-padding);
-    border: none;
-    border-radius: var(--ds-counter-control-border-radius, $ds-size-500);
-    background-color: var(--ds-counter-control-ui-bkg);
-    line-height: unset;
 
-    &:hover{
-        :not(:disabled) {
-            background-color: var(--ds-counter-control-ui-hover);
-        }
-    }
-
-    &:focus-visible {
-        &:not(&:disabled) {
-            outline: var(--ds-counter-control-border-active) solid 2px;
-            outline-offset: 0;
-            transform: unset;
-        }
-    }
-
-    &:after {
-        // no way around level 5 specificity with current lint rules
-        border: none !important; /* stylelint-disable-line declaration-no-important */
-    }
-    
+// Note: without this, events on a disabled element will still fire
+slot {
+  pointer-events: none;
 }
 
 .contentWrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    span {
-        display: block;
-        height: 24px;
+  span {
+      display: block;
+      height: 24px;
+  }
+}
+
+.auroButton {
+  position: relative;
+  display: inline-flex;
+  overflow: visible;
+  width: 36px;
+  height: 34px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-counter-control-padding);
+  border: none;
+  border-radius: var(--ds-counter-control-border-radius, $ds-size-500);
+
+  // removes margins around button in Safari
+  margin: 0;
+  cursor: pointer;
+  font-family: var(--ds-font-family-default, $ds-font-family-default);
+  font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  font-weight: var(--ds-text-body-default-weight, $ds-text-body-default-weight);
+  gap: var(--ds-size-100, $ds-size-100);
+  line-height: unset;
+
+  // macOS / iOS agents
+  -webkit-touch-callout: none;
+  user-select: none;
+  white-space: nowrap;
+
+  // handle active state
+  &:active {
+    .contentWrapper {
+      transform: scale(0.95);
     }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    transform: unset;
+  }
+
+  &:focus-visible {
+    &:not(&:disabled) {
+        outline-offset: 0;
+        outline-style: solid;
+        outline-width: 2px;
+        transform: unset;
+    }
+  }
+
 }
