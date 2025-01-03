@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.12...v2.0.0-beta.1) (2025-01-03)
+
+
+### Performance Improvements
+
+* remove deprecated component code [#126](https://github.com/AlaskaAirlines/auro-formkit/issues/126) ([67f3be8](https://github.com/AlaskaAirlines/auro-formkit/commit/67f3be8287cb33d70031b961032db8ef9cd60c08))
+
+
+### BREAKING CHANGES
+
+* remove unsupported deprecated code from all of our components.
+
 # [1.6.0-beta.12](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.11...v1.6.0-beta.12) (2025-01-02)
 
 
