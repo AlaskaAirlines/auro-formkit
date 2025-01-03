@@ -42,25 +42,6 @@
   height: calc(var(--ds-size-300, $ds-size-300) + var(--ds-size-25, $ds-size-25));
 }
 
-.clearBtn {
-  width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25)); 
-  height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25));
-  opacity: 0;
-  pointer-events: none;
-}
-
-:host {
-  .wrapper {
-    &:hover,
-    &:focus-within {
-      .clearBtn {
-        opacity: 1;
-        pointer-events: auto;
-      }
-    }
-  }
-}
-
 .passwordBtn {
   width: calc(var(--ds-size-300, $ds-size-300));
   height: calc(var(--ds-size-300, $ds-size-300));
@@ -104,6 +85,23 @@
   padding: 0;
   margin: 0;
   visibility: hidden;
+}
+
+.clearBtn {
+  @include hidden-notification;
+}
+
+:host {
+  .wrapper {
+    &:hover,
+    &:focus-within {
+      .clearBtn {
+        width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25)); 
+        height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25));
+        visibility: visible;
+      }
+    }
+  }
 }
 
 :host(:focus-within[type="password"]) {
