@@ -14,42 +14,35 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--ds-counter-text-default);
   column-gap: var(--ds-size-150);
   font-family: var(--ds-font-family-default, $ds-font-family-default);
   font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
 }
 
-.counterContent {
+.content {
   display: flex;
   flex-flow: column;  
 }
 
-.counterLabel {
+.label {
   font-size: 1rem;
   line-height: 1.5rem;
 }
 
 .subLabel {
-  color: var(--ds-counter-text-secondary);
   font-size: .75rem;
   line-height: 1rem;
-}
-
-.controlIcon {
-  color: var(--ds-counter-icon-color-default);
 }
 
 .quantityWrapper {
   width: var(--ds-size-400);
   height: 34px;
   align-content: center;
-  background-color: var(--ds-counter-control-ui-bkg);
   font-size: var(--ds-size-250);
   text-align: center;    
 }
 
-.counterQuantity {
+.quantity {
   transform: translateY(0.1rem);
 }
 
@@ -74,16 +67,4 @@
 
 auro-counter-button {
   display: flex;
-}
-
-[disabled], :host([disabled]) {
-  .controlIcon {
-    color: var(--ds-counter-control-ui-disabled);
-  }
-
-  label,
-  .subLabel,
-  &::part(counterControl) {
-    color: var(--ds-counter-text-disabled);
-  }
 }

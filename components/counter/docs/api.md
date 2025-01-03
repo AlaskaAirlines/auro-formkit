@@ -1,57 +1,49 @@
 # auro-counter
 
-## Attributes
-
-| Attribute          | Type        | Description                                      |
-|--------------------|-------------|--------------------------------------------------|
-| `disableEventShow` | ` Boolean ` | If declared, the dropdown will only show by calling the API .show() public method. |
-
 ## Properties
 
-| Property                | Attribute               | Type        | Default | Description                                      |
-|-------------------------|-------------------------|-------------|---------|--------------------------------------------------|
-| `bordered`              | `bordered`              | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
-| `chevron`               | `chevron`               | ` Boolean ` |         | If declared, the dropdown displays an display state chevron on the right. |
-| `disabled`              | `disabled`              | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
-| `error`                 | `error`                 | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
-| `inset`                 | `inset`                 | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
-| `isPopoverVisible`      | `isPopoverVisible`      | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
-| `matchWidth`            | `matchWidth`            | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |
-| `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false   | If delclared, the dropdown will not hide when moving focus outside the element. |
-| `noToggle`              | `noToggle`              | ` Boolean ` |         | If declared, the trigger will only show the dropdown bib. |
-| `ready`                 | `ready`                 | ` Boolean ` |         | When false the component API should not be called. |
-| `rounded`               | `rounded`               | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
+| Property                          | Attribute                         | Type      | Default     | Description                                      |
+|-----------------------------------|-----------------------------------|-----------|-------------|--------------------------------------------------|
+| `disabled`                        | `disabled`                        | `boolean` | false       | Determines whether the counter is interactive or disabled. |
+| `error`                           | `error`                           | `boolean` | false       | Indicates if the counter is in an error state.   |
+| `max`                             | `max`                             | `number`  | 9           | Maximum value of the counter.                    |
+| `min`                             | `min`                             | `number`  | 0           | Minimum value of the counter.                    |
+| `noValidate`                      | `noValidate`                      | `boolean` |             |                                                  |
+| `setCustomValidity`               | `setCustomValidity`               | `string`  |             |                                                  |
+| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    | `string`  |             |                                                  |
+| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  | `string`  |             |                                                  |
+| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` | `string`  |             |                                                  |
+| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`  |             |                                                  |
+| `subLabel`                        | `subLabel`                        | `string`  | ""          | Optional sub-label text for the counter.         |
+| `validity`                        | `validity`                        | `string`  | "undefined" | Indicates if the current value is valid.         |
+| `value`                           | `value`                           | `number`  | "undefined" | Value of the counter.                            |
 
 ## Methods
 
-| Method | Type       | Description                 |
-|--------|------------|-----------------------------|
-| `hide` | `(): void` | Hides the dropdown content. |
-| `show` | `(): void` | Shows the dropdown content. |
+| Method                | Type                         | Description                                      |
+|-----------------------|------------------------------|--------------------------------------------------|
+| `decrement`           | `(): void`                   | Decrements the value of the counter by 1 if it is greater than the minimum value. |
+| `increment`           | `(): void`                   | Increments the counter value by 1 if it is less than the maximum value. |
+| `initValue`           | `(): void`                   | Initializes the value of the counter.<br />If the current value is undefined, it sets the value to the minimum value. |
+| `isIncrementDisabled` | `(extrema: number): boolean` | Determines if the increment button should be disabled based on the current value and extrema.<br /><br />**extrema**: The extreme value (either min or max) to compare against the current value. |
+| `jumpFocusToEnabled`  | `(): void`                   | Moves the focus to the first enabled button within the shadow DOM.<br />This method searches for the first `auro-counter-button` element that is not disabled<br />and sets the focus on it. |
 
 ## Events
 
-| Event                       | Type                                  | Description                                      |
-|-----------------------------|---------------------------------------|--------------------------------------------------|
-| `auroDropdown-ready`        | `CustomEvent<any>`                    | Notifies that the component has finished initializing. |
-| `auroDropdown-toggled`      | `CustomEvent<{ expanded: boolean; }>` | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | `CustomEvent<any>`                    | Notifies that the trigger has been clicked.      |
-| `dropdownToggled`           | `CustomEvent<{ expanded: boolean; }>` | (DEPRECATED) Notifies that the visibility of the dropdown bib has changed. |
+| Event   | Type                                           |
+|---------|------------------------------------------------|
+| `input` | `CustomEvent<{ value: number \| undefined; }>` |
 
 ## Slots
 
-| Name       | Description                           |
-|------------|---------------------------------------|
-|            | Default slot for the popover content. |
-| `helpText` | Defines the content of the helpText.  |
-| `label`    | Defines the content of the label.     |
-| `trigger`  | Defines the content of the trigger.   |
+| Name | Description                         |
+|------|-------------------------------------|
+|      | Default slot for main label content |
 
 ## CSS Shadow Parts
 
-| Part       | Description                                  |
-|------------|----------------------------------------------|
-| `chevron`  | The collapsed/expanded state icon container. |
-| `helpText` | The helpText content container.              |
-| `popover`  | The bib content container.                   |
-| `trigger`  | The trigger content container.               |
+| Part             | Description                              |
+|------------------|------------------------------------------|
+| `controlMinus`   | Styling hook for minus button            |
+| `controlPlus`    | Styling hook for plus button             |
+| `counterControl` | Styling hook for counter control section |

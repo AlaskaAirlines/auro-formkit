@@ -3,8 +3,9 @@
 
 // ---------------------------------------------------------------------
 
+import styleButtonTokenCss from "./styles/counter-button-tokens-css.js";
+import styleButtonColorCss from "./styles/counter-button-color-css.js";
 import styleButtonCss from "./styles/counter-button-css.js";
-import styleCssAuroButton from "@aurodesignsystem/auro-button/src/style-css.js";
 
 import { AuroButton } from "@aurodesignsystem/auro-button/src/auro-button.js";
 
@@ -12,10 +13,12 @@ import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runt
 
 // build the component class
 export class AuroCounterButton extends AuroButton {
+
   static get styles() {
     return [
-      styleCssAuroButton,
-      styleButtonCss
+      styleButtonCss,
+      styleButtonColorCss,
+      styleButtonTokenCss
     ];
   }
 
