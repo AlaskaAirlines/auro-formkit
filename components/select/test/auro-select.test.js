@@ -116,7 +116,7 @@ describe('auro-select', () => {
 
     await expect(el.optionSelected).to.be.equal(undefined);
     await expect(triggerContentHTML).to.contain('Flight Course');
-    await expect(el.getAttribute('validity')).to.equal('badInput');
+    await expect(el.getAttribute('validity')).to.equal('patternMismatch');
   });
 
   it('reset selection value programmatically', async () => {
@@ -158,11 +158,11 @@ describe('auro-select', () => {
   });
 
   it('reset method clears the value and validity state', async () => {
-    const el = await badInputFixture();
+    const el = await patternMismatchFixture();
 
     await expect(el.value).to.be.equal('Carrot');
     await expect(el.optionSelected).to.be.equal(undefined);
-    await expect(el.getAttribute('validity')).to.equal('badInput');
+    await expect(el.getAttribute('validity')).to.equal('patternMismatch');
 
     el.reset();
 
@@ -226,7 +226,7 @@ async function errorFixture() {
   `);
 }
 
-async function badInputFixture() {
+async function patternMismatchFixture() {
   return await fixture(html`
   <auro-select value="Carrot">
     <span slot="label">Name</span>

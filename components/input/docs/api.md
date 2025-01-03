@@ -11,43 +11,43 @@ Generate unique names for dependency components.
 
 ## Properties
 
-| Property                          | Attribute                         | Type      | Default     | Description                                      |
-|-----------------------------------|-----------------------------------|-----------|-------------|--------------------------------------------------|
-| `activeLabel`                     | `activeLabel`                     | `Boolean` | false       | If set, the label will remain fixed in the active position. |
-| `autocapitalize`                  | `autocapitalize`                  | `String`  |             | An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters] |
-| `autocomplete`                    | `autocomplete`                    | `String`  |             | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
-| `autocorrect`                     | `autocorrect`                     | `String`  |             | When set to `off`, stops iOS from auto correcting words when typed into a text box. |
-| `customValidityTypeEmail`         | `customValidityTypeEmail`         | `string`  |             |                                                  |
-| `disabled`                        | `disabled`                        | `Boolean` | false       | If set, disables the input.                      |
-| `error`                           | `error`                           | `String`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
-| `errorMessage`                    | `errorMessage`                    | `String`  |             | Contains the help text message for the current validity error. |
-| `icon`                            | `icon`                            | `Boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
-| `id`                              | `id`                              | `String`  |             | Sets the unique ID of the element.               |
-| `lang`                            | `lang`                            | `String`  |             | defines the language of an element.              |
-| `max`                             | `max`                             | `String`  | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
-| `maxLength`                       | `maxLength`                       | `Number`  | "undefined" | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
-| `min`                             | `min`                             | `String`  | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
-| `minLength`                       | `minLength`                       | `Number`  | "undefined" | The minimum number of characters the user can enter into the text input. This must be an non-negative integer value smaller than or equal to the value specified by `maxlength`. |
-| `name`                            | `name`                            | `String`  |             | Populates the `name` attribute on the input.     |
-| `noValidate`                      | `noValidate`                      | `Boolean` | false       | If set, disables auto-validation on blur.        |
-| `pattern`                         | `pattern`                         | `String`  |             | Specifies a regular expression the form control's value should match. |
-| `placeholder`                     | `placeholder`                     | `String`  |             | Define custom placeholder text, only supported by date input formats. |
-| `readonly`                        | `readonly`                        | `Boolean` |             | Makes the input read-only, but can be set programmatically. |
-| `required`                        | `required`                        | `Boolean` | false       | Populates the `required` attribute on the input. Used for client-side validation. |
-| `setCustomValidity`               | `setCustomValidity`               | `String`  |             | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityBadInput`       | `setCustomValidityBadInput`       | `String`  |             | Custom help text message to display when validity = `badInput`. |
-| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    | `String`  |             | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityForType`        | `setCustomValidityForType`        | `String`  | "undefined" | Custom help text message to display for the declared element `type` and type validity fails. |
-| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  | `String`  |             | Custom help text message to display when validity = `rangeOverflow`. |
-| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` | `String`  |             | Custom help text message to display when validity = `rangeUnderflow`. |
-| `setCustomValidityTooLong`        | `setCustomValidityTooLong`        | `String`  |             | Custom help text message to display when validity = `tooLong`. |
-| `setCustomValidityTooShort`       | `setCustomValidityTooShort`       | `String`  |             | Custom help text message to display when validity = `tooShort`. |
-| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
-| `spellcheck`                      | `spellcheck`                      | `String`  |             | An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`. |
-| `type`                            | `type`                            | `String`  |             | Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `month-day-year`, `month-year`, `year-month-day`  or `text`. If given value is not allowed or set, defaults to `text`. |
-| `validateOnInput`                 | `validateOnInput`                 | `Boolean` |             | Sets validation mode to re-eval with each input. |
-| `validity`                        | `validity`                        | `String`  |             | Specifies the `validityState` this element is in. |
-| `value`                           | `value`                           | `String`  |             | Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input. |
+| Property                           | Attribute                          | Type      | Default     | Description                                      |
+|------------------------------------|------------------------------------|-----------|-------------|--------------------------------------------------|
+| `activeLabel`                      | `activeLabel`                      | `Boolean` | false       | If set, the label will remain fixed in the active position. |
+| `autocapitalize`                   | `autocapitalize`                   | `String`  |             | An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters] |
+| `autocomplete`                     | `autocomplete`                     | `String`  |             | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
+| `autocorrect`                      | `autocorrect`                      | `String`  |             | When set to `off`, stops iOS from auto correcting words when typed into a text box. |
+| `customValidityTypeEmail`          | `customValidityTypeEmail`          | `string`  |             |                                                  |
+| `disabled`                         | `disabled`                         | `Boolean` | false       | If set, disables the input.                      |
+| `error`                            | `error`                            | `String`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| `errorMessage`                     | `errorMessage`                     | `String`  |             | Contains the help text message for the current validity error. |
+| `icon`                             | `icon`                             | `Boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
+| `id`                               | `id`                               | `String`  |             | Sets the unique ID of the element.               |
+| `lang`                             | `lang`                             | `String`  |             | defines the language of an element.              |
+| `max`                              | `max`                              | `String`  | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
+| `maxLength`                        | `maxLength`                        | `Number`  | "undefined" | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
+| `min`                              | `min`                              | `String`  | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
+| `minLength`                        | `minLength`                        | `Number`  | "undefined" | The minimum number of characters the user can enter into the text input. This must be an non-negative integer value smaller than or equal to the value specified by `maxlength`. |
+| `name`                             | `name`                             | `String`  |             | Populates the `name` attribute on the input.     |
+| `noValidate`                       | `noValidate`                       | `Boolean` | false       | If set, disables auto-validation on blur.        |
+| `pattern`                          | `pattern`                          | `String`  |             | Specifies a regular expression the form control's value should match. |
+| `placeholder`                      | `placeholder`                      | `String`  |             | Define custom placeholder text, only supported by date input formats. |
+| `readonly`                         | `readonly`                         | `Boolean` |             | Makes the input read-only, but can be set programmatically. |
+| `required`                         | `required`                         | `Boolean` | false       | Populates the `required` attribute on the input. Used for client-side validation. |
+| `setCustomValidity`                | `setCustomValidity`                | `String`  |             | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`     | `setCustomValidityCustomError`     | `String`  |             | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityForType`         | `setCustomValidityForType`         | `String`  | "undefined" | Custom help text message to display for the declared element `type` and type validity fails. |
+| `setCustomValidityPatternMismatch` | `setCustomValidityPatternMismatch` | `String`  |             | Custom help text message to display when validity = `patternMismatch`. |
+| `setCustomValidityRangeOverflow`   | `setCustomValidityRangeOverflow`   | `String`  |             | Custom help text message to display when validity = `rangeOverflow`. |
+| `setCustomValidityRangeUnderflow`  | `setCustomValidityRangeUnderflow`  | `String`  |             | Custom help text message to display when validity = `rangeUnderflow`. |
+| `setCustomValidityTooLong`         | `setCustomValidityTooLong`         | `String`  |             | Custom help text message to display when validity = `tooLong`. |
+| `setCustomValidityTooShort`        | `setCustomValidityTooShort`        | `String`  |             | Custom help text message to display when validity = `tooShort`. |
+| `setCustomValidityValueMissing`    | `setCustomValidityValueMissing`    | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
+| `spellcheck`                       | `spellcheck`                       | `String`  |             | An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`. |
+| `type`                             | `type`                             | `String`  |             | Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `month-day-year`, `month-year`, `year-month-day`  or `text`. If given value is not allowed or set, defaults to `text`. |
+| `validateOnInput`                  | `validateOnInput`                  | `Boolean` |             | Sets validation mode to re-eval with each input. |
+| `validity`                         | `validity`                         | `String`  |             | Specifies the `validityState` this element is in. |
+| `value`                            | `value`                            | `String`  |             | Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input. |
 
 ## Methods
 

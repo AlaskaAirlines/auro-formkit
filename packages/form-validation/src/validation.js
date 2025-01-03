@@ -47,8 +47,8 @@ export default class AuroFormValidation {
       const pattern = new RegExp(`^${elem.pattern}$`, 'u');
 
       if (!pattern.test(elem.value)) {
-        elem.validity = 'badInput';
-        elem.setCustomValidity = elem.setCustomValidityBadInput || '';
+        elem.validity = 'patternMismatch';
+        elem.setCustomValidity = elem.setCustomValidityPatternMismatch || '';
       }
     }
 
@@ -76,7 +76,7 @@ export default class AuroFormValidation {
         const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/; // eslint-disable-line require-unicode-regexp
 
         if (!elem.value.match(emailRegex)) {
-          elem.validity = 'badInput';
+          elem.validity = 'patternMismatch';
           elem.setCustomValidity = elem.setCustomValidityForType || '';
         }
       } else if (elem.type === 'credit-card') {

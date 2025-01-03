@@ -280,7 +280,7 @@ export class AuroSelect extends LitElement {
       this.menu.optionSelected = undefined;
       this.optionSelected = this.menu.optionSelected;
 
-      this.validity = 'badInput';
+      this.validity = 'patternMismatch';
 
       // Capitalizes the first letter of each word in this.value string
       const valueStr = this.value.replace(/(^\w{1})|(\s+\w{1})/gu, (letter) => letter.toUpperCase());

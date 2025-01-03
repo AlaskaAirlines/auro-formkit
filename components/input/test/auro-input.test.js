@@ -231,7 +231,7 @@ describe('auro-input', () => {
     await elementUpdated(el);
 
     expect(el.hasAttribute('validity')).to.be.true;
-    expect(el.getAttribute('validity')).to.be.equal('badInput');
+    expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
   })
 
   it ('validates type="email" correctly', async () => {
@@ -249,7 +249,7 @@ describe('auro-input', () => {
 
     await elementUpdated(el);
 
-    expect(el.getAttribute('validity')).to.be.equal('badInput');
+    expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
   })
 
   it('validates auro-input on input', async () => {
@@ -264,7 +264,7 @@ describe('auro-input', () => {
     input.focus();
     setInputValue(el, 'dale');
     await elementUpdated(el);
-    expect(el.getAttribute('validity')).to.be.equal('badInput');
+    expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
     setInputValue(el, 'dale sande');
     await elementUpdated(el);
     expect(el.getAttribute('validity')).to.be.equal('valid');
