@@ -235,7 +235,7 @@ The `setCustomValidityTooShort` attribute may optionally be used in combination 
 
 Use the `pattern` attribute to set custom input validation. This example also uses the `spellcheck` attribute set to `false` which in turn sets `autocorrect` to `off` and `autocapitalize` to `none`. Additionally the `maxlength` attribute sets the maximum length of characters that can be entered.
 
-The `<auro-input>` component supports setting a custom validity message specific to the pattern validation by using the `setCustomValidityBadInput` attribute.
+The `<auro-input>` component supports setting a custom validity message specific to the pattern validation by using the `setCustomValidityPatternMismatch` attribute.
 
 <div class="exampleWrapper exampleWrapper--flex">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/pattern.html) -->

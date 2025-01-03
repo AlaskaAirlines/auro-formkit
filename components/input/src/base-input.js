@@ -46,7 +46,7 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @attr {String}  setCustomValidity - Sets a custom help text message to display for all validityStates.
  * @attr {String}  setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
  * @attr {String}  setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String}  setCustomValidityBadInput - Custom help text message to display when validity = `badInput`.
+ * @attr {String}  setCustomValidityPatternMismatch - Custom help text message to display when validity = `patternMismatch`.
  * @attr {String}  setCustomValidityTooShort - Custom help text message to display when validity = `tooShort`.
  * @attr {String}  setCustomValidityTooLong - Custom help text message to display when validity = `tooLong`.
  * @attr {String}  setCustomValidityForType - Custom help text message to display for the declared element `type` and type validity fails.
@@ -197,15 +197,15 @@ export default class BaseInput extends LitElement {
         type: String,
         reflect: true
       },
-      setCustomValidity:               { type: String },
-      setCustomValidityCustomError:    { type: String },
-      setCustomValidityValueMissing:   { type: String },
-      setCustomValidityBadInput:       { type: String },
-      setCustomValidityTooShort:       { type: String },
-      setCustomValidityTooLong:        { type: String },
-      setCustomValidityRangeOverflow:  { type: String},
-      setCustomValidityRangeUnderflow: { type: String},
-      customValidityTypeEmail:         { type: String }
+      setCustomValidity:                { type: String },
+      setCustomValidityCustomError:     { type: String },
+      setCustomValidityValueMissing:    { type: String },
+      setCustomValidityPatternMismatch: { type: String },
+      setCustomValidityTooShort:        { type: String },
+      setCustomValidityTooLong:         { type: String },
+      setCustomValidityRangeOverflow:   { type: String },
+      setCustomValidityRangeUnderflow:  { type: String },
+      customValidityTypeEmail:          { type: String }
     };
   }
 
