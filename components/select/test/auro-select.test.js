@@ -115,8 +115,8 @@ describe('auro-select', () => {
     const triggerContentHTML = dropdown.querySelector('#triggerFocus').innerHTML;
 
     await expect(el.optionSelected).to.be.equal(undefined);
-    await expect(triggerContentHTML).to.contain('Flight Course');
-    await expect(el.getAttribute('validity')).to.equal('patternMismatch');
+    await expect(triggerContentHTML).to.contain(el.placeholder);
+    await expect(el.getAttribute('validity')).to.equal(undefined);
   });
 
   it('reset selection value programmatically', async () => {
@@ -158,11 +158,12 @@ describe('auro-select', () => {
   });
 
   it('reset method clears the value and validity state', async () => {
-    const el = await patternMismatchFixture();
+    const el = await presetValueFixture();
+    const presetOption = el.shadowRoot.querySelector('#presetOption');
 
-    await expect(el.value).to.be.equal('Carrot');
-    await expect(el.optionSelected).to.be.equal(undefined);
-    await expect(el.getAttribute('validity')).to.equal('patternMismatch');
+    await expect(el.value).to.be.equal('price');
+    await expect(el.optionSelected).to.be.equal(presetOption);
+    await expect(el.getAttribute('validity')).to.equal('valid');
 
     el.reset();
 
@@ -192,7 +193,7 @@ async function presetValueFixture() {
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
-      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="price" id="presetOption">Price</auro-menuoption>
       <auro-menuoption value="duration">Duration</auro-menuoption>
       <auro-menuoption value="departure">Departure</auro-menuoption>
       <auro-menuoption value="arrival">Arrival</auro-menuoption>
@@ -217,18 +218,6 @@ async function noCheckmarkFixture() {
 async function errorFixture() {
   return await fixture(html`
   <auro-select error="custom error message">
-    <span slot="label">Name</span>
-    <auro-menu>
-      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
-      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
-    </auro-menu>
-  </auro-select>
-  `);
-}
-
-async function patternMismatchFixture() {
-  return await fixture(html`
-  <auro-select value="Carrot">
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
