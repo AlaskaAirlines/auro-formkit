@@ -24,8 +24,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @event auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @event auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
  * @event auroMenu-selectValueFailure - Notifies that a an attempt to select a menuoption by matching a value has failed.
- * @event auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event auroMenu-selectValueReset - Notifies that the component value has been reset.
+ * @event auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event auroMenu-loadingChange - Notifies when the loading attribute is changed.
  * @slot loadingText - Text to show while loading attribute is set
  * @slot loadingIcon - Icon to show while loading attribute is set

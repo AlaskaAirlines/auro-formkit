@@ -277,26 +277,8 @@ export class AuroSelect extends LitElement {
      * with `auro-select.value`.
      */
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
-      this.menu.optionSelected = undefined;
-      this.optionSelected = this.menu.optionSelected;
-
-      this.validity = 'patternMismatch';
-
-      // Capitalizes the first letter of each word in this.value string
-      const valueStr = this.value.replace(/(^\w{1})|(\s+\w{1})/gu, (letter) => letter.toUpperCase());
-
-      // Pass the new string to the trigger content
-      this.updateDisplayedValue(valueStr);
-    });
-
-    this.menu.addEventListener('auroMenu-selectValueReset', () => {
-      // set the trigger content back to the placeholder
+      this.reset();
       this.updateDisplayedValue(this.placeholder);
-
-      this.optionSelected = undefined;
-      this.value = undefined;
-
-      this.validation.validate(this);
     });
   }
 

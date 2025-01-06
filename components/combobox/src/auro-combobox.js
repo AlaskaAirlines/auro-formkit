@@ -384,9 +384,7 @@ export class AuroCombobox extends LitElement {
     });
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {
-      this.optionSelected = undefined;
-      this.value = undefined;
-      this.validation.validate(this);
+      this.reset();
     });
   }
 

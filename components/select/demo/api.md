@@ -111,7 +111,6 @@ To pre-set the value of auro-select on load, use the `value` property. The `sele
   <!-- The below content is automatically added from ./../apiExamples/value.html -->
   <auro-button id="validValueExampleBtn">Set Value to Valid Option</auro-button>
   <auro-button id="invalidValueExampleBtn">Set Value to Invalid Option</auro-button>
-  <auro-button id="undefinedValueExampleBtn">Set Value to Undefined</auro-button>
   <br/><br/>
   <auro-select id="valueExample" value="price">
     <span slot="label">Name</span>
@@ -134,7 +133,6 @@ To pre-set the value of auro-select on load, use the `value` property. The `sele
 ```html
 <auro-button id="validValueExampleBtn">Set Value to Valid Option</auro-button>
 <auro-button id="invalidValueExampleBtn">Set Value to Invalid Option</auro-button>
-<auro-button id="undefinedValueExampleBtn">Set Value to Undefined</auro-button>
 <br/><br/>
 <auro-select id="valueExample" value="price">
   <span slot="label">Name</span>
@@ -158,15 +156,11 @@ export function valueExample() {
 
   document.querySelector('#validValueExampleBtn').addEventListener('click', () => {
     valueExample.value = 'arrival';
-  })
+  });
 
   document.querySelector('#invalidValueExampleBtn').addEventListener('click', () => {
     valueExample.value = 'flight course';
-  })
-
-  document.querySelector('#undefinedValueExampleBtn').addEventListener('click', () => {
-    valueExample.value = undefined;
-  })
+  });
 }
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
