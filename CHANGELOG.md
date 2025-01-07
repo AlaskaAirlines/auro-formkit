@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2025-01-07)
+
+
+### Bug Fixes
+
+* add clarifying docs for checkbox naming collisions ([022a0f6](https://github.com/AlaskaAirlines/auro-formkit/commit/022a0f6766f2c8917a63c649744ad307a352e852))
+* fix other doc checkbox values ([1d2d19f](https://github.com/AlaskaAirlines/auro-formkit/commit/1d2d19f97e4d30db314652b56b7d1a1abd2f2261))
+
 # [2.0.0-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.6.0-beta.12...v2.0.0-beta.1) (2025-01-03)
 
 
