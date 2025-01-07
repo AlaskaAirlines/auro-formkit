@@ -212,14 +212,7 @@ export class AuroSelect extends LitElement {
       elm.remove();
     });
 
-    if (!this.optionSelected) {
-      // create a new span element with the value string
-      const valueElem = document.createElement('span');
-      valueElem.textContent = "";
-
-      // append the new element into the trigger content
-      triggerContentEl.appendChild(valueElem);
-    } else {
+    if (this.optionSelected) {
       // clone the selected option and remove attributes that style it
       const clone = this.optionSelected.cloneNode(true);
       clone.removeAttribute('selected');
