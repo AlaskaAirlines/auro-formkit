@@ -7,7 +7,7 @@ The auro-checkbox-group element is a wrapper for auro-checkbox element.
 | Property                        | Attribute                       | Type      | Default     | Description                                      |
 |---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
 | `disabled`                      | `disabled`                      | `boolean` | "undefined" |                                                  |
-| `error`                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| `error`                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets the validity message to the attribute value. |
 | `horizontal`                    | `horizontal`                    | `Boolean` | false       | If set, checkboxes will be aligned horizontally. |
 | `noValidate`                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
 | `required`                      | `required`                      | `Boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
@@ -52,7 +52,7 @@ Custom element for the purpose of allowing users to select one or more options o
 | `error`    | `error`    | `Boolean` | false   | If set to true, sets an error state on the checkbox. |
 | `id`       | `id`       | `String`  |         | Sets the individual `id` per element.            |
 | `name`     | `name`     | `String`  |         | Accepts any string, `DOMString` representing the value of the input. |
-| `value`    | `value`    | `String`  |         | Sets the element's input value.                  |
+| `value`    | `value`    | `String`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
 
 ## Methods
 

@@ -28,8 +28,7 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @attr {Boolean} bordered - Applies bordered UI variant.
  * @attr {Boolean} borderless - Applies borderless UI variant.
  * @attr {Boolean} disabled - If set, disables the input.
- * @attr {String}  error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
- * @prop {String}  errorMessage - Contains the help text message for the current validity error.
+ * @attr {String}  error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
  * @attr {Boolean} icon - If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
  * @attr {String}  id - Sets the unique ID of the element.
  * @attr {String}  lang - defines the language of an element.
@@ -43,7 +42,7 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @attr {Boolean} required - Populates the `required` attribute on the input. Used for client-side validation.
  * @attr {String}  pattern - Specifies a regular expression the form control's value should match.
  * @attr {String}  placeholder - Define custom placeholder text, only supported by date input formats.
- * @attr {String}  setCustomValidity - Sets a custom help text message to display for all validityStates.
+ * @attr {String}  setCustomValidity - Sets a custom help text message to display for all validity states.
  * @attr {String}  setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
  * @attr {String}  setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
  * @attr {String}  setCustomValidityPatternMismatch - Custom help text message to display when validity = `patternMismatch`.
@@ -192,7 +191,6 @@ export default class BaseInput extends LitElement {
         type: String,
         reflect: true
       },
-      errorMessage:            { type: String },
       validity:                {
         type: String,
         reflect: true
@@ -204,8 +202,7 @@ export default class BaseInput extends LitElement {
       setCustomValidityTooShort:        { type: String },
       setCustomValidityTooLong:         { type: String },
       setCustomValidityRangeOverflow:   { type: String },
-      setCustomValidityRangeUnderflow:  { type: String },
-      customValidityTypeEmail:          { type: String }
+      setCustomValidityRangeUnderflow:  { type: String }
     };
   }
 
@@ -835,7 +832,7 @@ export default class BaseInput extends LitElement {
     this.maxLength = card.formatLength;
     this.minLength = card.formatMinLength;
 
-    this.setCustomValidity = card.setCustomValidity;
+    this.errorMessage = card.errorMessage;
 
     if (this.icon) {
       this.inputIconName = card.cardIcon;
@@ -855,63 +852,63 @@ export default class BaseInput extends LitElement {
         name: 'Airlines',
         regex: /^(?<num>1|2)\d{0}/u,
         formatMinLength: 17,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'credit-card'
       },
       {
         name: 'Commercial',
         regex: /^(?<num>2)\d{0}/u,
         formatMinLength: 8,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'credit-card'
       },
       {
         name: 'Alaska Commercial',
         regex: /^(?<num>27)\d{0}/u,
         formatMinLength: 8,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-alaska'
       },
       {
         name: 'American Express',
         regex: /^(?<num>34|37)\d{0}/u,
         formatLength: 17,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-amex'
       },
       {
         name: 'Diners club',
         regex: /^(?<num>36|38)\d{0}/u,
         formatLength: 16,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'credit-card'
       },
       {
         name: 'Visa',
         regex: /^(?<num>4)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-visa'
       },
       {
         name: 'Alaska Airlines Visa',
         regex: /^(?<num>4147\s34|4888\s93|4800\s11|4313\s51|4313\s07)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-alaska'
       },
       {
         name: 'Master Card',
         regex: /^(?<num>5)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-mastercard'
       },
       {
         name: 'Discover Card',
         regex: /^(?<num>6)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
+        errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-discover'
       }
     ];
@@ -919,7 +916,7 @@ export default class BaseInput extends LitElement {
     let type = {
       name: 'Default Card',
       formatLength: 19,
-      setCustomValidity: CreditCardValidationMessage,
+      errorMessage: CreditCardValidationMessage,
       cardIcon: 'credit-card'
     };
 

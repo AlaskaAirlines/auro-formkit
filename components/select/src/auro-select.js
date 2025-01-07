@@ -29,7 +29,7 @@ import tokensCss from "./styles/tokens-css.js";
  * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
  * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
  * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+ * @attr {String} error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
  * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
  * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
  * @attr {Boolean} flexMenuWidth - If set, makes dropdown bib width match the size of the content, rather than the width of the trigger.
@@ -547,7 +547,7 @@ export class AuroSelect extends LitElement {
                 </p>`
               : html`
                 <p class="selectElement-helpText" id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-                  ${this.setCustomValidity}
+                  ${this.errorMessage}
                 </p>`
             }
           </span>

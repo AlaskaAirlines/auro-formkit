@@ -425,7 +425,7 @@ export class AuroRadioGroup extends LitElement {
           </p>`
         : html`
           <p class="radioGroupElement-helpText" role="alert" aria-live="assertive" part="helpText">
-            ${this.setCustomValidity}
+            ${this.errorMessage}
           </p>`
       }
     `;

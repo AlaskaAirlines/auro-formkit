@@ -73,7 +73,9 @@ Use the `disabled` attribute to disable singular `<auro-radio>` elements or the 
 
 ### Error
 
-Use the `error` attribute to set an error state on the entire `<auro-radio-group>`.
+Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
+
+A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/error.html) -->

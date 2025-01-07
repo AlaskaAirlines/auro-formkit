@@ -48,19 +48,19 @@ export default class AuroFormValidation {
 
       if (!pattern.test(elem.value)) {
         elem.validity = 'patternMismatch';
-        elem.setCustomValidity = elem.setCustomValidityPatternMismatch || '';
+        elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || '';
       }
     }
 
     // Length > 0 is required to prevent the error message from showing when the input is empty
     if (elem.value?.length > 0 && elem.value?.length < elem.minLength) {
       elem.validity = 'tooShort';
-      elem.setCustomValidity = elem.setCustomValidityTooShort || '';
+      elem.errorMessage = elem.setCustomValidityTooShort || elem.setCustomValidity || '';
     }
     
     if (elem.value?.length > elem.maxLength) {
       elem.validity = 'tooLong';
-      elem.setCustomValidity = elem.setCustomValidityTooLong || '';
+      elem.errorMessage = elem.setCustomValidityTooLong || elem.setCustomValidity || '';
     }
   }
 
@@ -77,24 +77,23 @@ export default class AuroFormValidation {
 
         if (!elem.value.match(emailRegex)) {
           elem.validity = 'patternMismatch';
-          elem.setCustomValidity = elem.setCustomValidityForType || '';
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         }
       } else if (elem.type === 'credit-card') {
         if (elem.value.length > 0 && elem.value.length < elem.validationCCLength) {
           elem.validity = 'tooShort';
-          elem.setCustomValidity = elem.setCustomValidityForType || '';
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         }
       } else if (elem.type === 'number') {
         if (elem.max !== undefined && Number(elem.max) < Number(elem.value)) {
           elem.validity = 'rangeOverflow';
-          elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeOverflow') || '';
+          elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
         }
 
-        if (elem.min !== undefined && Number(elem.min) > Number(elem.value)) {
+        if (elem.min !== undefined && elem.value?.length > 0 && Number(elem.min) > Number(elem.value)) {
           elem.validity = 'rangeUnderflow';
-          elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeUnderflow') || '';
+          elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
         }
-
       } else if (elem.type === 'month-day-year' ||
                  elem.type === 'month-year' ||
                  elem.type === 'month-fullYear' ||
@@ -102,7 +101,7 @@ export default class AuroFormValidation {
       ) {
         if (elem.value && elem.value.length > 0 && elem.value.length < elem.dateStrLength) {
           elem.validity = 'tooShort';
-          elem.setCustomValidity = elem.setCustomValidityForType || '';
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         } else {
           const valueDate = new Date(elem.value);
 
@@ -112,7 +111,7 @@ export default class AuroFormValidation {
 
             if (valueDate > maxDate) {
               elem.validity = 'rangeOverflow';
-              elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeOverflow') || '';
+              elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
             }
           }
 
@@ -122,7 +121,7 @@ export default class AuroFormValidation {
 
             if (valueDate < minDate) {
               elem.validity = 'rangeUnderflow';
-              elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeUnderflow') || '';
+              elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
             }
           }
         }
@@ -145,10 +144,10 @@ export default class AuroFormValidation {
 
     if (elem.hasAttribute('error')) {
       elem.validity = 'customError';
-      elem.setCustomValidity = elem.error;
+      elem.errorMessage = elem.setCustomValidityCustomError || elem.error || elem.setCustomValidity || '';
     } else if (validationShouldRun) {
       elem.validity = 'valid';
-      elem.setCustomValidity = '';
+      elem.errorMessage = '';
 
       /**
        * Only validate once we interact with the datepicker
@@ -168,7 +167,7 @@ export default class AuroFormValidation {
 
       if (!hasValue && elem.required) {
         elem.validity = 'valueMissing';
-        elem.setCustomValidity = elem.setCustomValidityValueMissing || '';
+        elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
         this.validateType(elem);
         this.validateAttributes(elem);
@@ -177,22 +176,18 @@ export default class AuroFormValidation {
 
     if (this.auroInputElements && this.auroInputElements.length > 0) {
       elem.validity = this.auroInputElements[0].validity;
-      elem.setCustomValidity = this.auroInputElements[0].setCustomValidity;
+      elem.errorMessage = this.auroInputElements[0].errorMessage;
 
-      if (elem.validity === 'valid') {
-        if (this.auroInputElements.length > 1) {
-          elem.validity = this.auroInputElements[1].validity;
-          elem.setCustomValidity = this.auroInputElements[1].setCustomValidity;
-        }
+      if (elem.validity === 'valid' && this.auroInputElements.length > 1) {
+        elem.validity = this.auroInputElements[1].validity;
+        elem.errorMessage = this.auroInputElements[1].errorMessage;
       }
     }
 
     if (validationShouldRun || elem.hasAttribute('error')) {
-      if (elem.validity && elem.validity !== 'valid') {
-        // Use the validity message override if it is declared
-        if (elem.ValidityMessageOverride) {
-          elem.setCustomValidity = elem.ValidityMessageOverride;
-        }
+      // Use the validity message override if it is declared
+      if (elem.validity && elem.validity !== 'valid' && elem.ValidityMessageOverride) {
+        elem.errorMessage = elem.ValidityMessageOverride;
       }
 
       this.getErrorMessage(elem);
@@ -238,13 +233,13 @@ export default class AuroFormValidation {
     if (elem.validity !== 'valid') {
       if (elem.setCustomValidity) {
         elem.errorMessage = elem.setCustomValidity;
-      } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
+      } else if (this.runtimeUtils.elementMatch(elem, 'auro-input') && elem.errorMessage === '') {
         const input = elem.renderRoot.querySelector('input');
 
         if (input.validationMessage.length > 0) {
           elem.errorMessage = input.validationMessage;
         }
-      } else if (this.inputElements && this.inputElements.length > 0) {
+      } else if (this.inputElements && this.inputElements.length > 0  && elem.errorMessage === '') {
         const firstInput = this.inputElements[0];
 
         if (firstInput.validationMessage.length > 0) {

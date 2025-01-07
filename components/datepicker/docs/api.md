@@ -9,7 +9,7 @@
 | `calendarStartDate`               | `calendarStartDate`               | `String`  | "undefined"                                      | The first date that may be displayed in the calendar. |
 | `centralDate`                     | `centralDate`                     | `String`  |                                                  | The date that determines the currently visible month. |
 | `disabled`                        | `disabled`                        | `Boolean` | false                                            | If set, disables the datepicker.                 |
-| `error`                           | `error`                           | `String`  |                                                  | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| `error`                           | `error`                           | `String`  |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `maxDate`                         | `maxDate`                         | `String`  |                                                  | Maximum date. All dates after will be disabled.  |
 | `minDate`                         | `minDate`                         | `String`  |                                                  | Minimum date. All dates before will be disabled. |
 | `monthNames`                      | `monthNames`                      | `array`   | ["January","February","March","April","May","June","July","August","September","October","November","December"] |                                                  |
@@ -17,6 +17,7 @@
 | `range`                           | `range`                           | `Boolean` | false                                            | If set, turns on date range functionality in auro-calendar. |
 | `required`                        | `required`                        | `Boolean` | false                                            | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`               | `setCustomValidity`               | `String`  |                                                  | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    | `String`  |                                                  | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  | `String`  |                                                  | Custom help text message to display when validity = `rangeOverflow`. |
 | `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` | `String`  |                                                  | Custom help text message to display when validity = `rangeUnderflow`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `String`  |                                                  | Help text message to display when validity = `valueMissing`. |

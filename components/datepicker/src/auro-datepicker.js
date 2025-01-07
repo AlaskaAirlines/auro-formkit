@@ -35,9 +35,10 @@ import inputVersion from './formkit/auro-inputVersion.js';
 /**
  * @prop {String} value - Value selected for the date picker.
  * @prop {String} valueEnd - Value selected for the second date picker when using date range.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+ * @attr {String} error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
  * @attr {String} validity - Specifies the `validityState` this element is in.
  * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
+ * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
  * @attr {String} setCustomValidityRangeUnderflow - Custom help text message to display when validity = `rangeUnderflow`.
  * @attr {String} setCustomValidityRangeOverflow - Custom help text message to display when validity = `rangeOverflow`.
  * @attr {String} setCustomValidityValueMissing - Help text message to display when validity = `valueMissing`.
@@ -167,19 +168,18 @@ export class AuroDatePicker extends LitElement {
       },
       setCustomValidity: {
         type: String,
-        reflect: true
+      },
+      setCustomValidityCustomError: {
+        type: String,
       },
       setCustomValidityRangeUnderflow: {
         type: String,
-        reflect: true
       },
       setCustomValidityRangeOverflow: {
         type: String,
-        reflect: true
       },
       setCustomValidityValueMissing: {
         type: String,
-        reflect: true
       },
       validity: {
         type: String,
@@ -375,30 +375,6 @@ export class AuroDatePicker extends LitElement {
   }
 
   /**
-   * Return appropriate error message.
-   * @param {Object} evt - Event passed in from auro-input when the event triggered this function.
-   * @private
-   */
-  getErrorMessage(evt) {
-    if (evt) {
-      const inputClass = evt.target.getAttribute('class');
-      if (inputClass === 'dateFrom') {
-        if (this.inputList[0].validity && this.inputList[0].validity !== 'valid') {
-          this.errorMessage = evt.target.errorMessage;
-        } else {
-          this.errorMessage = undefined;
-        }
-      }
-
-      if (inputClass === 'dateTo') {
-        if (!this.errorMessage && this.inputList[1].validity && this.inputList[1].validity !== 'valid') {
-          this.errorMessage = evt.target.errorMessage;
-        }
-      }
-    }
-  }
-
-  /**
    * Changes the calendar's visibility to reflect the value of the central date attribute.
    * @private
    * @returns {void}
@@ -506,13 +482,13 @@ export class AuroDatePicker extends LitElement {
       input.addEventListener('auroFormElement-validated', (evt) => {
         if (evt.detail.validity === 'customError') {
           this.validity = evt.detail.validity;
-          this.setCustomValidity = evt.detail.message;
+          this.errorMessage = evt.detail.message;
         } else if (evt.target === this.inputList[0]) {
           this.validity = evt.detail.validity;
-          this.setCustomValidity = evt.detail.message;
+          this.errorMessage = evt.detail.message;
         } else if (this.inputList.length > 1 && evt.target === this.inputList[1] && (this.inputList[0].validity === 'valid' || this.inputList[0].validity === undefined)) {
           this.validity = evt.detail.validity;
-          this.setCustomValidity = evt.detail.message;
+          this.errorMessage = evt.detail.message;
         }
       });
     });
@@ -802,7 +778,7 @@ export class AuroDatePicker extends LitElement {
       // This is done to prevent error icon from displaying on both inputs in range support
       const lastInput = this.inputList[this.inputList.length - 1];
 
-      if (this.error) {
+      if (this.hasAttribute('error')) {
         // Set the error attribute on the last input
         lastInput.setAttribute('error', this.getAttribute('error'));
       } else {
@@ -920,6 +896,8 @@ export class AuroDatePicker extends LitElement {
               noValidate
               .max="${this.maxDate}"
               .min="${this.minDate}"
+              setCustomValidity="${this.setCustomValidity}"
+              setCustomValidityCustomError="${this.setCustomValidityCustomError}"
               setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
               setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
               setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
@@ -937,6 +915,8 @@ export class AuroDatePicker extends LitElement {
                 noValidate
                 .max="${this.maxDate}"
                 .min="${this.minDate}"
+                setCustomValidity="${this.setCustomValidity}"
+                setCustomValidityCustomError="${this.setCustomValidityCustomError}"
                 setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
                 setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
                 setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
@@ -967,8 +947,8 @@ export class AuroDatePicker extends LitElement {
               ? html`
                 <slot name="helpText"></slot>
               ` : html`
-                <p class="datepickerElement-helpText" id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-                  ${this.setCustomValidity}
+                <p class="datepickerElement-helpText" role="alert" aria-live="assertive" part="helpText">
+                  ${this.errorMessage}
                 </p>`
             }
           </span>
