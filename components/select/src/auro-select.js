@@ -7,6 +7,7 @@
 
 // If using litElement base class
 import { LitElement } from "lit";
+import { classMap } from 'lit/directives/class-map.js';
 import { html } from 'lit/static-html.js';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
@@ -463,6 +464,10 @@ export class AuroSelect extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const placeholderClass = {
+      hidden: this.value,
+    };
+
     return html`
       <div class="outerWrapper">
         <div aria-live="polite" class="util_displayHiddenVisually">
@@ -489,7 +494,7 @@ export class AuroSelect extends LitElement {
           chevron
           part="dropdown">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
-            ${!this.value ? html`<slot name="placeholder"></slot>` : null}
+            <span id="placeholder" class="${classMap(placeholderClass)}"><slot name="placeholder"></slot></span>
           </span>
           <div class="menuWrapper">
           </div>

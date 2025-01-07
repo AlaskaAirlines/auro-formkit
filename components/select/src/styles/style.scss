@@ -10,7 +10,7 @@
 @import '@aurodesignsystem/webcorestylesheets/src/core';
 @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-/* stylelint-disable selector-class-pattern, selector-max-attribute */
+/* stylelint-disable selector-class-pattern */
 
 [slot='trigger'] {
   width: 100%;
@@ -25,12 +25,12 @@
     display: none;
   }
 
-  .placeholder {
-    transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
-    will-change: font-size;
-
-    &[hasValue='true'] {
-      font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+  #placeholder {
+    &.hidden {
+      position: absolute;
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
     }
   }
 } 
