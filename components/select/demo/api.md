@@ -17,7 +17,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | Property                        | Attribute                       | Type      | Default                | Description                                      |
 |---------------------------------|---------------------------------|-----------|------------------------|--------------------------------------------------|
 | [disabled](#disabled)                      | `disabled`                      | `Boolean` |                        | When attribute is present element shows disabled state. |
-| [error](#error)                         | `error`                         | `String`  |                        | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| [error](#error)                         | `error`                         | `String`  |                        | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | [flexMenuWidth](#flexMenuWidth)                 | `flexMenuWidth`                 | `Boolean` |                        | If set, makes dropdown bib width match the size of the content, rather than the width of the trigger. |
 | [noCheckmark](#noCheckmark)                   | `noCheckmark`                   | `Boolean` |                        | When true, checkmark on selected option will no longer be present. |
 | [noValidate](#noValidate)                    | `noValidate`                    | `Boolean` |                        | If set, disables auto-validation on blur.        |
@@ -207,7 +207,7 @@ Use the `placeholder` string attribute to inject a custom placeholder option wit
 #### required <a name="required"></a>
 When present, the `required` attribute specifies that a select field must be filled out before submitting the form.
 
-When the validity check fails the validityState equals `valueMissing`. The error message for the `valueMissing` validityState can be set to a custom string using the `setCustomValidityValueMissing`. There is no default error message defined.
+When the validity check fails the validityState, equals `valueMissing`. The error message for the `valueMissing` validityState can be set to a custom string using the `setCustomValidityValueMissing`. There is no default error message defined.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->
@@ -245,7 +245,9 @@ When the validity check fails the validityState equals `valueMissing`. The error
 </auro-accordion>
 
 #### error <a name="error"></a>
-Use the `error` boolean attribute to toggle the error UI.
+Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
+
+A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/errorApi.html) -->

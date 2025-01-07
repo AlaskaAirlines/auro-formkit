@@ -70,7 +70,7 @@ Use the `placeholder` string attribute to inject a custom placeholder option wit
 
 When present, the `required` attribute specifies that a select field must be filled out before submitting the form.
 
-When the validity check fails the validityState equals `valueMissing`. The error message for the `valueMissing` validityState can be set to a custom string using the `setCustomValidityValueMissing`. There is no default error message defined.
+When the validity check fails the validityState, equals `valueMissing`. The error message for the `valueMissing` validityState can be set to a custom string using the `setCustomValidityValueMissing`. There is no default error message defined.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->
@@ -86,7 +86,9 @@ When the validity check fails the validityState equals `valueMissing`. The error
 
 #### error <a name="error"></a>
 
-Use the `error` boolean attribute to toggle the error UI.
+Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
+
+A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/errorApi.html) -->

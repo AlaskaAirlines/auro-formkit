@@ -27,9 +27,11 @@ import styleCss from "./styles/style-css.js";
  * @prop {Object} optionSelected - Specifies the current selected option.
  * @prop {String} value - Value selected for the dropdown menu.
  * @prop {Boolean} checkmark - When attribute is present auro-menu will apply checkmarks to selected options.
- * @attr {Boolean} error - Sets a persistent error state (e.g. an error state returned from the server).
+ * @attr {String} error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
  * @attr {String} validity - Specifies the `validityState` this element is in.
  * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
+ * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
+ * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
  * @attr {Boolean} disabled - If set, disables the combobox.
  * @attr {Boolean} noFilter - If set, combobox will not filter menuoptions based in input.
  * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
@@ -95,12 +97,17 @@ export class AuroCombobox extends LitElement {
     return {
       // ...super.properties,
       error: {
-        type: Boolean,
+        type: String,
         reflect: true
       },
       setCustomValidity: {
-        type: String,
-        reflect: true
+        type: String
+      },
+      setCustomValidityCustomError: {
+        type: String
+      },
+      setCustomValidityValueMissing: {
+        type: String
       },
       validity: {
         type: String,
@@ -462,7 +469,7 @@ export class AuroCombobox extends LitElement {
     });
 
     this.input.addEventListener('auroFormElement-validated', (evt) => {
-      this.auroInputHelpText = evt.detail.message;
+      this.errorMessage = evt.detail.message;
     });
   }
 
@@ -606,9 +613,6 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   reset() {
-    // Resets the help text of the combobox
-    this.auroInputHelpText = undefined;
-
     this.input.reset();
     this.validation.reset(this);
   }
@@ -640,10 +644,6 @@ export class AuroCombobox extends LitElement {
     if (changedProperties.has('error')) {
       this.input.setAttribute('error', this.getAttribute('error'));
       this.validation.validate(this);
-    }
-
-    if (changedProperties.has('setCustomValidity')) {
-      this.input.setAttribute('setCustomValidity', this.setCustomValidity);
     }
   }
 
@@ -698,19 +698,23 @@ export class AuroCombobox extends LitElement {
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
+            setCustomValidity="${this.setCustomValidity}"
+            setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
+            setCustomValidityCustomError="${this.setCustomValidityCustomError}"
             .type="${this.type}">
             <slot name="label" slot="label"></slot>
           </${this.inputTag}>
           <div class="menuWrapper">
           </div>
           <span slot="helpText">
-            ${this.auroInputHelpText
+          <!-- Help text and error message template -->
+            ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`
-                ${this.auroInputHelpText}
-              `
-              : html`
                 <slot name="helpText"></slot>
-              `
+              ` : html`
+                <p role="alert" aria-live="assertive" part="helpText">
+                  ${this.errorMessage}
+                </p>`
             }
           </span>
         </${this.dropdownTag}>

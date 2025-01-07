@@ -235,7 +235,6 @@ export class AuroInput extends BaseInput {
         <p class="inputElement-helpText" id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
           ${this.errorMessage}
         </p>`
-
       }
     `;
   }

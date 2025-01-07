@@ -17,10 +17,8 @@ Generate unique names for dependency components.
 | `autocapitalize`                   | `autocapitalize`                   | `String`  |             | An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters] |
 | `autocomplete`                     | `autocomplete`                     | `String`  |             | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
 | `autocorrect`                      | `autocorrect`                      | `String`  |             | When set to `off`, stops iOS from auto correcting words when typed into a text box. |
-| `customValidityTypeEmail`          | `customValidityTypeEmail`          | `string`  |             |                                                  |
 | `disabled`                         | `disabled`                         | `Boolean` | false       | If set, disables the input.                      |
-| `error`                            | `error`                            | `String`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
-| `errorMessage`                     | `errorMessage`                     | `String`  |             | Contains the help text message for the current validity error. |
+| `error`                            | `error`                            | `String`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `icon`                             | `icon`                             | `Boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
 | `id`                               | `id`                               | `String`  |             | Sets the unique ID of the element.               |
 | `lang`                             | `lang`                             | `String`  |             | defines the language of an element.              |
@@ -34,7 +32,7 @@ Generate unique names for dependency components.
 | `placeholder`                      | `placeholder`                      | `String`  |             | Define custom placeholder text, only supported by date input formats. |
 | `readonly`                         | `readonly`                         | `Boolean` |             | Makes the input read-only, but can be set programmatically. |
 | `required`                         | `required`                         | `Boolean` | false       | Populates the `required` attribute on the input. Used for client-side validation. |
-| `setCustomValidity`                | `setCustomValidity`                | `String`  |             | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidity`                | `setCustomValidity`                | `String`  |             | Sets a custom help text message to display for all validity states. |
 | `setCustomValidityCustomError`     | `setCustomValidityCustomError`     | `String`  |             | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityForType`         | `setCustomValidityForType`         | `String`  | "undefined" | Custom help text message to display for the declared element `type` and type validity fails. |
 | `setCustomValidityPatternMismatch` | `setCustomValidityPatternMismatch` | `String`  |             | Custom help text message to display when validity = `patternMismatch`. |
