@@ -234,7 +234,7 @@ export class AuroSelect extends LitElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
-    this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
+
     // racing condition on custom-select with custom-menu
     if (!this.menu) {
       setTimeout(() => {
@@ -243,6 +243,7 @@ export class AuroSelect extends LitElement {
       return;
     }
 
+    this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
     this.menu.setAttribute('aria-hidden', 'true');
 
     this.generateOptionsArray();

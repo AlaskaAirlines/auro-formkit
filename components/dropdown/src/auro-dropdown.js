@@ -80,7 +80,7 @@ export class AuroDropdown extends LitElement {
     /**
      * @private
      */
-    this._hasTriggerContent = false;
+    this.hasTriggerContent = false;
 
     /**
      * @private
@@ -208,7 +208,12 @@ export class AuroDropdown extends LitElement {
       /**
        * @private
        */
-      tabIndex: { type: Number }
+      tabIndex: { type: Number },
+
+      /**
+       * @private
+       */
+      hasTriggerContent: {type: Boolean },
     };
   }
 
@@ -218,39 +223,6 @@ export class AuroDropdown extends LitElement {
       colorCss,
       tokensCss
     ];
-  }
-
-  /**
-   * Sets the value of the hasTriggerContent property and requests an update if changed.
-   *
-   * This setter updates the internal `_hasTriggerContent` property only if the new value differs
-   * from the current value. If a change is detected, it triggers a request for the component to
-   * update, ensuring that UI elements are refreshed accordingly.
-   *
-   * @private
-   * @setter hasTriggerContent
-   * @param {boolean} value - The new value indicating whether the trigger content is present.
-   * @returns {void}
-   */
-  set hasTriggerContent(value) {
-    if (value !== this._hasTriggerContent) {
-      this._hasTriggerContent = value;
-
-      // requestUpdate to re-render with the latest value on `#triggerLabel.hasTrigger`
-      this.requestUpdate();
-    }
-  }
-
-  /**
-   * Retrieves the value of the hasTriggerContent property.
-   *
-   * @private
-   * @getter hasTriggerContent
-   * @type {boolean}
-   * @returns {boolean} The current value of the hasTriggerContent property.
-   */
-  get hasTriggerContent() {
-    return this._hasTriggerContent;
   }
 
   /**
@@ -351,10 +323,15 @@ export class AuroDropdown extends LitElement {
 
     if (this.triggerContentSlot) {
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
+        if (slot.textContent.trim()) {
+          return true;
+        }
         const slotInSlot = slot.querySelector('slot');
-        const slotsInSlotNodes = slotInSlot ? slotInSlot.assignedNodes() : null;
-        const hasInnerContent = slotsInSlotNodes ? slotsInSlotNodes.some((ss) => Boolean(ss.textContent.trim())) : false;
-        return hasInnerContent || Boolean(slot.textContent.trim());
+        if (!slotInSlot) {
+          return false;
+        }
+        const slotsInSlotNodes = slotInSlot.assignedNodes();
+        return slotsInSlotNodes.some((ss) => Boolean(ss.textContent.trim()));
       });
     } else {
       this.hasTriggerContent = false;
