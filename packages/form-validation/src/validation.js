@@ -99,7 +99,7 @@ export default class AuroFormValidation {
                  elem.type === 'month-fullYear' ||
                  elem.type === 'year-month-day'
       ) {
-        if (elem.value && elem.value.length > 0 && elem.value.length < elem.dateStrLength) {
+        if (elem.value?.length > 0 && elem.value.length < elem.dateStrLength) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         } else {
@@ -159,7 +159,7 @@ export default class AuroFormValidation {
       let hasValue = elem.value && elem.value.length > 0;
 
       // If there is a second input in the elem and that value is undefined or an empty string set hasValue to false;
-      if (this.auroInputElements && this.auroInputElements.length === 2) {
+      if (this.auroInputElements?.length === 2) {
         if (!this.auroInputElements[1].value || this.auroInputElements[1].length === 0) {
           hasValue = false;
         }
@@ -174,7 +174,7 @@ export default class AuroFormValidation {
       }
     }
 
-    if (this.auroInputElements && this.auroInputElements.length > 0) {
+    if (this.auroInputElements?.length > 0) {
       elem.validity = this.auroInputElements[0].validity;
       elem.errorMessage = this.auroInputElements[0].errorMessage;
 
@@ -239,12 +239,12 @@ export default class AuroFormValidation {
         if (input.validationMessage.length > 0) {
           elem.errorMessage = input.validationMessage;
         }
-      } else if (this.inputElements && this.inputElements.length > 0  && elem.errorMessage === '') {
+      } else if (this.inputElements?.length > 0  && elem.errorMessage === '') {
         const firstInput = this.inputElements[0];
 
         if (firstInput.validationMessage.length > 0) {
           elem.errorMessage = firstInput.validationMessage;
-        } else if (this.inputElements.length === 2) {
+        } else if (this.inputElements?.length === 2) {
           const secondInput = this.inputElements[1];
 
           if (secondInput.validationMessage.length > 0) {
