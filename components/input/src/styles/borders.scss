@@ -3,6 +3,8 @@
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
+@import 'mixins';
+
 input {
   border: unset;
 }
@@ -26,30 +28,12 @@ input {
   }
 }
 
-// Handle highlighting the border during focus and invalid stat
-
-@mixin border-highlight {
-  &:before {
-    position: absolute;
-    display: block;
-
-    /* stylelint-disable declaration-block-no-redundant-longhand-properties */
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    /* stylelint-enable declaration-block-no-redundant-longhand-properties */
-
-    content: '';
-    inset: 0;
-    pointer-events: none;
-  }
-}
-
 // FOCUS STATE
 
 :host(:not([borderless])) {
   .wrapper {
     &:focus-within {
-      @include border-highlight;
+      @include border-highlight-style;
     }
   }
 }

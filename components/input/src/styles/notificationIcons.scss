@@ -1,4 +1,5 @@
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import 'mixins';
 
 /* stylelint-disable  selector-max-attribute, max-nesting-depth, selector-max-class, selector-max-combinators, selector-max-compound-selectors */
 
@@ -76,19 +77,12 @@
   }
 }
 
-// Determine which icons to show based on focus state
+.clearBtn {
+  @include transition-animation;
 
-@mixin hidden-notification {
   overflow: hidden;
   width: 0;
-  height: 0;
-  padding: 0;
-  margin: 0;
-  visibility: hidden;
-}
-
-.clearBtn {
-  @include hidden-notification;
+  opacity: 0;
 }
 
 :host {
@@ -98,7 +92,7 @@
       .clearBtn {
         width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25)); 
         height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-25, $ds-size-25));
-        visibility: visible;
+        opacity: 1;
       }
     }
   }
