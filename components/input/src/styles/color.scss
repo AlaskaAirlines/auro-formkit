@@ -5,16 +5,9 @@
 // Support for fallback values
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
 
-/* stylelint-disable */
+@import 'mixins';
 
-/* stylelint-disable no-descending-specificity */
-
-// Handle highlighting the border during focus and invalid state
-@mixin border-highlight {
-  &:before {
-    border-bottom-color: transparent;
-  }
-}
+/* stylelint-disable no-descending-specificity, selector-class-pattern */
 
 .wrapper {
   border-color: transparent;
@@ -72,7 +65,7 @@ label {
     &:focus-within {
       --ds-auro-input-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
 
-      @include border-highlight;
+      @include border-highlight-color;
     }
   }
 }

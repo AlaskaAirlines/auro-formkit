@@ -3,7 +3,11 @@
 // Support for fallback values
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
 
+@import 'mixins';
+
 input {
+  @include transition-animation;
+
   position: relative;
   overflow: hidden;
   min-height: calc(var(--ds-size-700, $ds-size-700) + var(--ds-size-25, $ds-size-25));
@@ -15,7 +19,6 @@ input {
   font-size: var(--ds-size-200, $ds-size-200);
   outline: none;
   text-overflow: ellipsis;
-  transition: all .3s cubic-bezier(.215, .61, .355, 1);
   white-space: nowrap;
 
   // this is to disable the toggle-password feature in MS Edge only
