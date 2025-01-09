@@ -1,21 +1,3 @@
-<style>
-  .exampleWrapper--flex * {
-    margin-bottom: 1rem;
-  }
-
-  @media screen and (min-width: 660px) {
-    .exampleWrapper--flex {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .exampleWrapper--flex * {
-      width: 45%;
-      margin-bottom: unset;
-    }
-  }
-</style>
-
 # Input
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
@@ -30,7 +12,7 @@
 
 The default component supports the basic input `type="text"` structure. The `(optional)` label is provided to instruct the user that their input is not required. Use the `bordered` attribute for a bordered `<auro-input>`.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -47,7 +29,7 @@ The default component supports the basic input `type="text"` structure. The `(op
 
 Use the `placeholder` attribute to add a custom placeholder message within the element.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/placeholder.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -64,7 +46,7 @@ Use the `placeholder` attribute to add a custom placeholder message within the e
 
 Use the `disabled` attribute to prevent the user from interacting with the input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -118,7 +100,7 @@ Use the `pattern` attribute to set custom input validation. This example also us
 
 The `<auro-input>` component supports setting a custom validity message specific to the pattern validation by using the `setCustomValidityPatternMismatch` attribute.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/pattern.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -145,7 +127,7 @@ AuroInput.register('custom-input');
 
 This will create a new custom element that you can use in your HTML that will function identically to the `<auro-input>` element.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>

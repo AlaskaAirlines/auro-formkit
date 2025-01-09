@@ -1,21 +1,3 @@
-<style>
-  .exampleWrapper--flex * {
-    margin-bottom: 1rem;
-  }
-
-  @media screen and (min-width: 660px) {
-    .exampleWrapper--flex {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .exampleWrapper--flex * {
-      width: 45%;
-      margin-bottom: unset;
-    }
-  }
-</style>
-
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../docs/api.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -33,7 +15,9 @@ The `auro-input` element supports the localization of all content managed within
 
 ## Basic
 
-<div class="exampleWrapper exampleWrapper--flex">
+The default component supports the basic input `type="text"` structure. The `(optional)` label is provided to instruct the user that their input is not required. Use the `bordered` attribute for a bordered `<auro-input>`.
+
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -52,7 +36,7 @@ The `auro-input` element supports the localization of all content managed within
 
 Use the `disable` attribute to prevent the user from interacting with the input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/disabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -69,7 +53,7 @@ Use the `disable` attribute to prevent the user from interacting with the input.
 
 Use the `placeholder` attribute to add a custom placeholder message within the element.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/placeholder.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -199,7 +183,7 @@ Use the `maxlength` attribute to control the length of the input entered.
 
 The `setCustomValidityTooLong` attribute may optionally be used in combination with the `maxLength` attribute to define custom help text used when the length of the input is too long.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/maxLength.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -218,7 +202,7 @@ Use the `minlength` attribute to control the length of the input entered.
 
 The `setCustomValidityTooShort` attribute may optionally be used in combination with the `minLength` attribute to define custom help text used when the length of the input is not long enough.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/minLength.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -237,7 +221,7 @@ Use the `pattern` attribute to set custom input validation. This example also us
 
 The `<auro-input>` component supports setting a custom validity message specific to the pattern validation by using the `setCustomValidityPatternMismatch` attribute.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/pattern.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -246,23 +230,6 @@ The `<auro-input>` component supports setting a custom validity message specific
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/pattern.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Borderless <a name="borderless"></a>
-
-Use the `borderless` attribute to remove the bottom border. This attribute is intended for use when input is wrapped in a container that already handles the different state displays, e.g. [auro-dropdown](http://auro.alaskaair.com/components/auro/dropdown).
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/borderless.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/borderless.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -293,7 +260,7 @@ In this example, the user is able to programmatically change the value of the in
 
 Example use cases for auro-input support the `activeLabel` attribute. If set, the label will stay fixed in the active position.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/activeLabel.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -310,7 +277,7 @@ Example use cases for auro-input support the `activeLabel` attribute. If set, th
 
 For use cases where the field is `required`, but live validation is not wanted, use the `noValidate` attribute.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/noValidate.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -335,7 +302,7 @@ When present, the `required` attribute specifies that an input field must be fil
 
 When the validity check fails, the validityState equals `valueMissing`. The error message for the `valueMissing` validityState can be changed to a custom string using the `setCustomValidityValueMissing`.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/required.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -353,7 +320,7 @@ When the validity check fails, the validityState equals `valueMissing`. The erro
 Use the `validateOnInput` attribute to enable live validation on the `input` event. Recommended use is with setting a custom `pattern` and validation is required prior to a `blur` event.
 
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/validateOnInput.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -372,7 +339,7 @@ The `setCustomValidity` attribute can be used to set a custom string for all val
 
 **NOTE:** Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using this element property.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/setCustomValidity.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -415,7 +382,7 @@ Use the `type="password"` attribute for a password style input. The hide/show pa
 
 Default help text will be added to the input `type="password"` if custom help text is not provided. See the example below.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/password.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -434,7 +401,7 @@ Use the `type="email"` attribute for a email style input. These examples illustr
 
 Default help text will be added to the input `type="email"` if custom help text is not provided. See the example below.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/email.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -453,7 +420,7 @@ Use the `type="number"` attribute for a numeric style input and invoke a numeric
 
 This `number` input type should only be used for incremental numeric values, meaning values with decimals will be considered invalid. The `number` input type is not appropriate for values that happen to only consist of but aren't strictly speaking a number, such as postal codes in many countries or credit card numbers. See [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number) for more information.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/number.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -472,7 +439,7 @@ Use the `type="credit-card"` attribute for a credit card formatted input.
 
 Default help text will be added to the input `type="credit-card"` if custom help text is not provided. See the example below.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/creditCard.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -489,7 +456,7 @@ Use the `type="credit-card"` and `icon` attributes for a credit card formatted i
 
 **Dependency**: Please be sure to also install [auro-icon](https://auro.alaskaair.com/components/auro/icon/install) as a peer dependency.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/creditCardIcon.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -507,7 +474,7 @@ Use the `type="credit-card"` and `icon` attributes for a credit card formatted i
 
 Use the `type="month-day-year"` attribute for a date formatted input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/monthDayYear.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -522,7 +489,7 @@ Use the `type="month-day-year"` attribute for a date formatted input.
 
 Use the `type="month-year"` attribute for a date formatted input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/monthYear.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -537,7 +504,7 @@ Use the `type="month-year"` attribute for a date formatted input.
 
 Use the `type="month-fullYear"` attribute for a date formatted input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/monthFullYear.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -552,7 +519,7 @@ Use the `type="month-fullYear"` attribute for a date formatted input.
 
 Use the `type="year-month-day"` attribute for a date formatted input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/yearMonthDay.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -567,7 +534,7 @@ Use the `type="year-month-day"` attribute for a date formatted input.
 
 Use the `type="month"` attribute for a date formatted input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/month.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -582,7 +549,7 @@ Use the `type="month"` attribute for a date formatted input.
 
 Use the `type="year"` attribute for a date formatted input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/year.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -597,7 +564,7 @@ Use the `type="year"` attribute for a date formatted input.
 
 Use the `type="fullYear"` attribute for a date formatted input.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/fullYear.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -636,7 +603,7 @@ Use the `reset()` method to reset the `<auro-input>`'s `value` and `validity` st
 
 Example illustrates using a JavaScript function attached to an `auro-button` component `click` event to swap the values of two `auro-input` elements. An example of this use case would be swapping the departure and arrival airports in a flight search form.
 
-<div class="exampleWrapper exampleWrapper--flex">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/swapValue.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>

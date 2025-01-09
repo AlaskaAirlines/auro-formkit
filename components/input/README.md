@@ -75,7 +75,6 @@ import "@auro-formkit/-formkit/-formkit/auro-input";
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-input></auro-input>
 <auro-input bordered></auro-input>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -119,7 +118,6 @@ The `<auro-input>` element should be used in situations where users may:
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-input></auro-input>
 <auro-input bordered></auro-input>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
