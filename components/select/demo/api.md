@@ -16,18 +16,18 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 | Property                        | Attribute                       | Type      | Default     | Description                                      |
 |---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
-| [disabled](#disabled)                      | `disabled`                      | `Boolean` |             | When attribute is present element shows disabled state. |
-| [error](#error)                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
-| [flexMenuWidth](#flexMenuWidth)                 | `flexMenuWidth`                 | `Boolean` |             | If set, makes dropdown bib width match the size of the content, rather than the width of the trigger. |
-| [noCheckmark](#noCheckmark)                   | `noCheckmark`                   | `Boolean` |             | When true, checkmark on selected option will no longer be present. |
-| [noValidate](#noValidate)                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
-| [optionSelected](#optionSelected)                | `optionSelected`                | `Object`  | "undefined" | Specifies the current selected menuOption.       |
-| [required](#required)                      | `required`                      | `Boolean` |             | Populates the `required` attribute on the element. Used for client-side validation. |
-| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `String`  |             | Sets a custom help text message to display for all validityStates. |
-| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
-| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
-| [validity](#validity)                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
-| [value](#value)                         | `value`                         | `String`  |             | Value selected for the component.                |
+| [disabled](#disabled)                      | `disabled`                      | `boolean` |             | When attribute is present, element shows disabled state. |
+| [error](#error)                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| [flexMenuWidth](#flexMenuWidth)                 | `flexMenuWidth`                 | `boolean` |             | If set, makes dropdown width match the size of the content, rather than the width of the trigger. |
+| [noCheckmark](#noCheckmark)                   | `noCheckmark`                   | `boolean` |             | When true, checkmark on selected option will no longer be present. |
+| [noValidate](#noValidate)                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
+| [optionSelected](#optionSelected)                | `optionSelected`                | `object`  | "undefined" | Specifies the current selected menuOption.       |
+| [required](#required)                      | `required`                      | `boolean` |             | Populates the `required` attribute on the element. Used for client-side validation. |
+| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `string`  |             | Sets a custom help text message to display for all validityStates. |
+| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `string`  |             | Custom help text message to display when validity = `customError`. |
+| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
+| [validity](#validity)                      | `validity`                      | `string`  | "undefined" | Specifies the `validityState` this element is in. |
+| [value](#value)                         | `value`                         | `string`  |             | Value selected for the component.                |
 
 ## Methods
 

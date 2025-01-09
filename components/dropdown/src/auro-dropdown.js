@@ -24,22 +24,7 @@ import tokensCss from "./styles/tokens-css.js";
 import './auro-dropdownBib.js';
 
 /**
- * @attr { Boolean } bordered - If declared, applies a border around the trigger slot.
- * @attr { Boolean } common - If declared, the dropdown will be styled with the common theme.
- * @attr { Boolean } chevron - If declared, the dropdown displays an display state chevron on the right.
- * @attr { Boolean } disabled - If declared, the dropdown is not interactive.
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
- * @attr { Boolean } error - If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
- * @attr {Boolean} fluid - Makes the trigger to be full width of its parent container
- * @attr { Boolean } matchWidth - If declared, the popover and trigger will be set to the same width.
- * @attr { Boolean } inset - If declared, will apply padding around trigger slot content.
- * @attr { Boolean } rounded - If declared, will apply border-radius to trigger and default slots.
- * @attr { Boolean } hoverToggle - if declared, the trigger will toggle the big on mouseover/mouseout.
- * @attr { Boolean } noToggle - If declared, the trigger will only show the dropdown bib.
- * @attr { Boolean } focusShow - if declared, the bib will display when focus is applied to the trigger.
- * @attr { Boolean } noHideOnThisFocusLoss - If declared, the dropdown will not hide when moving focus outside the element.
- * @attr { String } mobileFullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
- * @prop { Boolean } isPopoverVisible - If true, the dropdown bib is displayed.
  * @slot - Default slot for the popover content.
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
@@ -133,87 +118,159 @@ export class AuroDropdown extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * If declared, applies a border around the trigger slot.
+       */
       bordered: {
         type: Boolean,
         reflect: true
       },
-      chevron: {
-        type: Boolean,
-        reflect: true
-      },
-      disabled: {
-        type: Boolean,
-        reflect: true
-      },
-      error: {
-        type: Boolean,
-        reflect: true
-      },
-      fluid: {
-        type: Boolean,
-        reflect: true,
-      },
-      focusShow: {
-        type: Boolean,
-        reflect: true
-      },
-      hoverToggle: {
-        type: Boolean,
-        reflect: true
-      },
-      inset: {
-        type: Boolean,
-        reflect: true
-      },
-      matchWidth: {
-        type: Boolean,
-        reflect: true
-      },
-      rounded: {
-        type: Boolean,
-        reflect: true
-      },
+
+      /**
+       * If declared, the dropdown will be styled with the common theme.
+       */
       common: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If declared, the dropdown displays a chevron on the right.
+       * @attr {Boolean} chevron
+       */
+      chevron: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown is not interactive.
+       */
+      disabled: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
+       */
+      error: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Makes the trigger to be full width of its parent container.
+       */
+      fluid: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the popover and trigger will be set to the same width.
+       */
+      matchWidth: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, will apply padding around trigger slot content.
+       */
+      inset: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, will apply border-radius to trigger and default slots.
+       */
+      rounded: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the trigger will toggle the dropdown on mouseover/mouseout.
+       */
+      hoverToggle: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the trigger will only show the dropdown bib.
+       */
       noToggle: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If declared, the bib will display when focus is applied to the trigger.
+       */
+      focusShow: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will not hide when moving focus outside the element.
+       */
       noHideOnThisFocusLoss: {
         type: Boolean,
         reflect: true
       },
-      isPopoverVisible: { type: Boolean },
+
+      /**
+       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       */
+      mobileFullscreenBreakpoint: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If true, the dropdown bib is displayed.
+       */
+      isPopoverVisible: {
+        type: Boolean
+      },
+
       onSlotChange: {
         type: Function,
         reflect: false
       },
-      mobileFullscreenBreakpoint: {
-        type: String,
-        reflect: true,
+
+      /**
+       * @private
+       */
+      dropdownWidth: {
+        type: Number
       },
 
       /**
        * @private
        */
-      dropdownWidth: { type: Number },
+      placement: {
+        type: String
+      },
 
       /**
        * @private
        */
-      placement:     { type: String },
+      tabIndex: {
+        type: Number
+      },
 
       /**
        * @private
        */
-      tabIndex: { type: Number },
-
-      /**
-       * @private
-       */
-      hasTriggerContent: {type: Boolean },
+      hasTriggerContent: {
+        type: Boolean
+      }
     };
   }
 

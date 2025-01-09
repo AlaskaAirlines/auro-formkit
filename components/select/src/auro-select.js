@@ -26,18 +26,6 @@ import tokensCss from "./styles/tokens-css.js";
 /**
  * The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
  *
- * @attr {String} validity - Specifies the `validityState` this element is in.
- * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
- * @attr {Boolean} flexMenuWidth - If set, makes dropdown bib width match the size of the content, rather than the width of the trigger.
- * @prop {String} value - Value selected for the component.
- * @prop {Boolean} disabled - When attribute is present element shows disabled state.
- * @prop {Boolean} noCheckmark - When true, checkmark on selected option will no longer be present.
- * @attr {Object} optionSelected - Specifies the current selected menuOption.
  * @slot - Default slot for the menu content.
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
@@ -106,46 +94,93 @@ export class AuroSelect extends LitElement {
   // to understand how to use reflected attributes with your property settings.
   static get properties() {
     return {
-      // ...super.properties,
+
+      /**
+       * Specifies the current selected menuOption.
+       */
       optionSelected: {
         type: Object
       },
+
+      /**
+       * Value selected for the component.
+       */
       value: {
         type: String
       },
+
+      /**
+       * If set, disables auto-validation on blur.
+       */
       noValidate: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * Populates the `required` attribute on the element. Used for client-side validation.
+       */
       required: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+       */
       error: {
         type: String,
         reflect: true
       },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
       setCustomValidity: {
         type: String
       },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
       setCustomValidityCustomError: {
         type: String
       },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
       setCustomValidityValueMissing: {
         type: String
       },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
       validity: {
         type: String,
         reflect: true
       },
+
+      /**
+       * When attribute is present, element shows disabled state.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * When true, checkmark on selected option will no longer be present.
+       */
       noCheckmark: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
+       */
       flexMenuWidth: {
         type: Boolean,
         reflect: true
