@@ -11,13 +11,13 @@
 | Property                     | Attribute                    | Type        | Default | Description                                      |
 |------------------------------|------------------------------|-------------|---------|--------------------------------------------------|
 | `bordered`                   | `bordered`                   | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
-| `chevron`                    | `chevron`                    | ` Boolean ` |         | If declared, the dropdown displays an display state chevron on the right. |
+| `chevron`                    | `chevron`                    | ` Boolean ` |         | If declared, the dropdown displays a chevron on the right. |
 | `common`                     | `common`                     | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
 | `disabled`                   | `disabled`                   | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
 | `error`                      | `error`                      | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
-| `fluid`                      | `fluid`                      | `Boolean`   |         | Makes the trigger to be full width of its parent container |
-| `focusShow`                  | `focusShow`                  | ` Boolean ` |         | if declared, the bib will display when focus is applied to the trigger. |
-| `hoverToggle`                | `hoverToggle`                | ` Boolean ` |         | if declared, the trigger will toggle the big on mouseover/mouseout. |
+| `fluid`                      | `fluid`                      | `Boolean`   |         | Makes the trigger to be full width of its parent container. |
+| `focusShow`                  | `focusShow`                  | ` Boolean ` |         | If declared, the bib will display when focus is applied to the trigger. |
+| `hoverToggle`                | `hoverToggle`                | ` Boolean ` |         | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
 | `inset`                      | `inset`                      | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
 | `isPopoverVisible`           | `isPopoverVisible`           | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
 | `matchWidth`                 | `matchWidth`                 | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |

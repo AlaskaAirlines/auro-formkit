@@ -21,41 +21,8 @@ import AuroFormValidation from '@auro-formkit/form-validation';
 /**
  * Auro-input provides users a way to enter data into a text field.
  *
- * @attr {Boolean} activeLabel - If set, the label will remain fixed in the active position.
- * @attr {String}  autocapitalize - An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters]
- * @attr {String}  autocomplete - An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
- * @attr {String}  autocorrect - When set to `off`, stops iOS from auto correcting words when typed into a text box.
  * @attr {Boolean} bordered - Applies bordered UI variant.
  * @attr {Boolean} borderless - Applies borderless UI variant.
- * @attr {Boolean} disabled - If set, disables the input.
- * @attr {String}  error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
- * @attr {Boolean} icon - If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
- * @attr {String}  id - Sets the unique ID of the element.
- * @attr {String}  lang - defines the language of an element.
- * @attr {String}  max - The maximum value allowed. This only applies for inputs with a type of `number` and all date formats.
- * @attr {Number}  maxLength - The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
- * @attr {String}  min - The minimum value allowed. This only applies for inputs with a type of `number` and all date formats.
- * @attr {Number}  minLength - The minimum number of characters the user can enter into the text input. This must be an non-negative integer value smaller than or equal to the value specified by `maxlength`.
- * @attr {String}  name - Populates the `name` attribute on the input.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} readonly - Makes the input read-only, but can be set programmatically.
- * @attr {Boolean} required - Populates the `required` attribute on the input. Used for client-side validation.
- * @attr {String}  pattern - Specifies a regular expression the form control's value should match.
- * @attr {String}  placeholder - Define custom placeholder text, only supported by date input formats.
- * @attr {String}  setCustomValidity - Sets a custom help text message to display for all validity states.
- * @attr {String}  setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String}  setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String}  setCustomValidityPatternMismatch - Custom help text message to display when validity = `patternMismatch`.
- * @attr {String}  setCustomValidityTooShort - Custom help text message to display when validity = `tooShort`.
- * @attr {String}  setCustomValidityTooLong - Custom help text message to display when validity = `tooLong`.
- * @attr {String}  setCustomValidityForType - Custom help text message to display for the declared element `type` and type validity fails.
- * @attr {String}  setCustomValidityRangeOverflow - Custom help text message to display when validity = `rangeOverflow`.
- * @attr {String}  setCustomValidityRangeUnderflow - Custom help text message to display when validity = `rangeUnderflow`.
- * @attr {String}  spellcheck - An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
- * @attr {String}  type - Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `month-day-year`, `month-year`, `year-month-day`  or `text`. If given value is not allowed or set, defaults to `text`.
- * @attr {Boolean} validateOnInput - Sets validation mode to re-eval with each input.
- * @attr {String}  validity - Specifies the `validityState` this element is in.
- * @attr {String}  value - Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
  *
  * @slot helptext - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
@@ -150,59 +117,261 @@ export default class BaseInput extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
-      id:                      { type: String },
-      name:                    { type: String },
-      type:                    { type: String,
-        reflect: true },
-      value:                   { type: String },
-      lang:                    { type: String },
-      pattern:                 {
-        type: String,
-        reflect: true
-      },
-      icon:                    { type: Boolean },
-      disabled:                { type: Boolean },
-      required:                { type: Boolean },
-      noValidate:              { type: Boolean },
-      spellcheck:              { type: String },
-      autocorrect:             { type: String },
-      autocapitalize:          { type: String },
-      autocomplete:            {
-        type: String,
-        reflect: true
-      },
-      placeholder:             { type: String },
-      activeLabel:             {
+
+      /**
+       * If set, the label will remain fixed in the active position.
+       */
+      activeLabel: {
         type: Boolean,
         reflect: true
       },
-      max:               { type: String },
-      min:               { type: String },
-      maxLength:               { type: Number },
-      minLength:               { type: Number },
+
+      /**
+       * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters]
+       */
+      autocapitalize: {
+        type: String
+      },
+
+      /**
+       * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
+       */
+      autocomplete: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * When set to `off`, stops iOS from auto-correcting words when typed into a text box.
+       */
+      autocorrect: {
+        type: String
+      },
+
+      /**
+       * If set, disables the input.
+       */
+      disabled: {
+        type: Boolean
+      },
+
+      error: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Contains the help text message for the current validity error.
+       */
+      errorMessage: {
+        type: String
+      },
+
+      /**
+       * If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
+       */
+      icon: {
+        type: Boolean
+      },
+
+      /**
+       * Sets the unique ID of the element.
+       */
+      id: {
+        type: String
+      },
+
+      /**
+       * Defines the language of an element.
+       */
+      lang: {
+        type: String
+      },
+
+      /**
+       * The maximum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       */
+      max: {
+        type: String
+      },
+
+      /**
+       * The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
+       */
+      maxLength: {
+        type: Number
+      },
+
+      /**
+       * The minimum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       */
+      min: {
+        type: String
+      },
+
+      /**
+       * The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`.
+       */
+      minLength: {
+        type: Number
+      },
+
+      /**
+       * Populates the `name` attribute on the input.
+       */
+      name: {
+        type: String
+      },
+
+      /**
+       * If set, disables auto-validation on blur.
+       */
+      noValidate: {
+        type: Boolean
+      },
+
+      /**
+       * Specifies a regular expression the form control's value should match.
+       */
+      pattern: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Define custom placeholder text, only supported by date input formats.
+       */
+      placeholder: {
+        type: String
+      },
+
+      /**
+       * Makes the input read-only, but can be set programmatically.
+       */
+      readonly: {
+        type: Boolean
+      },
+
+      /**
+       * Populates the `required` attribute on the input. Used for client-side validation.
+       */
+      required: {
+        type: Boolean
+      },
 
       /**
        * @ignore
        */
-      showPassword:            { state: true },
-      validateOnInput:         { type: Boolean },
-      readonly:                { type: Boolean },
-      error:                   {
+      showPassword: {
+        state: true
+      },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
+      setCustomValidity: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `badInput`.
+       */
+      setCustomValidityBadInput: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
+      setCustomValidityCustomError: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display for the declared element `type` and type validity fails.
+       */
+      setCustomValidityForType: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `rangeOverflow`.
+       */
+      setCustomValidityRangeOverflow: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `rangeUnderflow`.
+       */
+      setCustomValidityRangeUnderflow: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `tooLong`.
+       */
+      setCustomValidityTooLong: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `tooShort`.
+       */
+      setCustomValidityTooShort: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
+      setCustomValidityValueMissing: {
+        type: String
+      },
+
+      /**
+       * Custom help text message for email type validity.
+       */
+      customValidityTypeEmail: {
+        type: String
+      },
+
+      /**
+       * An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
+       */
+      spellcheck: {
+        type: String
+      },
+
+      /**
+       * Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `month-day-year`, `month-year`, `year-month-day` or `text`. If given value is not allowed or set, defaults to `text`.
+       */
+      type: {
         type: String,
         reflect: true
       },
-      validity:                {
+
+      /**
+       * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
+       */
+      value: {
+        type: String
+      },
+
+      /**
+       * Sets validation mode to re-eval with each input.
+       */
+      validateOnInput: {
+        type: Boolean
+      },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
+      validity: {
         type: String,
         reflect: true
-      },
-      setCustomValidity:                { type: String },
-      setCustomValidityCustomError:     { type: String },
-      setCustomValidityValueMissing:    { type: String },
-      setCustomValidityPatternMismatch: { type: String },
-      setCustomValidityTooShort:        { type: String },
-      setCustomValidityTooLong:         { type: String },
-      setCustomValidityRangeOverflow:   { type: String },
-      setCustomValidityRangeUnderflow:  { type: String }
+      }
     };
   }
 

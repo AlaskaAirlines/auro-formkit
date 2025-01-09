@@ -22,9 +22,6 @@ const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
 ];
 
 /**
- * @attr { Boolean } common - If declared, will apply all styles for the common theme.
- * @attr { Boolean } rounded - If declared, will apply border-radius to the bib.
- * @attr { Boolean } inset - If declared, will apply extra padding to bib content.
  * @prop { String } mobileFullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
  * @csspart bibContainer - Apply css to the bib container.
  */
@@ -50,14 +47,26 @@ export class AuroDropdownBib extends LitElement {
 
   static get properties() {
     return {
+
+      /**
+       * If declared, will apply all styles for the common theme.
+       */
       common: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If declared, will apply extra padding to bib content.
+       */
       inset: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If declared, will apply border-radius to the bib.
+       */
       rounded: {
         type: Boolean,
         reflect: true
