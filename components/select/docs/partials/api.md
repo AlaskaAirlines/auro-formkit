@@ -13,7 +13,7 @@ This file is generated based on a template fetched from `./docs/partials/apiExam
 
 ### Default example
 
-A baseline `auro-select` using `auro-menu` and `auro-menuoption` elements. Notice a default `Please select option` placeholder in the trigger.
+A baseline `auro-select` using `auro-menu` and `auro-menuoption` elements.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
@@ -46,22 +46,6 @@ To pre-set the value of auro-select on load, use the `value` property. The `sele
 <!-- AURO-GENERATED-CONTENT:END -->
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/value.js) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-#### placeholder <a name="placeholder"></a>
-
-Use the `placeholder` string attribute to inject a custom placeholder option with the select element.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customPlaceholder.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/customPlaceholder.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -151,22 +135,6 @@ Use the `label` slot to give your users contextual information about their selec
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/label.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-#### label with placeholder
-
-The `label` slot and `placeholder` attribute may be used together.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/labelWithPlaceholder.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/labelWithPlaceholder.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

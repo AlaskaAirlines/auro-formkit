@@ -62,7 +62,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ### Default example
 
-A baseline `auro-select` using `auro-menu` and `auro-menuoption` elements. Notice a default `Please select option` placeholder in the trigger.
+A baseline `auro-select` using `auro-menu` and `auro-menuoption` elements.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
@@ -166,46 +166,6 @@ export function valueExample() {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-#### placeholder <a name="placeholder"></a>
-Use the `placeholder` string attribute to inject a custom placeholder option with the select element.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customPlaceholder.html) -->
-  <!-- The below content is automatically added from ./../apiExamples/customPlaceholder.html -->
-  <auro-select>
-    <label slot="placeholder">Please select your preferred option</label>
-    <auro-menu>
-      <auro-menuoption value="stops">Stops</auro-menuoption>
-      <auro-menuoption value="price">Price</auro-menuoption>
-      <auro-menuoption value="duration">Duration</auro-menuoption>
-      <auro-menuoption value="departure">Departure</auro-menuoption>
-      <auro-menuoption value="arrival">Arrival</auro-menuoption>
-      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-    </auro-menu>
-  </auro-select>
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/customPlaceholder.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/customPlaceholder.html -->
-
-```html
-<auro-select>
-  <label slot="placeholder">Please select your preferred option</label>
-  <auro-menu>
-    <auro-menuoption value="stops">Stops</auro-menuoption>
-    <auro-menuoption value="price">Price</auro-menuoption>
-    <auro-menuoption value="duration">Duration</auro-menuoption>
-    <auro-menuoption value="departure">Departure</auro-menuoption>
-    <auro-menuoption value="arrival">Arrival</auro-menuoption>
-    <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-  </auro-menu>
-</auro-select>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
 #### required <a name="required"></a>
 When present, the `required` attribute specifies that a select field must be filled out before submitting the form.
 
@@ -215,6 +175,7 @@ When the validity check fails the validityState, equals `valueMissing`. The erro
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/required.html) -->
   <!-- The below content is automatically added from ./../apiExamples/required.html -->
   <auro-select required setCustomValidityValueMissing="Custom required validation error message.">
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -233,6 +194,7 @@ When the validity check fails the validityState, equals `valueMissing`. The erro
 
 ```html
 <auro-select required setCustomValidityValueMissing="Custom required validation error message.">
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
@@ -258,6 +220,7 @@ A custom error message can be set using the `error` attribute, or it can be used
   <auro-button id="undefinedValueExampleBtnRemoveError">Remove Error</auro-button>
   <br /><br />
   <auro-select id="errorExample" error="Custom error message">
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -279,6 +242,7 @@ A custom error message can be set using the `error` attribute, or it can be used
 <auro-button id="undefinedValueExampleBtnRemoveError">Remove Error</auro-button>
 <br /><br />
 <auro-select id="errorExample" error="Custom error message">
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
@@ -299,6 +263,7 @@ Use the `disabled` boolean attribute to toggle the disabled UI.
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
   <!-- The below content is automatically added from ./../apiExamples/disabled.html -->
   <auro-select disabled>
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -317,6 +282,7 @@ Use the `disabled` boolean attribute to toggle the disabled UI.
 
 ```html
 <auro-select disabled>
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
@@ -337,6 +303,7 @@ Use the `flexMenuWidth` boolean attribute to toggle the width of the `<auro-sele
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/flexMenuWidth.html) -->
   <!-- The below content is automatically added from ../apiExamples/flexMenuWidth.html -->
   <auro-select flexMenuWidth id="flexMenuWidthExample">
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu>
       <auro-menuoption value="united states">United States has a country code of (+1)</auro-menuoption>
       <auro-menuoption value="costa rica">Costa Rica has a country code of (+506)</auro-menuoption>
@@ -359,6 +326,7 @@ Use the `flexMenuWidth` boolean attribute to toggle the width of the `<auro-sele
 
 ```html
 <auro-select flexMenuWidth id="flexMenuWidthExample">
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu>
     <auro-menuoption value="united states">United States has a country code of (+1)</auro-menuoption>
     <auro-menuoption value="costa rica">Costa Rica has a country code of (+506)</auro-menuoption>
@@ -418,49 +386,6 @@ Use the `label` slot to give your users contextual information about their selec
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-#### label with placeholder
-
-The `label` slot and `placeholder` attribute may be used together.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/labelWithPlaceholder.html) -->
-  <!-- The below content is automatically added from ./../apiExamples/labelWithPlaceholder.html -->
-  <auro-select>
-    <span slot="label">Label Text</span>
-    <label slot="placeholder">Placeholder Text</label>
-    <auro-menu>
-      <auro-menuoption value="stops">Stops</auro-menuoption>
-      <auro-menuoption value="price">Price</auro-menuoption>
-      <auro-menuoption value="duration">Duration</auro-menuoption>
-      <auro-menuoption value="departure">Departure</auro-menuoption>
-      <auro-menuoption value="arrival">Arrival</auro-menuoption>
-      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-    </auro-menu>
-  </auro-select>
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/labelWithPlaceholder.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/labelWithPlaceholder.html -->
-
-```html
-<auro-select>
-  <span slot="label">Label Text</span>
-  <label slot="placeholder">Placeholder Text</label>
-  <auro-menu>
-    <auro-menuoption value="stops">Stops</auro-menuoption>
-    <auro-menuoption value="price">Price</auro-menuoption>
-    <auro-menuoption value="duration">Duration</auro-menuoption>
-    <auro-menuoption value="departure">Departure</auro-menuoption>
-    <auro-menuoption value="arrival">Arrival</auro-menuoption>
-    <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-  </auro-menu>
-</auro-select>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
 #### helpText <a name="helpText"></a>
 Use the `helptext` slot to provide additional information back to your user about their selection option(s).
 
@@ -468,6 +393,7 @@ Use the `helptext` slot to provide additional information back to your user abou
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/helpText.html) -->
   <!-- The below content is automatically added from ./../apiExamples/helpText.html -->
   <auro-select>
+    <label slot="placeholder">Placeholder Text</label>
     <span slot="helpText">Custom help text message.</span>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -487,6 +413,7 @@ Use the `helptext` slot to provide additional information back to your user abou
 
 ```html
 <auro-select>
+  <label slot="placeholder">Placeholder Text</label>
   <span slot="helpText">Custom help text message.</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -513,6 +440,7 @@ Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` s
   <auro-button id="resetStateBtn">Reset</auro-button>
   <br/><br/>
   <auro-select id="resetStateExample" required value="price">
+    <label slot="placeholder">Placeholder Text</label>
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -534,6 +462,7 @@ Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` s
 <auro-button id="resetStateBtn">Reset</auro-button>
 <br/><br/>
 <auro-select id="resetStateExample" required value="price">
+  <label slot="placeholder">Placeholder Text</label>
   <span slot="label">Name</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -569,6 +498,7 @@ The following example illustrates how a user may query the `element.value` or `e
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/valueExtraction.html) -->
   <!-- The below content is automatically added from ./../apiExamples/valueExtraction.html -->
   <auro-select id="valueExtraction">
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -588,6 +518,7 @@ The following example illustrates how a user may query the `element.value` or `e
 
 ```html
 <auro-select id="valueExtraction">
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
@@ -627,6 +558,7 @@ This example programmatically adds the `error` state when a user selects an opti
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customErrorValidity.html) -->
   <!-- The below content is automatically added from ./../apiExamples/customErrorValidity.html -->
   <auro-select id="primaryError">
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu>
       <auro-menuoption value="1">1</auro-menuoption>
       <auro-menuoption value="2">2</auro-menuoption>
@@ -645,6 +577,7 @@ This example programmatically adds the `error` state when a user selects an opti
 
 ```html
 <auro-select id="primaryError">
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu>
     <auro-menuoption value="1">1</auro-menuoption>
     <auro-menuoption value="2">2</auro-menuoption>
@@ -818,6 +751,7 @@ The following example listens for the `auroMenu-selectedOption` event. Once trig
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/valueAlert.html) -->
   <!-- The below content is automatically added from ./../apiExamples/valueAlert.html -->
   <auro-select id="valueAlert">
+    <label slot="placeholder">Placeholder Text</label>
     <auro-menu id="valueAlertMenu">
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -836,6 +770,7 @@ The following example listens for the `auroMenu-selectedOption` event. Once trig
 
 ```html
 <auro-select id="valueAlert">
+  <label slot="placeholder">Placeholder Text</label>
   <auro-menu id="valueAlertMenu">
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
