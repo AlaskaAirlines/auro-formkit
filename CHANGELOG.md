@@ -1,5 +1,31 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2025-01-09)
+
+
+### Bug Fixes
+
+* make x icon take no space when invisible [#164](https://github.com/AlaskaAirlines/auro-formkit/issues/164) ([7ad63e2](https://github.com/AlaskaAirlines/auro-formkit/commit/7ad63e2d8898bd44e67724b8bb174f2a2f549174))
+
+
+### Features
+
+* update custom validity message logic and docs [#155](https://github.com/AlaskaAirlines/auro-formkit/issues/155) [#156](https://github.com/AlaskaAirlines/auro-formkit/issues/156) ([beec66a](https://github.com/AlaskaAirlines/auro-formkit/commit/beec66a85d8004ad30207e3b039eac8cf3ffb2fb))
+
+
+### Performance Improvements
+
+* add animation to clear icon and add shared mixin file ([4c6a1e1](https://github.com/AlaskaAirlines/auro-formkit/commit/4c6a1e1f286c727f63acb53aaa59828e6387c2e0))
+* add optional chaining to validation logic ([c4de243](https://github.com/AlaskaAirlines/auro-formkit/commit/c4de243b2f98633605872ef41d2a033d7341b5f3))
+* update handling of invalid values in select ([d1eb0bf](https://github.com/AlaskaAirlines/auro-formkit/commit/d1eb0bf6477b89a751a8f9ce4c5d43d4fa92721c))
+* update validity to use patternMismatch state [#163](https://github.com/AlaskaAirlines/auro-formkit/issues/163) ([4c9f9a4](https://github.com/AlaskaAirlines/auro-formkit/commit/4c9f9a4c803b2fede189208ad0e005156d6b0bbf))
+
+
+### BREAKING CHANGES
+
+* input's errorMessage is now a private property.
+* patternMismatch replaces badInput state when user inputs do not match the expected pattern.
+
 # [2.0.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2025-01-07)
 
 
