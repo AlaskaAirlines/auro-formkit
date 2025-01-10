@@ -4,26 +4,26 @@
 
 | Property                          | Attribute                         | Type      | Default                                          | Description                                      |
 |-----------------------------------|-----------------------------------|-----------|--------------------------------------------------|--------------------------------------------------|
-| `calendarEndDate`                 | `calendarEndDate`                 | `String`  | "undefined"                                      | The last date that may be displayed in the calendar |
-| `calendarFocusDate`               | `calendarFocusDate`               | `String`  | "value"                                          | The date that will first be visually rendered to the user in the calendar. |
-| `calendarStartDate`               | `calendarStartDate`               | `String`  | "undefined"                                      | The first date that may be displayed in the calendar. |
-| `centralDate`                     | `centralDate`                     | `String`  |                                                  | The date that determines the currently visible month. |
-| `disabled`                        | `disabled`                        | `Boolean` | false                                            | If set, disables the datepicker.                 |
-| `error`                           | `error`                           | `String`  |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
-| `maxDate`                         | `maxDate`                         | `String`  |                                                  | Maximum date. All dates after will be disabled.  |
-| `minDate`                         | `minDate`                         | `String`  |                                                  | Minimum date. All dates before will be disabled. |
-| `monthNames`                      | `monthNames`                      | `array`   | ["January","February","March","April","May","June","July","August","September","October","November","December"] |                                                  |
-| `noValidate`                      | `noValidate`                      | `Boolean` | false                                            | If set, disables auto-validation on blur.        |
-| `range`                           | `range`                           | `Boolean` | false                                            | If set, turns on date range functionality in auro-calendar. |
-| `required`                        | `required`                        | `Boolean` | false                                            | Populates the `required` attribute on the input. Used for client-side validation. |
-| `setCustomValidity`               | `setCustomValidity`               | `String`  |                                                  | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    | `String`  |                                                  | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  | `String`  |                                                  | Custom help text message to display when validity = `rangeOverflow`. |
-| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` | `String`  |                                                  | Custom help text message to display when validity = `rangeUnderflow`. |
-| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `String`  |                                                  | Help text message to display when validity = `valueMissing`. |
-| `validity`                        | `validity`                        | `String`  | "undefined"                                      | Specifies the `validityState` this element is in. |
-| `value`                           | `value`                           | `String`  | "undefined"                                      | Value selected for the date picker.              |
-| `valueEnd`                        | `valueEnd`                        | `String`  | "undefined"                                      | Value selected for the second date picker when using date range. |
+| `calendarEndDate`                 | `calendarEndDate`                 | `string`  | "undefined"                                      | The last date that may be displayed in the calendar. |
+| `calendarFocusDate`               | `calendarFocusDate`               | `string`  | "value"                                          | The date that will first be visually rendered to the user in the calendar. |
+| `calendarStartDate`               | `calendarStartDate`               | `string`  | "undefined"                                      | The first date that may be displayed in the calendar. |
+| `centralDate`                     | `centralDate`                     | `string`  |                                                  | The date that determines the currently visible month. |
+| `disabled`                        | `disabled`                        | `boolean` | false                                            | If set, disables the datepicker.                 |
+| `error`                           | `error`                           | `string`  |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| `maxDate`                         | `maxDate`                         | `string`  |                                                  | Maximum date. All dates after will be disabled.  |
+| `minDate`                         | `minDate`                         | `string`  |                                                  | Minimum date. All dates before will be disabled. |
+| `monthNames`                      | `monthNames`                      | `array`   | ["January","February","March","April","May","June","July","August","September","October","November","December"] | Names of all 12 months to render in the calendar, used for localization of date string in mobile layout. |
+| `noValidate`                      | `noValidate`                      | `boolean` | false                                            | If set, disables auto-validation on blur.        |
+| `range`                           | `range`                           | `boolean` | false                                            | If set, turns on date range functionality in auro-calendar. |
+| `required`                        | `required`                        | `boolean` | false                                            | Populates the `required` attribute on the input. Used for client-side validation. |
+| `setCustomValidity`               | `setCustomValidity`               | `string`  |                                                  | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    | `string`  |                                                  | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  | `string`  |                                                  | Custom help text message to display when validity = `rangeOverflow`. |
+| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` | `string`  |                                                  | Custom help text message to display when validity = `rangeUnderflow`. |
+| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`  |                                                  | Custom help text message to display when validity = `valueMissing`. |
+| `validity`                        | `validity`                        | `string`  | "undefined"                                      | Specifies the `validityState` this element is in. |
+| `value`                           | `value`                           | `string`  | "undefined"                                      | Value selected for the datepicker.               |
+| `valueEnd`                        | `valueEnd`                        | `string`  | "undefined"                                      | Value selected for the second datepicker when using date range. |
 
 ## Methods
 

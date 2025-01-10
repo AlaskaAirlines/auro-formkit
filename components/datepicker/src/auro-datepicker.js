@@ -33,26 +33,6 @@ import inputVersion from './formkit/auro-inputVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * @prop {String} value - Value selected for the date picker.
- * @prop {String} valueEnd - Value selected for the second date picker when using date range.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
- * @attr {String} validity - Specifies the `validityState` this element is in.
- * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String} setCustomValidityRangeUnderflow - Custom help text message to display when validity = `rangeUnderflow`.
- * @attr {String} setCustomValidityRangeOverflow - Custom help text message to display when validity = `rangeOverflow`.
- * @attr {String} setCustomValidityValueMissing - Help text message to display when validity = `valueMissing`.
- * @attr {String} calendarStartDate - The first date that may be displayed in the calendar.
- * @attr {String} calendarEndDate - The last date that may be displayed in the calendar
- * @attr {String} calendarFocusDate - The date that will first be visually rendered to the user in the calendar.
- * @attr {Boolean} disabled - If set, disables the datepicker.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} required - Populates the `required` attribute on the input. Used for client-side validation.
- * @attr {Boolean} range - If set, turns on date range functionality in auro-calendar.
- * @attr {String} centralDate - The date that determines the currently visible month.
- * @attr {String} maxDate - Maximum date. All dates after will be disabled.
- * @attr {String} minDate - Minimum date. All dates before will be disabled.
- * @attr {Array} monthNames = Names of all 12 months to render in the calendar, used for localization of date string in mobile layout.
  * @slot helpText - Defines the content of the helpText.
  * @slot mobileDateLabel - Defines the content to display above selected dates in the mobile layout.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
@@ -149,7 +129,15 @@ export class AuroDatePicker extends LitElement {
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
     this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
+
+    /**
+     * @private
+     */
     this.inputTag = versioning.generateTag('auro-input', inputVersion, AuroInput);
   }
 
@@ -159,100 +147,155 @@ export class AuroDatePicker extends LitElement {
   static get properties() {
     return {
       // ...super.properties,
-      error: {
-        type: String,
-        reflect: true
-      },
-      noValidate: {
-        type: Boolean
-      },
-      setCustomValidity: {
-        type: String,
-      },
-      setCustomValidityCustomError: {
-        type: String,
-      },
-      setCustomValidityRangeUnderflow: {
-        type: String,
-      },
-      setCustomValidityRangeOverflow: {
-        type: String,
-      },
-      setCustomValidityValueMissing: {
-        type: String,
-      },
-      validity: {
-        type: String,
-        reflect: true
-      },
-      range: {
-        type: Boolean,
-        reflect: true
-      },
-      disabled: {
-        type: Boolean,
-        reflect: true
-      },
-      required: {
-        type: Boolean,
-        reflect: true
-      },
-      type: {
-        type: String,
-        reflect: true
-      },
-      value: {
-        type: String
-      },
-      valueEnd: {
-        type: String
-      },
-      centralDate: {
-        type: String
-      },
-      maxDate: {
-        type: String,
-        reflect: true
-      },
-      minDate: {
-        type: String,
-        reflect: true
-      },
-      monthNames: {
-        type: Array
-      },
-      calendarStartDate: {
-        type: String,
-        reflect: true
-      },
+      /**
+       * The last date that may be displayed in the calendar.
+       */
       calendarEndDate: {
         type: String,
         reflect: true
       },
+
+      /**
+       * The date that will first be visually rendered to the user in the calendar.
+       */
       calendarFocusDate: {
         type: String,
         reflect: true
       },
 
       /**
-       * @private
+       * The first date that may be displayed in the calendar.
        */
-      dropdownElementName: { type: String },
+      calendarStartDate: {
+        type: String,
+        reflect: true
+      },
 
       /**
-       * @private
+       * The date that determines the currently visible month.
        */
-      dropdownTag: { type: Object },
+      centralDate: {
+        type: String
+      },
 
       /**
-       * @private
+       * If set, disables the datepicker.
        */
-      inputElementName: { type: String },
+      disabled: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
-       * @private
+       * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
        */
-      inputTag: { type: Object }
+      error: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Maximum date. All dates after will be disabled.
+       */
+      maxDate: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Minimum date. All dates before will be disabled.
+       */
+      minDate: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Names of all 12 months to render in the calendar, used for localization of date string in mobile layout.
+       */
+      monthNames: {
+        type: Array
+      },
+
+      /**
+       * If set, disables auto-validation on blur.
+       */
+      noValidate: {
+        type: Boolean
+      },
+
+      /**
+       * If set, turns on date range functionality in auro-calendar.
+       */
+      range: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Populates the `required` attribute on the input. Used for client-side validation.
+       */
+      required: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
+      setCustomValidity: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
+      setCustomValidityCustomError: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `rangeOverflow`.
+       */
+      setCustomValidityRangeOverflow: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `rangeUnderflow`.
+       */
+      setCustomValidityRangeUnderflow: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
+      setCustomValidityValueMissing: {
+        type: String
+      },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
+      validity: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Value selected for the datepicker.
+       */
+      value: {
+        type: String
+      },
+
+      /**
+       * Value selected for the second datepicker when using date range.
+       */
+      valueEnd: {
+        type: String
+      }
     };
   }
 
