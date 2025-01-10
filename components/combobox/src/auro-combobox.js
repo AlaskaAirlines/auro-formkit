@@ -346,12 +346,15 @@ export class AuroCombobox extends LitElement {
     // handle the menu event for an option selection
     this.menu.addEventListener('auroMenu-selectedOption', () => {
       if (this.menu.optionSelected) {
-        if (this.optionSelected !== this.menu.optionSelected) {
-          this.optionSelected = this.menu.optionSelected;
+        const selected = Array.isArray(this.menu.optionSelected) ? this.menu.optionSelected[0] : this.menu.optionSelected;
+
+        if (this.optionSelected !== selected) {
+          this.optionSelected = selected;
         }
 
         if (this.value !== this.optionSelected.value) {
           this.value = this.optionSelected.value;
+          this.menu.value = [this.optionSelected.value];
         }
 
         if (this.input.value !== this.optionSelected.textContent) {
@@ -548,11 +551,11 @@ export class AuroCombobox extends LitElement {
 
       if (this.dropdown.isPopoverVisible) {
         if (evt.key === 'ArrowUp') {
-          this.menu.selectNextItem('up');
+          this.menu.navigateOptions('up');
         }
 
         if (evt.key === 'ArrowDown') {
-          this.menu.selectNextItem('down');
+          this.menu.navigateOptions('down');
         }
       }
     });
@@ -592,7 +595,7 @@ export class AuroCombobox extends LitElement {
 
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      this.menu.value = this.value;
+      this.menu.value = [this.getAttribute('value')];
     }
   }
 
@@ -611,6 +614,7 @@ export class AuroCombobox extends LitElement {
   reset() {
     this.input.reset();
     this.validation.reset(this);
+    this.menu.value = undefined;
   }
 
   updated(changedProperties) {
@@ -646,7 +650,7 @@ export class AuroCombobox extends LitElement {
   /**
    * Watch for slot changes and recalculate the menuoptions.
    * @private
-   * @param {Event} event - slotchange event
+   * @param {Event} event - `slotchange` event.
    * @returns {void}
    */
   handleSlotChange(event) {
