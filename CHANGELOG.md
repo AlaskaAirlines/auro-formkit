@@ -1,5 +1,23 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2025-01-10)
+
+
+### Bug Fixes
+
+* remove menuoption's padding in select ([8bb0efc](https://github.com/AlaskaAirlines/auro-formkit/commit/8bb0efc0d9562c5ddd36d813668767a5398efebe))
+* simplify logic on calculating `hasTriggerContent` in dropdown ([f1129cc](https://github.com/AlaskaAirlines/auro-formkit/commit/f1129ccd669332d4b1cc6e88d2f5c988663bf652))
+
+
+### Code Refactoring
+
+* make `dropdown.placeholder` slot [#36](https://github.com/AlaskaAirlines/auro-formkit/issues/36) ([bff21e8](https://github.com/AlaskaAirlines/auro-formkit/commit/bff21e85e07cd1b1c6bdd5fc2c4147bc17b80087))
+
+
+### BREAKING CHANGES
+
+* `placeholder` is now slot not attribute and there is no default node for it
+
 # [2.0.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2025-01-09)
 
 
