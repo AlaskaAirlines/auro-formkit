@@ -96,17 +96,27 @@ export class AuroSelect extends LitElement {
     return {
 
       /**
-       * Specifies the current selected menuOption.
+       * When attribute is present, element shows disabled state.
        */
-      optionSelected: {
-        type: Object
+      disabled: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
-       * Value selected for the component.
+       * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
        */
-      value: {
-        type: String
+      flexMenuWidth: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * When true, checkmark on selected option will no longer be present.
+       */
+      noCheckmark: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -115,6 +125,27 @@ export class AuroSelect extends LitElement {
       noValidate: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * @private
+       */
+      optionActive: {
+        type: Object
+      },
+
+      /**
+       * Specifies the current selected menuOption.
+       */
+      optionSelected: {
+        type: Object
+      },
+
+      /**
+       * @private
+       */
+      options: {
+        type: Array
       },
 
       /**
@@ -163,45 +194,18 @@ export class AuroSelect extends LitElement {
       },
 
       /**
-       * When attribute is present, element shows disabled state.
+       * Value selected for the component.
        */
-      disabled: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * When true, checkmark on selected option will no longer be present.
-       */
-      noCheckmark: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
-       */
-      flexMenuWidth: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * @private
-       */
-      options: { type: Array },
-
-      /**
-       * @private
-       */
-      optionActive: { type: Object },
+      value: {
+        type: String
+      }
     };
   }
 
   static get styles() {
     return [
-      styleCss,
       colorCss,
+      styleCss,
       tokensCss
     ];
   }

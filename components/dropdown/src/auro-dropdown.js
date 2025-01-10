@@ -128,18 +128,18 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If declared, the dropdown will be styled with the common theme.
+       * If declared, the dropdown displays a chevron on the right.
+       * @attr {Boolean} chevron
        */
-      common: {
+      chevron: {
         type: Boolean,
         reflect: true
       },
 
       /**
-       * If declared, the dropdown displays a chevron on the right.
-       * @attr {Boolean} chevron
+       * If declared, the dropdown will be styled with the common theme.
        */
-      chevron: {
+      common: {
         type: Boolean,
         reflect: true
       },
@@ -153,57 +153,16 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
+       * @private
+       */
+      dropdownWidth: {
+        type: Number
+      },
+
+      /**
        * If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
        */
       error: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * Makes the trigger to be full width of its parent container.
-       */
-      fluid: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, the popover and trigger will be set to the same width.
-       */
-      matchWidth: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, will apply padding around trigger slot content.
-       */
-      inset: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, will apply border-radius to trigger and default slots.
-       */
-      rounded: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, the trigger will toggle the dropdown on mouseover/mouseout.
-       */
-      hoverToggle: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, the trigger will only show the dropdown bib.
-       */
-      noToggle: {
         type: Boolean,
         reflect: true
       },
@@ -217,11 +176,41 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If declared, the dropdown will not hide when moving focus outside the element.
+       * Makes the trigger to be full width of its parent container.
        */
-      noHideOnThisFocusLoss: {
+      fluid: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * If declared, will apply padding around trigger slot content.
+       */
+      inset: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If true, the dropdown bib is displayed.
+       */
+      isPopoverVisible: {
+        type: Boolean
+      },
+
+      /**
+       * If declared, the trigger will toggle the dropdown on mouseover/mouseout.
+       */
+      hoverToggle: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * @private
+       */
+      hasTriggerContent: {
+        type: Boolean
       },
 
       /**
@@ -233,10 +222,27 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If true, the dropdown bib is displayed.
+       * If declared, the popover and trigger will be set to the same width.
        */
-      isPopoverVisible: {
-        type: Boolean
+      matchWidth: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will not hide when moving focus outside the element.
+       */
+      noHideOnThisFocusLoss: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the trigger will only show the dropdown bib.
+       */
+      noToggle: {
+        type: Boolean,
+        reflect: true
       },
 
       onSlotChange: {
@@ -247,15 +253,16 @@ export class AuroDropdown extends LitElement {
       /**
        * @private
        */
-      dropdownWidth: {
-        type: Number
+      placement: {
+        type: String
       },
 
       /**
-       * @private
+       * If declared, will apply border-radius to trigger and default slots.
        */
-      placement: {
-        type: String
+      rounded: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -263,21 +270,14 @@ export class AuroDropdown extends LitElement {
        */
       tabIndex: {
         type: Number
-      },
-
-      /**
-       * @private
-       */
-      hasTriggerContent: {
-        type: Boolean
       }
     };
   }
 
   static get styles() {
     return [
-      styleCss,
       colorCss,
+      styleCss,
       tokensCss
     ];
   }
