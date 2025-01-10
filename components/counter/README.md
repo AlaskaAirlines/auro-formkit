@@ -21,7 +21,7 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-The `auro-counter` component is a ui element that enables a way to increment or decrement a single digit value. Common use case such as adding passengers to a flight.
+The `auro-counter` component is a ui element that enables a way to increment or decrement a single digit value. Common use case is inside the `auro-counter-group` to facilitate a collection of counters to add passenger types to a flight.
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -76,15 +76,14 @@ import "@auro-formkit/-formkit/-formkit/auro-counter";
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-counter>
-  Short label
-</auro-counter>
-<br>
-<hr>
-<br>
-<auro-counter>
-  This is an example of the wrapping behavior for a long label
-</auro-counter>
+<auro-counter-group>
+  <auro-counter>
+    Short label
+  </auro-counter>
+  <auro-counter>
+    This is an example of the wrapping behavior for a long label
+  </auro-counter>
+</auro-counter-group>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -128,15 +127,14 @@ The `auro-counter` element should be used in situations where users may:
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-counter>
-  Short label
-</auro-counter>
-<br>
-<hr>
-<br>
-<auro-counter>
-  This is an example of the wrapping behavior for a long label
-</auro-counter>
+<auro-counter-group>
+  <auro-counter>
+    Short label
+  </auro-counter>
+  <auro-counter>
+    This is an example of the wrapping behavior for a long label
+  </auro-counter>
+</auro-counter-group>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 

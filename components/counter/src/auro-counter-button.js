@@ -34,3 +34,9 @@ export class AuroCounterButton extends AuroButton {
     RuntimeUtils.default.prototype.registerComponent(name, AuroCounterButton);
   }
 }
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-counter-button")) {
+  customElements.define("auro-counter-button", AuroCounterButton);
+}

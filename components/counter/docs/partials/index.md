@@ -27,16 +27,30 @@ This file is generated based on a template fetched from `./docs/partials/index.m
 
 </auro-accordion>
 
-### Sub label
+### Description slot
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/sub-label.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/description.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/sub-label.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/description.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Dropdown
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dropdown.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

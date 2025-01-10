@@ -29,7 +29,7 @@
   line-height: 1.5rem;
 }
 
-.subLabel {
+.description {
   font-size: .75rem;
   line-height: 1rem;
 }
@@ -38,8 +38,9 @@
   width: var(--ds-size-400);
   height: 34px;
   align-content: center;
+  cursor: default;
   font-size: var(--ds-size-250);
-  text-align: center;    
+  text-align: center;
 }
 
 .quantity {

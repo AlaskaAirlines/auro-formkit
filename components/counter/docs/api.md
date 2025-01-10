@@ -2,31 +2,23 @@
 
 ## Properties
 
-| Property                          | Attribute                         | Type      | Default     | Description                                      |
-|-----------------------------------|-----------------------------------|-----------|-------------|--------------------------------------------------|
-| `disabled`                        | `disabled`                        | `boolean` | false       | Determines whether the counter is interactive or disabled. |
-| `error`                           | `error`                           | `boolean` | false       | Indicates if the counter is in an error state.   |
-| `max`                             | `max`                             | `number`  | 9           | Maximum value of the counter.                    |
-| `min`                             | `min`                             | `number`  | 0           | Minimum value of the counter.                    |
-| `noValidate`                      | `noValidate`                      | `boolean` |             |                                                  |
-| `setCustomValidity`               | `setCustomValidity`               | `string`  |             |                                                  |
-| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    | `string`  |             |                                                  |
-| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  | `string`  |             |                                                  |
-| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` | `string`  |             |                                                  |
-| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`  |             |                                                  |
-| `subLabel`                        | `subLabel`                        | `string`  | ""          | Optional sub-label text for the counter.         |
-| `validity`                        | `validity`                        | `string`  | "undefined" | Indicates if the current value is valid.         |
-| `value`                           | `value`                           | `number`  | "undefined" | Value of the counter.                            |
+| Property     | Attribute    | Type      | Default     | Description                                 |
+|--------------|--------------|-----------|-------------|---------------------------------------------|
+| `disableMax` | `disableMax` | `boolean` | false       | Indicates if the maximum value is disabled. |
+| `disableMin` | `disableMin` | `boolean` | false       | Indicates if the minimum value is disabled. |
+| `disabled`   | `disabled`   | `boolean` | false       | Indicates if the counter is disabled.       |
+| `max`        | `max`        | `number`  | 9           | The maximum value for the counter.          |
+| `min`        | `min`        | `number`  | 0           | The minimum value for the counter.          |
+| `noValidate` | `noValidate` | `boolean` | false       | Indicates if validation is disabled.        |
+| `validity`   | `validity`   | `string`  | "undefined" | The validity state of the counter.          |
+| `value`      | `value`      | `number`  | "undefined" | The current value of the counter.           |
 
 ## Methods
 
-| Method                | Type                         | Description                                      |
-|-----------------------|------------------------------|--------------------------------------------------|
-| `decrement`           | `(): void`                   | Decrements the value of the counter by 1 if it is greater than the minimum value. |
-| `increment`           | `(): void`                   | Increments the counter value by 1 if it is less than the maximum value. |
-| `initValue`           | `(): void`                   | Initializes the value of the counter.<br />If the current value is undefined, it sets the value to the minimum value. |
-| `isIncrementDisabled` | `(extrema: number): boolean` | Determines if the increment button should be disabled based on the current value and extrema.<br /><br />**extrema**: The extreme value (either min or max) to compare against the current value. |
-| `jumpFocusToEnabled`  | `(): void`                   | Moves the focus to the first enabled button within the shadow DOM.<br />This method searches for the first `auro-counter-button` element that is not disabled<br />and sets the focus on it. |
+| Method      | Type       | Description                               |
+|-------------|------------|-------------------------------------------|
+| `decrement` | `(): void` | Decrements the value of the counter by 1. |
+| `increment` | `(): void` | Increments the counter value by 1.        |
 
 ## Events
 
@@ -36,14 +28,40 @@
 
 ## Slots
 
-| Name | Description                         |
-|------|-------------------------------------|
-|      | Default slot for main label content |
+| Name          | Description                          |
+|---------------|--------------------------------------|
+| `Default`     | Main label content for the counter.  |
+| `description` | Descriptive content for the counter. |
 
 ## CSS Shadow Parts
 
-| Part             | Description                              |
-|------------------|------------------------------------------|
-| `controlMinus`   | Styling hook for minus button            |
-| `controlPlus`    | Styling hook for plus button             |
-| `counterControl` | Styling hook for counter control section |
+| Part             | Description                               |
+|------------------|-------------------------------------------|
+| `controlMinus`   | Styling hook for minus button.            |
+| `controlPlus`    | Styling hook for plus button.             |
+| `counterControl` | Styling hook for counter control section. |
+
+
+# auro-counter-group
+
+## Properties
+
+| Property     | Attribute    | Type      | Default     | Description                                      |
+|--------------|--------------|-----------|-------------|--------------------------------------------------|
+| `max`        | `max`        | `number`  | "undefined" | The maximum value allowed for the whole group of counters. |
+| `min`        | `min`        | `number`  | "undefined" | The minimum value allowed for the whole group of counters. |
+| `noValidate` | `noValidate` | `boolean` | false       | If true, disables validation.                    |
+| `validity`   | `validity`   | `string`  | "undefined" | Reflects the validity state.                     |
+| `value`      | `value`      | `number`  | "undefined" | The current value.                               |
+
+## Events
+
+| Event   | Type                                           |
+|---------|------------------------------------------------|
+| `input` | `CustomEvent<{ value: number \| undefined; }>` |
+
+## Slots
+
+| Name      | Description                |
+|-----------|----------------------------|
+| `Default` | Slot for counter elements. |

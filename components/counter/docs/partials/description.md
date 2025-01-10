@@ -1,1 +1,1 @@
-The `auro-counter` component is a ui element that enables a way to increment or decrement a single digit value. Common use case such as adding passengers to a flight.
+The `auro-counter` component is a ui element that enables a way to increment or decrement a single digit value. Common use case is inside the `auro-counter-group` to facilitate a collection of counters to add passenger types to a flight.

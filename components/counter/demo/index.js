@@ -1,10 +1,9 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 import { AuroCounter } from '../src/auro-counter.js';
-import { AuroCounterButton } from '../src/auro-counter-button.js';
-
+import { AuroCounterGroup } from '../src/auro-counter-group.js';
 
 AuroCounter.register();
-AuroCounterButton.register();
+AuroCounterGroup.register();
 AuroCounter.register('custom-counter');
 
 export function initExamples(initialCount = 0) {
