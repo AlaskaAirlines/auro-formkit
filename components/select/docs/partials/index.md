@@ -44,9 +44,9 @@ Use the `placeholder` slot to inject a custom placeholder option with the select
 
 </auro-accordion>
 
-## Label and help text slots
+## Label, placeholder and help text slots
 
-The following example illustrates the use of the `label` and `helptext` slots for additional placement of content around the select menu.
+The following example illustrates the use of the `label`, `placeholder` and `helptext` slots for additional placement of content around the select menu.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/slots.html) -->
@@ -57,22 +57,6 @@ The following example illustrates the use of the `label` and `helptext` slots fo
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/slots.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-## label with placeholder
-
-The `label` slot and `placeholder` slot may be used together.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/labelWithPlaceholder.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/labelWithPlaceholder.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
