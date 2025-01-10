@@ -43,7 +43,7 @@
   }
 
   &:hover {
-    --ds-auro-calendar-cell-container-color: var(--ds-color-container-ui-secondary-hover-default, #{$ds-color-container-ui-secondary-hover-default});
+    --ds-auro-calendar-cell-container-color: var(--ds-color-brand-neutral-200, #{$ds-color-brand-neutral-200});
     --ds-auro-calendar-cell-text-color: var(--ds-color-text-primary-default, #{$ds-color-text-primary-default});
   }
 
