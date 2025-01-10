@@ -114,7 +114,7 @@ export default class BaseInput extends LitElement {
       .substring(idSubstrStart, idSubstrEnd);
   }
 
-  // function to define props used within the scope of this component
+  // function to define props used within the scope of this componentstatic
   static get properties() {
     return {
 
@@ -375,10 +375,11 @@ export default class BaseInput extends LitElement {
     };
   }
 
+
   static get styles() {
     return [
-      css`${styleCss}`,
       css`${colorCss}`,
+      css`${styleCss}`,
       css`${tokensCss}`
     ];
   }
