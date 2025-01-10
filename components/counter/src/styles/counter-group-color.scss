@@ -10,21 +10,10 @@
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
-
-:host {
-  position: relative;
-  display: block;
-}
+/* stylelint-disable no-descending-specificity, selector-max-attribute */
 
 .counters {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ds-size-300, $ds-size-300);
-
   ::slotted(*:not(:first-child)) {
-    padding-top: var(--ds-size-300, $ds-size-300);
-    border-top-width: 1px;
-    border-top-style: solid;
+    border-color: var(--ds-color-border-divider-default, $ds-color-border-divider-default);
   }
 }

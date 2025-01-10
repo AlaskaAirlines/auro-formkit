@@ -39,10 +39,10 @@ export default class AuroFormValidation {
   /**
    * Determines the validity state of the element based on the common attribute restrictions (pattern).
    * @private
-   * @param {object} elem - HTML element to validate.
+   * @param {object} elem - HTML input element to validate.
    * @returns {void}
    */
-  validateAttributes(elem) {
+  validateInputAttributes(elem) {
     if (elem.pattern) {
       const pattern = new RegExp(`^${elem.pattern}$`, 'u');
 
@@ -61,6 +61,27 @@ export default class AuroFormValidation {
     if (elem.value?.length > elem.maxLength) {
       elem.validity = 'tooLong';
       elem.errorMessage = elem.setCustomValidityTooLong || elem.setCustomValidity || '';
+    }
+  }
+
+  /**
+   * Validates the attributes of a counter element.
+   * This method checks if the element's value is within the allowed `min` and `max` range.
+   * If the value is outside the valid range, the element's validity is set and a custom validity message is applied.
+   *
+   * @private
+   * @param {HTMLElement} elem - The counter element to validate.
+   * @returns {void}
+   */
+  validateCounterAttributes(elem) {
+    if (elem.max !== undefined && Number(elem.max) < Number(elem.value)) {
+      elem.validity = 'rangeOverflow';
+      elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeOverflow') || '';
+    }
+
+    if (elem.min !== undefined && Number(elem.min) > Number(elem.value)) {
+      elem.validity = 'rangeUnderflow';
+      elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeUnderflow') || '';
     }
   }
 
@@ -170,7 +191,9 @@ export default class AuroFormValidation {
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
         this.validateType(elem);
-        this.validateAttributes(elem);
+        this.validateInputAttributes(elem);
+      } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
+        this.validateCounterAttributes(elem);
       }
     }
 

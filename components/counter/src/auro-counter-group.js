@@ -1,48 +1,208 @@
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
-
 import styleCss from "./styles/counter-group-css.js";
+import colorCss from "./styles/counter-group-color-css.js";
+import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
+import AuroFormValidation from "@auro-formkit/form-validation";
 
+/**
+ * Auro Counter Group is a group of counter components.
+ *
+ * This web component provides a flexible interface for grouping multiple counters, supporting
+ * validation, custom validity messages, and disabled states based on the group's value.
+ *
+ * @element auro-counter-group
+ * @extends LitElement
+ * @slot Default - Slot for counter elements.
+ */
 export class AuroCounterGroup extends LitElement {
+  constructor() {
+    super();
+
+    this.max = undefined;
+    this.min = undefined;
+    this.noValidate = false;
+    this.validity = undefined;
+    this.value = undefined;
+
+    /**
+     * @private
+     */
+    this.validation = new AuroFormValidation();
+  }
 
   static get styles() {
-    return [styleCss];
+    return [
+      colorCss,
+      styleCss
+    ];
   }
 
   static get properties() {
     return {
-      common: {
-        type: Boolean,
-        reflect: true
+
+      /**
+       * The maximum value allowed for the whole group of counters.
+       */
+      max: {
+        type: Number,
       },
-      inset: {
-        type: Boolean,
-        reflect: true
+
+      /**
+       * The minimum value allowed for the whole group of counters.
+       */
+      min: {
+        type: Number,
       },
-      rounded: {
+
+      /**
+       * If true, disables validation.
+       */
+      noValidate: {
         type: Boolean,
-        reflect: true
-      }
+      },
+
+      /**
+       * Custom validity message.
+       * @private
+       */
+      setCustomValidity: {
+        type: String,
+      },
+
+      /**
+       * Custom validity message for range overflow.
+       * @private
+       */
+      setCustomValidityRangeOverflow: {
+        type: String,
+      },
+
+      /**
+       * Custom validity message for range underflow.
+       * @private
+       */
+      setCustomValidityRangeUnderflow: {
+        type: String,
+      },
+
+      /**
+       * Custom validity message for value missing.
+       * @private
+       */
+      setCustomValidityValueMissing: {
+        type: String,
+      },
+
+      /**
+       * Reflects the validity state.
+       */
+      validity: {
+        type: String,
+        reflect: true,
+      },
+
+      /**
+       * The current value.
+       */
+      value: {
+        type: Number,
+      },
     };
+  }
+
+  firstUpdated() {
+    this.listenToCounters();
+    this.addEventListener("slotchange", () => {
+      this.listenToCounters();
+    });
+  }
+
+  /**
+   * Dynamically disables increment/decrement buttons on a counter based on group value.
+   * This method checks the total aggregated value against the group's min and max properties.
+   * If the total value is at or below the minimum, the counter's decrement button is disabled; if at or above the maximum, the increment button is disabled.
+   *
+   * @param {HTMLElement} counter - The counter element to potentially disable.
+   * @private
+   */
+  checkDisabled(counter) {
+    counter.disableMax = false;
+    counter.disableMin = false;
+
+    if (this.value <= this.min) {
+      counter.disableMin = true;
+    } else if (this.value >= this.max) {
+      counter.disableMax = true;
+    }
+  }
+
+
+  /**
+   * Attaches input event listeners to all auro-counter elements within the component.
+   * This method selects all `auro-counter` and `[auto-counter]` elements and adds an `input` event listener to each.
+   * The listener calls `this.updateValue()` whenever the value of a counter changes.
+   * @private
+   */
+  listenToCounters() {
+    const counters = this.querySelectorAll("auro-counter, [auto-counter]");
+    counters.forEach((counter) => {
+      counter.addEventListener("input", () => this.updateValue());
+    });
+  }
+
+  /**
+   * Updates the aggregate value based on the values of contained auro-counter components.
+   * This method queries for all `auro-counter` elements, sums their values, and updates the component's `value` property.
+   * Additionally, it iterates through each counter and calls `checkDisabled()` on it.
+   * @private
+   */
+  updateValue() {
+    const counters = this.querySelectorAll("auro-counter");
+    this.value = Array.from(counters).reduce(
+      (total, counter) => total + Number(counter.value),
+      0,
+    );
+    counters.forEach((counter) => {
+      this.checkDisabled(counter);
+    });
+  }
+
+  updated(changedProperties) {
+    if (changedProperties.has("value")) {
+      const oldValue = changedProperties.get("value");
+      this.validation.validate(this);
+      if (this.value !== oldValue && oldValue !== undefined) {
+        this.dispatchEvent(new CustomEvent("input", {
+          detail: {
+            value: this.value,
+          },
+        }));
+      }
+    }
+  }
+
+  /**
+   * Registers the custom element with the browser.
+   * @param {string} [name="auro-counter-group"] - Custom element name to register.
+   * @example
+   * AuroCounterGroup.register("custom-counter-group") // registers <custom-counter-group/>
+   */
+  static register(name = "auro-counter-group") {
+    AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroCounterGroup);
   }
 
   // function that renders the HTML and CSS into the scope of the component
   render() {
     return html`
-      <div>
+      <div class="counters">
         <slot></slot>
       </div>
     `;
   }
-}
-
-/* istanbul ignore else */
-// define the name of the custom component
-if (!customElements.get("auro-counter-group")) {
-  customElements.define("auro-counter-group", AuroCounterGroup);
 }
