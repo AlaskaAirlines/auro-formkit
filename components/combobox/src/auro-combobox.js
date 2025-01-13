@@ -390,7 +390,7 @@ export class AuroCombobox extends LitElement {
     });
 
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
-      this.optionSelected = undefined;
+      this.clearSelection();
     });
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {

@@ -18,6 +18,11 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import dropdownVersion from './formkit/auro-dropdownVersion.js';
 
+import {
+  arrayConverter,
+  arrayOrUndefinedHasChanged
+} from '@auro-formkit/auro-menu';
+
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
@@ -41,7 +46,7 @@ export class AuroSelect extends LitElement {
     super();
 
     this.optionSelected = undefined;
-    this.validity = undefined;
+    this.value = undefined;
 
     const idLength = 36;
     const idSubstrEnd = 8;
@@ -138,7 +143,10 @@ export class AuroSelect extends LitElement {
        * Specifies the current selected menuOption.
        */
       optionSelected: {
-        type: Object
+        // Allow HTMLElement[] arrays and undefined
+        type: Object,
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
       },
 
       /**
@@ -197,7 +205,10 @@ export class AuroSelect extends LitElement {
        * Value selected for the component.
        */
       value: {
-        type: String
+        // Allow string[] arrays and undefined
+        type: Object,
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
       }
     };
   }
@@ -240,7 +251,7 @@ export class AuroSelect extends LitElement {
   }
 
   /**
-   * Updates the displayed value in an Auro dropdown component based on optionSelected
+   * Updates the displayed value in an Auro dropdown component based on optionSelected.
    * @private
    * @returns {void}
    */
@@ -252,9 +263,10 @@ export class AuroSelect extends LitElement {
       elm.remove();
     });
 
-    if (this.optionSelected) {
+    // optionSelected is an array, get the first element for single-select
+    if (this.optionSelected && this.optionSelected.length > 0) {
       // clone the selected option and remove attributes that style it
-      const clone = this.optionSelected.cloneNode(true);
+      const clone = this.optionSelected[0].cloneNode(true);
       clone.removeAttribute('selected');
       clone.removeAttribute('class');
 
@@ -292,8 +304,10 @@ export class AuroSelect extends LitElement {
     });
 
     this.menu.addEventListener('auroMenu-selectedOption', () => {
+      // Get array of selected options from menu
       this.optionSelected = this.menu.optionSelected;
-      this.value = this.optionSelected.value;
+      // For single select, we still use arrays but only take first value
+      this.value = this.menu.value;
 
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
@@ -308,7 +322,7 @@ export class AuroSelect extends LitElement {
      * with `auro-select.value`.
      */
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
-      this.reset();
+      this.menu.clearSelection();
     });
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {
@@ -333,7 +347,7 @@ export class AuroSelect extends LitElement {
         this.dropdown.show();
 
         if (this.dropdown.isPopoverVisible) {
-          this.menu.selectNextItem('up');
+          this.menu.navigateOptions('up');
         }
       }
 
@@ -343,7 +357,7 @@ export class AuroSelect extends LitElement {
         this.dropdown.show();
 
         if (this.dropdown.isPopoverVisible) {
-          this.menu.selectNextItem('down');
+          this.menu.navigateOptions('down');
         }
       }
 
@@ -406,7 +420,7 @@ export class AuroSelect extends LitElement {
      * input as no longer in the initial state.
      */
     if (this.value === undefined) {
-      this.value = '';
+      this.value = undefined;
       this.removeEventListener('focusin', this.handleFocusin);
     }
   }
@@ -460,15 +474,16 @@ export class AuroSelect extends LitElement {
 
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      this.menu.value = this.value;
+      // Wrap single value in array for menu
+      this.menu.value = [this.getAttribute('value')];
     }
   }
 
   updated(changedProperties) {
-    // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
       if (this.value) {
-        this.menu.value = this.value;
+        // Ensure menu always receives array of values
+        this.menu.value = Array.isArray(this.value) ? this.value : [this.value];
       } else {
         this.menu.value = undefined;
       }
