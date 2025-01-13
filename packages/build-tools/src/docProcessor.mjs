@@ -1,7 +1,7 @@
 import { Logger } from "@aurodesignsystem/auro-library/scripts/utils/logger.mjs";
+import fs from "node:fs/promises";
 import {
   fromAuroComponentRoot,
-  generateReadmeUrl,
   processContentForFile,
   templateFiller
 } from "@aurodesignsystem/auro-library/scripts/utils/sharedFileProcessorUtils.mjs";
@@ -15,7 +15,6 @@ import {
  * @prop {string} [remoteReadmeVariant=""] - The variant string to use for the README source.
  * (like "_esm" to make README_esm.md).
  */
-
 
 /**
  * @param {ProcessorConfig} config - The configuration for this processor.
@@ -31,6 +30,38 @@ export const defaultDocsProcessorConfig = {
 };
 
 /**
+ * Get the version from the root package.json
+ * @returns {Promise<string>}
+ */
+async function getPackageVersion() {
+  const packageJsonPath = fromAuroComponentRoot('package.json');
+  const packageContent = await fs.readFile(packageJsonPath, 'utf8');
+  const packageJson = JSON.parse(packageContent);
+  return packageJson.version;
+}
+
+const formkitVersion = await getPackageVersion();
+
+export const monorepoVars = {
+  formkitVersion,
+  'monorepoName': 'auro-formkit',
+  'dependentComponents': [] //  populated by componentDependencyTree in processDocFiles
+}
+
+export const componentDependencyTree = {
+  'checkbox': ['checkbox'],
+  'combobox': ['dropdown', 'input', 'menu', 'combobox'],
+  'counter': ['counter'],
+  'datepicker': ['dropdown', 'input', 'popover', 'datepicker'],
+  'dropdown': ['dropdown'],
+  'form': ['form'],
+  'input': ['input'],
+  'menu': ['menu'],
+  'radio': ['radio'],
+  'select': ['dropdown', 'menu', 'select'],
+}
+
+/**
  * @param {ProcessorConfig} config - The configuration for this processor.
  * @returns {import('@aurodesignsystem/auro-library/scripts/utils/sharedFileProcessorUtils').FileProcessorConfig[]}
  */
@@ -38,11 +69,7 @@ export const fileConfigs = (config) => [
   // README.md
   {
     identifier: 'README.md',
-    input: {
-      remoteUrl: generateReadmeUrl(config.remoteReadmeVersion, config.remoteReadmeVariant),
-      fileName: fromAuroComponentRoot(`components/${config.component}/docTemplates/README.md`),
-      overwrite: config.overwriteLocalCopies
-    },
+    input: fromAuroComponentRoot(`docs/templates/componentReadmeTemplate.md`),
     output: fromAuroComponentRoot(`components/${config.component}/README.md`)
   },
   // index.md
@@ -79,8 +106,10 @@ export async function processDocFiles(componentName) {
 
     for (const fileConfig of fileConfigs(config)) {
       try {
+        const dependencies = componentDependencyTree[config.component];
+
         // eslint-disable-next-line no-await-in-loop
-        await processContentForFile(fileConfig);
+        await processContentForFile({ ...fileConfig, extraVars: { ...monorepoVars, dependentComponents: dependencies} });
       } catch (err) {
         Logger.error(`Error processing ${fileConfig.identifier}: ${err.message}`);
       }
