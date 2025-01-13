@@ -4,8 +4,8 @@ The README.md file is a compiled document. No edits should be made directly to t
 README.md is created by running `npm run build:docs`.
 
 This file is generated based on a template fetched from
-`https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/README_updated_paths.md`
-and copied to `./componentDocs/README.md` each time the the docs are compiled.
+`../../docs/templates/componentReadmeTemplate.md`
+and copied to `./componentDocs/README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
@@ -17,7 +17,7 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Formkit/auro-radio
+# Radio
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
@@ -37,18 +37,12 @@ For the most up to date information on [UI development browser support](https://
 
 ## Install
 
-<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
-[![Build Status](https://img.shields.io/github/actions/workflow/status/AlaskaAirlines/-formkit/-formkit/auro-radio/testPublish.yml?style=for-the-badge)](https://github.com/AlaskaAirlines/-formkit/-formkit/auro-radio/actions/workflows/testPublish.yml)
-[![See it on NPM!](https://img.shields.io/npm/v/@auro-formkit/-formkit/-formkit/auro-radio?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@auro-formkit/-formkit/-formkit/auro-radio)
-[![License](https://img.shields.io/npm/l/@auro-formkit/-formkit/-formkit/auro-radio?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
-![ESM supported](https://img.shields.io/badge/ESM-compatible-FFE900?style=for-the-badge)
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
+<!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
 ```shell
-$ npm i @auro-formkit/-formkit/-formkit/auro-radio
+$ npm i @aurodesignsystem/auro-formkit
 ```
-
-Installing as a direct, dev or peer dependency is up to the user installing the package. If you are unsure as to what type of dependency you should use, consider reading this [stack overflow](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies) answer.
-
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ### Design Token CSS Custom Property dependency
@@ -61,17 +55,18 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 ### Define dependency in project component
 
 <!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentImportDescription.md) -->
-Defining the component dependency within each component that is using the `<-formkit/-formkit/auro-radio>` component.
+Defining the component dependency within each component that is using the `<auro-radio>` component.
 
 <!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentImport.md) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentUsage.md) -->
+<!-- The below content is automatically added from ../../docs/templates/componentUsage.md -->
 
 ```js
-import "@auro-formkit/-formkit/-formkit/auro-radio";
+import "@aurodesignsystem/auro-formkit/auro-radio";
 ```
-
 <!-- AURO-GENERATED-CONTENT:END -->
 **Reference component in HTML**
+
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./apiExamples/basic.html) -->
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
@@ -83,7 +78,7 @@ import "@auro-formkit/-formkit/-formkit/auro-radio";
 ## Install bundled assets from CDN
 
 <!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/bundleInstallDescription.md) -->
-In cases where the project is not able to process JS assets, there are pre-processed assets available for use. See -- `-formkit/-formkit/auro-radio__bundled.js` for modern browsers. Legacy browsers such as IE11 are no longer supported.
+In cases where the project is not able to process JS assets, there are pre-processed assets available for use. See -- `auro-radio__bundled.js` for modern browsers. Legacy browsers such as IE11 are no longer supported.
 
 **WARNING!** When installing into your application environment, DO NOT use `@latest` for the requested version. Risks include unknown MAJOR version releases and instant adoption of any new features and possible bugs without developer knowledge. The `@latest` wildcard should NEVER be used for production customer-facing applications. You have been warned.
 
@@ -91,17 +86,14 @@ In cases where the project is not able to process JS assets, there are pre-proce
 
 ### Bundle example code
 
-<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/bundleUseModBrowsers.md) -->
-
-```html
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentBundleUseModBrowsers.md) -->
+<!-- The below content is automatically added from ../../docs/templates/componentBundleUseModBrowsers.md -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@4.9.2/dist/tokens/CSSCustomProperties.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@5.1.2/dist/bundled/essentials.css" />
-<script src="https://cdn.jsdelivr.net/npm/@auro-formkit/-formkit/-formkit/auro-radio@4.1.1/dist/-formkit/-formkit/auro-radio__bundled.js" type="module"></script>
-```
-
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-radio@2.0.0-beta.4/dist/auro-radio__bundled.js" type="module"></script>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## auro-formkit/auro-radio use cases
+## auro-radio use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
@@ -114,7 +106,7 @@ The following examples illustrate fully functional `<auro-radio>` elements wrapp
 
 ## API Code Examples
 
-### Default auro-formkit/auro-radio
+### Default auro-radio
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./apiExamples/basic.html) -->
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
@@ -164,7 +156,7 @@ The custom element API file is generated in the build and committed back to the 
 ### Testing
 
 <!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/testing.md) -->
-Automated tests are required for every Auro component. See `.\test\-formkit/-formkit/auro-radio.test.js` for the tests for this component. Run `npm test` to run the tests and check code coverage. Tests must pass and meet a certain coverage threshold to commit. See [the testing documentation](https://auro.alaskaair.com/support/tests) for more details.
+Automated tests are required for every Auro component. See `.\test\auro-radio.test.js` for the tests for this component. Run `npm test` to run the tests and check code coverage. Tests must pass and meet a certain coverage threshold to commit. See [the testing documentation](https://auro.alaskaair.com/support/tests) for more details.
 
 <!-- AURO-GENERATED-CONTENT:END -->
 
