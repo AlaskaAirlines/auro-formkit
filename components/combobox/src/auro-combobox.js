@@ -19,6 +19,11 @@ import dropdownVersion from './formkit/auro-dropdownVersion.js';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './formkit/auro-inputVersion.js';
 
+import {
+  arrayConverter,
+  arrayOrUndefinedHasChanged
+} from '@auro-formkit/auro-menu';
+
 // Import touch detection lib
 import styleCss from "./styles/style-css.js";
 
@@ -52,8 +57,8 @@ export class AuroCombobox extends LitElement {
 
     this.noFilter = false;
     this.validity = undefined;
-    this.value = null;
-    this.optionSelected = null;
+    this.value = undefined;
+    this.optionSelected = undefined;
 
     this.privateDefaults();
 
@@ -121,7 +126,11 @@ export class AuroCombobox extends LitElement {
         type: Boolean,
         reflect: true
       },
-      optionSelected: { type: Object },
+      optionSelected: {
+        type: Object,
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
+      },
       noValidate: { type: Boolean },
       required: {
         type: Boolean,
@@ -136,7 +145,9 @@ export class AuroCombobox extends LitElement {
         reflect: true
       },
       value: {
-        type: String
+        type: Object,
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
       },
       checkmark: {
         type: Boolean,
@@ -204,6 +215,33 @@ export class AuroCombobox extends LitElement {
   handleMenuOptions() {
     this.generateOptionsArray();
     this.availableOptions = [];
+
+    if (this.menu.optionSelected) {
+      // Get first option since combobox is single-select
+      const [selected] = this.menu.optionSelected;
+
+      if (!this.optionSelected || this.optionSelected[0] !== selected) {
+        // Store as array
+        this.optionSelected = [selected];
+      }
+
+      if (!this.value || this.value[0] !== selected.value) {
+        // Store as array
+        this.value = [selected.value];
+        // Menu already expects array
+        this.menu.value = this.value;
+      }
+
+      if (this.input.value !== selected.textContent) {
+        this.input.value = selected.textContent;
+      }
+
+      if (this.menu.matchWord !== this.input.value) {
+        this.menu.matchWord = this.input.value;
+      }
+
+      this.classList.add('combobox-filled');
+    }
 
     if (this.noFilter) {
       this.availableOptions = [...this.options];
@@ -348,13 +386,13 @@ export class AuroCombobox extends LitElement {
       if (this.menu.optionSelected) {
         const selected = Array.isArray(this.menu.optionSelected) ? this.menu.optionSelected[0] : this.menu.optionSelected;
 
-        if (this.optionSelected !== selected) {
-          this.optionSelected = selected;
+        if (!this.optionSelected || this.optionSelected[0] !== selected) {
+          this.optionSelected = [selected];
         }
 
-        if (this.value !== this.optionSelected.value) {
-          this.value = this.optionSelected.value;
-          this.menu.value = [this.optionSelected.value];
+        if (!this.value || this.value[0] !== this.optionSelected[0].value) {
+          this.value = [this.optionSelected[0].value];
+          this.menu.value = this.value;
         }
 
         if (this.input.value !== this.optionSelected.textContent) {
@@ -390,7 +428,7 @@ export class AuroCombobox extends LitElement {
     });
 
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
-      this.clearSelection();
+      this.menu.clearSelection();
     });
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {
@@ -418,8 +456,9 @@ export class AuroCombobox extends LitElement {
         this.validation.validate(this);
       }
 
-      if (typeof this.value === 'object') {
-        this.value = '';
+      // Set to undefined if empty
+      if (Array.isArray(this.value) && this.value.length === 0) {
+        this.value = undefined;
       }
     });
 
@@ -621,14 +660,16 @@ export class AuroCombobox extends LitElement {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
       if (this.value) {
-        if (this.optionSelected && this.optionSelected.value === this.value) {
+        if (this.optionSelected && this.optionSelected[0] && this.optionSelected[0].value === this.value[0]) {
           // If value updates and the previously selected option already matches the new value
           // just update the input value to use the textContent of the optionSelected
-          this.input.value = this.optionSelected.textContent;
+          this.input.value = this.optionSelected[0].textContent;
         } else {
           // Otherwise just enter the value into the input
           this.optionSelected = undefined;
-          this.input.value = this.value;
+          // Use first value since combobox is single-select
+          const [inputValue] = this.value;
+          this.input.value = inputValue;
 
           // If the value got set programmatically make sure we hide the bib
           if (!this.contains(document.activeElement)) {
