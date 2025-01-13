@@ -19,14 +19,6 @@ import tokensCss from "./styles/tokens-css.js";
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
  *
- * @attr {String} validity - Specifies the `validityState` this element is in.
- * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets the validity message to the attribute value.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
- * @attr {Boolean} horizontal - If set, checkboxes will be aligned horizontally.
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
@@ -38,10 +30,14 @@ export class AuroCheckboxGroup extends LitElement {
     super();
 
     this.validity = undefined;
-    this.value = undefined;
     this.disabled = undefined;
     this.required = false;
     this.horizontal = false;
+
+    /**
+     * @private
+     */
+    this.value = undefined;
 
     /**
      * @private
@@ -74,38 +70,71 @@ export class AuroCheckboxGroup extends LitElement {
 
   static get properties() {
     return {
+
+      /**
+       * If set, disables the checkbox group.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
-      horizontal: {
-        type: Boolean,
-        reflect: true
-      },
-      value: {
-        type: Array
-      },
-      noValidate: {
-        type: Boolean,
-        reflect: true
-      },
-      required: {
-        type: Boolean,
-        reflect: true
-      },
+
+      /**
+       * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
+       */
       error: {
         type: String,
         reflect: true
       },
+
+      /**
+       * If set, checkboxes will be aligned horizontally.
+       */
+      horizontal: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If set, disables auto-validation on blur.
+       */
+      noValidate: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Populates the `required` attribute on the element. Used for client-side validation.
+       */
+      required: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
       setCustomValidity: {
         type: String
       },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
       setCustomValidityCustomError: {
         type: String
       },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
       setCustomValidityValueMissing: {
         type: String
       },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
       validity: {
         type: String,
         reflect: true

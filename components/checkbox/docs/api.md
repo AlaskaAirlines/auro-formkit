@@ -6,16 +6,15 @@ The auro-checkbox-group element is a wrapper for auro-checkbox element.
 
 | Property                        | Attribute                       | Type      | Default     | Description                                      |
 |---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
-| `disabled`                      | `disabled`                      | `boolean` | "undefined" |                                                  |
-| `error`                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets the validity message to the attribute value. |
-| `horizontal`                    | `horizontal`                    | `Boolean` | false       | If set, checkboxes will be aligned horizontally. |
-| `noValidate`                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
-| `required`                      | `required`                      | `Boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
-| `setCustomValidity`             | `setCustomValidity`             | `String`  |             | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
-| `validity`                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `array`   | "undefined" |                                                  |
+| `disabled`                      | `disabled`                      | `boolean` | "undefined" | If set, disables the checkbox group.             |
+| `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| `horizontal`                    | `horizontal`                    | `boolean` | false       | If set, checkboxes will be aligned horizontally. |
+| `noValidate`                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
+| `required`                      | `required`                      | `boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
+| `setCustomValidity`             | `setCustomValidity`             | `string`  |             | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`  |             | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
+| `validity`                      | `validity`                      | `string`  | "undefined" | Specifies the `validityState` this element is in. |
 
 ## Methods
 
@@ -47,12 +46,11 @@ Custom element for the purpose of allowing users to select one or more options o
 
 | Property   | Attribute  | Type      | Default | Description                                      |
 |------------|------------|-----------|---------|--------------------------------------------------|
-| `checked`  | `checked`  | `Boolean` | false   | If set to true, the checkbox will be filled with a checkmark. |
-| `disabled` | `disabled` | `Boolean` | false   | If set to true, the checkbox will not be clickable. |
-| `error`    | `error`    | `Boolean` | false   | If set to true, sets an error state on the checkbox. |
-| `id`       | `id`       | `String`  |         | Sets the individual `id` per element.            |
-| `name`     | `name`     | `String`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
-| `value`    | `value`    | `String`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
+| `checked`  | `checked`  | `boolean` | false   | If set to true, the checkbox will be filled with a checkmark. |
+| `disabled` | `disabled` | `boolean` | false   | If set to true, the checkbox will not be clickable. |
+| `id`       | `id`       | `string`  |         | Sets the individual `id` per element.            |
+| `name`     | `name`     | `string`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
+| `value`    | `value`    | `string`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
 
 ## Methods
 
