@@ -81,6 +81,7 @@ export class AuroCounter extends LitElement {
 
       /**
        * Indicates if the maximum value is disabled.
+       * @private
        */
       disableMax: {
         type: Boolean,
@@ -88,6 +89,7 @@ export class AuroCounter extends LitElement {
 
       /**
        * Indicates if the minimum value is disabled.
+       * @private
        */
       disableMin: {
         type: Boolean,

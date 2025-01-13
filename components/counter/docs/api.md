@@ -2,16 +2,14 @@
 
 ## Properties
 
-| Property     | Attribute    | Type      | Default     | Description                                 |
-|--------------|--------------|-----------|-------------|---------------------------------------------|
-| `disableMax` | `disableMax` | `boolean` | false       | Indicates if the maximum value is disabled. |
-| `disableMin` | `disableMin` | `boolean` | false       | Indicates if the minimum value is disabled. |
-| `disabled`   | `disabled`   | `boolean` | false       | Indicates if the counter is disabled.       |
-| `max`        | `max`        | `number`  | 9           | The maximum value for the counter.          |
-| `min`        | `min`        | `number`  | 0           | The minimum value for the counter.          |
-| `noValidate` | `noValidate` | `boolean` | false       | Indicates if validation is disabled.        |
-| `validity`   | `validity`   | `string`  | "undefined" | The validity state of the counter.          |
-| `value`      | `value`      | `number`  | "undefined" | The current value of the counter.           |
+| Property     | Attribute    | Type      | Default     | Description                           |
+|--------------|--------------|-----------|-------------|---------------------------------------|
+| `disabled`   | `disabled`   | `boolean` | false       | Indicates if the counter is disabled. |
+| `max`        | `max`        | `number`  | 9           | The maximum value for the counter.    |
+| `min`        | `min`        | `number`  | 0           | The minimum value for the counter.    |
+| `noValidate` | `noValidate` | `boolean` | false       | Indicates if validation is disabled.  |
+| `validity`   | `validity`   | `string`  | "undefined" | The validity state of the counter.    |
+| `value`      | `value`      | `number`  | "undefined" | The current value of the counter.     |
 
 ## Methods
 
