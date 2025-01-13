@@ -2,6 +2,7 @@
 node_modules/
 docTemplates/
 .cache/
+.vscode/
 
 ## Demo support files
 components/**/demo/*.css
