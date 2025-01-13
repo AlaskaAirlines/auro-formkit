@@ -51,7 +51,7 @@ Custom element for the purpose of allowing users to select one or more options o
 | `disabled` | `disabled` | `Boolean` | false   | If set to true, the checkbox will not be clickable. |
 | `error`    | `error`    | `Boolean` | false   | If set to true, sets an error state on the checkbox. |
 | `id`       | `id`       | `String`  |         | Sets the individual `id` per element.            |
-| `name`     | `name`     | `String`  |         | Accepts any string, `DOMString` representing the value of the input. |
+| `name`     | `name`     | `String`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
 | `value`    | `value`    | `String`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
 
 ## Methods
