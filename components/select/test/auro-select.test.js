@@ -102,7 +102,7 @@ describe('auro-select', () => {
     await expect(el.optionSelected).to.be.equal(selectedOptions[0]);
   });
 
-  it('make invalid selection programmatically results in error ui', async () => {
+  it('making invalid selection programmatically results in resetting of component', async () => {
     const el = await presetValueFixture();
 
     await expect(el.value).to.be.equal('price');
@@ -111,12 +111,8 @@ describe('auro-select', () => {
 
     await elementUpdated(el);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const triggerContentHTML = dropdown.querySelector('#triggerFocus').innerHTML;
-
     await expect(el.optionSelected).to.be.equal(undefined);
-    await expect(triggerContentHTML).to.contain(el.placeholder);
-    await expect(el.getAttribute('validity')).to.equal(undefined);
+    await expect(el.hasAttribute('validity')).to.be.false;
   });
 
   it('reset selection value programmatically', async () => {
@@ -159,7 +155,8 @@ describe('auro-select', () => {
 
   it('reset method clears the value and validity state', async () => {
     const el = await presetValueFixture();
-    const presetOption = el.shadowRoot.querySelector('#presetOption');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const presetOption = dropdown.bibContent.querySelector('#presetOption');
 
     await expect(el.value).to.be.equal('price');
     await expect(el.optionSelected).to.be.equal(presetOption);
