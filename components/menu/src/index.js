@@ -6,3 +6,10 @@ AuroMenuOption.register();
 
 // Enable TypeScript support
 export { AuroMenu, AuroMenuOption };
+
+export {
+  arrayConverter,
+  arrayOrUndefinedHasChanged,
+  isOptionInteractive,
+  dispatchMenuEvent
+} from './auro-menu-utils.js';

@@ -686,5 +686,3 @@ export class AuroMenu extends LitElement {
   }
 }
 
-// Register the custom element with the browser.
-customElements.define('auro-menu', AuroMenu);
