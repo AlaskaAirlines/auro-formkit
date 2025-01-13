@@ -22,7 +22,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @attr {Boolean} disabled - If set to true, the checkbox will not be clickable.
  * @attr {Boolean} error - If set to true, sets an error state on the checkbox.
  * @attr {String} id - Sets the individual `id` per element.
- * @attr {String} name - Accepts any string, `DOMString` representing the value of the input.
+ * @attr {String} name - Accepts any string and is used to identify related checkboxes when submitting form data.
  * @attr {String} value - Sets the element's input value. Must be unique within an auro-checkbox-group element.
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
