@@ -104,6 +104,23 @@ Use the `disabled` boolean attribute to toggle the disabled UI.
 
 </auro-accordion>
 
+#### multiselect <a name="multiselect"></a>
+
+Sets multi-select mode, allowing multiple options to be selected at once.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multiselect.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multiselect.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### flexMenuWidth <a name="flexMenuWidth"></a>
 
 Use the `flexMenuWidth` boolean attribute to toggle the width of the `<auro-select>` element to match the width of the bib content, rather than the width of the trigger.

@@ -19,6 +19,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | [disabled](#disabled)                      | `disabled`                      | `boolean` |             | When attribute is present, element shows disabled state. |
 | [error](#error)                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | [flexMenuWidth](#flexMenuWidth)                 | `flexMenuWidth`                 | `boolean` |             | If set, makes dropdown width match the size of the content, rather than the width of the trigger. |
+| [multiSelect](#multiSelect)                   | `multiselect`                   | `boolean` |             | Sets multi-select mode, allowing multiple options to be selected at once. |
 | [noCheckmark](#noCheckmark)                   | `noCheckmark`                   | `boolean` |             | When true, checkmark on selected option will no longer be present. |
 | [noValidate](#noValidate)                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
 | [optionSelected](#optionSelected)                | `optionSelected`                | `object`  | "undefined" | Specifies the current selected menuOption.       |
@@ -112,7 +113,7 @@ To pre-set the value of auro-select on load, use the `value` property. The `sele
   <auro-button id="validValueExampleBtn">Set Value to Valid Option</auro-button>
   <auro-button id="invalidValueExampleBtn">Set Value to Invalid Option</auro-button>
   <br/><br/>
-  <auro-select id="valueExample" value="price">
+  <auro-select id="valueExample" value='["price"]'>
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>
@@ -134,7 +135,7 @@ To pre-set the value of auro-select on load, use the `value` property. The `sele
 <auro-button id="validValueExampleBtn">Set Value to Valid Option</auro-button>
 <auro-button id="invalidValueExampleBtn">Set Value to Invalid Option</auro-button>
 <br/><br/>
-<auro-select id="valueExample" value="price">
+<auro-select id="valueExample" value='["price"]'>
   <span slot="label">Name</span>
   <auro-menu>
     <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>
@@ -155,11 +156,13 @@ export function valueExample() {
   const valueExample = document.querySelector('#valueExample');
 
   document.querySelector('#validValueExampleBtn').addEventListener('click', () => {
-    valueExample.value = 'arrival';
+    valueExample.value = ['arrival'];
+    console.log(valueExample.value);
   });
 
   document.querySelector('#invalidValueExampleBtn').addEventListener('click', () => {
-    valueExample.value = 'flight course';
+    valueExample.value = ['flight course'];
+    console.log(valueExample.value);
   });
 }
 ```
@@ -290,6 +293,40 @@ Use the `disabled` boolean attribute to toggle the disabled UI.
     <auro-menuoption value="departure">Departure</auro-menuoption>
     <auro-menuoption value="arrival">Arrival</auro-menuoption>
     <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+  </auro-menu>
+</auro-select>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+#### multiselect <a name="multiselect"></a>
+Sets multi-select mode, allowing multiple options to be selected at once.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multiselect.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/multiselect.html -->
+  <auro-select multiselect>
+    <label slot="placeholder">Select one or more options</label>
+    <auro-menu>
+      <auro-menuoption value="1">Option 1</auro-menuoption>
+      <auro-menuoption value="2">Option 2</auro-menuoption>
+      <auro-menuoption value="3">Option 3</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multiselect.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/multiselect.html -->
+
+```html
+<auro-select multiselect>
+  <label slot="placeholder">Select one or more options</label>
+  <auro-menu>
+    <auro-menuoption value="1">Option 1</auro-menuoption>
+    <auro-menuoption value="2">Option 2</auro-menuoption>
+    <auro-menuoption value="3">Option 3</auro-menuoption>
   </auro-menu>
 </auro-select>
 ```
@@ -439,7 +476,7 @@ Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` s
   <!-- The below content is automatically added from ./../apiExamples/resetState.html -->
   <auro-button id="resetStateBtn">Reset</auro-button>
   <br/><br/>
-  <auro-select id="resetStateExample" required value="price">
+  <auro-select id="resetStateExample" value='["price"]'>
     <label slot="placeholder">Placeholder Text</label>
     <span slot="label">Name</span>
     <auro-menu>
@@ -461,7 +498,7 @@ Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` s
 ```html
 <auro-button id="resetStateBtn">Reset</auro-button>
 <br/><br/>
-<auro-select id="resetStateExample" required value="price">
+<auro-select id="resetStateExample" value='["price"]'>
   <label slot="placeholder">Placeholder Text</label>
   <span slot="label">Name</span>
   <auro-menu>
@@ -686,7 +723,7 @@ The component can be in a dialog.
     <auro-dialog id="select-dialog">
       <span slot="header">Select in Dialog</span>
       <div slot="content">
-        <auro-select id="valueExample" value="price">
+        <auro-select id="valueExample" value='["price"]'>
           <span slot="label">Name</span>
           <auro-menu>
             <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>
@@ -713,7 +750,7 @@ The component can be in a dialog.
   <auro-dialog id="select-dialog">
     <span slot="header">Select in Dialog</span>
     <div slot="content">
-      <auro-select id="valueExample" value="price">
+      <auro-select id="valueExample" value='["price"]'>
         <span slot="label">Name</span>
         <auro-menu>
           <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>

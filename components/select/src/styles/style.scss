@@ -74,3 +74,14 @@ auro-menuoption {
   font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
   line-height: 1rem;
 }
+
+// Multiselect styles
+.isMultiSelect {
+  display: flex;
+
+  auro-menuoption {
+    &:not(:first-child) {
+      margin-left: var(--ds-size-100, $ds-size-100);
+    }
+  }
+}

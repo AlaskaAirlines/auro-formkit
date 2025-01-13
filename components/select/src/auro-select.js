@@ -209,7 +209,16 @@ export class AuroSelect extends LitElement {
         type: Object,
         converter: arrayConverter,
         hasChanged: arrayOrUndefinedHasChanged
-      }
+      },
+
+      /**
+       * Sets multi-select mode, allowing multiple options to be selected at once.
+       */
+      multiSelect: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'multiselect'
+      },
     };
   }
 
@@ -257,21 +266,49 @@ export class AuroSelect extends LitElement {
    */
   updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
+    const multiSelectCssClass = 'isMultiSelect';
 
-    // remove all existing rendered value(s)
-    triggerContentEl.querySelectorAll('auro-menuoption, [auro-menuoption]').forEach((elm) => {
-      elm.remove();
-    });
+    // Clear everything except the placeholder
+    const placeholder = triggerContentEl.querySelector('#placeholder');
+    triggerContentEl.innerHTML = '';
+    if (placeholder) {
+      triggerContentEl.appendChild(placeholder);
+    }
 
-    // optionSelected is an array, get the first element for single-select
+    // Handle selected options if they exist
     if (this.optionSelected && this.optionSelected.length > 0) {
-      // clone the selected option and remove attributes that style it
-      const clone = this.optionSelected[0].cloneNode(true);
-      clone.removeAttribute('selected');
-      clone.removeAttribute('class');
+      if (this.multiSelect) {
+        // Add class to simplify light DOM styling
+        triggerContentEl.classList.add(multiSelectCssClass);
 
-      // insert the non-styled clone into the trigger
-      triggerContentEl.appendChild(clone);
+        // Create a document fragment to build the content
+        const fragment = document.createDocumentFragment();
+
+        this.optionSelected.forEach((option, index) => {
+          // Only add comma if it's not the first item
+          if (index > 0) {
+            fragment.appendChild(document.createTextNode(','));
+          }
+
+          // Clone and append the option
+          const clone = option.cloneNode(true);
+          clone.removeAttribute('selected');
+          clone.removeAttribute('class');
+          fragment.appendChild(clone);
+        });
+
+        // Append the entire fragment at once
+        triggerContentEl.appendChild(fragment);
+      } else {
+        // For single select, show only the first selected option
+        triggerContentEl.classList.remove(multiSelectCssClass);
+        const clone = this.optionSelected[0].cloneNode(true);
+        clone.removeAttribute('selected');
+        clone.removeAttribute('class');
+        triggerContentEl.appendChild(clone);
+      }
+    } else {
+      triggerContentEl.classList.remove(multiSelectCssClass);
     }
 
     // notify dropdown as trigger content is changed
@@ -292,6 +329,10 @@ export class AuroSelect extends LitElement {
         this.configureMenu();
       }, 0);
       return;
+    }
+
+    if (this.multiSelect) {
+      this.menu.setAttribute('multiselect', '');
     }
 
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
