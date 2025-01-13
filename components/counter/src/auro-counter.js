@@ -219,8 +219,7 @@ export class AuroCounter extends LitElement {
    * @private
    */
   checkDescriptionSlot() {
-    const descriptionSlot = this.shadowRoot.querySelector('slot[name="description"]');
-    return !descriptionSlot || descriptionSlot.assignedNodes().length === 0;
+    return this.querySelector('[slot="description"]');
   }
 
   /**
@@ -295,7 +294,7 @@ export class AuroCounter extends LitElement {
       <div class="counter">
       <div class="content">
         <label class="label"><slot></slot></label>
-        ${this.checkDescriptionSlot() ? '' : html`<div class="description"><slot name="description"></slot></div>`}
+        ${this.checkDescriptionSlot() ? html`<div class="description"><slot name="description"></slot></div>` : ''}
       </div>
       
       <div part="counterControl">
