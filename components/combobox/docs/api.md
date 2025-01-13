@@ -9,7 +9,7 @@
 | `error`                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `noFilter`                      | `noFilter`                      | `Boolean` | false       | If set, combobox will not filter menuoptions based in input. |
 | `noValidate`                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
-| `optionSelected`                | `optionSelected`                | `Object`  | null        | Specifies the current selected option.           |
+| `optionSelected`                | `optionSelected`                | `Object`  | "undefined" | Specifies the current selected option.           |
 | `required`                      | `required`                      | `Boolean` |             | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`             | `setCustomValidity`             | `String`  |             | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
@@ -17,7 +17,7 @@
 | `triggerIcon`                   | `triggerIcon`                   | `Boolean` |             | If set, the `icon` attribute will be applied to the trigger `auro-input` element. |
 | `type`                          | `type`                          | `String`  |             | Applies the defined value as the type attribute on auro-input. |
 | `validity`                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `String`  | null        | Value selected for the dropdown menu.            |
+| `value`                         | `value`                         | `String`  | "undefined" | Value selected for the dropdown menu.            |
 
 ## Methods
 
