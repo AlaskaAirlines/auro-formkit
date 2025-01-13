@@ -157,6 +157,17 @@ export class AuroCounterGroup extends LitElement {
   }
 
   /**
+   * Safely converts a value to a number, returning 0 if invalid.
+   * @private
+   * @param {*} value - The value to convert.
+   * @returns {number} The converted number or 0 if invalid.
+   */
+  safeNumberConversion(value) {
+    const num = Number(value);
+    return Number.isNaN(num) ? 0 : num;
+  }
+
+  /**
    * Updates the aggregate value based on the values of contained auro-counter components.
    * This method queries for all `auro-counter` elements, sums their values, and updates the component's `value` property.
    * Additionally, it iterates through each counter and calls `checkDisabled()` on it.
@@ -165,7 +176,7 @@ export class AuroCounterGroup extends LitElement {
   updateValue() {
     const counters = this.querySelectorAll("auro-counter");
     this.value = Array.from(counters).reduce(
-      (total, counter) => total + Number(counter.value),
+      (total, counter) => total + this.safeNumberConversion(counter.value),
       0,
     );
     counters.forEach((counter) => {
