@@ -81,6 +81,9 @@ import "@auro-formkit/-formkit/-formkit/auro-counter";
     Short label
   </auro-counter>
   <auro-counter>
+    Another short label
+  </auro-counter>
+  <auro-counter>
     This is an example of the wrapping behavior for a long label
   </auro-counter>
 </auro-counter-group>
@@ -130,6 +133,9 @@ The `auro-counter` element should be used in situations where users may:
 <auro-counter-group>
   <auro-counter>
     Short label
+  </auro-counter>
+  <auro-counter>
+    Another short label
   </auro-counter>
   <auro-counter>
     This is an example of the wrapping behavior for a long label
