@@ -37,51 +37,87 @@ export default class AuroFormValidation {
   }
 
   /**
-   * Determines the validity state of the element based on the common attribute restrictions (pattern).
-   * @private
-   * @param {object} elem - HTML input element to validate.
+   * Validates the attributes of a given element based on predefined validation rules.
+   *
+   * @param {HTMLElement} elem - The element to be validated.
    * @returns {void}
+   *
+   * @example
+   * // Assuming `inputElement` is a reference to an input element in the DOM
+   * validateElementAttributes(inputElement);
+   *
+   * The function checks the element's attributes against the validation rules defined for 'input' and 'counter' types.
+   * If a validation rule is violated, it sets the element's validity state and error message accordingly.
+   *
+   * Validation rules:
+   * - input:
+   *   - length:
+   *     - tooShort: Checks if the value length is less than the minimum length.
+   *     - tooLong: Checks if the value length exceeds the maximum length.
+   *   - pattern:
+   *     - patternMismatch: Checks if the value does not match the specified pattern.
+   * - counter:
+   *   - range:
+   *     - rangeOverflow: Checks if the value exceeds the maximum value.
+   *     - rangeUnderflow: Checks if the value is less than the minimum value.
    */
-  validateInputAttributes(elem) {
-    if (elem.pattern) {
-      const pattern = new RegExp(`^${elem.pattern}$`, 'u');
-
-      if (!pattern.test(elem.value)) {
-        elem.validity = 'patternMismatch';
-        elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || '';
+  validateElementAttributes(elem) {
+    const validationRules = {
+      input: {
+        length: [
+          {
+            check: (e) => e.value?.length > 0 && e.value?.length < e.minLength,
+            validity: 'tooShort',
+            message: e => e.setCustomValidityTooShort || e.setCustomValidity || ''
+          },
+          {
+            check: (e) => e.value?.length > e.maxLength,
+            validity: 'tooLong',
+            message: e => e.setCustomValidityTooLong || e.setCustomValidity || ''
+          }
+        ],
+        pattern: [
+          {
+            check: (e) => e.pattern && !new RegExp(`^${e.pattern}$`, 'u').test(e.value),
+            validity: 'patternMismatch',
+            message: e => e.setCustomValidityPatternMismatch || e.setCustomValidity || ''
+          }
+        ]
+      },
+      counter: {
+        range: [
+          {
+            check: (e) => e.max !== undefined && Number(e.max) < Number(e.value),
+            validity: 'rangeOverflow',
+            message: e => e.getAttribute('setCustomValidityRangeOverflow') || ''
+          },
+          {
+            check: (e) => e.min !== undefined && Number(e.min) > Number(e.value),
+            validity: 'rangeUnderflow',
+            message: e => e.getAttribute('setCustomValidityRangeUnderflow') || ''
+          }
+        ]
       }
-    }
-
-    // Length > 0 is required to prevent the error message from showing when the input is empty
-    if (elem.value?.length > 0 && elem.value?.length < elem.minLength) {
-      elem.validity = 'tooShort';
-      elem.errorMessage = elem.setCustomValidityTooShort || elem.setCustomValidity || '';
+    };
+  
+    let elementType;
+    if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
+      elementType = 'input';
+    } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
+      elementType = 'counter';
     }
     
-    if (elem.value?.length > elem.maxLength) {
-      elem.validity = 'tooLong';
-      elem.errorMessage = elem.setCustomValidityTooLong || elem.setCustomValidity || '';
-    }
-  }
-
-  /**
-   * Validates the attributes of a counter element.
-   * This method checks if the element's value is within the allowed `min` and `max` range.
-   * If the value is outside the valid range, the element's validity is set and a custom validity message is applied.
-   *
-   * @private
-   * @param {HTMLElement} elem - The counter element to validate.
-   * @returns {void}
-   */
-  validateCounterAttributes(elem) {
-    if (elem.max !== undefined && Number(elem.max) < Number(elem.value)) {
-      elem.validity = 'rangeOverflow';
-      elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeOverflow') || '';
-    }
-
-    if (elem.min !== undefined && Number(elem.min) > Number(elem.value)) {
-      elem.validity = 'rangeUnderflow';
-      elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeUnderflow') || '';
+    if (elementType) {
+      const rules = validationRules[elementType];
+    
+      if (rules) {
+        Object.values(rules).flat().forEach(rule => {
+          if (rule.check(elem)) {
+            elem.validity = rule.validity;
+            elem.errorMessage = rule.message(elem);
+          }
+        });
+      }
     }
   }
 
@@ -191,9 +227,9 @@ export default class AuroFormValidation {
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
         this.validateType(elem);
-        this.validateInputAttributes(elem);
+        this.validateElementAttributes(elem);
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
-        this.validateCounterAttributes(elem);
+        this.validateElementAttributes(elem);
       }
     }
 
