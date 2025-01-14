@@ -424,20 +424,28 @@ export class AuroCombobox extends LitElement {
       this.menu.matchWord = this.input.value;
       this.optionActive = null;
 
+      let hasChange = false;
+
       if (this.value !== this.input.value) {
         this.value = this.input.value;
+        hasChange = true;
       }
 
       if (this.value !== this.menu.value) {
         this.menu.value = this.value;
+        hasChange = true;
       }
 
       if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
         this.optionSelected = undefined;
+        hasChange = true;
+      }
+
+      if (!hasChange) {
+        return;
       }
 
       this.menu.resetOptionsStates();
-
       this.handleMenuOptions();
 
       this.handleInputValueChange();
