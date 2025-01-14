@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2025-01-14)
+
+
+### Performance Improvements
+
+* add dynamic documentation for monorepo structure [#150](https://github.com/AlaskaAirlines/auro-formkit/issues/150) ([03d0c1b](https://github.com/AlaskaAirlines/auro-formkit/commit/03d0c1baebdaefa2e17486297afd9e26b66791e0))
+* update auro-library and all other deps ([f35cc60](https://github.com/AlaskaAirlines/auro-formkit/commit/f35cc60c735b332b6df2232564263ee80e0aab91))
+
 # [2.0.0-beta.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2025-01-14)
 
 
