@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2025-01-14)
+
+
+### Bug Fixes
+
+* make cell hover color non-transparent [#106](https://github.com/AlaskaAirlines/auro-formkit/issues/106) ([fd30de3](https://github.com/AlaskaAirlines/auro-formkit/commit/fd30de34c5b4b45ac0977bd2c7b4502c7a12aefe))
+
 # [2.0.0-beta.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2025-01-10)
 
 
