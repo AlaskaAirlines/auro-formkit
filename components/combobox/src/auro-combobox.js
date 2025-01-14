@@ -345,9 +345,6 @@ export class AuroCombobox extends LitElement {
 
     // handle the menu event for an option selection
     this.menu.addEventListener('auroMenu-selectedOption', () => {
-      // dropdown bib should hide when making a selection
-      this.hideBib();
-
       if (this.menu.optionSelected) {
         if (this.optionSelected !== this.menu.optionSelected) {
           this.optionSelected = this.menu.optionSelected;
@@ -376,6 +373,9 @@ export class AuroCombobox extends LitElement {
           composed: true,
         }));
       }
+
+      // dropdown bib should hide when making a selection
+      this.hideBib();
     });
 
     this.menu.addEventListener('auroMenu-customEventFired', () => {
