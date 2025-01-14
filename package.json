@@ -16,7 +16,8 @@
     "access": "public"
   },
   "workspaces": [
-    "components/*",
+    "components/input",
+    "components/form",
     "packages/*"
   ],
   "scripts": {

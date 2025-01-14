@@ -80,10 +80,11 @@ import "@auro-formkit/-formkit/-formkit/auro-form";
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-form>Hello World</auro-form>
-<auro-input>
-    <span slot="label">Hello World</span>
-</auro-input>
+<auro-form>
+  <auro-input>
+      <span slot="label">Hello World</span>
+  </auro-input>
+</auro-form>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -127,10 +128,11 @@ The `<auro-form>` element should be used in situations where users may:
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-form>Hello World</auro-form>
-<auro-input>
-    <span slot="label">Hello World</span>
-</auro-input>
+<auro-form>
+  <auro-input>
+      <span slot="label">Hello World</span>
+  </auro-input>
+</auro-form>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 

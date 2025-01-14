@@ -1,0 +1,61 @@
+<!--
+  Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license
+  See LICENSE in the project root for license information.
+
+  HTML in this document is standardized and NOT to be edited.
+  All demo code should be added/edited in ./demo/index.md
+
+  With the exception of adding custom elements if needed for the demo.
+
+  ----------------------- DO NOT EDIT -----------------------------
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auro Web Component Generator | auro-form custom element</title>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/tokens/CSSCustomProperties.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+</head>
+<body class="auro-markdown">
+<main>
+  <h2>auro-form testing</h2>
+  <auro-form>
+    <auro-input id="first-name" name="firstName" required>
+      <span slot="label">First Name</span>
+    </auro-input>
+    <div>
+      <auro-input id="last-name" name="lastName" required>
+        <span slot="label">Last Name</span>
+      </auro-input>
+    </div>
+    <div>
+      <div>
+        <auro-input id="occupation" name="occupation" required>
+          <span slot="label">Occupation</span>
+        </auro-input>
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </auro-form>
+</main>
+
+<script type="module" data-demo-script="true" src="./index.min.js"></script>
+<script type="module" data-demo-script="true" src="./registerDemoDeps.js"></script>
+<!--<script type="module" data-demo-script="true" src="~@auro-formkit/auro-input/dist/index.min.js"></script>-->
+
+<!-- If additional elements are needed for the demo, add them here. -->
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/dist/auro-accordion__bundled.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/dist/auro-accordion__bundled.js" type="module"></script>
+</body>
+</html>
