@@ -844,11 +844,14 @@ export class AuroDatePicker extends LitElement {
     // a later date than the current value date
     if (changedProperties.has('minDate')) {
       if (this.minDate) {
-        const minDateMonth = Number(this.minDate.charAt(1));
+        const minDateMonth = Number(this.minDate.split('/')[0]);
+        const minDateYear = Number(this.minDate.split('/')[2]);
 
         // This sets the visible month of the calendar to the minDate when the minDate is later
         // than the current visible date
-        if (minDateMonth > this.calendar.month) {
+        if (minDateYear > this.calendar.year) {
+          this.calendarRenderUtil.updateCentralDate(this, this.minDate);
+        } else if (minDateYear === this.calendar.year && minDateMonth > this.calendar.month) {
           this.calendarRenderUtil.updateCentralDate(this, this.minDate);
         }
 
@@ -869,6 +872,17 @@ export class AuroDatePicker extends LitElement {
     // This resets the datepicker when the maxDate is set to a new value that is
     // an earlier date than the current value date
     if (changedProperties.has('maxDate')) {
+      const maxDateMonth = Number(this.maxDate.split('/')[0]);
+      const maxDateYear = Number(this.maxDate.split('/')[2]);
+
+      // This sets the visible month of the calendar to the maxDate when the maxDate is earlier
+      // than the current visible date
+      if (maxDateYear < this.calendar.year) {
+        this.calendarRenderUtil.updateCentralDate(this, this.maxDate);
+      } else if (maxDateYear === this.calendar.year && maxDateMonth < this.calendar.month) {
+        this.calendarRenderUtil.updateCentralDate(this, this.maxDate);
+      }
+
       if (this.maxDate) {
         if (this.value) {
           if (new Date(this.maxDate).getTime() < new Date(this.value).getTime()) {
