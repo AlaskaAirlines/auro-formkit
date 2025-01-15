@@ -76,12 +76,14 @@ auro-menuoption {
 }
 
 // Multiselect styles
-.isMultiSelect {
-  display: flex;
+:host([multiselect]) {
+  [slot="trigger"] {
+    display: flex;
+  }
 
   auro-menuoption {
     &:not(:first-child) {
-      margin-left: var(--ds-size-100, $ds-size-100);
+      margin-left: var(--ds-size-100);
     }
   }
 }

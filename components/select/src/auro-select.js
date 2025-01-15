@@ -144,7 +144,6 @@ export class AuroSelect extends LitElement {
        */
       optionSelected: {
         // Allow HTMLElement[] arrays and undefined
-        type: Object,
         converter: arrayConverter,
         hasChanged: arrayOrUndefinedHasChanged
       },
@@ -206,7 +205,6 @@ export class AuroSelect extends LitElement {
        */
       value: {
         // Allow string[] arrays and undefined
-        type: Object,
         converter: arrayConverter,
         hasChanged: arrayOrUndefinedHasChanged
       },
@@ -266,8 +264,6 @@ export class AuroSelect extends LitElement {
    */
   updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
-    const multiSelectCssClass = 'isMultiSelect';
-
     // Clear everything except the placeholder
     const placeholder = triggerContentEl.querySelector('#placeholder');
     triggerContentEl.innerHTML = '';
@@ -278,9 +274,6 @@ export class AuroSelect extends LitElement {
     // Handle selected options if they exist
     if (this.optionSelected && this.optionSelected.length > 0) {
       if (this.multiSelect) {
-        // Add class to simplify light DOM styling
-        triggerContentEl.classList.add(multiSelectCssClass);
-
         // Create a document fragment to build the content
         const fragment = document.createDocumentFragment();
 
@@ -301,14 +294,11 @@ export class AuroSelect extends LitElement {
         triggerContentEl.appendChild(fragment);
       } else {
         // For single select, show only the first selected option
-        triggerContentEl.classList.remove(multiSelectCssClass);
         const clone = this.optionSelected[0].cloneNode(true);
         clone.removeAttribute('selected');
         clone.removeAttribute('class');
         triggerContentEl.appendChild(clone);
       }
-    } else {
-      triggerContentEl.classList.remove(multiSelectCssClass);
     }
 
     // notify dropdown as trigger content is changed
@@ -526,7 +516,7 @@ export class AuroSelect extends LitElement {
         // Ensure menu always receives array of values
         this.menu.value = Array.isArray(this.value) ? this.value : [this.value];
 
-        // Wait for menu to finish updating it's value
+        // Wait for menu to finish updating its value
         await this.menu.updateComplete;
 
         this.optionSelected = this.menu.optionSelected;
