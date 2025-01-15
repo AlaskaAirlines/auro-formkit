@@ -26,6 +26,8 @@
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
+    "@auro-formkit/auro-datepicker": "*",
+    "@auro-formkit/auro-input": "*",
     "@aurodesignsystem/design-tokens": "^4.12.1",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",

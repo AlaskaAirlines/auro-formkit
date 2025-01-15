@@ -19,7 +19,9 @@ The auro-form element provides users a way to ... (it would be great if you fill
 
 ## Methods
 
-| Method              | Type                       |
-|---------------------|----------------------------|
-| `getSubmitFunction` | `(): (event: any) => void` |
-| `onSlotChange`      | `(event: any): void`       |
+| Method              | Type                         | Description                                      |
+|---------------------|------------------------------|--------------------------------------------------|
+| `getSubmitFunction` | `(): (event: any) => void`   |                                                  |
+| `isFormElement`     | `(tagName: string): boolean` | Check if the tag name is a form element.<br /><br />**tagName**: The tag name to check. |
+| `isSubmitElement`   | `(tagName: string): boolean` | Check if the tag name is a submit element.<br /><br />**tagName**: The tag name to check. |
+| `onSlotChange`      | `(event: any): void`         |                                                  |
