@@ -420,62 +420,6 @@ export class AuroCombobox extends LitElement {
       }
     });
 
-    this.input.addEventListener('input', () => {
-      this.menu.matchWord = this.input.value;
-      this.optionActive = null;
-
-      let hasChange = false;
-
-      if (this.value !== this.input.value) {
-        this.value = this.input.value;
-        hasChange = true;
-      }
-
-      if (this.value !== this.menu.value) {
-        this.menu.value = this.value;
-        hasChange = true;
-      }
-
-      if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
-        this.optionSelected = undefined;
-        hasChange = true;
-      }
-
-      if (!hasChange) {
-        return;
-      }
-
-      this.menu.resetOptionsStates();
-      this.handleMenuOptions();
-
-      this.handleInputValueChange();
-      // validate only if the value was set programmatically
-      if (document.activeElement !== this) {
-        this.validation.validate(this);
-      }
-
-      // hide the menu if the value is empty otherwise show if there are available suggestions
-      if (this.input.value && this.input.value.length === 0) {
-        this.hideBib();
-        this.classList.remove('combobox-filled');
-      } else if (!this.dropdown.isPopoverVisible && this.availableOptions) {
-        const hasFocus = this.contains(document.activeElement);
-
-        // if the focus is within the combobox, then show the bib
-        // this will prevent the bib from being shown while loading & presetting the value
-        if (hasFocus) {
-          this.showBib();
-        }
-
-        this.classList.add('combobox-filled');
-      }
-
-      // force the dropdown bib to hide if the input value has no matching suggestions
-      if (!this.availableOptions || this.availableOptions.length === 0) {
-        this.hideBib();
-      }
-    });
-
     this.input.addEventListener('auroFormElement-validated', (evt) => {
       this.errorMessage = evt.detail.message;
     });
@@ -510,8 +454,14 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   handleInputValueChange() {
+    this.menu.matchWord = this.input.value;
+    this.optionActive = null;
+
+    let hasChange = false;
+
     if (this.value !== this.input.value) {
       this.value = this.input.value;
+      hasChange = true;
 
       this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
         bubbles: true,
@@ -520,9 +470,47 @@ export class AuroCombobox extends LitElement {
       }));
     }
 
-    // This check prevents the component showing an error when a required datepicker is first rendered
-    if (this.input.value) {
+    if (this.value !== this.menu.value) {
+      this.menu.value = this.value;
+      hasChange = true;
+    }
+
+    if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
+      this.optionSelected = undefined;
+      hasChange = true;
+    }
+
+    if (!hasChange) {
+      return;
+    }
+
+    this.menu.resetOptionsStates();
+    this.handleMenuOptions();
+
+    // validate if the value was set programmatically
+    if (document.activeElement !== this) {
       this.validation.validate(this);
+    }
+
+    // hide the menu if the value is empty otherwise show if there are available suggestions
+    if (this.input.value && this.input.value.length === 0) {
+      this.hideBib();
+      this.classList.remove('combobox-filled');
+    } else if (!this.dropdown.isPopoverVisible && this.availableOptions) {
+      const hasFocus = this.contains(document.activeElement);
+
+      // if the focus is within the combobox, then show the bib
+      // this will prevent the bib from being shown while loading & presetting the value
+      if (hasFocus) {
+        this.showBib();
+      }
+
+      this.classList.add('combobox-filled');
+    }
+
+    // force the dropdown bib to hide if the input value has no matching suggestions
+    if (!this.availableOptions || this.availableOptions.length === 0) {
+      this.hideBib();
     }
   }
 
@@ -709,7 +697,8 @@ export class AuroCombobox extends LitElement {
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-            .type="${this.type}">
+            .type="${this.type}"
+            @input="${this.handleInputValueChange}">
             <slot name="label" slot="label"></slot>
           </${this.inputTag}>
           <div class="menuWrapper">
