@@ -122,8 +122,6 @@ export class AuroMenu extends LitElement {
       },
       optionSelected: {
         // Allow HTMLElement[] arrays and undefined
-        type: Object,
-        attribute: 'optionselected',
         converter: arrayConverter,
         hasChanged: arrayOrUndefinedHasChanged
       },
@@ -137,6 +135,7 @@ export class AuroMenu extends LitElement {
       },
       multiSelect: {
         type: Boolean,
+        reflect: true,
         attribute: 'multiselect'
       },
       value: {
@@ -196,24 +195,51 @@ export class AuroMenu extends LitElement {
   }
 
   updated(changedProperties) {
-    // Handle preset values from attribute
     if (changedProperties.has('value')) {
-      // Ensure this.value is valid and has elements before accessing [0]
-      const isMatchingOption = this.value && this.value.length > 0
-        ? this.items.find((item) => item.value === this.value[0])
-        : undefined;
-
-      // Wrap the matching option in an array if found, else return undefined
-      const matchingOption = isMatchingOption ? [isMatchingOption] : undefined;
-
-      if (matchingOption) {
-        this.optionSelected = matchingOption;
+      // Handle null/undefined case
+      if (this.value === undefined || this.value === null) {
+        this.optionSelected = undefined;
+        // Reset index tracking
+        this.index = -1;
       } else {
-        this.reset();
+        // Convert single values to arrays
+        const valueArray = Array.isArray(this.value) ? this.value : [this.value];
+
+        // Find all matching options
+        const matchingOptions = this.items.filter((item) => valueArray.includes(item.value));
+
+        if (matchingOptions.length > 0) {
+          if (this.multiSelect) {
+            // For multiselect, keep all matching options
+            this.optionSelected = matchingOptions;
+          } else {
+            // For single select, only use the first match
+            this.optionSelected = [matchingOptions[0]];
+            this.index = this.items.indexOf(matchingOptions[0]);
+          }
+        } else {
+          // No matches found - trigger failure event
+          dispatchMenuEvent(this, 'auroMenu-selectValueFailure');
+          this.optionSelected = undefined;
+          this.index = -1;
+        }
+      }
+
+      // Update UI state
+      this.updateItemsState(new Map([
+        [
+          'optionSelected',
+          true
+        ]
+      ]));
+
+      // Notify of changes
+      if (this.optionSelected !== undefined) {
+        this.notifySelectionChange();
       }
     }
 
-    // Process all UI updates
+    // Process all other UI updates
     this.updateItemsState(changedProperties);
   }
 
@@ -481,6 +507,7 @@ export class AuroMenu extends LitElement {
       this.initItems();
     }
 
+    // Get currently selected menu option based on index
     const option = this.items[this.index];
 
     // Return early if option is not interactive
