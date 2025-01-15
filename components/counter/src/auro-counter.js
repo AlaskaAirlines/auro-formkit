@@ -265,11 +265,17 @@ export class AuroCounter extends LitElement {
       const oldValue = changedProperties.get("value");
       if (this.value !== oldValue && oldValue !== undefined) {
         this.validation.validate(this);
-        this.dispatchEvent(new CustomEvent("input", {
-          detail: {
-            value: this.value,
-          },
-        }),);
+        this.dispatchEvent(
+          new CustomEvent("input", {
+            detail: {
+              value: this.value,
+            },
+          }),
+          {
+            bubble: true,
+            composable: true,
+          }
+        );
 
         if (
           this.value === this.max ||
