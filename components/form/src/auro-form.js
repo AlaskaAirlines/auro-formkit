@@ -117,13 +117,14 @@ export class AuroForm extends LitElement {
         return formKey.validity !== null && formKey.validity !== 'valid' && formKey.required;
       });
 
-    return invalidKey ? this._formState[invalidKey].validity : 'valid';
+    return invalidKey ? 'invalid' : 'valid';
   }
 
-  get isInitialState() {
-    // return true if all keys are null
-    return true;
-  }
+  // Below is not implemented yet
+  // get isInitialState() {
+  //   // return true if all keys are null
+  //   return true;
+  // }
 
   getSubmitFunction() {
     // We return an arrow function here to ensure that the `this` context points at this same AuroForm context.
@@ -132,7 +133,7 @@ export class AuroForm extends LitElement {
       event.preventDefault();
 
       // eslint-disable-next-line no-console,no-magic-numbers
-      console.log(`Form internal state (not for public use) -> ${JSON.stringify(this._formState, null, 4)}`);
+      // console.log(`Form internal state (not for public use) -> ${JSON.stringify(this._formState, null, 4)}`);
 
       // eslint-disable-next-line no-console,no-magic-numbers
       console.log(`Form submitted -> ${JSON.stringify(this.value, null, 4)}`);
