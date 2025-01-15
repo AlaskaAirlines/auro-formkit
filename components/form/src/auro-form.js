@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 // Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -38,14 +40,17 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 // build the component class
 export class AuroForm extends LitElement {
+  static get properties() {
+    return {
+      _formState: { attribute: false },
+    };
+  }
+
   constructor() {
     super();
 
     /** @type {FormState} */
-    this.formState = {};
-
-    /** @type {HTMLInputElement[]} */
-    this.formElements = [];
+    this._formState = {};
   }
 
   // Note: button is NOT considered a form element in this context
@@ -54,8 +59,34 @@ export class AuroForm extends LitElement {
     return [
       'auro-input',
       'auro-select',
-      'button',
+      'auro-datepicker',
+      'auro-checkbox-group',
     ];
+  }
+
+  /**
+   * Check if the tag name is a form element.
+   * @param {string} tagName - The tag name to check.
+   * @returns {boolean}
+   */
+  isFormElement(tagName) {
+    return AuroForm.formElementTags.includes(tagName.toLowerCase());
+  }
+
+  static get submitElementTags() {
+    return [
+      'button',
+      'auro-button',
+    ];
+  }
+
+  /**
+   * Check if the tag name is a submit element.
+   * @param {string} tagName - The tag name to check.
+   * @returns {boolean}
+   */
+  isSubmitElement(tagName) {
+    return AuroForm.submitElementTags.includes(tagName.toLowerCase());
   }
 
   static get styles() {
@@ -72,10 +103,26 @@ export class AuroForm extends LitElement {
    * @returns {Record<string, string | number | boolean | string[] | null>} The form value.
    */
   get value() {
-    return Object.keys(this.formState).reduce((acc, key) => {
-      acc[key] = this.formState[key].value;
+    return Object.keys(this._formState).reduce((acc, key) => {
+      acc[key] = this._formState[key].value;
       return acc;
     }, {});
+  }
+
+  get validity() {
+    // go through validity states and return the first invalid state (if any)
+    const invalidKey = Object.keys(this._formState).
+      find((key) => {
+        const formKey = this._formState[key];
+        return formKey.validity !== null && formKey.validity !== 'valid' && formKey.required;
+      });
+
+    return invalidKey ? this._formState[invalidKey].validity : 'valid';
+  }
+
+  get isInitialState() {
+    // return true if all keys are null
+    return true;
   }
 
   getSubmitFunction() {
@@ -84,8 +131,11 @@ export class AuroForm extends LitElement {
     return (event) => {
       event.preventDefault();
 
-      // eslint-disable-next-line no-console
-      console.log(`Form submitted -> ${JSON.stringify(this.value)}`);
+      // eslint-disable-next-line no-console,no-magic-numbers
+      console.log(`Form internal state (not for public use) -> ${JSON.stringify(this._formState, null, 4)}`);
+
+      // eslint-disable-next-line no-console,no-magic-numbers
+      console.log(`Form submitted -> ${JSON.stringify(this.value, null, 4)}`);
     };
   }
 
@@ -112,8 +162,25 @@ export class AuroForm extends LitElement {
       /** @type {HTMLInputElement} */
       const eventTarget = event.target;
       if (AuroForm.formElementTags.includes(eventTarget.tagName.toLowerCase())) {
-        this.formState[eventTarget.name].value = eventTarget.value;
+        if (!this._formState[eventTarget.getAttribute("name")]) {
+          this._formState[eventTarget.getAttribute("name")] = {
+            value: eventTarget.value,
+            validity: eventTarget.getAttribute("validity"),
+            required: eventTarget.hasAttribute('required'),
+          };
+        }
+
+        this._formState[eventTarget.getAttribute("name")].value = eventTarget.value;
       }
+    });
+
+    slot.addEventListener('auroFormElement-validated', (event) => {
+      const oldValue = this._formState;
+
+      // eslint-disable-next-line no-console
+      console.log(`${event.target.getAttribute("name")} -> ${event.detail.validity}`);
+      this._formState[event.target.getAttribute("name")].validity = event.detail.validity;
+      this.requestUpdate('formState', oldValue);
     });
   }
 
@@ -121,43 +188,51 @@ export class AuroForm extends LitElement {
     const slot = event.target;
     const elements = slot.assignedElements();
 
-    const formElements = [];
-    elements.forEach((element) => {
-      // If one of the root elements is a form element, just push it to the formElements array
-      if (AuroForm.formElementTags.includes(element.tagName.toLowerCase())) {
-        formElements.push(element);
-      } else {
-        // If this root element is not a form element, query for form elements within it (note: NOT shadowRoot)
-        element.querySelectorAll(AuroForm.formElementTags.join(',')).forEach((formElement) => {
-          formElements.push(formElement);
-        });
-      }
-    });
+    // Clear current form state - maybe we should call a reset function instead?
+    this._formState = {};
 
-    for (const element of formElements) {
-      if (element.tagName.toLowerCase() !== 'button') {
-        this.formState[element.getAttribute('name')] = {
+    const tryAddToElements = (element) => {
+      // Form elements get added to the form state
+      if (this.isFormElement(element.tagName)) {
+        this._formState[element.getAttribute('name')] = {
           value: element.getAttribute('value'),
-          // THIS IS PROBABLY NOT DONE CORRECTLY :)
           validity: element.getAttribute('validity'),
-          // THIS IS NOT DONE CORRECTLY :)
-          required: element.getAttribute('required'),
+          required: element.hasAttribute('required'),
         };
-      } else if (element.tagName.toLowerCase() === 'button' && element.type === 'submit') {
-        // eslint-disable-next-line no-console
-        console.log('Button element detected');
-
-        // Remove in case this button was already registered!
+      } else if (this.isSubmitElement(element.tagName) && element.getAttribute('type') === 'submit') {
         element.removeEventListener('click', this.getSubmitFunction());
         element.addEventListener('click', this.getSubmitFunction());
+      } else {
+        throw new Error(`Element ${element.tagName} is not a form element or a submit element`);
       }
-    }
+    };
+
+    elements.forEach((element) => {
+      try {
+        tryAddToElements(element);
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('not a form element')) {
+          // Not a form element, so we need to check if it has form elements inside (note: not shadow DOM)
+          const query = AuroForm.formElementTags.concat(AuroForm.submitElementTags.map((tag) => `${tag}[type=submit]`)).join(',');
+          element.querySelectorAll(query).forEach((formElement) => {
+            try {
+              tryAddToElements(formElement);
+              // eslint-disable-next-line no-unused-vars
+            } catch (_error) {
+              // Do nothing - we don't care about this error
+            }
+          });
+        }
+      }
+    });
   }
 
   // function that renders the HTML and CSS into the scope of the component
   render() {
     return html`
         <form>
+          <p>Value: ${JSON.stringify(this.value)}</p>
+          <p>Validity: ${this.validity}</p>
           <h3>Auro form example</h3>
           <slot @slotchange="${this.onSlotChange}"></slot>
         </form>

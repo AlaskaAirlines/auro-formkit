@@ -25,9 +25,23 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/tokens/CSSCustomProperties.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@8.2.0/dist/auro-button__bundled.js" type="module"></script>
 </head>
 <body class="auro-markdown">
 <main>
+  <style>
+    .submitBlock {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .datepickerBlock {
+      margin-top: 1rem;
+    }
+  </style>
+
   <h2>auro-form testing</h2>
   <auro-form>
     <auro-input id="first-name" name="firstName" required>
@@ -46,11 +60,22 @@
       </div>
     </div>
 
-    <button type="submit">Submit</button>
+    <div class="datepickerBlock">
+      <h4>Pick a cool date</h4>
+      <auro-datepicker id="date-example" name="dateExample" required>
+        <span slot="fromLabel">Choose a date</span>
+        <span slot="mobileDateLabel">Choose a date</span>
+      </auro-datepicker>
+    </div>
+
+    <div class="submitBlock">
+      <auro-button type="reset">Reset</auro-button>
+      <auro-button type="submit">Submit</auro-button>
+    </div>
   </auro-form>
 </main>
 
-<script type="module" data-demo-script="true" src="./index.min.js"></script>
+<script type="module" data-demo-script="true" src="./index.js"></script>
 <script type="module" data-demo-script="true" src="./registerDemoDeps.js"></script>
 <!--<script type="module" data-demo-script="true" src="~@auro-formkit/auro-input/dist/index.min.js"></script>-->
 
