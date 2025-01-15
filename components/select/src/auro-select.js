@@ -520,11 +520,16 @@ export class AuroSelect extends LitElement {
     }
   }
 
-  updated(changedProperties) {
+  async updated(changedProperties) {
     if (changedProperties.has('value')) {
       if (this.value) {
         // Ensure menu always receives array of values
         this.menu.value = Array.isArray(this.value) ? this.value : [this.value];
+
+        // Wait for menu to finish updating it's value
+        await this.menu.updateComplete;
+
+        this.optionSelected = this.menu.optionSelected;
       } else {
         this.menu.value = undefined;
       }

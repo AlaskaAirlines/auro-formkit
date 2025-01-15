@@ -197,18 +197,19 @@ export class AuroMenu extends LitElement {
 
   updated(changedProperties) {
     // Handle preset values from attribute
-    if ((changedProperties.has('value') || changedProperties.has('optionSelected')) &&
-        this.hasAttribute('value') &&
-        (!this.value || this.value.length === 0)) {
-      // Get the initial value from the attribute
-      const initialValue = this.getAttribute('value');
+    if (changedProperties.has('value')) {
+      // Ensure this.value is valid and has elements before accessing [0]
+      const isMatchingOption = this.value && this.value.length > 0
+        ? this.items.find((item) => item.value === this.value[0])
+        : undefined;
 
-      // Find the corresponding option in the menu items
-      const matchingOption = this.items.find((item) => item.value === initialValue);
+      // Wrap the matching option in an array if found, else return undefined
+      const matchingOption = isMatchingOption ? [isMatchingOption] : undefined;
 
       if (matchingOption) {
-        this.value = initialValue;
         this.optionSelected = matchingOption;
+      } else {
+        this.reset();
       }
     }
 
