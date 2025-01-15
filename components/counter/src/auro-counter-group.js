@@ -189,11 +189,17 @@ export class AuroCounterGroup extends LitElement {
       const oldValue = changedProperties.get("value");
       this.validation.validate(this);
       if (this.value !== oldValue && oldValue !== undefined) {
-        this.dispatchEvent(new CustomEvent("input", {
-          detail: {
-            value: this.value,
-          },
-        }));
+        this.dispatchEvent(
+          new CustomEvent("input", {
+            detail: {
+              value: this.value,
+            },
+          }),
+          {
+            bubble: true,
+            composable: true,
+          }
+        );
       }
     }
   }
