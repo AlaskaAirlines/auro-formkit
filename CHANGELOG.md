@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.7](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2025-01-15)
+
+
+### Bug Fixes
+
+* hide bib properly upon making a selecting [#78](https://github.com/AlaskaAirlines/auro-formkit/issues/78) ([a1d66ab](https://github.com/AlaskaAirlines/auro-formkit/commit/a1d66aba87ad87c8b1f35786cb05cdc58a07fbff))
+* reset option on combobox.input.value change only with any variable change [#141](https://github.com/AlaskaAirlines/auro-formkit/issues/141) ([fe3bfb4](https://github.com/AlaskaAirlines/auro-formkit/commit/fe3bfb4300c117e0b3054c17a4837cf60b676f66))
+
 # [2.0.0-beta.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2025-01-14)
 
 
