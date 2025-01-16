@@ -4,6 +4,7 @@
 
 | Property                        | Attribute                       | Type      | Default     | Description                                      |
 |---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
+| `autocomplete`                  | `autocomplete`                  | `string`  |             | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
 | `checkmark`                     | `checkmark`                     | `boolean` |             | When attribute is present auro-menu will apply checkmarks to selected options. |
 | `disabled`                      | `disabled`                      | `boolean` |             | If set, disables the combobox.                   |
 | `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
