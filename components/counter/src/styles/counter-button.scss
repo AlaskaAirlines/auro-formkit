@@ -31,7 +31,7 @@ slot {
 
   span {
       display: block;
-      height: 24px;
+      height: var(--ds-size-300, $ds-size-300);
   }
 }
 
@@ -39,21 +39,18 @@ slot {
   position: relative;
   display: inline-flex;
   overflow: visible;
-  width: 36px;
-  height: 34px;
+  width: calc(var(--ds-size-50, $ds-size-50) + var(--ds-size-400, $ds-size-400));
+  height: calc(var(--ds-size-25, $ds-size-25) + var(--ds-size-400, $ds-size-400));
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: var(--ds-counter-control-padding);
+  padding: var(--ds-auro-counter-control-padding);
   border: none;
-  border-radius: var(--ds-counter-control-border-radius, $ds-size-500);
+  border-radius: var(--ds-auro-counter-control-border-radius);
 
   // removes margins around button in Safari
   margin: 0;
   cursor: pointer;
-  font-family: var(--ds-font-family-default, $ds-font-family-default);
-  font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
-  font-weight: var(--ds-text-body-default-weight, $ds-text-body-default-weight);
   gap: var(--ds-size-100, $ds-size-100);
   line-height: unset;
 
@@ -78,7 +75,7 @@ slot {
     &:not(&:disabled) {
         outline-offset: 0;
         outline-style: solid;
-        outline-width: 2px;
+        outline-width: var(--ds-size-25, $ds-size-25);
         transform: unset;
     }
   }

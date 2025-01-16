@@ -1,3 +1,5 @@
+/* stylelint-disable selector-max-attribute, scss/selector-nest-combinators */
+
 // Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
 // See LICENSE in the project root for license information.
 
@@ -11,29 +13,32 @@
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 .counter {
-  color: var(--ds-counter-text-default);
+  color: var(--ds-auro-counter-text-default);
 }
 
-.description {
-  color: var(--ds-counter-text-secondary);
+[name="description"]{
+  &::slotted(*) {
+    color: var(--ds-auro-counter-text-secondary);
+  }
 }
+  
 
 .controlIcon {
-  color: var(--ds-counter-icon-color-default);
+  color: var(--ds-auro-counter-icon-color-default);
 }
 
 .quantityWrapper {
-  background-color: var(--ds-counter-control-ui-bkg);
+  background-color: var(--ds-auro-counter-control-ui-bkg);
 }
 
 [disabled], :host([disabled]) {
   .controlIcon {
-    color: var(--ds-counter-control-ui-disabled);
+    color: var(--ds-auro-counter-control-ui-disabled);
   }
 
   label,
-  .description,
+  [name="description"]::slotted(*),
   &::part(counterControl) {
-    color: var(--ds-counter-text-disabled);
+    color: var(--ds-auro-counter-text-disabled);
   }
 }

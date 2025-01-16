@@ -12,13 +12,13 @@
 
 
 :host {
-  --ds-counter-text-default: var(--ds-color-text-primary-default, #{$ds-color-text-primary-default});
-  --ds-counter-text-secondary: var(--ds-color-text-secondary-default, #{$ds-color-text-secondary-default});
-  --ds-counter-text-disabled: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});;
-  --ds-counter-control-ui-active: var(--ds-color-ui-active-default, #{$ds-color-ui-active-default});
-  --ds-counter-control-ui-hover: var(--ds-color-ui-hover-default, #{$ds-color-ui-hover-default});
-  --ds-counter-control-ui-disabled: var(--ds-color-ui-disabled-default, #{$ds-color-ui-disabled-default});
-  --ds-counter-control-ui-bkg: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
-  --ds-counter-control-line-height: var(--ds-text-body-size-sm, #{$ds-text-body-size-sm});
-  --ds-counter-icon-color-default: var(--ds-color-ui-default-default, #{$ds-color-ui-default-default});
+  --ds-auro-counter-text-default: var(--ds-color-text-primary-default, #{$ds-color-text-primary-default});
+  --ds-auro-counter-text-secondary: var(--ds-color-text-secondary-default, #{$ds-color-text-secondary-default});
+  --ds-auro-counter-text-disabled: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});;
+  --ds-auro-counter-control-ui-active: var(--ds-color-ui-active-default, #{$ds-color-ui-active-default});
+  --ds-auro-counter-control-ui-hover: var(--ds-color-ui-hover-default, #{$ds-color-ui-hover-default});
+  --ds-auro-counter-control-ui-disabled: var(--ds-color-ui-disabled-default, #{$ds-color-ui-disabled-default});
+  --ds-auro-counter-control-ui-bkg: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
+  --ds-auro-counter-control-line-height: var(--ds-text-body-size-sm, #{$ds-text-body-size-sm});
+  --ds-auro-counter-icon-color-default: var(--ds-color-ui-default-default, #{$ds-color-ui-default-default});
 }
