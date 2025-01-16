@@ -26,7 +26,6 @@ export class AuroCounterGroup extends LitElement {
 
     this.max = undefined;
     this.min = undefined;
-    this.noValidate = false;
     this.validity = undefined;
     this.value = undefined;
 
@@ -51,6 +50,7 @@ export class AuroCounterGroup extends LitElement {
        */
       max: {
         type: Number,
+        reflect: true,
       },
 
       /**
@@ -58,45 +58,7 @@ export class AuroCounterGroup extends LitElement {
        */
       min: {
         type: Number,
-      },
-
-      /**
-       * If true, disables validation.
-       */
-      noValidate: {
-        type: Boolean,
-      },
-
-      /**
-       * Custom validity message.
-       * @private
-       */
-      setCustomValidity: {
-        type: String,
-      },
-
-      /**
-       * Custom validity message for range overflow.
-       * @private
-       */
-      setCustomValidityRangeOverflow: {
-        type: String,
-      },
-
-      /**
-       * Custom validity message for range underflow.
-       * @private
-       */
-      setCustomValidityRangeUnderflow: {
-        type: String,
-      },
-
-      /**
-       * Custom validity message for value missing.
-       * @private
-       */
-      setCustomValidityValueMissing: {
-        type: String,
+        reflect: true,
       },
 
       /**
@@ -116,13 +78,6 @@ export class AuroCounterGroup extends LitElement {
     };
   }
 
-  firstUpdated() {
-    this.listenToCounters();
-    this.addEventListener("slotchange", () => {
-      this.listenToCounters();
-    });
-  }
-
   /**
    * Dynamically disables increment/decrement buttons on a counter based on group value.
    * This method checks the total aggregated value against the group's min and max properties.
@@ -131,7 +86,7 @@ export class AuroCounterGroup extends LitElement {
    * @param {HTMLElement} counter - The counter element to potentially disable.
    * @private
    */
-  checkDisabled(counter) {
+  manageDisabled(counter) {
     counter.disableMax = false;
     counter.disableMin = false;
 
@@ -149,7 +104,7 @@ export class AuroCounterGroup extends LitElement {
    * The listener calls `this.updateValue()` whenever the value of a counter changes.
    * @private
    */
-  listenToCounters() {
+  configureCounters() {
     const counters = this.querySelectorAll("auro-counter, [auto-counter]");
     counters.forEach((counter) => {
       counter.addEventListener("input", () => this.updateValue());
@@ -170,37 +125,34 @@ export class AuroCounterGroup extends LitElement {
   /**
    * Updates the aggregate value based on the values of contained auro-counter components.
    * This method queries for all `auro-counter` elements, sums their values, and updates the component's `value` property.
-   * Additionally, it iterates through each counter and calls `checkDisabled()` on it.
+   * Additionally, it iterates through each counter and calls `manageDisabled()` on it.
    * @private
    */
   updateValue() {
-    const counters = this.querySelectorAll("auro-counter");
+    const counters = this.querySelectorAll("auro-counter, [auro-counter]");
     this.value = Array.from(counters).reduce(
       (total, counter) => total + this.safeNumberConversion(counter.value),
       0,
     );
     counters.forEach((counter) => {
-      this.checkDisabled(counter);
+      this.manageDisabled(counter);
     });
   }
 
   updated(changedProperties) {
     if (changedProperties.has("value")) {
-      const oldValue = changedProperties.get("value");
       this.validation.validate(this);
-      if (this.value !== oldValue && oldValue !== undefined) {
-        this.dispatchEvent(
-          new CustomEvent("input", {
-            detail: {
-              value: this.value,
-            },
-          }),
-          {
-            bubble: true,
-            composable: true,
-          }
-        );
-      }
+      this.dispatchEvent(
+        new CustomEvent("input", {
+          detail: {
+            value: this.value,
+          },
+        }),
+        {
+          bubble: true,
+          composable: true,
+        }
+      );
     }
   }
 
@@ -218,7 +170,7 @@ export class AuroCounterGroup extends LitElement {
   render() {
     return html`
       <div class="counters">
-        <slot></slot>
+        <slot @slotchange=${() => this.configureCounters()}></slot>
       </div>
     `;
   }

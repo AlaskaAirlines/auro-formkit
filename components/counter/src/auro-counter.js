@@ -1,4 +1,4 @@
-/* eslint-disable lit/binding-positions, lit/no-invalid-html, max-lines */
+/* eslint-disable lit/binding-positions, lit/no-invalid-html */
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -28,9 +28,6 @@ import styleCss from "./styles/style-css.js";
  * @extends LitElement
  * @slot Default - Main label content for the counter.
  * @slot description - Descriptive content for the counter.
- * @csspart counterControl - Styling hook for counter control section.
- * @csspart controlMinus - Styling hook for minus button.
- * @csspart controlPlus - Styling hook for plus button.
  */
 export class AuroCounter extends LitElement {
   constructor() {
@@ -41,7 +38,6 @@ export class AuroCounter extends LitElement {
     this.disableMin = false;
     this.max = 9;
     this.min = 0;
-    this.noValidate = false;
     this.validity = undefined;
     this.value = undefined;
 
@@ -80,7 +76,7 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * Indicates if the maximum value is disabled.
+       * Group will attach to counter to disable the increment button.
        * @private
        */
       disableMax: {
@@ -88,7 +84,7 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * Indicates if the minimum value is disabled.
+       * Group will attach to counter to disable the decrement button.
        * @private
        */
       disableMin: {
@@ -100,6 +96,7 @@ export class AuroCounter extends LitElement {
        */
       max: {
         type: Number,
+        reflect: true,
       },
 
       /**
@@ -107,45 +104,7 @@ export class AuroCounter extends LitElement {
        */
       min: {
         type: Number,
-      },
-
-      /**
-       * Indicates if validation is disabled.
-       */
-      noValidate: {
-        type: Boolean,
-      },
-
-      /**
-       * Custom validity message.
-       * @private
-       */
-      setCustomValidity: {
-        type: String,
-      },
-
-      /**
-       * Custom validity message for range overflow.
-       * @private
-       */
-      setCustomValidityRangeOverflow: {
-        type: String,
-      },
-
-      /**
-       * Custom validity message for range underflow.
-       * @private
-       */
-      setCustomValidityRangeUnderflow: {
-        type: String,
-      },
-
-      /**
-       * Custom validity message for value missing.
-       * @private
-       */
-      setCustomValidityValueMissing: {
-        type: String,
+        reflect: true,
       },
 
       /**
@@ -184,21 +143,23 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Increments the counter value by 1.
+   * Increments the counter value by 1. If a value is provided, it increments by that amount.
    * @method increment
+   * @param {number} [value] - The amount to increment by.
    * @returns {void}
    */
-  increment() {
-    this.value += 1;
+  increment(value) {
+    this.value += value !== undefined ? value : 1;
   }
 
   /**
-   * Decrements the value of the counter by 1.
+   * Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.
    * @method decrement
+   * @param {number} [value] - The amount to decrement by.
    * @returns {void}
    */
-  decrement() {
-    this.value -= 1;
+  decrement(value) {
+    this.value -= value !== undefined ? value : 1;
   }
 
   /**
@@ -213,18 +174,6 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Checks if the "description" slot is empty.
-   * This method retrieves the "description" slot from the shadow DOM and determines if it's empty.
-   * An empty slot is defined as either a non-existent slot or a slot with no assigned nodes.
-   *
-   * @returns {boolean} `true` if the "description" slot is empty, `false` otherwise.
-   * @private
-   */
-  checkDescriptionSlot() {
-    return this.querySelector('[slot="description"]');
-  }
-
-  /**
    * Determines if the increment button should be disabled based on the current value and extrema.
    *
    * @param {number} extrema - The extreme value (either min or max) to compare against the current value.
@@ -232,6 +181,7 @@ export class AuroCounter extends LitElement {
    * @private
    */
   isIncrementDisabled(extrema) {
+    // Initially, the value is undefined and then set to the minimum value. During this transition, the increment button should be disabled.
     if (this.value === undefined) {
       return false;
     } else if (extrema === this.min && this.value > extrema) {
@@ -256,76 +206,79 @@ export class AuroCounter extends LitElement {
     }
   }
 
+  handleSlotChange() {
+    this.checkSlots();
+  }
+
   firstUpdated() {
     this.initValue();
   }
 
   updated(changedProperties) {
     if (changedProperties.has("value")) {
-      const oldValue = changedProperties.get("value");
-      if (this.value !== oldValue && oldValue !== undefined) {
-        this.validation.validate(this);
-        this.dispatchEvent(
-          new CustomEvent("input", {
-            detail: {
-              value: this.value,
-            },
-          }),
-          {
-            bubble: true,
-            composable: true,
-          }
-        );
+      this.validation.validate(this);
+      this.dispatchEvent(
+        new CustomEvent("input", {
+          detail: {
+            value: this.value,
+          },
+        }),
+        {
+          bubble: true,
+          composable: true,
+        },
+      );
 
-        if (
-          this.value === this.max ||
-          this.value === this.min ||
-          changedProperties.get("disableMax") ||
-          changedProperties.get("disableMin")
-        ) {
-          this.jumpFocusToEnabled();
-        }
+      if (
+        this.value === this.max ||
+        this.value === this.min ||
+        changedProperties.get("disableMax") ||
+        changedProperties.get("disableMin")
+      ) {
+        this.jumpFocusToEnabled();
       }
     }
+    /* eslint-disable no-extra-parens */
     if (
-      (changedProperties.has("disableMax") ||
-        changedProperties.has("disableMin")) &&
-      (changedProperties.get("disableMax") !== undefined ||
+      (changedProperties.has("disableMax") &&
+        changedProperties.get("disableMax") !== undefined) ||
+      (changedProperties.has("disableMin") &&
         changedProperties.get("disableMin") !== undefined)
     ) {
       this.jumpFocusToEnabled();
     }
+    /* eslint-enable no-extra-parens */
   }
 
   render() {
     return html`
       <div class="counter">
-      <div class="content">
-        <label class="label"><slot></slot></label>
-        ${this.checkDescriptionSlot() ? html`<div class="description"><slot name="description"></slot></div>` : ''}
-      </div>
-      
-      <div part="counterControl">
-        <auro-counter-button
-        part="controlMinus"
-        @click="${this.decrement}"
-        ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
-        >
-        <${this.iconTag} category="interface" name="minus-lg"class="controlIcon" slot="icon"></${this.iconTag}>
-        </auro-counter-button>
-
-        <div class="quantityWrapper">
-        <div class="quantity">${this.value !== undefined ? this.value : this.min}</div>
+        <div class="content" >
+          <label class="label"><slot></slot></label>
+          <slot name="description"></slot>
         </div>
+        
+        <div part="counterControl">
+          <auro-counter-button
+          part="controlMinus"
+          @click="${() => this.decrement()}"
+          ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
+          >
+            <${this.iconTag} category="interface" name="minus-lg"class="controlIcon" slot="icon"></${this.iconTag}>
+          </auro-counter-button>
 
-        <auro-counter-button
-        part="controlPlus"
-        @click="${this.increment}"
-        ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
-        >
-        <${this.iconTag} category="interface" name="plus-lg" class="controlIcon" slot="icon"> </${this.iconTag}>
-        </auro-counter-button>
-      </div>
+          <div class="quantityWrapper">
+            <div class="quantity">${this.value !== undefined ? this.value : this.min}</div>
+          </div>
+
+          <auro-counter-button
+          part="controlPlus"
+          @click="${() => this.increment()}"
+          ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
+          >
+            <${this.iconTag} category="interface" name="plus-lg" class="controlIcon" slot="icon"> </${this.iconTag}>
+          </auro-counter-button>
+        </div>
       </div>
     `;
   }
