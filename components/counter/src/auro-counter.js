@@ -11,8 +11,12 @@ import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
 
 import { AuroIcon } from "@aurodesignsystem/auro-icon/src/auro-icon.js";
-import iconVersion from "./formkit/iconVersion.js";
+import iconVersion from "./iconVersion.js";
 import AuroFormValidation from "@auro-formkit/form-validation";
+
+import { IconUtil } from "@auro-formkit/utils";
+import plusIcon from '@alaskaairux/icons/dist/icons/interface/plus-lg.mjs';
+import minusIcon from '@alaskaairux/icons/dist/icons/interface/minus-lg.mjs';
 
 import tokensCss from "./styles/tokens-css.js";
 import colorCss from "./styles/color-css.js";
@@ -200,7 +204,7 @@ export class AuroCounter extends LitElement {
    * @private
    */
   jumpFocusToEnabled() {
-    const button = this.shadowRoot.querySelector("auro-counter-button:not([disabled])",);
+    const button = this.shadowRoot.querySelector("auro-counter-button:not([disabled])");
     if (button !== null) {
       button.focus();
     }
@@ -226,7 +230,7 @@ export class AuroCounter extends LitElement {
         {
           bubble: true,
           composable: true,
-        },
+        }
       );
 
       if (
@@ -264,7 +268,7 @@ export class AuroCounter extends LitElement {
           @click="${() => this.decrement()}"
           ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
           >
-            <${this.iconTag} category="interface" name="minus-lg"class="controlIcon" slot="icon"></${this.iconTag}>
+            <${this.iconTag} class="controlIcon" slot="icon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
           </auro-counter-button>
 
           <div class="quantityWrapper">
@@ -276,7 +280,7 @@ export class AuroCounter extends LitElement {
           @click="${() => this.increment()}"
           ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
           >
-            <${this.iconTag} category="interface" name="plus-lg" class="controlIcon" slot="icon"> </${this.iconTag}>
+            <${this.iconTag} class="controlIcon" slot="icon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
           </auro-counter-button>
         </div>
       </div>
