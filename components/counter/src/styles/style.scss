@@ -15,8 +15,6 @@
   align-items: center;
   justify-content: space-between;
   column-gap: var(--ds-size-150, $ds-size-150);
-  font-family: var(--ds-font-family-default, $ds-font-family-default);
-  font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
 }
 
 .content {
@@ -24,27 +22,21 @@
   flex-flow: column;  
 }
 
-.label {
-  font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
-  line-height: var(--ds-size-300, $ds-size-300);
-}
-
-.description {
-  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-  line-height: var(--ds-size-200, $ds-size-200);
+[name="description"] {
+  &::slotted(*) {
+    display: block;
+    font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+    line-height: var(--ds-size-200, $ds-size-200);
+  }
 }
 
 .quantityWrapper {
   width: var(--ds-size-400, $ds-size-400);
-  height: 34px;
+  height: calc(var(--ds-size-25, $ds-size-25) + var(--ds-size-400, $ds-size-400));
   align-content: center;
   cursor: default;
   font-size: var(--ds-size-250, $ds-size-250);
   text-align: center;
-}
-
-.quantity {
-  transform: translateY(0.1rem);
 }
 
 :host{
@@ -56,13 +48,13 @@
   }
 
   &::part(controlMinus) {
-    --ds-counter-control-border-radius: var(--ds-size-500, #{$ds-size-500}) 0 0 var(--ds-size-500, #{$ds-size-500});
-    --ds-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100});
+    --ds-auro-counter-control-border-radius: var(--ds-size-500, #{$ds-size-500}) 0 0 var(--ds-size-500, #{$ds-size-500});
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100});
   }
 
   &::part(controlPlus) {
-    --ds-counter-control-border-radius: 0 var(--ds-size-500, #{$ds-size-500}) var(--ds-size-500, #{$ds-size-500}) 0;
-    --ds-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50});
+    --ds-auro-counter-control-border-radius: 0 var(--ds-size-500, #{$ds-size-500}) var(--ds-size-500, #{$ds-size-500}) 0;
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50});
   }
 }
 

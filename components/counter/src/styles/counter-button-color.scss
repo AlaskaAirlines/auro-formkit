@@ -9,20 +9,20 @@
 
 .auroButton {
   border-color: unset;
-  background-color: var(--ds-counter-control-ui-bkg);
+  background-color: var(--ds-auro-counter-control-ui-bkg);
   color: var(--ds-auro-button-text-color);
   -webkit-tap-highlight-color: var(--ds-auro-button-tap-color);
 
   &:focus-visible {
     &:not(&:disabled) {
-      outline-color: var(--ds-counter-control-border-active);
+      outline-color: var(--ds-auro-counter-control-border-active);
     }
   }
 
   @media (hover: hover) {
     &:active, &:hover{
       &:not(:disabled) {
-        background-color: var(--ds-counter-control-ui-hover);
+        background-color: var(--ds-auro-counter-control-ui-hover);
       }
     }
   }
