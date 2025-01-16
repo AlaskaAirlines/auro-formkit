@@ -682,10 +682,11 @@ export class AuroDatePicker extends LitElement {
         if (!this.value || !this.util.validDateStr(this.value)) {
           this.value = newDate;
         } else if (!this.valueEnd || !this.util.validDateStr(this.valueEnd)) {
-
           // verify the date is after this.value to insure we are setting a proper range
           if (new Date(newDate) >= new Date(this.value)) {
             this.valueEnd = newDate;
+          } else {
+            this.value = newDate;
           }
         } else {
           this.value = newDate;
