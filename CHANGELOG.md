@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.8](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2025-01-16)
+
+
+### Features
+
+* move start date when the 2nd click is before start date in datepicker [#218](https://github.com/AlaskaAirlines/auro-formkit/issues/218) ([bf2e38e](https://github.com/AlaskaAirlines/auro-formkit/commit/bf2e38e1d9640cafd0d806de93ea74f190158ef4))
+
 # [2.0.0-beta.7](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2025-01-15)
 
 
