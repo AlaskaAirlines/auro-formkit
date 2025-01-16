@@ -523,11 +523,7 @@ export class AuroMenu extends LitElement {
 
     if (this.multiSelect) {
       // In multiselect, toggle individual selections
-      if (this.isOptionSelected(option)) {
-        this.handleDeselectState(option);
-      } else {
-        this.handleSelectState(option);
-      }
+      this.toggleOption(option);
       // In single select, only handle selection of new options
     } else if (!this.isOptionSelected(option)) {
       this.clearSelection();
@@ -613,26 +609,43 @@ export class AuroMenu extends LitElement {
     if (!this.items || !this.items.length) {
       return;
     }
+
     let newIndex = this.index;
     const increment = direction === 'down' ? 1 : -1;
     const maxIterations = this.items.length;
     let iterations = 0;
+    let foundInteractiveOption = false;
 
     do {
       newIndex = (newIndex + increment + this.items.length) % this.items.length;
       iterations += 1;
 
-      // Break if all options were checked or an interactive option was found
-      // This prevents an infinite loop if all options are disabled
-      if (iterations >= maxIterations || isOptionInteractive(this.items[newIndex])) {
+      // Check if current option is interactive
+      const currentOption = this.items[newIndex];
+      if (isOptionInteractive(currentOption)) {
+        foundInteractiveOption = true;
+        break;
+      }
+
+      // Break if all options were checked
+      if (iterations >= maxIterations) {
         break;
       }
     } while (iterations < maxIterations);
 
-    // Only update if an interactive option was found
-    if (isOptionInteractive(this.items[newIndex])) {
+    // Handle the results of the search
+    if (foundInteractiveOption) {
+      // Update only if an interactive option was found
       this.index = newIndex;
       this.updateActiveOption(this.index);
+    } else {
+      // All options are disabled or non-interactive
+      // Keep the current index unchanged
+      dispatchMenuEvent(this, 'auroMenu-navigateFailure', {
+        reason: 'No interactive options available',
+        direction,
+        currentIndex: this.index
+      });
     }
   }
 

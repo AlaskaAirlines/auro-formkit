@@ -21,7 +21,7 @@ import dropdownVersion from './formkit/auro-dropdownVersion.js';
 import {
   arrayConverter,
   arrayOrUndefinedHasChanged
-} from '@auro-formkit/auro-menu';
+} from '@aurodesignsystem/auro-menu';
 
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
@@ -264,44 +264,24 @@ export class AuroSelect extends LitElement {
    */
   updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
-    // Clear everything except the placeholder
+
+    // Clear everything except placeholder
     const placeholder = triggerContentEl.querySelector('#placeholder');
     triggerContentEl.innerHTML = '';
     if (placeholder) {
       triggerContentEl.appendChild(placeholder);
     }
 
-    // Handle selected options if they exist
-    if (this.optionSelected && this.optionSelected.length > 0) {
-      if (this.multiSelect) {
-        // Create a document fragment to build the content
-        const fragment = document.createDocumentFragment();
+    // Handle selected options
+    if (this.optionSelected && this.optionSelected.length) {
+      // Create display text from selected options
+      const displayText = this.optionSelected.map((option) => option.textContent).join(', ');
 
-        this.optionSelected.forEach((option, index) => {
-          // Only add comma if it's not the first item
-          if (index > 0) {
-            fragment.appendChild(document.createTextNode(','));
-          }
-
-          // Clone and append the option
-          const clone = option.cloneNode(true);
-          clone.removeAttribute('selected');
-          clone.removeAttribute('class');
-          fragment.appendChild(clone);
-        });
-
-        // Append the entire fragment at once
-        triggerContentEl.appendChild(fragment);
-      } else {
-        // For single select, show only the first selected option
-        const clone = this.optionSelected[0].cloneNode(true);
-        clone.removeAttribute('selected');
-        clone.removeAttribute('class');
-        triggerContentEl.appendChild(clone);
-      }
+      const span = document.createElement('span');
+      span.textContent = displayText;
+      triggerContentEl.appendChild(span);
     }
 
-    // notify dropdown as trigger content is changed
     this.dropdown.requestUpdate();
   }
 
@@ -322,7 +302,7 @@ export class AuroSelect extends LitElement {
     }
 
     if (this.multiSelect) {
-      this.menu.setAttribute('multiselect', '');
+      this.menu.multiSelect = this.multiSelect;
     }
 
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
@@ -505,16 +485,14 @@ export class AuroSelect extends LitElement {
 
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      // Wrap single value in array for menu
-      this.menu.value = [this.getAttribute('value')];
+      this.menu.value = this.value;
     }
   }
 
   async updated(changedProperties) {
     if (changedProperties.has('value')) {
       if (this.value) {
-        // Ensure menu always receives array of values
-        this.menu.value = Array.isArray(this.value) ? this.value : [this.value];
+        this.menu.value = this.value;
 
         // Wait for menu to finish updating its value
         await this.menu.updateComplete;

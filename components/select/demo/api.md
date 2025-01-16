@@ -22,13 +22,13 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | [multiSelect](#multiSelect)                   | `multiselect`                   | `boolean` |             | Sets multi-select mode, allowing multiple options to be selected at once. |
 | [noCheckmark](#noCheckmark)                   | `noCheckmark`                   | `boolean` |             | When true, checkmark on selected option will no longer be present. |
 | [noValidate](#noValidate)                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
-| [optionSelected](#optionSelected)                | `optionSelected`                | `object`  | "undefined" | Specifies the current selected menuOption.       |
+| [optionSelected](#optionSelected)                | `optionSelected`                |           | "undefined" | Specifies the current selected menuOption.       |
 | [required](#required)                      | `required`                      | `boolean` |             | Populates the `required` attribute on the element. Used for client-side validation. |
 | [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `string`  |             | Sets a custom help text message to display for all validityStates. |
 | [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `string`  |             | Custom help text message to display when validity = `customError`. |
 | [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
 | [validity](#validity)                      | `validity`                      | `string`  |             | Specifies the `validityState` this element is in. |
-| [value](#value)                         | `value`                         | `object`  | "undefined" | Value selected for the component.                |
+| [value](#value)                         | `value`                         |           | "undefined" | Value selected for the component.                |
 
 ## Methods
 
@@ -157,12 +157,10 @@ export function valueExample() {
 
   document.querySelector('#validValueExampleBtn').addEventListener('click', () => {
     valueExample.value = ['arrival'];
-    console.log(valueExample.value);
   });
 
   document.querySelector('#invalidValueExampleBtn').addEventListener('click', () => {
     valueExample.value = ['flight course'];
-    console.log(valueExample.value);
   });
 }
 ```

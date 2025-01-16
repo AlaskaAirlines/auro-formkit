@@ -181,7 +181,7 @@ export function dynamicMenuExample() {
 
   inputEl.addEventListener('input', () => {
     let data = dynamicData.getData();
-    data = dynamicData.filterData(data, dynamicMenuExample.value);
+    data = dynamicData.filterData(data, inputEl.value);
 
     generateHtml(data);
   });
@@ -412,7 +412,7 @@ Use the `value` attribute to programmatically set the value of the combobox.
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/programmaticValue.html) -->
   <!-- The below content is automatically added from ./../apiExamples/programmaticValue.html -->
-  <auro-combobox value="Apples">
+  <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -432,7 +432,7 @@ Use the `value` attribute to programmatically set the value of the combobox.
 <!-- The below code snippet is automatically added from ./../apiExamples/programmaticValue.html -->
 
 ```html
-<auro-combobox value="Apples">
+<auro-combobox>
   <span slot="label">Name</span>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -466,7 +466,7 @@ Note: using a value that does not match a menu option will reset the combobox va
   <auro-button id="valueInvalidExampleBtn">Set to custom value</auro-button>
   <auro-button id="valueUndefinedExampleBtn">Reset</auro-button>
   <br/><br/>
-  <auro-combobox id="valueExample" value="Apples">
+  <auro-combobox id="valueExample">
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -490,7 +490,7 @@ Note: using a value that does not match a menu option will reset the combobox va
 <auro-button id="valueInvalidExampleBtn">Set to custom value</auro-button>
 <auro-button id="valueUndefinedExampleBtn">Reset</auro-button>
 <br/><br/>
-<auro-combobox id="valueExample" value="Apples">
+<auro-combobox id="valueExample">
   <span slot="label">Name</span>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -512,11 +512,11 @@ export function valueExample() {
   const valueExample = document.querySelector('#valueExample');
 
   document.querySelector('#valueValidExampleBtn').addEventListener('click', () => {
-    valueExample.value = 'Oranges';
+    valueExample.value = ['Oranges'];
   });
 
   document.querySelector('#valueInvalidExampleBtn').addEventListener('click', () => {
-    valueExample.value = 'Dragon Fruit';
+    valueExample.value = ['Dragon Fruit'];
   });
 
   document.querySelector('#valueUndefinedExampleBtn').addEventListener('click', () => {

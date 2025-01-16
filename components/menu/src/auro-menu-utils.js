@@ -84,7 +84,7 @@ export function arrayOrUndefinedHasChanged(newVal, oldVal) {
 
     // If non-array or non-undefined, throw error
     if (!isArrayOrUndefined(newVal) || !isArrayOrUndefined(oldVal)) {
-      const invalidValue = !isArrayOrUndefined(newVal) ? newVal : oldVal;
+      const invalidValue = isArrayOrUndefined(newVal) ? oldVal : newVal;
       throw new Error(`Value must be an array or undefined, received ${typeof invalidValue}`);
     }
 

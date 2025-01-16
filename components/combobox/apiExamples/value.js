@@ -11,6 +11,5 @@ export function valueExample() {
 
   document.querySelector('#valueUndefinedExampleBtn').addEventListener('click', () => {
     valueExample.value = undefined;
-    valueExample.reset();
   });
 }
