@@ -1,5 +1,25 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.9](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2025-01-16)
+
+
+### Features
+
+* add IconUtil for SVG icon generation [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([4f5d55f](https://github.com/AlaskaAirlines/auro-formkit/commit/4f5d55f5959d302c6ac48efdee0f33fa5909a34c))
+* adjust description slot logic and colors [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([79cde62](https://github.com/AlaskaAirlines/auro-formkit/commit/79cde624e9d223dfd4963b5be76b3eb8d5cab08c))
+* counter group added with counter refactor, docs, and validation [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([2b34587](https://github.com/AlaskaAirlines/auro-formkit/commit/2b34587e7e873674a86009d9fa90b3c656dee62c))
+* counter value, min, and max with button disable state [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([7df2b00](https://github.com/AlaskaAirlines/auro-formkit/commit/7df2b00ca2f46522139a5b99f26ac50429964dc4))
+* dropdown version build fix [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([15f2109](https://github.com/AlaskaAirlines/auro-formkit/commit/15f2109ac792e607759ddd79a3556ecd3754da37))
+* enhance dispatch event [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([4511e9b](https://github.com/AlaskaAirlines/auro-formkit/commit/4511e9b5c13a7a6a203bf9a314e35a3806838381))
+* handle potential NaN values from Number conversion [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([2cae200](https://github.com/AlaskaAirlines/auro-formkit/commit/2cae2000c5cc6c27333c7ecba1ecf8341e9689ea))
+* hide props used only by group [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([a35a09d](https://github.com/AlaskaAirlines/auro-formkit/commit/a35a09d355466bbd2f6cc61f6014c414c21a683b))
+* initial component styles and structure [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([ad6b77d](https://github.com/AlaskaAirlines/auro-formkit/commit/ad6b77d94a8855765a93a5805c3c1e10e4f68bff))
+* refactor button styles and add counter validation [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([ef46ddd](https://github.com/AlaskaAirlines/auro-formkit/commit/ef46dddff08e55270326f2aefb520bb101677135))
+* simplify AuroCounterGroup by removing noValidate property and updating method names [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([231f110](https://github.com/AlaskaAirlines/auro-formkit/commit/231f110988fb8c27356ffec1f44b6b8b99a95683))
+* update color variables and styles for AuroCounter components [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([9ec6629](https://github.com/AlaskaAirlines/auro-formkit/commit/9ec662980e6fc5bfa11d81ccdc485cff634eac86))
+* update token refs [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([667b1af](https://github.com/AlaskaAirlines/auro-formkit/commit/667b1af0726dcd2813ef6a0b2371c879d5b49b53))
+* update validation logic [#91](https://github.com/AlaskaAirlines/auro-formkit/issues/91) ([08392e7](https://github.com/AlaskaAirlines/auro-formkit/commit/08392e7990ce906f9ad446c118a38d69b2df1da1))
+
 # [2.0.0-beta.8](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2025-01-16)
 
 
