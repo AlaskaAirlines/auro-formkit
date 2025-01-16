@@ -78,6 +78,14 @@ export class AuroCombobox extends LitElement {
       // ...super.properties,
 
       /**
+       * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
+       */
+      autocomplete: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * When attribute is present auro-menu will apply checkmarks to selected options.
        */
       checkmark: {
@@ -739,6 +747,7 @@ export class AuroCombobox extends LitElement {
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+            .autocomplete="${this.autocomplete}"
             .type="${this.type}"
             @input="${this.handleInputValueChange}">
             <slot name="label" slot="label"></slot>
