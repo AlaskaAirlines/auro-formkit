@@ -29,20 +29,6 @@ import styleCss from "./styles/style-css.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * @prop {Object} optionSelected - Specifies the current selected option.
- * @prop {String} value - Value selected for the dropdown menu.
- * @prop {Boolean} checkmark - When attribute is present auro-menu will apply checkmarks to selected options.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
- * @attr {String} validity - Specifies the `validityState` this element is in.
- * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {Boolean} disabled - If set, disables the combobox.
- * @attr {Boolean} noFilter - If set, combobox will not filter menuoptions based in input.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} required - Populates the `required` attribute on the input. Used for client-side validation.
- * @attr {Boolean} triggerIcon - If set, the `icon` attribute will be applied to the trigger `auro-input` element.
- * @attr {String} type - Applies the defined value as the type attribute on auro-input.
  * @slot - Default slot for the menu content.
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
@@ -61,28 +47,6 @@ export class AuroCombobox extends LitElement {
     this.optionSelected = undefined;
 
     this.privateDefaults();
-
-    /**
-     * @private
-     */
-    this.validation = new AuroFormValidation();
-
-    /**
-     * @private
-     */
-    this.runtimeUtils = new AuroLibraryRuntimeUtils();
-
-    /**
-     * @private
-     */
-    this.isHiddenWhileLoading = false;
-
-    /**
-     * Generate unique names for dependency components.
-     */
-    const versioning = new AuroDependencyVersioning();
-    this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
-    this.inputTag = versioning.generateTag('auro-input', inputVersion, AuroInput);
   }
 
   /**
@@ -93,6 +57,17 @@ export class AuroCombobox extends LitElement {
     this.availableOptions = [];
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
+
+    this.validation = new AuroFormValidation();
+
+    this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    this.isHiddenWhileLoading = false;
+
+    const versioning = new AuroDependencyVersioning();
+
+    this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
+    this.inputTag = versioning.generateTag('auro-input', inputVersion, AuroInput);
   }
 
   // This function is to define props used within the scope of this component
@@ -101,92 +76,115 @@ export class AuroCombobox extends LitElement {
   static get properties() {
     return {
       // ...super.properties,
-      error: {
-        type: String,
-        reflect: true
-      },
-      setCustomValidity: {
-        type: String
-      },
-      setCustomValidityCustomError: {
-        type: String
-      },
-      setCustomValidityValueMissing: {
-        type: String
-      },
-      validity: {
-        type: String,
-        reflect: true
-      },
-      disabled: {
-        type: Boolean,
-        reflect: true
-      },
-      noFilter: {
-        type: Boolean,
-        reflect: true
-      },
-      optionSelected: {
-        type: Object,
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
-      },
-      noValidate: { type: Boolean },
-      required: {
-        type: Boolean,
-        reflect: true
-      },
-      triggerIcon: {
-        type: Boolean,
-        reflect: true
-      },
-      type: {
-        type: String,
-        reflect: true
-      },
-      value: {
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
-      },
+
+      /**
+       * When attribute is present auro-menu will apply checkmarks to selected options.
+       */
       checkmark: {
         type: Boolean,
         reflect: true
       },
 
       /**
-       * @private
+       * If set, disables the combobox.
        */
-      availableOptions: { type: Array },
+      disabled: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
-       * @private
+       * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
        */
-      optionActive: { type: Object },
+      error: {
+        type: String,
+        reflect: true
+      },
 
       /**
-       * @private
+       * If set, combobox will not filter menuoptions based in input.
        */
-      msgSelectionMissing: { type: String },
+      noFilter: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
-       * @private
+       * If set, disables auto-validation on blur.
        */
-      dropdownElementName: { type: String },
+      noValidate: {
+        type: Boolean
+      },
 
       /**
-       * @private
+       * Specifies the current selected option.
        */
-      dropdownTag: { type: Object },
+      optionSelected: {
+        type: Object,
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
+      },
 
       /**
-       * @private
+       * Populates the `required` attribute on the input. Used for client-side validation.
        */
-      inputElementName: { type: String },
+      required: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
-       * @private
+       * Sets a custom help text message to display for all validityStates.
        */
-      inputTag: { type: Object }
+      setCustomValidity: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
+      setCustomValidityCustomError: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
+      setCustomValidityValueMissing: {
+        type: String
+      },
+
+      /**
+       * If set, the `icon` attribute will be applied to the trigger `auro-input` element.
+       */
+      triggerIcon: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Applies the defined value as the type attribute on auro-input.
+       */
+      type: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
+      validity: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Value selected for the dropdown menu.
+       */
+      value: {
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
+      },
     };
   }
 
