@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-underscore-dangle,max-lines */
 
 // Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -37,7 +37,12 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 export class AuroForm extends LitElement {
   static get properties() {
     return {
-      _formState: { attribute: false },
+      formState: { attribute: false },
+      _validity: { attribute: false },
+      _isInitialState: { attribute: false },
+      _elements: { attribute: false },
+      _submitElements: { attribute: false },
+      _resetElements: { attribute: false },
     };
   }
 
@@ -45,7 +50,23 @@ export class AuroForm extends LitElement {
     super();
 
     /** @type {FormState} */
-    this._formState = {};
+    this.formState = {};
+
+    /** @type {"valid" | "invalid" | null} */
+    this._validity = null;
+    this._isInitialState = true;
+
+    /** @type {(HTMLElement & {reset: () => void})[]} */
+    this._elements = [];
+
+    /** @type {HTMLButtonElement[]} */
+    this._submitelements = [];
+
+    /** @type {HTMLButtonElement[]} */
+    this._resetElements = [];
+
+    // Bind listeners
+    this.reset = this.reset.bind(this);
   }
 
   // Note: button is NOT considered a form element in this context
@@ -79,7 +100,7 @@ export class AuroForm extends LitElement {
     return this._isInElementCollection(AuroForm.formElementTags, element);
   }
 
-  static get submitElementTags() {
+  static get buttonElementTags() {
     return [
       'button',
       'auro-button',
@@ -87,12 +108,12 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Check if the tag name is a submit element.
+   * Check if the tag name is a button element.
    * @param {HTMLElement} element - The element to check.
    * @returns {boolean}
    */
-  isSubmitElement(element) {
-    return this._isInElementCollection(AuroForm.submitElementTags, element);
+  isButtonElement(element) {
+    return this._isInElementCollection(AuroForm.buttonElementTags, element);
   }
 
   static get styles() {
@@ -109,31 +130,68 @@ export class AuroForm extends LitElement {
    * @returns {Record<string, string | number | boolean | string[] | null>} The form value.
    */
   get value() {
-    return Object.keys(this._formState).reduce((acc, key) => {
-      acc[key] = this._formState[key].value;
+    return Object.keys(this.formState).reduce((acc, key) => {
+      acc[key] = this.formState[key].value;
       return acc;
     }, {});
   }
 
-  get validity() {
-    // go through validity states and return the first invalid state (if any)
-    const invalidKey = Object.keys(this._formState).
-      find((key) => {
-        const formKey = this._formState[key];
-
-        // these are NOT extra :(
-        // eslint-disable-next-line no-extra-parens
-        return (formKey.validity !== 'valid' && formKey.required) || (formKey.validity !== 'valid' && formKey.value !== null);
-      });
-
-    return invalidKey ? 'invalid' : 'valid';
+  /**
+   * Infer validity status based on current formState.
+   * @private
+   */
+  _calculateValidity() {
+    if (this.isInitialState) {
+      this._validity = null;
+    } else {
+      // go through validity states and return the first invalid state (if any)
+      const invalidKey = Object.keys(this.formState).
+        find((key) => {
+          const formKey = this.formState[key];
+          // these are NOT extra parens
+          // eslint-disable-next-line no-extra-parens
+          return (formKey.validity !== 'valid' && formKey.required) || (formKey.validity !== 'valid' && formKey.value !== null);
+        });
+      this._validity = invalidKey ? 'invalid' : 'valid';
+    }
   }
 
-  // Below is not implemented yet
-  get isInitialState() {
-    const anyTainted = Object.keys(this._formState).some((key) => this._formState[key].validity !== null);
+  /**
+   * Current validity state of the form, based on form element events.
+   * @returns {"valid" | "invalid"}
+   */
+  get validity() {
+    return this._validity;
+  }
 
-    return !anyTainted;
+  _setInitialState() {
+    const anyTainted = Object.keys(this.formState).some((key) => this.formState[key].validity !== null || this.formState[key].value !== null);
+
+    this._isInitialState = !anyTainted;
+
+    this._resetElements.forEach((resetElement) => {
+      if (resetElement.hasAttribute("disabled")) {
+        resetElement.removeAttribute("disabled");
+      }
+    });
+  }
+
+  /**
+   * Mostly internal way to determine if a form is in the initial state.
+   * @returns {boolean}
+   */
+  get isInitialState() {
+    return this._isInitialState;
+  }
+
+  setDisabledStateOnButtons() {
+    this._resetElements.forEach((element) => {
+      if (this.isInitialState) {
+        element.setAttribute("disabled", "");
+      } else {
+        element.removeAttribute("disabled");
+      }
+    });
   }
 
   getSubmitFunction() {
@@ -156,15 +214,75 @@ export class AuroForm extends LitElement {
    */
   queryAuroElements() {
     const formElementQuery = AuroForm.formElementTags.map((tag) => `${tag}[name]`).join(',');
-    const submitterQuery = AuroForm.submitElementTags.map((tag) => `${tag}[type=submit]`).join(',');
+    const submitterQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=submit]`).join(',');
+    const resetButtonQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=reset]`).join(',');
 
     // Alternatively, for renamed components...
     const renamedFormElementQuery = AuroForm.formElementTags.map((tag) => `[${tag}][name]`).join(',');
     const renamedSubmitterQuery = AuroForm.formElementTags.map((tag) => `[${tag}][type=submit]`).join(',');
+    const renamedResetButtonQuery = AuroForm.buttonElementTags.map((tag) => `[${tag}][type=reset]`).join(',');
 
-    const unifiedElementQuery = `${formElementQuery},${submitterQuery},${renamedFormElementQuery},${renamedSubmitterQuery}`;
+    const unifiedElementQuery = `${formElementQuery},${submitterQuery},${renamedFormElementQuery},${renamedSubmitterQuery},${resetButtonQuery},${renamedResetButtonQuery}`;
 
     return this.querySelectorAll(unifiedElementQuery);
+  }
+
+  /**
+   * Initialize (or reinitialize) the form state.
+   */
+  initializeState() {
+    this.formState = {};
+    this._submitelements = [];
+    this._resetElements = [];
+    this._elements = [];
+
+    this.queryAuroElements().forEach((element) => {
+      if (this.isFormElement(element)) {
+        this.formState[element.getAttribute('name')] = {
+          value: element.getAttribute('value'),
+          validity: element.getAttribute('validity'),
+          required: element.hasAttribute('required'),
+          // element
+        };
+
+        this._elements.push(element);
+      }
+
+      if (this.isButtonElement(element) && element.getAttribute('type') === 'submit') {
+        element.removeEventListener('click', this.getSubmitFunction());
+        element.addEventListener('click', this.getSubmitFunction());
+
+        // Keep record of this element, so we can enable/disable as needed
+        this._submitelements.push(element);
+      }
+
+      if (this.isButtonElement(element) && element.getAttribute('type') === 'reset') {
+        // Keep record of this element, so we can enable/disable as needed
+        element.removeEventListener('click', this.reset);
+        element.addEventListener('click', this.reset);
+
+        this._resetElements.push(element);
+      }
+    });
+
+    // Set enabled/disabled states on buttons
+    this.setDisabledStateOnButtons();
+  }
+
+  reset() {
+    this._elements.forEach((element) => element.reset());
+
+    this.updateComplete.then(() => {
+      this.initializeState();
+      // Initial state must come first - validity can only be null if initial state is true
+      this._setInitialState();
+      this._calculateValidity();
+
+      // Wait for the above changes to run through, then disable submit/reset
+      this.updateComplete.then(() => {
+        this.setDisabledStateOnButtons();
+      });
+    });
   }
 
   /**
@@ -186,40 +304,43 @@ export class AuroForm extends LitElement {
 
     // Update the form state when a form element is detected
     slot.addEventListener('input', (event) => {
-
-      /** @type {HTMLInputElement} */
-      const eventTarget = event.target;
-      if (this.isFormElement(eventTarget)) {
-        this._formState[eventTarget.getAttribute("name")].value = eventTarget.value;
+      const targetName = event.target.getAttribute("name");
+      if (!this.isFormElement(event.target) || !targetName) {
+        return;
       }
+
+      this.formState[targetName].value = event.target.value;
+      this.requestUpdate('formState');
     });
 
     slot.addEventListener('auroFormElement-validated', (event) => {
-      const oldValue = this._formState;
+      const targetName = event.target.getAttribute("name");
+      if (!this.isFormElement(event.target) || !targetName) {
+        return;
+      }
 
-      this._formState[event.target.getAttribute("name")].validity = event.detail.validity;
-      this.requestUpdate('formState', oldValue);
+      this.formState[targetName].validity = event.detail.validity;
+      this._calculateValidity();
     });
   }
 
+  updated(_changedProperties) {
+    super.updated(_changedProperties);
+
+    if (_changedProperties.has("formState")) {
+      this._setInitialState();
+
+      // Automatically infer disabled state now
+      this.setDisabledStateOnButtons();
+    }
+
+    if (_changedProperties.has("_validity")) {
+      this._setInitialState();
+    }
+  }
+
   onSlotChange() {
-    this._formState = {};
-
-    this.queryAuroElements().forEach((element) => {
-      if (this.isFormElement(element)) {
-        this._formState[element.getAttribute('name')] = {
-          value: element.getAttribute('value'),
-          validity: element.getAttribute('validity'),
-          required: element.hasAttribute('required'),
-          element
-        };
-      }
-
-      if (this.isSubmitElement(element) && element.getAttribute('type') === 'submit') {
-        element.removeEventListener('click', this.getSubmitFunction());
-        element.addEventListener('click', this.getSubmitFunction());
-      }
-    });
+    this.initializeState();
   }
 
   // function that renders the HTML and CSS into the scope of the component
