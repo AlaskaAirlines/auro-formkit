@@ -12,8 +12,8 @@
     "url": "https://github.com/AlaskaAirlines/auro-select"
   },
   "dependencies": {
-    "@auro-formkit/auro-dropdown": "*",
-    "@auro-formkit/auro-menu": "*",
+    "@aurodesignsystem/auro-dropdown": "*",
+    "@aurodesignsystem/auro-menu": "*",
     "chalk": "^5.3.0",
     "lit-element": "^4.1.1",
     "lit-html": "^3.2.1"

@@ -73,8 +73,8 @@ Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
   "name": "@auro-formkit/combobox",
   "dependencies": {
     // Internal dependencies
-    "@auro-formkit/auro-dropdown": "*",     // Required UI component
-    "@auro-formkit/auro-input": "*",        // Required UI component
+    "@aurodesignsystem/auro-dropdown": "*",     // Required UI component
+    "@aurodesignsystem/auro-input": "*",        // Required UI component
     
     // External dependencies
     "@alaskaairux/icons": "^4.44.1",  // Required UI component

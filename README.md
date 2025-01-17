@@ -64,7 +64,7 @@ Running the `dev` command will open a `localhost` development server for all com
 To only develop a single component, use the `--filter` flag:
 
 ```
-turbo dev --filter=@auro-formkit/auro-input
+turbo dev --filter=@aurodesignsystem/auro-input
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -174,8 +174,8 @@ Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
   "name": "@auro-formkit/combobox",
   "dependencies": {
     // Internal dependencies
-    "@auro-formkit/auro-dropdown": "*",     // Required UI component
-    "@auro-formkit/auro-input": "*",        // Required UI component
+    "@aurodesignsystem/auro-dropdown": "*",     // Required UI component
+    "@aurodesignsystem/auro-input": "*",        // Required UI component
 
     // External dependencies
     "@alaskaairux/icons": "^4.44.1",  // Required UI component

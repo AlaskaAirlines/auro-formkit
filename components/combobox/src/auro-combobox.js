@@ -13,10 +13,10 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@auro-formkit/form-validation';
 
-import { AuroDropdown } from '@auro-formkit/auro-dropdown';
+import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import dropdownVersion from './formkit/auro-dropdownVersion.js';
 
-import { AuroInput } from '@auro-formkit/auro-input';
+import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './formkit/auro-inputVersion.js';
 
 // Import touch detection lib
