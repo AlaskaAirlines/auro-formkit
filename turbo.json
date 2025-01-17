@@ -19,25 +19,25 @@
         "*-css.js"
       ]
     },
-    "@auro-formkit/auro-combobox#build": {
+    "@aurodesignsystem/auro-combobox#build": {
       "dependsOn": [
-        "@auro-formkit/auro-input#build",
-        "@auro-formkit/auro-dropdown#build",
+        "@aurodesignsystem/auro-input#build",
+        "@aurodesignsystem/auro-dropdown#build",
         "postCss:component",
         "sass:render"
       ]
     },
-    "@auro-formkit/auro-datepicker#build": {
+    "@aurodesignsystem/auro-datepicker#build": {
       "dependsOn": [
-        "@auro-formkit/auro-input#build",
-        "@auro-formkit/auro-dropdown#build",
+        "@aurodesignsystem/auro-input#build",
+        "@aurodesignsystem/auro-dropdown#build",
         "postCss:component",
         "sass:render"
       ]
     },
-    "@auro-formkit/auro-select#build": {
+    "@aurodesignsystem/auro-select#build": {
       "dependsOn": [
-        "@auro-formkit/auro-dropdown#build",
+        "@aurodesignsystem/auro-dropdown#build",
         "postCss:component",
         "sass:render"
       ]

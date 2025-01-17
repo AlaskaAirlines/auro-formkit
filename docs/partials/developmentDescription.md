@@ -5,5 +5,5 @@ Running the `dev` command will open a `localhost` development server for all com
 To only develop a single component, use the `--filter` flag:
 
 ```
-turbo dev --filter=@auro-formkit/auro-input
+turbo dev --filter=@aurodesignsystem/auro-input
 ```
