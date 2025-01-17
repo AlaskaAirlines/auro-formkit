@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.12](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2025-01-17)
+
+
+### Features
+
+* add combobox autocomplete=off functionality [#109](https://github.com/AlaskaAirlines/auro-formkit/issues/109) ([8cab9dd](https://github.com/AlaskaAirlines/auro-formkit/commit/8cab9ddf73c6afb0f5de99ab9f6c592d64f6ca8b))
+
+
+### Performance Improvements
+
+* force focus into html5 input for combobox [#143](https://github.com/AlaskaAirlines/auro-formkit/issues/143) ([89c2323](https://github.com/AlaskaAirlines/auro-formkit/commit/89c2323530b79f5c9c55527cce5f6be19288ef1a))
+
 # [2.0.0-beta.11](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2025-01-17)
 
 
