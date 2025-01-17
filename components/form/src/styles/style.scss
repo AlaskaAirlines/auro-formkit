@@ -35,13 +35,3 @@
   background-color: var(--auro-color-border-error-on-light);
   color: var(--auro-color-base-white);
 }
-
-:host {
-  form {
-    display: block;
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid #2a2a2a;
-    border-radius: 1rem;
-  }
-}
