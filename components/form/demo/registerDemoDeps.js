@@ -1,5 +1,5 @@
-import {AuroInput} from "@auro-formkit/auro-input";
-import {AuroDatePicker} from "@auro-formkit/auro-datepicker";
+import {AuroInput} from "@aurodesignsystem/auro-input";
+import {AuroDatePicker} from "@aurodesignsystem/auro-datepicker";
 
 AuroInput.register();
 AuroDatePicker.register();
