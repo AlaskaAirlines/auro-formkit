@@ -210,6 +210,12 @@ export class AuroCounter extends LitElement {
     }
   }
 
+  /**
+   * Handles the slot change event.
+   * This method is called when the slot content changes.
+   * It triggers the checkSlots method to update the component state based on the new slot content.
+   * @private
+   */
   handleSlotChange() {
     this.checkSlots();
   }
