@@ -272,7 +272,6 @@ export class AuroMenu extends LitElement {
       // Update selection if option or value changed
       if (changedProperties.has('optionSelected') || changedProperties.has('value')) {
         const isSelected = this.isOptionSelected(option);
-        option.classList.toggle('active', isSelected);
         option.setAttribute('aria-selected', isSelected ? 'true' : 'false');
 
         // Add/remove selected attribute based on state
