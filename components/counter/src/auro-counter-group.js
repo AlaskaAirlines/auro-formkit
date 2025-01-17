@@ -26,8 +26,14 @@ export class AuroCounterGroup extends LitElement {
 
     this.max = undefined;
     this.min = undefined;
+    this.total = undefined;
     this.validity = undefined;
     this.value = undefined;
+
+    /**
+     * @private
+     */
+    this.counters = undefined;
 
     /**
      * @private
@@ -62,6 +68,13 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
+       * The total value of the counters.
+       */
+      total: {
+        type: Number,
+      },
+
+      /**
        * Reflects the validity state.
        */
       validity: {
@@ -70,10 +83,10 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
-       * The current value.
+       * The current individual values of the nested counters.
        */
       value: {
-        type: Number,
+        type: Object,
       },
     };
   }
@@ -90,13 +103,12 @@ export class AuroCounterGroup extends LitElement {
     counter.disableMax = false;
     counter.disableMin = false;
 
-    if (this.value <= this.min) {
+    if (this.total <= this.min) {
       counter.disableMin = true;
-    } else if (this.value >= this.max) {
+    } else if (this.total >= this.max) {
       counter.disableMax = true;
     }
   }
-
 
   /**
    * Attaches input event listeners to all auro-counter elements within the component.
@@ -105,8 +117,8 @@ export class AuroCounterGroup extends LitElement {
    * @private
    */
   configureCounters() {
-    const counters = this.querySelectorAll("auro-counter, [auto-counter]");
-    counters.forEach((counter) => {
+    this.counters = this.querySelectorAll("auro-counter, [auto-counter]");
+    this.counters.forEach((counter) => {
       counter.addEventListener("input", () => this.updateValue());
     });
   }
@@ -129,12 +141,18 @@ export class AuroCounterGroup extends LitElement {
    * @private
    */
   updateValue() {
-    const counters = this.querySelectorAll("auro-counter, [auro-counter]");
-    this.value = Array.from(counters).reduce(
+    this.value = Array.from(this.counters).reduce((acc, counter, index) => {
+      const name = counter.hasAttribute('name') ? counter.getAttribute('name') : `counter-${index}`;
+      acc[name] = this.safeNumberConversion(counter.value);
+      return acc;
+    }, {});
+
+    this.total = Array.from(this.counters).reduce(
       (total, counter) => total + this.safeNumberConversion(counter.value),
       0,
     );
-    counters.forEach((counter) => {
+
+    this.counters.forEach((counter) => {
       this.manageDisabled(counter);
     });
   }
@@ -145,7 +163,8 @@ export class AuroCounterGroup extends LitElement {
       this.dispatchEvent(
         new CustomEvent("input", {
           detail: {
-            value: this.value,
+            total: this.total,
+            value: this.value
           },
         }),
         {

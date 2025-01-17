@@ -12,11 +12,10 @@
 
 ## Methods
 
-| Method             | Type                                  | Description                                      |
-|--------------------|---------------------------------------|--------------------------------------------------|
-| `decrement`        | `(value?: number \| undefined): void` | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
-| `handleSlotChange` | `(): void`                            |                                                  |
-| `increment`        | `(value?: number \| undefined): void` | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
+| Method      | Type                                  | Description                                      |
+|-------------|---------------------------------------|--------------------------------------------------|
+| `decrement` | `(value?: number \| undefined): void` | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
+| `increment` | `(value?: number \| undefined): void` | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
 
 ## Events
 
@@ -40,14 +39,15 @@
 |------------|------------|----------|-------------|--------------------------------------------------|
 | `max`      | `max`      | `number` | "undefined" | The maximum value allowed for the whole group of counters. |
 | `min`      | `min`      | `number` | "undefined" | The minimum value allowed for the whole group of counters. |
+| `total`    | `total`    | `number` | "undefined" | The total value of the counters.                 |
 | `validity` | `validity` | `string` | "undefined" | Reflects the validity state.                     |
-| `value`    | `value`    | `number` | "undefined" | The current value.                               |
+| `value`    | `value`    | `object` | "undefined" | The current individual values of the nested counters. |
 
 ## Events
 
-| Event   | Type                                           |
-|---------|------------------------------------------------|
-| `input` | `CustomEvent<{ value: number \| undefined; }>` |
+| Event   | Type                                             |
+|---------|--------------------------------------------------|
+| `input` | `CustomEvent<{ total: number \| undefined; value: {} \| undefined; }>` |
 
 ## Slots
 
