@@ -1,4 +1,5 @@
 export default {
+  rootDir: '../../',
   files: [
     'test/**/*.test.js',
     '!**/node_modules/**'
@@ -8,6 +9,8 @@ export default {
     extensions: ['.js', '.css']
   },
   coverageConfig: {
+    include: ['src/**/*.js'],
+    exclude: ['**/node_modules/**'],
     threshold: {
       statements: 70,
       branches: 70,
@@ -15,4 +18,4 @@ export default {
       lines: 70
     }
   }
- };
+};
