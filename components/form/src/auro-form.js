@@ -347,9 +347,6 @@ export class AuroForm extends LitElement {
   render() {
     return html`
         <form>
-          <p>Value: ${JSON.stringify(this.value)}</p>
-          <p>Validity: ${this.validity}</p>
-          <h3>Auro form example</h3>
           <slot @slotchange="${this.onSlotChange}"></slot>
         </form>
     `;
