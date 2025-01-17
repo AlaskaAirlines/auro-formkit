@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.10](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2025-01-17)
+
+
+### Bug Fixes
+
+* make calendar render correctly when maxDate is set [#170](https://github.com/AlaskaAirlines/auro-formkit/issues/170) ([a912b52](https://github.com/AlaskaAirlines/auro-formkit/commit/a912b52a1b74802ada4a51718dc2232142bebf87))
+
 # [2.0.0-beta.9](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2025-01-16)
 
 
