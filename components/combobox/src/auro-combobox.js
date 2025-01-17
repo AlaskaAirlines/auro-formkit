@@ -603,6 +603,10 @@ export class AuroCombobox extends LitElement {
         }
       }
     });
+
+    this.addEventListener('focusin', () => {
+      this.focus();
+    });
   }
 
   /**
