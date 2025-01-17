@@ -7,20 +7,20 @@
 
 | Property                        | Attribute                       | Type      | Default     | Description                                      |
 |---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
-| [checkmark](#checkmark)                     | `checkmark`                     | `Boolean` |             | When attribute is present auro-menu will apply checkmarks to selected options. |
-| [disabled](#disabled)                      | `disabled`                      | `Boolean` |             | If set, disables the combobox.                   |
-| [error](#error)                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
-| [noFilter](#noFilter)                      | `noFilter`                      | `Boolean` | false       | If set, combobox will not filter menuoptions based in input. |
-| [noValidate](#noValidate)                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
-| [optionSelected](#optionSelected)                | `optionSelected`                | `Object`  | "undefined" | Specifies the current selected option.           |
-| [required](#required)                      | `required`                      | `Boolean` |             | Populates the `required` attribute on the input. Used for client-side validation. |
-| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `String`  |             | Sets a custom help text message to display for all validityStates. |
-| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
-| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
-| [triggerIcon](#triggerIcon)                   | `triggerIcon`                   | `Boolean` |             | If set, the `icon` attribute will be applied to the trigger `auro-input` element. |
-| [type](#type)                          | `type`                          | `String`  |             | Applies the defined value as the type attribute on auro-input. |
-| [validity](#validity)                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
-| [value](#value)                         | `value`                         | `String`  | "undefined" | Value selected for the dropdown menu.            |
+| [checkmark](#checkmark)                     | `checkmark`                     | `boolean` |             | When attribute is present auro-menu will apply checkmarks to selected options. |
+| [disabled](#disabled)                      | `disabled`                      | `boolean` |             | If set, disables the combobox.                   |
+| [error](#error)                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| [noFilter](#noFilter)                      | `noFilter`                      | `boolean` | false       | If set, combobox will not filter menuoptions based in input. |
+| [noValidate](#noValidate)                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
+| [optionSelected](#optionSelected)                | `optionSelected`                | `object`  | "undefined" | Specifies the current selected option.           |
+| [required](#required)                      | `required`                      | `boolean` |             | Populates the `required` attribute on the input. Used for client-side validation. |
+| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `string`  |             | Sets a custom help text message to display for all validityStates. |
+| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `string`  |             | Custom help text message to display when validity = `customError`. |
+| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
+| [triggerIcon](#triggerIcon)                   | `triggerIcon`                   | `boolean` |             | If set, the `icon` attribute will be applied to the trigger `auro-input` element. |
+| [type](#type)                          | `type`                          | `string`  |             | Applies the defined value as the type attribute on auro-input. |
+| [validity](#validity)                      | `validity`                      | `string`  | "undefined" | Specifies the `validityState` this element is in. |
+| [value](#value)                         | `value`                         |           | "undefined" | Value selected for the dropdown menu.            |
 
 ## Methods
 
