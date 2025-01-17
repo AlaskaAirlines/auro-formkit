@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.15](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.14...v2.0.0-beta.15) (2025-01-17)
+
+
+### Bug Fixes
+
+* remove extra css selector ([c5b2dce](https://github.com/AlaskaAirlines/auro-formkit/commit/c5b2dce6095a7afbe2940dcb908b87583f45d20f))
+* update color token for active and hover states ([8cb23dc](https://github.com/AlaskaAirlines/auro-formkit/commit/8cb23dc48c1330703a48695c165117d8e831702d))
+
 # [2.0.0-beta.14](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.13...v2.0.0-beta.14) (2025-01-17)
 
 
