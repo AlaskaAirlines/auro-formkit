@@ -23,6 +23,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @property {string | number | boolean | string[] | null} value - The value of the form element.
  * @property {ValidityState} validity - The validity state of the form element, stored when fired from the form element.
  * @property {boolean} required - Whether the form element is required or not.
+ * @property {HTMLElement} element - Whether the form element is required or not.
  */
 
 /**
@@ -65,12 +66,23 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Shared code for determining if an element is something we care about (submit, form element, etc.).
+   * @param {string[]} collection - The array to use for tag name search.
+   * @param {HTMLElement} element - The element to compare against the master list.
+   * @returns boolean
+   * @private
+   */
+  _isInElementCollection(collection, element) {
+    return collection.some((elementTag) => element.tagName === elementTag || element.hasAttribute(elementTag));
+  }
+
+  /**
    * Check if the tag name is a form element.
-   * @param {string} tagName - The tag name to check.
+   * @param {HTMLElement} element - The element to check (attr or tag name).
    * @returns {boolean}
    */
-  isFormElement(tagName) {
-    return AuroForm.formElementTags.includes(tagName.toLowerCase());
+  isFormElement(element) {
+    return this._isInElementCollection(AuroForm.formElementTags, element);
   }
 
   static get submitElementTags() {
@@ -82,11 +94,11 @@ export class AuroForm extends LitElement {
 
   /**
    * Check if the tag name is a submit element.
-   * @param {string} tagName - The tag name to check.
+   * @param {HTMLElement} element - The element to check.
    * @returns {boolean}
    */
-  isSubmitElement(tagName) {
-    return AuroForm.submitElementTags.includes(tagName.toLowerCase());
+  isSubmitElement(element) {
+    return this._isInElementCollection(AuroForm.submitElementTags, element);
   }
 
   static get styles() {
@@ -114,17 +126,21 @@ export class AuroForm extends LitElement {
     const invalidKey = Object.keys(this._formState).
       find((key) => {
         const formKey = this._formState[key];
-        return formKey.validity !== null && formKey.validity !== 'valid' && formKey.required;
+
+        // these are NOT extra :(
+        // eslint-disable-next-line no-extra-parens
+        return (formKey.validity !== 'valid' && formKey.required) || (formKey.validity !== 'valid' && formKey.value !== null);
       });
 
     return invalidKey ? 'invalid' : 'valid';
   }
 
   // Below is not implemented yet
-  // get isInitialState() {
-  //   // return true if all keys are null
-  //   return true;
-  // }
+  get isInitialState() {
+    const anyTainted = Object.keys(this._formState).some((key) => this._formState[key].validity !== null);
+
+    return !anyTainted;
+  }
 
   getSubmitFunction() {
     // We return an arrow function here to ensure that the `this` context points at this same AuroForm context.
@@ -138,6 +154,23 @@ export class AuroForm extends LitElement {
       // eslint-disable-next-line no-console,no-magic-numbers
       console.log(`Form submitted -> ${JSON.stringify(this.value, null, 4)}`);
     };
+  }
+
+  /**
+   * Construct the query strings from elements, append them together, execute, and return the NodeList.
+   * @returns {NodeList}
+   */
+  queryAuroElements() {
+    const formElementQuery = AuroForm.formElementTags.map((tag) => `${tag}[name]`).join(',');
+    const submitterQuery = AuroForm.submitElementTags.map((tag) => `${tag}[type=submit]`).join(',');
+
+    // Alternatively, for renamed components...
+    const renamedFormElementQuery = AuroForm.formElementTags.map((tag) => `[${tag}]`).join(',');
+    const renamedSubmitterQuery = AuroForm.formElementTags.map((tag) => `[${tag}][type=submit]`).join(',');
+
+    const unifiedElementQuery = `${formElementQuery},${submitterQuery},${renamedFormElementQuery},${renamedSubmitterQuery}`;
+
+    return this.querySelectorAll(unifiedElementQuery);
   }
 
   /**
@@ -162,15 +195,7 @@ export class AuroForm extends LitElement {
 
       /** @type {HTMLInputElement} */
       const eventTarget = event.target;
-      if (AuroForm.formElementTags.includes(eventTarget.tagName.toLowerCase())) {
-        if (!this._formState[eventTarget.getAttribute("name")]) {
-          this._formState[eventTarget.getAttribute("name")] = {
-            value: eventTarget.value,
-            validity: eventTarget.getAttribute("validity"),
-            required: eventTarget.hasAttribute('required'),
-          };
-        }
-
+      if (this.isFormElement(eventTarget)) {
         this._formState[eventTarget.getAttribute("name")].value = eventTarget.value;
       }
     });
@@ -185,45 +210,22 @@ export class AuroForm extends LitElement {
     });
   }
 
-  onSlotChange(event) {
-    const slot = event.target;
-    const elements = slot.assignedElements();
-
-    // Clear current form state - maybe we should call a reset function instead?
+  onSlotChange() {
     this._formState = {};
 
-    const tryAddToElements = (element) => {
-      // Form elements get added to the form state
-      if (this.isFormElement(element.tagName)) {
+    this.queryAuroElements().forEach((element) => {
+      if (this.isFormElement(element)) {
         this._formState[element.getAttribute('name')] = {
           value: element.getAttribute('value'),
           validity: element.getAttribute('validity'),
           required: element.hasAttribute('required'),
+          element
         };
-      } else if (this.isSubmitElement(element.tagName) && element.getAttribute('type') === 'submit') {
+      }
+
+      if (this.isSubmitElement(element) && element.getAttribute('type') === 'submit') {
         element.removeEventListener('click', this.getSubmitFunction());
         element.addEventListener('click', this.getSubmitFunction());
-      } else {
-        throw new Error(`Element ${element.tagName} is not a form element or a submit element`);
-      }
-    };
-
-    elements.forEach((element) => {
-      try {
-        tryAddToElements(element);
-      } catch (error) {
-        if (error instanceof Error && error.message.includes('not a form element')) {
-          // Not a form element, so we need to check if it has form elements inside (note: not shadow DOM)
-          const query = AuroForm.formElementTags.concat(AuroForm.submitElementTags.map((tag) => `${tag}[type=submit]`)).join(',');
-          element.querySelectorAll(query).forEach((formElement) => {
-            try {
-              tryAddToElements(formElement);
-              // eslint-disable-next-line no-unused-vars
-            } catch (_error) {
-              // Do nothing - we don't care about this error
-            }
-          });
-        }
       }
     });
   }
