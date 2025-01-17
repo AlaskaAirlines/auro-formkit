@@ -8,12 +8,6 @@
 // If using litElement base class
 import { LitElement, html } from "lit";
 
-// If using auroElement base class
-// See instructions for importing auroElement base class https://git.io/JULq4
-// import { LitElement, html } from "lit";
-// import AuroElement from '@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
-
-// Import touch detection lib
 import styleCss from "./styles/style-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -73,7 +67,7 @@ export class AuroForm extends LitElement {
    * @private
    */
   _isInElementCollection(collection, element) {
-    return collection.some((elementTag) => element.tagName === elementTag || element.hasAttribute(elementTag));
+    return collection.some((elementTag) => element.tagName.toLowerCase() === elementTag || element.hasAttribute(elementTag.toLowerCase()));
   }
 
   /**
@@ -148,11 +142,11 @@ export class AuroForm extends LitElement {
     return (event) => {
       event.preventDefault();
 
-      // eslint-disable-next-line no-console,no-magic-numbers
-      // console.log(`Form internal state (not for public use) -> ${JSON.stringify(this._formState, null, 4)}`);
-
-      // eslint-disable-next-line no-console,no-magic-numbers
-      console.log(`Form submitted -> ${JSON.stringify(this.value, null, 4)}`);
+      this.dispatchEvent(new CustomEvent('submit', {
+        detail: {
+          value: this.value
+        }
+      }));
     };
   }
 
@@ -165,7 +159,7 @@ export class AuroForm extends LitElement {
     const submitterQuery = AuroForm.submitElementTags.map((tag) => `${tag}[type=submit]`).join(',');
 
     // Alternatively, for renamed components...
-    const renamedFormElementQuery = AuroForm.formElementTags.map((tag) => `[${tag}]`).join(',');
+    const renamedFormElementQuery = AuroForm.formElementTags.map((tag) => `[${tag}][name]`).join(',');
     const renamedSubmitterQuery = AuroForm.formElementTags.map((tag) => `[${tag}][type=submit]`).join(',');
 
     const unifiedElementQuery = `${formElementQuery},${submitterQuery},${renamedFormElementQuery},${renamedSubmitterQuery}`;
@@ -203,8 +197,6 @@ export class AuroForm extends LitElement {
     slot.addEventListener('auroFormElement-validated', (event) => {
       const oldValue = this._formState;
 
-      // eslint-disable-next-line no-console
-      console.log(`${event.target.getAttribute("name")} -> ${event.detail.validity}`);
       this._formState[event.target.getAttribute("name")].validity = event.detail.validity;
       this.requestUpdate('formState', oldValue);
     });
