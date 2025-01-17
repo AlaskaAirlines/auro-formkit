@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.14](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.13...v2.0.0-beta.14) (2025-01-17)
+
+
+### Features
+
+* enhance AuroCounterGroup to include total value and update value structure to support auro-form [#200](https://github.com/AlaskaAirlines/auro-formkit/issues/200) ([b7f8eda](https://github.com/AlaskaAirlines/auro-formkit/commit/b7f8eda10669714afa01e15c05efd86faa272dd5))
+
 # [2.0.0-beta.13](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.12...v2.0.0-beta.13) (2025-01-17)
 
 
