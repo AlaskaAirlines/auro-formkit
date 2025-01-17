@@ -1,5 +1,18 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.11](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2025-01-17)
+
+
+### Bug Fixes
+
+* add multiselect attribute to select ([e37d424](https://github.com/AlaskaAirlines/auro-formkit/commit/e37d42453c721841a1589316c7fdef9689351002))
+* combobox returns array ([aca8bbe](https://github.com/AlaskaAirlines/auro-formkit/commit/aca8bbe17b6dffbfe005f4ee8135b1120fb280b7))
+* handle preset values in select ([c60d29a](https://github.com/AlaskaAirlines/auro-formkit/commit/c60d29a9ceeb0475f1723da5e35d329c1d893af8))
+* menu api updates ([c507594](https://github.com/AlaskaAirlines/auro-formkit/commit/c507594035b052680100f61467877c15cc885095))
+* programmatic updates & mutlisect ([ac4d49a](https://github.com/AlaskaAirlines/auro-formkit/commit/ac4d49a4aadf34d847ec012d33f64a9eba98a4df))
+* update combobox to work with new menu api ([e49d6fe](https://github.com/AlaskaAirlines/auro-formkit/commit/e49d6fe269125224b9dbbedd598af5b292031ff0))
+* update Select to work with updated Menu API ([63b0f12](https://github.com/AlaskaAirlines/auro-formkit/commit/63b0f12bfca623f268b6d6c951934a26396b9a79))
+
 # [2.0.0-beta.10](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2025-01-17)
 
 
