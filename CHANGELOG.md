@@ -1,5 +1,20 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.16](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.15...v2.0.0-beta.16) (2025-01-17)
+
+
+### Bug Fixes
+
+* **form:** address group feedback ([1743430](https://github.com/AlaskaAirlines/auro-formkit/commit/174343098dfffb2cb005bc408d9b6779bbe401bf))
+* **form:** make form validity only return valid or invalid ([4bd2e65](https://github.com/AlaskaAirlines/auro-formkit/commit/4bd2e6543d195f0dae1a8ec4efd28ee90f14cf26))
+* **form:** pr feedback ([dbee3a9](https://github.com/AlaskaAirlines/auro-formkit/commit/dbee3a900aee30e1391c0a6410b561c1ab2a5f9e))
+
+
+### Features
+
+* implement a very basic MVP form element ([1316508](https://github.com/AlaskaAirlines/auro-formkit/commit/1316508f479d429bf6eb96845301793da12a0946))
+* implement initial event listeners ([73e083a](https://github.com/AlaskaAirlines/auro-formkit/commit/73e083a4d7520a30d1867fa104ad02412c23cd59))
+
 # [2.0.0-beta.15](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.14...v2.0.0-beta.15) (2025-01-17)
 
 
