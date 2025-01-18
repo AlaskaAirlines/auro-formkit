@@ -1,5 +1,18 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.18](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2025-01-18)
+
+
+### Bug Fixes
+
+* **form:** remove temporary styling ([1200922](https://github.com/AlaskaAirlines/auro-formkit/commit/1200922634cd6c7f74414585a3dd19aa29872cee))
+
+
+### Features
+
+* **form:** add submit connection ([b3fc7a4](https://github.com/AlaskaAirlines/auro-formkit/commit/b3fc7a4a47eed1f560e8d937c98fb7b285536f7d))
+* **form:** connect .reset() to reset buttons ([79c7c3d](https://github.com/AlaskaAirlines/auro-formkit/commit/79c7c3df03c07372833cff1b5ba43921bc2c1251))
+
 # [2.0.0-beta.17](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.16...v2.0.0-beta.17) (2025-01-18)
 
 
