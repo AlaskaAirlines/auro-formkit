@@ -12,7 +12,7 @@
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
 
-.counters {
+:host {
   ::slotted(*:not(:first-child)) {
     border-color: var(--ds-color-border-divider-default, $ds-color-border-divider-default);
   }

@@ -1,3 +1,5 @@
+/* eslint-disable lit/no-invalid-html, lit/binding-positions */
+
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -5,10 +7,17 @@
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
+
 import styleCss from "./styles/counter-group-css.js";
-import colorCss from "./styles/counter-group-color-css.js";
+
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
 import AuroFormValidation from "@auro-formkit/form-validation";
+
+import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs";
+import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
+import dropdownVersion from "./dropdownVersion.js";
+
+import './auro-counter-wrapper.js';
 
 /**
  * Auro Counter Group is a group of counter components.
@@ -23,6 +32,8 @@ import AuroFormValidation from "@auro-formkit/form-validation";
 export class AuroCounterGroup extends LitElement {
   constructor() {
     super();
+
+    this.isDropdown = false;
 
     this.max = undefined;
     this.min = undefined;
@@ -39,17 +50,34 @@ export class AuroCounterGroup extends LitElement {
      * @private
      */
     this.validation = new AuroFormValidation();
+
+    /**
+     * Generate unique names for dependency components.
+     * @private
+     */
+    const versioning = new AuroDependencyVersioning();
+
+    /**
+     * Dynamically generated dropdown tag.
+     * @private
+     * @type {string}
+     */
+    this.dropdownTag = versioning.generateTag("auro-dropdown", dropdownVersion, AuroDropdown);
   }
 
   static get styles() {
-    return [
-      colorCss,
-      styleCss
-    ];
+    return [styleCss];
   }
 
   static get properties() {
     return {
+
+      /**
+       * Indicates if the counter group is displayed as a dropdown.
+       */
+      isDropdown: {
+        type: Boolean
+      },
 
       /**
        * The maximum value allowed for the whole group of counters.
@@ -68,13 +96,6 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
-       * The total value of the counters.
-       */
-      total: {
-        type: Number,
-      },
-
-      /**
        * Reflects the validity state.
        */
       validity: {
@@ -83,11 +104,18 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
+       * The total value of the counters.
+       */
+      total: {
+        type: Number,
+      },
+
+      /**
        * The current individual values of the nested counters.
        */
       value: {
         type: Object,
-      },
+      }
     };
   }
 
@@ -112,12 +140,32 @@ export class AuroCounterGroup extends LitElement {
 
   /**
    * Attaches input event listeners to all auro-counter elements within the component.
-   * This method selects all `auro-counter` and `[auto-counter]` elements and adds an `input` event listener to each.
+   * This method selects all `auro-counter` and `[auro-counter]` elements and adds an `input` event listener to each.
    * The listener calls `this.updateValue()` whenever the value of a counter changes.
    * @private
    */
   configureCounters() {
-    this.counters = this.querySelectorAll("auro-counter, [auto-counter]");
+    this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
+    this.counters.forEach((counter) => {
+      counter.addEventListener("input", () => this.updateValue());
+    });
+  }
+
+  /**
+   * Configures the dropdown counters by selecting all `auro-counter` elements
+   * and appending them to the `auro-counter-wrapper` element within the shadow DOM.
+   * Adds an event listener to each counter to update the value on input.
+   * @private
+   */
+  configureDropdownCounters() {
+    const counterWrapper = this.shadowRoot.querySelector('auro-counter-wrapper');
+    this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
+
+    this.counters.forEach((counter) => {
+      counterWrapper.append(counter);
+    });
+
+    this.counters = counterWrapper.querySelectorAll("auro-counter, [auro-counter]");
     this.counters.forEach((counter) => {
       counter.addEventListener("input", () => this.updateValue());
     });
@@ -188,9 +236,14 @@ export class AuroCounterGroup extends LitElement {
   // function that renders the HTML and CSS into the scope of the component
   render() {
     return html`
-      <div class="counters">
-        <slot @slotchange=${() => this.configureCounters()}></slot>
-      </div>
-    `;
+    ${this.isDropdown
+      ? html`<${this.dropdownTag} common chevron>
+        <div slot="trigger">${this.total}<slot name="placeholder"></slot></div>
+        <auro-counter-wrapper isInDropdown>
+        </auro-counter-wrapper>
+      </${this.dropdownTag}>
+      <slot @slotchange=${() => this.configureDropdownCounters()}></slot>`
+      : html`<auro-counter-wrapper><slot @slotchange=${() => this.configureCounters()}></slot></auro-counter-wrapper>`
+    }`;
   }
 }
