@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.17](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.16...v2.0.0-beta.17) (2025-01-18)
+
+
+### Features
+
+* counter group dropdown variant [#179](https://github.com/AlaskaAirlines/auro-formkit/issues/179) ([fe09f66](https://github.com/AlaskaAirlines/auro-formkit/commit/fe09f662decc331efcc41cad62eb94285573022a))
+
 # [2.0.0-beta.16](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.15...v2.0.0-beta.16) (2025-01-17)
 
 
