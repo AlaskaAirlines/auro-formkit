@@ -67,6 +67,7 @@ export class AuroForm extends LitElement {
 
     // Bind listeners
     this.reset = this.reset.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
   // Note: button is NOT considered a form element in this context
@@ -192,20 +193,14 @@ export class AuroForm extends LitElement {
         element.removeAttribute("disabled");
       }
     });
-  }
 
-  getSubmitFunction() {
-    // We return an arrow function here to ensure that the `this` context points at this same AuroForm context.
-    // Otherwise, submission tries to read `this.value` on the button element.
-    return (event) => {
-      event.preventDefault();
-
-      this.dispatchEvent(new CustomEvent('submit', {
-        detail: {
-          value: this.value
-        }
-      }));
-    };
+    this._submitelements.forEach((element) => {
+      if (this.isInitialState || this.validity !== "valid") {
+        element.setAttribute("disabled", "");
+      } else {
+        element.removeAttribute("disabled");
+      }
+    });
   }
 
   /**
@@ -213,18 +208,11 @@ export class AuroForm extends LitElement {
    * @returns {NodeList}
    */
   queryAuroElements() {
-    const formElementQuery = AuroForm.formElementTags.map((tag) => `${tag}[name]`).join(',');
-    const submitterQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=submit]`).join(',');
-    const resetButtonQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=reset]`).join(',');
+    const formElementQuery = AuroForm.formElementTags.map((tag) => `${tag}[name], [${tag}][name]`);
+    const submitterQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=submit], [${tag}][type=submit]`);
+    const resetButtonQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=reset], [${tag}][type=reset]`);
 
-    // Alternatively, for renamed components...
-    const renamedFormElementQuery = AuroForm.formElementTags.map((tag) => `[${tag}][name]`).join(',');
-    const renamedSubmitterQuery = AuroForm.formElementTags.map((tag) => `[${tag}][type=submit]`).join(',');
-    const renamedResetButtonQuery = AuroForm.buttonElementTags.map((tag) => `[${tag}][type=reset]`).join(',');
-
-    const unifiedElementQuery = `${formElementQuery},${submitterQuery},${renamedFormElementQuery},${renamedSubmitterQuery},${resetButtonQuery},${renamedResetButtonQuery}`;
-
-    return this.querySelectorAll(unifiedElementQuery);
+    return this.querySelectorAll(formElementQuery.concat(submitterQuery, resetButtonQuery).join(', '));
   }
 
   /**
@@ -249,8 +237,8 @@ export class AuroForm extends LitElement {
       }
 
       if (this.isButtonElement(element) && element.getAttribute('type') === 'submit') {
-        element.removeEventListener('click', this.getSubmitFunction());
-        element.addEventListener('click', this.getSubmitFunction());
+        element.removeEventListener('click', this.submit);
+        element.addEventListener('click', this.submit);
 
         // Keep record of this element, so we can enable/disable as needed
         this._submitelements.push(element);
@@ -283,6 +271,34 @@ export class AuroForm extends LitElement {
         this.setDisabledStateOnButtons();
       });
     });
+  }
+
+  /**
+   * Submit fires an event called `submit` - just as you would expect from a normal form.
+   *
+   * @example ```
+   * const form = document.querySelector('auro-
+   * ```
+   */
+  submit() {
+    // Steps required to get out of beta:
+    // 1. Submit triggers a forced validation on ALL elements
+    // 2. Wait for validation to complete (this.updateComplete.then or similar)
+    // 3. If still valid, go ahead with submit.
+    this._elements.forEach((element) => {
+      if (element.tagName.toLowerCase() !== "auro-datepicker") {
+        // Next line currently does NOT force
+        element.validate();
+      }
+    });
+
+    this.dispatchEvent(new CustomEvent('submit', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        value: this.value
+      }
+    }));
   }
 
   /**

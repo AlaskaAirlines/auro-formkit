@@ -68,6 +68,10 @@
       </div>
     </div>
 
+    <auro-input-two id="cool-fact" name="coolFact" required>
+      <span slot="label">Cool Fact</span>
+    </auro-input-two>
+
     <div class="datepickerBlock">
       <h4>Pick a cool date</h4>
       <auro-datepicker id="date-example" name="dateExample" required>
@@ -83,9 +87,19 @@
   </auro-form>
 </main>
 
-<script type="module" data-demo-script="true" src="./index.js"></script>
+<!-- Form elements MUST be registered BEFORE form if custom names are used -->
 <script type="module" data-demo-script="true" src="./registerDemoDeps.js"></script>
+<script type="module" data-demo-script="true" src="./index.js"></script>
 <!--<script type="module" data-demo-script="true" src="~@auro-formkit/auro-input/dist/index.min.js"></script>-->
+
+<script>
+  const form = document.querySelector('auro-form');
+  form.addEventListener('submit', (event) => {
+    console.log(event)
+
+    console.log(event.target.value)
+  })
+</script>
 
 <!-- If additional elements are needed for the demo, add them here. -->
 <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/dist/auro-accordion__bundled.js" type="module"></script>
