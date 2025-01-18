@@ -13,14 +13,17 @@
 /* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
 
 :host {
-  position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-300, $ds-size-300);
+
+  ::slotted(*:not(:first-child)) {
+    padding-top: var(--ds-size-300, $ds-size-300);
+    border-top-width: 1px;
+    border-top-style: solid;
+  }
 }
 
-[slot="trigger"] {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--ds-size-100, $ds-size-100);
-    
+:host([isindropdown]) {
+  padding: var(--ds-size-300, $ds-size-300);
 }

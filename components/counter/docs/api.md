@@ -35,13 +35,14 @@
 
 ## Properties
 
-| Property   | Attribute  | Type     | Default     | Description                                      |
-|------------|------------|----------|-------------|--------------------------------------------------|
-| `max`      | `max`      | `number` | "undefined" | The maximum value allowed for the whole group of counters. |
-| `min`      | `min`      | `number` | "undefined" | The minimum value allowed for the whole group of counters. |
-| `total`    | `total`    | `number` | "undefined" | The total value of the counters.                 |
-| `validity` | `validity` | `string` | "undefined" | Reflects the validity state.                     |
-| `value`    | `value`    | `object` | "undefined" | The current individual values of the nested counters. |
+| Property     | Attribute    | Type      | Default     | Description                                      |
+|--------------|--------------|-----------|-------------|--------------------------------------------------|
+| `isDropdown` | `isDropdown` | `boolean` | false       | Indicates if the counter group is displayed as a dropdown. |
+| `max`        | `max`        | `number`  | "undefined" | The maximum value allowed for the whole group of counters. |
+| `min`        | `min`        | `number`  | "undefined" | The minimum value allowed for the whole group of counters. |
+| `total`      | `total`      | `number`  | "undefined" | The total value of the counters.                 |
+| `validity`   | `validity`   | `string`  | "undefined" | Reflects the validity state.                     |
+| `value`      | `value`      | `object`  | "undefined" | The current individual values of the nested counters. |
 
 ## Events
 
