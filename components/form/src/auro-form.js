@@ -208,11 +208,25 @@ export class AuroForm extends LitElement {
    * @returns {NodeList}
    */
   queryAuroElements() {
-    const formElementQuery = AuroForm.formElementTags.map((tag) => `${tag}[name], [${tag}][name]`);
-    const submitterQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=submit], [${tag}][type=submit]`);
-    const resetButtonQuery = AuroForm.buttonElementTags.map((tag) => `${tag}[type=reset], [${tag}][type=reset]`);
+    const queries = [
+      [
+        AuroForm.formElementTags,
+        '[name]'
+      ],
+      [
+        AuroForm.buttonElementTags,
+        '[type=submit]'
+      ],
+      [
+        AuroForm.buttonElementTags,
+        '[type=reset]'
+      ]
+    ];
 
-    return this.querySelectorAll(formElementQuery.concat(submitterQuery, resetButtonQuery).join(', '));
+    return this.querySelectorAll(queries.flatMap(([
+      tags,
+      extraAttributes
+    ]) => tags.map((tag) => `${tag}${extraAttributes}, [${tag}]${extraAttributes}`)).join(', '));
   }
 
   /**
