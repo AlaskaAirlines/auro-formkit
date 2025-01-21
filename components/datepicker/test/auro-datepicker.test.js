@@ -1,3 +1,5 @@
+/* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
+
 import { fixture, html, expect, elementUpdated, nextFrame } from '@open-wc/testing';
 import '../src/index.js';
 
@@ -20,7 +22,7 @@ describe('auro-datepicker', () => {
   });
 
   it('custom element is defined', async () => {
-    const el = await !!customElements.get("auro-datepicker");
+    const el = await Boolean(customElements.get("auro-datepicker"));
 
     await expect(el).to.be.true;
   });
@@ -286,7 +288,7 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const central = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
     const min = el.minDate;
 
     await expect(min).to.be.equal(central);
@@ -306,7 +308,7 @@ describe('auro-datepicker', () => {
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
-    
+
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
 
     const calendarCell = calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell');
@@ -352,7 +354,7 @@ describe('auro-datepicker', () => {
 
     await expect(el.value).to.equal(dateFromSelected);
 
-    const dateTo = calendarCell[1];
+    const [, dateTo] = calendarCell;
     const dateToBtn = dateTo.shadowRoot.querySelector('button');
 
     dateToBtn.click();
@@ -406,7 +408,7 @@ describe('auro-datepicker', () => {
 
   it('hides the prev month button when viewing the first available month', async () => {
     const date = new Date();
-    const fullDate = `${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + (date.getDate())).slice(-2)}/${date.getFullYear()}`;
+    const fullDate = `${`0${date.getMonth() + 1}`.slice(-2)}/${`0${date.getDate()}`.slice(-2)}/${date.getFullYear()}`;
 
     const el = await fixture(html`
       <auro-datepicker calendarStartDate="${fullDate}"></auro-datepicker>
@@ -496,7 +498,7 @@ describe('auro-datepicker', () => {
 
     const calendar = el.shadowRoot.querySelector('auro-calendar');
 
-    const central = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(central).to.be.equal('03/23/2023');
 
@@ -504,7 +506,7 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const centralAfter = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(centralAfter).to.be.equal('04/25/2024');
   });
@@ -613,7 +615,7 @@ describe('auro-datepicker', () => {
     const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const prevMonthBth = calendar.shadowRoot.querySelector('.prevMonth');
 
-    const central = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(central).to.equal('02/01/2023');
 
@@ -621,7 +623,7 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const centralAfter = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(centralAfter).to.contain('01/01/2023');
 
@@ -629,7 +631,7 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const centralAfterAgain = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const centralAfterAgain = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(centralAfterAgain).to.contain('12/01/2022');
   });
@@ -645,15 +647,15 @@ describe('auro-datepicker', () => {
     const calendar = dropdown.bibContent.querySelector('auro-calendar');
     const nextMonthBth = calendar.shadowRoot.querySelector('.nextMonth');
 
-    const central = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(central).to.equal('11/01/2023');
 
     nextMonthBth.click();
 
     await elementUpdated(el);
-    
-    const centralAfter = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+
+    const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(centralAfter).to.contain('12/01/2023');
 
@@ -661,7 +663,7 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    const centralAfterAgain = `${("0" + (new Date(el.centralDate).getMonth() + 1)).slice(-2)}/${("0" + new Date(el.centralDate).getDate()).slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+    const centralAfterAgain = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
     await expect(centralAfterAgain).to.contain('01/01/2024');
   });
@@ -693,7 +695,7 @@ describe('auro-datepicker', () => {
 
     const closeBtn = calendar.shadowRoot.querySelector('.mobileFooterActions auro-button');
 
-    input.click()
+    input.click();
 
     await elementUpdated();
 
@@ -716,7 +718,7 @@ describe('auro-datepicker', () => {
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
-    
+
     const calendarMonth = calendar.shadowRoot.querySelector('auro-calendar-month');
     const calendarCell = [...calendarMonth.shadowRoot.querySelectorAll('auro-calendar-cell')];
 
@@ -816,8 +818,12 @@ describe('auro-datepicker', () => {
   });
 });
 
-async function dateSlotFixture() {
-  return await fixture(html`
+/**
+ * Fixture for date slot testing.
+ * @returns {Promise<HTMLElement>} The fixture element.
+ */
+function dateSlotFixture() {
+  return fixture(html`
     <auro-datepicker centralDate="10/01/2023">
       <span slot="date_10_01_2023">$1322</span>
       <span slot="date_10_02_2023">$234</span>
@@ -828,8 +834,12 @@ async function dateSlotFixture() {
   `);
 }
 
-async function popoverSlotFixture() {
-  return await fixture(html`
+/**
+ * Fixture for popover slot testing.
+ * @returns {Promise<HTMLElement>} The fixture element.
+ */
+function popoverSlotFixture() {
+  return fixture(html`
     <auro-datepicker centralDate="10/01/2023">
       <span slot="popover_10_01_2023">$1322</span>
       <span slot="popover_10_02_2023">$234</span>
@@ -840,10 +850,22 @@ async function popoverSlotFixture() {
   `);
 }
 
+/**
+ * Sets the value of the input.
+ * @param {HTMLElement} auroInput - The input element.
+ * @param {string} value - The value to set.
+ * @returns {void}
+ */
 function setInputValue(auroInput, value) {
   auroInput.value = value;
 }
 
+/**
+ * Gets the input element from the datepicker.
+ * @param {HTMLElement} el - The datepicker element.
+ * @param {number} index - The index of the input element.
+ * @returns {HTMLElement} The input element.
+ */
 function getInput(el, index) {
   return el.inputList[index];
 }
