@@ -78,6 +78,7 @@ export class AuroForm extends LitElement {
       'auro-select',
       'auro-datepicker',
       'auro-checkbox-group',
+      'auro-combobox',
     ];
   }
 
@@ -354,7 +355,7 @@ export class AuroForm extends LitElement {
     this._elements.forEach((element) => {
       if (element.tagName.toLowerCase() !== "auro-datepicker") {
         // Next line currently does NOT force
-        element.validate();
+        // element.validate();
       }
     });
 

@@ -1,0 +1,128 @@
+<!--
+  Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license
+  See LICENSE in the project root for license information.
+
+  HTML in this document is standardized and NOT to be edited.
+  All demo code should be added/edited in ./demo/index.md
+
+  With the exception of adding custom elements if needed for the demo.
+
+  ----------------------- DO NOT EDIT -----------------------------
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auro Web Component Generator | auro-form custom element</title>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/tokens/CSSCustomProperties.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@8.2.0/dist/auro-button__bundled.js" type="module"></script>
+</head>
+<body class="auro-markdown">
+<main>
+  <style>
+    .submitBlock {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .datepickerBlock {
+      margin-top: 1rem;
+    }
+
+    auro-form {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid #2a2a2a;
+      border-radius: 1rem;
+    }
+  </style>
+
+  <h2>auro-form testing</h2>
+  <auro-form>
+    <auro-combobox id="dynamicMenuExample" name="cityAirport" noFilter>
+      <span slot="label">Name</span>
+      <!--
+        The auro-combobox element requires an empty auro-menu element
+        due to the requirements of auro-dropdown and auro-input
+      -->
+      <auro-menu id="initMenu"></auro-menu>
+
+    </auro-combobox>
+
+    <auro-datepicker name="dateRange" range>
+      <span slot="fromLabel">Check in</span>
+      <span slot="toLabel">Check out</span>
+      <span slot="mobileDateLabel">Roundtrip</span>
+    </auro-datepicker>
+
+    <auro-counter-group isDropdown>
+      <div slot="placeholder">Rooms, Guests</div>
+      <auro-counter>
+        Rooms
+        <span slot="description">
+          Total rooms
+        </span>
+      </auro-counter>
+      <auro-counter>
+        Adults Per Room
+        <span slot="description">
+          Ages 18 and older
+        </span>
+      </auro-counter>
+      <auro-counter>
+        Children Per Room
+        <span slot="description">
+          Ages 0-17
+        </span>
+      </auro-counter>
+    </auro-counter-group>
+
+    <auro-button type="submit">
+      Search hotels
+    </auro-button>
+  </auro-form>
+</main>
+
+<!-- Form elements MUST be registered BEFORE form if custom names are used -->
+<script type="module" data-demo-script="true" src="./registerDemoDeps.js"></script>
+<script type="module" data-demo-script="true" src="./index.js"></script>
+<!--<script type="module" data-demo-script="true" src="~@auro-formkit/auro-input/dist/index.min.js"></script>-->
+
+<script type="module">
+  import {dynamicMenuExample} from "./dynamicMenu.js";
+
+  let initCount = 0;
+  try {
+    dynamicMenuExample();
+  } catch(error) {
+    if (initCount++ <= 20) {
+      setTimeout(dynamicMenuExample, 100);
+    }
+  }
+
+  const form = document.querySelector('auro-form');
+  form.addEventListener('submit', (event) => {
+    console.log(event)
+
+    console.log(event.target.value)
+  })
+</script>
+
+<!-- If additional elements are needed for the demo, add them here. -->
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/dist/auro-accordion__bundled.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/dist/auro-accordion__bundled.js" type="module"></script>
+</body>
+</html>
