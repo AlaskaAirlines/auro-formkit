@@ -215,7 +215,7 @@ export class AuroCounterGroup extends LitElement {
 
   updated(changedProperties) {
     if (changedProperties.has("value")) {
-      this.validate(this);
+      this.validate();
       this.dispatchEvent(
         new CustomEvent("input", {
           detail: {
