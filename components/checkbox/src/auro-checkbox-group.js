@@ -185,7 +185,7 @@ export class AuroCheckboxGroup extends LitElement {
       composed: true,
     }));
 
-    this.validation.validate(this, true);
+    this.validate(true);
   }
 
   firstUpdated() {
@@ -271,7 +271,7 @@ export class AuroCheckboxGroup extends LitElement {
 
     this.handlePreselectedItems();
 
-    this.validation.validate(this);
+    this.validate();
   }
 
   /**
@@ -327,8 +327,16 @@ export class AuroCheckboxGroup extends LitElement {
         this.removeAttribute('aria-invalid');
       }
 
-      this.validation.validate(this, true);
+      this.validate(true);
     }
+  }
+
+  /**
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
   render() {

@@ -1,4 +1,4 @@
-/* eslint-disable lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable lit/binding-positions, lit/no-invalid-html, max-lines */
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -220,13 +220,22 @@ export class AuroCounter extends LitElement {
     this.checkSlots();
   }
 
+  /**
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
+  }
+
+
   firstUpdated() {
     this.initValue();
   }
 
   updated(changedProperties) {
     if (changedProperties.has("value")) {
-      this.validation.validate(this);
+      this.validate(this);
       this.dispatchEvent(
         new CustomEvent("input", {
           detail: {

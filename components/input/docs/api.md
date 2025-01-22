@@ -51,11 +51,11 @@ Generate unique names for dependency components.
 
 ## Methods
 
-| Method       | Type          | Description                              |
-|--------------|---------------|------------------------------------------|
-| `isDateType` | `(): boolean` |                                          |
-| `reset`      | `(): void`    | Resets component to initial state.       |
-| `validate`   | `(): void`    | Public method force validation of input. |
+| Method       | Type                                   | Description                                      |
+|--------------|----------------------------------------|--------------------------------------------------|
+| `isDateType` | `(): boolean`                          |                                                  |
+| `reset`      | `(): void`                             | Resets component to initial state.               |
+| `validate`   | `(force?: boolean \| undefined): void` | Validates value<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

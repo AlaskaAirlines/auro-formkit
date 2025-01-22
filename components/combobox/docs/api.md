@@ -22,10 +22,11 @@
 
 ## Methods
 
-| Method  | Type       | Description                         |
-|---------|------------|-------------------------------------|
-| `focus` | `(): void` | Focuses the combobox trigger input. |
-| `reset` | `(): void` | Resets component to initial state.  |
+| Method     | Type                                   | Description                                      |
+|------------|----------------------------------------|--------------------------------------------------|
+| `focus`    | `(): void`                             | Focuses the combobox trigger input.              |
+| `reset`    | `(): void`                             | Resets component to initial state.               |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

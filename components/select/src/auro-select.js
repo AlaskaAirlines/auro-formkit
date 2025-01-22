@@ -516,7 +516,7 @@ export class AuroSelect extends LitElement {
     }
 
     if (changedProperties.has('error')) {
-      this.validation.validate(this, true);
+      this.validate(this, true);
     }
   }
 
@@ -526,6 +526,14 @@ export class AuroSelect extends LitElement {
    */
   reset() {
     this.validation.reset(this);
+  }
+
+  /**
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
   // When using auroElement, use the following attribute and function when hiding content from screen readers.

@@ -651,7 +651,7 @@ export default class BaseInput extends LitElement {
     }
 
     if (changedProperties.has('error')) {
-      this.validation.validate(this, true);
+      this.validate(this, true);
     }
 
     if (changedProperties.has('validity')) {
@@ -843,11 +843,11 @@ export default class BaseInput extends LitElement {
   }
 
   /**
-   * Public method force validation of input.
-   * @returns {void}
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
    */
-  validate() {
-    this.validation.validate(this);
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
   /**

@@ -458,7 +458,7 @@ export class AuroCombobox extends LitElement {
      */
     this.addEventListener('focusout', () => {
       if (document.activeElement !== this) {
-        this.validation.validate(this);
+        this.validate(this);
       }
 
       // Set to undefined if empty
@@ -536,7 +536,7 @@ export class AuroCombobox extends LitElement {
 
     // Validate only if the value was set programmatically
     if (document.activeElement !== this) {
-      this.validation.validate(this);
+      this.validate(this);
     }
 
     // Hide menu if value is empty, otherwise show if there are available suggestions
@@ -665,6 +665,14 @@ export class AuroCombobox extends LitElement {
     this.menu.value = undefined;
   }
 
+  /**
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
+  }
+
   updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
@@ -693,7 +701,7 @@ export class AuroCombobox extends LitElement {
 
     if (changedProperties.has('error')) {
       this.input.setAttribute('error', this.getAttribute('error'));
-      this.validation.validate(this);
+      this.validate();
     }
   }
 

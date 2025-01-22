@@ -205,9 +205,17 @@ export class AuroCounterGroup extends LitElement {
     });
   }
 
+  /**
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
+  }
+
   updated(changedProperties) {
     if (changedProperties.has("value")) {
-      this.validation.validate(this);
+      this.validate(this);
       this.dispatchEvent(
         new CustomEvent("input", {
           detail: {
