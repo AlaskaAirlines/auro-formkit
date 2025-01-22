@@ -516,7 +516,7 @@ export class AuroSelect extends LitElement {
     }
 
     if (changedProperties.has('error')) {
-      this.validate(this, true);
+      this.validate(true);
     }
   }
 

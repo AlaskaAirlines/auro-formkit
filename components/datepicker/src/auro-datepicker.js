@@ -792,7 +792,7 @@ export class AuroDatePicker extends LitElement {
         }
       }
 
-      this.validate(this);
+      this.validate();
     }
 
     if (changedProperties.has('valueEnd') && this.inputList[1]) {
@@ -822,7 +822,7 @@ export class AuroDatePicker extends LitElement {
         }
       }
 
-      this.validate(this);
+      this.validate();
     }
 
     if (changedProperties.has('error')) {

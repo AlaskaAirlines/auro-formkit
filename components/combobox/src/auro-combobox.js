@@ -458,7 +458,7 @@ export class AuroCombobox extends LitElement {
      */
     this.addEventListener('focusout', () => {
       if (document.activeElement !== this) {
-        this.validate(this);
+        this.validate();
       }
 
       // Set to undefined if empty
@@ -536,7 +536,7 @@ export class AuroCombobox extends LitElement {
 
     // Validate only if the value was set programmatically
     if (document.activeElement !== this) {
-      this.validate(this);
+      this.validate();
     }
 
     // Hide menu if value is empty, otherwise show if there are available suggestions
