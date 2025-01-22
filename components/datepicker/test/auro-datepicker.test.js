@@ -1,6 +1,7 @@
 /* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
 
 import { fixture, html, expect, elementUpdated, nextFrame } from '@open-wc/testing';
+import { setViewport} from '@web/test-runner-commands';
 import '../src/index.js';
 
 describe('auro-datepicker', () => {
@@ -542,20 +543,23 @@ describe('auro-datepicker', () => {
     await expect(calendar.numCalendars).to.be.equal(2);
   });
 
-  it.skip('renders twelve calendars in mobile version', async () => {
-    window.innerWidth = 550;
+  it('renders twelve calendars in mobile version', async () => {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
 
     const el = await fixture(html`
       <auro-datepicker></auro-datepicker>
     `);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
-    await elementUpdated(calendar.shadowRoot);
-    await nextFrame();
+
+    const calendar = dropdown.bibContent.querySelector('auro-calendar');
+    await elementUpdated(calendar);
 
     await expect(calendar.numCalendars).to.be.equal(12);
   });
@@ -586,8 +590,11 @@ describe('auro-datepicker', () => {
     expect(input2.value).to.equal('');
   });
 
-  it.skip('render correct number of calendars with calendarStartDate and calendarEndDate in mobile', async () => {
-    window.innerWidth = 550;
+  it('render correct number of calendars with calendarStartDate and calendarEndDate in mobile', async () => {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
 
     const el = await fixture(html`
       <auro-datepicker range calendarStartDate="03/04/2023" calendarEndDate="05/05/2023"></auro-datepicker>
@@ -598,7 +605,7 @@ describe('auro-datepicker', () => {
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
-    await elementUpdated(calendar.shadowRoot);
+    await elementUpdated(calendar.numCalendars);
     await nextFrame();
 
     await expect(calendar.numCalendars).to.equal(3);
@@ -682,8 +689,11 @@ describe('auro-datepicker', () => {
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
-  it.skip('closes the mobile bib when clicking the bottom done', async () => {
-    window.innerWidth = 550;
+  it('closes the mobile bib when clicking the bottom done', async () => {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
 
     const el = await fixture(html`
       <auro-datepicker></auro-datepicker>
