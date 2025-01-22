@@ -68,19 +68,51 @@
       <span slot="mobileDateLabel">Roundtrip</span>
     </auro-datepicker>
 
+    <auro-counter-group isDropdown>
+      <div slot="placeholder">Rooms, Guests</div>
+      <auro-counter>
+        Rooms
+        <span slot="description">
+          Total rooms
+        </span>
+      </auro-counter>
+      <auro-counter>
+        Adults Per Room
+        <span slot="description">
+          Ages 18 and older
+        </span>
+      </auro-counter>
+      <auro-counter>
+        Children Per Room
+        <span slot="description">
+          Ages 0-17
+        </span>
+      </auro-counter>
+    </auro-counter-group>
+
     <auro-button type="submit">
-      Submit
+      Search hotels
     </auro-button>
   </auro-form>
 </main>
 
 <!-- Form elements MUST be registered BEFORE form if custom names are used -->
 <script type="module" data-demo-script="true" src="./registerDemoDeps.js"></script>
-<script type="module" data-demo-script="true" src="./dynamicMenu.js"></script>
 <script type="module" data-demo-script="true" src="./index.js"></script>
 <!--<script type="module" data-demo-script="true" src="~@auro-formkit/auro-input/dist/index.min.js"></script>-->
 
-<script>
+<script type="module">
+  import {dynamicMenuExample} from "./dynamicMenu.js";
+
+  let initCount = 0;
+  try {
+    dynamicMenuExample();
+  } catch(error) {
+    if (initCount++ <= 20) {
+      setTimeout(dynamicMenuExample, 100);
+    }
+  }
+
   const form = document.querySelector('auro-form');
   form.addEventListener('submit', (event) => {
     console.log(event)
