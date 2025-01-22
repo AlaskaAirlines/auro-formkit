@@ -559,7 +559,8 @@ describe('auro-datepicker', () => {
     await expect(dropdown.isPopoverVisible).to.be.true;
 
     const calendar = dropdown.bibContent.querySelector('auro-calendar');
-    await elementUpdated(calendar);
+    await elementUpdated(calendar.shadowRoot);
+    await nextFrame();
 
     await expect(calendar.numCalendars).to.be.equal(12);
   });
@@ -605,7 +606,7 @@ describe('auro-datepicker', () => {
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
-    await elementUpdated(calendar.numCalendars);
+    await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
     await expect(calendar.numCalendars).to.equal(3);
