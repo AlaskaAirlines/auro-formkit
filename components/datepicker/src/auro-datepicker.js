@@ -719,6 +719,14 @@ export class AuroDatePicker extends LitElement {
     this.validation.reset(this);
   }
 
+  /**
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
+  }
+
   updated(changedProperties) {
     if (changedProperties.has('calendarFocusDate')) {
       this.handleFocusDateChange();
@@ -784,7 +792,7 @@ export class AuroDatePicker extends LitElement {
         }
       }
 
-      this.validation.validate(this);
+      this.validate(this);
     }
 
     if (changedProperties.has('valueEnd') && this.inputList[1]) {
@@ -814,7 +822,7 @@ export class AuroDatePicker extends LitElement {
         }
       }
 
-      this.validation.validate(this);
+      this.validate(this);
     }
 
     if (changedProperties.has('error')) {

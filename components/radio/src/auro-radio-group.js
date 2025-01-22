@@ -199,7 +199,7 @@ export class AuroRadioGroup extends LitElement {
     }
 
     if (changedProperties.has('error')) {
-      this.validation.validate(this, true);
+      this.validate(this, true);
     }
 
     if (changedProperties.has('validity')) {
@@ -230,6 +230,14 @@ export class AuroRadioGroup extends LitElement {
     });
 
     this.validation.reset(this);
+  }
+
+  /**
+   * Validates value
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
   /**
