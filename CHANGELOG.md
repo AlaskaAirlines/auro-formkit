@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.19](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.18...v2.0.0-beta.19) (2025-01-22)
+
+
+### Bug Fixes
+
+* pass correct paramenter to `validate` ([6d947a3](https://github.com/AlaskaAirlines/auro-formkit/commit/6d947a3fb321fbd2f18730868d1121e27e58a651))
+
+
+### Features
+
+* add public `validate` function in each components [#246](https://github.com/AlaskaAirlines/auro-formkit/issues/246) ([cb37af5](https://github.com/AlaskaAirlines/auro-formkit/commit/cb37af58b679df066f335e45d5f6db93df5db43d))
+
 # [2.0.0-beta.18](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2025-01-18)
 
 
