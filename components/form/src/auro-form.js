@@ -82,14 +82,25 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Compare tag name with element to identify it (for API purposes).
+   * @param {string} elementTag - The HTML tag name like `auro-datepicker`.
+   * @param {HTMLElement} element - The actual HTML element to compare.
+   * @returns {boolean}
+   * @private
+   */
+  _isElementTag(elementTag, element) {
+    return element.tagName.toLowerCase() === elementTag || element.hasAttribute(elementTag.toLowerCase());
+  }
+
+  /**
    * Shared code for determining if an element is something we care about (submit, form element, etc.).
    * @param {string[]} collection - The array to use for tag name search.
    * @param {HTMLElement} element - The element to compare against the master list.
-   * @returns boolean
+   * @returns {boolean}
    * @private
    */
   _isInElementCollection(collection, element) {
-    return collection.some((elementTag) => element.tagName.toLowerCase() === elementTag || element.hasAttribute(elementTag.toLowerCase()));
+    return collection.some((elementTag) => this._isElementTag(elementTag, element));
   }
 
   /**
@@ -339,8 +350,24 @@ export class AuroForm extends LitElement {
         return;
       }
 
-      this.formState[targetName].value = event.target.value;
-      this.requestUpdate('formState');
+      // Check special input types and handle their edge cases
+      if (this._isElementTag('auro-datepicker', event.target) && event.target.hasAttribute('range')) {
+        // Value is populated first, check for valueEnd after
+        this.formState[targetName].value = [event.target.value];
+
+        if (event.target.valueEnd) {
+          this.formState[targetName].value = [
+            event.target.value,
+            event.target.valueEnd
+          ];
+        }
+
+        this.requestUpdate('formState');
+      } else {
+        // "Normal" input value handling, just assign the value
+        this.formState[targetName].value = event.target.value;
+        this.requestUpdate('formState');
+      }
     });
 
     slot.addEventListener('auroFormElement-validated', (event) => {
