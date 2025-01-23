@@ -29,10 +29,6 @@ export class AuroCheckbox extends LitElement {
     super();
     this.checked = false;
     this.disabled = false;
-
-    /**
-     * @private
-     */
     this.error = false;
 
     /**
@@ -65,6 +61,14 @@ export class AuroCheckbox extends LitElement {
        * If set to true, the checkbox will not be clickable.
        */
       disabled: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If set to true, the checkbox will be displayed with an error state.
+       */
+      error: {
         type: Boolean,
         reflect: true
       },

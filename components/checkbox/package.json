@@ -59,7 +59,7 @@
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "serve": "web-dev-server",
     "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage",
-    "test:watch": "wtr --watch",
+    "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --watch",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./src/**/*.scss\"",
