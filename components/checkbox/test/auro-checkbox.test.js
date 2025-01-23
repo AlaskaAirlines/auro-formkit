@@ -177,9 +177,9 @@ describe('auro-checkbox-group', () => {
       </auro-checkbox-group>
     `);
 
-    const checkboxs = el.querySelectorAll('auro-checkbox');
+    const checkboxes = el.querySelectorAll('auro-checkbox');
 
-    checkboxs.forEach((checkbox) => {
+    checkboxes.forEach((checkbox) => {
       expect(checkbox.disabled).to.be.true;
       expect(checkbox.error).to.be.true;
     });
@@ -232,9 +232,9 @@ describe('auro-checkbox-group', () => {
 
     await elementUpdated(el);
 
-    const checkboxs = el.querySelectorAll('auro-checkbox');
+    const checkboxes = el.querySelectorAll('auro-checkbox');
 
-    checkboxs.forEach((checkbox) => {
+    checkboxes.forEach((checkbox) => {
       expect(checkbox.disabled, "child disabled state was not updated").to.be.true;
       expect(checkbox.error, "child error state was not updated").to.be.true;
     });
