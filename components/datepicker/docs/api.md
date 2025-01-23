@@ -31,7 +31,7 @@
 |------------|----------------------------------------|--------------------------------------------------|
 | `focus`    | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
 | `reset`    | `(): void`                             | Resets component to initial state.               |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value<br /><br />**force**: Whether to force validation. |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

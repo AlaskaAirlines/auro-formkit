@@ -35,7 +35,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
 | [reset](#reset)    | `(): void`                             | Resets component to initial state.               |
-| [validate](#validate) | `(force?: boolean \| undefined): void` | Validates value<br /><br />**force**: Whether to force validation. |
+| [validate](#validate) | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

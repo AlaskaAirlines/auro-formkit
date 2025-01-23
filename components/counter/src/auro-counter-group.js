@@ -206,7 +206,7 @@ export class AuroCounterGroup extends LitElement {
   }
 
   /**
-   * Validates value
+   * Validates value.
    * @param {boolean} [force=false] - Whether to force validation.
    */
   validate(force = false) {
