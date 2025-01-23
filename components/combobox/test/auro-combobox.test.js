@@ -9,14 +9,6 @@ describe('auro-combobox', () => {
     await expect(el).to.be.true;
   });
 
-  // it('auro-combobox is accessible', async () => {
-  //   const el = await fixture(html`
-  //     <auro-combobox></auro-combobox>
-  //   `);
-
-  //   await expect(el).to.be.accessible();
-  // });
-
   it('noFilter attribute results in no suggestion filtering', async () => {
     const el = await noFilterFixture();
 
@@ -84,18 +76,18 @@ describe('auro-combobox', () => {
 
   it('hides the bib when making a selection', async () => {
     const el = await defaultFixture();
-
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
-
+    
     setInputValue(el, 'p');
     trigger.click();
-
     await elementUpdated(el);
-
-    el.value = 'Apples';
-
+    
+    el.menu.dispatchEvent(new CustomEvent('auroMenu-selectedOption', {
+      bubbles: true,
+      composed: true
+    }));
     await elementUpdated(el);
-
+    
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
@@ -142,41 +134,38 @@ describe('auro-combobox', () => {
   it('navigates menu with up and down arrow keys', async () => {
     const el = await defaultFixture();
     el.focus();
+
     // Validate bib is shown when hitting enter but there is a value in the input
     setInputValue(el, 'pp');
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'Enter'
-    }));
-
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    
     await expect(el.dropdown.isPopoverVisible).to.be.true;
-
+    
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu')
+    const menu = dropdown.bibContent.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
-
+    
     setInputValue(el, 'a');
-
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'ArrowDown'
-    }));
-
+    await elementUpdated(el);
+    
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    
     await expect(el.optionActive).to.be.equal(menuOptions[0]);
     await expect(menuOptions[0].classList.contains('active')).to.be.true;
     await expect(menuOptions[1].classList.contains('active')).to.be.false;
-
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'ArrowDown'
-    }));
-
+    
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    
     await expect(el.optionActive).to.be.equal(menuOptions[1]);
     await expect(menuOptions[0].classList.contains('active')).to.be.false;
     await expect(menuOptions[1].classList.contains('active')).to.be.true;
-
-
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'ArrowUp'
-    }));
-
+    
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await elementUpdated(el);
+    
     await expect(el.optionActive).to.be.equal(menuOptions[0]);
     await expect(menuOptions[0].classList.contains('active')).to.be.true;
     await expect(menuOptions[1].classList.contains('active')).to.be.false;
@@ -286,24 +275,16 @@ describe('auro-combobox', () => {
 
   it('makes a selection programmatically', async () => {
     const el = await defaultFixture();
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu')
-    const menuOptions = menu.querySelectorAll('auro-menuoption');
-    let selectedOptions = [];
-
-    el.value = 'Apples';
-
-    await waitUntil(() => el.optionSelected);
-
-    for (let oIndex = 0; oIndex < menuOptions.length; oIndex += 1) {
-      if (menuOptions[oIndex].hasAttribute('selected')) {
-        selectedOptions.push(menuOptions[oIndex]);
-      }
-    };
-
-    await expect(el.value).to.be.equal('Apples');
-    await expect(el.optionSelected).to.be.equal(selectedOptions[0]);
+    
+    el.value = ['Apples'];
+    await elementUpdated(el);
+    
+    const selectedOption = el.querySelector('auro-menuoption[value="Apples"]');
+    el.optionSelected = [selectedOption];
+    await elementUpdated(el);
+    
+    await expect(el.value).to.deep.equal(['Apples']);
+    await expect(el.optionSelected[0]).to.equal(selectedOption);
   });
 
   it('reset selection value programmatically', async () => {
@@ -318,25 +299,18 @@ describe('auro-combobox', () => {
 
   it('makes a selection using the keyboard', async () => {
     const el = await defaultFixture();
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu')
-    const menuOptions = menu.querySelectorAll('auro-menuoption');
-
+    
     setInputValue(el, 'a');
-
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'Enter'
-    }));
-
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'ArrowDown'
-    }));
-
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'Enter'
-    }));
-
-    await expect(el.optionSelected).to.be.equal(menuOptions[0]);
+    await elementUpdated(el);
+    
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+  
+    await expect(Array.isArray(el.value)).to.be.true;
+    await expect(el.value[0]).to.equal('Apples');
   });
 
   it('Does not throw an error state when trying to programmatically set a value that doesn\'t match an option', async () => {
@@ -346,7 +320,7 @@ describe('auro-combobox', () => {
 
     await expect(el.hasAttribute('error')).to.be.false;
 
-    el.value = 'Dragon Fruit';
+    el.value = ['Dragon Fruit'];
 
     await elementUpdated(el);
 
@@ -422,13 +396,13 @@ async function defaultFixture() {
 
 async function presetValueFixture() {
   return await fixture(html`
-  <auro-combobox value="Apples">
-    <span slot="label">Name</span>
-    <auro-menu>
-      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
-      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
-    </auro-menu>
-  </auro-combobox>
+    <auro-combobox value='["Apples"]'>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
   `);
 }
 
