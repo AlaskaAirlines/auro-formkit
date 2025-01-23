@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.20](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.19...v2.0.0-beta.20) (2025-01-23)
+
+
+### Bug Fixes
+
+* reset `validity` when resetting `value` [#260](https://github.com/AlaskaAirlines/auro-formkit/issues/260) ([47eb399](https://github.com/AlaskaAirlines/auro-formkit/commit/47eb39960875e0a5d6c6686e71675a3eca2d261f))
+
 # [2.0.0-beta.19](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.18...v2.0.0-beta.19) (2025-01-22)
 
 
