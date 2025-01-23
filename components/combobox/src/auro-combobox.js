@@ -508,18 +508,15 @@ export class AuroCombobox extends LitElement {
 
     // Store value as array or undefined
     if (!this.value || this.value[0] !== this.input.value) {
-      this.value = this.input.value ? [this.input.value] : undefined;
+      // Menu expects an array
+      this.menu.value = this.input.value ? [this.input.value] : undefined;
+      this.value = this.menu.value;
       hasChange = true;
       this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
         bubbles: true,
         cancelable: false,
         composed: true,
       }));
-    }
-
-    if (this.value !== this.menu.value) {
-      this.menu.value = this.value;
-      hasChange = true;
     }
 
     if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
