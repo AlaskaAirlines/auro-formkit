@@ -177,10 +177,12 @@ describe('auro-checkbox-group', () => {
       </auro-checkbox-group>
     `);
 
-    const checkbox = el.querySelector('auro-checkbox');
+    const checkboxs = el.querySelectorAll('auro-checkbox');
 
-    expect(checkbox.disabled).to.be.true;
-    expect(checkbox.error).to.be.true;
+    checkboxs.forEach((checkbox) => {
+      expect(checkbox.disabled).to.be.true;
+      expect(checkbox.error).to.be.true;
+    });
   });
 
   it('is accessible', async () => {
@@ -230,10 +232,12 @@ describe('auro-checkbox-group', () => {
 
     await elementUpdated(el);
 
-    const checkbox = el.querySelector('auro-checkbox');
+    const checkboxs = el.querySelectorAll('auro-checkbox');
 
-    expect(checkbox.disabled, "child disabled state was not updated").to.be.true;
-    expect(checkbox.error, "child error state was not updated").to.be.true;
+    checkboxs.forEach((checkbox) => {
+      expect(checkbox.disabled, "child disabled state was not updated").to.be.true;
+      expect(checkbox.error, "child error state was not updated").to.be.true;
+    });
   });
 
   it('disabled state on checkboxes updates correctly', async () => {
@@ -298,7 +302,7 @@ describe('auro-checkbox-group', () => {
 
     // Click the first checkbox
     alaskaCheckboxInput.click();
-    
+
     await expect(el.value).to.eql(['alaska']);
   });
 
