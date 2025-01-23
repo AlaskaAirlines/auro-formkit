@@ -16,7 +16,7 @@
 |-------------|----------------------------------------|--------------------------------------------------|
 | `decrement` | `(value?: number \| undefined): void`  | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
 | `increment` | `(value?: number \| undefined): void`  | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
-| `validate`  | `(force?: boolean \| undefined): void` | Validates value<br /><br />**force**: Whether to force validation. |
+| `validate`  | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
@@ -49,7 +49,7 @@
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
-| `validate` | `(force?: boolean \| undefined): void` | Validates value<br /><br />**force**: Whether to force validation. |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

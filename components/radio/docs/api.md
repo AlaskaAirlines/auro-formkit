@@ -21,7 +21,7 @@
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
 | `reset`    | `(): void`                             | Resets component to initial state.               |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value<br /><br />**force**: Whether to force validation. |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

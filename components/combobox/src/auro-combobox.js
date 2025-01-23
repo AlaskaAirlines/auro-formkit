@@ -666,7 +666,7 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
-   * Validates value
+   * Validates value.
    * @param {boolean} [force=false] - Whether to force validation.
    */
   validate(force = false) {
@@ -694,8 +694,7 @@ export class AuroCombobox extends LitElement {
           }
         }
       } else {
-        this.input.value = '';
-        this.menu.value = undefined;
+        this.reset();
       }
     }
 
