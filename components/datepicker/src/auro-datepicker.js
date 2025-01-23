@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, max-depth, no-magic-numbers, complexity, newline-per-chained-call, no-underscore-dangle, lit/binding-positions,
+/* eslint-disable max-lines, no-magic-numbers, complexity, newline-per-chained-call, no-underscore-dangle, lit/binding-positions,
    lit/no-invalid-html, no-unused-expressions */
 
 // If using litElement base class
