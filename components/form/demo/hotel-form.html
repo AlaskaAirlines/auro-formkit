@@ -30,69 +30,70 @@
 <body class="auro-markdown">
 <main>
   <style>
-    .submitBlock {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
+
+    #borealis-hotel-booking-form {
+      display: inline-flex;
+      flex-direction: column;
+      background-color: var(--ds-color-background-primary-200-default, #F7F7F7);
+      padding: var(--ds-grid-gutter-lg, 1.5rem);
+      width: 454px;
     }
 
-    .datepickerBlock {
-      margin-top: 1rem;
-    }
-
-    auro-form {
-      display: block;
-      width: 100%;
-      padding: 1rem;
-      border: 1px solid #2a2a2a;
-      border-radius: 1rem;
+    .borealis-hotel-booking-form-row:not(:last-child) {
+      margin-bottom: var(--ds-size-200, 1rem);
     }
   </style>
 
-  <h2>auro-form testing</h2>
-  <auro-form>
-    <auro-combobox id="dynamicMenuExample" name="cityAirport" noFilter>
-      <span slot="label">Name</span>
-      <!--
-        The auro-combobox element requires an empty auro-menu element
-        due to the requirements of auro-dropdown and auro-input
-      -->
-      <auro-menu id="initMenu"></auro-menu>
+  <h2>Hotel Booking Form Testing</h2>
+  <auro-form id="borealis-hotel-booking-form">
+    <div class="borealis-hotel-booking-form-row">
+      <auro-combobox id="dynamicMenuExample" name="cityAirport" noFilter required>
+        <span slot="label">City, airport, or landmark</span>
+        <!--
+          The auro-combobox element requires an empty auro-menu element
+          due to the requirements of auro-dropdown and auro-input
+        -->
+        <auro-menu id="initMenu"></auro-menu>
+      </auro-combobox>
+    </div>
 
-    </auro-combobox>
+    <div class="borealis-hotel-booking-form-row">
+      <auro-datepicker name="dateRange" range required>
+        <span slot="fromLabel">Check in</span>
+        <span slot="toLabel">Check out</span>
+        <span slot="mobileDateLabel">Roundtrip</span>
+      </auro-datepicker>
+    </div>
 
-    <auro-datepicker name="dateRange" range>
-      <span slot="fromLabel">Check in</span>
-      <span slot="toLabel">Check out</span>
-      <span slot="mobileDateLabel">Roundtrip</span>
-    </auro-datepicker>
+    <div class="borealis-hotel-booking-form-row">
+      <auro-counter-group isDropdown required>
+        <div slot="placeholder">Rooms, Guests</div>
+        <auro-counter min="1">
+          Rooms
+          <span slot="description">
+            Total rooms
+          </span>
+        </auro-counter>
+        <auro-counter min="1">
+          Adults Per Room
+          <span slot="description">
+            Ages 18 and older
+          </span>
+        </auro-counter>
+        <auro-counter>
+          Children Per Room
+          <span slot="description">
+            Ages 0-17
+          </span>
+        </auro-counter>
+      </auro-counter-group>
+    </div>
 
-    <auro-counter-group isDropdown>
-      <div slot="placeholder">Rooms, Guests</div>
-      <auro-counter>
-        Rooms
-        <span slot="description">
-          Total rooms
-        </span>
-      </auro-counter>
-      <auro-counter>
-        Adults Per Room
-        <span slot="description">
-          Ages 18 and older
-        </span>
-      </auro-counter>
-      <auro-counter>
-        Children Per Room
-        <span slot="description">
-          Ages 0-17
-        </span>
-      </auro-counter>
-    </auro-counter-group>
-
-    <auro-button type="submit">
-      Search hotels
-    </auro-button>
+    <div class="borealis-hotel-booking-form-row">
+      <auro-button type="submit" fluid>
+        Search hotels
+      </auro-button>
+    </div>
   </auro-form>
 </main>
 
