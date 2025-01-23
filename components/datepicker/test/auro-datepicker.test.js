@@ -1,7 +1,7 @@
 /* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
 
 import { fixture, html, expect, elementUpdated, nextFrame } from '@open-wc/testing';
-import { setViewport} from '@web/test-runner-commands';
+import { setViewport } from '@web/test-runner-commands';
 import '../src/index.js';
 
 describe('auro-datepicker', () => {

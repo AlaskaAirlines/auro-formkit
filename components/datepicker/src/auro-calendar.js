@@ -25,7 +25,7 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
  * @prop {Date} minDate - Minimum date. All dates before will be disabled.
  * @prop {Date | undefined} selectedDate - The selected date, usually synchronized with datepicker-input.
  * Not to be confused with the focused date (therefore not necessarily in active month view).
- * @prop {string} weekdayHeaderNotation - Weekday header notation, based on Intl DatetimeFormat:
+ * @prop {string} weekdayHeaderNotation - Weekday header notation, based on Intl DatetimeFormat:.
  * @prop {Boolean} visible - Flag indicating if the calendar is visible.
  * - 'short' (e.g., Thu)
  * - 'narrow' (e.g., T).

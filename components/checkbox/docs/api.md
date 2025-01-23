@@ -49,6 +49,7 @@ Custom element for the purpose of allowing users to select one or more options o
 |------------|------------|-----------|---------|--------------------------------------------------|
 | `checked`  | `checked`  | `boolean` | false   | If set to true, the checkbox will be filled with a checkmark. |
 | `disabled` | `disabled` | `boolean` | false   | If set to true, the checkbox will not be clickable. |
+| `error`    | `error`    | `boolean` | false   | If set to true, the checkbox will be displayed with an error state. |
 | `id`       | `id`       | `string`  |         | Sets the individual `id` per element.            |
 | `name`     | `name`     | `string`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
 | `value`    | `value`    | `string`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
