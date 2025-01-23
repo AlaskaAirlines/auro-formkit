@@ -19,6 +19,11 @@
         "*-css.js"
       ]
     },
+    "test:watch": {
+      "dependsOn": ["build"],
+      "persistent": true,
+      "cache": false
+    },
     "@aurodesignsystem/auro-combobox#build": {
       "dependsOn": [
         "@aurodesignsystem/auro-input#build",
