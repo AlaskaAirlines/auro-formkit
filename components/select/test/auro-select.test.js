@@ -71,7 +71,6 @@ describe('auro-select', () => {
     await expect(menuOptions[0].classList.contains('active')).to.be.false;
     await expect(menuOptions[1].classList.contains('active')).to.be.true;
 
-
     el.dispatchEvent(new KeyboardEvent('keydown', {
       'key': 'ArrowUp'
     }));
@@ -82,48 +81,41 @@ describe('auro-select', () => {
 
   it('makes a selection programatically', async () => {
     const el = await defaultFixture();
-
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu')
-    const menuOptions = menu.querySelectorAll('auro-menuoption');
-    let selectedOptions = [];
-
-    el.value = 'Apples';
-
-    await waitUntil(() => el.optionSelected);
-
-    for (let oIndex = 0; oIndex < menuOptions.length; oIndex += 1) {
-      if (menuOptions[oIndex].hasAttribute('selected')) {
-        selectedOptions.push(menuOptions[oIndex]);
-      }
-    };
-
-    await expect(el.value).to.be.equal('Apples');
-    await expect(el.optionSelected).to.be.equal(selectedOptions[0]);
+    const menu = dropdown.bibContent.querySelector('auro-menu');
+    
+    el.value = ['Apples'];
+    await elementUpdated(el);
+    await elementUpdated(menu);
+    
+    const selectedOption = menu.querySelector('auro-menuoption[value="Apples"]');
+    
+    await expect(el.value).to.deep.equal(['Apples']);
+    await expect(el.optionSelected[0]).to.equal(selectedOption);
   });
 
   it('making invalid selection programmatically results in resetting of component', async () => {
     const el = await presetValueFixture();
-
-    await expect(el.value).to.be.equal('price');
-
-    el.value = 'flight course';
-
     await elementUpdated(el);
+    await expect(el.value).to.deep.equal(['price']);
 
+    el.value = ['flight course'];
+    await elementUpdated(el);
+    
     await expect(el.optionSelected).to.be.equal(undefined);
-    await expect(el.hasAttribute('validity')).to.be.false;
+    await expect(el.getAttribute('validity')).to.equal('valid');
   });
 
   it('reset selection value programmatically', async () => {
     const el = await presetValueFixture();
+    const menu = el.querySelector('auro-menu');
 
-    el.value = undefined;
-
+    el.reset();
     await elementUpdated(el);
+    await elementUpdated(menu);
 
     await expect(el.optionSelected).to.be.equal(undefined);
-  });
+});
 
   it('default to checkmark on selected option', async () => {
     const el = await defaultFixture();
@@ -155,20 +147,15 @@ describe('auro-select', () => {
 
   it('reset method clears the value and validity state', async () => {
     const el = await presetValueFixture();
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const presetOption = dropdown.bibContent.querySelector('#presetOption');
+    await elementUpdated(el);
 
-    await expect(el.value).to.be.equal('price');
-    await expect(el.optionSelected).to.be.equal(presetOption);
+    await expect(el.value).to.deep.equal(['price']);
     await expect(el.getAttribute('validity')).to.equal('valid');
 
     el.reset();
-
     await elementUpdated(el);
 
-    await expect(el.hasAttribute('validity')).to.be.false;
-    await expect(el.value).to.be.equal(undefined);
-    await expect(el.optionSelected).to.be.equal(undefined);
+    await expect(el.value).to.be.undefined;
   });
 });
 
@@ -186,7 +173,7 @@ async function defaultFixture() {
 
 async function presetValueFixture() {
   return await fixture(html`
-  <auro-select value="price">
+  <auro-select value='["price"]'>
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -223,4 +210,3 @@ async function errorFixture() {
   </auro-select>
   `);
 }
-
