@@ -352,15 +352,7 @@ export class AuroForm extends LitElement {
 
       // Check special input types and handle their edge cases
       if (this._isElementTag('auro-datepicker', event.target) && event.target.hasAttribute('range')) {
-        // Value is populated first, check for valueEnd after
-        this.formState[targetName].value = [event.target.value];
-
-        if (event.target.valueEnd) {
-          this.formState[targetName].value = [
-            event.target.value,
-            event.target.valueEnd
-          ];
-        }
+        this.formState[targetName].value = event.target.values;
 
         this.requestUpdate('formState');
       } else {

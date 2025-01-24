@@ -325,6 +325,9 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     await expect(el.value).to.equal(dateSelected);
+    await expect(el.value).to.equal(dateSelected);
+    await expect(el.values).to.have.length(1);
+    await expect(el.values[0]).to.equal(dateSelected);
   });
 
   it('selecting a dateTo date by clicking on the calendar sets the correct value', async () => {
@@ -365,6 +368,9 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     await expect(el.valueEnd).to.equal(dateToSelected);
+    await expect(el.values).to.have.length(2);
+    await expect(el.values[0]).to.equal(dateSelected);
+    await expect(el.values[1]).to.equal(dateFromSelected);
   });
 
   it('attempting to set the dateTo to a date earlier than dateFrom by clicking on the calendar does not set the valueFrom', async () => {
