@@ -320,6 +320,28 @@ export class AuroDatePicker extends LitElement {
   }
 
   /**
+   * A convenience wrapper for `value` and `valueEnd`, uses the new Auro "array value pattern".
+   * @returns {string[]}
+   */
+  get values() {
+    // If range, and both populated, return both values in an array
+    // - NOTE: both are required here, so we don't have something like `['10/22/25', undefined]`
+    if (this.range && this.value && this.valueEnd) {
+      return [
+        this.value,
+        this.valueEnd
+      ];
+    }
+
+    // This if block catches instances where `value` is present, no matter if valueEnd is selected yet
+    if (this.value) {
+      return [this.value];
+    }
+
+    return [];
+  }
+
+  /**
    * Force the calendar view to the focus date when it changes.
    * @private
    * @returns {void}
