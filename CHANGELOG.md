@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.23](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.22...v2.0.0-beta.23) (2025-01-24)
+
+
+### Bug Fixes
+
+* bad datepicker test ([8d4d4a3](https://github.com/AlaskaAirlines/auro-formkit/commit/8d4d4a39ff2e8f565f18d42f6d13364bc3ce827f))
+
 # [2.0.0-beta.22](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.21...v2.0.0-beta.22) (2025-01-24)
 
 
