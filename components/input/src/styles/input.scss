@@ -10,8 +10,8 @@ input {
 
   position: relative;
   overflow: hidden;
-  min-height: calc(var(--ds-size-700, $ds-size-700) + var(--ds-size-25, $ds-size-25));
-  max-height: calc(var(--ds-size-700, $ds-size-700) + var(--ds-size-25, $ds-size-25));
+  min-height: var(--ds-size-700, $ds-size-700);
+  max-height: var(--ds-size-700, $ds-size-700);
   flex: 1;
   padding: var(--ds-size-400, $ds-size-400) 0 var(--ds-size-50, $ds-size-50);
   margin: 0;
