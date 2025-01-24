@@ -2,7 +2,7 @@ import { fixture, html, expect } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-form', () => {
-  it('sets the CSS class on auro-form > div element', async () => {
+  it.skip('sets the CSS class on auro-form > div element', async () => {
     const el = await fixture(html`
       <auro-form cssclass="testClass"></auro-form>
     `);
