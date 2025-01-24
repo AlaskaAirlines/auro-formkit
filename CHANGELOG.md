@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.22](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.21...v2.0.0-beta.22) (2025-01-24)
+
+
+### Features
+
+* datepicker array values ([6c8deb7](https://github.com/AlaskaAirlines/auro-formkit/commit/6c8deb7942b51fc90428b8b3a14257a7ffb036c1))
+* datepicker range support ([d235a68](https://github.com/AlaskaAirlines/auro-formkit/commit/d235a681340ab539e1191ba56acd48d6214d3383))
+
 # [2.0.0-beta.21](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.20...v2.0.0-beta.21) (2025-01-24)
 
 
