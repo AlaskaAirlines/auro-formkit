@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.24](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2025-01-24)
+
+
+### Bug Fixes
+
+* make datepicker's height the same as other components' height [#271](https://github.com/AlaskaAirlines/auro-formkit/issues/271) ([40f206d](https://github.com/AlaskaAirlines/auro-formkit/commit/40f206dd135eff95ab24012be54db80320c1b190))
+
 # [2.0.0-beta.23](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.22...v2.0.0-beta.23) (2025-01-24)
 
 
