@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.21](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.20...v2.0.0-beta.21) (2025-01-24)
+
+
+### Bug Fixes
+
+* remove duplicate package.json entry ([be9b60f](https://github.com/AlaskaAirlines/auro-formkit/commit/be9b60f3d7c3f030ddaef509253658790fab7aab))
+* wrap values as array ([bde8d4a](https://github.com/AlaskaAirlines/auro-formkit/commit/bde8d4a5944e6e90f76c5327a123b31fdfdafa3b))
+
 # [2.0.0-beta.20](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.19...v2.0.0-beta.20) (2025-01-23)
 
 
