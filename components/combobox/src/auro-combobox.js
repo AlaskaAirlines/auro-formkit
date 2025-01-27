@@ -768,7 +768,7 @@ export class AuroCombobox extends LitElement {
               ? html`
                 <slot name="helpText"></slot>
               ` : html`
-                <p role="alert" aria-live="assertive" part="helpText">
+                <p role="alert" class="comboboxElement-helpText" aria-live="assertive" part="helpText">
                   ${this.errorMessage}
                 </p>`
             }
