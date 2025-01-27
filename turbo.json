@@ -24,6 +24,11 @@
       "persistent": true,
       "cache": false
     },
+    "@aurodesignsystem/auro-checkbox#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
     "@aurodesignsystem/auro-combobox#build": {
       "dependsOn": [
         "@aurodesignsystem/auro-input#build",
@@ -46,6 +51,11 @@
       ]
     },
     "@aurodesignsystem/auro-input#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
+    "@aurodesignsystem/auro-radio#build": {
       "dependsOn": [
         "@aurodesignsystem/auro-helptext#build"
       ]

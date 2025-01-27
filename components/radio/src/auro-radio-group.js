@@ -19,6 +19,7 @@ import AuroFormValidation from '@auro-formkit/form-validation';
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
+import '@aurodesignsystem/auro-helptext';
 
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
 /* eslint-disable max-lines */
@@ -428,13 +429,13 @@ export class AuroRadioGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <p class="radioGroupElement-helpText" part="helpText">
+          <auro-helptext part="helpText">
             <slot name="helpText"></slot>
-          </p>`
+          </auro-helptext>`
         : html`
-          <p class="radioGroupElement-helpText" role="alert" aria-live="assertive" part="helpText">
+          <auro-helptext role="alert" error aria-live="assertive" part="helpText">
             ${this.errorMessage}
-          </p>`
+          </auro-helptext>`
       }
     `;
   }

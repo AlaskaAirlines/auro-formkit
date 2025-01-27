@@ -1035,9 +1035,9 @@ export class AuroDatePicker extends LitElement {
               ? html`
                 <slot name="helpText"></slot>
               ` : html`
-                <p class="datepickerElement-helpText" role="alert" aria-live="assertive" part="helpText">
+                <span role="alert" aria-live="assertive" part="helpText">
                   ${this.errorMessage}
-                </p>`
+                </span>`
             }
           </span>
         </${this.dropdownTag}>
