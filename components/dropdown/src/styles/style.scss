@@ -85,12 +85,6 @@
 }
 /* stylelint-enable selector-id-pattern */
 
-.helpText {
-  margin-top: var(--ds-size-50, $ds-size-50);
-  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-  line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
-}
-
 :host([matchwidth]) {
   #bibSizer {
     width: 100%;

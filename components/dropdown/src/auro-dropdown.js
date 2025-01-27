@@ -21,6 +21,7 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+import '@aurodesignsystem/auro-helptext';
 import './auro-dropdownBib.js';
 
 /**
@@ -435,7 +436,7 @@ export class AuroDropdown extends LitElement {
             <div class="triggerContent">
               <slot
                 name="trigger"
-                @slotchange="${(event) => this.handleTriggerContentSlotChange(event)}"></slot>
+                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
             </div>
           </div>
           ${this.chevron || this.common ? html`
@@ -452,11 +453,9 @@ export class AuroDropdown extends LitElement {
               </div>
             ` : undefined }
         </div>
-        <div
-          class="helpText"
-          part="helpText">
+        <auro-helptext part="helpText" ?error="${this.error}">
           <slot name="helpText"></slot>
-        </div>
+        </auro-helptext>
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>

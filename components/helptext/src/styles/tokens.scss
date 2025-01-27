@@ -1,0 +1,9 @@
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+:host {
+  --ds-auro-help-text-color: var(--ds-color-text-tertiary-default, #{$ds-color-text-tertiary-default});
+}
+
+:host([error]) {
+  --ds-auro-help-text-color: var(--ds-color-text-error-default, #{$ds-color-text-error-default});
+}
