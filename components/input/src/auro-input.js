@@ -20,6 +20,8 @@ import iconVersion from './iconVersion.js';
 import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
 import buttonVersion from './buttonVersion.js';
 
+import '@aurodesignsystem/auro-helptext';
+
 // build the component class
 export class AuroInput extends BaseInput {
   constructor() {
@@ -226,16 +228,22 @@ export class AuroInput extends BaseInput {
         </div>
       </div>
       <!-- Help text and error message template -->
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
-      ? html`
-        <p class="inputElement-helpText" id="${this.uniqueId}" part="helpText">
-          <slot name="helptext">${this.getHelpText(this.type)}</slot>
-        </p>`
-      : html`
-        <p class="inputElement-helpText" id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-          ${this.errorMessage}
-        </p>`
-      }
+        ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+        <auro-helptext>
+          <span id="${this.uniqueId}" part="helpText">
+            <slot name="helptext">${this.getHelpText(this.type)}</slot>
+          </span>
+        </auro-helptext>
+        `
+        : html`
+        <auro-helptext error>
+          <span id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+            ${this.errorMessage}
+          </span>
+        </auro-helptext>
+        `
+        }
     `;
   }
 }

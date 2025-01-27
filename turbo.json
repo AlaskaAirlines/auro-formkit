@@ -40,6 +40,16 @@
         "sass:render"
       ]
     },
+    "@aurodesignsystem/auro-dropdown#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
+    "@aurodesignsystem/auro-input#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
     "@aurodesignsystem/auro-select#build": {
       "dependsOn": [
         "@aurodesignsystem/auro-dropdown#build",

@@ -13,10 +13,6 @@
   border-color: transparent;
 }
 
-.inputElement-helpText {
-  color: var(--ds-auro-input-help-text-color);
-}
-
 input {
   background-color: transparent;
   caret-color: var(--ds-auro-input-caret-color);
@@ -72,7 +68,6 @@ label {
 
 :host([validity]:not([validity='valid'])) {
   --ds-auro-input-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
-  --ds-auro-input-help-text-color: var(--ds-color-text-error-default, #{$ds-color-text-error-default});
 }
 
 :host([validity]:not([validity='valid'])[bordered]) {

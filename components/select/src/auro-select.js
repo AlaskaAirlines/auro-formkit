@@ -579,13 +579,13 @@ export class AuroSelect extends LitElement {
           <span slot="helpText">
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`
-                <p class="selectElement-helpText" id="${this.uniqueId}" part="helpText">
+                <span id="${this.uniqueId}" part="helpText">
                   <slot name="helpText"></slot>
-                </p>`
+                </span>`
               : html`
-                <p class="selectElement-helpText" id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+                <span id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
                   ${this.errorMessage}
-                </p>`
+                </span>`
             }
           </span>
         </${this.dropdownTag}>

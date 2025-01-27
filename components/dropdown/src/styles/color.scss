@@ -33,10 +33,6 @@
   }
 }
 
-.helpText {
-  color: var(--ds-auro-dropdown-help-text-color);
-}
-
 :host([disabled]) {
   --ds-auro-dropdown-trigger-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
   --ds-auro-dropdown-label-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
@@ -55,7 +51,6 @@
 }
 
 :host([error]) {
-  --ds-auro-dropdown-help-text-color: var(--ds-color-text-error-default, #{$ds-color-text-error-default});
   --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
 
   .trigger {

@@ -1163,7 +1163,6 @@ The component may be restyled using the following code sample and changing the v
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
 
 :host {
-  --ds-auro-dropdown-help-text-color: var(--ds-color-text-secondary-default, #{$ds-color-text-secondary-default});
   --ds-auro-dropdown-label-text-color: var(--ds-color-text-secondary-default, #{$ds-color-text-secondary-default});
   --ds-auro-dropdown-popover-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
   --ds-auro-dropdown-popover-border-color: transparent;
