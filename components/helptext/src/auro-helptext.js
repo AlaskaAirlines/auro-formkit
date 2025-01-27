@@ -21,7 +21,7 @@ export class AuroHelpText extends LitElement {
     super();
 
     this.error = false;
-    this.hasSlot = false;
+    this.hasTextContent = false;
   }
 
   static get styles() {
@@ -38,7 +38,14 @@ export class AuroHelpText extends LitElement {
       /**
        * @private
        */
-      hasSlot: {
+      slotNodes: {
+        type: Boolean,
+      },
+
+      /**
+       * @private
+       */
+      hasTextContent: {
         type: Boolean,
       },
 
@@ -64,15 +71,41 @@ export class AuroHelpText extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroHelpText);
   }
 
+  updated() {
+    this.handleSlotChange();
+  }
+
   handleSlotChange(event) {
-    const nodes = event.target.assignedNodes();
-    this.hasSlot = nodes && nodes.length >= 1;
+    if (event) {
+      this.slotNode = event.target.assignedNodes();
+    }
+
+    if (this.slotNode) {
+      this.hasTextContent = this.slotNode.some((slot) => {
+        if (slot.textContent.trim()) {
+          return true;
+        }
+
+        if (!slot.querySelector) {
+          return false;
+        }
+
+        const slotInSlot = slot.tagName === 'SLOT' ? slot : slot.querySelector('slot');
+        if (!slotInSlot) {
+          return false;
+        }
+        const slotsInSlotNodes = slotInSlot.assignedNodes();
+        return slotsInSlotNodes.some((ss) => Boolean(ss.textContent.trim()));
+      });
+    } else {
+      this.hasTextContent = false;
+    }
   }
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
-      <div class="helptext-wrapper" visible="${this.hasSlot}">
+      <div class="helptext-wrapper" visible="${this.hasTextContent}">
           <slot @slotchange=${this.handleSlotChange}></slot>
       </div>
     `;
