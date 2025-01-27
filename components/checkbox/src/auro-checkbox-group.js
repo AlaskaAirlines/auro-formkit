@@ -16,6 +16,8 @@ import styleCss from "./styles/auro-checkbox-group-css.js";
 import colorCss from "./styles/colorGroup-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+import '@aurodesignsystem/auro-helptext';
+
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
  *
@@ -355,13 +357,13 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <p class="checkboxGroupElement-helpText" part="helpText">
+          <auro-helptext part="helpText">
             <slot name="helpText"></slot>
-          </p>`
+          </auro-helptext>`
         : html`
-          <p class="checkboxGroupElement-helpText" role="alert" aria-live="assertive" part="helpText">
+          <auro-helptext error role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
-          </p>`
+          </auro-helptext>`
       }
     `;
   }
