@@ -38,7 +38,7 @@ describe('auro-input', () => {
       </auro-input>
     `);
     const input = el.shadowRoot.querySelector('input');
-    const text = el.shadowRoot.querySelector('.inputElement-helpText').innerText;
+    const text = el.shadowRoot.querySelector('auro-helptext').textContent;
 
     await elementUpdated(el);
 
@@ -342,8 +342,8 @@ describe('auro-input', () => {
 
     expect(el.getAttribute('validity')).to.be.equal('customError');
 
-    const helpTextElem = el.shadowRoot.querySelector('.inputElement-helpText');
-    expect(helpTextElem.innerText).to.be.equal('Custom Error Message');
+    const helpTextElem = el.shadowRoot.querySelector('auro-helptext');
+    expect(helpTextElem.textContent).to.contain('Custom Error Message');
   });
 
   it('updates validity when error message removed after creation', async () => {
@@ -353,8 +353,8 @@ describe('auro-input', () => {
 
     expect(el.getAttribute('validity')).to.be.equal('customError');
 
-    const helpTextElem = el.shadowRoot.querySelector('.inputElement-helpText');
-    expect(helpTextElem.innerText).to.be.equal('Custom Error Message');
+    const helpTextElem = el.shadowRoot.querySelector('auro-helptext');
+    expect(helpTextElem.textContent).to.be.contain('Custom Error Message');
 
     el.removeAttribute('error');
 
