@@ -762,7 +762,7 @@ export class AuroCombobox extends LitElement {
           </${this.inputTag}>
           <div class="menuWrapper">
           </div>
-          <span slot="helpText">
+          <p slot="helpText">
           <!-- Help text and error message template -->
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`
@@ -772,7 +772,7 @@ export class AuroCombobox extends LitElement {
                   ${this.errorMessage}
                 </span>`
             }
-          </span>
+          </p>
         </${this.dropdownTag}>
       </div>
     `;

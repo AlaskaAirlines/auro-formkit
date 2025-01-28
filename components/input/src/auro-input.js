@@ -231,16 +231,16 @@ export class AuroInput extends BaseInput {
         ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
         <auro-helptext>
-          <span id="${this.uniqueId}" part="helpText">
+          <p id="${this.uniqueId}" part="helpText">
             <slot name="helptext">${this.getHelpText(this.type)}</slot>
-          </span>
+          </p>
         </auro-helptext>
         `
         : html`
         <auro-helptext error>
-          <span id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+          <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
-          </span>
+          </p>
         </auro-helptext>
         `
         }

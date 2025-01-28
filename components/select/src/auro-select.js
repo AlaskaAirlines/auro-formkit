@@ -576,7 +576,7 @@ export class AuroSelect extends LitElement {
           <div class="menuWrapper">
           </div>
           <slot name="label" slot="label"></slot>
-          <span slot="helpText">
+          <p slot="helpText">
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`
                 <span id="${this.uniqueId}" part="helpText">
@@ -587,7 +587,7 @@ export class AuroSelect extends LitElement {
                   ${this.errorMessage}
                 </span>`
             }
-          </span>
+          </p>
         </${this.dropdownTag}>
         <!-- Help text and error message template -->
       </div>
