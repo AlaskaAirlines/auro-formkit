@@ -173,6 +173,9 @@ export class AuroForm extends LitElement {
    * @returns {"valid" | "invalid"}
    */
   get validity() {
+    // Force calculate, as sometimes validity won't reflect
+    // the latest value while in-between renders.
+    this._calculateValidity();
     return this._validity;
   }
 
@@ -241,6 +244,27 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Store an element in state and on the _elements array.
+   * @param {HTMLElement} element - The element to add to our state.
+   * @private
+   */
+  _addElementToState(element) {
+    const targetName = element.getAttribute('name');
+    if (this.formState[targetName]) {
+      return;
+    }
+
+    this.formState[targetName] = {
+      value: element.getAttribute('value'),
+      validity: element.validity || null,
+      required: element.hasAttribute('required'),
+      // element
+    };
+
+    this._elements.push(element);
+  }
+
+  /**
    * Initialize (or reinitialize) the form state.
    */
   initializeState() {
@@ -251,14 +275,7 @@ export class AuroForm extends LitElement {
 
     this.queryAuroElements().forEach((element) => {
       if (this.isFormElement(element)) {
-        this.formState[element.getAttribute('name')] = {
-          value: element.getAttribute('value'),
-          validity: element.getAttribute('validity'),
-          required: element.hasAttribute('required'),
-          // element
-        };
-
-        this._elements.push(element);
+        this._addElementToState(element);
       }
 
       if (this.isButtonElement(element) && element.getAttribute('type') === 'submit') {
@@ -350,13 +367,16 @@ export class AuroForm extends LitElement {
         return;
       }
 
+      // Occasionally, a form element will emit their event before the form can read data about the form element.
+      if (!this.formState[targetName] && this.isFormElement(event.target)) {
+        this._addElementToState(event.target);
+      }
+
       // Check special input types and handle their edge cases
       if (this._isElementTag('auro-datepicker', event.target) && event.target.hasAttribute('range')) {
         this.formState[targetName].value = event.target.values;
-
         this.requestUpdate('formState');
       } else {
-        // "Normal" input value handling, just assign the value
         this.formState[targetName].value = event.target.value;
         this.requestUpdate('formState');
       }
@@ -366,6 +386,10 @@ export class AuroForm extends LitElement {
       const targetName = event.target.getAttribute("name");
       if (!this.isFormElement(event.target) || !targetName) {
         return;
+      }
+
+      if (!this.formState[targetName]) {
+        this._addElementToState(event.target);
       }
 
       this.formState[targetName].validity = event.detail.validity;
