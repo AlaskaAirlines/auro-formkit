@@ -16,6 +16,10 @@
   line-height: var(--ds-size-200, $ds-size-200);
 }
 
-.helptext-wrapper[visible='true'] {
+.helptext-wrapper[visible] {
   display: block;
+}
+
+::slotted(p) {
+  margin-block: 0;
 }

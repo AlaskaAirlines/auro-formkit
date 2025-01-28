@@ -1029,7 +1029,7 @@ export class AuroDatePicker extends LitElement {
               ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd ? this.getMobileDateStr(this.valueEnd) : html`<span class="placeholderDate">MM/DD/YYYY</span>`}</span>` : undefined}
             </auro-calendar>
           </div>
-          <span slot="helpText" part="helpTextSpan">
+          <p slot="helpText" part="helpTextSpan">
             <!-- Help text and error message template -->
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`
@@ -1039,7 +1039,7 @@ export class AuroDatePicker extends LitElement {
                   ${this.errorMessage}
                 </span>`
             }
-          </span>
+          </p>
         </${this.dropdownTag}>
       </div>
     `;

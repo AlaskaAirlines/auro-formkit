@@ -11,10 +11,8 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * Custom element for the purpose of allowing users to select one or more options of a limited number of choices.
+ * Displays help text or error messages within form elements - Internal Use Only
  */
-
-// build the component class
 export class AuroHelpText extends LitElement {
 
   constructor() {
@@ -77,11 +75,11 @@ export class AuroHelpText extends LitElement {
 
   handleSlotChange(event) {
     if (event) {
-      this.slotNode = event.target.assignedNodes();
+      this.slotNodes = event.target.assignedNodes();
     }
 
-    if (this.slotNode) {
-      this.hasTextContent = this.slotNode.some((slot) => {
+    if (this.slotNodes) {
+      this.hasTextContent = this.slotNodes.some((slot) => {
         if (slot.textContent.trim()) {
           return true;
         }
@@ -90,12 +88,12 @@ export class AuroHelpText extends LitElement {
           return false;
         }
 
-        const slotInSlot = slot.tagName === 'SLOT' ? slot : slot.querySelector('slot');
-        if (!slotInSlot) {
+        const nestedSlot = slot.tagName === 'SLOT' ? slot : slot.querySelector('slot');
+        if (!nestedSlot) {
           return false;
         }
-        const slotsInSlotNodes = slotInSlot.assignedNodes();
-        return slotsInSlotNodes.some((ss) => Boolean(ss.textContent.trim()));
+        const nestedSlotNodes = nestedSlot.assignedNodes();
+        return nestedSlotNodes.some((ss) => Boolean(ss.textContent.trim()));
       });
     } else {
       this.hasTextContent = false;
@@ -105,7 +103,7 @@ export class AuroHelpText extends LitElement {
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
-      <div class="helptext-wrapper" visible="${this.hasTextContent}">
+      <div class="helptext-wrapper" ?visible="${this.hasTextContent}">
           <slot @slotchange=${this.handleSlotChange}></slot>
       </div>
     `;
