@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.26](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.25...v2.0.0-beta.26) (2025-01-28)
+
+
+### Bug Fixes
+
+* add display block to auro-dropdown in counter-group styles [#249](https://github.com/AlaskaAirlines/auro-formkit/issues/249) ([558aa17](https://github.com/AlaskaAirlines/auro-formkit/commit/558aa1733792b33d828b61e524757d0319df3a1c))
+
 # [2.0.0-beta.25](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.24...v2.0.0-beta.25) (2025-01-28)
 
 
