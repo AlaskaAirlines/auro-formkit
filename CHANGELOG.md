@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.25](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.24...v2.0.0-beta.25) (2025-01-28)
+
+
+### Bug Fixes
+
+* update counter tests to use initial values in markup and ensure HTMLButtonElement before focusing [#202](https://github.com/AlaskaAirlines/auro-formkit/issues/202) ([193b4ee](https://github.com/AlaskaAirlines/auro-formkit/commit/193b4ee599c08a650dc399e1695d6a3c331629f8))
+
+
+### Performance Improvements
+
+* add increment and decrement disable functionality, and create tests [#202](https://github.com/AlaskaAirlines/auro-formkit/issues/202) ([8ea3afb](https://github.com/AlaskaAirlines/auro-formkit/commit/8ea3afb8ebed273472d771eeefebfab9172af438))
+
 # [2.0.0-beta.24](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2025-01-24)
 
 
