@@ -153,6 +153,10 @@ export class AuroCounter extends LitElement {
    * @returns {void}
    */
   increment(value) {
+    if (this.disabled) {
+      return;
+    }
+
     this.value += value !== undefined ? value : 1;
   }
 
@@ -163,6 +167,10 @@ export class AuroCounter extends LitElement {
    * @returns {void}
    */
   decrement(value) {
+    if (this.disabled) {
+      return;
+    }
+
     this.value -= value !== undefined ? value : 1;
   }
 
@@ -208,16 +216,6 @@ export class AuroCounter extends LitElement {
     if (button !== null) {
       button.focus();
     }
-  }
-
-  /**
-   * Handles the slot change event.
-   * This method is called when the slot content changes.
-   * It triggers the checkSlots method to update the component state based on the new slot content.
-   * @private
-   */
-  handleSlotChange() {
-    this.checkSlots();
   }
 
   /**
