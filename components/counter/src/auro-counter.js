@@ -213,7 +213,7 @@ export class AuroCounter extends LitElement {
    */
   jumpFocusToEnabled() {
     const button = this.shadowRoot.querySelector("auro-counter-button:not([disabled])");
-    if (button !== null) {
+    if (button && button instanceof HTMLButtonElement) {
       button.focus();
     }
   }
