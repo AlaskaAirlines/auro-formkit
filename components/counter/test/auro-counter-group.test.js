@@ -201,24 +201,6 @@ describe('auro-counter-group: rendering logic', () => {
     expect(el.counters[1].value).to.equal(0);
   });
 
-  /*
-  No matter what I try, I can't get this test to pass.
-  I can see in the test browser that the default dropdown
-  trigger content renders, but the test fails.
-  */
-
-  //   it('make sure default dropdown trigger content renders correctly', async () => {
-  //     const el = await fixture(html`
-  //       <auro-counter-group isDropdown>
-  //         <auro-counter value="2">counter1</auro-counter>
-  //          <auro-counter value="3">counter2</auro-counter>
-  //       </auro-counter-group>
-  //     `);
-  //     await elementUpdated(el);
-  //     const defaultTriggerSlot = el.shadowRoot.querySelector('div[slot="trigger"] slot[name="valueText"]');
-  //     expect(defaultTriggerSlot.assignedNodes()[0].textContent.trim()).to.equal('Select');
-  //   });
-
   it('renders the correct value text in the dropdown trigger slot', async () => {
     const el = await fixture(html`
             <auro-counter-group isDropdown>
