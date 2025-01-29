@@ -1,6 +1,6 @@
 /* eslint-disable no-undef, no-magic-numbers */
 
-import { fixture, html, expect } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-counter-group: configureCounters', () => {
@@ -149,3 +149,53 @@ describe('auro-counter-group: configureDropdownCounters', () => {
     expect(el.counters.length).to.equal(1);
   });
 });
+
+describe('auro-counter-group: rendering logic', () => {
+  it('renders the correct value text in the dropdown trigger slot', async () => {
+    const el = await fixture(html`
+            <auro-counter-group isDropdown>
+                <div slot="valueText">Value</div>
+                <auro-counter value="2">counter1</auro-counter>
+                <auro-counter value="3">counter2</auro-counter>
+            </auro-counter-group>
+        `);
+
+    await elementUpdated(el);
+
+    const triggerSlot = el.shadowRoot.querySelector('div[slot="trigger"] slot[name="valueText"]');
+
+    expect(triggerSlot.assignedNodes()[0].textContent.trim()).to.equal('Value');
+  });
+
+  it('renders the correct label in the dropdown label slot', async () => {
+    const el = await fixture(html`
+            <auro-counter-group isDropdown>
+                <span slot="label">Counter Group Label</span>
+                <auro-counter value="2">counter1</auro-counter>
+                <auro-counter value="3">counter2</auro-counter>
+            </auro-counter-group>
+        `);
+
+    await elementUpdated(el);
+
+    const labelSlot = el.shadowRoot.querySelector('div[slot="label"] slot[name="label"]');
+    expect(labelSlot.assignedNodes()[0].textContent.trim()).to.equal('Counter Group Label');
+  });
+
+  it('renders the correct help text in the dropdown helpText slot', async () => {
+    const el = await fixture(html`
+            <auro-counter-group isDropdown>
+                <span slot="helpText">Help Text</span>
+                <auro-counter value="2">counter1</auro-counter>
+                <auro-counter value="3">counter2</auro-counter>
+            </auro-counter-group>
+        `);
+
+    await elementUpdated(el);
+
+    const helpTextSlot = el.shadowRoot.querySelector('div[slot="helpText"] slot[name="helpText"]');
+    expect(helpTextSlot.assignedNodes()[0].textContent.trim()).to.equal('Help Text');
+  });
+
+});
+
