@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.27](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.26...v2.0.0-beta.27) (2025-01-29)
+
+
+### Bug Fixes
+
+* update config index with exports [#283](https://github.com/AlaskaAirlines/auro-formkit/issues/283) ([35af251](https://github.com/AlaskaAirlines/auro-formkit/commit/35af251bfbcbc7cc0d74c56c9f0ef35f6afbb50d))
+* update postinstall script to use reliable dependency path ([fa0607f](https://github.com/AlaskaAirlines/auro-formkit/commit/fa0607faea8a5bab9c78f4d0ee82bc05864eb2b0))
+
 # [2.0.0-beta.26](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.25...v2.0.0-beta.26) (2025-01-28)
 
 
