@@ -246,7 +246,11 @@ export class AuroCounterGroup extends LitElement {
     return html`
     ${this.isDropdown
       ? html`<${this.dropdownTag} common chevron>
-        <div slot="trigger">${this.total}<slot name="placeholder"></slot></div>
+        <div slot="trigger"><slot name="valueText">
+          ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.shadowRoot.querySelector('.label slot').assignedNodes()[0].textContent}${index !== this.counters.length - 1 ? ', ' : ''}`)}
+        </slot></div>
+        <div slot="label"><slot name="label"></slot></div>
+        <div slot="helpText"><slot name="helpText"></slot></div>
         <auro-counter-wrapper isInDropdown>
         </auro-counter-wrapper>
       </${this.dropdownTag}>

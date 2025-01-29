@@ -17,12 +17,10 @@
   display: block;
 }
 
-[slot="trigger"] {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--ds-size-100, $ds-size-100);
-    
+[slot="trigger"], ::slotted([slot="valueText"]) {
+  display: block;
+  overflow: auto;
+  text-overflow: ellipsis;
 }
 
 [auro-dropdown] {
