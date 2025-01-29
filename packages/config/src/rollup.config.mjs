@@ -1,31 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import serve from 'rollup-plugin-serve';
-
-const production = !process.env.ROLLUP_WATCH;
-
-const createConfig = (input, output) => ({
-  input,
-  output: {
-    format: 'esm',
-    dir: output,
-    entryFileNames: '[name].js'
-  },
-  plugins: [
-    nodeResolve({
-      browser: true,
-      dedupe: ['lit', 'lit-element', 'lit-html'],
-      preferBuiltins: false,
-      moduleDirectories: ['node_modules']
-    }),
-    !production &&
-      serve({
-        open: true,
-        openPage: '/docs/'
-      })
-  ]
-});
-
-const mainConfig = createConfig('./src/index.js', 'dist');
+import mainRollupConfig from './main.rollup.config.mjs';
 
 function createExampleConfig(entryPoint) {
   return {
@@ -39,4 +13,5 @@ function createExampleConfig(entryPoint) {
     plugins: [nodeResolve()],
   };
 }
-export default [mainConfig, createExampleConfig('index'), createExampleConfig('api')];
+
+export default [...mainRollupConfig, createExampleConfig('index'), createExampleConfig('api')];
