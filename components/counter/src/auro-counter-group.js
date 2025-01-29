@@ -28,6 +28,9 @@ import './auro-counter-wrapper.js';
  * @element auro-counter-group
  * @extends LitElement
  * @slot Default - Slot for counter elements.
+ * @slot Label - Dropdown label content. Only used when `isDropdown` is true.
+ * @slot ValueText - Dropdown value text display. Only used when `isDropdown` is true.
+ * @slot HelpText - Dropdown help text content. Only used when `isDropdown` is true.
  */
 export class AuroCounterGroup extends LitElement {
   constructor() {

@@ -59,6 +59,9 @@
 
 ## Slots
 
-| Name      | Description                |
-|-----------|----------------------------|
-| `Default` | Slot for counter elements. |
+| Name        | Description                                      |
+|-------------|--------------------------------------------------|
+| `Default`   | Slot for counter elements.                       |
+| `HelpText`  | Dropdown help text content. Only used when `isDropdown` is true. |
+| `Label`     | Dropdown label content. Only used when `isDropdown` is true. |
+| `ValueText` | Dropdown value text display. Only used when `isDropdown` is true. |
