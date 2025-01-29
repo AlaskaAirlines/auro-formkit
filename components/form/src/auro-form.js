@@ -149,6 +149,22 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Getter for internal _submitElements.
+   * @returns {HTMLButtonElement[]}
+   */
+  get submitElements() {
+    return this._submitelements;
+  }
+
+  /**
+   * Getter for internal _resetElements.
+   * @returns {HTMLButtonElement[]}
+   */
+  get resetElements() {
+    return this._resetElements;
+  }
+
+  /**
    * Infer validity status based on current formState.
    * @private
    */
@@ -299,7 +315,11 @@ export class AuroForm extends LitElement {
     this.setDisabledStateOnButtons();
   }
 
+  /**
+   * Reset fires an event called `reset` - just as you would expect from a normal form.
+   */
   reset() {
+    const previousValue = this.value;
     this._elements.forEach((element) => element.reset());
 
     this.updateComplete.then(() => {
@@ -311,16 +331,20 @@ export class AuroForm extends LitElement {
       // Wait for the above changes to run through, then disable submit/reset
       this.updateComplete.then(() => {
         this.setDisabledStateOnButtons();
+
+        this.dispatchEvent(new CustomEvent('reset', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            previousValue
+          }
+        }));
       });
     });
   }
 
   /**
    * Submit fires an event called `submit` - just as you would expect from a normal form.
-   *
-   * @example ```
-   * const form = document.querySelector('auro-
-   * ```
    */
   submit() {
     // Steps required to get out of beta:
