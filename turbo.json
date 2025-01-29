@@ -26,7 +26,9 @@
     },
     "@aurodesignsystem/auro-checkbox#build": {
       "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build"
+        "@aurodesignsystem/auro-helptext#build",
+        "postCss:component",
+        "sass:render"
       ]
     },
     "@aurodesignsystem/auro-combobox#build": {
@@ -47,17 +49,23 @@
     },
     "@aurodesignsystem/auro-dropdown#build": {
       "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build"
+        "@aurodesignsystem/auro-helptext#build",
+        "postCss:component",
+        "sass:render"
       ]
     },
     "@aurodesignsystem/auro-input#build": {
       "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build"
+        "@aurodesignsystem/auro-helptext#build",
+        "postCss:component",
+        "sass:render"
       ]
     },
     "@aurodesignsystem/auro-radio#build": {
       "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build"
+        "@aurodesignsystem/auro-helptext#build",
+        "postCss:component",
+        "sass:render"
       ]
     },
     "@aurodesignsystem/auro-select#build": {
