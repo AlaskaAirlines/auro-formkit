@@ -7,11 +7,6 @@
 
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 
-
-:host([error]) {
-  --ds-auro-helptext-color: var(--ds-color-text-error-default, #{$ds-color-text-error-default});
-}
-
 .helptext-wrapper {
   display: none;
   margin-top: var(--ds-size-50, $ds-size-50);
