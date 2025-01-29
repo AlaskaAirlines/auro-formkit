@@ -33,7 +33,7 @@
     "test:watch": "turbo run test:watch",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "postinstall": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postinstall.mjs",
+    "postinstall": "node ./packages/build-tools/src/postinstall.mjs",
     "build:docs": "turbo run build:docs",
     "build:docs:kit": "node ./packages/build-tools/src/kitDocProcessor.mjs",
     "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
