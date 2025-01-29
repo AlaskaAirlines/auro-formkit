@@ -429,11 +429,11 @@ export class AuroRadioGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <auro-helptext part="helpText">
+          <auro-helptext large part="helpText">
             <slot name="helpText"></slot>
           </auro-helptext>`
         : html`
-          <auro-helptext role="alert" error aria-live="assertive" part="helpText">
+          <auro-helptext large role="alert" error aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </auro-helptext>`
       }

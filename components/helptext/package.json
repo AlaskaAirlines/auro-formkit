@@ -41,11 +41,12 @@
     "access": "public"
   },
   "scripts": {
-    "build": "run-s build:sass bundler types",
+    "build": "run-s sass bundler types",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
     "bundler": "rollup -c node:@auro-formkit/config/main.rollup",
     "clean": "rm -rf dist build",
+    "sass": "run-s build:sass sass:render",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7709",

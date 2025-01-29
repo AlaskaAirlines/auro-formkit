@@ -357,11 +357,11 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <auro-helptext part="helpText">
+          <auro-helptext large part="helpText">
             <slot name="helpText"></slot>
           </auro-helptext>`
         : html`
-          <auro-helptext error role="alert" aria-live="assertive" part="helpText">
+          <auro-helptext error large role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </auro-helptext>`
       }
