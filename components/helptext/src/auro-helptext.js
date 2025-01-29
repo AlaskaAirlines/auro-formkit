@@ -13,6 +13,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 /**
  * Displays help text or error messages within form elements - Internal Use Only.
+ *
+ * @attr { Boolean } large - If declared, make font-size to 1rem(16px).
  */
 export class AuroHelpText extends LitElement {
 
