@@ -1,17 +1,18 @@
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
 import { LitElement, html } from "lit";
 
+import colorCss from "./styles/color-css.js";
 import styleCss from "./styles/style-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * Displays help text or error messages within form elements - Internal Use Only
+ * Displays help text or error messages within form elements - Internal Use Only.
  */
 export class AuroHelpText extends LitElement {
 
@@ -24,6 +25,7 @@ export class AuroHelpText extends LitElement {
 
   static get styles() {
     return [
+      colorCss,
       styleCss,
       tokensCss
     ];
@@ -48,7 +50,7 @@ export class AuroHelpText extends LitElement {
       },
 
       /**
-       * If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
+       * If declared, make font color red.
        */
       error: {
         type: Boolean,
