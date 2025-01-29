@@ -12,6 +12,7 @@
     "url": "https://github.com/AlaskaAirlines/auro-radio"
   },
   "dependencies": {
+    "@aurodesignsystem/auro-helptext": "*",
     "chalk": "^5.3.0",
     "focus-visible": "^5.2.1",
     "lit": "^3.2.1"
