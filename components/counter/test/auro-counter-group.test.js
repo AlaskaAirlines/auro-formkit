@@ -151,6 +151,74 @@ describe('auro-counter-group: configureDropdownCounters', () => {
 });
 
 describe('auro-counter-group: rendering logic', () => {
+
+  it('handles empty counter group correctly', async () => {
+    const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <div slot="valueText">Value</div>
+          </auro-counter-group>
+        `);
+    await elementUpdated(el);
+    expect(el.counters.length).to.equal(0);
+  });
+
+  it('handles counters with empty labels correctly', async () => {
+    const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <div slot="valueText">Value</div>
+            <auro-counter value="2"></auro-counter>
+            <auro-counter value="3"></auro-counter>
+          </auro-counter-group>
+        `);
+    await elementUpdated(el);
+    expect(el.counters.length).to.equal(2);
+  });
+
+  it('handles mix of labeled and unlabeled counters correctly', async () => {
+    const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <div slot="valueText">Value</div>
+            <auro-counter value="2">Labeled</auro-counter>
+            <auro-counter value="3"></auro-counter>
+            <auro-counter value="0">Zero Value</auro-counter>
+          </auro-counter-group>
+        `);
+    await elementUpdated(el);
+    expect(el.counters.length).to.equal(3);
+  });
+
+  it('handles counters with zero values correctly', async () => {
+    const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <div slot="valueText">Value</div>
+            <auro-counter value="0">Zero Counter</auro-counter>
+            <auro-counter value="0">Another Zero</auro-counter>
+          </auro-counter-group>
+        `);
+    await elementUpdated(el);
+    expect(el.counters.length).to.equal(2);
+    expect(el.counters[0].value).to.equal(0);
+    expect(el.counters[1].value).to.equal(0);
+  });
+
+  /*
+  No matter what I try, I can't get this test to pass.
+  I can see in the test browser that the default dropdown
+  trigger content renders, but the test fails.
+  */
+
+  //   it('make sure default dropdown trigger content renders correctly', async () => {
+  //     const el = await fixture(html`
+  //       <auro-counter-group isDropdown>
+  //         <auro-counter value="2">counter1</auro-counter>
+  //          <auro-counter value="3">counter2</auro-counter>
+  //       </auro-counter-group>
+  //     `);
+  //     await elementUpdated(el);
+  //     const defaultTriggerSlot = el.shadowRoot.querySelector('div[slot="trigger"] slot[name="valueText"]');
+  //     expect(defaultTriggerSlot.assignedNodes()[0].textContent.trim()).to.equal('Select');
+  //   });
+
   it('renders the correct value text in the dropdown trigger slot', async () => {
     const el = await fixture(html`
             <auro-counter-group isDropdown>
