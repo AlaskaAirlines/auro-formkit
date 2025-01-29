@@ -18,12 +18,12 @@ export default {
     include: ['src/**/*.js'],
     exclude: ['**/node_modules/**'],
     // Disabled until form and counter have full test coverage
-    // threshold: {
-    //   statements: 70,
-    //   branches: 70,
-    //   functions: 70,
-    //   lines: 70
-    // }
+    threshold: {
+      statements: 70,
+      branches: 70,
+      functions: 70,
+      lines: 70
+    }
   },
   testRunnerHtml: (testFramework) => `<html>
       <head>
