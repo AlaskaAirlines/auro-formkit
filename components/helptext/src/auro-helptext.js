@@ -82,26 +82,38 @@ export class AuroHelpText extends LitElement {
       this.slotNodes = event.target.assignedNodes();
     }
 
-    if (this.slotNodes) {
-      this.hasTextContent = this.slotNodes.some((slot) => {
-        if (slot.textContent.trim()) {
-          return true;
-        }
+    this.hasTextContent = this.checkSlotsForContent(this.slotNodes);
+  }
 
-        if (!slot.querySelector) {
-          return false;
-        }
-
-        const nestedSlot = slot.tagName === 'SLOT' ? slot : slot.querySelector('slot');
-        if (!nestedSlot) {
-          return false;
-        }
-        const nestedSlotNodes = nestedSlot.assignedNodes();
-        return nestedSlotNodes.some((ss) => Boolean(ss.textContent.trim()));
-      });
-    } else {
-      this.hasTextContent = false;
+  /**
+   * Checks if any of the provided nodes or their nested slot nodes contain non-empty text content.
+   *
+   * @param {NodeList|Array} nodes - The list of nodes to check for content.
+   * @returns {boolean} - Returns true if any node or nested slot node contains non-empty text content, otherwise false.
+   * @private
+   */
+  checkSlotsForContent(nodes) {
+    if (!nodes) {
+      return false;
     }
+
+    return nodes.some((node) => {
+      if (node.textContent.trim()) {
+        return true;
+      }
+
+      if (!node.querySelector) {
+        return false;
+      }
+
+      const nestedSlot = node.tagName === 'SLOT' ? node : node.querySelector('slot');
+      if (!nestedSlot) {
+        return false;
+      }
+
+      const nestedSlotNodes = nestedSlot.assignedNodes();
+      return this.checkSlotsForContent(nestedSlotNodes);
+    });
   }
 
   // function that renders the HTML and CSS into  the scope of the component
