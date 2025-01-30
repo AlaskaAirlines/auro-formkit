@@ -9,7 +9,7 @@
     ".": "./src/index.js",
     "./commitlint": "./src/commitlint.config.js",
     "./eslint": "./src/eslint.config.mjs",
-    "./main.rollup": "./src/main.rollup.config.mjs",
+    "./internal.rollup": "./src/internal.rollup.config.mjs",
     "./rollup": "./src/rollup.config.mjs",
     "./stylelint": "./src/stylelintrc.config.json",
     "./wtr": "./src/web-test-runner.config.mjs"
