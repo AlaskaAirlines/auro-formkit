@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.30](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.29...v2.0.0-beta.30) (2025-01-30)
+
+
+### Bug Fixes
+
+* check deep nested slots with recusive function ([6ab4435](https://github.com/AlaskaAirlines/auro-formkit/commit/6ab4435c155e75f1075963484d14c5d9db9ea326))
+
+
+### Features
+
+* enhance dropdown rendering with value, label, and help text slots [#250](https://github.com/AlaskaAirlines/auro-formkit/issues/250) ([7a14d3e](https://github.com/AlaskaAirlines/auro-formkit/commit/7a14d3eef033ea33ce5ae85da766df6224ae3a0a))
+
 # [2.0.0-beta.29](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.28...v2.0.0-beta.29) (2025-01-30)
 
 
