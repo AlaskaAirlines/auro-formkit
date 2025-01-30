@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions, no-undef, no-magic-numbers, arrow-parens */
 
-import { fixture, html, expect } from '@open-wc/testing';
+import { fixture, html, expect, assert } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-counter: increment', () => {
@@ -82,5 +82,21 @@ describe('auro-counter: isIncrementDisabled', () => {
   it('returns true when value is equal to max', async () => {
     const el = await fixture(html`<auro-counter value="10" max="10"></auro-counter>`);
     expect(el.isIncrementDisabled(el.max)).to.be.true;
+  });
+});
+
+describe('auro-counter: accessibility tests', () => {
+  const ignoredRules = {
+    ignoredRules: ['color-contrast'],
+  };
+
+  it('is accessible', async () => {
+    const el = await fixture(html`<auro-counter value="5" min="0" max="10">Counter</auro-counter>`);
+    await assert.isAccessible(el, ignoredRules);
+  });
+
+  it('is accessible when disabled', async () => {
+    const el = await fixture(html`<auro-counter value="5" min="0" max="10" disabled>Counter</auro-counter>`);
+    await assert.isAccessible(el, ignoredRules);
   });
 });

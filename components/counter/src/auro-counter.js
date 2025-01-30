@@ -271,12 +271,13 @@ export class AuroCounter extends LitElement {
     return html`
       <div class="counter">
         <div class="content" >
-          <label class="label"><slot></slot></label>
+          <label id="counter-label" class="label"><slot></slot></label>
           <slot name="description"></slot>
         </div>
         
-        <div part="counterControl">
+        <div part="counterControl" aria-labelledby="counter-label">
           <auro-counter-button
+          arialabel="Decrement"
           part="controlMinus"
           @click="${() => this.decrement()}"
           ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
@@ -289,6 +290,7 @@ export class AuroCounter extends LitElement {
           </div>
 
           <auro-counter-button
+          arialabel="Increment"
           part="controlPlus"
           @click="${() => this.increment()}"
           ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"

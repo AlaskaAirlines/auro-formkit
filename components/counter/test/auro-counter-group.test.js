@@ -1,6 +1,6 @@
-/* eslint-disable no-undef, no-magic-numbers */
+/* eslint-disable no-undef, no-magic-numbers, max-lines */
 
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, assert } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-counter-group: configureCounters', () => {
@@ -249,3 +249,33 @@ describe('auro-counter-group: rendering logic', () => {
 
 });
 
+describe('auro-counter-group: accessibility tests', () => {
+  const ignoredRules = {
+    ignoredRules: ['color-contrast'],
+  };
+
+  it('auro-counter-group passes accessibility test', async () => {
+    const el = await fixture(html`
+      <auro-counter-group>
+        <auro-counter value="2"></auro-counter>
+        <auro-counter value="3"></auro-counter>
+      </auro-counter-group>
+    `);
+
+    await assert.isAccessible(el, ignoredRules);
+  });
+
+  it('auro-counter-group with dropdown passes accessibility test', async () => {
+    const el = await fixture(html`
+      <auro-counter-group isDropdown>
+        <span slot="label">Counter Group Label</span>
+        <span slot="helpText">Help Text</span>
+        <auro-counter value="2"></auro-counter>
+        <auro-counter value="3"></auro-counter>
+      </auro-counter-group>
+    `);
+
+    await assert.isAccessible(el, ignoredRules);
+  });
+
+});
