@@ -14,6 +14,7 @@
   "dependencies": {
     "@alaskaairux/icons": "^4.44.1",
     "@aurodesignsystem/auro-button": "^8.2.1",
+    "@aurodesignsystem/auro-dropdown": "*",
     "chalk": "^5.2.0",
     "lit": "^3.2.1"
   },
