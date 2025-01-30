@@ -1,5 +1,23 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.28](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.27...v2.0.0-beta.28) (2025-01-30)
+
+
+### Bug Fixes
+
+* breaking builds in gh actions ([1046717](https://github.com/AlaskaAirlines/auro-formkit/commit/1046717c08d67fbde9966e5b583ff0adef9a4853))
+* handle early input and validity ([6df5c6d](https://github.com/AlaskaAirlines/auro-formkit/commit/6df5c6d9f038f308263ed310455c3e6f62dba992))
+
+
+### Features
+
+* expose `reset` event and a couple internal states ([c72379b](https://github.com/AlaskaAirlines/auro-formkit/commit/c72379b02ba3e9eb830303786c60e6621e22707b))
+
+
+### Performance Improvements
+
+* rebase package lock ([385eeb6](https://github.com/AlaskaAirlines/auro-formkit/commit/385eeb6424a44307741c7833f235ed08e5ea974e))
+
 # [2.0.0-beta.27](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.26...v2.0.0-beta.27) (2025-01-29)
 
 
