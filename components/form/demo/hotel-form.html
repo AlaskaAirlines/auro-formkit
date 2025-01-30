@@ -105,21 +105,22 @@
       </div>
 
       <div class="borealis-hotel-booking-form-item">
-        <auro-counter-group isDropdown required>
-          <div slot="placeholder">Rooms, Guests</div>
-          <auro-counter min="1">
+        <auro-counter-group isDropdown required id="counter">
+          <div slot="label">Rooms, Guests</div>
+          <div slot="valueText"></div>
+          <auro-counter min="1" name="room">
             Rooms
             <span slot="description">
               Total rooms
             </span>
           </auro-counter>
-          <auro-counter min="1">
+          <auro-counter min="1" name="adult">
             Adults Per Room
             <span slot="description">
               Ages 18 and older
             </span>
           </auro-counter>
-          <auro-counter>
+          <auro-counter name="child">
             Children Per Room
             <span slot="description">
               Ages 0-17
@@ -144,42 +145,76 @@
   import {dynamicMenuExample} from "./dynamicMenu.js";
 
   let initCount = 0;
-  try {
-    dynamicMenuExample();
-  } catch(error) {
-    if (initCount++ <= 20) {
-      setTimeout(dynamicMenuExample, 100);
+  const form = document.querySelector('auro-form');
+
+  function initCombobox() {
+    try {
+      dynamicMenuExample();
+    } catch(error) {
+      if (initCount++ <= 20) {
+        setTimeout(dynamicMenuExample, 100);
+      }
     }
   }
 
-  const form = document.querySelector('auro-form');
-  form.addEventListener('submit', (event) => {
-    console.log(event)
+  function initSelector() {
+    const selector = document.querySelector('#mode-selector');
+    selector.value = ['default'];
+    selector.addEventListener("auroSelect-valueSet", (event) => {
+      switch(event.target.value[0]) {
+        case 'narrow':
+          form.setAttribute('narrow', '');
+          form.removeAttribute('wide');
+          break;
+        case 'wide':
+          form.setAttribute('wide', '');
+          form.removeAttribute('narrow');
+          break;
+        case 'default':
+        default:
+          form.removeAttribute('narrow');
+          form.removeAttribute('wide');
+          break;
+      }
+      console.log(event.target.value);
+    });
 
-    console.log(event.target.value)
-  });
+  }
 
-  const selector = document.querySelector('#mode-selector');
-  selector.value = ['default'];
-  selector.addEventListener("auroSelect-valueSet", (event) => {
-    switch(event.target.value[0]) {
-      case 'narrow':
-        form.setAttribute('narrow', '');
-        form.removeAttribute('wide');
-        break;
-      case 'wide':
-        form.setAttribute('wide', '');
-        form.removeAttribute('narrow');
-        break;
-      case 'default':
-      default:
-        form.removeAttribute('narrow');
-        form.removeAttribute('wide');
-        break;
+  function initForm() {
+    // form
+    form.addEventListener('submit', (event) => {
+      console.log(event)
+
+      console.log(event.target.value)
+    });
+    
+    // counter
+    const counter = form.querySelector("#counter");
+    const valueTextSlot = counter.querySelector("[slot='valueText']");
+
+    function updateCounterText({ room, adult, child }) {
+      let valueText = `${room} Rooms, ${adult} Adults`;
+      if (child >= 1) {
+        valueText+= `, ${child} Children`;
+      }
+      console.log(valueText);
+      valueTextSlot.textContent = valueText;
+      console.log(valueTextSlot);
+
     }
-    console.log(event.target.value);
-  });
-  
+    counter.addEventListener('input', (event) => {
+      updateCounterText(event.detail.value);
+    });
+
+    updateCounterText({ room: 1, adult: 1 });
+
+
+    initCombobox();
+  }
+
+  initSelector();
+  initForm();
 </script>
 
 <!-- If additional elements are needed for the demo, add them here. -->
