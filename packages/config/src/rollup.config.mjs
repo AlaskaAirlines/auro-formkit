@@ -1,5 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import mainRollupConfig from './main.rollup.config.mjs';
+import componentRollupConfig from './internal.rollup.config.mjs';
 
 function createExampleConfig(entryPoint) {
   return {
@@ -14,4 +14,4 @@ function createExampleConfig(entryPoint) {
   };
 }
 
-export default [...mainRollupConfig, createExampleConfig('index'), createExampleConfig('api')];
+export default [...componentRollupConfig, createExampleConfig('index'), createExampleConfig('api')];
