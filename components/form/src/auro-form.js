@@ -77,7 +77,11 @@ export class AuroForm extends LitElement {
       'auro-input',
       'auro-select',
       'auro-datepicker',
+      // checkbox and radio are grouped elements
       'auro-checkbox-group',
+      'auro-radio-group',
+      // while counter is groupable, the group is for min/max values and not for grouped values
+      'auro-counter',
     ];
   }
 
@@ -271,7 +275,7 @@ export class AuroForm extends LitElement {
     }
 
     this.formState[targetName] = {
-      value: element.getAttribute('value'),
+      value: element.value || element.getAttribute('value'),
       validity: element.validity || null,
       required: element.hasAttribute('required'),
       // element
