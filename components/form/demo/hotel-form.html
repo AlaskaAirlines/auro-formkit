@@ -85,49 +85,43 @@
   </auro-select>
   <auro-form id="borealis-hotel-booking-form">
     <div id="borealis-hotel-booking-form-container">
-      <div class="borealis-hotel-booking-form-item">
-        <auro-combobox id="dynamicMenuExample" name="cityAirport" noFilter required>
-          <span slot="label">City, airport, or landmark</span>
-          <!--
-            The auro-combobox element requires an empty auro-menu element
-            due to the requirements of auro-dropdown and auro-input
-          -->
-          <auro-menu id="initMenu"></auro-menu>
-        </auro-combobox>
-      </div>
-
-      <div class="borealis-hotel-booking-form-item">
-        <auro-datepicker name="dateRange" range required>
-          <span slot="fromLabel">Check in</span>
-          <span slot="toLabel">Check out</span>
-          <span slot="mobileDateLabel">Roundtrip</span>
-        </auro-datepicker>
-      </div>
-
-      <div class="borealis-hotel-booking-form-item">
-        <auro-counter-group isDropdown required id="counter">
-          <div slot="label">Rooms, Guests</div>
-          <div slot="valueText"></div>
-          <auro-counter min="1" name="room">
-            Rooms
-            <span slot="description">
-              Total rooms
-            </span>
-          </auro-counter>
-          <auro-counter min="1" name="adult">
-            Adults Per Room
-            <span slot="description">
-              Ages 18 and older
-            </span>
-          </auro-counter>
-          <auro-counter name="child">
-            Children Per Room
-            <span slot="description">
-              Ages 0-17
-            </span>
-          </auro-counter>
-        </auro-counter-group>
-      </div>
+      <auro-combobox id="dynamicMenuExample" class="borealis-hotel-booking-form-item" name="cityAirport" noFilter required>
+        <span slot="label">City, airport, or landmark</span>
+        <!--
+          The auro-combobox element requires an empty auro-menu element
+          due to the requirements of auro-dropdown and auro-input
+        -->
+        <auro-menu id="initMenu"></auro-menu>
+      </auro-combobox>
+      
+      <auro-datepicker class="borealis-hotel-booking-form-item" name="dateRange" range required>
+        <span slot="fromLabel">Check in</span>
+        <span slot="toLabel">Check out</span>
+        <span slot="mobileDateLabel">Roundtrip</span>
+      </auro-datepicker>
+      
+      <auro-counter-group class="borealis-hotel-booking-form-item" isDropdown required id="counter">
+        <div slot="label">Rooms, Guests</div>
+        <div slot="valueText"></div>
+        <auro-counter min="1" name="room">
+          Rooms
+          <span slot="description">
+            Total rooms
+          </span>
+        </auro-counter>
+        <auro-counter min="1" name="adult">
+          Adults Per Room
+          <span slot="description">
+            Ages 18 and older
+          </span>
+        </auro-counter>
+        <auro-counter name="child">
+          Children Per Room
+          <span slot="description">
+            Ages 0-17
+          </span>
+        </auro-counter>
+      </auro-counter-group>
 
       <auro-button type="submit" fluid>
         Search hotels
@@ -146,6 +140,35 @@
 
   let initCount = 0;
   const form = document.querySelector('auro-form');
+  const counter = form.querySelector("#counter");
+  const valueTextSlot = counter.querySelector("[slot='valueText']");
+
+  function wordifyCount(count, word) {
+    if (count > 1) {
+      if (word === 'Child') {
+        return `${count} Chilren`;
+      }
+      return `${count} ${word}s`;
+    }
+    return `${count} ${word}`;
+  }
+  function updateCounterText({ room, adult, child }) {
+    const shorten = form.hasAttribute('narrow');
+    let valueText = wordifyCount(room, 'Room') + ', ';
+    if (shorten) {
+      if (child >= 1) {
+        valueText += wordifyCount((adult + child) * room, 'Guest')
+      } else {
+        valueText += wordifyCount(adult * room, 'Adult');
+      }
+    } else {
+      valueText += wordifyCount(adult * room, 'Adult');
+      if (child >= 1) {
+        valueText+= ', ' + wordifyCount(child * room, 'Child');
+      }
+    }
+    valueTextSlot.textContent = valueText;
+  }
 
   function initCombobox() {
     try {
@@ -176,7 +199,7 @@
           form.removeAttribute('wide');
           break;
       }
-      console.log(event.target.value);
+      updateCounterText(counter.value);
     });
 
   }
@@ -190,19 +213,6 @@
     });
     
     // counter
-    const counter = form.querySelector("#counter");
-    const valueTextSlot = counter.querySelector("[slot='valueText']");
-
-    function updateCounterText({ room, adult, child }) {
-      let valueText = `${room} Rooms, ${adult} Adults`;
-      if (child >= 1) {
-        valueText+= `, ${child} Children`;
-      }
-      console.log(valueText);
-      valueTextSlot.textContent = valueText;
-      console.log(valueTextSlot);
-
-    }
     counter.addEventListener('input', (event) => {
       updateCounterText(event.detail.value);
     });
