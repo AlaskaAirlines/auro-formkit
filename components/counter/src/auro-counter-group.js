@@ -250,7 +250,7 @@ export class AuroCounterGroup extends LitElement {
     ${this.isDropdown
       ? html`<${this.dropdownTag} common chevron>
         <div slot="trigger"><slot name="valueText">
-          ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.shadowRoot.querySelector('.label slot').assignedNodes()[0].textContent}${index !== this.counters.length - 1 ? ', ' : ''}`)}
+          ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
         </slot></div>
         <div slot="label"><slot name="label"></slot></div>
         <div slot="helpText"><slot name="helpText"></slot></div>

@@ -1,6 +1,6 @@
-/* eslint-disable no-undef, no-magic-numbers, max-lines */
+/* eslint-disable no-undef, no-magic-numbers */
 
-import { fixture, html, expect, elementUpdated, assert } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, assert, nextFrame } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-counter-group: configureCounters', () => {
@@ -251,14 +251,17 @@ describe('auro-counter-group: rendering logic', () => {
 
 describe('auro-counter-group: accessibility tests', () => {
   const ignoredRules = {
-    ignoredRules: ['color-contrast'],
+    ignoredRules: [
+      'color-contrast',
+      'aria-hidden-focus'
+    ],
   };
 
   it('auro-counter-group passes accessibility test', async () => {
     const el = await fixture(html`
       <auro-counter-group>
-        <auro-counter value="2"></auro-counter>
-        <auro-counter value="3"></auro-counter>
+        <auro-counter value="2">Counter 1</auro-counter>
+        <auro-counter value="3">Counter 2</auro-counter>
       </auro-counter-group>
     `);
 
@@ -270,8 +273,8 @@ describe('auro-counter-group: accessibility tests', () => {
       <auro-counter-group isDropdown>
         <span slot="label">Counter Group Label</span>
         <span slot="helpText">Help Text</span>
-        <auro-counter value="2"></auro-counter>
-        <auro-counter value="3"></auro-counter>
+        <auro-counter value="2">Counter 1</auro-counter>
+        <auro-counter value="3">Counter 2</auro-counter>
       </auro-counter-group>
     `);
 

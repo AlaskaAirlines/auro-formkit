@@ -22,13 +22,18 @@
   }
 }
   
-
 .controlIcon {
   color: var(--ds-auro-counter-icon-color-default);
 }
 
 .quantityWrapper {
   background-color: var(--ds-auro-counter-control-ui-bkg);
+}
+
+::part(counterControl) {
+  &:focus-visible {
+    outline-color: var(--ds-auro-counter-control-border-active);
+  }
 }
 
 [disabled], :host([disabled]) {

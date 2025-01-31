@@ -21,4 +21,5 @@
   --ds-auro-counter-control-ui-bkg: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
   --ds-auro-counter-control-line-height: var(--ds-text-body-size-sm, #{$ds-text-body-size-sm});
   --ds-auro-counter-icon-color-default: var(--ds-color-ui-default-default, #{$ds-color-ui-default-default});
+  --ds-auro-counter-control-border-active: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
 }
