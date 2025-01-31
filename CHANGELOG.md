@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.31](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.30...v2.0.0-beta.31) (2025-01-31)
+
+
+### Bug Fixes
+
+* add margin only when the slotted node has contents [#271](https://github.com/AlaskaAirlines/auro-formkit/issues/271) ([7ef1ef8](https://github.com/AlaskaAirlines/auro-formkit/commit/7ef1ef8b38b2be55a0b6fef22cb4dbc7c789e31d))
+
 # [2.0.0-beta.30](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.29...v2.0.0-beta.30) (2025-01-30)
 
 
