@@ -90,7 +90,7 @@ In cases where the project is not able to process JS assets, there are pre-proce
 <!-- The below content is automatically added from ../../docs/templates/componentBundleUseModBrowsers.md -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@4.9.2/dist/tokens/CSSCustomProperties.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@5.1.2/dist/bundled/essentials.css" />
-<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-radio@2.0.0-beta.29/dist/auro-radio__bundled.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-radio@2.0.0-beta.30/dist/auro-radio__bundled.js" type="module"></script>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## auro-radio use cases
