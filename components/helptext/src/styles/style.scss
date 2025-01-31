@@ -9,8 +9,6 @@
 
 .helptext-wrapper {
   display: none;
-  margin-top: var(--ds-size-50, $ds-size-50);
-  margin-bottom: 0;
   font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
   line-height: var(--ds-size-200, $ds-size-200);
 }
@@ -23,6 +21,11 @@
 
 .helptext-wrapper[visible] {
   display: block;
+}
+
+::slotted(*:not(:empty)) {
+  margin-top: var(--ds-size-50, $ds-size-50);
+  margin-bottom: 0;
 }
 
 ::slotted(p) {
