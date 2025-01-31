@@ -37,6 +37,7 @@ export class AuroCounter extends LitElement {
   constructor() {
     super();
 
+    this.defaultSlot = undefined;
     this.disabled = false;
     this.disableMax = false;
     this.disableMin = false;
@@ -70,6 +71,15 @@ export class AuroCounter extends LitElement {
    */
   static get properties() {
     return {
+
+      /**
+       * The default slot content.
+       * @type {string}
+       * @private
+       */
+      defaultSlot: {
+        type: String,
+      },
 
       /**
        * Indicates if the counter is disabled.
@@ -153,7 +163,7 @@ export class AuroCounter extends LitElement {
    * @returns {void}
    */
   increment(value) {
-    if (this.disabled) {
+    if (this.disabled || this.disableMax || this.value >= this.max) {
       return;
     }
 
@@ -167,7 +177,7 @@ export class AuroCounter extends LitElement {
    * @returns {void}
    */
   decrement(value) {
-    if (this.disabled) {
+    if (this.disabled || this.disableMin || this.value <= this.min) {
       return;
     }
 
@@ -206,19 +216,6 @@ export class AuroCounter extends LitElement {
   }
 
   /**
-   * Moves the focus to the first enabled button within the shadow DOM.
-   * This method searches for the first `auro-counter-button` element that is not disabled
-   * and sets the focus on it.
-   * @private
-   */
-  jumpFocusToEnabled() {
-    const button = this.shadowRoot.querySelector("auro-counter-button:not([disabled])");
-    if (button && button instanceof HTMLButtonElement) {
-      button.focus();
-    }
-  }
-
-  /**
    * Validates value.
    * @param {boolean} [force=false] - Whether to force validation.
    */
@@ -226,9 +223,54 @@ export class AuroCounter extends LitElement {
     this.validation.validate(this, force);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('keydown', this.handleKeyDown);
+    super.disconnectedCallback();
+  }
+
+  /**
+   * Handles the keydown event for the counter component.
+   * @param {KeyboardEvent} event - The keyboard event object.
+   * @returns {void}
+   * @private
+   */
+  handleKeyDown(event) {
+    if (this.disabled) {
+      return;
+    }
+
+    switch (event.key) {
+      case 'ArrowUp':
+        event.preventDefault();
+        this.increment();
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        this.decrement();
+        break;
+      default:
+        break;
+    }
+  }
 
   firstUpdated() {
     this.initValue();
+  }
+
+  /**
+   * Handles the change event for the default slot.
+   * Updates the defaultSlot property with the trimmed text content of the first assigned node.
+   *
+   * @param {Event} event - The event object representing the slot change event.
+   * @private
+   */
+  onDefaultSlotChange(event) {
+    this.defaultSlot = event.target.assignedNodes()[0].textContent.trim();
   }
 
   updated(changedProperties) {
@@ -245,39 +287,21 @@ export class AuroCounter extends LitElement {
           composable: true,
         }
       );
-
-      if (
-        this.value === this.max ||
-        this.value === this.min ||
-        changedProperties.get("disableMax") ||
-        changedProperties.get("disableMin")
-      ) {
-        this.jumpFocusToEnabled();
-      }
     }
-    /* eslint-disable no-extra-parens */
-    if (
-      (changedProperties.has("disableMax") &&
-        changedProperties.get("disableMax") !== undefined) ||
-      (changedProperties.has("disableMin") &&
-        changedProperties.get("disableMin") !== undefined)
-    ) {
-      this.jumpFocusToEnabled();
-    }
-    /* eslint-enable no-extra-parens */
   }
 
   render() {
     return html`
       <div class="counter">
         <div class="content" >
-          <label id="counter-label" class="label"><slot></slot></label>
-          <slot name="description"></slot>
+          <label id="counter-label" class="label"><slot @slotchange="${this.onDefaultSlotChange}" ></slot></label>
+          <slot id="counter-description" name="description"></slot>
         </div>
-        
-        <div part="counterControl" aria-labelledby="counter-label">
+        <div part="counterControl" aria-labelledby="counter-label" aria-describedby="counter-description" tabindex="${this.disabled ? '-1' : '0'}" role="spinbutton" aria-valuemin="${this.min}" aria-valuemax="${this.max}" aria-valuenow="${this.value}">
           <auro-counter-button
-          arialabel="Decrement"
+          aria-hidden="true"
+          iconOnly
+          tabindex="-1"
           part="controlMinus"
           @click="${() => this.decrement()}"
           ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
@@ -290,7 +314,9 @@ export class AuroCounter extends LitElement {
           </div>
 
           <auro-counter-button
-          arialabel="Increment"
+          aria-hidden="true"
+          iconOnly
+          tabindex="-1"
           part="controlPlus"
           @click="${() => this.increment()}"
           ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"

@@ -73,9 +73,7 @@ slot {
 
   &:focus-visible {
     &:not(&:disabled) {
-        outline-offset: 0;
-        outline-style: solid;
-        outline-width: var(--ds-size-25, $ds-size-25);
+        outline: none;
         transform: unset;
     }
   }

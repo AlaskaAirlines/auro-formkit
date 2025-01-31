@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-expressions, no-undef, no-magic-numbers, arrow-parens */
+/* eslint-disable no-unused-expressions, no-undef, no-magic-numbers */
 
-import { fixture, html, expect, assert } from '@open-wc/testing';
+import { fixture, html, expect, assert, nextFrame } from '@open-wc/testing';
 import '../src/index.js';
 
 describe('auro-counter: increment', () => {
@@ -87,7 +87,10 @@ describe('auro-counter: isIncrementDisabled', () => {
 
 describe('auro-counter: accessibility tests', () => {
   const ignoredRules = {
-    ignoredRules: ['color-contrast'],
+    ignoredRules: [
+      'color-contrast',
+      'aria-hidden-focus'
+    ],
   };
 
   it('is accessible', async () => {

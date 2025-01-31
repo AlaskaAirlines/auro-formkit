@@ -13,12 +13,6 @@
   color: var(--ds-auro-button-text-color);
   -webkit-tap-highlight-color: var(--ds-auro-button-tap-color);
 
-  &:focus-visible {
-    &:not(&:disabled) {
-      outline-color: var(--ds-auro-counter-control-border-active);
-    }
-  }
-
   @media (hover: hover) {
     &:active, &:hover{
       &:not(:disabled) {

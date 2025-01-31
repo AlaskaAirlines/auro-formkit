@@ -44,7 +44,14 @@
 
   &::part(counterControl) {
     display: flex;
+    border-radius: var(--ds-size-500, $ds-size-500);
     line-height: 0;
+
+    &:focus-visible {
+      outline-offset: 0;
+      outline-style: solid;
+      outline-width: var(--ds-size-25, $ds-size-25);
+    }
   }
 
   &::part(controlMinus) {
