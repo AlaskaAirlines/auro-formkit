@@ -77,6 +77,7 @@ export class AuroForm extends LitElement {
       'auro-input',
       'auro-select',
       'auro-datepicker',
+      'auro-combobox',
       // checkbox and radio are grouped elements
       'auro-checkbox-group',
       'auro-radio-group',

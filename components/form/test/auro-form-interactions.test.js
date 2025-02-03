@@ -145,4 +145,34 @@ describe('auro-form', () => {
       await expect(form.value.testGroup).to.equal('yes');
     });
   });
+
+  describe('when an auro-combobox is present', () => {
+    const componentTemplate = html`
+      <auro-form>
+        <auro-combobox name="comboTest">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+            <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+            <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+            <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+            <auro-menuoption static nomatch>No matching option</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      </auro-form>
+    `;
+
+    useSharedTestBehavior('auro-combobox', componentTemplate);
+
+    it('should store combobox value as a string array', async () => {
+      const form = await fixture(componentTemplate);
+      const [combobox] = form._elements;
+
+      combobox.input.value = 'Oranges';
+
+      await elementUpdated(form);
+      await expect(form.value.comboTest).to.deep.equal(['Oranges']);
+    });
+  });
 });
