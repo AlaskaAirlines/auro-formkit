@@ -602,7 +602,7 @@ export class AuroCombobox extends LitElement {
     });
 
     this.addEventListener('focusin', () => {
-      this.focus();
+      this.forceInputFocus();
     });
   }
 
@@ -650,6 +650,20 @@ export class AuroCombobox extends LitElement {
    */
   focus() {
     this.input.focus();
+  }
+
+  /**
+   * Forces focus into HTML5 input
+   * @private
+   * @returns {void}
+   */
+  forceInputFocus() {
+    this.focus();
+
+    if (this.input.value) {
+      // Highlights the text in the datepicker when user tabs into it
+      this.input.inputElement.setSelectionRange(0, this.input.value.length);
+    }
   }
 
   /**
