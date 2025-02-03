@@ -372,6 +372,20 @@ export class AuroDatePicker extends LitElement {
     this.range && focusInput === 'endDate' ? this.inputList[1].focus() : this.inputList[0].focus();
   }
 
+  /**
+   * Forces focus into HTML5 input
+   * @private
+   * @returns {void}
+   */
+  forceInputFocus() {
+    // Always force focus into the first input
+    this.focus();
+
+    if (this.value) {
+      // Highlights the text in the datepicker when user tabs into it
+      this.inputList[0].inputElement.setSelectionRange(0, this.value.length);
+    }
+  }
 
   /**
    * Converts valid time number to format used by wc-date-range API.
@@ -614,6 +628,8 @@ export class AuroDatePicker extends LitElement {
       if (this.valueEnd === undefined) {
         this.valueEnd = '';
       }
+
+      this.forceInputFocus();
     });
 
     this.addEventListener('focusout', (evt) => {
