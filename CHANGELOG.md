@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.32](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.31...v2.0.0-beta.32) (2025-02-04)
+
+
+### Bug Fixes
+
+* styling for mobile Datepicker ([7c43db9](https://github.com/AlaskaAirlines/auro-formkit/commit/7c43db9a4aff2903911bd726e244290f437f0ce5))
+* update container query per design spec ([5509027](https://github.com/AlaskaAirlines/auro-formkit/commit/55090272a8cedc847292edb53924bc316fe58075))
+
 # [2.0.0-beta.31](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.30...v2.0.0-beta.31) (2025-01-31)
 
 
