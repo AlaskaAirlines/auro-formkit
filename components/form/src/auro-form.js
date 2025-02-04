@@ -119,6 +119,18 @@ export class AuroForm extends LitElement {
     return this._isInElementCollection(AuroForm.formElementTags, element);
   }
 
+  /**
+   * Validates if an event is from a valid form element with a name.
+   * @param {Event} event - The event to validate.
+   * @returns {boolean} - True if event is valid for processing.
+   * @private
+   */
+  _eventIsValidFormEvent(event) {
+    const targetName = event.target.getAttribute("name");
+    return this.isFormElement(event.target) && targetName;
+  }
+
+
   static get buttonElementTags() {
     return [
       'button',
@@ -394,7 +406,7 @@ export class AuroForm extends LitElement {
     const targetName = event.target.getAttribute("name");
 
     // This should only happen if some bubble-up event is fired from inside a form element.
-    if (!this.isFormElement(event.target) || !targetName) {
+    if (!this._eventIsValidFormEvent(event)) {
       return;
     }
 
@@ -419,7 +431,7 @@ export class AuroForm extends LitElement {
    */
   sharedValidationListener(event) {
     const targetName = event.target.getAttribute("name");
-    if (!this.isFormElement(event.target) || !targetName) {
+    if (!this._eventIsValidFormEvent(event)) {
       return;
     }
 
@@ -466,7 +478,8 @@ export class AuroForm extends LitElement {
 
   onSlotChange() {
     this.initializeState();
-    // this._attachEventListeners();
+    // Safe to call as we remove and re-add event listeners
+    this._attachEventListeners();
   }
 
   // function that renders the HTML and CSS into the scope of the component
