@@ -175,4 +175,30 @@ describe('auro-form', () => {
       await expect(form.value.comboTest).to.deep.equal(['Oranges']);
     });
   });
+
+  describe('when an auro-counter-group is present', () => {
+    const componentTemplate = html`
+      <auro-form>
+        <auro-counter-group name="someCounterGroup" isDropdown>
+          <auro-counter name="shortLabel">
+            Short label
+          </auro-counter>
+        </auro-counter-group>
+      </auro-form>
+    `;
+
+    useSharedTestBehavior('auro-counter-group', componentTemplate);
+
+    it('should store counter value as a number', async () => {
+      const form = await fixture(componentTemplate);
+      const [counterGroup] = form._elements;
+      const someNumber = 5;
+
+      counterGroup.counters[0].increment(someNumber);
+
+      await elementUpdated(counterGroup);
+      await elementUpdated(form);
+      await expect(form.value.someCounterGroup).to.deep.equal({ shortLabel: someNumber });
+    });
+  });
 });
