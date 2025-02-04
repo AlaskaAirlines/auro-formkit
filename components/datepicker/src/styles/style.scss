@@ -64,7 +64,7 @@
 /* This value is per design but relates to 
    https://github.com/AlaskaAirlines/AuroDesignTokens/issues/206
 */
-@container outerwrapper (min-width: 490px) {
+@container outerwrapper (min-width: 390px) {
   .dpTriggerContent {
     flex-direction: row;
   }
