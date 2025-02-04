@@ -279,7 +279,10 @@ export class AuroCounter extends LitElement {
    * @private
    */
   onDefaultSlotChange(event) {
-    this.defaultSlot = event.target.assignedNodes()[0].textContent.trim();
+    const assignedNodes = event.target.assignedNodes();
+    if (assignedNodes.length > 0) {
+      this.defaultSlot = assignedNodes[0].textContent.trim();
+    }
   }
 
   updated(changedProperties) {
