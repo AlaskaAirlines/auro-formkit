@@ -68,6 +68,8 @@ export class AuroForm extends LitElement {
     // Bind listeners
     this.reset = this.reset.bind(this);
     this.submit = this.submit.bind(this);
+    this.sharedInputListener = this.sharedInputListener.bind(this);
+    this.sharedValidationListener = this.sharedValidationListener.bind(this);
   }
 
   // Note: button is NOT considered a form element in this context
@@ -82,7 +84,7 @@ export class AuroForm extends LitElement {
       'auro-checkbox-group',
       'auro-radio-group',
       // while counter is groupable, the group is for min/max values and not for grouped values
-      'auro-counter',
+      'auro-counter-group'
     ];
   }
 
@@ -384,46 +386,67 @@ export class AuroForm extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroForm);
   }
 
+  /**
+   * Shared input listener for all form elements.
+   * @param {Event} event - The event that is fired from the form element.
+   */
+  sharedInputListener(event) {
+    const targetName = event.target.getAttribute("name");
+
+    // This should only happen if some bubble-up event is fired from inside a form element.
+    if (!this.isFormElement(event.target) || !targetName) {
+      return;
+    }
+
+    // Occasionally, a form element will emit their event before the form can read data about the form element.
+    if (!this.formState[targetName] && this.isFormElement(event.target)) {
+      this._addElementToState(event.target);
+    }
+
+    // Check special input types and handle their edge cases
+    if (this._isElementTag('auro-datepicker', event.target) && event.target.hasAttribute('range')) {
+      this.formState[targetName].value = event.target.values;
+      this.requestUpdate('formState');
+    } else {
+      this.formState[targetName].value = event.target.value;
+      this.requestUpdate('formState');
+    }
+  }
+
+  /**
+   * Shared validation listener for all form elements.
+   * @param {Event} event - The event that is fired from the form element.
+   */
+  sharedValidationListener(event) {
+    const targetName = event.target.getAttribute("name");
+    if (!this.isFormElement(event.target) || !targetName) {
+      return;
+    }
+
+    if (!this.formState[targetName]) {
+      this._addElementToState(event.target);
+    }
+
+    this.formState[targetName].validity = event.detail.validity;
+    this._calculateValidity();
+  }
+
+  _attachEventListeners() {
+    this.queryAuroElements().forEach((element) => {
+      // remove any existing event listeners (in case of re-initialization)
+      element.removeEventListener('input', this.sharedInputListener);
+      element.removeEventListener('auroFormElement-validated', this.sharedValidationListener);
+
+      // add new event listeners
+      element.addEventListener('input', this.sharedInputListener);
+      element.addEventListener('auroFormElement-validated', this.sharedValidationListener);
+    });
+  }
+
   firstUpdated(_changedProperties) {
     super.firstUpdated(_changedProperties);
 
-    const slot = this.shadowRoot.querySelector('slot');
-
-    // Update the form state when a form element is detected
-    slot.addEventListener('input', (event) => {
-      const targetName = event.target.getAttribute("name");
-      if (!this.isFormElement(event.target) || !targetName) {
-        return;
-      }
-
-      // Occasionally, a form element will emit their event before the form can read data about the form element.
-      if (!this.formState[targetName] && this.isFormElement(event.target)) {
-        this._addElementToState(event.target);
-      }
-
-      // Check special input types and handle their edge cases
-      if (this._isElementTag('auro-datepicker', event.target) && event.target.hasAttribute('range')) {
-        this.formState[targetName].value = event.target.values;
-        this.requestUpdate('formState');
-      } else {
-        this.formState[targetName].value = event.target.value;
-        this.requestUpdate('formState');
-      }
-    });
-
-    slot.addEventListener('auroFormElement-validated', (event) => {
-      const targetName = event.target.getAttribute("name");
-      if (!this.isFormElement(event.target) || !targetName) {
-        return;
-      }
-
-      if (!this.formState[targetName]) {
-        this._addElementToState(event.target);
-      }
-
-      this.formState[targetName].validity = event.detail.validity;
-      this._calculateValidity();
-    });
+    this._attachEventListeners();
   }
 
   updated(_changedProperties) {
@@ -443,6 +466,7 @@ export class AuroForm extends LitElement {
 
   onSlotChange() {
     this.initializeState();
+    // this._attachEventListeners();
   }
 
   // function that renders the HTML and CSS into the scope of the component

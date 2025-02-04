@@ -11,16 +11,18 @@ The auro-form element provides users a way to ... (it would be great if you fill
 
 ## Properties
 
-| Property         | Modifiers | Type                                             | Default | Description                                      |
-|------------------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
-| `formState`      |           | `FormState`                                      | {}      |                                                  |
-| `isInitialState` | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
-| `reset`          |           |                                                  |         |                                                  |
-| `resetElements`  | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _resetElements.              |
-| `submit`         |           |                                                  |         |                                                  |
-| `submitElements` | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _submitElements.             |
-| `validity`       | readonly  | `"valid" \| "invalid"`                           |         | Current validity state of the form, based on form element events. |
-| `value`          | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` |         | Reduce the form value into a key-value pair.<br /><br />NOTE: form keys use `name` first, and `id` second if `name` is not available.<br />This follows standard HTML5 form behavior - submission uses `name` by default when creating<br />the FormData object. |
+| Property                   | Modifiers | Type                                             | Default | Description                                      |
+|----------------------------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
+| `formState`                |           | `FormState`                                      | {}      |                                                  |
+| `isInitialState`           | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
+| `reset`                    |           |                                                  |         |                                                  |
+| `resetElements`            | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _resetElements.              |
+| `sharedInputListener`      |           |                                                  |         |                                                  |
+| `sharedValidationListener` |           |                                                  |         |                                                  |
+| `submit`                   |           |                                                  |         |                                                  |
+| `submitElements`           | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _submitElements.             |
+| `validity`                 | readonly  | `"valid" \| "invalid"`                           |         | Current validity state of the form, based on form element events. |
+| `value`                    | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` |         | Reduce the form value into a key-value pair.<br /><br />NOTE: form keys use `name` first, and `id` second if `name` is not available.<br />This follows standard HTML5 form behavior - submission uses `name` by default when creating<br />the FormData object. |
 
 ## Methods
 
@@ -33,6 +35,8 @@ The auro-form element provides users a way to ... (it would be great if you fill
 | `queryAuroElements`         | `(): NodeList`                    | Construct the query strings from elements, append them together, execute, and return the NodeList. |
 | `reset`                     | `(): void`                        | Reset fires an event called `reset` - just as you would expect from a normal form. |
 | `setDisabledStateOnButtons` | `(): void`                        |                                                  |
+| `sharedInputListener`       | `(event: Event): void`            | Shared input listener for all form elements.<br /><br />**event**: The event that is fired from the form element. |
+| `sharedValidationListener`  | `(event: Event): void`            | Shared validation listener for all form elements.<br /><br />**event**: The event that is fired from the form element. |
 | `submit`                    | `(): void`                        | Submit fires an event called `submit` - just as you would expect from a normal form. |
 
 ## Events
