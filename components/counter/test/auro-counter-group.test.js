@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, no-magic-numbers */
+/* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
 import { fixture, html, expect, elementUpdated, assert, nextFrame } from '@open-wc/testing';
 import '../src/index.js';
@@ -281,4 +281,97 @@ describe('auro-counter-group: accessibility tests', () => {
     await assert.isAccessible(el, ignoredRules);
   });
 
+});
+
+describe('auro-counter-group: keyboard navigation', () => {
+  it('should increment/decrement values with arrow keys', async () => {
+    const el = await fixture(html`
+      <auro-counter-group isDropdown>
+        <auro-counter value="2">Counter 1</auro-counter>
+        <auro-counter value="3">Counter 2</auro-counter>
+      </auro-counter-group>
+    `);
+
+    // Open dropdown
+    el.dropdown.show();
+    await elementUpdated(el);
+
+    const [firstCounter] = el.counters;
+    firstCounter.focus();
+
+    // Test arrow up
+    firstCounter.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await elementUpdated(el);
+    expect(firstCounter.value).to.equal(3);
+
+    // Test arrow down
+    firstCounter.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(firstCounter.value).to.equal(2);
+  });
+
+  it('should cycle focus through interactive elements with tab', async () => {
+    const el = await fixture(html`
+      <auro-counter-group isDropdown>
+        <auro-counter value="2">Counter 1</auro-counter>
+        <auro-counter value="3">Counter 2</auro-counter>
+      </auro-counter-group>
+    `);
+
+    // Ensure dropdown is fully rendered
+    el.dropdown.show();
+    await elementUpdated(el);
+
+    // Verify counters exist
+    expect(el.counters.length).to.equal(2);
+
+    // Focus first counter and verify
+    const firstCounter = el.counters[0];
+    const secondCounter = el.counters[1];
+    firstCounter.focus();
+    await elementUpdated(el);
+    expect(document.activeElement).to.equal(firstCounter);
+
+    // Tab to second counter
+    const tabEvent = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      bubbles: true,
+      cancelable: true
+    });
+    firstCounter.dispatchEvent(tabEvent);
+    await elementUpdated(el);
+    expect(document.activeElement).to.equal(secondCounter);
+
+    // Shift+Tab back to first counter
+    const shiftTabEvent = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true
+    });
+    secondCounter.dispatchEvent(shiftTabEvent);
+    await elementUpdated(el);
+    expect(document.activeElement).to.equal(firstCounter);
+  });
+
+  it('should close dropdown when pressing Escape', async () => {
+    const el = await fixture(html`
+      <auro-counter-group isDropdown>
+        <auro-counter value="2">Counter 1</auro-counter>
+        <auro-counter value="3">Counter 2</auro-counter>
+      </auro-counter-group>
+    `);
+
+    // Open dropdown
+    el.dropdown.show();
+    await elementUpdated(el);
+    await nextFrame();
+    expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    // Press Escape
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await elementUpdated(el);
+    await nextFrame();
+    expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
 });
