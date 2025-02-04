@@ -63,6 +63,15 @@ export class AuroCounter extends LitElement {
      * @type {string}
      */
     this.iconTag = versioning.generateTag("auro-icon", iconVersion, AuroIcon);
+
+    /**
+     * @private
+     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
+     */
+    this.constructor.shadowRootOptions = {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
   }
 
   /**

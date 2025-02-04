@@ -3,8 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions,
-arrow-body-style, no-extra-parens, block-spacing, brace-style, curly, template-curly-spacing, no-underscore-dangle */
+/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions, template-curly-spacing */
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
@@ -46,6 +45,15 @@ export class AuroDropdown extends LitElement {
     this.noHideOnThisFocusLoss = false;
 
     this.privateDefaults();
+
+    /**
+     * @private
+     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
+     */
+    this.constructor.shadowRootOptions = {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
   }
 
   /**
@@ -368,7 +376,7 @@ export class AuroDropdown extends LitElement {
    *
    * @private
    * @method handleTriggerContentSlotChange
-   * @param {Event} event - native slotchange event
+   * @param {Event} event - Native slotchange event.
    * @returns {void}
    */
   handleTriggerContentSlotChange(event) {
