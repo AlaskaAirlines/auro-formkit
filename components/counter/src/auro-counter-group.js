@@ -133,6 +133,9 @@ export class AuroCounterGroup extends LitElement {
    * @param {NodeList} counters - The list of counter elements.
    */
   trapKeyboard(event, counters) {
+    if (!this.dropdown.isPopoverVisible) {
+      return;
+    }
 
     event.stopPropagation();
     event.preventDefault();
