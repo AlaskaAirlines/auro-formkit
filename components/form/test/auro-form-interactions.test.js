@@ -189,7 +189,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-counter-group', componentTemplate);
 
-    it('should store counter value as a number', async () => {
+    it('should store counter group value as an object', async () => {
       const form = await fixture(componentTemplate);
       const [counterGroup] = form._elements;
       const someNumber = 5;
