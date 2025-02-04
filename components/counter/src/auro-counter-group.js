@@ -1,4 +1,4 @@
-/* eslint-disable lit/no-invalid-html, lit/binding-positions */
+/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, prefer-destructuring, no-underscore-dangle, no-lonely-if */
 
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -37,7 +37,6 @@ export class AuroCounterGroup extends LitElement {
     super();
 
     this.isDropdown = false;
-
     this.max = undefined;
     this.min = undefined;
     this.total = undefined;
@@ -48,6 +47,11 @@ export class AuroCounterGroup extends LitElement {
      * @private
      */
     this.counters = undefined;
+
+    /**
+     * @private
+     */
+    this.dropdown = undefined;
 
     /**
      * @private
@@ -123,6 +127,50 @@ export class AuroCounterGroup extends LitElement {
   }
 
   /**
+   * Traps keyboard tab interactions within dropdown when open.
+   * @private
+   * @param {KeyboardEvent} event - The keyboard event.
+   * @param {NodeList} counters - The list of counter elements.
+   */
+  trapKeyboard(event, counters) {
+
+    event.stopPropagation();
+    event.preventDefault();
+
+    const firstFocusable = counters[0];
+    const lastFocusable = counters[counters.length - 1];
+
+    if (event.key === 'Enter') {
+      firstFocusable.focus();
+    }
+
+    if (event.key === 'Escape') {
+      this.dropdown.hide();
+    }
+
+    if (event.key === 'Tab' && event.target.offsetParent.id === 'bib') {
+      this.dropdown.noHideOnThisFocusLoss = true;
+
+      const currentIndex = Array.from(counters).indexOf(document.activeElement);
+
+      if (event.shiftKey) {
+        if (currentIndex === 0) {
+          lastFocusable.focus();
+        } else {
+          counters[currentIndex - 1].focus();
+        }
+      } else {
+        if (currentIndex === counters.length - 1) {
+          firstFocusable.focus();
+        } else {
+          counters[currentIndex + 1].focus();
+        }
+      }
+
+    }
+  }
+
+  /**
    * Dynamically disables increment/decrement buttons on a counter based on group value.
    * This method checks the total aggregated value against the group's min and max properties.
    * If the total value is at or below the minimum, the counter's decrement button is disabled; if at or above the maximum, the increment button is disabled.
@@ -155,12 +203,21 @@ export class AuroCounterGroup extends LitElement {
   }
 
   /**
-   * Configures the dropdown counters by selecting all `auro-counter` elements
-   * and appending them to the `auro-counter-wrapper` element within the shadow DOM.
-   * Adds an event listener to each counter to update the value on input.
+   * Configures the dropdown counters by selecting all `auro-counter` elements,
+   * appending them to the `auro-counter-wrapper` element within the shadow DOM,
+   * and setting up keyboard navigation and input event listeners.
    * @private
    */
   configureDropdownCounters() {
+    this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+    this.dropdown.addEventListener('keydown', (event) => this.trapKeyboard(event, this.counters, 'dropdown'));
+
+    this.addEventListener('auroDropdown-toggled', () => {
+      if (!this.dropdown.isPopoverVisible) {
+        this.dropdown.focus();
+      }
+    });
+
     const counterWrapper = this.shadowRoot.querySelector('auro-counter-wrapper');
     this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
 
@@ -169,6 +226,15 @@ export class AuroCounterGroup extends LitElement {
     });
 
     this.counters = counterWrapper.querySelectorAll("auro-counter, [auro-counter]");
+
+    if (this.keydownHandler) {
+      counterWrapper.removeEventListener('keydown', this.keydownHandler);
+    }
+    this.keydownHandler = (keydownEvent) => {
+      this.trapKeyboard(keydownEvent, this.counters);
+    };
+    counterWrapper.addEventListener('keydown', this.keydownHandler);
+
     this.counters.forEach((counter) => {
       counter.addEventListener("input", () => this.updateValue());
     });
