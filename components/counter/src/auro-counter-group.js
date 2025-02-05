@@ -1,4 +1,4 @@
-/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, prefer-destructuring, no-underscore-dangle, no-lonely-if */
+/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, prefer-destructuring, no-underscore-dangle */
 
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -162,12 +162,10 @@ export class AuroCounterGroup extends LitElement {
         } else {
           counters[currentIndex - 1].focus();
         }
+      } else if (currentIndex === counters.length - 1) {
+        firstFocusable.focus();
       } else {
-        if (currentIndex === counters.length - 1) {
-          firstFocusable.focus();
-        } else {
-          counters[currentIndex + 1].focus();
-        }
+        counters[currentIndex + 1].focus();
       }
 
     }
