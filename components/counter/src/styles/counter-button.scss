@@ -54,6 +54,9 @@ slot {
   gap: var(--ds-size-100, $ds-size-100);
   line-height: unset;
 
+  // prevent double-tap zoom on iOS (included in counterControl for disabled state behaving differently)
+  touch-action: manipulation;
+
   // macOS / iOS agents
   -webkit-touch-callout: none;
   user-select: none;

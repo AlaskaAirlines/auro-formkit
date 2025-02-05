@@ -30,7 +30,7 @@
   background-color: var(--ds-auro-counter-control-ui-bkg);
 }
 
-::part(counterControl) {
+:host::part(counterControl) {
   &:focus-visible {
     outline-color: var(--ds-auro-counter-control-border-active);
   }
