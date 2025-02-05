@@ -414,7 +414,7 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    await expect(el.valueEnd).to.equal('');
+    await expect(el.valueEnd).to.equal(undefined);
   });
 
   it('hides the prev month button when viewing the first available month', async () => {

@@ -73,7 +73,6 @@ describe('auro-dropdown', () => {
 
     const triggerEl = el.shadowRoot.querySelector('.trigger');
     expect(triggerEl).to.have.attribute('aria-labelledby', 'triggerLabel');
-    expect(triggerEl).to.have.attribute('aria-controls', 'popover');
   });
 
   it('auro-dropdown shows only with click when using noToggle attribute', async () => {

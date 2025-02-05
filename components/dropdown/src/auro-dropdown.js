@@ -32,7 +32,6 @@ import './auro-dropdownBib.js';
  * @csspart trigger - The trigger content container.
  * @csspart chevron - The collapsed/expanded state icon container.
  * @csspart helpText - The helpText content container.
- * @csspart popover - The bib content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
  */
@@ -509,7 +508,6 @@ export class AuroDropdown extends LitElement {
           class="trigger"
           part="trigger"
           aria-labelledby="triggerLabel"
-          aria-controls="popover"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
           >

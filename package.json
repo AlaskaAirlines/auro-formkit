@@ -41,7 +41,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-library": "^3.0.7"
+    "@aurodesignsystem/auro-library": "^3.0.8"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"
