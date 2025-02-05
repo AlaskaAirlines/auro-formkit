@@ -47,6 +47,9 @@
     border-radius: var(--ds-size-500, $ds-size-500);
     line-height: 0;
 
+    // prevent double-tap zoom on iOS (included in button for enabled state behaving differently)
+    touch-action: manipulation;
+
     &:focus-visible {
       outline-offset: 0;
       outline-style: solid;
