@@ -19,7 +19,7 @@
 
 [slot="trigger"], ::slotted([slot="valueText"]) {
   display: block;
-  overflow: auto;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
