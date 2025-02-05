@@ -74,6 +74,16 @@ export class AuroCounter extends LitElement {
     };
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('keydown', this.handleKeyDown);
+    super.disconnectedCallback();
+  }
+
   /**
    * Defines reactive properties for the component.
    * @returns {Object} Property configuration.
@@ -230,16 +240,6 @@ export class AuroCounter extends LitElement {
    */
   validate(force = false) {
     this.validation.validate(this, force);
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.addEventListener('keydown', this.handleKeyDown);
-  }
-
-  disconnectedCallback() {
-    this.removeEventListener('keydown', this.handleKeyDown);
-    super.disconnectedCallback();
   }
 
   /**
