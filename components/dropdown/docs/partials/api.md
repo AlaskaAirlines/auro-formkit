@@ -279,9 +279,21 @@ On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` wil
 
 ### Slot Examples
 
-#### trigger & default
+#### default
 
-All examples shown on this page include default and `trigger` slot content.
+All examples shown on this page include default slot content.
+
+#### trigger
+
+Content defined in the `trigger` slot will be rendered in the clickable trigger of the dropdown that is used to display the bib. Focus state visual effects will be disabled on the trigger when it contains a focusable element other than `<auro-input>`.
+
+This slot may contain any static content (e.g. plain text) and/or no more than one of the following elements:
+- `<a>`
+- `<auro-hyperlink>`
+- `<button>`
+- `<auro-button>`
+- `<input>`
+- `<auro-input>`
 
 #### label
 

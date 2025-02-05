@@ -44,8 +44,14 @@
   position: relative;
   display: flex;
   align-items: center;
-  border-width: 1px;
-  border-style: solid;
+
+  &[showBorder] {
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    outline-style: solid;
+    outline-width: 1px;
+  }
 }
 
 @media (hover: hover) {

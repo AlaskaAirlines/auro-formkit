@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions, template-curly-spacing */
+/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
@@ -368,6 +368,64 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Determines if the element or any children are focusable.
+   * @private
+   * @param {HTMLElement} element - Element to check.
+   * @returns {Boolean} - True if the element or any children are focusable.
+   */
+  containsFocusableElement(element) {
+    this.showTriggerBorders = true;
+
+    const nodes = [
+      element,
+      ...element.children
+    ];
+
+    const focusableElements = [
+      'a',
+      'auro-hyperlink',
+      'button',
+      'auro-button',
+      'input',
+      'auro-input',
+    ];
+
+    const focusableElementsThatNeedBorders = ['auro-input'];
+
+    const result = nodes.some((node) => {
+      const tagName = node.tagName.toLowerCase();
+
+      if (node.tabIndex > -1) {
+        return true;
+      }
+
+      if (focusableElements.includes(tagName)) {
+        if ((tagName === 'a' || tagName === 'auro-hyperlink' || node.hasAttribute('auro-hyperlink')) && node.hasAttribute('href')) {
+          return true;
+        }
+        if (!node.hasAttribute('disabled')) {
+          return true;
+        }
+      }
+
+      if (focusableElements.some((focusableElement) => focusableElement.startsWith('auro-') && (focusableElement === tagName || node.hasAttribute(focusableElement)))) {
+        return true;
+      }
+
+      return false;
+    });
+
+    if (result) {
+      this.showTriggerBorders = !nodes.some((node) => {
+        const tagName = node.tagName.toLowerCase();
+        return focusableElements.includes(tagName) && !focusableElementsThatNeedBorders.includes(tagName);
+      });
+    }
+
+    return result;
+  }
+
+  /**
    * Handles changes to the trigger content slot and updates related properties.
    *
    * It first updates the floater settings
@@ -381,6 +439,24 @@ export class AuroDropdown extends LitElement {
    */
   handleTriggerContentSlotChange(event) {
     this.floater.handleTriggerTabIndex();
+
+    const triggerContentNodes = this.shadowRoot.querySelector('.triggerContent slot').assignedNodes();
+
+    triggerContentNodes.forEach((node) => {
+      if (!this.triggerContentFocusable) {
+        this.triggerContentFocusable = this.containsFocusableElement(node);
+      }
+    });
+
+    const trigger = this.shadowRoot.querySelector('#trigger');
+
+    if (!this.triggerContentFocusable) {
+      trigger.setAttribute('tabindex', '0');
+      trigger.setAttribute('role', 'button');
+    } else {
+      trigger.removeAttribute('tabindex');
+      trigger.removeAttribute('role');
+    }
 
     if (event) {
       this.triggerNode = event.target;
@@ -432,10 +508,10 @@ export class AuroDropdown extends LitElement {
           id="trigger"
           class="trigger"
           part="trigger"
-          role="button"
           aria-labelledby="triggerLabel"
           aria-controls="popover"
           tabindex="${this.tabIndex}"
+          ?showBorder="${this.showTriggerBorders}"
           >
           <div class="triggerContentWrapper">
             <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
