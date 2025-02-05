@@ -365,10 +365,8 @@ describe('auro-counter-group: keyboard navigation', () => {
     // Open dropdown
     el.dropdown.show();
     await elementUpdated(el);
-    await nextFrame();
     expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    // Press Escape
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await elementUpdated(el);
     await nextFrame();
