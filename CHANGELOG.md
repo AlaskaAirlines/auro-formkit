@@ -1,5 +1,26 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.34](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.33...v2.0.0-beta.34) (2025-02-05)
+
+
+### Bug Fixes
+
+* correct event options to use 'bubbles' and 'composed' in AuroCounter and AuroCounterGroup components ([859994c](https://github.com/AlaskaAirlines/auro-formkit/commit/859994ce7abca97622aa82cecd6b30529d0c83f3))
+
+
+### Features
+
+* enhance accessibility and add tests for auro-counter and auro-counter-group components [#195](https://github.com/AlaskaAirlines/auro-formkit/issues/195) ([3d083ed](https://github.com/AlaskaAirlines/auro-formkit/commit/3d083ed7535209e2f26284d265d7e1c338f516ae))
+* enhance keyboard navigation and focus management in dropdown bib with counters [#195](https://github.com/AlaskaAirlines/auro-formkit/issues/195) ([7cfee58](https://github.com/AlaskaAirlines/auro-formkit/commit/7cfee58809007d8e270716a5c39c2092b6609d1e))
+* improve focus styles and screen reader accessibility for counter components [#195](https://github.com/AlaskaAirlines/auro-formkit/issues/195) ([2621e6c](https://github.com/AlaskaAirlines/auro-formkit/commit/2621e6c267cebcca6ef7c9ff109c9890f060d820))
+* prevent keyboard trapping when dropdown is not visible [#195](https://github.com/AlaskaAirlines/auro-formkit/issues/195) ([fdff54f](https://github.com/AlaskaAirlines/auro-formkit/commit/fdff54f6af576c9948e48bdddddf455d8a654cae))
+
+
+### Performance Improvements
+
+* handle empty default slot in AuroCounter component [#195](https://github.com/AlaskaAirlines/auro-formkit/issues/195) ([42be516](https://github.com/AlaskaAirlines/auro-formkit/commit/42be5165f40241e213d0ff07085f7e77345c3af6))
+* simplify focus management logic in AuroCounterGroup component [#195](https://github.com/AlaskaAirlines/auro-formkit/issues/195) ([331813a](https://github.com/AlaskaAirlines/auro-formkit/commit/331813a00f1ab5d8c58076e2880b5b33d8940701))
+
 # [2.0.0-beta.33](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.32...v2.0.0-beta.33) (2025-02-05)
 
 
