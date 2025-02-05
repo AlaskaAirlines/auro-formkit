@@ -369,7 +369,7 @@ describe('auro-counter-group: keyboard navigation', () => {
     expect(el.dropdown.isPopoverVisible).to.be.true;
 
     // Press Escape
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await elementUpdated(el);
     await nextFrame();
     expect(el.dropdown.isPopoverVisible).to.be.false;
