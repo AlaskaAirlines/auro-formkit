@@ -496,7 +496,6 @@ export class AuroDatePicker extends LitElement {
     });
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
-      this.setAttribute('aria-expanded', this.dropdown.isPopoverVisible);
       this.notifyDatepickerToggled();
 
       this.calendar.visible = this.dropdown.isPopoverVisible;
@@ -508,10 +507,6 @@ export class AuroDatePicker extends LitElement {
         }
       }
     });
-
-    if (!this.dropdown.hasAttribute('aria-expanded')) {
-      this.dropdown.setAttribute('aria-expanded', this.dropdown.isPopoverVisible);
-    }
   }
 
   /**
@@ -617,8 +612,6 @@ export class AuroDatePicker extends LitElement {
     });
 
     this.addEventListener('focusout', (evt) => {
-      this.setAttribute('aria-expanded', this.dropdown.isPopoverVisible);
-
       if (!this.noValidate && !evt.detail.expanded && this.inputList[0].value !== undefined) {
         if (!this.contains(document.activeElement)) {
           this.validation.validate(this.inputList[0]);
