@@ -1,5 +1,18 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.33](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.32...v2.0.0-beta.33) (2025-02-05)
+
+
+### Bug Fixes
+
+* form event listeners ([531752b](https://github.com/AlaskaAirlines/auro-formkit/commit/531752b3d6fec481ccebf5e0feef00ef539080c2))
+* **form:** try `.value` first when initializing state keys ([a9c373a](https://github.com/AlaskaAirlines/auro-formkit/commit/a9c373abab1550be0286d3d0df71c1f4373ceaa4))
+
+
+### Features
+
+* make form pickup combobox input ([47aa6fe](https://github.com/AlaskaAirlines/auro-formkit/commit/47aa6fe6be3441678242876cda602a385f2b465d))
+
 # [2.0.0-beta.32](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.31...v2.0.0-beta.32) (2025-02-04)
 
 
