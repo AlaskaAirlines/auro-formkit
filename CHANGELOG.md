@@ -1,5 +1,19 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.36](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.35...v2.0.0-beta.36) (2025-02-05)
+
+
+### Bug Fixes
+
+* address aria violations on datepicker ([09ea460](https://github.com/AlaskaAirlines/auro-formkit/commit/09ea46034c0a7c80576f42a1f51274f1611c26e6))
+* correct trigger behavior based on slot content [#299](https://github.com/AlaskaAirlines/auro-formkit/issues/299) ([2d238f1](https://github.com/AlaskaAirlines/auro-formkit/commit/2d238f13bf7e265c78671dfe483f71392ff3ed5f))
+* remove dropdowns aria-expanded attribute ([dfe0c35](https://github.com/AlaskaAirlines/auro-formkit/commit/dfe0c351463ce54691957b636997d94ff6651faf))
+
+
+### Performance Improvements
+
+* update dependencies and README docs ([84d9727](https://github.com/AlaskaAirlines/auro-formkit/commit/84d9727ada4aec27203c38d5cc3be7e54f55c6a8))
+
 # [2.0.0-beta.35](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.34...v2.0.0-beta.35) (2025-02-05)
 
 
