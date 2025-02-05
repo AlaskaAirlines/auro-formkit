@@ -354,10 +354,6 @@ export class AuroCombobox extends LitElement {
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
     });
-
-    if (!this.dropdown.hasAttribute('aria-expanded')) {
-      this.dropdown.setAttribute('aria-expanded', this.dropdown.isPopoverVisible);
-    }
   }
 
   /**
