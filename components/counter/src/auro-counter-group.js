@@ -294,8 +294,8 @@ export class AuroCounterGroup extends LitElement {
           },
         }),
         {
-          bubble: true,
-          composable: true,
+          bubbles: true,
+          composed: true,
         }
       );
     }
