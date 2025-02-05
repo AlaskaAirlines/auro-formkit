@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.35](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.34...v2.0.0-beta.35) (2025-02-05)
+
+
+### Bug Fixes
+
+* adjust max-height for dropdown trigger in counter-group styles [#289](https://github.com/AlaskaAirlines/auro-formkit/issues/289) ([1aa464a](https://github.com/AlaskaAirlines/auro-formkit/commit/1aa464a3e9d41eba91f1f3f099671a30ab73a2ac))
+* change overflow property to hidden for trigger and valueText slots ([64e9994](https://github.com/AlaskaAirlines/auro-formkit/commit/64e9994f21589edec46e7a8b493bae407a174070))
+
 # [2.0.0-beta.34](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.33...v2.0.0-beta.34) (2025-02-05)
 
 
