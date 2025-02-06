@@ -91,7 +91,7 @@ export class AuroRadioGroup extends LitElement {
         reflect: true
       },
       value: {
-        type: Array
+        type: String
       },
       noValidate: {
         type: Boolean,
@@ -191,6 +191,14 @@ export class AuroRadioGroup extends LitElement {
           el.disabled = this.disabled;
         });
       }
+    }
+
+    if (changedProperties.has('value')) {
+      this.dispatchEvent(new CustomEvent('input', {
+        bubbles: true,
+        cancelable: false,
+        composed: true,
+      }));
     }
 
     if (changedProperties.has('required')) {

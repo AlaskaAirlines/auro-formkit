@@ -1,6 +1,7 @@
 import {AuroInput} from "@aurodesignsystem/auro-input";
 import {AuroDatePicker} from "@aurodesignsystem/auro-datepicker";
 import {AuroCounter, AuroCounterGroup} from "@aurodesignsystem/auro-counter";
+import {AuroRadio, AuroRadioGroup} from "@aurodesignsystem/auro-radio";
 import {AuroCheckbox, AuroCheckboxGroup} from "@aurodesignsystem/auro-checkbox";
 import {AuroCombobox} from "@aurodesignsystem/auro-combobox";
 import {AuroMenu, AuroMenuOption} from "@aurodesignsystem/auro-menu";
@@ -11,6 +12,8 @@ AuroInput.register('auro-input-two');
 AuroDatePicker.register();
 AuroCounter.register();
 AuroCounterGroup.register();
+AuroRadio.register();
+AuroRadioGroup.register();
 AuroCheckbox.register();
 AuroCheckboxGroup.register();
 AuroCombobox.register();
