@@ -504,7 +504,14 @@ export class AuroSelect extends LitElement {
 
       this.validation.validate(this);
 
+      // LEGACY EVENT
       this.dispatchEvent(new CustomEvent('auroSelect-valueSet', {
+        bubbles: true,
+        cancelable: false,
+        composed: true,
+      }));
+
+      this.dispatchEvent(new CustomEvent('input', {
         bubbles: true,
         cancelable: false,
         composed: true,
