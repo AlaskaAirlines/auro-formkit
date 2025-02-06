@@ -247,7 +247,7 @@ describe('auro-form', () => {
       await selectEvent;
       await elementUpdated(form);
 
-      await expect(select.value).to.deep.equal(['Apples']);
+      await expect(form.value.selectExample).to.deep.equal(['Apples']);
     });
   });
 });
