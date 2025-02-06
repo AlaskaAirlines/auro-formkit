@@ -131,16 +131,27 @@ describe('auro-form', () => {
     useSharedTestBehavior('auro-radio-group', componentTemplate);
 
     // DOES NOT WORK. radio group needs to emit an input event!
-    it.skip('should surface radio group values as a string array', async () => {
+    it('should surface radio group value as a string', async () => {
       const form = await fixture(componentTemplate);
       const [radioGroup] = form._elements;
       const [radioOne] = [...form.querySelectorAll('auro-radio')];
+      const radioInput = radioOne.shadowRoot.querySelector('input');
 
-      await elementUpdated(radioGroup);
       await expect(form.value.testGroup).to.equal(null);
 
-      await radioOne.click();
+      const eventPromise = new Promise((resolve) => {
+        radioGroup.addEventListener('input', (event) => {
+          if (event.target.getAttribute('name') === 'testGroup') {
+            resolve(event);
+          }
+        });
+      });
+
+      await radioInput.click();
+
+      await eventPromise;
       await elementUpdated(radioGroup);
+      await elementUpdated(form);
 
       await expect(form.value.testGroup).to.equal('yes');
     });

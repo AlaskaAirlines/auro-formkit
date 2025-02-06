@@ -14,7 +14,7 @@
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
 | `validity`                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `array`   | "undefined" |                                                  |
+| `value`                         | `value`                         | `string`  | "undefined" |                                                  |
 
 ## Methods
 
@@ -25,9 +25,10 @@
 
 ## Events
 
-| Event                       | Description                                   |
-|-----------------------------|-----------------------------------------------|
-| `auroFormElement-validated` | Notifies that the element has been validated. |
+| Event                       | Type               | Description                                   |
+|-----------------------------|--------------------|-----------------------------------------------|
+| `auroFormElement-validated` |                    | Notifies that the element has been validated. |
+| `input`                     | `CustomEvent<any>` |                                               |
 
 ## Slots
 

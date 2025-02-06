@@ -1,5 +1,6 @@
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import '../src/index.js';
+import {value} from "lodash/seq.js";
 
 describe('auro-radio', () => {
   it('auro-radio is accessible', async () => {
@@ -96,7 +97,7 @@ describe('auro-radio', () => {
 
     await expect(radioButtonOne.hasAttribute('checked')).to.be.false;
     await expect(radioButtonTwo.hasAttribute('checked')).to.be.false;
-  
+
     await expect(el.value).to.equal(undefined);
     await expect(el.optionSelected).to.equal(undefined);
     await expect(el.hasAttribute('validity')).to.be.false;
@@ -161,6 +162,44 @@ describe('auro-radio', () => {
 
     await expect(el.optionSelected).to.equal(radioOne);
     await expect(el.value).to.equal('yes');
+  });
+});
+
+describe('auro-radio-group', () => {
+  it('emits an input event when value changes', async () => {
+    const el = await fixture(html`
+      <auro-radio-group name="group">
+        <span slot="legend">Form label goes here</span>
+        <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes"></auro-radio>
+        <auro-radio id="radio2" label="No" name="radioDemo" value="no"></auro-radio>
+        <auro-radio id="radio3" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
+      </auro-radio-group>
+    `);
+
+    const radioGroup = el;
+
+    const eventPromise = new Promise((resolve) => {
+      radioGroup.addEventListener('input', (event) => {
+        // don't resolve until event matches the radio group
+        // two input events are fired:
+        // 1. from the radio button
+        // 2. from the radio group - this is the one we want
+        if (event.target.getAttribute('name') === 'group') {
+          resolve(event);
+        }
+      });
+    });
+
+    const radioOne = el.querySelector('#radio1');
+    const input = radioOne.shadowRoot.querySelector('input');
+
+    input.click();
+
+    const event = await eventPromise;
+
+    await expect(event).to.exist;
+    await expect(event.target).to.equal(radioGroup);
+    await expect(event.target.value).to.equal('yes');
   });
 });
 
