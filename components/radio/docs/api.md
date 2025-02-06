@@ -25,10 +25,10 @@
 
 ## Events
 
-| Event                       | Type               | Description                                   |
-|-----------------------------|--------------------|-----------------------------------------------|
-| `auroFormElement-validated` |                    | Notifies that the element has been validated. |
-| `input`                     | `CustomEvent<any>` |                                               |
+| Event                       | Type               | Description                                      |
+|-----------------------------|--------------------|--------------------------------------------------|
+| `auroFormElement-validated` |                    | Notifies that the element has been validated.    |
+| `input`                     | `CustomEvent<any>` | Notifies every time the value prop of the element is changed. |
 
 ## Slots
 

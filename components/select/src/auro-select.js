@@ -36,6 +36,7 @@ import tokensCss from "./styles/tokens-css.js";
  * @slot helpText - Defines the content of the helpText.
  * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
+ * @event input - Notifies every time the value prop of the element is changed.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  * @csspart helpText - Apply CSS to the help text.
  */

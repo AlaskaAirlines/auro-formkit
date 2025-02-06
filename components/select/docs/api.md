@@ -33,7 +33,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 |-----------------------------|--------------------|--------------------------------------------------|
 | `auroFormElement-validated` |                    | Notifies that the `validity` and `errorMessage` values have changed. |
 | `auroSelect-valueSet`       | `CustomEvent<any>` | Notifies that the component has a new value set. |
-| `input`                     | `CustomEvent<any>` |                                                  |
+| `input`                     | `CustomEvent<any>` | Notifies every time the value prop of the element is changed. |
 
 ## Slots
 
