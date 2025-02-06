@@ -212,6 +212,8 @@ export class AuroCounterGroup extends LitElement {
   configureDropdownCounters() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
     this.dropdown.addEventListener('keydown', (event) => this.trapKeyboard(event, this.counters, 'dropdown'));
+    // notify dropdown to reconfigure as the trigger text is updated
+    this.dropdown.requestUpdate();
 
     this.addEventListener('auroDropdown-toggled', () => {
       if (!this.dropdown.isPopoverVisible) {
