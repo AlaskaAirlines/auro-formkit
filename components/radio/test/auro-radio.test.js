@@ -1,6 +1,5 @@
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import '../src/index.js';
-import {value} from "lodash/seq.js";
 
 describe('auro-radio', () => {
   it('auro-radio is accessible', async () => {
