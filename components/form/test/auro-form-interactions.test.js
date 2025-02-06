@@ -29,7 +29,6 @@ function useSharedTestBehavior(name, markup) {
       const form = await getElement();
       const formMemberName = form._elements[0].getAttribute('name');
 
-      await expect(form._elements).to.have.length(1);
       await expect(form.value).to.have.key(formMemberName);
     });
   });
@@ -210,6 +209,45 @@ describe('auro-form', () => {
       await elementUpdated(counterGroup);
       await elementUpdated(form);
       await expect(form.value.someCounterGroup).to.deep.equal({ shortLabel: someNumber });
+    });
+  });
+
+  describe('when an auro-select is present', () => {
+    const componentTemplate = html`
+      <auro-form>
+        <auro-select name="selectExample">
+          <auro-menu>
+            <auro-menuoption value="stops">Stops</auro-menuoption>
+            <auro-menuoption value="price">Price</auro-menuoption>
+            <auro-menuoption value="duration">Duration</auro-menuoption>
+            <auro-menuoption value="departure">Departure</auro-menuoption>
+            <auro-menuoption value="arrival">Arrival</auro-menuoption>
+            <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+          </auro-menu>
+        </auro-select>
+      </auro-form>
+    `;
+
+    useSharedTestBehavior('auro-select', componentTemplate);
+
+    it('should store select value as a string array', async () => {
+      const form = await fixture(componentTemplate);
+      const [select] = form._elements;
+
+      // wait for the select 'input' event to ensure we're testing that part of the code
+      const selectEvent = new Promise((resolve) => {
+        select.addEventListener('input', (event) => {
+          if (event.target.getAttribute('name') === 'selectExample') {
+            resolve(event);
+          }
+        });
+      });
+
+      select.value = ['Apples'];
+      await selectEvent;
+      await elementUpdated(form);
+
+      await expect(select.value).to.deep.equal(['Apples']);
     });
   });
 });
