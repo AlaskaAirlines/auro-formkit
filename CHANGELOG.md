@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.37](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.36...v2.0.0-beta.37) (2025-02-06)
+
+
+### Performance Improvements
+
+* prevent double-tap zoom on iOS and fix outline style on edge [#212](https://github.com/AlaskaAirlines/auro-formkit/issues/212) ([8401d2b](https://github.com/AlaskaAirlines/auro-formkit/commit/8401d2bcc4228d2ca9c2bea83573aadf695544ef))
+
 # [2.0.0-beta.36](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.35...v2.0.0-beta.36) (2025-02-05)
 
 
