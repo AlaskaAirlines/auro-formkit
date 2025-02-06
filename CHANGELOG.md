@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.38](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.37...v2.0.0-beta.38) (2025-02-06)
+
+
+### Bug Fixes
+
+* render counter dropdown's border and label properly ([58c87fa](https://github.com/AlaskaAirlines/auro-formkit/commit/58c87fae499c7470bae417308e6e6c96f3fc2316))
+
 # [2.0.0-beta.37](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.36...v2.0.0-beta.37) (2025-02-06)
 
 
