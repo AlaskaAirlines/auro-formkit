@@ -197,7 +197,7 @@ export class AuroRadioGroup extends LitElement {
     if (changedProperties.has('value')) {
       this.dispatchEvent(new CustomEvent('input', {
         bubbles: true,
-        cancelable: false,
+        cancelable: true,
         composed: true,
       }));
     }

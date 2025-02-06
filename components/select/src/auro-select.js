@@ -514,7 +514,7 @@ export class AuroSelect extends LitElement {
 
       this.dispatchEvent(new CustomEvent('input', {
         bubbles: true,
-        cancelable: false,
+        cancelable: true,
         composed: true,
       }));
     }
