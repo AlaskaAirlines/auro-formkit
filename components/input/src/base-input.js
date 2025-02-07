@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -13,7 +13,6 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import Cleave from 'cleave.js';
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
@@ -85,14 +84,6 @@ export default class BaseInput extends LitElement {
       "month",
       "year",
       "fullYear"
-    ];
-
-    this.autoFormattingTypes = [
-      'credit-card',
-      'month-day-year',
-      'month-year',
-      'month-fullyear',
-      'year-month-day'
     ];
 
     /**
@@ -390,128 +381,6 @@ export default class BaseInput extends LitElement {
     this.privateDefaults();
 
     notifyOnLangChange(this);
-
-    // Process auto-formatting if defined for CleaveJS
-    if (this.type) {
-      let config = null;
-
-      // Set config for credit card
-      switch (this.type) {
-        case 'number':
-          config = {
-            numeral: true,
-            delimiter: ''
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'credit-card':
-          config = {
-            creditCard: true
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month-day-year':
-          config = {
-            date: true,
-            delimiter: '/',
-            datePattern: [
-              'm',
-              'd',
-              'Y'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'year-month-day':
-          config = {
-            date: true,
-            delimiter: '/',
-            datePattern: [
-              'Y',
-              'm',
-              'd'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month-year':
-          config = {
-            date: true,
-            datePattern: [
-              'm',
-              'y'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month-fullYear':
-          config = {
-            date: true,
-            datePattern: [
-              'm',
-              'Y'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'fullYear':
-          config = {
-            date: true,
-            datePattern: ['Y']
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'year':
-          config = {
-            date: true,
-            datePattern: ['y']
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month':
-          config = {
-            date: true,
-            datePattern: ['m']
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        default:
-          // Do nothing
-      }
-
-      // initialize CleaveJS if we have a defined config for the requested format
-      if (config) {
-        // eslint-disable-next-line no-unused-vars
-        const cleave = new Cleave(this, config);
-      }
-    }
   }
 
   disconnectedCallback() {
@@ -557,40 +426,6 @@ export default class BaseInput extends LitElement {
         this.setCustomValidityForType = i18n(this.lang, 'dateMM');
       }
     }
-
-    this.addEventListener('keydown', (evt) => {
-      if (this.autoFormattingTypes.includes(this.type)) {
-        if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
-          if (evt.key.length === 1) {
-            const numCharSelected = this.inputElement.selectionEnd - this.inputElement.selectionStart;
-
-            if (numCharSelected > 1) {
-              this.cursorPosition = this.inputElement.selectionStart + 1;
-            } else if (numCharSelected === 1) {
-              this.cursorPosition = this.inputElement.selectionEnd;
-            } else {
-              this.cursorPosition = this.inputElement.selectionEnd + 1;
-            }
-          } else if (evt.key === 'Backspace') {
-            this.cursorPosition = this.inputElement.selectionEnd - 1;
-          } else if (evt.key === 'Delete') {
-            this.cursorPosition = this.inputElement.selectionEnd;
-          }
-        }
-
-        if (evt.key === "ArrowUp" || evt.key === "ArrowDown" || evt.key === "ArrowLeft" || evt.key === "ArrowRight") {
-          if (evt.key === 'ArrowUp') {
-            this.cursorPosition = 0;
-          } else if (evt.key === 'ArrowDown') {
-            this.cursorPosition = this.value.length;
-          } else if (evt.key === 'ArrowLeft') {
-            this.cursorPosition = this.inputElement.selectionEnd - 1;
-          } else if (evt.key === 'ArrowRight') {
-            this.cursorPosition = this.inputElement.selectionEnd + 1;
-          }
-        }
-      }
-    });
   }
 
   /**
@@ -647,7 +482,7 @@ export default class BaseInput extends LitElement {
 
         this.notifyValueChanged();
       }
-      this.autoFormatHandling();
+      // this.autoFormatHandling();
     }
 
     if (changedProperties.has('error')) {
@@ -656,30 +491,6 @@ export default class BaseInput extends LitElement {
 
     if (changedProperties.has('validity')) {
       this.notifyValidityChange();
-    }
-  }
-
-  /**
-   * @private
-   * @returns {void} Handles cursor position when input auto-formats.
-   */
-  autoFormatHandling() {
-    if (this.cursorPosition >= 0 && this.autoFormattingTypes.includes(this.type)) {
-      if (this.type === 'credit-card' && this.inputElement.value.charAt(this.cursorPosition) === ' ') {
-        this.cursorPosition += 1;
-      } else if (this.dateInputTypes.includes(this.type)) {
-        const divider = '/';
-        const dividerNextChar = this.inputElement.value.charAt(this.cursorPosition) === divider;
-
-        if (this.cursorPosition > 1 && dividerNextChar && this.inputElement.value.charAt(this.cursorPosition - 2) !== divider) {
-          this.cursorPosition += 1;
-        } else if (this.cursorPosition > 0 && this.inputElement.value.charAt(this.cursorPosition + 1) === divider
-                  && this.inputElement.value.charAt(this.cursorPosition - 1) === '0') { // eslint-disable-line operator-linebreak
-          this.cursorPosition += 2;
-        }
-      }
-
-      this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
     }
   }
 
