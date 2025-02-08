@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
+/* eslint-disable max-lines,array-element-newline,no-magic-numbers */
 
 import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
 
@@ -105,7 +105,7 @@ describe('auro-form', () => {
     `);
 
     // INTERNAL STATE KEY - FOR TESTING ONLY :)
-    const [inputEl] = el._elements;
+    const [inputEl] = el.elements;
 
     inputEl.focus();
     inputEl.value = 'zzz';
@@ -129,7 +129,7 @@ describe('auro-form', () => {
     await expect(el.validity).to.be.null;
 
     // INTERNAL STATE KEY - used externally for testing only!
-    const [inputEl] = el._elements;
+    const [inputEl] = el.elements;
 
     inputEl.focus();
     inputEl.value = 'zzz';
@@ -139,6 +139,51 @@ describe('auro-form', () => {
 
     await expect(el.formState.testInput.validity).to.equal('valid');
     await expect(el.validity).to.equal('valid');
+  });
+
+  describe('when elements are present in the form', () => {
+    it ('should expose `elements` property containing references to form elements', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="testInput" required></auro-input>
+          <auro-input name="testInput2" required></auro-input>
+        </auro-form>
+      `);
+
+      await expect(el.elements).to.have.length(2);
+      await expect(el.elements.map((element) => element.name)).to.deep.equal(['testInput', 'testInput2']);
+    });
+
+    // like form[0], form[1], etc.
+    it('should expose indexes of elements', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="testInput" required></auro-input>
+          <auro-input name="testInput2" required></auro-input>
+        </auro-form>
+      `);
+
+      await expect(el[0].name).to.equal('testInput');
+      await expect(el[1].name).to.equal('testInput2');
+    });
+  });
+
+  describe('when no elements are present in the form', () => {
+    it('should return an empty array for elements', async () => {
+      const el = await fixture(html`
+        <auro-form></auro-form>
+      `);
+
+      await expect(el.elements).to.have.length(0);
+    });
+
+    it('should return undefined for indexes of elements', async () => {
+      const el = await fixture(html`
+        <auro-form></auro-form>
+      `);
+
+      await expect(el[0]).to.be.undefined;
+    });
   });
 
   describe('when given multiple inputs', () => {
@@ -155,7 +200,7 @@ describe('auro-form', () => {
       await expect(el.formState.testInput2.validity).to.be.null;
       await expect(el.validity).to.be.null;
 
-      const [inputEl] = el._elements;
+      const [inputEl] = el.elements;
 
       inputEl.focus();
       inputEl.value = 'zzz';
@@ -180,7 +225,7 @@ describe('auro-form', () => {
       await expect(el.formState.testInput2.validity).to.be.null;
       await expect(el.validity).to.be.null;
 
-      const [inputEl] = el._elements;
+      const [inputEl] = el.elements;
 
       inputEl.focus();
       inputEl.value = 'zzz';
@@ -352,7 +397,7 @@ describe('auro-form', () => {
         });
       });
 
-      const [inputEl, inputEl2] = el._elements;
+      const [inputEl, inputEl2] = el.elements;
 
       inputEl.focus();
       inputEl.value = 'zzz';

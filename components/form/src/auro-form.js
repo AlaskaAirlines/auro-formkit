@@ -88,6 +88,10 @@ export class AuroForm extends LitElement {
     ];
   }
 
+  get elements() {
+    return this._elements;
+  }
+
   /**
    * Compare tag name with element to identify it (for API purposes).
    * @param {string} elementTag - The HTML tag name like `auro-datepicker`.
@@ -455,6 +459,17 @@ export class AuroForm extends LitElement {
     });
   }
 
+  /**
+   * Allow for accessing elements by index.
+   * This looks strange, but is a built-in HTML feature for form elements.
+   * @private
+   */
+  _setIndexAddressesForElements() {
+    this._elements.forEach((element, index) => {
+      this[index] = element;
+    });
+  }
+
   firstUpdated(_changedProperties) {
     super.firstUpdated(_changedProperties);
 
@@ -473,6 +488,10 @@ export class AuroForm extends LitElement {
 
     if (_changedProperties.has("_validity")) {
       this._setInitialState();
+    }
+
+    if (_changedProperties.has("_elements")) {
+      this._setIndexAddressesForElements();
     }
   }
 
