@@ -1,5 +1,15 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.39](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.38...v2.0.0-beta.39) (2025-02-08)
+
+
+### Bug Fixes
+
+* make events cancelable ([502c3ba](https://github.com/AlaskaAirlines/auro-formkit/commit/502c3ba0bba8ffea4bb4072ba95cce41980665e9))
+* remove strange import ([11b9603](https://github.com/AlaskaAirlines/auro-formkit/commit/11b9603b9821875ef0bb5512548b42941a7fa699))
+* surface input event from radio group ([c7d55e3](https://github.com/AlaskaAirlines/auro-formkit/commit/c7d55e373044aca05ce775ec06f48cb69f6f10b8))
+* surface input event from select ([b425569](https://github.com/AlaskaAirlines/auro-formkit/commit/b425569e30b3bffc2c631644ab7a60f0dcd4bda5))
+
 # [2.0.0-beta.38](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.37...v2.0.0-beta.38) (2025-02-06)
 
 
