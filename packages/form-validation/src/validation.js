@@ -156,7 +156,7 @@ export default class AuroFormValidation {
                  elem.type === 'month-fullYear' ||
                  elem.type === 'year-month-day'
       ) {
-        if (elem.value?.length > 0 && elem.value.length < elem.dateStrLength) {
+        if (elem.value?.length > 0 && elem.value.length < elem.lengthForType) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         } else {
