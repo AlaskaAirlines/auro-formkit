@@ -15,6 +15,9 @@ import tokensCss from "./styles/tokens-css.js";
 
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
 
+import Inputmask from "inputmask/lib/inputmask.js";
+import "inputmask/lib/extensions/inputmask.date.extensions.js";
+
 import AuroFormValidation from '@auro-formkit/form-validation';
 
 /**
@@ -73,7 +76,12 @@ export default class BaseInput extends LitElement {
       "credit-card",
       "month-day-year",
       "year-month-day",
-      "month-year"
+      "month-year",
+      "month-fullYear",
+      "month",
+      "year",
+      "fullYear",
+      "tel"
     ];
 
     this.dateInputTypes = [
@@ -83,7 +91,18 @@ export default class BaseInput extends LitElement {
       "month-fullYear",
       "month",
       "year",
-      "fullYear"
+      "fullYear",
+      "date"
+    ];
+
+    this.autoFormattingTypes = [
+      'credit-card',
+      'month-day-year',
+      'month-year',
+      'month-fullyear',
+      'year-month-day',
+      'date',
+      'tel'
     ];
 
     /**
@@ -93,7 +112,7 @@ export default class BaseInput extends LitElement {
     this.setSelectionInputTypes = [
       "text",
       "password",
-      "email",
+      "email"
     ];
 
     const idLength = 36;
@@ -156,6 +175,14 @@ export default class BaseInput extends LitElement {
        */
       errorMessage: {
         type: String
+      },
+
+      /**
+       * Specifies the format of the input. Should be used in conjunction with the `type` attribute.
+       */
+      format: {
+        type: String,
+        reflect: true
       },
 
       /**
@@ -397,6 +424,10 @@ export default class BaseInput extends LitElement {
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');
 
+    this.inputElement.addEventListener('click', (event) => {
+      this.cursorPosition = event.target.selectionStart;
+    });
+
     // use validity message override if declared when initializing the component
     if (this.hasAttribute('setCustomValidity')) {
       this.ValidityMessageOverride = this.setCustomValidity;
@@ -424,8 +455,73 @@ export default class BaseInput extends LitElement {
         this.setCustomValidityForType = i18n(this.lang, 'dateYYYY');
       } else if (this.type === 'month') {
         this.setCustomValidityForType = i18n(this.lang, 'dateMM');
+      } else if (this.type === 'tel') {
+        this.setCustomValidityForType = i18n(this.lang, 'tel');
       }
     }
+
+    this.addEventListener('keydown', (evt) => {
+      if (this.autoFormattingTypes.includes(this.type)) {
+        if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
+          if (evt.key.length === 1) {
+            if (this.type === 'tel' && this.value.length === 4) { // Or 5 to handle two-digit country code
+              this.cursorPosition = this.value.length;
+            }
+    
+            // Used to track placeholder characters in date inputs
+            let lengthMinusPlaceholders = this.value.length;
+                
+            if (this.dateInputTypes.includes(this.type)) {
+              const delimiterCount = [...this.value] // Convert string to array of characters
+                  .filter(char => this.dateMaskPlaceholders?.includes(char)) // Keep only delimiters
+                  .length; // Count them
+              lengthMinusPlaceholders -= delimiterCount;
+            }
+
+            if (lengthMinusPlaceholders < this.lengthForType) { // or <= to handle after inserting char, < makes it impossible for caret to get to end
+              if (this.delimiters.includes(this.value.charAt(this.cursorPosition + 1))) {
+                this.cursorPosition += 2;
+              } else {
+                this.cursorPosition += 1;
+              }
+            } else if (lengthMinusPlaceholders === this.lengthForType) {
+              if (this.cursorPosition === lengthMinusPlaceholders - 1) {
+                this.cursorPosition = this.value.length;
+              } else {
+                this.cursorPosition += 1;
+              }
+            }
+          } else if (evt.key === 'Backspace') {
+            if (this.delimiters.includes(this.value.charAt(this.cursorPosition - 1))) {
+              while (this.delimiters.includes(this.value.charAt(this.cursorPosition - 1))) {
+                this.cursorPosition -= 1;
+              }
+            }
+
+            this.cursorPosition -= 1; // This breaks the cursor position when highlighting multiple characters
+          } else if (evt.key === 'Delete') {
+            if (this.delimiters.includes(this.value.charAt(this.cursorPosition))) {
+              this.cursorPosition += 1;
+            }
+          }
+        }
+
+        if (evt.key === "ArrowUp" || evt.key === "ArrowDown" || evt.key === "ArrowLeft" || evt.key === "ArrowRight") {
+          if (evt.key === 'ArrowUp') {
+            this.cursorPosition = 0;
+          } else if (evt.key === 'ArrowDown') {
+            this.cursorPosition = this.value.length;
+          } else if (evt.key === 'ArrowLeft' && this.cursorPosition > 0) {
+            this.cursorPosition  = this.inputElement.selectionStart - 1;
+          } else if (evt.key === 'ArrowRight' && this.cursorPosition < this.value.length) {
+            this.cursorPosition  = this.inputElement.selectionStart + 1;
+          }
+        }
+      }
+    });
+
+    // Need to configure based on language
+    this.configureAutoFormatting();
   }
 
   /**
@@ -482,7 +578,6 @@ export default class BaseInput extends LitElement {
 
         this.notifyValueChanged();
       }
-      // this.autoFormatHandling();
     }
 
     if (changedProperties.has('error')) {
@@ -504,6 +599,69 @@ export default class BaseInput extends LitElement {
       cancelable: false,
       composed: true,
     }));
+  }
+
+  /**
+   * Link to Inputmask tool: https://robinherbots.github.io/Inputmask/#/
+   * @private
+   * @returns {void} Notify validity state changed via event.
+   */
+  configureAutoFormatting() {
+    if (this.type) {
+      switch (this.type) {
+        case 'tel':
+          this.delimiters = ['+', ' ', '(', ')', '-'];
+
+          Inputmask({
+            mask: "+9 (999) 999-9999",
+            showMaskOnFocus: false,
+            showMaskOnHover: false,
+            jitMasking: true,
+            isComplete: function () {
+              this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
+            }.bind(this)
+          }).mask(this.inputElement);
+
+          break;
+
+        case 'credit-card':
+          this.delimiters = [' '];
+
+          Inputmask({
+            mask: "9999 9999 9999 9999", 
+            jitMasking: true,
+            isComplete: function () {
+              this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
+            }.bind(this)
+           }).mask(this.inputElement);
+
+          this.inputMode = 'numeric';
+
+          break;
+
+        case 'date': // Make sure data always comes back 'MM/DD/YYYY' regardless of format
+          this.delimiters = ['/'];
+          this.dateMaskPlaceholders = ['m', 'd', 'y'];
+
+          Inputmask({
+            alias: "datetime",
+            inputFormat: this.format?.toLowerCase() || "mm/dd/yyyy",
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            prefillYear: false,
+            isComplete: function () {
+              this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
+            }.bind(this)
+          }).mask(this.inputElement);
+
+          this.inputMode = 'numeric';
+
+          break;
+
+        default:
+          // Do nothing
+      }
+    }
   }
 
   /**
@@ -575,11 +733,6 @@ export default class BaseInput extends LitElement {
    * @return {void}
    */
   handleInput() {
-    // Prevent non-number characters from being entered on credit card fields.
-    if (this.type === 'credit-card') {
-      this.inputElement.value = this.inputElement.value.replace(/[\D]/gu, '');
-    }
-
     // Sets value property to value of element value (el.value).
     this.value = this.inputElement.value;
 
@@ -608,6 +761,7 @@ export default class BaseInput extends LitElement {
    * @return {void}
    */
   handleFocusin() {
+
 
     /**
      * The input is considered to be in it's initial state based on
@@ -676,15 +830,21 @@ export default class BaseInput extends LitElement {
    */
   configureDataForType() {
     if (this.type === 'month-day-year' || this.type === 'year-month-day') {
-      this.dateStrLength = 10;
+      this.lengthForType = 10;
     } else if (this.type === 'month-year') {
-      this.dateStrLength = 5;
+      this.lengthForType = 5;
     } else if (this.type === 'month-fullYear') {
-      this.dateStrLength = 7;
+      this.lengthForType = 7;
     } else if (this.type === 'month' || this.type === 'year') {
-      this.dateStrLength = 2;
+      this.lengthForType = 2;
     } else if (this.type === 'fullYear') {
-      this.dateStrLength = 4;
+      this.lengthForType = 4;
+    } else if (this.type === 'credit-card') {
+      this.lengthForType = 19;
+    } else if (this.type === 'tel') {
+      this.lengthForType = 17;
+    } else if (this.type === 'date') {
+      this.lengthForType = 10 || this.format.length;
     }
   }
 
