@@ -100,10 +100,10 @@ In cases where the project is not able to process JS assets, there are pre-proce
 <!-- The below content is automatically added from ../../docs/templates/componentBundleUseModBrowsers.md -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@4.13.0/dist/tokens/CSSCustomProperties.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@6.0.0/dist/bundled/essentials.css" />
-<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-dropdown@2.0.0-beta.39/dist/auro-dropdown__bundled.js" type="module"></script>
-<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-input@2.0.0-beta.39/dist/auro-input__bundled.js" type="module"></script>
-<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-menu@2.0.0-beta.39/dist/auro-menu__bundled.js" type="module"></script>
-<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-combobox@2.0.0-beta.39/dist/auro-combobox__bundled.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-dropdown@2.0.0-beta.41/dist/auro-dropdown__bundled.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-input@2.0.0-beta.41/dist/auro-input__bundled.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-menu@2.0.0-beta.41/dist/auro-menu__bundled.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit/auro-combobox@2.0.0-beta.41/dist/auro-combobox__bundled.js" type="module"></script>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## auro-combobox use cases
