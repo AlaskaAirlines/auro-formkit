@@ -53,6 +53,16 @@ export class AuroDropdown extends LitElement {
       ...LitElement.shadowRootOptions,
       delegatesFocus: true,
     };
+
+    /**
+     * @private
+     */
+    this.triggerContentFocusable = false;
+
+    /**
+     * @private
+     */
+    this.showTriggerBorders = true;
   }
 
   /**
