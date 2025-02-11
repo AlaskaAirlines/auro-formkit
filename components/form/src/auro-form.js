@@ -489,10 +489,27 @@ export class AuroForm extends LitElement {
     }
   }
 
-  onSlotChange() {
+  onMutationOberver() {
+    this.initializeState();
+    this._attachEventListeners();
+  }
+
+  onSlotChange(event) {
     this.initializeState();
     // Safe to call as we remove and re-add event listeners
     this._attachEventListeners();
+
+
+    const slotNodes = event.currentTarget.assignedNodes();
+    slotNodes.forEach((node) => {
+      if (node.tagName && !this.isFormElement(node)) {
+        const mo = new MutationObserver(this.onMutationOberver);
+        mo.observe(node, {
+          subtree: true,
+          childList: true
+        });
+      }
+    });
   }
 
   // function that renders the HTML and CSS into the scope of the component
