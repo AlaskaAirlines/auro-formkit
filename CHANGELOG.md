@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.40](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.39...v2.0.0-beta.40) (2025-02-11)
+
+
+### Bug Fixes
+
+* set to border to render in dropdown when there is no trigger slot provided ([729d3e7](https://github.com/AlaskaAirlines/auro-formkit/commit/729d3e7efbee7c1c98782a63f28ebcf4515d5200))
+
 # [2.0.0-beta.39](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.38...v2.0.0-beta.39) (2025-02-08)
 
 
