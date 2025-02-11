@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.41](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.40...v2.0.0-beta.41) (2025-02-11)
+
+
+### Bug Fixes
+
+* validations didn't always trigger form updates ([b215d31](https://github.com/AlaskaAirlines/auro-formkit/commit/b215d317a940924632c74b964ae667774e2e105b))
+
+
+### Performance Improvements
+
+* **form:** remove extra bool check on events ([d01e0f3](https://github.com/AlaskaAirlines/auro-formkit/commit/d01e0f3dce53411fed754034eee782f2e7f1cb43))
+
 # [2.0.0-beta.40](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.39...v2.0.0-beta.40) (2025-02-11)
 
 
