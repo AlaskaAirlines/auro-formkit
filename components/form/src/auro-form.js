@@ -71,7 +71,7 @@ export class AuroForm extends LitElement {
     this.submit = this.submit.bind(this);
     this.sharedInputListener = this.sharedInputListener.bind(this);
     this.sharedValidationListener = this.sharedValidationListener.bind(this);
-    this.onMutationOberver = this.onMutationOberver.bind(this);
+    this.mutationEventListener = this.mutationEventListener.bind(this);
   }
 
   // Note: button is NOT considered a form element in this context
@@ -497,7 +497,7 @@ export class AuroForm extends LitElement {
    *
    * @returns {void}
    */
-  onMutationOberver() {
+  mutationEventListener() {
     this.initializeState();
     this._attachEventListeners();
   }
@@ -511,7 +511,7 @@ export class AuroForm extends LitElement {
     const slotNodes = event.currentTarget.assignedNodes();
     slotNodes.forEach((node) => {
       if (node.tagName && !this.isFormElement(node)) {
-        const mo = new MutationObserver(this.onMutationOberver);
+        const mo = new MutationObserver(this.mutationEventListener);
         mo.observe(node, {
           subtree: true,
           childList: true
