@@ -193,6 +193,81 @@ describe('auro-form', () => {
     });
   });
 
+  describe('when elements are added to the DOM after initial render', () => {
+    function createInput() {
+      const inputEl = document.createElement('auro-input');
+      inputEl.setAttribute('name', 'testInput');
+      inputEl.setAttribute('required', '');
+
+      return inputEl;
+    }
+
+    // Detect slot change
+    describe('in the case of direct children', () => {
+      it('should handle slot updates', async () => {
+        const el = await fixture(html`
+          <auro-form>
+          </auro-form>
+        `);
+
+        const inputEl = createInput();
+        el.appendChild(inputEl);
+
+        await elementUpdated(el);
+
+        await expect(el._elements).to.have.length(1);
+        await expect(el.formState).to.have.keys('testInput');
+      });
+
+      it('has the same form state before and after slot updates', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="existingInput" required></auro-input>
+          </auro-form>
+        `);
+
+        const [existingInputEl] = el._elements;
+
+        existingInputEl.focus();
+        existingInputEl.value = 'existingValue';
+        existingInputEl.blur();
+
+        await elementUpdated(el);
+
+        await expect(el.formState).to.have.keys('existingInput');
+        await expect(el.value.existingInput).to.equal('existingValue');
+
+        const newInputEl = createInput();
+        el.appendChild(newInputEl);
+
+        await elementUpdated(el);
+
+        await expect(el.formState).to.have.keys('existingInput', 'testInput');
+        await expect(el.value.existingInput).to.equal('existingValue');
+      });
+    });
+
+    // MutationObserver test
+    describe('in the case of nested children', () => {
+      it('should handle insert updates', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <div id="target"></div>
+          </auro-form>
+        `);
+
+        const target = el.querySelector('#target');
+        const inputEl = createInput();
+        target.appendChild(inputEl);
+
+        await elementUpdated(el);
+
+        await expect(el._elements).to.have.length(1);
+        await expect(el.formState).to.have.keys('testInput');
+      });
+    });
+  });
+
   describe('when auro-buttons are present', () => {
     it('picks up type=submit buttons automatically', async () => {
       const el = await fixture(html`

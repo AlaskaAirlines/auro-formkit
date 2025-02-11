@@ -71,6 +71,7 @@ export class AuroForm extends LitElement {
     this.submit = this.submit.bind(this);
     this.sharedInputListener = this.sharedInputListener.bind(this);
     this.sharedValidationListener = this.sharedValidationListener.bind(this);
+    this.onMutationOberver = this.onMutationOberver.bind(this);
   }
 
   // Note: button is NOT considered a form element in this context
@@ -489,6 +490,13 @@ export class AuroForm extends LitElement {
     }
   }
 
+  /**
+   * Mutation observer for form elements. Slot change does not trigger unless
+   * root-level elements are added/removed. This is a workaround to ensure
+   * nested form elements are also observed.
+   *
+   * @returns {void}
+   */
   onMutationOberver() {
     this.initializeState();
     this._attachEventListeners();
