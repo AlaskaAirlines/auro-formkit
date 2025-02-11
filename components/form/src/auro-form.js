@@ -31,6 +31,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  *
  * @attr {Boolean} fixed - Uses fixed pixel values for element shape
  * @attr {String} cssClass - Applies designated CSS class to demo element - you want to delete me!
+ * @event {Event} change - Fires when form state changes.
  */
 
 // build the component class
@@ -330,6 +331,12 @@ export class AuroForm extends LitElement {
       }
     });
 
+    this.dispatchEvent(new Event('change', {
+      bubbles: true,
+      composed: true,
+      cancelable: true
+    }));
+
     // Set enabled/disabled states on buttons
     this.setDisabledStateOnButtons();
   }
@@ -415,13 +422,24 @@ export class AuroForm extends LitElement {
       this._addElementToState(event.target);
     }
 
+    let needsUpdate = false;
     // Check special input types and handle their edge cases
     if (this._isElementTag('auro-datepicker', event.target) && event.target.hasAttribute('range')) {
       this.formState[targetName].value = event.target.values;
-      this.requestUpdate('formState');
+
+      needsUpdate = true;
     } else {
       this.formState[targetName].value = event.target.value;
+      needsUpdate = true;
+    }
+
+    if (needsUpdate) {
       this.requestUpdate('formState');
+      this.dispatchEvent(new CustomEvent('change', {
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
     }
   }
 
@@ -441,6 +459,7 @@ export class AuroForm extends LitElement {
 
     this.formState[targetName].validity = event.detail.validity;
     this._calculateValidity();
+    this.requestUpdate('formState');
   }
 
   _attachEventListeners() {

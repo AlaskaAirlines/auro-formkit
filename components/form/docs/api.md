@@ -41,7 +41,8 @@ The auro-form element provides users a way to ... (it would be great if you fill
 
 ## Events
 
-| Event    | Type                                             |
-|----------|--------------------------------------------------|
-| `reset`  | `CustomEvent<{ previousValue: Record<string, string \| number \| boolean \| string[] \| null>; }>` |
-| `submit` | `CustomEvent<{ value: Record<string, string \| number \| boolean \| string[] \| null>; }>` |
+| Event    | Type                                             | Description                    |
+|----------|--------------------------------------------------|--------------------------------|
+| `change` | `Event`                                          | Fires when form state changes. |
+| `reset`  | `CustomEvent<{ previousValue: Record<string, string \| number \| boolean \| string[] \| null>; }>` |                                |
+| `submit` | `CustomEvent<{ value: Record<string, string \| number \| boolean \| string[] \| null>; }>` |                                |
