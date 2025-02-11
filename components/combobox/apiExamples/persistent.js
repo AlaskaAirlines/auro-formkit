@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export function persistentExample() {
   const persistentExample = document.querySelector('#persistent');
 
