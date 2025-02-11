@@ -422,25 +422,19 @@ export class AuroForm extends LitElement {
       this._addElementToState(event.target);
     }
 
-    let needsUpdate = false;
     // Check special input types and handle their edge cases
     if (this._isElementTag('auro-datepicker', event.target) && event.target.hasAttribute('range')) {
       this.formState[targetName].value = event.target.values;
-
-      needsUpdate = true;
     } else {
       this.formState[targetName].value = event.target.value;
-      needsUpdate = true;
     }
 
-    if (needsUpdate) {
-      this.requestUpdate('formState');
-      this.dispatchEvent(new CustomEvent('change', {
-        bubbles: true,
-        composed: true,
-        cancelable: true
-      }));
-    }
+    this.requestUpdate('formState');
+    this.dispatchEvent(new CustomEvent('change', {
+      bubbles: true,
+      composed: true,
+      cancelable: true
+    }));
   }
 
   /**
