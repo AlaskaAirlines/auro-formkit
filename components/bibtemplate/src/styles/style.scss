@@ -1,0 +1,46 @@
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+#bibTemplate {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+#headerContainer {
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--ds-auro-dropdownbib-boxshadow-color);
+}
+
+#header {
+  display: flex;
+  width: 100%;
+  min-height: var(--ds-size-1000, $ds-size-1000);
+  box-sizing: border-box;
+  align-items: end;
+  padding: var(--ds-size-400, $ds-size-400) var(--ds-size-200, $ds-size-200);
+  padding-bottom: 0;
+  pointer-events: none;
+}
+
+#subheader {
+  width: 100%;
+}
+
+#closeButton{
+  position: absolute;
+  top: var(--ds-size-400, $ds-size-400);
+  right: var(--ds-size-200, $ds-size-200);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#bodyContainer {
+  flex: 1 1 100%;
+  padding-top: var(--ds-size-100, $ds-size-100);
+}
+
+#footerContainer{
+  padding: var(--ds-size-200, $ds-size-200);
+}

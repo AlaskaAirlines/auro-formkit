@@ -33,6 +33,7 @@
     },
     "@aurodesignsystem/auro-combobox#build": {
       "dependsOn": [
+        "@aurodesignsystem/auro-bibtemplate#build",
         "@aurodesignsystem/auro-input#build",
         "@aurodesignsystem/auro-dropdown#build",
         "postCss:component",

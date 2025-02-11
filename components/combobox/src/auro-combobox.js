@@ -19,6 +19,9 @@ import dropdownVersion from './formkit/auro-dropdownVersion.js';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './formkit/auro-inputVersion.js';
 
+import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+import bibTemplateVersion from './bibtemplateVersion.js';
+
 import {
   arrayConverter,
   arrayOrUndefinedHasChanged
@@ -26,6 +29,8 @@ import {
 
 // Import touch detection lib
 import styleCss from "./styles/style-css.js";
+
+AuroBibtemplate.register();
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -67,6 +72,7 @@ export class AuroCombobox extends LitElement {
     const versioning = new AuroDependencyVersioning();
 
     this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
+    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
     this.inputTag = versioning.generateTag('auro-input', inputVersion, AuroInput);
   }
 
@@ -193,6 +199,14 @@ export class AuroCombobox extends LitElement {
         converter: arrayConverter,
         hasChanged: arrayOrUndefinedHasChanged
       },
+
+      /**
+       * @private
+       */
+      isDropdownFullscreen: {
+        type: Boolean,
+        reflect: false
+      }
     };
   }
 
@@ -329,6 +343,9 @@ export class AuroCombobox extends LitElement {
       this.dropdown.hide();
       return;
     }
+
+    this.isDropdownFullscreen = Boolean(this.dropdown.bibContent.getAttribute('isfullscreen'));
+
     if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
       if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
         if (this.menu.hasAttribute('loading') && !this.menu.hasLoadingPlaceholder) {
@@ -349,8 +366,20 @@ export class AuroCombobox extends LitElement {
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
     this.menuWrapper.append(this.menu);
 
-    this.dropdown.setAttribute('role', 'combobox');
+    // setting up bibtemplate
+    const bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    bibtemplate.append(this.menuWrapper);
 
+    this.hideBib = this.hideBib.bind(this);
+    bibtemplate.addEventListener('close-click', this.hideBib);
+
+    const bibHeader = this.querySelector("[slot='bib.header']");
+    if (bibHeader) {
+      bibHeader.setAttribute("slot", "header");
+      bibtemplate.append(bibHeader);
+    }
+
+    this.dropdown.setAttribute('role', 'combobox');
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
     });
@@ -738,6 +767,7 @@ export class AuroCombobox extends LitElement {
           rounded
           matchWidth
           nocheckmark
+          mobilefullscreenbreakpoint="sm"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow>
@@ -756,10 +786,18 @@ export class AuroCombobox extends LitElement {
             @input="${this.handleInputValueChange}">
             <slot name="label" slot="label"></slot>
           </${this.inputTag}>
-          <div class="menuWrapper">
-          </div>
+
+          <div class="menuWrapper"></div>
+
+          <${this.bibtemplateTag}
+            large
+            ?fullscreen="${this.isDropdownFullscreen}"
+            @close-click=""${this.hideBib}>
+            <slot name="subheader" slot="bib.subheader"></slot>
+          </${this.bibtemplateTag}>
+
           <p slot="helpText">
-          <!-- Help text and error message template -->
+            <!-- Help text and error message template -->
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`
                 <slot name="helpText"></slot>

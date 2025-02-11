@@ -3,4 +3,4 @@ export default {
   nodeResolve: true,
   watch: true,
   port: 8002
-}
+};
