@@ -502,6 +502,11 @@ export class AuroForm extends LitElement {
     this._attachEventListeners();
   }
 
+  /**
+   * Slot change event listener. This is the main entry point for the form element.
+   * @param {Event} event - The slot change event.
+   * @returns {void}
+   */
   onSlotChange(event) {
     this.initializeState();
     // Safe to call as we remove and re-add event listeners

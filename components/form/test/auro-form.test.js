@@ -268,6 +268,36 @@ describe('auro-form', () => {
     });
   });
 
+  describe('when elements are removed from the DOM after initial render', () => {
+    it('should update internal state and formState when an element is removed', async () => {
+      const el = await fixture(html`
+        <auro-form>
+        </auro-form>
+      `);
+
+      // Create the input element
+      const inputEl = document.createElement('auro-input');
+
+      inputEl.setAttribute('name', 'testInput');
+      inputEl.setAttribute('required', '');
+      el.appendChild(inputEl);
+
+      await elementUpdated(el);
+
+      // Validate the element is added
+      await expect(el._elements).to.have.length(1);
+      await expect(el.formState).to.have.keys('testInput');
+
+      // Remove the element
+      el.removeChild(inputEl);
+      await elementUpdated(el);
+
+      // Validate that the element removal is reflected correctly in the state
+      await expect(el._elements).to.have.length(0);
+      await expect(el.formState).to.not.have.keys('testInput');
+    });
+  });
+
   describe('when auro-buttons are present', () => {
     it('picks up type=submit buttons automatically', async () => {
       const el = await fixture(html`
