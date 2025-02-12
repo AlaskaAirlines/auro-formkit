@@ -66,6 +66,9 @@ export class AuroForm extends LitElement {
     /** @type {HTMLButtonElement[]} */
     this._resetElements = [];
 
+    /** @type {MutationObserver[]} */
+    this.mutationObservers = [];
+
     // Bind listeners
     this.reset = this.reset.bind(this);
     this.submit = this.submit.bind(this);
@@ -512,6 +515,8 @@ export class AuroForm extends LitElement {
     // Safe to call as we remove and re-add event listeners
     this._attachEventListeners();
 
+    // Get rid of old observers - we'll create new ones in a moment
+    this.mutationObservers.forEach((mo) => mo.disconnect());
 
     const slotNodes = event.currentTarget.assignedNodes();
     slotNodes.forEach((node) => {
