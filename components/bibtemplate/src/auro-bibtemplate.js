@@ -41,7 +41,7 @@ export class AuroBibtemplate extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
-      fullscreen: {
+      isFullscreen: {
         type: Boolean,
         reflect: true,
       },
@@ -66,19 +66,20 @@ export class AuroBibtemplate extends LitElement {
   }
 
   onCloseButtonClick() {
-    this.dispatchEvent(new Event("close-click"));
+    this.dispatchEvent(new Event("close-click", { bubbles: true,
+      composed: true }));
   }
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
       <div id="bibTemplate">
-      ${this.fullscreen ? html`
+      ${this.isFullscreen ? html`
         <div id="headerContainer">
           <button id="closeButton" @click="${this.onCloseButtonClick}">
             <${this.iconTag} category="interface" name="x-lg"></${this.iconTag}>
           </button>
-          <${this.headerTag} display="${this.large ? 'display' : '600'}" size="none" id="header">
+          <${this.headerTag} display="${this.large ? 'display' : '600'}" level="3" size="none" id="header">
             <slot name="header"></slot>
           </${this.headerTag}>
           <span id="subheader">
@@ -90,7 +91,7 @@ export class AuroBibtemplate extends LitElement {
           <slot></slot>
         </div>
 
-      ${this.fullscreen ? html`
+      ${this.isFullscreen ? html`
         <div id="footerContainer">
           <slot name="footer"></slot>
         </div>` : null}

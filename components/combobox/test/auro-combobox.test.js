@@ -1,8 +1,19 @@
 import { fixture, html, expect, waitUntil, elementUpdated } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
 import '../src/index.js';
 import '../../menu/src/index.js';
 
 describe('auro-combobox', () => {
+  runFulltest(false);
+});
+
+describe('auro-combobox in mobile screen', () => {
+  runFulltest(true);
+});
+
+
+
+function runFulltest(mobileview) {
   it('auro-combobox custom element is defined', async () => {
     const el = await Boolean(customElements.get("auro-combobox"));
 
@@ -10,7 +21,7 @@ describe('auro-combobox', () => {
   });
 
   it('noFilter attribute results in no suggestion filtering', async () => {
-    const el = await noFilterFixture();
+    const el = await noFilterFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -29,7 +40,7 @@ describe('auro-combobox', () => {
   });
 
   it('can programmatically apply focus to input', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     const {input} = el;
 
@@ -39,17 +50,23 @@ describe('auro-combobox', () => {
   });
 
   it('shows the bib on click only when a value is typed', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
     trigger.click();
     await expect(el.dropdown.isPopoverVisible).to.be.false;
+    if (mobileview) {
+      // wait until input settles in dropdown
+      await waitUntil(() => {
+        return el.input.parentNode === el.dropdown;
+      });
+    }
+    el.focus();
     setInputValue(el, 'p');
-    trigger.click();
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
   it('shows the bib when pressing enter and a value is typed', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     // Validate bib is not shown when hitting enter but there is no value in the input
     el.focus();
@@ -68,14 +85,14 @@ describe('auro-combobox', () => {
   });
 
   it('hides the bib when there are no available options', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     setInputValue(el, 'zzzzzz');
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
   it('hides the bib when making a selection', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
     setInputValue(el, 'p');
@@ -92,7 +109,7 @@ describe('auro-combobox', () => {
   });
 
   it('hides the bib when tabbing away from combobox', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
     el.focus();
@@ -101,7 +118,7 @@ describe('auro-combobox', () => {
     trigger.click();
     await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    el.dispatchEvent(new KeyboardEvent('keydown', {
+    document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
       'key': 'Tab'
     }));
 
@@ -109,7 +126,7 @@ describe('auro-combobox', () => {
   });
 
   it('hides the bib when selecting an option with a custom event', async () => {
-    const el = await customEventFixture();
+    const el = await customEventFixture(mobileview);
 
     await expect(el.dropdown.isPopoverVisible).to.be.false;
 
@@ -132,7 +149,7 @@ describe('auro-combobox', () => {
   });
 
   it('navigates menu with up and down arrow keys', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
     el.focus();
 
     // Validate bib is shown when hitting enter but there is a value in the input
@@ -140,17 +157,22 @@ describe('auro-combobox', () => {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await elementUpdated(el);
 
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
-    const menuOptions = menu.querySelectorAll('auro-menuoption');
-
+    if (mobileview) {
+      await waitUntil(() => {
+        // wait until input settles in dropdown
+        return el.input.parentNode === el.dropdown;
+      });
+    }
     setInputValue(el, 'a');
     await elementUpdated(el);
 
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
+
+
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     await expect(el.optionActive).to.be.equal(menuOptions[0]);
     await expect(menuOptions[0].classList.contains('active')).to.be.true;
@@ -172,7 +194,7 @@ describe('auro-combobox', () => {
   });
 
   it('typing filters list of options', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -192,7 +214,7 @@ describe('auro-combobox', () => {
   });
 
   it('using the nomatch attribute with a matching value', async () => {
-    const el = await noMatchFixture();
+    const el = await noMatchFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -212,7 +234,7 @@ describe('auro-combobox', () => {
   });
 
   it('using the nomatch attribute with no matching value', async () => {
-    const el = await noMatchFixture();
+    const el = await noMatchFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -232,7 +254,7 @@ describe('auro-combobox', () => {
   });
 
   it('using the persistent attribute always displays the persistent option', async () => {
-    const el = await persistentFixture();
+    const el = await persistentFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -253,7 +275,7 @@ describe('auro-combobox', () => {
   });
 
   it('using the suggest attribute matches additional options', async () => {
-    const el = await suggestFixture();
+    const el = await suggestFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -274,7 +296,7 @@ describe('auro-combobox', () => {
   });
 
   it('makes a selection programmatically', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     el.value = ['Apples'];
     await elementUpdated(el);
@@ -288,7 +310,7 @@ describe('auro-combobox', () => {
   });
 
   it('reset selection value programmatically', async () => {
-    const el = await presetValueFixture();
+    const el = await presetValueFixture(mobileview);
 
     el.value = undefined;
 
@@ -298,7 +320,7 @@ describe('auro-combobox', () => {
   });
 
   it('makes a selection using the keyboard', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     setInputValue(el, 'a');
     await elementUpdated(el);
@@ -314,7 +336,7 @@ describe('auro-combobox', () => {
   });
 
   it('Does not throw an error state when trying to programmatically set a value that doesn\'t match an option', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     const menu = el.querySelector('auro-menu');
 
@@ -328,7 +350,7 @@ describe('auro-combobox', () => {
   });
 
   it('handles the required state being set', async () => {
-    const el = await requiredFixture();
+    const el = await requiredFixture(mobileview);
 
     // error applied on blur
     el.focus();
@@ -340,8 +362,7 @@ describe('auro-combobox', () => {
 
     // no error when input has a value
     setInputValue(el, 'pp');
-
-    el.shadowRoot.activeElement.blur();
+    el.input.blur();
 
     await elementUpdated(el);
 
@@ -349,7 +370,7 @@ describe('auro-combobox', () => {
   });
 
   it('default to nocheckmark on selected option', async () => {
-    const el = await defaultFixture();
+    const el = await defaultFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -357,7 +378,7 @@ describe('auro-combobox', () => {
   });
 
   it('selected options have checkmark when checkmark attribute is present', async () => {
-    const el = await checkmarkFixture();
+    const el = await checkmarkFixture(mobileview);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
@@ -365,7 +386,7 @@ describe('auro-combobox', () => {
   });
 
   it('reset method clears the value and validity state', async () => {
-    const el = await requiredFixture();
+    const el = await requiredFixture(mobileview);
 
     el.focus();
     el.shadowRoot.activeElement.blur();
@@ -380,12 +401,23 @@ describe('auro-combobox', () => {
     await expect(el.hasAttribute('validity')).to.be.false;
     await expect(el.value).to.equal(undefined);
   });
-});
+}
 
 /**
  *
  */
-async function defaultFixture() {
+async function defaultFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
@@ -400,7 +432,18 @@ async function defaultFixture() {
 /**
  *
  */
-async function presetValueFixture() {
+async function presetValueFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
     <auro-combobox value='["Apples"]'>
       <span slot="label">Name</span>
@@ -415,7 +458,18 @@ async function presetValueFixture() {
 /**
  *
  */
-async function checkmarkFixture() {
+async function checkmarkFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox checkmark>
     <span slot="label">Name</span>
@@ -431,7 +485,18 @@ async function checkmarkFixture() {
 /**
  *
  */
-async function suggestFixture() {
+async function suggestFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
@@ -446,7 +511,18 @@ async function suggestFixture() {
 /**
  *
  */
-async function requiredFixture() {
+async function requiredFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox required>
     <span slot="label">Name</span>
@@ -461,7 +537,18 @@ async function requiredFixture() {
 /**
  *
  */
-async function noMatchFixture() {
+async function noMatchFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
@@ -477,7 +564,18 @@ async function noMatchFixture() {
 /**
  *
  */
-async function persistentFixture() {
+async function persistentFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
@@ -493,7 +591,18 @@ async function persistentFixture() {
 /**
  *
  */
-async function customEventFixture() {
+async function customEventFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
@@ -507,7 +616,18 @@ async function customEventFixture() {
 /**
  *
  */
-async function noFilterFixture() {
+async function noFilterFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
   return await fixture(html`
   <auro-combobox noFilter>
     <span slot="label">Name</span>

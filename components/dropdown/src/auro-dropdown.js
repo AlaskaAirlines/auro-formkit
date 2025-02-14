@@ -40,6 +40,7 @@ export class AuroDropdown extends LitElement {
     super();
 
     this.isPopoverVisible = false;
+    this.isBibFullscreen = false;
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
@@ -214,6 +215,14 @@ export class AuroDropdown extends LitElement {
        */
       isPopoverVisible: {
         type: Boolean
+      },
+
+      /**
+       * If true, the dropdown bib is taking the fullscreen when it's open
+       */
+      isBibFullscreen: {
+        type: Boolean,
+        reflect: true,
       },
 
       /**
@@ -555,6 +564,7 @@ export class AuroDropdown extends LitElement {
         <auro-dropdownbib
           id="bib"
           role="tooltip"
+          ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
           ?rounded="${this.common || this.rounded}"
           ?inset="${this.common || this.inset}">

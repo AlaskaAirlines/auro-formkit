@@ -25,6 +25,10 @@
 
 #subheader {
   width: 100%;
+
+  ::slotted([auro-input]) {
+    padding: 0 var(--ds-size-200, $ds-size-200);
+  }
 }
 
 #closeButton{
