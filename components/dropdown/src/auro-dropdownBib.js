@@ -49,6 +49,14 @@ export class AuroDropdownBib extends LitElement {
     return {
 
       /**
+       * If declared, will take the fullscreen.
+       */
+      isFullscreen: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If declared, will apply all styles for the common theme.
        */
       common: {
@@ -88,6 +96,20 @@ export class AuroDropdownBib extends LitElement {
 
   get mobileFullscreenBreakpoint() {
     return this._mobileBreakpointValue;
+  }
+
+  updated(changedProperties) {
+    if (changedProperties.has('isFullscreen')) {
+      this.childNodes.forEach((child) => {
+        if (child.nodeName !== '#text') {
+          if (this.isFullscreen) {
+            child.setAttribute('isFullscreen', 'true');
+          } else {
+            child.removeAttribute('isFullscreen');
+          }
+        }
+      });
+    }
   }
 
   // function that renders the HTML and CSS into  the scope of the component
