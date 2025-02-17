@@ -151,20 +151,17 @@ export default class AuroFormValidation {
           elem.validity = 'rangeUnderflow';
           elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
         }
-      } else if (elem.type === 'month-day-year' ||
-                 elem.type === 'month-year' ||
-                 elem.type === 'month-fullYear' ||
-                 elem.type === 'year-month-day'
-      ) {
-        if (elem.value?.length > 0 && elem.value.length < elem.lengthForType) {
+      } else if (elem.type === 'date') {
+        if (elem.delimiterCount > 0) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         } else {
-          const valueDate = new Date(elem.value);
+          const formattedValue = elem.toNorthAmericanFormat(elem.value);
+          const valueDate = new Date(formattedValue.dateForComparison);
 
           // validate max
           if (elem.max !== undefined) {
-            const maxDate = new Date(elem.max);
+            const maxDate = new Date(elem.toNorthAmericanFormat(elem.max).dateForComparison);
 
             if (valueDate > maxDate) {
               elem.validity = 'rangeOverflow';
@@ -174,7 +171,7 @@ export default class AuroFormValidation {
 
           // validate min
           if (elem.min) {
-            const minDate = new Date(elem.min);
+            const minDate = new Date(elem.toNorthAmericanFormat(elem.min).dateForComparison);
 
             if (valueDate < minDate) {
               elem.validity = 'rangeUnderflow';
