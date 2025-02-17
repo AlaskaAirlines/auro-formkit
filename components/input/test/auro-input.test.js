@@ -315,12 +315,12 @@ describe('auro-input', () => {
 
   it('date inputs use programmatic placeholder', async () => {
     // All date types and their default placeholders at their corresponding index
-    let dateTypes = ['month-day-year', 'month-year', 'month-fullYear', 'year-month-day'];
+    let dateFormats = ['MM/DD/YYYY', 'MM/YY', 'MM/YYYY', 'YYYY/MM/DD'];
     let defaultDatePH = ['MM/DD/YYYY', 'MM/YY', 'MM/YYYY', 'YYYY/MM/DD'];
 
     for (let index = 0; index < dateTypes.length; index++) {
       const el = await fixture(html`
-        <auro-input type=${dateTypes[index]}></auro-input>
+        <auro-input type="date" format=${dateFormats[index]}></auro-input>
       `);
 
       let placeholder = el.getPlaceholder();
@@ -399,9 +399,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-day-year validity checked correctly', async () => {
+  it('type date validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="month-day-year"></auro-input>
+      <auro-input type="date"></auro-input>
     `)
 
     el.value = '10/10/202';
@@ -417,9 +417,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-year validity checked correctly', async () => {
+  it('MM/YY format validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="month-year"></auro-input>
+      <auro-input type="date" format="MM/YY"></auro-input>
     `)
 
     el.value = '10/';
@@ -435,9 +435,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-fullyear validity checked correctly', async () => {
+  it('format MM/YYYY validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="month-fullYear"></auro-input>
+      <auro-input type="date" format="MM/YYYY"></auro-input>
     `)
 
     el.value = '10/';
@@ -453,9 +453,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type year-month-date validity checked correctly', async () => {
+  it('format YYYY/MM/DD validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="year-month-day"></auro-input>
+      <auro-input type="date" format="YYYY/MM/DD"></auro-input>
     `)
 
     el.value = '20';
@@ -471,9 +471,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-day-year validity checked correctly when using the max attribute', async () => {
+  it('type date validity checked correctly when using the max attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="month-day-year" max="03/03/2023"></auro-input>
+      <auro-input type="date" max="03/03/2023"></auro-input>
     `)
 
     el.value = '03/03/2023';
@@ -489,9 +489,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
   });
 
-  it('type month-day-year validity checked correctly when using the min attribute', async () => {
+  it('type date validity checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="month-day-year" min="03/03/2023"></auro-input>
+      <auro-input type="date" min="03/03/2023"></auro-input>
     `)
 
     el.value = '03/04/2023';
@@ -595,7 +595,7 @@ describe('auro-input', () => {
   describe('handles date formatting', () => {
     it('MM/DD/YYYY', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="month-day-year" required></auro-input>
+        <auro-input id="format-date" type="date" required></auro-input>
       `);
 
       expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/DD/YYYY');
@@ -603,7 +603,7 @@ describe('auro-input', () => {
 
     it('YYYY/MM/DD', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="year-month-day" required></auro-input>
+        <auro-input id="format-date" type="date" format="YYYY/MM/DD" required></auro-input>
       `);
 
       expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'YYYY/MM/DD');
@@ -611,7 +611,7 @@ describe('auro-input', () => {
 
     it('MM/YY', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="month-year" required></auro-input>
+        <auro-input id="format-date" type="date" format="MM/YY" required></auro-input>
       `);
 
       expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/YY');
@@ -619,7 +619,7 @@ describe('auro-input', () => {
 
     it('MM/YYYY', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="month-fullYear" required></auro-input>
+        <auro-input id="format-date" type="date" format="MM/YYYY" required></auro-input>
       `);
 
       expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/YYYY');
