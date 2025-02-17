@@ -44,12 +44,17 @@ const stringsES = {
   'password': `Las contraseñas válidas deben constar de al menos 8 caracteres, incluyendo al menos una letra mayúscula, una letra minúscula y un número.`,
   'creditcard': 'Por favor, introduzca un número de tarjeta de crédito válida.',
   'dateMMDDYYYY': 'Ingrese una fecha completa en el formato MM/DD/AAAA',
-  'dateMMYY': 'Ingrese una fecha completa en el formato MM/AA',
-  'dateMMYYYY': 'Ingrese una fecha completa en el formato MM/AAAA',
+  'dateDDMMYYYY': 'Ingrese una fecha completa en el formato DD/MM/AAAA',
   'dateYYYYMMDD': 'Ingrese una fecha completa en el formato AAAA/MM/DD',
+  'dateYYYYDDMM': 'Ingrese una fecha completa en el formato AAAA/DD/MM',
+  'dateMMYY': 'Ingrese una fecha completa en el formato MM/AA',
+  'dateYYMM': 'Ingrese una fecha completa en el formato AA/MM',
+  'dateMMYYYY': 'Ingrese una fecha completa en el formato MM/AAAA',
+  'dateYYYYMM': 'Ingrese una fecha completa en el formato AAAA/MM',
   'dateYY': 'Ingrese una fecha completa en el formato AA',
   'dateYYYY': 'Ingrese una fecha completa en el formato AAAA',
   'dateMM': 'Ingrese una fecha completa en el formato MM',
+  'dateDD': 'Ingrese una fecha completa en el formato DD'
 };
 
 const stringsEN = {
@@ -59,12 +64,17 @@ const stringsEN = {
   'password': 'Valid passwords must consist of at least 8 characters, including at least one uppercase letter, one lowercase letter, and one number.',
   'creditcard': 'Please enter a valid credit card number.',
   'dateMMDDYYYY': 'Please enter a complete date in the format MM/DD/YYYY',
-  'dateMMYY': 'Please enter a complete date in the format MM/YY',
-  'dateMMYYYY': 'Please enter a complete date in the format MM/YYYY',
+  'dateDDMMYYYY': 'Please enter a complete date in the format DD/MM/YYYY',
   'dateYYYYMMDD': 'Please enter a complete date in the format YYYY/MM/DD',
-  'dateYYY': 'Please enter a complete date in the format YY',
-  'dateYYYYY': 'Please enter a complete date in the format YYYY',
-  'dateMM': 'Please enter a complete date in the format MM'
+  'dateYYYYDDMM': 'Please enter a complete date in the format YYYY/DD/MM',
+  'dateMMYY': 'Please enter a complete date in the format MM/YY',
+  'dateYYMM': 'Please enter a complete date in the format YY/MM',
+  'dateMMYYYY': 'Please enter a complete date in the format MM/YYYY',
+  'dateYYYYMM': 'Please enter a complete date in the format YYYY/MM',
+  'dateYY': 'Please enter a complete date in the format YY',
+  'dateYYYY': 'Please enter a complete date in the format YYYY',
+  'dateMM': 'Please enter a complete date in the format MM',
+  'dateDD': 'Please enter a complete date in the format DD'
 };
 
 /**

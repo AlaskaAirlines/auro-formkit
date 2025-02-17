@@ -61,41 +61,11 @@ export class AuroInput extends BaseInput {
    * @returns {boolean} - Returns true if the input type is meant to render an icon.
    */
   hasTypeIcon() {
-    const typesWithIcons = [
-      'month-day-year',
-      'month-year',
-      'year-month-day',
-      'month-fullYear',
-      'month',
-      'year',
-      'fullYear'
-    ];
-
-    if (this.icon || typesWithIcons.includes(this.type)) {
+    if (this.icon || this.type === 'date') {
       return true;
     }
 
     return false;
-  }
-
-  isDateType() {
-    let isDateType = false;
-
-    switch (this.type) {
-      case 'month-day-year':
-      case 'month-year':
-      case 'year-month-day':
-      case 'month-fullYear':
-      case 'month':
-      case 'year':
-      case 'fullYear':
-        isDateType = true;
-        break;
-      default:
-        break;
-    }
-
-    return isDateType;
   }
 
   // function that renders the HTML and CSS into  the scope of the component
@@ -127,7 +97,7 @@ export class AuroInput extends BaseInput {
             `) : undefined
             }
 
-            ${this.isDateType()
+            ${this.type === 'date'
             ? html`
               <${this.iconTag}
                 class="accentIcon"
@@ -232,7 +202,7 @@ export class AuroInput extends BaseInput {
         ? html`
         <auro-helptext>
           <p id="${this.uniqueId}" part="helpText">
-            <slot name="helptext">${this.getHelpText(this.type)}</slot>
+            <slot name="helptext">${this.getHelpText()}</slot>
           </p>
         </auro-helptext>
         `

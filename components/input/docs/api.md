@@ -19,7 +19,7 @@ Generate unique names for dependency components.
 | `autocorrect`                     | `autocorrect`                     | `string`  |             | When set to `off`, stops iOS from auto-correcting words when typed into a text box. |
 | `customValidityTypeEmail`         | `customValidityTypeEmail`         | `string`  |             | Custom help text message for email type validity. |
 | `disabled`                        | `disabled`                        | `boolean` | false       | If set, disables the input.                      |
-| `error`                           | `error`                           | `string`  |             |                                                  |
+| `error`                           | `error`                           | `string`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `errorMessage`                    | `errorMessage`                    | `string`  |             | Contains the help text message for the current validity error. |
 | `format`                          | `format`                          | `string`  |             | Specifies the format of the input. Should be used in conjunction with the `type` attribute. |
 | `icon`                            | `icon`                            | `boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
@@ -45,18 +45,17 @@ Generate unique names for dependency components.
 | `setCustomValidityTooShort`       | `setCustomValidityTooShort`       | `string`  |             | Custom help text message to display when validity = `tooShort`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
 | `spellcheck`                      | `spellcheck`                      | `string`  |             | An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`. |
-| `type`                            | `type`                            | `string`  |             | Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `month-day-year`, `month-year`, `year-month-day` or `text`. If given value is not allowed or set, defaults to `text`. |
+| `type`                            | `type`                            | `string`  |             | Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `date`, `tel` or `text`. If given value is not allowed or set, defaults to `text`. |
 | `validateOnInput`                 | `validateOnInput`                 | `boolean` |             | Sets validation mode to re-eval with each input. |
 | `validity`                        | `validity`                        | `string`  |             | Specifies the `validityState` this element is in. |
 | `value`                           | `value`                           | `string`  |             | Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input. |
 
 ## Methods
 
-| Method       | Type                                   | Description                                      |
-|--------------|----------------------------------------|--------------------------------------------------|
-| `isDateType` | `(): boolean`                          |                                                  |
-| `reset`      | `(): void`                             | Resets component to initial state.               |
-| `validate`   | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method     | Type                                   | Description                                      |
+|------------|----------------------------------------|--------------------------------------------------|
+| `reset`    | `(): void`                             | Resets component to initial state.               |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
