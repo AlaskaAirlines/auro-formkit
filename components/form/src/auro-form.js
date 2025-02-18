@@ -517,6 +517,7 @@ export class AuroForm extends LitElement {
 
     // Get rid of old observers - we'll create new ones in a moment
     this.mutationObservers.forEach((mo) => mo.disconnect());
+    this.mutationObservers = [];
 
     const slotNodes = event.currentTarget.assignedNodes();
     slotNodes.forEach((node) => {
@@ -526,6 +527,7 @@ export class AuroForm extends LitElement {
           subtree: true,
           childList: true
         });
+        this.mutationObservers.push(mo);
       }
     });
   }
