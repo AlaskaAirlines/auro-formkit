@@ -290,6 +290,30 @@ For use cases where the field is `required`, but live validation is not wanted, 
 
 </auro-accordion>
 
+### Format <a name="format"></a>
+
+Use the `format` attribute to set the format of the Inputmask. 
+
+Default masking definitions:
+- 9 : numeric
+- a : alphabetical
+- \* : alphanumeric (letters and numbers)
+
+See [Inputmask](https://robinherbots.github.io/Inputmask/#/documentation) for more information on how to configure a mask.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/format.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Error support and HTML5 Validity
 
 The `<auro-input>` component follows the HTML5 input `validity` and `validityState` [specification](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#client-side_validation).
