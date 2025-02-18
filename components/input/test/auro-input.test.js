@@ -592,6 +592,33 @@ describe('auro-input', () => {
     expect(el.value).to.equal(undefined);
   });
 
+  it ('input value is formatted with passed in format and respects the format restrictions', async () => {
+    const el = await fixture(html`
+      <auro-input format="4744[9]{0,4}"></auro-input>
+    `);
+
+    // Prevents non-numeric characters from being entered
+    setInputValue(el, 'www');
+
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('');
+
+    // Sets correct value
+    setInputValue(el, '1234');
+
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('47441234');
+
+    // Prevents more than max characters from being entered
+    setInputValue(el, '1234658965900');
+
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('47441234');
+  });
+
   describe('handles date formatting', () => {
     it('MM/DD/YYYY', async () => {
       const el = await fixture(html`

@@ -21,7 +21,7 @@ Generate unique names for dependency components.
 | `disabled`                        | `disabled`                        | `boolean` | false       | If set, disables the input.                      |
 | `error`                           | `error`                           | `string`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `errorMessage`                    | `errorMessage`                    | `string`  |             | Contains the help text message for the current validity error. |
-| `format`                          | `format`                          | `string`  |             | Specifies the format of the input. Should be used in conjunction with the `type` attribute. |
+| `format`                          | `format`                          | `string`  |             | Specifies the input mask format.                 |
 | `icon`                            | `icon`                            | `boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
 | `id`                              | `id`                              | `string`  |             | Sets the unique ID of the element.               |
 | `lang`                            | `lang`                            | `string`  |             | Defines the language of an element.              |

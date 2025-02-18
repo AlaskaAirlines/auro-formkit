@@ -163,7 +163,7 @@ export default class BaseInput extends LitElement {
       },
 
       /**
-       * Specifies the format of the input. Should be used in conjunction with the `type` attribute.
+       * Specifies the input mask format.
        */
       format: {
         type: String,
@@ -712,61 +712,58 @@ export default class BaseInput extends LitElement {
    * @returns {void} Notify validity state changed via event.
    */
   configureAutoFormatting() {
-    if (this.type) {
-      switch (this.type) {
-        case 'tel':
-          this.delimiters = ['+', ' ', '(', ')', '-'];
-
-          Inputmask({
-            mask: "+9 (999) 999-9999",
-            showMaskOnFocus: false,
-            showMaskOnHover: false,
-            jitMasking: true,
-            isComplete: function () {
-              this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
-            }.bind(this)
-          }).mask(this.inputElement);
-
-          break;
-
-        case 'credit-card':
-          this.delimiters = [' '];
-
-          Inputmask({
-            mask: "9999 9999 9999 9999", 
-            jitMasking: true,
-            isComplete: function () {
-              this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
-            }.bind(this)
-           }).mask(this.inputElement);
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'date': // Make sure data always comes back 'mm/dd/yyyy' regardless of format
-          this.delimiters = ['/'];
-          this.dateMaskPlaceholders = ['m', 'd', 'y'];
-
-          Inputmask({
-            alias: "datetime",
-            inputFormat: this.format || "mm/dd/yyyy",
-            showMaskOnHover: false,
-            showMaskOnFocus: false,
-            prefillYear: false,
-            isComplete: function () {
-              this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
-            }.bind(this)
-          }).mask(this.inputElement);
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        default:
-          // Do nothing
-      }
+    if (!this.type && this.format) {
+        Inputmask({ mask: this.format }).mask(this.inputElement);
+        return;
     }
+
+    let maskConfig;
+
+    switch (this.type) {
+      case 'tel':
+        maskConfig = {
+            mask: "+9 (999) 999-9999",
+            delimiters: ['+', ' ', '(', ')', '-']
+        };
+
+        break;
+
+      case 'credit-card':
+        maskConfig = {
+          mask: "9999 9999 9999 9999",
+          delimiters: [' ']
+        };
+
+        break;
+
+      case 'date':
+        maskConfig = {
+          alias: "datetime",
+          inputFormat: this.format || "mm/dd/yyyy",
+          delimiters: ['/'],
+          dateMaskPlaceholders: ['m', 'd', 'y']
+        };
+
+        break;
+
+      default:
+        return;
+    }
+
+    Object.assign(this, maskConfig);
+    
+    Inputmask({
+      ...maskConfig,
+      showMaskOnFocus: false,
+      showMaskOnHover: false,
+      jitMasking: this.type !== date,
+      prefillYear: this.type === 'date' ? false : undefined,
+      isComplete: () => {
+        this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
+      }
+    }).mask(this.inputElement);
+
+    this.inputMode = 'numeric';
   }
 
   /**
