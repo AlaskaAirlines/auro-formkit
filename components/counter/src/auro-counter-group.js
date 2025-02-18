@@ -17,6 +17,9 @@ import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts
 import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
 import dropdownVersion from "./dropdownVersion.js";
 
+import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+import bibTemplateVersion from './bibtemplateVersion.js';
+
 import './auro-counter-wrapper.js';
 
 /**
@@ -42,6 +45,7 @@ export class AuroCounterGroup extends LitElement {
     this.total = undefined;
     this.validity = undefined;
     this.value = undefined;
+    this.mobileFullscreenBreakpoint = 'sm';
 
     /**
      * @private
@@ -70,6 +74,13 @@ export class AuroCounterGroup extends LitElement {
      * @type {string}
      */
     this.dropdownTag = versioning.generateTag("auro-dropdown", dropdownVersion, AuroDropdown);
+
+    /**
+     * Dynamically generated bibtempalate tag.
+     * @private
+     * @type {string}
+     */
+    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
   }
 
   static get styles() {
@@ -122,6 +133,25 @@ export class AuroCounterGroup extends LitElement {
        */
       value: {
         type: Object,
+      },
+
+      /**
+       * If declared, make mobileHeadline in HeadingDisplay.
+       * Otherwise, Heading 600
+       */
+      largeMobileHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.
+       * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       * @default sm
+       */
+      mobileFullscreenBreakpoint: {
+        type: String,
+        reflect: true
       }
     };
   }
@@ -241,6 +271,25 @@ export class AuroCounterGroup extends LitElement {
     this.counters.forEach((counter) => {
       counter.addEventListener("input", () => this.updateValue());
     });
+
+    // configure bib Header for fullscreen view
+    const bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    bibtemplate.addEventListener('close-click', () => {
+      if (this.dropdown.isPopoverVisible) {
+        this.dropdown.hide();
+      }
+    });
+    const bibHeader = this.querySelector('[slot="bib.mobile.headline"]');
+    if (bibHeader) {
+      bibHeader.setAttribute('slot', 'header');
+      bibtemplate.append(bibHeader);
+    }
+
+    const bibFooter = this.querySelector('[slot="bib.mobile.footer"]');
+    if (bibFooter) {
+      bibFooter.setAttribute('slot', 'footer');
+      bibtemplate.append(bibFooter);
+    }
   }
 
   /**
@@ -317,14 +366,18 @@ export class AuroCounterGroup extends LitElement {
   render() {
     return html`
     ${this.isDropdown
-      ? html`<${this.dropdownTag} common chevron>
+      ? html`<${this.dropdownTag} common chevron mobilefullscreenbreakpoint="${this.mobileFullscreenBreakpoint}">
+
         <div slot="trigger"><slot name="valueText">
           ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
         </slot></div>
         <div slot="label"><slot name="label"></slot></div>
         <div slot="helpText"><slot name="helpText"></slot></div>
-        <auro-counter-wrapper isInDropdown>
-        </auro-counter-wrapper>
+
+          <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}">
+          <auro-counter-wrapper isInDropdown>
+          </auro-counter-wrapper>
+        </${this.bibtemplateTag}>
       </${this.dropdownTag}>
       <slot @slotchange=${() => this.configureDropdownCounters()}></slot>`
       : html`<auro-counter-wrapper><slot @slotchange=${() => this.configureCounters()}></slot></auro-counter-wrapper>`

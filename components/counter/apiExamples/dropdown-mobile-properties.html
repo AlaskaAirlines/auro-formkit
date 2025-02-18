@@ -1,8 +1,7 @@
 <div style="max-width: 350px;">
-  <auro-counter-group isDropdown>
+  <auro-counter-group id="dropdownCouterExample" isDropdown mobileFullscreenBreakpoint="lg">
     <span slot="bib.mobile.headline">Counter Bib Header</span>
-    <div slot="valueText">Custom value text</div>
-    <div slot="label"></div>
+    <div slot="helpText">This is help text</div>
     <auro-counter>
       Adults
       <span slot="description">18 years or older</span>
@@ -15,5 +14,10 @@
       Lap Infants
       <span slot="description">Under 2 years</span>
     </auro-counter>
+
+    <div slot="bib.mobile.footer" style="display:flex; justify-content: stretch; gap: 1.5rem">
+      <auro-button id="dropdownCounterExampleResetbutton" fluid variant="secondary" style="flex: 1 50%">Reset</auro-button>
+      <auro-button id="dropdownCounterExampleSavebutton" fluid style="flex: 1 50%">Save</auro-button>
+    </div>
   </auro-counter-group>
 </div>
