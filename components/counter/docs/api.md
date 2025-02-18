@@ -36,14 +36,16 @@
 
 ## Properties
 
-| Property     | Attribute    | Type      | Default     | Description                                      |
-|--------------|--------------|-----------|-------------|--------------------------------------------------|
-| `isDropdown` | `isDropdown` | `boolean` | false       | Indicates if the counter group is displayed as a dropdown. |
-| `max`        | `max`        | `number`  | "undefined" | The maximum value allowed for the whole group of counters. |
-| `min`        | `min`        | `number`  | "undefined" | The minimum value allowed for the whole group of counters. |
-| `total`      | `total`      | `number`  | "undefined" | The total value of the counters.                 |
-| `validity`   | `validity`   | `string`  | "undefined" | Reflects the validity state.                     |
-| `value`      | `value`      | `object`  | "undefined" | The current individual values of the nested counters. |
+| Property                     | Attribute                    | Type      | Default     | Description                                      |
+|------------------------------|------------------------------|-----------|-------------|--------------------------------------------------|
+| `isDropdown`                 | `isDropdown`                 | `boolean` | false       | Indicates if the counter group is displayed as a dropdown. |
+| `largeMobileHeadline`        | `largeMobileHeadline`        | `boolean` |             | If declared, make mobileHeadline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `max`                        | `max`                        | `number`  | "undefined" | The maximum value allowed for the whole group of counters. |
+| `min`                        | `min`                        | `number`  | "undefined" | The minimum value allowed for the whole group of counters. |
+| `mobileFullscreenBreakpoint` | `mobileFullscreenBreakpoint` | `string`  | "sm"        | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
+| `total`                      | `total`                      | `number`  | "undefined" | The total value of the counters.                 |
+| `validity`                   | `validity`                   | `string`  | "undefined" | Reflects the validity state.                     |
+| `value`                      | `value`                      | `object`  | "undefined" | The current individual values of the nested counters. |
 
 ## Methods
 
