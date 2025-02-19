@@ -6,7 +6,7 @@
 /* eslint-disable max-lines */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-checkbox-group', () => {
   it('has the expected properties and validity in required state', async () => {

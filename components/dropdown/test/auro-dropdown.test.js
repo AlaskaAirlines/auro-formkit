@@ -1,5 +1,5 @@
 import { fixture, html, expect, oneEvent } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-dropdown', () => {
   it('auro-dropdown is accessible', async () => {

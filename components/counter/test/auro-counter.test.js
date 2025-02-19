@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions, no-undef, no-magic-numbers */
 
 import { fixture, html, expect, assert, nextFrame } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-counter: increment', () => {
   it('increments the value by 1 when no argument is provided', async () => {

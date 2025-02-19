@@ -14,10 +14,10 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import AuroFormValidation from '@auro-formkit/form-validation';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import dropdownVersion from './formkit/auro-dropdownVersion.js';
+import dropdownVersion from './dropdownVersion.js';
 
 import { AuroInput } from '@aurodesignsystem/auro-input';
-import inputVersion from './formkit/auro-inputVersion.js';
+import inputVersion from './inputVersion.js';
 
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';

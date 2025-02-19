@@ -9,7 +9,7 @@ import { auroMenuLoadingExample } from '../apiExamples/loading';
 
 
 import { AuroCombobox } from '../src/auro-combobox.js';
-import '../../menu/src/index.js';
+import '../../menu/src/registered.js';
 
 AuroCombobox.register();
 

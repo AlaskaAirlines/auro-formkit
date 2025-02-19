@@ -3,120 +3,31 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build", 
-        "build:sass", 
-        "build:version", 
-        "postCss:component", 
-        "sass:render", 
-        "bundler", 
-        "types"
-      ],
+      "dependsOn": ["^build", "build:version"],
       "outputs": [
         "dist/**",
-        "build/**",
-        "src/**/*.css",
-        "*-css.js"
+        "demo/*.md",
+        "demo/*.min.js",
+        "docTemplates/**",
+        "docs/api.md",
+        "src/styles/*.css",
+        "src/styles/*-css.js",
+        "src/*Version.js"
       ]
-    },
-    "test:watch": {
-      "dependsOn": ["build"],
-      "persistent": true,
-      "cache": false
-    },
-    "@aurodesignsystem/auro-checkbox#build": {
-      "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build",
-        "postCss:component",
-        "sass:render"
-      ]
-    },
-    "@aurodesignsystem/auro-combobox#build": {
-      "dependsOn": [
-        "@aurodesignsystem/auro-bibtemplate#build",
-        "@aurodesignsystem/auro-input#build",
-        "@aurodesignsystem/auro-dropdown#build",
-        "postCss:component",
-        "sass:render"
-      ]
-    },
-    "@aurodesignsystem/auro-datepicker#build": {
-      "dependsOn": [
-        "@aurodesignsystem/auro-input#build",
-        "@aurodesignsystem/auro-dropdown#build",
-        "postCss:component",
-        "sass:render"
-      ]
-    },
-    "@aurodesignsystem/auro-dropdown#build": {
-      "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build",
-        "postCss:component",
-        "sass:render"
-      ]
-    },
-    "@aurodesignsystem/auro-input#build": {
-      "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build",
-        "postCss:component",
-        "sass:render"
-      ]
-    },
-    "@aurodesignsystem/auro-radio#build": {
-      "dependsOn": [
-        "@aurodesignsystem/auro-helptext#build",
-        "postCss:component",
-        "sass:render"
-      ]
-    },
-    "@aurodesignsystem/auro-select#build": {
-      "dependsOn": [
-        "@aurodesignsystem/auro-dropdown#build",
-        "postCss:component",
-        "sass:render"
-      ]
-    },
-    "build:docs": {
-      "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
-    },
-    "@auro-formkit/build-tools#build:docs:kit": {
-      "inputs": ["../../docs/partials/**/*", "../../docs/templates/**/*", "src/kitDocProcessor.mjs"],
-      "outputs": ["../../README.md"]
-    },
-    "build:version": {
-      "outputs": ["src/*.js", "src/**/*.js"]
-    },
-    "build:sass": {
-      "outputs": ["src/**/*.css"],
-      "inputs": ["src/**/*.scss"]
-    },
-    "postCss:component": {
-      "dependsOn": ["build:sass"],
-      "inputs": ["src/**/*.css"],
-      "outputs": [
-        "src/**/*.css",
-        "src/**/*-css.js"
-      ]
-    },
-    "sass:render": {
-      "dependsOn": ["postCss:component"],
-      "inputs": ["src/**/*.css"],
-      "outputs": ["src/**/*-css.js"]
-    },
-    "bundler": {
-      "dependsOn": ["sass:render", "postCss:component"],
-      "outputs": ["dist/**"]
-    },
-    "types": {
-      "outputs": ["dist/**"]
     },
     "build:watch": {
       "dependsOn": ["^build"],
       "persistent": true
     },
+    "build:version": {
+      "inputs": ["src/*Version.js"],
+      "outputs": ["src/*Version.js"]
+    },
+    "build:docs": {
+      "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
+    },
     "dev": {
       "dependsOn": ["build"],
-      "cache": false,
       "persistent": true
     },
     "clean": {
@@ -127,8 +38,55 @@
       "outputs": ["coverage/**"],
       "inputs": ["src/**/*.js", "test/**/*.js"]
     },
+    "test:watch": {
+      "dependsOn": ["build"],
+      "persistent": true,
+      "cache": false
+    },
     "lint": {
       "outputs": []
+    },
+    "@auro-formkit/build-tools#build:docs:kit": {
+      "inputs": ["../../docs/partials/**/*", "../../docs/templates/**/*", "src/kitDocProcessor.mjs"],
+      "outputs": ["../../README.md"]
+    },
+    "@aurodesignsystem/auro-checkbox#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
+    "@aurodesignsystem/auro-combobox#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-bibtemplate#build",
+        "@aurodesignsystem/auro-input#build",
+        "@aurodesignsystem/auro-dropdown#build"
+      ]
+    },
+    "@aurodesignsystem/auro-datepicker#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-input#build",
+        "@aurodesignsystem/auro-dropdown#build"
+      ]
+    },
+    "@aurodesignsystem/auro-dropdown#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
+    "@aurodesignsystem/auro-input#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
+    "@aurodesignsystem/auro-radio#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
+    "@aurodesignsystem/auro-select#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-dropdown#build"
+      ]
     }
   }
 }

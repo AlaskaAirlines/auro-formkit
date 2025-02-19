@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers */
-import '../src/index.js';
+import '../src/registered.js';
 
 export function initExamples(initialCount = 0) {
   try {

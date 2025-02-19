@@ -1,7 +1,7 @@
 import { fixture, html, expect, waitUntil, elementUpdated } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import '../src/index.js';
-import '../../menu/src/index.js';
+import '../src/registered.js';
+import '../../menu/src/registered.js';
 
 describe('auro-combobox', () => {
   runFulltest(false);

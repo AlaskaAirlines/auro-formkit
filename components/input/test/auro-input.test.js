@@ -1,5 +1,5 @@
 import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-input', () => {
   it('web component is successfully created in the document', async () => {

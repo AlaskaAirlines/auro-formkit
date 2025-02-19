@@ -1,7 +1,7 @@
 /* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
 import { fixture, html, expect, elementUpdated, assert, nextFrame } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-counter-group: configureCounters', () => {
   it('updates the counters property with all auro-counter elements', async () => {

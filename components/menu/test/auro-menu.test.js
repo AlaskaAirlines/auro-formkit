@@ -1,5 +1,5 @@
 import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 import { arrayConverter } from '../src/auro-menu-utils.js';
 
 describe('auro-menu', () => {

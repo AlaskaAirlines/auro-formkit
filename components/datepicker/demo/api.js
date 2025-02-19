@@ -8,7 +8,7 @@ import { updateMinDateExample } from './../apiExamples/updateMinDate';
 import { validityExample } from './../apiExamples/validity';
 import { inDialogExample } from '../apiExamples/inDialog.js';
 import { resetStateExample } from '../apiExamples/resetState.js';
-import '../src/index.js';
+import '../src/registered.js';
 
 export function initExamples(initCount) {
   initCount = initCount || 0;

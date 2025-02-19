@@ -1,6 +1,6 @@
 {
   "name": "@auro-formkit/typescript",
-  "description": "Shared Typescipt configurations for auro-formkit monorepo",
+  "description": "Shared Typescript configurations for auro-formkit monorepo",
   "version": "0.0.0",
   "private": true,
   "scripts": {

@@ -2,7 +2,7 @@
 
 import { fixture, html, expect, elementUpdated, nextFrame } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-datepicker', () => {
   it('auro-datepicker is accessible', async () => {
