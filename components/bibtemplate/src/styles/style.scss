@@ -38,6 +38,10 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
+
+  [auro-icon] {
+    --ds-auro-icon-size: 2.5rem;
+  }
 }
 
 #bodyContainer {
