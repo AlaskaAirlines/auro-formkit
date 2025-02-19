@@ -13,7 +13,7 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Formkit
+# Auro Formkit
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -21,6 +21,11 @@ The following sections are editable by making changes to the following files:
 ## Install
 
 <!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Getting Started
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Development
