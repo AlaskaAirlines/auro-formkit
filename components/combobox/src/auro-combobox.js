@@ -383,7 +383,7 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    const bibHeader = this.querySelector('[slot="mobile.headline"]');
+    const bibHeader = this.querySelector('[slot="bib.mobile.headline"]');
     if (bibHeader) {
       bibHeader.setAttribute('slot', 'header');
       this.bibtemplate.append(bibHeader);
@@ -396,13 +396,13 @@ export class AuroCombobox extends LitElement {
 
     this.transportInput = this.transportInput.bind(this);
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
+      // wait a frame in case the bib gets hide immidatly after showing because there is no value
       setTimeout(this.transportInput);
     });
 
     this.dropdown.addEventListener('auroDropdown-strategy-change', (event) => {
       this.isDropdownFullscreen = event.detail.strategy === 'fullscreen';
-      this.transportInput();
-      this.showBib();
+      setTimeout(this.transportInput);
     });
 
   }
@@ -582,11 +582,31 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   transportInput() {
+    if (!this.input) {
+      return;
+    }
+
+    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext');
+    const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
+
     if (this.dropdown.isPopoverVisible && this.isDropdownFullscreen) {
       if (this.input.parentNode !== this.bibtemplate) {
+        // keep the trigger size the same even after input gets removed
+        const parentSize = window.getComputedStyle(this.dropdown.trigger);
+        this.dropdown.trigger.style.height = parentSize.height;
+
+        // input will not have border on bib
         this.input.removeAttribute('bordered');
         this.input.setAttribute('borderless', true);
         this.input.setAttribute('slot', 'subheader');
+
+        // set disply of helpText and alert icon programatically
+        // because ::slotted and ::part do not work together
+        inputHelpText.style.display = 'none';
+        if (inputAlertIcon) {
+          inputAlertIcon.style.display = 'none';
+        }
+
         this.bibtemplate.append(this.input);
         this.input.focus();
       }
@@ -594,6 +614,13 @@ export class AuroCombobox extends LitElement {
       this.input.setAttribute('bordered', true);
       this.input.removeAttribute('borderless');
       this.input.setAttribute('slot', 'trigger');
+
+      // reset display of helpText and alert icon to be visible
+      inputHelpText.style.display = '';
+      if (inputAlertIcon) {
+        inputAlertIcon.style.display = '';
+      }
+
       this.dropdown.append(this.input);
       this.input.focus();
     }
@@ -680,8 +707,8 @@ export class AuroCombobox extends LitElement {
       if (evt.key === 'Tab') {
         this.hideBib();
 
-        if (this.isDropdownFullscreen) {
-          // if it's on fullscreen, just close the bib and do not move the focus to the next focasable element
+        if (this.dropdown.isPopoverVisible && this.isDropdownFullscreen) {
+          // if bib is open in fullscreen, just close the bib and do not move the focus to the next focasable element
           evt.preventDefault();
         }
       }
