@@ -199,6 +199,15 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
+       * If declared, make mobileHeadline in HeadingDisplay.
+       * Otherwise, Heading 600
+       */
+      largeMobileHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * @private
        */
       isDropdownFullscreen: {
@@ -505,9 +514,17 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   configureInput() {
+    // When input is in bibtemplate, make the event to be fired at combobox element
     this.bubbleUpInputKeyEvent = this.bubbleUpInputKeyEvent.bind(this);
     this.input.addEventListener('keydown', this.bubbleUpInputKeyEvent);
     this.input.addEventListener('keyup', this.bubbleUpInputKeyEvent);
+
+    // Programatically inject as the slot cannot be carried over to bibtemplate.
+    // It's because the bib is newly attach to body).
+    const label = this.querySelector('[slot="label"]');
+    if (label) {
+      this.input.append(label);
+    }
 
     this.addEventListener('keyup', (evt) => {
       if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
@@ -640,7 +657,7 @@ export class AuroCombobox extends LitElement {
     }
 
     // Force dropdown bib to hide if input value has no matching suggestions
-    if (!this.availableOptions || this.availableOptions.length === 0) {
+    if ((!this.availableOptions || this.availableOptions.length === 0) && !this.isDropdownFullscreen) {
       this.hideBib();
     }
   }
@@ -843,14 +860,11 @@ export class AuroCombobox extends LitElement {
             .autocomplete="${this.autocomplete}"
             .type="${this.type}"
             @input="${this.handleInputValueChange}">
-            <slot name="label" slot="label"></slot>
           </${this.inputTag}>
 
           <div class="menuWrapper"></div>
 
-          <${this.bibtemplateTag}
-            large>
-            <slot name="subheader"></slot>
+          <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}">
           </${this.bibtemplateTag}>
 
           <p slot="helpText">
