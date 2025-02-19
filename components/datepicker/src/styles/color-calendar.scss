@@ -25,7 +25,6 @@
 
 .mobileHeader {
   background-color: var(--ds-auro-calendar-mobile-header-container-color);
-  box-shadow: 0 0 10px var(--ds-auro-calendar-mobile-header-boxshadow-color);
 }
 
 .mobileDateLabel {
@@ -38,10 +37,6 @@
       background-color: var(--ds-auro-calendar-mobile-header-divider-color);
     }
   }
-}
-
-.mobileFooterActions {
-  background-color: var(--ds-auro-calendar-mobile-footer-container-color);
 }
 
 @include auro_breakpoint($max: $ds-grid-breakpoint-sm) {

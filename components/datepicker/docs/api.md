@@ -10,6 +10,7 @@
 | `centralDate`                     | `centralDate`                     |           | `string`   |                                                  | The date that determines the currently visible month. |
 | `disabled`                        | `disabled`                        |           | `boolean`  | false                                            | If set, disables the datepicker.                 |
 | `error`                           | `error`                           |           | `string`   |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| `largeMobileHeadline`             | `largeMobileHeadline`             |           | `boolean`  |                                                  | If declared, make mobileHeadline in HeadingDisplay.<br />Otherwise, Heading 600 |
 | `maxDate`                         | `maxDate`                         |           | `string`   |                                                  | Maximum date. All dates after will be disabled.  |
 | `minDate`                         | `minDate`                         |           | `string`   |                                                  | Minimum date. All dates before will be disabled. |
 | `monthNames`                      | `monthNames`                      |           | `array`    | ["January","February","March","April","May","June","July","August","September","October","November","December"] | Names of all 12 months to render in the calendar, used for localization of date string in mobile layout. |
@@ -52,6 +53,7 @@
 | `fromLabel`          | Defines the label content for the first input.   |
 | `helpText`           | Defines the content of the helpText.             |
 | `mobileDateLabel`    | Defines the content to display above selected dates in the mobile layout. |
+| `mobileHeadline`     | Defines the headline to display above mobileDateLabels in the mobile layout. |
 | `popover_MM_DD_YYYY` | Defines the content to display in the auro-calendar-cell popover for the specified date. |
 | `toLabel`            | Defines the label content for the second input when the `range` attribute is used. |
 
