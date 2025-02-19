@@ -751,7 +751,7 @@ describe('auro-input', () => {
 
       setInputValue(el,'4147 34');
       await elementUpdated(el);
-      expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-visa');
+      expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-alaska');
     });
 
     it('Any Corp Card', async () => {
