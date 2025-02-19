@@ -34,6 +34,7 @@ import inputVersion from './inputVersion.js';
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot helpText - Defines the content of the helpText.
+ * @slot mobileHeadline - Defines the headline to display above mobileDateLabels in the mobile layout.
  * @slot mobileDateLabel - Defines the content to display above selected dates in the mobile layout.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
  * @slot fromLabel - Defines the label content for the first input.
@@ -191,6 +192,15 @@ export class AuroDatePicker extends LitElement {
        */
       error: {
         type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, make mobileHeadline in HeadingDisplay.
+       * Otherwise, Heading 600
+       */
+      largeMobileHeadline: {
+        type: Boolean,
         reflect: true
       },
 
@@ -656,7 +666,8 @@ export class AuroDatePicker extends LitElement {
    */
   handleReadOnly() {
     // --ds-grid-breakpoint-sm
-    const mobileBreakpoint = 576;
+    const docStyle = getComputedStyle(document.documentElement);
+    const mobileBreakpoint = docStyle.getPropertyValue('--ds-grid-breakpoint-sm');
 
     this.inputList.forEach((input) => {
       if (window.innerWidth < mobileBreakpoint) {
@@ -1010,6 +1021,7 @@ export class AuroDatePicker extends LitElement {
           </div>
           <div class="calendarWrapper" part="calendarWrapper">
             <auro-calendar
+              ?largeMobileHeadline="${this.largeMobileHeadline}"
               ?noRange="${!this.range}"
               .min="${this.convertToWcValidTime(new Date(this.minDate))}"
               .max="${this.convertToWcValidTime(new Date(this.maxDate))}"
@@ -1017,6 +1029,7 @@ export class AuroDatePicker extends LitElement {
               .minDate="${this.minDate}"
               part="calendar"
             >
+              <slot slot="mobileHeadline" name="mobileHeadline" @slotchange="${this.handleSlotToSlot}"></slot>
               <slot slot="mobileDateLabel" name="mobileDateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
               <span slot="mobileDateFromStr">${this.value ? this.getMobileDateStr(this.value) : html`<span class="placeholderDate">MM/DD/YYYY</span>`}</span>
               ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd ? this.getMobileDateStr(this.valueEnd) : html`<span class="placeholderDate">MM/DD/YYYY</span>`}</span>` : undefined}

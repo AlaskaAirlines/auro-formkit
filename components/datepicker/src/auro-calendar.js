@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html } from "lit/static-html.js";
 
 import styleCss from './styles/style-auro-calendar-css.js';
 import colorCss from './styles/color-calendar-css.js';
@@ -10,10 +10,17 @@ import chevronLeft from '@alaskaairux/icons/dist/icons/interface/chevron-left.mj
 import chevronRight from '@alaskaairux/icons/dist/icons/interface/chevron-right.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroDatepickerUtilities } from './utilities.js';
 import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
+
+import { AuroHeader } from '@aurodesignsystem/auro-header/src/auro-header.js';
+import headerVersion from './headerVersion.js';
+
+import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+import bibTemplateVersion from './bibtemplateVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -34,7 +41,7 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
  * @event auroCalendar-monthChanged - Notifies that the visible calendar month(s) have changed.
  */
 
-/* eslint-disable no-magic-numbers, no-undef-init, max-lines */
+/* eslint-disable no-magic-numbers, no-undef-init, max-lines, lit/binding-positions, lit/no-invalid-html */
 
 // class AuroCalendar extends LitElement {
 export class AuroCalendar extends RangeDatepicker {
@@ -85,6 +92,23 @@ export class AuroCalendar extends RangeDatepicker {
      * @private
      */
     this.slots = {};
+
+    const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
+    this.headerTag = versioning.generateTag('auro-header', headerVersion, AuroHeader);
+
+    /**
+     * @private
+     */
+    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+
+    /**
+     * @private
+     */
+    this.dropdown = undefined;
   }
 
   static get styles() {
@@ -129,6 +153,10 @@ export class AuroCalendar extends RangeDatepicker {
       visible: {
         type: Boolean,
         reflect: false
+      },
+      isFullscreen: {
+        type: Boolean,
+        reflect: true
       }
     };
   }
@@ -164,7 +192,8 @@ export class AuroCalendar extends RangeDatepicker {
 
       const dropdown = AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdown, [auro-dropdown]', this);
       const dropdownbib = dropdown ? dropdown.bibContent : AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdownbib, [auro-dropdownbib]', this);
-      const mobileLayout = dropdownbib.hasAttribute('isfullscreen');
+      const mobileLayout = dropdownbib.hasAttribute('isFullscreen');
+      this.isFullscreen = mobileLayout;
       this.utilCalRender.determineNumCalendarsToRender(this, mobileLayout);
 
 
@@ -293,21 +322,25 @@ export class AuroCalendar extends RangeDatepicker {
 
   render() {
     return html`
-      <div class="calendarWrapper">
-        <div class="mobileHeader">
-          <div class="headerDateFrom">
-            <span class="mobileDateLabel">${this.slots.mobileDateLabel}</span>
-            <slot name="mobileDateFromStr"></slot>
-          </div>
-          <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>
+    <${this.bibtemplateTag}
+      ?large="${this.largeMobileHeadline}"
+      ?isFullscreen="${this.isFullscreen}"
+      @close-click="${this.utilCal.requestDismiss}">
+
+      <span slot="header">${this.slots.mobileHeadline}</span>
+
+      <div slot="subheader" class="mobileHeader">
+        <div class="headerDateFrom">
+          <span class="mobileDateLabel">${this.slots.mobileDateLabel}</span>
+          <slot name="mobileDateFromStr"></slot>
         </div>
+        <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>
+      </div>
+
+      <div class="calendarWrapper">
+
         <div class="calendars">
           ${this.renderAllCalendars()}
-        </div>
-        <div class="mobileFooter">
-          <div class="mobileFooterActions">
-            <auro-button fluid @click="${this.utilCal.requestDismiss}">Done</auro-button>
-          </div>
         </div>
         ${this.showPrevMonthBtn ? html`
           <button class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
@@ -320,6 +353,9 @@ export class AuroCalendar extends RangeDatepicker {
           </button>
         ` : undefined}
       </div>
+
+      <auro-button slot="footer" fluid @click="${this.utilCal.requestDismiss}">Done</auro-button>
+    </${this.bibtemplateTag}>
     `;
   }
 }
