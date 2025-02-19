@@ -30,10 +30,11 @@
 
 ## Methods
 
-| Method | Type       | Description                         |
-|--------|------------|-------------------------------------|
-| `hide` | `(): void` | Public method to hide the dropdown. |
-| `show` | `(): void` | Public method to show the dropdown. |
+| Method           | Type       | Description                                      |
+|------------------|------------|--------------------------------------------------|
+| `exposeCssParts` | `(): void` | Exposes CSS parts for styling from parent components. |
+| `hide`           | `(): void` | Public method to hide the dropdown.              |
+| `show`           | `(): void` | Public method to show the dropdown.              |
 
 ## Events
 

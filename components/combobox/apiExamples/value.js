@@ -1,6 +1,3 @@
-/**
- *
- */
 export function valueExample() {
   const valueExample = document.querySelector('#valueExample');
 

@@ -1,6 +1,3 @@
-/**
- *
- */
 export function swapValueExample() {
   const btn = document.querySelector('#swapExampleBtn');
   const comboboxOne = document.querySelector('#swapExampleLeft');

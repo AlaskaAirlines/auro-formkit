@@ -1,6 +1,3 @@
-/**
- *
- */
 export function resetStateExample() {
   const elem = document.querySelector('#resetStateExample');
 
