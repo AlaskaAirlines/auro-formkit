@@ -368,10 +368,13 @@ export class AuroCombobox extends LitElement {
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
     this.bibtemplate.append(this.menuWrapper);
 
+    // Exposes the CSS parts from the bibtemplate for styling
+    this.bibtemplate.exposeCssParts();
+
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    const bibHeader = this.querySelector('[slot="bib.header"]');
+    const bibHeader = this.querySelector('[slot="mobile.headline"]');
     if (bibHeader) {
       bibHeader.setAttribute('slot', 'header');
       this.bibtemplate.append(bibHeader);
@@ -556,6 +559,10 @@ export class AuroCombobox extends LitElement {
 
   /**
    * @private
+   * When the dropdown is visible in fullscreen mode, the input is moved to the subheader slot of bibtemplate.
+   * Otherwise, it's moved back to the trigger slot.
+   * @private
+   * @returns {void}
    */
   transportInput() {
     if (this.dropdown.isPopoverVisible && this.isDropdownFullscreen) {
@@ -653,7 +660,7 @@ export class AuroCombobox extends LitElement {
         }
       }
 
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
+      if (evt.key === 'Tab') {
         this.hideBib();
 
         if (this.isDropdownFullscreen) {
@@ -762,6 +769,7 @@ export class AuroCombobox extends LitElement {
           this.input.value = inputValue;
 
           // If the value got set programmatically make sure we hide the bib
+          // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
           if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
             this.hideBib();
           }

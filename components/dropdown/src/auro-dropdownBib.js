@@ -49,7 +49,7 @@ export class AuroDropdownBib extends LitElement {
     return {
 
       /**
-       * If declared, will take the fullscreen.
+       * If declared, will take the fullscreen when the bib is displayed.
        */
       isFullscreen: {
         type: Boolean,
@@ -101,6 +101,7 @@ export class AuroDropdownBib extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('isFullscreen')) {
       this.childNodes.forEach((child) => {
+        // skip any text that is not in an HTMLElement on setting `isFullscreen` attr.
         if (child.nodeName !== '#text') {
           if (this.isFullscreen) {
             child.setAttribute('isFullscreen', 'true');
@@ -120,9 +121,4 @@ export class AuroDropdownBib extends LitElement {
       </div>
     `;
   }
-}
-
-// default internal definition
-if (!customElements.get("auro-dropdownbib")) {
-  customElements.define("auro-dropdownbib", AuroDropdownBib);
 }

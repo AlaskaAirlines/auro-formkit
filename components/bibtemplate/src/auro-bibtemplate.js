@@ -70,10 +70,18 @@ export class AuroBibtemplate extends LitElement {
       composed: true }));
   }
 
+  /**
+   * Exposes CSS parts for styling from parent components.
+   * @returns {void}
+   */
+  exposeCssParts() {
+    this.setAttribute('exportparts', 'bibtemplate:dropdownBibTemplate');
+  }
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
-      <div id="bibTemplate">
+      <div id="bibTemplate" part="bibtemplate">
       ${this.isFullscreen ? html`
         <div id="headerContainer">
           <button id="closeButton" @click="${this.onCloseButtonClick}">

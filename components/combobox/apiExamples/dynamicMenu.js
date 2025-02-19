@@ -2,14 +2,8 @@
 // -----------------------
 import { DynamicData } from './dynamicMenuDataApi';
 
-/**
- *
- */
 export function dynamicMenuExample() {
   // Resets the root menu
-  /**
-   *
-   */
   function resetMenu(root) {
     while (root.firstChild) {
       root.removeChild(root.firstChild);
@@ -17,22 +11,19 @@ export function dynamicMenuExample() {
   }
 
   // Generates HTML for menu and submenus using country & city data from an external API
-  /**
-   *
-   */
   function generateHtml(data) {
     const initialMenu = document.querySelector('#initMenu');
 
     resetMenu(initialMenu);
 
     for (let index = 0; index < data.length; index++) {
-      const {country} = data[index];
-      const {cities} = data[index];
+      let country = data[index]['country'];
+      let cities = data[index]['cities'];
 
       generateMenuOptionHtml(initialMenu, country, country);
 
       for (let indexB = 0; indexB < cities.length; indexB++) {
-        const subMenu = document.createElement('auro-menu');
+        let subMenu = document.createElement('auro-menu');
 
         generateMenuOptionHtml(subMenu, cities[indexB], cities[indexB]);
 
@@ -42,11 +33,8 @@ export function dynamicMenuExample() {
   }
 
   // Helper function that generates HTML for menuoptions
-  /**
-   *
-   */
   function generateMenuOptionHtml(menu, label, value) {
-    const option = document.createElement('auro-menuoption');
+    let option = document.createElement('auro-menuoption');
 
     option.value = value;
     option.innerHTML = label;

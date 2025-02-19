@@ -16,12 +16,15 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
+
+import { AuroDropdownBib } from './auro-dropdownBib.js';
+import dropdownVersion from './dropdownVersion.js';
+
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import '@aurodesignsystem/auro-helptext';
-import './auro-dropdownBib.js';
 
 /**
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
@@ -115,7 +118,16 @@ export class AuroDropdown extends LitElement {
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
     this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
+
+    /**
+     * @private
+     */
+    this.dropdownBibTag = versioning.generateTag('auro-dropdownbib', dropdownVersion, AuroDropdownBib);
   }
 
   /**
@@ -353,7 +365,6 @@ export class AuroDropdown extends LitElement {
 
   /**
    * Exposes CSS parts for styling from parent components.
-   * @private
    * @returns {void}
    */
   exposeCssParts() {
@@ -561,14 +572,14 @@ export class AuroDropdown extends LitElement {
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>
         <div id="bibSizer" part="size"></div>
-        <auro-dropdownbib
+        <${this.dropdownBibTag}
           id="bib"
           role="tooltip"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
           ?rounded="${this.common || this.rounded}"
           ?inset="${this.common || this.inset}">
-        </auro-dropdownbib>
+        </${this.dropdownBibTag}>
       </div>
     `;
   }
