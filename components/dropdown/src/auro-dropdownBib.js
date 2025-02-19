@@ -8,6 +8,8 @@
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
+import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+
 import styleCss from "./styles/bibStyles-css.js";
 import colorCss from "./styles/bibColors-css.js";
 import tokensCss from "./styles/tokens-css.js";
@@ -35,6 +37,8 @@ export class AuroDropdownBib extends LitElement {
      * @private
      */
     this._mobileBreakpointValue = undefined;
+
+    AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-dropdownbib');
   }
 
   static get styles() {

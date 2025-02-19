@@ -163,7 +163,7 @@ export class AuroCalendar extends RangeDatepicker {
       this.utilCal.assessNavigationButtonVisibility(this);
 
       const dropdown = AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdown, [auro-dropdown]', this);
-      const dropdownbib = dropdown ? dropdown.bibContent : AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdownbib', this);
+      const dropdownbib = dropdown ? dropdown.bibContent : AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdownbib, [auro-dropdownbib]', this);
       const mobileLayout = dropdownbib.hasAttribute('isfullscreen');
       this.utilCalRender.determineNumCalendarsToRender(this, mobileLayout);
 

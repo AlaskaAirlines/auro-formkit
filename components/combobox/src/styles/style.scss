@@ -36,11 +36,3 @@
     --ds-auro-input-container-color: transparent;
   }
 }
-
-:host {
-  combobox-dropdown {
-    &::part(trigger) {
-      padding-right: var(--ds-size-150, $ds-size-150);
-    }
-  }
-}
