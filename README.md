@@ -13,7 +13,7 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Formkit
+# Auro Formkit
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
@@ -25,14 +25,18 @@ The following sections are editable by making changes to the following files:
 It is a monorepo that contains the following components:
 
 - `auro-checkbox`
+    - `auro-checkbox-group`
 - `auro-combobox`
 - `auro-counter`
+    - `auro-counter-group`
 - `auro-datepicker`
 - `auro-dropdown`
 - `auro-form`
 - `auro-input`
 - `auro-menu`
+    - `auro-menu-option`
 - `auro-radio`
+    - `auro-radio-group`
 - `auro-select`
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -50,6 +54,70 @@ $ npm i @aurodesignsystem/auro-formkit
 
 Installing as a direct, dev or peer dependency is up to the user installing the package. If you are unsure as to what type of dependency you should use, consider reading this [stack overflow](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies) answer.
 
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Getting Started
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
+<!-- The below content is automatically added from ./docs/partials/gettingStarted.md -->
+To start using the Auro Formkit components, follow the instructions below:
+
+### Usage
+
+You can use Auro Formkit components in your project in two ways: default or custom registration.
+
+#### Default Registration
+
+For default registration, simply import the component:
+
+```javascript
+import "@aurodesignsystem/auro-formkit/auro-checkbox";
+```
+
+This will automatically register both the `<auro-checkbox>` and the included `<auro-checkbox-group>` component for use in your project. Note that not all Auro Formkit components have sub-components. Be sure to check the documentation for each component to understand its specific usage and registration requirements.
+
+#### Class Custom Registration
+
+If you prefer to register the component with a custom name, you can call the component class directly to create a custom registration:
+
+```javascript
+import { AuroCheckbox, AuroCheckboxGroup } from "@aurodesignsystem/auro-formkit/auro-checkbox/class";
+
+AuroCheckbox.register('custom-checkbox');
+AuroCheckbox.register('custom-checkbox-group');
+```
+
+This will register the component as `<custom-checkbox>` and `<custom-checkbox-group>`.
+
+### Basic HTML Example
+
+Here is an example of how to use the Auro Checkbox component in your HTML:
+
+`index.html -> <head>`
+
+```html
+<script type="module">
+    import "@aurodesignsystem/auro-formkit/auro-checkbox";
+</script>
+```
+
+`index.html -> <body>`
+
+```html
+<auro-checkbox-group>
+    <span slot="legend">
+        Form label goes here
+    </span>
+    <auro-checkbox value="value1" name="basic" id="checkbox-basic1">
+        Checkbox option
+    </auro-checkbox>
+    <auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>
+        Checkbox option two
+    </auro-checkbox>
+</auro-checkbox-group>
+```
+
+By following these steps, you can easily integrate Auro Formkit components into your project.
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Development
@@ -121,7 +189,7 @@ The package's `package.json` will have every dependency that it needs. This is t
 #### Internal Dependencies
 - These are packages from within the `auro-formkit` monorepo
 - Allow sharing code between different packages in your repository
-- Example: The `@auro-formkit/combobox` package might depend on `@auro-formkit/input`
+- Example: The `@aurodesignsystem/combobox` package might depend on `@auro-formkit/input`
 - Must be declared in `package.json` just like external dependencies
 - Use workspace protocols (e.g., `"workspace:*"` or `"workspace:^1.0.0"`)
 
