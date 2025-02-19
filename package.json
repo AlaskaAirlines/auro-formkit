@@ -19,14 +19,19 @@
     "components/*",
     "packages/*"
   ],
+  "files": [
+    "packages/build-tools/src/postinstall.mjs",
+    "components/*/dist/**/*",
+    "components/*/demo/**/*",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
   "scripts": {
     "build": "turbo run build",
-    "build:sass": "turbo run build:sass",
+    "sass": "turbo run sass",
     "build:version": "turbo run build:version",
-    "postCss:component": "turbo run postCss:component",
-    "sass:render": "turbo run sass:render",
-    "bundler": "turbo run bundler",
-    "types": "turbo run types",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "test": "turbo run test",
@@ -36,7 +41,7 @@
     "postinstall": "node ./packages/build-tools/src/postinstall.mjs",
     "build:docs": "turbo run build:docs",
     "build:docs:kit": "node ./packages/build-tools/src/kitDocProcessor.mjs",
-    "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
+    "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./ -type d -name '.turbo' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky"
   },
@@ -104,7 +109,7 @@
   "release": {
     "branches": [
       {
-        "name": "main"
+        "name": "default"
       },
       {
         "name": "beta",
@@ -142,5 +147,87 @@
     "auro",
     "design system",
     "web components"
-  ]
+  ],
+  "exports": {
+    "./auro-checkbox": "./components/checkbox/dist/registered.js",
+    "./auro-checkbox/demo/*.md": "./components/checkbox/demo/*.md",
+    "./auro-checkbox/demo/*.js": "./components/checkbox/demo/*.min.js",
+    "./auro-checkbox/class": {
+      "module": "./components/checkbox/dist/index.js",
+      "types": "./components/checkbox/dist/index.d.ts",
+      "default": "./components/checkbox/dist/index.js"
+    },
+    "./auro-combobox": "./components/combobox/dist/registered.js",
+    "./auro-combobox/demo/*.md": "./components/combobox/demo/*.md",
+    "./auro-combobox/demo/*.js": "./components/combobox/demo/*.min.js",
+    "./auro-combobox/class": {
+      "module": "./components/combobox/dist/index.js",
+      "types": "./components/combobox/dist/index.d.ts",
+      "default": "./components/combobox/dist/index.js"
+    },
+    "./auro-counter": "./components/counter/dist/registered.js",
+    "./auro-counter/demo/*.md": "./components/counter/demo/*.md",
+    "./auro-counter/demo/*.js": "./components/counter/demo/*.min.js",
+    "./auro-counter/class": {
+      "module": "./components/counter/dist/index.js",
+      "types": "./components/counter/dist/index.d.ts",
+      "default": "./components/counter/dist/index.js"
+    },
+    "./auro-datepicker": "./components/datepicker/dist/registered.js",
+    "./auro-datepicker/demo/*.md": "./components/datepicker/demo/*.md",
+    "./auro-datepicker/demo/*.js": "./components/datepicker/demo/*.min.js",
+    "./auro-datepicker/class": {
+      "module": "./components/datepicker/dist/index.js",
+      "types": "./components/datepicker/dist/index.d.ts",
+      "default": "./components/datepicker/dist/index.js"
+    },
+    "./auro-dropdown": "./components/dropdown/dist/registered.js",
+    "./auro-dropdown/demo/*.md": "./components/dropdown/demo/*.md",
+    "./auro-dropdown/demo/*.js": "./components/dropdown/demo/*.min.js",
+    "./auro-dropdown/class": {
+      "module": "./components/dropdown/dist/index.js",
+      "types": "./components/dropdown/dist/index.d.ts",
+      "default": "./components/dropdown/dist/index.js"
+    },
+    "./auro-form": "./components/form/dist/registered.js",
+    "./auro-form/demo/*.md": "./components/form/demo/*.md",
+    "./auro-form/demo/*.js": "./components/form/demo/*.min.js",
+    "./auro-form/class": {
+      "module": "./components/form/dist/index.js",
+      "types": "./components/form/dist/index.d.ts",
+      "default": "./components/form/dist/index.js"
+    },
+    "./auro-input": "./components/input/dist/registered.js",
+    "./auro-input/demo/*.md": "./components/input/demo/*.md",
+    "./auro-input/demo/*.js": "./components/input/demo/*.min.js",
+    "./auro-input/class": {
+      "module": "./components/input/dist/index.js",
+      "types": "./components/input/dist/index.d.ts",
+      "default": "./components/input/dist/index.js"
+    },
+    "./auro-menu": "./components/menu/dist/registered.js",
+    "./auro-menu/demo/*.md": "./components/menu/demo/*.md",
+    "./auro-menu/demo/*.js": "./components/menu/demo/*.min.js",
+    "./auro-menu/class": {
+      "module": "./components/menu/dist/index.js",
+      "types": "./components/menu/dist/index.d.ts",
+      "default": "./components/menu/dist/index.js"
+    },
+    "./auro-radio": "./components/radio/dist/registered.js",
+    "./auro-radio/demo/*.md": "./components/radio/demo/*.md",
+    "./auro-radio/demo/*.js": "./components/radio/demo/*.min.js",
+    "./auro-radio/class": {
+      "module": "./components/radio/dist/index.js",
+      "types": "./components/radio/dist/index.d.ts",
+      "default": "./components/radio/dist/index.js"
+    },
+    "./auro-select": "./components/select/dist/registered.js",
+    "./auro-select/demo/*.md": "./components/select/demo/*.md",
+    "./auro-select/demo/*.js": "./components/select/demo/*.min.js",
+    "./auro-select/class": {
+      "module": "./components/select/dist/index.js",
+      "types": "./components/select/dist/index.d.ts",
+      "default": "./components/select/dist/index.js"
+    }
+  }
 }

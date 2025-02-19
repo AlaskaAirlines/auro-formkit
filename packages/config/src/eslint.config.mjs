@@ -18,9 +18,9 @@ export default [
     'node_modules/**',
     'components/**/*Version.js',
     'components/**/apiExamples/**',
-    'components/**/test/**',
-    'components/**/demo/**',
-    'components/**/dist/**',
+    'components/**/test/**/*',
+    'components/**/demo/**/*',
+    'components/**/dist/**/*',
     "components/**/vendor/**"
     ]
 },

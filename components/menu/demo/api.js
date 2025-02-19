@@ -4,7 +4,7 @@ import { auroMenuResetExample } from '../apiExamples/reset';
 import { auroMenuMatchWordExample } from '../apiExamples/matchWord';
 import { auroMenuCustomEventExample } from '../apiExamples/customEvent';
 import { auroMenuLoadingExample } from '../apiExamples/loading';
-import '../src/index.js';
+import '../src/registered.js';
 
 export function initExamples(initCount) {
   initCount = initCount || 0;

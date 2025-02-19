@@ -26,10 +26,10 @@ import tokensCss from "./styles/tokens-css.js";
 import './auro-calendar.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import dropdownVersion from './formkit/auro-dropdownVersion.js';
+import dropdownVersion from './dropdownVersion.js';
 
 import { AuroInput } from '@aurodesignsystem/auro-input';
-import inputVersion from './formkit/auro-inputVersion.js';
+import inputVersion from './inputVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**

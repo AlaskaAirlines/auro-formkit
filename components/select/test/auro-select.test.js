@@ -1,7 +1,7 @@
 import { fixture, html, expect, waitUntil, elementUpdated } from '@open-wc/testing';
 import '@aurodesignsystem/auro-dropdown';
-import '../../menu/src/index.js';
-import '../src/index.js';
+import '../../menu/src/registered.js';
+import '../src/registered.js';
 
 describe('auro-select', () => {
   it('auro-select custom element is defined', async () => {

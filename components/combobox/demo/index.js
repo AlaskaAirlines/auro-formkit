@@ -3,7 +3,7 @@ import { persistentExample } from '../apiExamples/persistent';
 import { swapValueExample } from '../apiExamples/swapValue';
 
 import { AuroCombobox } from '../src/auro-combobox.js';
-import '../../menu/src/index.js';
+import '../../menu/src/registered.js';
 
 AuroCombobox.register();
 AuroCombobox.register('custom-combobox');

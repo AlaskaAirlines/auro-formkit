@@ -1,5 +1,5 @@
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-radio', () => {
   it('auro-radio is accessible', async () => {

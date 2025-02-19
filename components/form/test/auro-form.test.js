@@ -4,7 +4,7 @@ import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 import '../demo/registerDemoDeps.js';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-form', () => {
   it('is accessible', async () => {

@@ -1,5 +1,3 @@
 import auroConfig from '@auro-formkit/config/eslint';
 
-export default [
-  ...auroConfig,
-];
+export default [...auroConfig];

@@ -4,6 +4,7 @@
   "description": "auro-helptext HTML custom element",
   "type": "module",
   "main": "dist/index.js",
+  "require": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -42,7 +43,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "run-s build:sass bundler types",
+    "build": "run-s sass types bundler",
+    "sass": "run-s build:sass postCss:component sass:render",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
     "bundler": "rollup -c node:@auro-formkit/config/internal.rollup",
