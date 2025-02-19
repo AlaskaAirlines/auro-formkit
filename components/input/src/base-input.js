@@ -77,10 +77,6 @@ export default class BaseInput extends LitElement {
       "tel"
     ];
 
-    this.dateInputTypes = [
-      "date"
-    ];
-
     this.autoFormattingTypes = [
       'credit-card',
       'date',
@@ -422,7 +418,19 @@ export default class BaseInput extends LitElement {
       this.ValidityMessageOverride = this.setCustomValidity;
     }
 
-    // if setCustomValidityForType is not set, use our default
+    this.setCustomHelpTextMessage();
+    this.handleCursorPosition();
+
+    // Need to configure based on language
+    this.configureAutoFormatting();
+  }
+
+  /**
+   * @private
+   * @returns {void} Sets the default help text for the input.
+   */
+  setCustomHelpTextMessage() {
+    // if setCustomValidityForType is not set, use our defaults
     if (!this.setCustomValidityForType) {
       if (this.type === 'password') {
         this.setCustomValidityForType = i18n(this.lang, 'password');
@@ -458,7 +466,13 @@ export default class BaseInput extends LitElement {
         this.setCustomValidityForType = i18n(this.lang, 'dateDD');
       }
     }
+  }
 
+  /**
+   * @private
+   * @returns {void} Handle cursor position for auto-formatting.
+   */
+  handleCursorPosition() {
     this.addEventListener('keydown', (evt) => {
       if (this.autoFormattingTypes.includes(this.type)) {
         if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
@@ -515,9 +529,6 @@ export default class BaseInput extends LitElement {
         }
       }
     });
-
-    // Need to configure based on language
-    this.configureAutoFormatting();
   }
 
   /**
@@ -644,7 +655,7 @@ export default class BaseInput extends LitElement {
       }
     }
 
-    if (changedProperties.has('type')) {
+    if (changedProperties.has('type') || changedProperties.has('format')) {
       this.configureDataForType();
     }
 
@@ -672,16 +683,15 @@ export default class BaseInput extends LitElement {
       }
 
       if (this.type && this.type === 'date') {
-        this.delimiterCount = [...this.value] // Convert string to array of characters
-          .filter(char => this.dateMaskPlaceholders?.includes(char)) // Keep only delimiters
-          .length; // Count them
-      }
+        // Counts the amount of delimiters in the date string
+        this.delimiterCount = this.dateMaskPlaceholders ? [...this.value].filter(char => this.dateMaskPlaceholders.includes(char)).length : 0;
 
-      if (this.value && this.value.length === this.lengthForType) {
-        const formattedDates = this.toNorthAmericanFormat(this.value);
+        if (this.value && this.value.length === this.lengthForType && this.toNorthAmericanFormat(this.value)) {
+          const formattedDates = this.toNorthAmericanFormat(this.value);
 
-        this.formattedDate = formattedDates.formattedDate;
-        this.comparisonDate = formattedDates.dateForComparison;
+          this.formattedDate = formattedDates.formattedDate;
+          this.comparisonDate = formattedDates.dateForComparison;
+        }
       }
     }
 
@@ -714,6 +724,7 @@ export default class BaseInput extends LitElement {
   configureAutoFormatting() {
     if (!this.type && this.format) {
         Inputmask({ mask: this.format }).mask(this.inputElement);
+
         return;
     }
 
@@ -730,7 +741,7 @@ export default class BaseInput extends LitElement {
 
       case 'credit-card':
         maskConfig = {
-          mask: "9999 9999 9999 9999",
+          mask: this.format,
           delimiters: [' ']
         };
 
@@ -932,11 +943,11 @@ export default class BaseInput extends LitElement {
    */
   configureDataForType() {
     if (this.type === 'credit-card') {
-      this.lengthForType = 19;
+      this.lengthForType = this.format ? this.format.length : 19;
     } else if (this.type === 'tel') {
       this.lengthForType = 17;
     } else if (this.type === 'date') {
-      this.lengthForType = this.format?.length || 10;
+      this.lengthForType = this.format ? this.format.length : 10;
     }
   }
 
@@ -1069,15 +1080,21 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   processCreditCard() {
-    const card = this.matchInputValueToCreditCard();
+    const creditCard = this.matchInputValueToCreditCard();
 
-    this.maxLength = card.formatLength;
-    this.minLength = card.formatMinLength;
+    this.format = creditCard.maskFormat;
 
-    this.errorMessage = card.errorMessage;
+    this.maxLength = creditCard.formatLength;
+    this.minLength = creditCard.formatMinLength;
+
+    this.errorMessage = creditCard.errorMessage;
 
     if (this.icon) {
-      this.inputIconName = card.cardIcon;
+      this.inputIconName = creditCard.cardIcon;
+    }
+
+    if (this.inputElement) {
+      this.configureAutoFormatting();
     }
   }
 
@@ -1095,63 +1112,72 @@ export default class BaseInput extends LitElement {
         regex: /^(?<num>1|2)\d{0}/u,
         formatMinLength: 17,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'credit-card'
+        cardIcon: 'credit-card',
+        maskFormat: "9999 9999 9999 9999 999"
       },
       {
         name: 'Commercial',
         regex: /^(?<num>2)\d{0}/u,
         formatMinLength: 8,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'credit-card'
+        cardIcon: 'credit-card',
+        maskFormat: "9999 9999 999"
       },
       {
         name: 'Alaska Commercial',
         regex: /^(?<num>27)\d{0}/u,
         formatMinLength: 8,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'cc-alaska'
+        cardIcon: 'cc-alaska',
+        maskFormat: "9999 9999 999"
       },
       {
         name: 'American Express',
         regex: /^(?<num>34|37)\d{0}/u,
         formatLength: 17,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'cc-amex'
+        cardIcon: 'cc-amex',
+        maskFormat: "9999 999999 99999"
       },
       {
         name: 'Diners club',
         regex: /^(?<num>36|38)\d{0}/u,
         formatLength: 16,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'credit-card'
+        cardIcon: 'credit-card',
+        maskFormat: "9999 999999 9999"
       },
       {
         name: 'Visa',
         regex: /^(?<num>4)\d{0}/u,
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'cc-visa'
+        cardIcon: 'cc-visa',
+        maskFormat: "9999 9999 9999 9999"
       },
       {
         name: 'Alaska Airlines Visa',
         regex: /^(?<num>4147\s34|4888\s93|4800\s11|4313\s51|4313\s07)\d{0}/u,
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'cc-alaska'
+        cardIcon: 'cc-alaska',
+        maskFormat: "9999 9999 9999 9999"
       },
       {
         name: 'Master Card',
         regex: /^(?<num>5)\d{0}/u,
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'cc-mastercard'
+        cardIcon: 'cc-mastercard',
+        maskFormat: "9999 9999 9999 9999"
       },
       {
         name: 'Discover Card',
         regex: /^(?<num>6)\d{0}/u,
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
-        cardIcon: 'cc-discover'
+        cardIcon: 'cc-discover',
+        maskFormat: "9999 9999 9999 9999"
       }
     ];
 
@@ -1159,7 +1185,8 @@ export default class BaseInput extends LitElement {
       name: 'Default Card',
       formatLength: 19,
       errorMessage: CreditCardValidationMessage,
-      cardIcon: 'credit-card'
+      cardIcon: 'credit-card',
+      maskFormat: "9999 9999 9999 9999"
     };
 
     creditCardTypes.forEach((cardType) => {
