@@ -27,7 +27,9 @@
       "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
     },
     "dev": {
-      "dependsOn": ["build"],
+      "persistent": true
+    },
+    "dev:closed": {
       "persistent": true
     },
     "clean": {
