@@ -721,13 +721,13 @@ export default class BaseInput extends LitElement {
       return;
     }
 
-    let maskConfig;
+    let maskConfig = {};
 
     switch (this.type) {
       case 'tel':
         maskConfig = {
-            mask: this.format || "+1 (999) 999-9999",
-            delimiters: ['+', ' ', '(', ')', '-']
+          mask: this.format || "+1 (999) 999-9999",
+          delimiters: ['+', ' ', '(', ')', '-']
         };
 
         break;
@@ -757,12 +757,12 @@ export default class BaseInput extends LitElement {
     Object.assign(this, maskConfig);
 
     this.delimiters = maskConfig.delimiters;
-    
+
     Inputmask({
       ...maskConfig,
       showMaskOnFocus: false,
       showMaskOnHover: false,
-      jitMasking: this.type !== date,
+      jitMasking: this.type !== 'date',
       prefillYear: this.type === 'date' ? false : undefined,
       isComplete: () => {
         this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
