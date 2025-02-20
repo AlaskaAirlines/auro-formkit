@@ -7,8 +7,8 @@ export default {
       if (context.url === '/' || context.url === '/index.html') {
         context.url = '/index.html';
       }
-      if (context.url === '/api' || context.url === '/api.html') {
-        context.url = '/api.html';
+      if (!context.url.endsWith('/') && !context.url.includes('.')) {
+        context.url += '.html';
       }
       return next();
     },
