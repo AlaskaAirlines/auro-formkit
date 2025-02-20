@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-magic-numbers, dot-location, complexity, no-extra-parens, max-depth, new-cap, array-element-newline */
+/* eslint-disable max-lines, no-magic-numbers, dot-location, complexity, no-extra-parens, new-cap, object-property-newline, init-declarations, curly,radix */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 import { LitElement, css } from "lit";
@@ -15,8 +15,7 @@ import tokensCss from "./styles/tokens-css.js";
 
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
 
-import Inputmask from "inputmask/lib/inputmask.js";
-import "inputmask/lib/extensions/inputmask.date.extensions.js";
+import IMask from 'imask';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 
@@ -75,12 +74,6 @@ export default class BaseInput extends LitElement {
       "password",
       "credit-card",
       "tel"
-    ];
-
-    this.autoFormattingTypes = [
-      'credit-card',
-      'date',
-      'tel'
     ];
 
     /**
@@ -405,10 +398,6 @@ export default class BaseInput extends LitElement {
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');
 
-    this.inputElement.addEventListener('click', (event) => {
-      this.cursorPosition = event.target.selectionStart;
-    });
-
     if (this.format) {
       this.format = this.format.toLowerCase();
     }
@@ -419,9 +408,6 @@ export default class BaseInput extends LitElement {
     }
 
     this.setCustomHelpTextMessage();
-    this.handleCursorPosition();
-
-    // Need to configure based on language
     this.configureAutoFormatting();
   }
 
@@ -466,72 +452,6 @@ export default class BaseInput extends LitElement {
         this.setCustomValidityForType = i18n(this.lang, 'dateDD');
       }
     }
-  }
-
-  /**
-   * @private
-   * @returns {void} Handle cursor position for auto-formatting.
-   */
-  handleCursorPosition() {
-    this.addEventListener('keydown', (evt) => {
-      if (this.autoFormattingTypes.includes(this.type)) {
-        if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
-          if (evt.key.length === 1) {
-            // Or 5 to handle two-digit country code
-            if (this.type === 'tel' && this.value.length === 4) {
-              this.cursorPosition = this.value.length;
-            }
-
-            // Used to track placeholder characters in date inputs
-            let trueValueLength = this.value.length;
-
-            if (this.type === 'date') {
-              trueValueLength -= this.delimiterCount;
-            }
-
-            // or <= to handle after inserting char, < makes it impossible for caret to get to end
-            if (trueValueLength < this.lengthForType) {
-              if (this.delimiters.includes(this.value.charAt(this.cursorPosition + 1))) {
-                this.cursorPosition += 2;
-              } else {
-                this.cursorPosition += 1;
-              }
-            } else if (trueValueLength === this.lengthForType) {
-              if (this.cursorPosition === trueValueLength - 1) {
-                this.cursorPosition = this.value.length;
-              } else {
-                this.cursorPosition += 1;
-              }
-            }
-          } else if (evt.key === 'Backspace') {
-            if (this.delimiters.includes(this.value.charAt(this.cursorPosition - 1))) {
-              while (this.delimiters.includes(this.value.charAt(this.cursorPosition - 1))) {
-                this.cursorPosition -= 1;
-              }
-            }
-
-            // This breaks the cursor position when highlighting multiple characters
-            this.cursorPosition -= 1;
-          } else if (evt.key === 'Delete') {
-            if (this.delimiters.includes(this.value.charAt(this.cursorPosition))) {
-              this.cursorPosition += 1;
-            }
-          }
-        }
-
-        if (evt.key === "ArrowUp" || evt.key === "ArrowDown" || evt.key === "ArrowLeft" || evt.key === "ArrowRight") {
-          if (evt.key === 'ArrowUp') {
-            this.cursorPosition = 0;
-          } else if (evt.key === 'ArrowDown') {
-            this.cursorPosition = this.value.length;
-          } else if (evt.key === 'ArrowLeft' && this.cursorPosition > 0) {
-            this.cursorPosition = this.inputElement.selectionStart - 1;
-          } else if (evt.key === 'ArrowRight' && this.cursorPosition < this.value.length) {
-            this.cursorPosition = this.inputElement.selectionStart + 1;
-          }
-        }
-      }
-    });
   }
 
   /**
@@ -671,18 +591,6 @@ export default class BaseInput extends LitElement {
 
         this.notifyValueChanged();
       }
-
-      if (this.type && this.type === 'date') {
-        // Counts the amount of delimiters in the date string
-        this.delimiterCount = this.dateMaskPlaceholders ? [...this.value].filter((char) => this.dateMaskPlaceholders.includes(char)).length : 0;
-
-        if (this.value && this.value.length === this.lengthForType && this.toNorthAmericanFormat(this.value)) {
-          const formattedDates = this.toNorthAmericanFormat(this.value);
-
-          this.formattedDate = formattedDates.formattedDate;
-          this.comparisonDate = formattedDates.dateForComparison;
-        }
-      }
     }
 
     if (changedProperties.has('error')) {
@@ -707,69 +615,114 @@ export default class BaseInput extends LitElement {
   }
 
   /**
-   * Configures the auto-formatting to be used on the input element.
-   * Inputmask tool: https://robinherbots.github.io/Inputmask/#/documentation.
+   * Configures the mask to be used on the input element based on format and/or type.
+   * IMask tool documentation: https://imask.js.org/.
    * @private
    * @returns {void} Notify validity state changed via event.
    */
   configureAutoFormatting() {
-    if (!this.type && this.format) {
-      Inputmask({
-        mask: this.format
-      }).mask(this.inputElement);
-
-      return;
+    if (this.maskInstance) {
+      this.maskInstance.destroy();
     }
 
-    let maskConfig = {};
+    let maskOptions = {};
 
-    switch (this.type) {
-      case 'tel':
-        maskConfig = {
-          mask: this.format || "+1 (999) 999-9999",
-          delimiters: ['+', ' ', '(', ')', '-']
+    if (this.type) {
+      if (this.type === 'credit-card') {
+        maskOptions = {
+          mask: this.format || '0000 0000 0000 0000',
+          placeholderChar: '',
+          lazy: true,
+          overwrite: false
         };
-
-        break;
-
-      case 'credit-card':
-        maskConfig = {
-          mask: this.format,
-          delimiters: [' ']
+      } else if (this.type === 'tel') {
+        maskOptions = {
+          mask: this.format || '+1 (000) 000-0000',
+          placeholderChar: '',
+          lazy: true,
+          overwrite: false
         };
+      } else if (this.type === 'date') {
+        const format = this.format || 'mm/dd/yyyy';
 
-        break;
+        maskOptions = {
+          mask: Date,
+          pattern: format,
+          blocks: {
+            yyyy: { mask: IMask.MaskedRange, from: 1925, to: 2025 },
+            mm: { mask: IMask.MaskedRange, from: 1, to: 12 },
+            dd: { mask: IMask.MaskedRange, from: 1, to: 31 },
+            yy: { mask: IMask.MaskedRange, from: 0, to: 99 }
+          },
+          format(date) {
+            const day = date.getDate()
+              .toString()
+              .padStart(2, '0');
+            const month = (date.getMonth() + 1)
+              .toString()
+              .padStart(2, '0');
+            const year = date.getFullYear();
 
-      case 'date':
-        maskConfig = {
-          alias: "datetime",
-          inputFormat: this.format || "mm/dd/yyyy",
-          delimiters: ['/'],
-          dateMaskPlaceholders: ['m', 'd', 'y']
+            return format
+              .replace('dd', day)
+              .replace('mm', month)
+              .replace('yyyy', year)
+              .replace('yy', year.toString().slice(-2));
+          },
+          parse(str) {
+            const parts = str.split('/');
+            const formatParts = format.split('/');
+            let day, month, year;
+
+            formatParts.forEach((part, index) => {
+              if (part === 'dd') day = parseInt(parts[index]);
+              if (part === 'mm') month = parseInt(parts[index]) - 1;
+              if (part === 'yyyy') year = parseInt(parts[index]);
+              if (part === 'yy') {
+                year = parseInt(parts[index]);
+                year = year <= 25 ? 2000 + year : 1900 + year;
+              }
+            });
+
+            if (!year) year = new Date().getFullYear();
+            if (!day || !month || isNaN(day) || isNaN(month)) return null;
+
+            return new Date(year, month, day);
+          },
+          lazy: true,
+          placeholderChar: ''
         };
-
-        break;
-
-      default:
-        return;
-    }
-
-    Object.assign(this, maskConfig);
-
-    this.delimiters = maskConfig.delimiters;
-
-    Inputmask({
-      ...maskConfig,
-      showMaskOnFocus: false,
-      showMaskOnHover: false,
-      jitMasking: this.type !== 'date',
-      prefillYear: this.type === 'date' ? false : undefined,
-      isComplete: () => {
-        this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
       }
-    }).mask(this.inputElement);
 
-    this.inputMode = 'numeric';
+      this.inputMode = 'numeric';
+    } else if (this.format) {
+      // Handle custom format
+      maskOptions = {
+        mask: this.format,
+        placeholderChar: '',
+        lazy: true
+      };
+    }
+
+    if (this.inputElement && maskOptions.mask) {
+      this.maskInstance = IMask(this.inputElement, maskOptions);
+
+      this.maskInstance.on('accept', () => {
+        this.value = this.maskInstance.value;
+      });
+
+      this.maskInstance.on('complete', () => {
+        this.value = this.maskInstance.value;
+
+        // Format date to North American format
+        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.toNorthAmericanFormat(this.value)) {
+          const formattedDates = this.toNorthAmericanFormat(this.value);
+
+          this.formattedDate = formattedDates.formattedDate;
+          this.comparisonDate = formattedDates.dateForComparison;
+        }
+      });
+    }
   }
 
   /**
@@ -971,26 +924,30 @@ export default class BaseInput extends LitElement {
       return i18n(this.lang, 'email');
     } else if (this.type === 'credit-card') {
       return i18n(this.lang, 'creditcard');
-    } else if (this.format === 'mm/dd/yyyy' || (this.type === 'date' && this.format === undefined)) {
-      return i18n(this.lang, 'dateMMDDYYYY');
-    } else if (this.format === 'dd/mm/yyyy') {
-      return i18n(this.lang, 'dateDDMMYYYY');
+    } else if (this.format === 'yyyy') {
+      return i18n(this.lang, 'dateYYYY');
+    } else if (this.format === 'yyyy/mm') {
+      return i18n(this.lang, 'dateYYYYMM');
     } else if (this.format === 'yyyy/mm/dd') {
       return i18n(this.lang, 'dateYYYYMMDD');
     } else if (this.format === 'yyyy/dd/mm') {
       return i18n(this.lang, 'dateYYYYDDMM');
-    } else if (this.format === 'mm/yy') {
-      return i18n(this.lang, 'dateMMYY');
-    } else if (this.format === 'yy/mm') {
-      return i18n(this.lang, 'dateYYMM');
     } else if (this.format === 'mm/yyyy') {
       return i18n(this.lang, 'dateMMYYYY');
-    } else if (this.format === 'yyyy/mm') {
-      return i18n(this.lang, 'dateYYYYMM');
+    } else if (this.format === 'mm/yy') {
+      return i18n(this.lang, 'dateMMYY');
+    } else if (this.format === 'mm/dd/yyyy' || (this.type === 'date' && this.format === undefined)) {
+      return i18n(this.lang, 'dateMMDDYYYY');
+    } else if (this.format === 'dd/mm/yyyy') {
+      return i18n(this.lang, 'dateDDMMYYYY');
+    } else if (this.format === 'dd/mm') {
+      return i18n(this.lang, 'dateDDMM');
+    } else if (this.format === 'mm/dd') {
+      return i18n(this.lang, 'dateMMDD');
+    } else if (this.format === 'yy/mm') {
+      return i18n(this.lang, 'dateYYMM');
     } else if (this.format === 'yy') {
       return i18n(this.lang, 'dateYY');
-    } else if (this.format === 'yyyy') {
-      return i18n(this.lang, 'dateYYYY');
     } else if (this.format === 'mm') {
       return i18n(this.lang, 'dateMM');
     } else if (this.format === 'dd') {
@@ -1016,20 +973,34 @@ export default class BaseInput extends LitElement {
    * @returns {string}
    */
   getPlaceholder() {
-    if (this.format === 'mm/dd/yyyy' || (this.type === 'date' && this.format === undefined)) {
-      return !this.placeholder ? 'mm/dd/yyyy' : this.placeholder;
-    } else if (this.format === 'mm/yy') {
-      return !this.placeholder ? 'mm/yy' : this.placeholder;
-    } else if (this.format === 'mm/yyyy') {
-      return !this.placeholder ? 'mm/yyyy' : this.placeholder;
+    if (this.format === 'yyyy') {
+      return !this.placeholder ? 'yyyy' : this.placeholder;
+    } else if (this.format === 'yyyy/mm') {
+      return !this.placeholder ? 'yyyy/mm' : this.placeholder;
     } else if (this.format === 'yyyy/mm/dd') {
       return !this.placeholder ? 'yyyy/mm/dd' : this.placeholder;
-    } else if (this.format === 'yyyy') {
-      return !this.placeholder ? 'yyyy' : this.placeholder;
+    } else if (this.format === 'yyyy/dd/mm') {
+      return !this.placeholder ? 'yyyy/dd/mm' : this.placeholder;
+    } else if (this.format === 'mm/yyyy') {
+      return !this.placeholder ? 'mm/yyyy' : this.placeholder;
+    } else if (this.format === 'mm/yy') {
+      return !this.placeholder ? 'mm/yy' : this.placeholder;
+    } else if (this.format === 'mm/dd/yyyy' || (this.type === 'date' && this.format === undefined)) {
+      return !this.placeholder ? 'mm/dd/yyyy' : this.placeholder;
+    } else if (this.format === 'dd/mm/yyyy') {
+      return !this.placeholder ? 'dd/mm/yyyy' : this.placeholder;
+    } else if (this.format === 'dd/mm') {
+      return !this.placeholder ? 'dd/mm' : this.placeholder;
+    } else if (this.format === 'mm/dd') {
+      return !this.placeholder ? 'mm/dd' : this.placeholder;
+    } else if (this.format === 'yy/mm') {
+      return !this.placeholder ? 'yy/mm' : this.placeholder;
     } else if (this.format === 'yy') {
-      return !this.placeholder ? 'yyyy' : this.placeholder;
+      return !this.placeholder ? 'yy' : this.placeholder;
     } else if (this.format === 'mm') {
       return !this.placeholder ? 'mm' : this.placeholder;
+    } else if (this.format === 'dd') {
+      return !this.placeholder ? 'dd' : this.placeholder;
     }
 
     return ifDefined(this.placeholder);
@@ -1107,7 +1078,7 @@ export default class BaseInput extends LitElement {
         formatMinLength: 17,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'credit-card',
-        maskFormat: "9999 9999 9999 9999 999"
+        maskFormat: "0000 0000 0000 0000 000"
       },
       {
         name: 'Commercial',
@@ -1115,7 +1086,7 @@ export default class BaseInput extends LitElement {
         formatMinLength: 8,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'credit-card',
-        maskFormat: "9999 9999 999"
+        maskFormat: "0000 0000 000"
       },
       {
         name: 'Alaska Commercial',
@@ -1123,7 +1094,7 @@ export default class BaseInput extends LitElement {
         formatMinLength: 8,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-alaska',
-        maskFormat: "9999 9999 999"
+        maskFormat: "0000 0000 000"
       },
       {
         name: 'American Express',
@@ -1131,7 +1102,7 @@ export default class BaseInput extends LitElement {
         formatLength: 17,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-amex',
-        maskFormat: "9999 999999 99999"
+        maskFormat: "0000 000000 00000"
       },
       {
         name: 'Diners club',
@@ -1139,7 +1110,7 @@ export default class BaseInput extends LitElement {
         formatLength: 16,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'credit-card',
-        maskFormat: "9999 999999 9999"
+        maskFormat: "0000 000000 0000"
       },
       {
         name: 'Visa',
@@ -1147,7 +1118,7 @@ export default class BaseInput extends LitElement {
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-visa',
-        maskFormat: "9999 9999 9999 9999"
+        maskFormat: "0000 0000 0000 0000"
       },
       {
         name: 'Alaska Airlines Visa',
@@ -1155,7 +1126,7 @@ export default class BaseInput extends LitElement {
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-alaska',
-        maskFormat: "9999 9999 9999 9999"
+        maskFormat: "0000 0000 0000 0000"
       },
       {
         name: 'Master Card',
@@ -1163,7 +1134,7 @@ export default class BaseInput extends LitElement {
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-mastercard',
-        maskFormat: "9999 9999 9999 9999"
+        maskFormat: "0000 0000 0000 0000"
       },
       {
         name: 'Discover Card',
@@ -1171,7 +1142,7 @@ export default class BaseInput extends LitElement {
         formatLength: 19,
         errorMessage: CreditCardValidationMessage,
         cardIcon: 'cc-discover',
-        maskFormat: "9999 9999 9999 9999"
+        maskFormat: "0000 0000 0000 0000"
       }
     ];
 
@@ -1180,7 +1151,7 @@ export default class BaseInput extends LitElement {
       formatLength: 19,
       errorMessage: CreditCardValidationMessage,
       cardIcon: 'credit-card',
-      maskFormat: "9999 9999 9999 9999"
+      maskFormat: "0000 0000 0000 0000"
     };
 
     creditCardTypes.forEach((cardType) => {

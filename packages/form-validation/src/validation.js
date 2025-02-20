@@ -152,15 +152,15 @@ export default class AuroFormValidation {
           elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
         }
       } else if (elem.type === 'date') {
-        if (elem.delimiterCount > 0) {
+        if (elem.value.length > 0 && elem.value.length < elem.lengthForType) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
-        } else {
+        } else if (elem.value?.length === elem.lengthForType) {
           const formattedValue = elem.toNorthAmericanFormat(elem.value);
           const valueDate = new Date(formattedValue.dateForComparison);
 
           // validate max
-          if (elem.max !== undefined) {
+          if (elem.max && elem.max.length === elem.lengthForType) {
             const maxDate = new Date(elem.toNorthAmericanFormat(elem.max).dateForComparison);
 
             if (valueDate > maxDate) {
@@ -170,7 +170,7 @@ export default class AuroFormValidation {
           }
 
           // validate min
-          if (elem.min) {
+          if (elem.min && elem.min.length === elem.lengthForType) {
             const minDate = new Date(elem.toNorthAmericanFormat(elem.min).dateForComparison);
 
             if (valueDate < minDate) {
