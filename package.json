@@ -137,7 +137,7 @@
           "assets": [
             "./package.json",
             "./CHANGELOG.md",
-            "./README.md",
+            "./readme.md",
             "./docs/api.md"
           ],
           "noVerify": true
@@ -153,7 +153,9 @@
     "web components"
   ],
   "exports": {
+    "./readme.md": "./README.md",
     "./auro-checkbox": "./components/checkbox/dist/registered.js",
+    "./auro-checkbox/readme.md": "./components/checkbox/README.md",
     "./auro-checkbox/demo/*.md": "./components/checkbox/demo/*.md",
     "./auro-checkbox/demo/*.js": "./components/checkbox/demo/*.min.js",
     "./auro-checkbox/class": {
@@ -162,6 +164,7 @@
       "default": "./components/checkbox/dist/index.js"
     },
     "./auro-combobox": "./components/combobox/dist/registered.js",
+    "./auro-combobox/readme.md": "./components/combobox/README.md",
     "./auro-combobox/demo/*.md": "./components/combobox/demo/*.md",
     "./auro-combobox/demo/*.js": "./components/combobox/demo/*.min.js",
     "./auro-combobox/class": {
@@ -170,6 +173,7 @@
       "default": "./components/combobox/dist/index.js"
     },
     "./auro-counter": "./components/counter/dist/registered.js",
+    "./auro-counter/readme.md": "./components/counter/README.md",
     "./auro-counter/demo/*.md": "./components/counter/demo/*.md",
     "./auro-counter/demo/*.js": "./components/counter/demo/*.min.js",
     "./auro-counter/class": {
@@ -178,6 +182,7 @@
       "default": "./components/counter/dist/index.js"
     },
     "./auro-datepicker": "./components/datepicker/dist/registered.js",
+    "./auro-datepicker/readme.md": "./components/datepicker/README.md",
     "./auro-datepicker/demo/*.md": "./components/datepicker/demo/*.md",
     "./auro-datepicker/demo/*.js": "./components/datepicker/demo/*.min.js",
     "./auro-datepicker/class": {
@@ -186,6 +191,7 @@
       "default": "./components/datepicker/dist/index.js"
     },
     "./auro-dropdown": "./components/dropdown/dist/registered.js",
+    "./auro-dropdown/readme.md": "./components/dropdown/README.md",
     "./auro-dropdown/demo/*.md": "./components/dropdown/demo/*.md",
     "./auro-dropdown/demo/*.js": "./components/dropdown/demo/*.min.js",
     "./auro-dropdown/class": {
@@ -194,6 +200,7 @@
       "default": "./components/dropdown/dist/index.js"
     },
     "./auro-form": "./components/form/dist/registered.js",
+    "./auro-form/readme.md": "./components/form/README.md",
     "./auro-form/demo/*.md": "./components/form/demo/*.md",
     "./auro-form/demo/*.js": "./components/form/demo/*.min.js",
     "./auro-form/class": {
@@ -202,6 +209,7 @@
       "default": "./components/form/dist/index.js"
     },
     "./auro-input": "./components/input/dist/registered.js",
+    "./auro-input/readme.md": "./components/input/README.md",
     "./auro-input/demo/*.md": "./components/input/demo/*.md",
     "./auro-input/demo/*.js": "./components/input/demo/*.min.js",
     "./auro-input/class": {
@@ -210,6 +218,7 @@
       "default": "./components/input/dist/index.js"
     },
     "./auro-menu": "./components/menu/dist/registered.js",
+    "./auro-menu/readme.md": "./components/menu/README.md",
     "./auro-menu/demo/*.md": "./components/menu/demo/*.md",
     "./auro-menu/demo/*.js": "./components/menu/demo/*.min.js",
     "./auro-menu/class": {
@@ -218,6 +227,7 @@
       "default": "./components/menu/dist/index.js"
     },
     "./auro-radio": "./components/radio/dist/registered.js",
+    "./auro-radio/readme.md": "./components/radio/README.md",
     "./auro-radio/demo/*.md": "./components/radio/demo/*.md",
     "./auro-radio/demo/*.js": "./components/radio/demo/*.min.js",
     "./auro-radio/class": {
@@ -226,6 +236,7 @@
       "default": "./components/radio/dist/index.js"
     },
     "./auro-select": "./components/select/dist/registered.js",
+    "./auro-select/readme.md": "./components/select/README.md",
     "./auro-select/demo/*.md": "./components/select/demo/*.md",
     "./auro-select/demo/*.js": "./components/select/demo/*.min.js",
     "./auro-select/class": {
