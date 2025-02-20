@@ -723,9 +723,9 @@ export default class BaseInput extends LitElement {
    */
   configureAutoFormatting() {
     if (!this.type && this.format) {
-        Inputmask({ mask: this.format }).mask(this.inputElement);
+      Inputmask({ mask: this.format }).mask(this.inputElement);
 
-        return;
+      return;
     }
 
     let maskConfig;
@@ -733,7 +733,7 @@ export default class BaseInput extends LitElement {
     switch (this.type) {
       case 'tel':
         maskConfig = {
-            mask: "+9 (999) 999-9999",
+            mask: this.format || "+1 (999) 999-9999",
             delimiters: ['+', ' ', '(', ')', '-']
         };
 
@@ -762,6 +762,8 @@ export default class BaseInput extends LitElement {
     }
 
     Object.assign(this, maskConfig);
+
+    this.delimiters = maskConfig.delimiters;
     
     Inputmask({
       ...maskConfig,
@@ -945,9 +947,9 @@ export default class BaseInput extends LitElement {
     if (this.type === 'credit-card') {
       this.lengthForType = this.format ? this.format.length : 19;
     } else if (this.type === 'tel') {
-      this.lengthForType = 17;
+      this.lengthForType = this.format ? this.format.length : 17
     } else if (this.type === 'date') {
-      this.lengthForType = this.format ? this.format.length : 10;
+      this.lengthForType = this.format ? this.format.length : 10
     }
   }
 

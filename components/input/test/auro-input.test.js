@@ -619,6 +619,32 @@ describe('auro-input', () => {
     expect(el.value).to.equal('47441234');
   });
 
+  describe('handles phone number formatting', () => {
+    it('default north american phone format', async () => {
+      const el = await fixture(html`
+        <auro-input type="tel"></auro-input>
+      `);
+
+      setInputValue(el, '5091234567');
+
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('+1 (509) 123-4567');
+    });
+
+    it('custom phone format', async () => {
+      const el = await fixture(html`
+        <auro-input type="tel" format="+52 999 99 9999"></auro-input>
+      `);
+
+      setInputValue(el, '5091234567');
+
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('+52 509 123 4567');
+    });
+  });
+
   describe('handles date formatting', () => {
     it('MM/DD/YYYY', async () => {
       const el = await fixture(html`
