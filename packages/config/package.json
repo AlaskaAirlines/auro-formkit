@@ -12,7 +12,8 @@
     "./internal.rollup": "./src/internal.rollup.config.mjs",
     "./rollup": "./src/rollup.config.mjs",
     "./stylelint": "./src/stylelintrc.config.json",
-    "./wtr": "./src/web-test-runner.config.mjs"
+    "./wtr": "./src/web-test-runner.config.mjs",
+    "./wds": "./src/web-dev-server.config.mjs"
   },
   "files": [
     "commitlint",
