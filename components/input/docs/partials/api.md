@@ -301,6 +301,8 @@ Default masking definitions:
 
 See [Inputmask](https://robinherbots.github.io/Inputmask/#/documentation) for more information on how to configure a mask.
 
+### Custom Format
+
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/format.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -310,6 +312,21 @@ See [Inputmask](https://robinherbots.github.io/Inputmask/#/documentation) for mo
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Phone Number Format
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/telFormat.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/telFormat.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -490,6 +507,23 @@ Use the `type="credit-card"` and `icon` attributes for a credit card formatted i
 
 // Use 4147 3411 1111 1111 to see the Alaska Airline's credit card!
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/creditCardIcon.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Phone Number
+
+Use the `type="tel"` attribute for a phone number formatted input.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/tel.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/tel.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
