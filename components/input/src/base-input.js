@@ -554,7 +554,6 @@ export default class BaseInput extends LitElement {
     let regexPattern = dateFormat.replace(/(?:yyyy|yy|mm|dd)/gu, (match) => formatPatterns[match]);
     regexPattern = `^${regexPattern}$`;
 
-    // Create a regex object with the 'u' flag
     const regex = new RegExp(regexPattern, 'u');
     const match = dateStr.match(regex);
 
@@ -708,7 +707,8 @@ export default class BaseInput extends LitElement {
   }
 
   /**
-   * Link to Inputmask tool: https://robinherbots.github.io/Inputmask/#/.
+   * Configures the auto-formatting to be used on the input element.
+   * Inputmask tool: https://robinherbots.github.io/Inputmask/#/documentation.
    * @private
    * @returns {void} Notify validity state changed via event.
    */
