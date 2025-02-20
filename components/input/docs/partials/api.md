@@ -296,7 +296,7 @@ Use the `format` attribute to set the format of the Inputmask.
 
 Default masking definitions:
 - 9 : numeric
-- a : alphabetical
+- a : alphabetic
 - \* : alphanumeric (letters and numbers)
 
 See [Inputmask](https://robinherbots.github.io/Inputmask/#/documentation) for more information on how to configure a mask.
