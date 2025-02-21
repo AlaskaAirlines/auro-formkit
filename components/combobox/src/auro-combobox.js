@@ -408,11 +408,12 @@ export class AuroCombobox extends LitElement {
 
     this.transportInput = this.transportInput.bind(this);
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
-      // wait a frame in case the bib gets hide immidatly after showing because there is no value
+      // wait a frame in case the bib gets hide immediately after showing because there is no value
       setTimeout(this.transportInput);
     });
 
     this.dropdown.addEventListener('auroDropdown-strategy-change', (event) => {
+      // event when the strategy(bib mode) is changed between fullscreen and floating
       this.isDropdownFullscreen = event.detail.strategy === 'fullscreen';
       setTimeout(this.transportInput);
     });
@@ -532,7 +533,7 @@ export class AuroCombobox extends LitElement {
     this.input.addEventListener('keyup', this.bubbleUpInputKeyEvent);
 
     // Programatically inject as the slot cannot be carried over to bibtemplate.
-    // It's because the bib is newly attach to body).
+    // It's because the bib is newly attach to body.
     const label = this.querySelector('[slot="label"]');
     if (label) {
       this.input.append(label);
