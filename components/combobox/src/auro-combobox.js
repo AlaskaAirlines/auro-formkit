@@ -61,6 +61,8 @@ export class AuroCombobox extends LitElement {
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
 
+    this.mobileFullscreenBreakpoint = 'sm';
+
     this.validation = new AuroFormValidation();
 
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
@@ -204,6 +206,16 @@ export class AuroCombobox extends LitElement {
        */
       largeMobileHeadline: {
         type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.
+       * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       * @default sm
+       */
+      mobileFullscreenBreakpoint: {
+        type: String,
         reflect: true
       },
 
@@ -870,7 +882,7 @@ export class AuroCombobox extends LitElement {
           rounded
           matchWidth
           nocheckmark
-          mobilefullscreenbreakpoint="sm"
+          mobilefullscreenbreakpoint="${this.mobileFullscreenBreakpoint}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow>
