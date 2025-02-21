@@ -24,6 +24,17 @@
   margin: var(--ds-size-50, $ds-size-50) 0;
 }
 
+
+@keyframes fullscreen-opening {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
 :host([isfullscreen]) {
  position: fixed;
  top: 0;
@@ -31,11 +42,13 @@
 
  .container {
     width: 100dvw;
-    max-width: none;
+    max-width: 100dvw;
     height: 100dvh;
     max-height: none;
     border-radius: unset;
     margin-top: 0;
+    animation: fullscreen-opening 200ms ease-in 0;
+    animation-iteration-count: 1;
     box-shadow: unset;
     overscroll-behavior: contain;
  }
