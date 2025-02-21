@@ -924,6 +924,8 @@ export default class BaseInput extends LitElement {
       return i18n(this.lang, 'email');
     } else if (this.type === 'credit-card') {
       return i18n(this.lang, 'creditcard');
+    } else if (this.type === 'tel') {
+      return i18n(this.lang, 'tel');
     } else if (this.format === 'yyyy') {
       return i18n(this.lang, 'dateYYYY');
     } else if (this.format === 'yyyy/mm') {
