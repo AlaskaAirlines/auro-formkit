@@ -3,14 +3,12 @@
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "dist",
-    "declarationMap": true,
+    "declarationMap": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "target": "ES2020",
     "module": "ES2020",
-    "types": ["mocha", "chai"],
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]

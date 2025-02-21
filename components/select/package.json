@@ -4,7 +4,6 @@
   "description": "auro-select HTML custom element",
   "type": "module",
   "main": "dist/index.js",
-  "require": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
