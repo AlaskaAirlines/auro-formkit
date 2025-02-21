@@ -1,5 +1,5 @@
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 
 :host {
-  --ds-auro-helptext-color: var(--ds-color-text-tertiary-default, #{$ds-color-text-tertiary-default});
+  --ds-auro-dropdownbib-header-boxshadow-color: var(--ds-elevation-200, #{$ds-elevation-200}); // same as --ds-auro-dropdownbib-boxshadow-color
 }

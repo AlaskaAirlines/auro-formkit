@@ -9,8 +9,9 @@
 import { LitElement } from "lit";
 import { html } from "lit/static-html.js";
 
-import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
+import styleCss from "./styles/style-css.js";
+import tokenCss from "./styles/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -36,7 +37,8 @@ export class AuroBibtemplate extends LitElement {
   static get styles() {
     return [
       colorCss,
-      styleCss
+      styleCss,
+      tokenCss
     ];
   }
 

@@ -11,7 +11,7 @@
 #headerContainer {
   display: flex;
   flex-direction: column;
-  box-shadow: var(--ds-auro-dropdownbib-boxshadow-color);
+  box-shadow: var(--ds-auro-dropdownbib-header-boxshadow-color);
 }
 
 #header {
@@ -34,9 +34,6 @@
   }
 }
 
-
-
-
 #closeButton{
   position: absolute;
   top: var(--ds-size-400, $ds-size-400);
@@ -46,7 +43,7 @@
   cursor: pointer;
 
   [auro-icon] {
-    --ds-auro-icon-size: 2.5rem;
+    --ds-auro-icon-size: var(--ds-size-500, $ds-size-500);
   }
 }
 

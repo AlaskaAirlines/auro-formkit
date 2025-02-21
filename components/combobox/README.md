@@ -72,7 +72,7 @@ import "@aurodesignsystem/auro-formkit/auro-combobox";
 
 ```html
 <auro-combobox>
-  <span slot="bib.mobile.headline">bib Header</span>
+  <span slot="bib.mobile.headline">Bib Header</span>
   <span slot="label">Name</span>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -131,7 +131,7 @@ The `<auro-combobox>` element should be used in situations where users may:
 
 ```html
 <auro-combobox>
-  <span slot="bib.mobile.headline">bib Header</span>
+  <span slot="bib.mobile.headline">Bib Header</span>
   <span slot="label">Name</span>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
