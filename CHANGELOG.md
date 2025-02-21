@@ -1,5 +1,20 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.42](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.41...v2.0.0-beta.42) (2025-02-21)
+
+
+### Bug Fixes
+
+* add `largeMobileHeadeline` attr for  bib headeline size, fix flickering issue in fullscreen ([2f4526a](https://github.com/AlaskaAirlines/auro-formkit/commit/2f4526a88eadd1a01a7f7168aa31e22240d14ab9))
+* make dropdown to pull `dropdownbib` properly ([9a45cb8](https://github.com/AlaskaAirlines/auro-formkit/commit/9a45cb8332c509eb3f9d1fc67ed70488b9bb7187))
+
+
+### Features
+
+* add `mobileFullscreenBreakpoint` property on combobox and pass to dropdown ([c036ba3](https://github.com/AlaskaAirlines/auro-formkit/commit/c036ba3ffc33b3f168e3f31326409361dbab278a))
+* basic bibtemplate structure [#323](https://github.com/AlaskaAirlines/auro-formkit/issues/323) ([be8ad9c](https://github.com/AlaskaAirlines/auro-formkit/commit/be8ad9c3c579f42ed5a0fcc768813e73f6c243ff))
+* move combobox's input to bib in fullscreen mode [#322](https://github.com/AlaskaAirlines/auro-formkit/issues/322) ([4188411](https://github.com/AlaskaAirlines/auro-formkit/commit/4188411d3407d9522d441b7abad1e31fb92d7901))
+
 # [2.0.0-beta.41](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.40...v2.0.0-beta.41) (2025-02-11)
 
 
