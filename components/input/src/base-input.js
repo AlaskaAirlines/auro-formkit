@@ -3,11 +3,10 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-magic-numbers, dot-location, complexity, no-extra-parens, new-cap, object-property-newline, init-declarations, curly, radix, no-nested-ternary */
+/* eslint-disable max-lines, no-magic-numbers, dot-location, no-extra-parens, new-cap, object-property-newline, init-declarations, curly, radix, no-nested-ternary */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 import { LitElement, css } from "lit";
-import { ifDefined } from 'lit/directives/if-defined.js';
 
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
@@ -978,37 +977,27 @@ export default class BaseInput extends LitElement {
       return i18n(this.lang, 'creditcard');
     } else if (this.type === 'tel') {
       return i18n(this.lang, 'tel');
-    } else if (this.format === 'yyyy') {
-      return i18n(this.lang, 'dateYYYY');
-    } else if (this.format === 'yyyy/mm') {
-      return i18n(this.lang, 'dateYYYYMM');
-    } else if (this.format === 'yyyy/mm/dd') {
-      return i18n(this.lang, 'dateYYYYMMDD');
-    } else if (this.format === 'yyyy/dd/mm') {
-      return i18n(this.lang, 'dateYYYYDDMM');
-    } else if (this.format === 'mm/yyyy') {
-      return i18n(this.lang, 'dateMMYYYY');
-    } else if (this.format === 'mm/yy') {
-      return i18n(this.lang, 'dateMMYY');
-    } else if (this.format === 'mm/dd/yyyy' || (this.type === 'date' && this.format === undefined)) {
-      return i18n(this.lang, 'dateMMDDYYYY');
-    } else if (this.format === 'dd/mm/yyyy') {
-      return i18n(this.lang, 'dateDDMMYYYY');
-    } else if (this.format === 'dd/mm') {
-      return i18n(this.lang, 'dateDDMM');
-    } else if (this.format === 'mm/dd') {
-      return i18n(this.lang, 'dateMMDD');
-    } else if (this.format === 'yy/mm') {
-      return i18n(this.lang, 'dateYYMM');
-    } else if (this.format === 'yy') {
-      return i18n(this.lang, 'dateYY');
-    } else if (this.format === 'mm') {
-      return i18n(this.lang, 'dateMM');
-    } else if (this.format === 'dd') {
-      return i18n(this.lang, 'dateDD');
     }
 
-    return '';
+    switch (this.format) {
+      case 'yyyy': return i18n(this.lang, 'dateYYYY');
+      case 'yyyy/mm': return i18n(this.lang, 'dateYYYYMM');
+      case 'yyyy/mm/dd': return i18n(this.lang, 'dateYYYYMMDD');
+      case 'yyyy/dd/mm': return i18n(this.lang, 'dateYYYYDDMM');
+      case 'mm/yyyy': return i18n(this.lang, 'dateMMYYYY');
+      case 'mm/yy': return i18n(this.lang, 'dateMMYY');
+      case 'mm/dd/yyyy':
+      case undefined:
+        return i18n(this.lang, 'dateMMDDYYYY');
+      case 'dd/mm/yyyy': return i18n(this.lang, 'dateDDMMYYYY');
+      case 'dd/mm': return i18n(this.lang, 'dateDDMM');
+      case 'mm/dd': return i18n(this.lang, 'dateMMDD');
+      case 'yy/mm': return i18n(this.lang, 'dateYYMM');
+      case 'yy': return i18n(this.lang, 'dateYY');
+      case 'mm': return i18n(this.lang, 'dateMM');
+      case 'dd': return i18n(this.lang, 'dateDD');
+      default: return '';
+    }
   }
 
   /**
@@ -1027,37 +1016,15 @@ export default class BaseInput extends LitElement {
    * @returns {string}
    */
   getPlaceholder() {
-    if (this.format === 'yyyy') {
-      return !this.placeholder ? 'yyyy' : this.placeholder;
-    } else if (this.format === 'yyyy/mm') {
-      return !this.placeholder ? 'yyyy/mm' : this.placeholder;
-    } else if (this.format === 'yyyy/mm/dd') {
-      return !this.placeholder ? 'yyyy/mm/dd' : this.placeholder;
-    } else if (this.format === 'yyyy/dd/mm') {
-      return !this.placeholder ? 'yyyy/dd/mm' : this.placeholder;
-    } else if (this.format === 'mm/yyyy') {
-      return !this.placeholder ? 'mm/yyyy' : this.placeholder;
-    } else if (this.format === 'mm/yy') {
-      return !this.placeholder ? 'mm/yy' : this.placeholder;
-    } else if (this.format === 'mm/dd/yyyy' || (this.type === 'date' && this.format === undefined)) {
-      return !this.placeholder ? 'mm/dd/yyyy' : this.placeholder;
-    } else if (this.format === 'dd/mm/yyyy') {
-      return !this.placeholder ? 'dd/mm/yyyy' : this.placeholder;
-    } else if (this.format === 'dd/mm') {
-      return !this.placeholder ? 'dd/mm' : this.placeholder;
-    } else if (this.format === 'mm/dd') {
-      return !this.placeholder ? 'mm/dd' : this.placeholder;
-    } else if (this.format === 'yy/mm') {
-      return !this.placeholder ? 'yy/mm' : this.placeholder;
-    } else if (this.format === 'yy') {
-      return !this.placeholder ? 'yy' : this.placeholder;
-    } else if (this.format === 'mm') {
-      return !this.placeholder ? 'mm' : this.placeholder;
-    } else if (this.format === 'dd') {
-      return !this.placeholder ? 'dd' : this.placeholder;
+    if (this.placeholder) {
+      return this.placeholder;
     }
 
-    return ifDefined(this.placeholder);
+    if (this.format) {
+      return this.format;
+    }
+
+    return 'mm/dd/yyyy';
   }
 
   /**
