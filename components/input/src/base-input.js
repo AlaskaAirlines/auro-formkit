@@ -645,53 +645,86 @@ export default class BaseInput extends LitElement {
       } else if (this.type === 'date') {
         const format = this.format || 'mm/dd/yyyy';
 
-        maskOptions = {
-          mask: Date,
-          pattern: format,
-          blocks: {
-            yyyy: { mask: IMask.MaskedRange, from: 1925, to: 2025 },
-            mm: { mask: IMask.MaskedRange, from: 1, to: 12 },
-            dd: { mask: IMask.MaskedRange, from: 1, to: 31 },
-            yy: { mask: IMask.MaskedRange, from: 0, to: 99 }
-          },
-          format(date) {
-            const day = date.getDate()
-              .toString()
-              .padStart(2, '0');
-            const month = (date.getMonth() + 1)
-              .toString()
-              .padStart(2, '0');
-            const year = date.getFullYear();
+        // Handle special cases where we don't need a full Date mask
+        if (format === 'dd' || format === 'yy' || format === 'yyyy') {
+          let maxValue;
+          if (format === 'dd') maxValue = 31;
+          if (format === 'yy') maxValue = 99;
+          if (format === 'yyyy') maxValue = 9999;
 
-            return format
-              .replace('dd', day)
-              .replace('mm', month)
-              .replace('yyyy', year)
-              .replace('yy', year.toString().slice(-2));
-          },
-          parse(str) {
-            const parts = str.split('/');
-            const formatParts = format.split('/');
-            let day, month, year;
+          maskOptions = {
+            mask: IMask.MaskedRange,
+            from: 1,
+            to: maxValue,
+            lazy: true,
+            placeholderChar: '',
+            format(value) {
+              return value.toString()
+                .padStart(format.length, '0');
+            },
+            parse(str) {
+              return parseInt(str) || null;
+            }
+          };
+        } else {
+          const blocks = {};
+          if (format.includes('yyyy')) blocks.yyyy = { mask: IMask.MaskedRange, from: 1900, to: 2100 };
+          if (format.includes('yy')) blocks.yy = { mask: IMask.MaskedRange, from: 0, to: 99 };
+          if (format.includes('mm')) blocks.mm = { mask: IMask.MaskedRange, from: 1, to: 12 };
+          if (format.includes('dd')) blocks.dd = { mask: IMask.MaskedRange, from: 1, to: 31 };
 
-            formatParts.forEach((part, index) => {
-              if (part === 'dd') day = parseInt(parts[index]);
-              if (part === 'mm') month = parseInt(parts[index]) - 1;
-              if (part === 'yyyy') year = parseInt(parts[index]);
-              if (part === 'yy') {
-                year = parseInt(parts[index]);
-                year = year <= 25 ? 2000 + year : 1900 + year;
-              }
-            });
+          maskOptions = {
+            mask: Date,
+            pattern: format,
+            blocks,
+            format(date) {
+              if (!date) return '';
 
-            if (!year) year = new Date().getFullYear();
-            if (!day || !month || isNaN(day) || isNaN(month)) return null;
+              const day = date.getDate()
+                .toString()
+                .padStart(2, '0');
+              const month = (date.getMonth() + 1)
+                .toString()
+                .padStart(2, '0');
+              const year = date
+                .getFullYear()
+                .toString();
+              const shortYear = year.slice(-2);
 
-            return new Date(year, month, day);
-          },
-          lazy: true,
-          placeholderChar: ''
-        };
+              let formattedDate = this.mask;
+
+              if (formattedDate.includes('dd')) formattedDate = formattedDate.replace('dd', day);
+              if (formattedDate.includes('mm')) formattedDate = formattedDate.replace('mm', month);
+              if (formattedDate.includes('yyyy')) formattedDate = formattedDate.replace('yyyy', year);
+              if (formattedDate.includes('yy')) formattedDate = formattedDate.replace('yy', shortYear);
+
+              return formattedDate;
+            },
+            parse(str) {
+              if (!str) return null;
+
+              const parts = str.split('/');
+              const formatParts = this.mask.split('/');
+              let day = 1, month, year = new Date().getFullYear();
+
+              formatParts.forEach((part, index) => {
+                if (part === 'dd') day = parseInt(parts[index]) || 1;
+                if (part === 'mm') month = parseInt(parts[index]) - 1;
+                if (part === 'yyyy') year = parseInt(parts[index]);
+                if (part === 'yy') {
+                  year = parseInt(parts[index]);
+                  year = year <= 25 ? 2000 + year : 1900 + year;
+                }
+              });
+
+              if (isNaN(month) || isNaN(year)) return null;
+
+              return new Date(year, month, day);
+            },
+            lazy: true,
+            placeholderChar: ''
+          };
+        }
       }
 
       this.inputMode = 'numeric';
@@ -895,6 +928,8 @@ export default class BaseInput extends LitElement {
       this.lengthForType = this.format ? this.format.length : 17;
     } else if (this.type === 'date') {
       this.lengthForType = this.format ? this.format.length : 10;
+    } else if (this.type === 'number') {
+      this.inputMode = 'numeric';
     }
   }
 
