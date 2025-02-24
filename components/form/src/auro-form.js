@@ -66,11 +66,15 @@ export class AuroForm extends LitElement {
     /** @type {HTMLButtonElement[]} */
     this._resetElements = [];
 
+    /** @type {MutationObserver[]} */
+    this.mutationObservers = [];
+
     // Bind listeners
     this.reset = this.reset.bind(this);
     this.submit = this.submit.bind(this);
     this.sharedInputListener = this.sharedInputListener.bind(this);
     this.sharedValidationListener = this.sharedValidationListener.bind(this);
+    this.mutationEventListener = this.mutationEventListener.bind(this);
   }
 
   // Note: button is NOT considered a form element in this context
@@ -489,10 +493,43 @@ export class AuroForm extends LitElement {
     }
   }
 
-  onSlotChange() {
+  /**
+   * Mutation observer for form elements. Slot change does not trigger unless
+   * root-level elements are added/removed. This is a workaround to ensure
+   * nested form elements are also observed.
+   *
+   * @returns {void}
+   */
+  mutationEventListener() {
+    this.initializeState();
+    this._attachEventListeners();
+  }
+
+  /**
+   * Slot change event listener. This is the main entry point for the form element.
+   * @param {Event} event - The slot change event.
+   * @returns {void}
+   */
+  onSlotChange(event) {
     this.initializeState();
     // Safe to call as we remove and re-add event listeners
     this._attachEventListeners();
+
+    // Get rid of old observers - we'll create new ones in a moment
+    this.mutationObservers.forEach((mo) => mo.disconnect());
+    this.mutationObservers = [];
+
+    const slotNodes = event.currentTarget.assignedNodes();
+    slotNodes.forEach((node) => {
+      if (node.tagName && !this.isFormElement(node)) {
+        const mo = new MutationObserver(this.mutationEventListener);
+        mo.observe(node, {
+          subtree: true,
+          childList: true
+        });
+        this.mutationObservers.push(mo);
+      }
+    });
   }
 
   // function that renders the HTML and CSS into the scope of the component

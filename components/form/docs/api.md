@@ -15,6 +15,7 @@ The auro-form element provides users a way to ... (it would be great if you fill
 |----------------------------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
 | `formState`                |           | `FormState`                                      | {}      |                                                  |
 | `isInitialState`           | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
+| `mutationEventListener`    |           |                                                  |         |                                                  |
 | `reset`                    |           |                                                  |         |                                                  |
 | `resetElements`            | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _resetElements.              |
 | `sharedInputListener`      |           |                                                  |         |                                                  |
@@ -31,7 +32,8 @@ The auro-form element provides users a way to ... (it would be great if you fill
 | `initializeState`           | `(): void`                        | Initialize (or reinitialize) the form state.     |
 | `isButtonElement`           | `(element: HTMLElement): boolean` | Check if the tag name is a button element.<br /><br />**element**: The element to check. |
 | `isFormElement`             | `(element: HTMLElement): boolean` | Check if the tag name is a form element.<br /><br />**element**: The element to check (attr or tag name). |
-| `onSlotChange`              | `(): void`                        |                                                  |
+| `mutationEventListener`     | `(): void`                        | Mutation observer for form elements. Slot change does not trigger unless<br />root-level elements are added/removed. This is a workaround to ensure<br />nested form elements are also observed. |
+| `onSlotChange`              | `(event: any): void`              |                                                  |
 | `queryAuroElements`         | `(): NodeList`                    | Construct the query strings from elements, append them together, execute, and return the NodeList. |
 | `reset`                     | `(): void`                        | Reset fires an event called `reset` - just as you would expect from a normal form. |
 | `setDisabledStateOnButtons` | `(): void`                        |                                                  |

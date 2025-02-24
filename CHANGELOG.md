@@ -1,5 +1,50 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.44](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.43...v2.0.0-beta.44) (2025-02-24)
+
+
+### Performance Improvements
+
+* complete refactor of build system and components ([fd40ece](https://github.com/AlaskaAirlines/auro-formkit/commit/fd40ece429e0c0438ad5b1b9e4f7ab186d10d450)), closes [#228](https://github.com/AlaskaAirlines/auro-formkit/issues/228)
+
+
+### BREAKING CHANGES
+
+* Major architectural changes to package structure and component system
+
+- Move to monorepo workspace configuration with Turborepo
+- Add new components:
+  - auro-counter for numeric input controls
+  - auro-helptext for form field assistance
+  - auro-bibtemplate for bib/dropdown templates
+  - auro-form for form handling and validation
+  - auro-counter-group for grouped counter inputs
+- Update existing components:
+  - auro-dropdown with improved positioning and mobile support
+  - auro-select with enhanced menu API
+  - auro-combobox with fullscreen mobile view
+  - auro-datepicker with range selection support
+- Consolidate all components under auro-formkit namespace
+- New build pipeline and documentation structure
+
+# [2.0.0-beta.43](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.42...v2.0.0-beta.43) (2025-02-24)
+
+
+### Bug Fixes
+
+* add register to AuroBibtemplate component and update with latest release scripts [#228](https://github.com/AlaskaAirlines/auro-formkit/issues/228) ([cfabce6](https://github.com/AlaskaAirlines/auro-formkit/commit/cfabce601ef3265e2ab037c342655ba834a49e4d))
+* expose paths to readme files [#228](https://github.com/AlaskaAirlines/auro-formkit/issues/228) ([93aabae](https://github.com/AlaskaAirlines/auro-formkit/commit/93aabae27abd03e04b938f830dd6beb6a975ba89))
+* **form:** address PR feedback ([724dea6](https://github.com/AlaskaAirlines/auro-formkit/commit/724dea6f278259eaef5ed14f01b4771e22056ebc))
+* make form to watch dom tree update ([d9488dc](https://github.com/AlaskaAirlines/auro-formkit/commit/d9488dc6f88794c30d5d663dcab9f34a42082679))
+* store mutationObservers properly ([abc058a](https://github.com/AlaskaAirlines/auro-formkit/commit/abc058a08e3c1b81df5c64732807a7a58c6a7b67))
+* update web-dev-server config to append .html for non-file URLs and enhance turbo.json dependencies ([696fcb0](https://github.com/AlaskaAirlines/auro-formkit/commit/696fcb0027ab4e0bc0083be050cfdbd520040f83))
+
+
+### Performance Improvements
+
+* **form:** remove old mutation observers ([6b8083f](https://github.com/AlaskaAirlines/auro-formkit/commit/6b8083f5948966613b340653906e37085efd754d))
+* update web-dev-server configurations and add new dev commands ([7d21e43](https://github.com/AlaskaAirlines/auro-formkit/commit/7d21e4373006891473f1ab331b406f4d9126a823))
+
 # [2.0.0-beta.42](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.41...v2.0.0-beta.42) (2025-02-21)
 
 
