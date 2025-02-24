@@ -155,7 +155,7 @@ export default class AuroFormValidation {
         if (elem.value.length > 0 && elem.value.length < elem.lengthForType) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
-        } else if (elem.value?.length === elem.lengthForType) {
+        } else if (elem.value?.length === elem.lengthForType && elem.toNorthAmericanFormat(elem.value)) {
           const formattedValue = elem.toNorthAmericanFormat(elem.value);
           const valueDate = new Date(formattedValue.dateForComparison);
 

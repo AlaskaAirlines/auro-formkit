@@ -104,8 +104,7 @@ describe('auro-input', () => {
       <auro-input type="number"></auro-input>
     `);
 
-    const inputMode = el.shadowRoot.querySelector('input').getAttribute('inputMode');
-    expect(inputMode).to.equal('numeric');
+    expect(el.inputMode).to.equal('numeric');
   });
 
   it('does not allow color type', async () => {
@@ -315,23 +314,35 @@ describe('auro-input', () => {
 
   it('date inputs use programmatic placeholder', async () => {
     // All date types and their default placeholders at their corresponding index
-    let dateFormats = ['MM/DD/YYYY', 'MM/YY', 'MM/YYYY', 'YYYY/MM/DD'];
-    let defaultDatePH = ['MM/DD/YYYY', 'MM/YY', 'MM/YYYY', 'YYYY/MM/DD'];
+    const dateFormats = [
+      'mm/dd/yyyy',
+      'dd/mm/yyyy',
+      'yyyy/mm/dd',
+      'yyyy/dd/mm',
+      'mm/yy',
+      'yy/mm',
+      'mm/yyyy',
+      'yyyy/mm',
+      'yy',
+      'yyyy',
+      'mm',
+      'dd'
+    ];
 
-    for (let index = 0; index < dateTypes.length; index++) {
+    for (let index = 0; index < dateFormats.length; index++) {
       const el = await fixture(html`
         <auro-input type="date" format=${dateFormats[index]}></auro-input>
       `);
 
       let placeholder = el.getPlaceholder();
 
-      expect(placeholder).to.equal(defaultDatePH[index]);
+      expect(placeholder).to.equal(dateFormats[index]);
 
       el.placeholder = "some date";
 
       placeholder = el.getPlaceholder();
 
-      expect(placeholder).not.to.equal(defaultDatePH[index]);
+      expect(placeholder).not.to.equal(dateFormats[index]);
     }
   });
 
@@ -594,25 +605,16 @@ describe('auro-input', () => {
 
   it ('input value is formatted with passed in format and respects the format restrictions', async () => {
     const el = await fixture(html`
-      <auro-input format="4744[9]{0,4}"></auro-input>
+      <auro-input format="47440000"></auro-input>
     `);
 
-    // Prevents non-numeric characters from being entered
     setInputValue(el, 'www');
 
     await elementUpdated(el);
 
-    expect(el.value).to.equal('');
+    expect(el.value).to.equal('4744');
 
-    // Sets correct value
     setInputValue(el, '1234');
-
-    await elementUpdated(el);
-
-    expect(el.value).to.equal('47441234');
-
-    // Prevents more than max characters from being entered
-    setInputValue(el, '1234658965900');
 
     await elementUpdated(el);
 
@@ -634,49 +636,137 @@ describe('auro-input', () => {
 
     it('custom phone format', async () => {
       const el = await fixture(html`
-        <auro-input type="tel" format="+52 999 99 9999"></auro-input>
+        <auro-input type="tel" format="+52 000 000 0000"></auro-input>
       `);
 
-      setInputValue(el, '5091234567');
+      setInputValue(el, '1234567890');
 
       await elementUpdated(el);
 
-      expect(el.value).to.equal('+52 509 123 4567');
+      expect(el.value).to.equal('+52 123 456 7890');
     });
   });
 
   describe('handles date formatting', () => {
-    it('MM/DD/YYYY', async () => {
+    it('mm/dd/yyyy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" required></auro-input>
+        <auro-input type="date" format="mm/dd/yyyy"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/DD/YYYY');
+    
+      setInputValue(el, '12312000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12/31/2000');
     });
-
-    it('YYYY/MM/DD', async () => {
+    
+    it('dd/mm/yyyy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="YYYY/MM/DD" required></auro-input>
+        <auro-input id="format-date" type="date" format="dd/mm/yyyy"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'YYYY/MM/DD');
+    
+      setInputValue(el, '31122000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('31/12/2000');
     });
-
-    it('MM/YY', async () => {
+    
+    it('yyyy/mm/dd', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="MM/YY" required></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy/mm/dd"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/YY');
+    
+      setInputValue(el, '20001231');
+      await elementUpdated(el);
+      expect(el.value).to.equal('2000/12/31');
     });
-
-    it('MM/YYYY', async () => {
+    
+    it('yyyy/dd/mm', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="MM/YYYY" required></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy/dd/mm"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/YYYY');
+    
+      setInputValue(el, '20003112');
+      await elementUpdated(el);
+      expect(el.value).to.equal('2000/31/12');
     });
+    
+    it('mm/yy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="mm/yy"></auro-input>
+      `);
+    
+      setInputValue(el, '1231');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12/31');
+    });
+    
+    it('yy/mm', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yy/mm"></auro-input>
+      `);
+    
+      setInputValue(el, '9912');
+      await elementUpdated(el);
+      expect(el.value).to.equal('99/12');
+    });
+    
+    it('mm/yyyy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="mm/yyyy"></auro-input>
+      `);
+    
+      setInputValue(el, '122000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12/2000');
+    });
+    
+    it('yyyy/mm', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yyyy/mm"></auro-input>
+      `);
+    
+      setInputValue(el, '200012');
+      await elementUpdated(el);
+      expect(el.value).to.equal('2000/12');
+    });
+    
+    it('yy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yy"></auro-input>
+      `);
+    
+      setInputValue(el, '99');
+      await elementUpdated(el);
+      expect(el.value).to.equal('99');
+    });
+    
+    it('yyyy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yyyy"></auro-input>
+      `);
+    
+      setInputValue(el, '1999');
+      await elementUpdated(el);
+      expect(el.value).to.equal('1999');
+    });
+    
+    it('mm', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="mm"></auro-input>
+      `);
+    
+      setInputValue(el, '12');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12');
+    });
+    
+    it('dd', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="dd"></auro-input>
+      `);
+    
+      setInputValue(el, '31');
+      await elementUpdated(el);
+      expect(el.value).to.equal('31');
+    });    
   });
 
   describe('handles i18n', () => {
