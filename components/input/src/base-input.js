@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-magic-numbers, dot-location, no-extra-parens, new-cap, object-property-newline, init-declarations, curly, radix, no-nested-ternary */
+/* eslint-disable max-lines, no-magic-numbers, dot-location, no-extra-parens, new-cap */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 import { LitElement, css } from "lit";
@@ -13,6 +13,7 @@ import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
+import { getMaskOptions } from "./maskConfig.js";
 
 import IMask from 'imask';
 
@@ -623,7 +624,11 @@ export default class BaseInput extends LitElement {
       this.maskInstance.destroy();
     }
 
-    const maskOptions = this.getMaskOptions();
+    const maskOptions = getMaskOptions(this.type, this.format);
+
+    if (this.type === 'credit-card' || this.type === 'tel' || this.type === 'date') {
+      this.inputMode = 'numeric';
+    }
 
     if (this.inputElement && maskOptions.mask) {
       this.maskInstance = IMask(this.inputElement, maskOptions);
@@ -644,134 +649,6 @@ export default class BaseInput extends LitElement {
         }
       });
     }
-  }
-
-  /**
-   * Configures the mask to be used on the input element based on format and/or type.
-   * IMask tool documentation: https://imask.js.org/.
-   * @private
-   * @returns {void}
-   */
-  getMaskOptions() {
-    if (this.type) {
-      if (this.type === 'credit-card') {
-        this.inputMode = 'numeric';
-
-        return {
-          mask: this.format || '0000 0000 0000 0000',
-          placeholderChar: '',
-          lazy: true,
-          overwrite: false
-        };
-      }
-
-      if (this.type === 'tel') {
-        this.inputMode = 'numeric';
-
-        return {
-          mask: this.format || '+1 (000) 000-0000',
-          placeholderChar: '',
-          lazy: true,
-          overwrite: false
-        };
-      }
-
-      if (this.type === 'date') {
-        this.inputMode = 'numeric';
-
-        const format = this.format || 'mm/dd/yyyy';
-
-        // Handle special cases where we don't need a full Date mask
-        if (format === 'dd' || format === 'yy' || format === 'yyyy') {
-          const maxValue = format === 'dd' ? 31 : (format === 'yy' ? 99 : 9999);
-
-          return {
-            mask: IMask.MaskedRange,
-            from: 1,
-            to: maxValue,
-            lazy: true,
-            placeholderChar: '',
-            format(value) {
-              return value.toString()
-                .padStart(format.length, '0');
-            },
-            parse(str) {
-              return parseInt(str) || null;
-            }
-          };
-        }
-
-        const blocks = {};
-
-        if (format.includes('yyyy')) blocks.yyyy = { mask: IMask.MaskedRange, from: 1900, to: 2100 };
-        if (format.includes('yy')) blocks.yy = { mask: IMask.MaskedRange, from: 0, to: 99 };
-        if (format.includes('mm')) blocks.mm = { mask: IMask.MaskedRange, from: 1, to: 12 };
-        if (format.includes('dd')) blocks.dd = { mask: IMask.MaskedRange, from: 1, to: 31 };
-
-        return {
-          mask: Date,
-          pattern: format,
-          blocks,
-          format(date) {
-            if (!date) return '';
-
-            const day = date.getDate()
-              .toString()
-              .padStart(2, '0');
-            const month = (date.getMonth() + 1)
-              .toString()
-              .padStart(2, '0');
-            const year = date
-              .getFullYear()
-              .toString();
-            const shortYear = year.slice(-2);
-
-            let formattedDate = this.mask;
-
-            if (formattedDate.includes('dd')) formattedDate = formattedDate.replace('dd', day);
-            if (formattedDate.includes('mm')) formattedDate = formattedDate.replace('mm', month);
-            if (formattedDate.includes('yyyy')) formattedDate = formattedDate.replace('yyyy', year);
-            if (formattedDate.includes('yy')) formattedDate = formattedDate.replace('yy', shortYear);
-
-            return formattedDate;
-          },
-          parse(str) {
-            if (!str) return null;
-
-            const parts = str.split('/');
-            const formatParts = this.mask.split('/');
-            let day = 1, month, year = new Date().getFullYear();
-
-            formatParts.forEach((part, index) => {
-              if (part === 'dd') day = parseInt(parts[index]) || 1;
-              if (part === 'mm') month = parseInt(parts[index]) - 1;
-              if (part === 'yyyy') year = parseInt(parts[index]);
-              if (part === 'yy') {
-                year = parseInt(parts[index]);
-                year = year <= 25 ? 2000 + year : 1900 + year;
-              }
-            });
-
-            if (isNaN(month) || isNaN(year)) return null;
-
-            return new Date(year, month, day);
-          },
-          lazy: true,
-          placeholderChar: ''
-        };
-      }
-    }
-
-    if (this.format) {
-      // Handle custom format
-      return {
-        mask: this.format,
-        placeholderChar: '',
-        lazy: true
-      };
-    }
-
-    return {};
   }
 
   /**
