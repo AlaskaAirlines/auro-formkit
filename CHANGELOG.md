@@ -1,5 +1,24 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.45](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.44...v2.0.0-beta.45) (2025-02-24)
+
+
+### Bug Fixes
+
+* rename some fullscreen related props and slot names ([fb3d4e6](https://github.com/AlaskaAirlines/auro-formkit/commit/fb3d4e62e39dc48ea0c17c51257127fc09aa8462))
+
+
+### Features
+
+* make counter-group dropdown fullscreen on mobile screen ([7b23520](https://github.com/AlaskaAirlines/auro-formkit/commit/7b23520c27a2d506d839e4f7d5d1c10af3f2e27e))
+
+
+### BREAKING CHANGES
+
+* properties for the fullscreen feature are renamed
+- `mobileFullscreenBreakpoint` is now `fullscreenBreakpoint`
+- `bib.mobile.headline` is now `bib.fullscreen.headline`
+
 # [2.0.0-beta.44](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.43...v2.0.0-beta.44) (2025-02-24)
 
 
