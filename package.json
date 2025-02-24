@@ -112,42 +112,6 @@
       "./node_modules"
     ]
   },
-  "release": {
-    "branches": [
-      {
-        "name": "main"
-      },
-      {
-        "name": "beta",
-        "prerelease": true
-      }
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogFile": "./CHANGELOG.md",
-          "changelogTitle": "# Semantic Release Automated Changelog"
-        }
-      ],
-      "@semantic-release/npm",
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "./package.json",
-            "./CHANGELOG.md",
-            "./readme.md",
-            "./docs/api.md"
-          ],
-          "noVerify": true
-        }
-      ],
-      "@semantic-release/github"
-    ]
-  },
   "keywords": [
     "alaska airlines",
     "auro",
