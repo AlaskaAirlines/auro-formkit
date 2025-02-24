@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.46](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.45...v2.0.0-beta.46) (2025-02-24)
+
+
+### Bug Fixes
+
+* use versioningTag for `auro-helptext` ([bbebcc4](https://github.com/AlaskaAirlines/auro-formkit/commit/bbebcc4823513ea4309e3778048bd76b2e5289e8))
+
 # [2.0.0-beta.45](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.44...v2.0.0-beta.45) (2025-02-24)
 
 
