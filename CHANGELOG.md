@@ -1,5 +1,32 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.44](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.43...v2.0.0-beta.44) (2025-02-24)
+
+
+### Performance Improvements
+
+* complete refactor of build system and components ([fd40ece](https://github.com/AlaskaAirlines/auro-formkit/commit/fd40ece429e0c0438ad5b1b9e4f7ab186d10d450)), closes [#228](https://github.com/AlaskaAirlines/auro-formkit/issues/228)
+
+
+### BREAKING CHANGES
+
+* Major architectural changes to package structure and component system
+
+- Move to monorepo workspace configuration with Turborepo
+- Add new components:
+  - auro-counter for numeric input controls
+  - auro-helptext for form field assistance
+  - auro-bibtemplate for bib/dropdown templates
+  - auro-form for form handling and validation
+  - auro-counter-group for grouped counter inputs
+- Update existing components:
+  - auro-dropdown with improved positioning and mobile support
+  - auro-select with enhanced menu API
+  - auro-combobox with fullscreen mobile view
+  - auro-datepicker with range selection support
+- Consolidate all components under auro-formkit namespace
+- New build pipeline and documentation structure
+
 # [2.0.0-beta.43](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.42...v2.0.0-beta.43) (2025-02-24)
 
 
