@@ -290,6 +290,30 @@ For use cases where the field is `required`, but live validation is not wanted, 
 
 </auro-accordion>
 
+### Format <a name="format"></a>
+
+Use the `format` attribute to set the format of the Inputmask. 
+
+Default masking definitions:
+- 0 : number
+- a : letter
+- \* : any character
+
+See [IMask](https://imask.js.org/) for more information on how to configure a mask.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/format.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Error support and HTML5 Validity
 
 The `<auro-input>` component follows the HTML5 input `validity` and `validityState` [specification](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#client-side_validation).
@@ -470,9 +494,43 @@ Use the `type="credit-card"` and `icon` attributes for a credit card formatted i
 
 </auro-accordion>
 
-### Date Format
+### Phone Number
 
-Use the `type="month-day-year"` attribute for a date formatted input.
+Use the `type="tel"` attribute for a phone number formatted input. The default format is `+1 (000) 000-0000`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/tel.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/tel.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### Formatting
+
+Use the `format` attribute to set a custom phone number format.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/telFormat.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/telFormat.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Date
+
+Use the `type="date"` attribute for a date formatted input. The default date format is `mm/dd/yyyy`.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/monthDayYear.html) -->
@@ -487,37 +545,9 @@ Use the `type="month-day-year"` attribute for a date formatted input.
 
 </auro-accordion>
 
-Use the `type="month-year"` attribute for a date formatted input.
+#### Formatting
 
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/monthYear.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/monthYear.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-Use the `type="month-fullYear"` attribute for a date formatted input.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/monthFullYear.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/monthFullYear.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-Use the `type="year-month-day"` attribute for a date formatted input.
+Use the `format` attribute to put together any combination of `mm`, `dd`, & `yyyy` or `yy`.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/yearMonthDay.html) -->
@@ -532,47 +562,28 @@ Use the `type="year-month-day"` attribute for a date formatted input.
 
 </auro-accordion>
 
-Use the `type="month"` attribute for a date formatted input.
-
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/month.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/monthYear.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/month.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/monthYear.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
 
-Use the `type="year"` attribute for a date formatted input.
-
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/year.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/day.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/year.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-Use the `type="fullYear"` attribute for a date formatted input.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/fullYear.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/fullYear.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/day.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
