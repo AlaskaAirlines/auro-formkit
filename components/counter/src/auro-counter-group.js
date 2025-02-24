@@ -31,6 +31,8 @@ import './auro-counter-wrapper.js';
  * @element auro-counter-group
  * @extends LitElement
  * @slot Default - Slot for counter elements.
+ * @slot bib.fullscreen.headline -  Defines the headline to display above menu-options
+ * @slot bib.fullscreen.footer -  Defines the footer to display at the bottom of fullscreen bib
  * @slot Label - Dropdown label content. Only used when `isDropdown` is true.
  * @slot ValueText - Dropdown value text display. Only used when `isDropdown` is true.
  * @slot HelpText - Dropdown help text content. Only used when `isDropdown` is true.
@@ -45,7 +47,7 @@ export class AuroCounterGroup extends LitElement {
     this.total = undefined;
     this.validity = undefined;
     this.value = undefined;
-    this.mobileFullscreenBreakpoint = 'sm';
+    this.fullscreenBreakpoint = 'sm';
 
     /**
      * @private
@@ -149,7 +151,7 @@ export class AuroCounterGroup extends LitElement {
        * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
        * @default sm
        */
-      mobileFullscreenBreakpoint: {
+      fullscreenBreakpoint: {
         type: String,
         reflect: true
       }
@@ -279,7 +281,7 @@ export class AuroCounterGroup extends LitElement {
 
   /**
    * @private
-   * This sets up a close event listener and moves any slotted `bib.mobile.headline` and `bib.mobile.footer` content into the bibtemplate.
+   * This sets up a close event listener and moves any slotted `bib.fullscreen.headline` and `bib.fullscreen.footer` content into the bibtemplate.
    */
   configureBibtemplate() {
     const bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
@@ -288,13 +290,13 @@ export class AuroCounterGroup extends LitElement {
         this.dropdown.hide();
       }
     });
-    const bibHeader = this.querySelector('[slot="bib.mobile.headline"]');
+    const bibHeader = this.querySelector('[slot="bib.fullscreen.headline"]');
     if (bibHeader) {
       bibHeader.setAttribute('slot', 'header');
       bibtemplate.append(bibHeader);
     }
 
-    const bibFooter = this.querySelector('[slot="bib.mobile.footer"]');
+    const bibFooter = this.querySelector('[slot="bib.fullscreen.footer"]');
     if (bibFooter) {
       bibFooter.setAttribute('slot', 'footer');
       bibtemplate.append(bibFooter);
@@ -375,7 +377,7 @@ export class AuroCounterGroup extends LitElement {
   render() {
     return html`
     ${this.isDropdown
-      ? html`<${this.dropdownTag} common chevron mobilefullscreenbreakpoint="${this.mobileFullscreenBreakpoint}">
+      ? html`<${this.dropdownTag} common chevron fullscreenBreakpoint="${this.fullscreenBreakpoint}">
 
         <div slot="trigger"><slot name="valueText">
           ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}

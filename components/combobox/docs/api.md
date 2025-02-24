@@ -8,8 +8,8 @@
 | `checkmark`                     | `checkmark`                     | `boolean` |             | When attribute is present auro-menu will apply checkmarks to selected options. |
 | `disabled`                      | `disabled`                      | `boolean` |             | If set, disables the combobox.                   |
 | `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"        | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeMobileHeadline`           | `largeMobileHeadline`           | `boolean` |             | If declared, make mobileHeadline in HeadingDisplay.<br />Otherwise, Heading 600 |
-| `mobileFullscreenBreakpoint`    | `mobileFullscreenBreakpoint`    | `string`  | "sm"        | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `noFilter`                      | `noFilter`                      | `boolean` | false       | If set, combobox will not filter menuoptions based in input. |
 | `noValidate`                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
 | `optionSelected`                | `optionSelected`                | `object`  | "undefined" | Specifies the current selected option.           |
@@ -39,8 +39,9 @@
 
 ## Slots
 
-| Name       | Description                          |
-|------------|--------------------------------------|
-|            | Default slot for the menu content.   |
-| `helpText` | Defines the content of the helpText. |
-| `label`    | Defines the content of the label.    |
+| Name                      | Description                                      |
+|---------------------------|--------------------------------------------------|
+|                           | Default slot for the menu content.               |
+| `bib.fullscreen.headline` | Defines the headline to display above menu-options |
+| `helpText`                | Defines the content of the helpText.             |
+| `label`                   | Defines the content of the label.                |

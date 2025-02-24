@@ -261,9 +261,9 @@ In cases where it is desired behavior for `auro-dropdown` to only show, not togg
 
 </auro-accordion>
 
-#### mobileFullscreenBreakpoint
+#### fullscreenBreakpoint
 
-On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
+On mobile view, adding the `fullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customDimensions300.html) -->

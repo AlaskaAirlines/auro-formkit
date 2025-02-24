@@ -33,6 +33,7 @@ import styleCss from './styles/style-css.js';
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot - Default slot for the menu content.
+ * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @event auroCombobox-valueSet - Notifies that the component has a new value set.
@@ -61,7 +62,7 @@ export class AuroCombobox extends LitElement {
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
 
-    this.mobileFullscreenBreakpoint = 'sm';
+    this.fullscreenBreakpoint = 'sm';
 
     this.validation = new AuroFormValidation();
 
@@ -214,7 +215,7 @@ export class AuroCombobox extends LitElement {
        * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
        * @default sm
        */
-      mobileFullscreenBreakpoint: {
+      fullscreenBreakpoint: {
         type: String,
         reflect: true
       },
@@ -395,7 +396,7 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    const bibHeader = this.querySelector('[slot="bib.mobile.headline"]');
+    const bibHeader = this.querySelector('[slot="bib.fullscreen.headline"]');
     if (bibHeader) {
       bibHeader.setAttribute('slot', 'header');
       this.bibtemplate.append(bibHeader);
@@ -883,7 +884,7 @@ export class AuroCombobox extends LitElement {
           rounded
           matchWidth
           nocheckmark
-          mobilefullscreenbreakpoint="${this.mobileFullscreenBreakpoint}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow>
