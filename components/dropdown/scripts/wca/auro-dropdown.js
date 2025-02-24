@@ -16,7 +16,7 @@ import { AuroDropdown } from '../../src/auro-dropdown.js';
  * @attr { Boolean } noToggle - If declared, the trigger will only show the dropdown bib.
  * @attr { Boolean } focusShow - if declared, the bib will display when focus is applied to the trigger.
  * @attr { Boolean } noHideOnThisFocusLoss - If declared, the dropdown will not hide when moving focus outside the element.
- * @attr { String } mobileFullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+ * @attr { String } fullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
  * @prop { Boolean } isPopoverVisible - If true, the dropdown bib is displayed.
  * @slot - Default slot for the popover content.
  * @slot label - Defines the content of the label.

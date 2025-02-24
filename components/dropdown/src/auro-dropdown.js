@@ -255,7 +255,7 @@ export class AuroDropdown extends LitElement {
       /**
        * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
        */
-      mobileFullscreenBreakpoint: {
+      fullscreenBreakpoint: {
         type: String,
         reflect: true
       },
@@ -344,8 +344,8 @@ export class AuroDropdown extends LitElement {
   updated(changedProperties) {
     this.floater.handleUpdate(changedProperties);
 
-    if (changedProperties.has('mobileFullscreenBreakpoint')) {
-      this.bibContent.mobileFullscreenBreakpoint = this.mobileFullscreenBreakpoint;
+    if (changedProperties.has('fullscreenBreakpoint')) {
+      this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
     }
 
     // when trigger's content is changed without any attribute or node change,

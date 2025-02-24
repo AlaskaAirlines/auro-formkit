@@ -43,11 +43,14 @@ You can also individually set the max or min value for each counter in a group.
 
 ### Dropdown with fullscreen bib
 
-You can make the dropdown open in fullscreen at a specific breakpoint by setting `mobileFullscreenBreakpoint`.
+You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
 
-The default value of `mobileFullscreenBreakpoint` is `sm`. 
+The default value of `fullscreenBreakpoint` is `sm`. 
 
-To support fullcreen bib, setting `mobile.bib.headline` is **STRONGLY RECOMMENDED**.
+Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens)
+
+To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMMENDED**.
+You can also set `bib.fullscreen.footer` to add any additional options on fullscreen view.
 
 
 <div class="exampleWrapper">

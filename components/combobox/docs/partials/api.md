@@ -266,11 +266,14 @@ While content is loading, the menu can either remain empty or display a loading 
 
 ### Dropdown with fullscreen bib
 
-You can make the dropdown open in fullscreen at a specific breakpoint by setting `mobileFullscreenBreakpoint`.
+You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
 
-The default value of `mobileFullscreenBreakpoint` is `sm`. 
+The default value of `fullscreenBreakpoint` is `sm`. 
 
-To support fullcreen bib, setting `mobile.bib.headline` is **STRONGLY RECOMMENDED**.
+Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens)
+
+
+To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMMENDED**.
 
 
 <div class="exampleWrapper">

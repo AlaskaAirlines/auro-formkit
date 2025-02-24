@@ -966,7 +966,7 @@ export class AuroDatePicker extends LitElement {
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow
           noHideOnThisFocusLoss
-          mobileFullscreenBreakpoint="sm"
+          fullscreenBreakpoint="sm"
           part="dropdown">
           <div slot="trigger" class="dpTriggerContent" part="trigger">
             <${this.inputTag}
