@@ -47,7 +47,7 @@ You can make the dropdown open in fullscreen at a specific breakpoint by setting
 
 The default value of `mobileFullscreenBreakpoint` is `sm`. 
 
-To support fullcreen bib, setting `mobile.bib.healine` is **STRONGLY RECOMMENDED**.
+To support fullcreen bib, setting `mobile.bib.headline` is **STRONGLY RECOMMENDED**.
 
 
 <div class="exampleWrapper">

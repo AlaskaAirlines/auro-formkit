@@ -272,7 +272,16 @@ export class AuroCounterGroup extends LitElement {
       counter.addEventListener("input", () => this.updateValue());
     });
 
-    // configure bib Header for fullscreen view
+    if (this.isDropdown) {
+      this.configureBibtemplate();
+    }
+  }
+
+  /**
+   * @private
+   * This sets up a close event listener and moves any slotted `bib.mobile.headline` and `bib.mobile.footer` content into the bibtemplate.
+   */
+  configureBibtemplate() {
     const bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
     bibtemplate.addEventListener('close-click', () => {
       if (this.dropdown.isPopoverVisible) {
