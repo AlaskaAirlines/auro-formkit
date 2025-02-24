@@ -3,20 +3,23 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
-import { LitElement, html } from "lit";
+import { LitElement } from "lit";
+import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 // Import the processed CSS file into the scope of the component
 import styleCss from "./styles/auro-checkbox-group-css.js";
 import colorCss from "./styles/colorGroup-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import '@aurodesignsystem/auro-helptext';
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
 
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
@@ -60,6 +63,16 @@ export class AuroCheckboxGroup extends LitElement {
      * @private
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    /**
+     * Generate unique names for dependency components.
+     */
+    const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
   }
 
   static get styles() {
@@ -357,13 +370,13 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <auro-helptext large part="helpText">
+          <${this.helpTextTag} large part="helpText">
             <slot name="helpText"></slot>
-          </auro-helptext>`
+          </${this.helpTextTag}>`
         : html`
-          <auro-helptext error large role="alert" aria-live="assertive" part="helpText">
+          <${this.helpTextTag} error large role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
-          </auro-helptext>`
+          </${this.helpTextTag}>`
       }
     `;
   }

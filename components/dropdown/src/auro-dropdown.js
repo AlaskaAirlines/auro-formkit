@@ -24,7 +24,8 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import '@aurodesignsystem/auro-helptext';
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
 
 /**
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
@@ -128,6 +129,11 @@ export class AuroDropdown extends LitElement {
      * @private
      */
     this.dropdownBibTag = versioning.generateTag('auro-dropdownbib', dropdownVersion, AuroDropdownBib);
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
   }
 
   /**
@@ -565,9 +571,9 @@ export class AuroDropdown extends LitElement {
               </div>
             ` : undefined }
         </div>
-        <auro-helptext part="helpText" ?error="${this.error}">
+        <${this.helpTextTag} part="helpText" ?error="${this.error}">
           <slot name="helpText"></slot>
-        </auro-helptext>
+        </${this.helpTextTag}>
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>

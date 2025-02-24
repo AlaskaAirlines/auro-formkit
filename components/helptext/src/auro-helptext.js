@@ -23,6 +23,8 @@ export class AuroHelpText extends LitElement {
 
     this.error = false;
     this.hasTextContent = false;
+
+    AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-helptext');
   }
 
   static get styles() {

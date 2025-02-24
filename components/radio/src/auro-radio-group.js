@@ -2,7 +2,8 @@
 // See LICENSE in the project root for license information.
 // ---------------------------------------------------------------------
 
-import { LitElement, html } from "lit";
+import { LitElement } from "lit";
+import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
 
 // Import touch detection lib
@@ -18,11 +19,13 @@ import AuroFormValidation from '@auro-formkit/form-validation';
 
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
-import '@aurodesignsystem/auro-helptext';
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
 
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
 /**
  * @attr {String} validity - Specifies the `validityState` this element is in.
@@ -70,6 +73,16 @@ export class AuroRadioGroup extends LitElement {
      * @private
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    /**
+     * Generate unique names for dependency components.
+     */
+    const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
   }
 
   static get styles() {
@@ -438,13 +451,13 @@ export class AuroRadioGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <auro-helptext large part="helpText">
+          <${this.helpTextTag} large part="helpText">
             <slot name="helpText"></slot>
-          </auro-helptext>`
+          </${this.helpTextTag}>`
         : html`
-          <auro-helptext large role="alert" error aria-live="assertive" part="helpText">
+          <${this.helpTextTag} large role="alert" error aria-live="assertive" part="helpText">
             ${this.errorMessage}
-          </auro-helptext>`
+          </${this.helpTextTag}>`
       }
     `;
   }
