@@ -292,7 +292,7 @@ For use cases where the field is `required`, but live validation is not wanted, 
 
 ### Format <a name="format"></a>
 
-Use the `format` attribute to set the format of the Inputmask. 
+Use the `format` attribute to set the format of the IMask. 
 
 Default masking definitions:
 - 0 : number

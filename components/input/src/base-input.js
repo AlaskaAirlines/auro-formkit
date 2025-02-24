@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-magic-numbers, dot-location, no-extra-parens, new-cap */
+/* eslint-disable max-lines, dot-location, new-cap */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 import { LitElement, css } from "lit";
@@ -13,7 +13,7 @@ import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
-import { getMaskOptions } from "./maskConfig.js";
+import { AuroInputUtilities } from "./utilities.js";
 
 import IMask from 'imask';
 
@@ -60,6 +60,7 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   privateDefaults() {
+    this.util = new AuroInputUtilities();
     this.validation = new AuroFormValidation();
     this.inputIconName = undefined;
     this.showPassword = false;
@@ -85,6 +86,23 @@ export default class BaseInput extends LitElement {
       "password",
       "email"
     ];
+
+    this.dateFormatMap = {
+      'mm/dd/yyyy': 'dateMMDDYYYY',
+      'dd/mm/yyyy': 'dateDDMMYYYY',
+      'yyyy/mm/dd': 'dateYYYYMMDD',
+      'yyyy/dd/mm': 'dateYYYYDDMM',
+      'mm/yy': 'dateMMYY',
+      'yy/mm': 'dateYYMM',
+      'mm/yyyy': 'dateMMYYYY',
+      'yyyy/mm': 'dateYYYYMM',
+      'yy': 'dateYY',
+      'yyyy': 'dateYYYY',
+      'mm': 'dateMM',
+      'dd': 'dateDD',
+      'dd/mm': 'dateDDMM',
+      'mm/dd': 'dateMMDD'
+    };
 
     const idLength = 36;
     const idSubstrEnd = 8;
@@ -416,126 +434,26 @@ export default class BaseInput extends LitElement {
    * @returns {void} Sets the default help text for the input.
    */
   setCustomHelpTextMessage() {
-    // if setCustomValidityForType is not set, use our defaults
-    if (!this.setCustomValidityForType) {
-      if (this.type === 'password') {
-        this.setCustomValidityForType = i18n(this.lang, 'password');
-      } else if (this.type === 'credit-card') {
-        this.setCustomValidityForType = i18n(this.lang, 'creditcard');
-      } else if (this.type === 'email') {
-        this.setCustomValidityForType = i18n(this.lang, 'email');
-      } else if (this.type === 'tel') {
-        this.setCustomValidityForType = i18n(this.lang, 'tel');
-      } else if (this.format === 'mm/dd/yyyy' || (!this.format && this.type === 'date')) {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
-      } else if (this.format === 'dd/mm/yyyy') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateDDMMYYYY');
-      } else if (this.format === 'yyyy/mm/dd') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYYYYMMDD');
-      } else if (this.format === 'yyyy/dd/mm') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYYYYDDMM');
-      } else if (this.format === 'mm/yy') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMMYY');
-      } else if (this.format === 'yy/mm') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYYMM');
-      } else if (this.format === 'mm/yyyy') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMMYYYY');
-      } else if (this.format === 'yyyy/mm') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYYYYMM');
-      } else if (this.format === 'yy') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYY');
-      } else if (this.format === 'yyyy') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYYYY');
-      } else if (this.format === 'mm') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMM');
-      } else if (this.format === 'dd') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateDD');
-      }
+    // if setCustomValidityForType is already set, don't override it
+    if (this.setCustomValidityForType) {
+      return;
+    }
+
+    const typeToI18n = [
+      'password',
+      'credit-card',
+      'email',
+      'tel'
+    ];
+
+    if (typeToI18n.includes(this.type)) {
+      this.setCustomValidityForType = i18n(this.lang, this.type);
+    } else if (!this.format && this.type === 'date') {
+      this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
+    } else if (this.dateFormatMap[this.format]) {
+      this.setCustomValidityForType = i18n(this.lang, this.dateFormatMap[this.format]);
     }
   }
-
-  /**
-   * @private
-   * @param {string} dateStr - Date string to parse.
-   * @returns {void}
-   */
-  parseDate(dateStr) {
-    const dateFormat = this.format || "mm/dd/yyyy";
-
-    // Define mappings for date components with named capture groups
-    const formatPatterns = {
-      'yyyy': '(?<year>\\d{4})',
-      'yy': '(?<year>\\d{2})',
-      'mm': '(?<month>\\d{2})',
-      'dd': '(?<day>\\d{2})'
-    };
-
-    // Escape slashes and replace format components with regex patterns
-    let regexPattern = dateFormat.replace(/(?:yyyy|yy|mm|dd)/gu, (match) => formatPatterns[match]);
-    regexPattern = `^${regexPattern}$`;
-
-    const regex = new RegExp(regexPattern, 'u');
-    const match = dateStr.match(regex);
-
-    if (match && match.groups) {
-      return {
-        year: match.groups.year,
-        month: match.groups.month,
-        day: match.groups.day
-      };
-    }
-
-    return undefined;
-  }
-
-  /**
-   * @private
-   * @param {string} dateStr - Date string to format.
-   * @returns {void}
-   */
-  toNorthAmericanFormat(dateStr) {
-    const parsedDate = this.parseDate(dateStr);
-
-    if (!parsedDate) {
-      return parsedDate;
-    }
-
-    const { month, day, year } = parsedDate;
-
-    let formattedInput = "";
-
-    if (month && day && year) {
-      formattedInput = `${month}/${day}/${year}`;
-    } else if (month && day) {
-      formattedInput = `${month}/${day}`;
-    } else if (month && year) {
-      formattedInput = `${month}/${year}`;
-    } else if (year) {
-      formattedInput = `${year}`;
-    } else if (month) {
-      formattedInput = `${month}`;
-    }
-
-    const fullYear = year && year.length === 2 ? `20${year}` : year;
-
-    let comparisonDate = "";
-
-    if (month && day && fullYear) {
-      comparisonDate = `${month}/${day}/${fullYear}`;
-    } else if (month && fullYear) {
-      comparisonDate = `${month}/01/${fullYear}`;
-    } else if (fullYear) {
-      comparisonDate = `01/01/${fullYear}`;
-    } else if (month) {
-      comparisonDate = `${month}/01/${new Date().getFullYear()}`;
-    }
-
-    return {
-      formattedDate: formattedInput,
-      dateForComparison: comparisonDate
-    };
-  }
-
 
   /**
    * LitElement lifecycle method. Called after the DOM has been updated.
@@ -624,11 +542,7 @@ export default class BaseInput extends LitElement {
       this.maskInstance.destroy();
     }
 
-    const maskOptions = getMaskOptions(this.type, this.format);
-
-    if (this.type === 'credit-card' || this.type === 'tel' || this.type === 'date') {
-      this.inputMode = 'numeric';
-    }
+    const maskOptions = this.util.getMaskOptions(this.type, this.format);
 
     if (this.inputElement && maskOptions.mask) {
       this.maskInstance = IMask(this.inputElement, maskOptions);
@@ -641,8 +555,8 @@ export default class BaseInput extends LitElement {
         this.value = this.maskInstance.value;
 
         // Format date to North American format
-        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.toNorthAmericanFormat(this.value)) {
-          const formattedDates = this.toNorthAmericanFormat(this.value);
+        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.util.toNorthAmericanFormat(this.value)) {
+          const formattedDates = this.util.toNorthAmericanFormat(this.value);
 
           this.formattedDate = formattedDates.formattedDate;
           this.comparisonDate = formattedDates.dateForComparison;
@@ -815,12 +729,15 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   configureDataForType() {
-    if (this.type === 'credit-card') {
-      this.lengthForType = this.format ? this.format.length : 19;
-    } else if (this.type === 'tel') {
-      this.lengthForType = this.format ? this.format.length : 17;
-    } else if (this.type === 'date') {
-      this.lengthForType = this.format ? this.format.length : 10;
+    const defaultLengths = {
+      'credit-card': 19,
+      'tel': 17,
+      'date': 10
+    };
+
+    if (this.type in defaultLengths) {
+      this.lengthForType = this.format ? this.format.length : defaultLengths[this.type];
+      this.inputMode = 'numeric';
     } else if (this.type === 'number') {
       this.inputMode = 'numeric';
     }
@@ -846,35 +763,22 @@ export default class BaseInput extends LitElement {
    * @returns {string} Evaluates pre-determined help text.
    */
   getHelpText() {
-    if (this.type === 'password') {
-      return i18n(this.lang, 'password');
-    } else if (this.type === 'email') {
-      return i18n(this.lang, 'email');
-    } else if (this.type === 'credit-card') {
-      return i18n(this.lang, 'creditcard');
-    } else if (this.type === 'tel') {
-      return i18n(this.lang, 'tel');
+    const typeHelpText = [
+      'password',
+      'email',
+      'credit-card',
+      'tel'
+    ];
+
+    if (typeHelpText.includes(this.type)) {
+      return i18n(this.lang, this.type);
     }
 
-    switch (this.format) {
-      case 'yyyy': return i18n(this.lang, 'dateYYYY');
-      case 'yyyy/mm': return i18n(this.lang, 'dateYYYYMM');
-      case 'yyyy/mm/dd': return i18n(this.lang, 'dateYYYYMMDD');
-      case 'yyyy/dd/mm': return i18n(this.lang, 'dateYYYYDDMM');
-      case 'mm/yyyy': return i18n(this.lang, 'dateMMYYYY');
-      case 'mm/yy': return i18n(this.lang, 'dateMMYY');
-      case 'mm/dd/yyyy':
-      case undefined:
-        return i18n(this.lang, 'dateMMDDYYYY');
-      case 'dd/mm/yyyy': return i18n(this.lang, 'dateDDMMYYYY');
-      case 'dd/mm': return i18n(this.lang, 'dateDDMM');
-      case 'mm/dd': return i18n(this.lang, 'dateMMDD');
-      case 'yy/mm': return i18n(this.lang, 'dateYYMM');
-      case 'yy': return i18n(this.lang, 'dateYY');
-      case 'mm': return i18n(this.lang, 'dateMM');
-      case 'dd': return i18n(this.lang, 'dateDD');
-      default: return '';
+    if (this.type === 'date') {
+      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
     }
+
+    return '';
   }
 
   /**
