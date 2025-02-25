@@ -154,6 +154,10 @@ export class AuroCalendar extends RangeDatepicker {
         type: Boolean,
         reflect: false
       },
+      largeMobileHeadline: {
+        type: Boolean,
+        reflect: true
+      },
       isFullscreen: {
         type: Boolean,
         reflect: true
