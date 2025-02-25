@@ -188,15 +188,14 @@ export class AuroCalendar extends RangeDatepicker {
 
       const dropdown = AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdown, [auro-dropdown]', this);
       const dropdownbib = dropdown ? dropdown.bibContent : AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdownbib, [auro-dropdownbib]', this);
-      const mobileLayout = dropdownbib.hasAttribute('isFullscreen');
-      this.isFullscreen = mobileLayout;
-      this.utilCalRender.determineNumCalendarsToRender(this, mobileLayout);
+      this.isFullscreen = dropdownbib.hasAttribute('isFullscreen');
+      this.utilCalRender.determineNumCalendarsToRender(this, this.isFullscreen);
 
 
       // Determine which month to render first
       let dateMatches = undefined;
 
-      if (!mobileLayout && this.centralDate) {
+      if (!this.isFullscreen && this.centralDate) {
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
         if (this.centralDate) {
           dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDate));
