@@ -57,7 +57,8 @@ const stringsES = {
   'dateYYMM': 'Ingrese una fecha completa en el formato AA/MM',
   'dateYY': 'Ingrese una fecha completa en el formato AA',
   'dateMM': 'Ingrese una fecha completa en el formato MM',
-  'dateDD': 'Ingrese una fecha completa en el formato DD'
+  'dateDD': 'Ingrese una fecha completa en el formato DD',
+  'clearInput': 'Borrar campo de entrada',
 };
 
 const stringsEN = {
@@ -80,7 +81,8 @@ const stringsEN = {
   'dateYYMM': 'Please enter a complete date in the format YY/MM',
   'dateYY': 'Please enter a complete date in the format YY',
   'dateMM': 'Please enter a complete date in the format MM',
-  'dateDD': 'Please enter a complete date in the format DD'
+  'dateDD': 'Please enter a complete date in the format DD',
+  'clearInput': 'Clear input field',
 };
 
 /**

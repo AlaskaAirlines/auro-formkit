@@ -188,8 +188,7 @@ export class AuroInput extends BaseInput {
                 <${this.buttonTag}
                   variant="flat"
                   class="notificationBtn clearBtn"
-                  aria-hidden="true"
-                  tabindex="-1"
+                  aria-label="${i18n(this.lang, 'clearInput')}"
                   @click="${this.handleClickClear}">
                   <${this.iconTag}
                     customColor
