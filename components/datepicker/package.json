@@ -13,11 +13,10 @@
   },
   "dependencies": {
     "@alaskaairux/icons": "^4.44.1",
+    "@auro-formkit/form-validation": "*",
     "@aurodesignsystem/auro-bibtemplate": "*",
     "@aurodesignsystem/auro-dropdown": "*",
     "@aurodesignsystem/auro-input": "*",
-    "@auro-formkit/form-validation": "*",
-    "@aurodesignsystem/auro-header": "3.0.0",
     "@aurodesignsystem/auro-popover": "^4.1.2",
     "@material/mwc-icon-button": "^0.27.0",
     "@material/mwc-list": "^0.27.0",

@@ -16,9 +16,6 @@ import { AuroDatepickerUtilities } from './utilities.js';
 import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 
-import { AuroHeader } from '@aurodesignsystem/auro-header/src/auro-header.js';
-import headerVersion from './headerVersion.js';
-
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';
 
@@ -94,11 +91,6 @@ export class AuroCalendar extends RangeDatepicker {
     this.slots = {};
 
     const versioning = new AuroDependencyVersioning();
-
-    /**
-     * @private
-     */
-    this.headerTag = versioning.generateTag('auro-header', headerVersion, AuroHeader);
 
     /**
      * @private
