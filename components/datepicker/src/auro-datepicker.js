@@ -667,7 +667,7 @@ export class AuroDatePicker extends LitElement {
   handleReadOnly() {
     // --ds-grid-breakpoint-sm
     const docStyle = getComputedStyle(document.documentElement);
-    const mobileBreakpoint = docStyle.getPropertyValue('--ds-grid-breakpoint-sm');
+    const mobileBreakpoint = Number(docStyle.getPropertyValue('--ds-grid-breakpoint-sm').replace("px", ""));
 
     this.inputList.forEach((input) => {
       if (window.innerWidth < mobileBreakpoint) {
