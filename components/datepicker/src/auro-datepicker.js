@@ -202,7 +202,7 @@ export class AuroDatePicker extends LitElement {
 
       /**
        * If declared, make mobileHeadline in HeadingDisplay.
-       * Otherwise, Heading 600
+       * Otherwise, Heading 600.
        */
       largeMobileHeadline: {
         type: Boolean,
@@ -751,7 +751,6 @@ export class AuroDatePicker extends LitElement {
   }
 
   updated(changedProperties) {
-    super.updated(changedProperties);
     this.convertDatesToAmericanFormat();
 
     if (changedProperties.has('calendarFocusDate')) {
@@ -1029,6 +1028,7 @@ export class AuroDatePicker extends LitElement {
               .max="${this.convertToWcValidTime(new Date(this.formattedMaxDate))}"
               .maxDate="${this.maxDate}"
               .minDate="${this.minDate}"
+              .monthNames="${this.monthNames}"
               part="calendar"
             >
               <slot slot="mobileHeadline" name="mobileHeadline" @slotchange="${this.handleSlotToSlot}"></slot>

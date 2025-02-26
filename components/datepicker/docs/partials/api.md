@@ -194,23 +194,6 @@ This example demonstrates that behavior.
 
 </auro-accordion>
 
-#### monthNames
-
-May be used to provide localized month names. These names will only be shown in the calendar when viewed on a mobile device.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/monthNames.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/monthNames.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/monthNames.js) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
 </auro-accordion>
 
 #### noValidate
@@ -445,7 +428,29 @@ The popover slot is intended for use with calendar dates that are `disabled` (e.
 
 </auro-accordion>
 
-## Functional Examples
+### Functional Examples
+
+#### Localization
+
+The datepicker supports localized month names through the `monthNames` property. 
+
+This example demonstrates how to set the `monthNames` property to Korean month names, with a Korean date format.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
 
 #### Reset State
 
@@ -466,7 +471,6 @@ Use the `reset()` method to reset the `<auro-datepicker>`'s `value`, `valueEnd` 
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
-
 
 #### Dynamic Slot Content
 

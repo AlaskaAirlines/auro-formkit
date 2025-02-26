@@ -144,6 +144,7 @@ export class UtilitiesCalendarRender {
         .dateTo="${elem.dateTo}"
         .dateFrom="${elem.dateFrom}"
         .locale="${elem.locale}"
+        .monthNames="${elem.monthNames}"
         month="${month}"
         year="${year}"
         @hovered-date-changed="${elem.hoveredDateChanged}"
