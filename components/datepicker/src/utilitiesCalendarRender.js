@@ -140,6 +140,7 @@ export class UtilitiesCalendarRender {
         .min="${elem.min}"
         .max="${elem.max}"
         ?noRange="${elem.noRange}"
+        .monthFirst="${elem.monthFirst}"
         .hoveredDate="${elem.hoveredDate}"
         .dateTo="${elem.dateTo}"
         .dateFrom="${elem.dateFrom}"

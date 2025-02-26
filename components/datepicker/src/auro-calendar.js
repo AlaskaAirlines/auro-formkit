@@ -153,6 +153,13 @@ export class AuroCalendar extends RangeDatepicker {
       isFullscreen: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * @private
+       */
+      monthFirst: {
+        type: Boolean
       }
     };
   }
