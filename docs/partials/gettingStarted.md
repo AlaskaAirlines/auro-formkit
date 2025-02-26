@@ -40,6 +40,20 @@ AuroCheckbox.register('custom-checkbox-group');
 
 This will register the component as `<custom-checkbox>` and `<custom-checkbox-group>`.
 
+#### TypeScript Module Resolution
+
+When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler"
+    }
+}
+```
+
+This configuration enables proper module resolution for the component's TypeScript files.
+
 ### Basic HTML Example
 
 Here is an example of how to use the Auro Checkbox component in your HTML:

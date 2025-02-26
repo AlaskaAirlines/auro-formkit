@@ -32,3 +32,17 @@ import { {{ capitalize namespace }}{{ capitalize name }} } from '@aurodesignsyst
 // Register with a custom name if desired
 {{ capitalize namespace }}{{ capitalize name }}.register('custom-{{name}}');
 ```
+
+#### TypeScript Module Resolution
+
+When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler"
+    }
+}
+```
+
+This configuration enables proper module resolution for the component's TypeScript files.

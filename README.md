@@ -64,11 +64,24 @@ To start using the Auro Formkit components, follow the instructions below:
 
 ### Usage
 
-You can use Auro Formkit components in your project in two ways: default or custom registration.
+You can use Auro Formkit components in your project in two ways: automatic or custom registration.
 
-#### Default Registration
+#### Required CSS Styles
+**Include in global stylesheet**
 
-For default registration, simply import the component:
+The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
+
+```css
+// baseline design css token variables
+@import "@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
+
+// essentials setup baseline primitive selectors for any UI development
+@import '@aurodesignsystem/webcorestylesheets/src/essentials.css';
+```
+
+#### Automatic Registration
+
+For automatic registration, simply import the component:
 
 ```javascript
 import "@aurodesignsystem/auro-formkit/auro-checkbox";
@@ -76,7 +89,7 @@ import "@aurodesignsystem/auro-formkit/auro-checkbox";
 
 This will automatically register both the `<auro-checkbox>` and the included `<auro-checkbox-group>` component for use in your project. Note that not all Auro Formkit components have sub-components. Be sure to check the documentation for each component to understand its specific usage and registration requirements.
 
-#### Class Custom Registration
+#### Custom Registration
 
 If you prefer to register the component with a custom name, you can call the component class directly to create a custom registration:
 
@@ -88,6 +101,20 @@ AuroCheckbox.register('custom-checkbox-group');
 ```
 
 This will register the component as `<custom-checkbox>` and `<custom-checkbox-group>`.
+
+#### TypeScript Module Resolution
+
+When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler"
+    }
+}
+```
+
+This configuration enables proper module resolution for the component's TypeScript files.
 
 ### Basic HTML Example
 
