@@ -555,8 +555,8 @@ export default class BaseInput extends LitElement {
         this.value = this.maskInstance.value;
 
         // Format date to North American format
-        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.util.toNorthAmericanFormat(this.value)) {
-          const formattedDates = this.util.toNorthAmericanFormat(this.value);
+        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.util.toNorthAmericanFormat(this.value, this.format)) {
+          const formattedDates = this.util.toNorthAmericanFormat(this.value, this.format);
 
           this.formattedDate = formattedDates.formattedDate;
           this.comparisonDate = formattedDates.dateForComparison;
@@ -799,13 +799,11 @@ export default class BaseInput extends LitElement {
   getPlaceholder() {
     if (this.placeholder) {
       return this.placeholder;
+    } else if (this.type === 'date') {
+      return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
     }
 
-    if (this.format) {
-      return this.format;
-    }
-
-    return 'mm/dd/yyyy';
+    return '';
   }
 
   /**

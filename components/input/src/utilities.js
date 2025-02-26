@@ -169,10 +169,11 @@ export class AuroInputUtilities {
   /**
    * @private
    * @param {string} dateStr - Date string to format.
+   * @param {string} format - Date format to use.
    * @returns {void}
    */
-  toNorthAmericanFormat(dateStr) {
-    const parsedDate = this.parseDate(dateStr);
+  toNorthAmericanFormat(dateStr, format) {
+    const parsedDate = this.parseDate(dateStr, format);
 
     if (!parsedDate) {
       return parsedDate;
@@ -210,10 +211,11 @@ export class AuroInputUtilities {
   /**
    * @private
    * @param {string} dateStr - Date string to parse.
+   * @param {string} format - Date format to parse.
    * @returns {void}
    */
-  parseDate(dateStr) {
-    const dateFormat = this.format || "mm/dd/yyyy";
+  parseDate(dateStr, format) {
+    const dateFormat = format || "mm/dd/yyyy";
 
     // Define mappings for date components with named capture groups
     const formatPatterns = {

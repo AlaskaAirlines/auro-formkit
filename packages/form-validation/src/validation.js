@@ -155,13 +155,13 @@ export default class AuroFormValidation {
         if (elem.value?.length > 0 && elem.value?.length < elem.lengthForType) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
-        } else if (elem.value?.length === elem.lengthForType && elem.util.toNorthAmericanFormat(elem.value)) {
-          const formattedValue = elem.util.toNorthAmericanFormat(elem.value);
+        } else if (elem.value?.length === elem.lengthForType && elem.util.toNorthAmericanFormat(elem.value, elem.format)) {
+          const formattedValue = elem.util.toNorthAmericanFormat(elem.value, elem.format);
           const valueDate = new Date(formattedValue.dateForComparison);
 
           // validate max
           if (elem.max?.length === elem.lengthForType) {
-            const maxDate = new Date(elem.util.toNorthAmericanFormat(elem.max).dateForComparison);
+            const maxDate = new Date(elem.util.toNorthAmericanFormat(elem.max, elem.format).dateForComparison);
 
             if (valueDate > maxDate) {
               elem.validity = 'rangeOverflow';
@@ -171,7 +171,7 @@ export default class AuroFormValidation {
 
           // validate min
           if (elem.min?.length === elem.lengthForType) {
-            const minDate = new Date(elem.util.toNorthAmericanFormat(elem.min).dateForComparison);
+            const minDate = new Date(elem.util.toNorthAmericanFormat(elem.min, elem.format).dateForComparison);
 
             if (valueDate < minDate) {
               elem.validity = 'rangeUnderflow';
