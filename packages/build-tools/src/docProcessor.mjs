@@ -45,7 +45,8 @@ const formkitVersion = await getPackageVersion();
 export const monorepoVars = {
   formkitVersion,
   'monorepoName': 'auro-formkit',
-  'dependentComponents': [] //  populated by componentDependencyTree in processDocFiles
+  'dependentComponents': [], //  populated by componentDependencyTree in processDocFiles
+  'componentList': [], //  populated by componentDependencyTree in processDocFiles
 }
 
 export const componentDependencyTree = {
@@ -59,6 +60,19 @@ export const componentDependencyTree = {
   'menu': ['menu'],
   'radio': ['radio'],
   'select': ['dropdown', 'menu', 'select'],
+}
+
+export const componentTree = {
+  'checkbox': ['checkbox', 'checkbox-group'],
+  'combobox': ['combobox'],
+  'counter': ['counter', 'counter-group'],
+  'datepicker': ['datepicker'],
+  'dropdown': ['dropdown'],
+  'form': ['form'],
+  'input': ['input'],
+  'menu': ['menu', 'menu-option'],
+  'radio': ['radio', 'radio-group'],
+  'select': ['select']
 }
 
 /**
@@ -101,15 +115,29 @@ export async function processDocFiles(componentName) {
   const config = { ...defaultDocsProcessorConfig };
   if (componentName) {
     config.component = componentName;
-    // setup
+
     await templateFiller.extractNames();
 
     for (const fileConfig of fileConfigs(config)) {
       try {
         const dependencies = componentDependencyTree[config.component];
+        const components = componentTree[config.component];
+        
+        // Modify this section to format the components array for templating
+        const formattedComponents = components.map(name => ({
+          name,
+          capitalizedName: name.charAt(0).toUpperCase() + name.slice(1)
+        }));
 
-        // eslint-disable-next-line no-await-in-loop
-        await processContentForFile({ ...fileConfig, extraVars: { ...monorepoVars, dependentComponents: dependencies} });
+        await processContentForFile({ 
+          ...fileConfig, 
+          extraVars: { 
+            ...monorepoVars, 
+            dependentComponents: dependencies, 
+            componentList: formattedComponents,
+            hasMultipleComponents: components.length > 1
+          } 
+        });
       } catch (err) {
         Logger.error(`Error processing ${fileConfig.identifier}: ${err.message}`);
       }
@@ -124,6 +152,15 @@ function main() {
   const componentName = process.argv[optionIndex + 1];
   processDocFiles(componentName).then(() => {
     Logger.log('Docs processed successfully for ' + componentName);
+    // Copy README.md to component demo folder
+    fs.copyFile(
+      fromAuroComponentRoot(`components/${componentName}/README.md`),
+      fromAuroComponentRoot(`components/${componentName}/demo/readme.md`)
+    ).then(() => {
+      Logger.log(`${componentName} README.md copied successfully`);
+    }).catch(err => {
+      Logger.error(`Error copying ${componentName} README.md: ${err.message}`);
+    });
   }).
     catch((err) => {
       Logger.error(`Error processing docs: ${err.message}`);

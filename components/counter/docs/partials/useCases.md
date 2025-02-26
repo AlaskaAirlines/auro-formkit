@@ -1,5 +1,4 @@
 The `auro-counter` element should be used in situations where users may:
 
-* 1
-* 2
-* 3
+* Need to input a numeric value within a defined range
+* Need a user-friendly interface for quantity selection

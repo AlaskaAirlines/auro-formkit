@@ -48,7 +48,8 @@
     "build:docs:kit": "node ./packages/build-tools/src/kitDocProcessor.mjs",
     "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./ -type d -name '.turbo' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deploy-demo": "npm run build && sh ./deploy-components.sh"
   },
   "dependencies": {
     "@aurodesignsystem/auro-library": "^3.0.10"

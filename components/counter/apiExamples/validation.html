@@ -1,0 +1,12 @@
+<auro-counter-group max="4" min="1">
+  <div slot="label">Room Occupants</div>
+  <div slot="helpText">Total occupants must be between 1-4 people</div>
+  <auro-counter>
+    Adults
+    <span slot="description">At least 1 adult required</span>
+  </auro-counter>
+  <auro-counter max="2">
+    Children
+    <span slot="description">Maximum 2 children per room</span>
+  </auro-counter>
+</auro-counter-group>
