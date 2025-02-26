@@ -34,7 +34,7 @@ When used, the datepicker will display two inputs and the component will support
 
 </auro-accordion>
 
-### Property Examples
+### Attribute Examples
 
 #### disabled
 
@@ -81,7 +81,7 @@ In <strong>desktop</strong>, the calendar month navigation will be restricted by
 
 - if both `calendarStartDate` and `calendarEndDate` are defined: all months between, including these dates, will be rendered.
 - If only `calendarStartDate` is defined: 12 months will be rendered starting with this value.
-- if only `calendarEndDate` is defined: The current date month through the value of this property will be rendered.
+- if only `calendarEndDate` is defined: The current date month through the value of this attribute will be rendered.
 
 Note: This does not restrict setting a value outside of those date constraints. These properties _only_ define which months can be rendered in the calendar. A user may still type any date into the input field. If actual value selection restrictions are needed, see the `minDate` and `maxDate` properties which may be used standalone, or in conjunction with `calendarStartDate` and `calendarEndDate`.
 
@@ -101,7 +101,7 @@ Note: This does not restrict setting a value outside of those date constraints. 
 
 The `calendarFocusDate` controls which calendar month is first presented to the user when they open the dropdown bib.
 
-In <strong>desktop</strong> layout, the first month actually rendered will be the `calendarFocusDate` if defined. Once the user manually navigates the calendar to a different month, the calendar view will remain where the user left off when they close and reopen the bib. If the `calendarFocusDate` property is changed, this will re-render the calendar starting at the new date. If `calendarFocusDate` is undefined, the first rendered month will be the current date or the first renderable date defined by `calendarStartDate`.
+In <strong>desktop</strong> layout, the first month actually rendered will be the `calendarFocusDate` if defined. Once the user manually navigates the calendar to a different month, the calendar view will remain where the user left off when they close and reopen the bib. If the `calendarFocusDate` attribute is changed, this will re-render the calendar starting at the new date. If `calendarFocusDate` is undefined, the first rendered month will be the current date or the first renderable date defined by `calendarStartDate`.
 
 In <strong>mobile</strong> layout, upon first opening the bib, the vertical list of months will scroll (with no animation) to the month defined by the `calendarFocusDate`. If the user scrolls the list to a different position, the scroll position will remain where the user left off when they close and reopen the bib. If the `calendarFocusDate` is changed, the list will scroll to the new dates month. If `calendarFocusDate` is undefined, the list will start at the top most scroll position.
 
@@ -120,7 +120,7 @@ In <strong>mobile</strong> layout, upon first opening the bib, the vertical list
 
 #### maxDate
 
-To give a higher limit you can bind a date to the `maxDate` property. It is recommended to use the `setCustomValidityRangeOverflow` attribute to define an error message to display when validation fails the maximum date restriction.
+To give a higher limit you can bind a date to the `maxDate` attribute. It is recommended to use the `setCustomValidityRangeOverflow` attribute to define an error message to display when validation fails the maximum date restriction.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/maxDate.html) -->
@@ -158,7 +158,7 @@ This example demonstrates that behavior.
 
 #### minDate
 
-To give a lower limit you can bind a date to the `minDate` property. It is recommended to use the `setCustomValidityRangeUnderflow` attribute to define an error message to display when validation fails the minimum date restriction.
+To give a lower limit you can bind a date to the `minDate` attribute. It is recommended to use the `setCustomValidityRangeUnderflow` attribute to define an error message to display when validation fails the minimum date restriction.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/minDate.html) -->
@@ -300,6 +300,23 @@ Value of the second input (end date), selected for the datepicker. Can be used t
 
 </auro-accordion>
 
+#### format
+
+The `format` attribute is used to define the date format used by the datepicker. The default value is `mm/dd/yyyy`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/format.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/format.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 ### Method Examples
 
 #### focus
@@ -341,7 +358,7 @@ Sets the label used for the input. When the `range` attribute is used this is th
 
 #### helpText
 
-Sets the help text displayed below the trigger. The `helpText` slot can be used to provide additional context for the combobox. When using the `error` property, the `helpText` slot can be used to describe the error.
+Sets the help text displayed below the trigger. The `helpText` slot can be used to provide additional context for the combobox. When using the `error` attribute, the `helpText` slot can be used to describe the error.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/helpText.html) -->

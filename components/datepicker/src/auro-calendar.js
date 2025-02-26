@@ -265,7 +265,7 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {void}
    */
   scrollMonthIntoView(date) {
-    this.utilCal.scrollMonthIntoView(this, date);
+    this.utilCal.scrollMonthIntoView(this, date, this.format);
   }
 
   firstUpdated() {

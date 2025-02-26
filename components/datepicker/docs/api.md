@@ -10,6 +10,7 @@
 | `centralDate`                     | `centralDate`                     |           | `string`   |                                                  | The date that determines the currently visible month. |
 | `disabled`                        | `disabled`                        |           | `boolean`  | false                                            | If set, disables the datepicker.                 |
 | `error`                           | `error`                           |           | `string`   |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| `format`                          | `format`                          |           | `string`   | "mm/dd/yyyy"                                     | Specifies the date format. The default is `mm/dd/yyyy`. |
 | `largeMobileHeadline`             | `largeMobileHeadline`             |           | `boolean`  |                                                  | If declared, make mobileHeadline in HeadingDisplay.<br />Otherwise, Heading 600 |
 | `maxDate`                         | `maxDate`                         |           | `string`   |                                                  | Maximum date. All dates after will be disabled.  |
 | `minDate`                         | `minDate`                         |           | `string`   |                                                  | Minimum date. All dates before will be disabled. |
