@@ -336,13 +336,13 @@ describe('auro-input', () => {
 
       let placeholder = el.getPlaceholder();
 
-      expect(placeholder).to.equal(dateFormats[index]);
+      expect(placeholder).to.equal(dateFormats[index].toUpperCase());
 
       el.placeholder = "some date";
 
       placeholder = el.getPlaceholder();
 
-      expect(placeholder).not.to.equal(dateFormats[index]);
+      expect(placeholder).not.to.equal(dateFormats[index].toUpperCase());
     }
   });
 

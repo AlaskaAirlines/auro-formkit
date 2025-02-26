@@ -1033,8 +1033,8 @@ export class AuroDatePicker extends LitElement {
             >
               <slot slot="mobileHeadline" name="mobileHeadline" @slotchange="${this.handleSlotToSlot}"></slot>
               <slot slot="mobileDateLabel" name="mobileDateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-              <span slot="mobileDateFromStr">${this.value ? this.value : html`<span class="placeholderDate">${this.format}</span>`}</span>
-              ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd ? this.valueEnd : html`<span class="placeholderDate">${this.format}</span>`}</span>` : undefined}
+              <span slot="mobileDateFromStr">${this.value ? this.value : html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
+              ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd ? this.valueEnd : html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
             </auro-calendar>
           </div>
           <p slot="helpText" part="helpTextSpan">
