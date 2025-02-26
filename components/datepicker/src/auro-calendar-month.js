@@ -44,6 +44,16 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
   }
 
   /**
+   * Returns month name to be rendered in the calendar header.
+   * @private
+   * @param {Number} month - The month number (1-12).
+   * @returns {String} The name of the month.
+   */
+  computeCurrentMonthName(month) {
+    return this.monthNames[month - 1];
+  }
+
+  /**
    * Determines the current month name based on locale.
    * This is a rewrite of the function used in the class RangeDatepickerCalendar and should not be removed from here.
    * @private
@@ -101,7 +111,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
         <div class="header">
           ${this.renderPrevButton()}
           <div class="headerTitle">
-            <div>${this.computeCurrentMonthName(this.month, this.year)}</div>
+            <div>${this.computeCurrentMonthName(this.month)}</div>
             <div>${this.renderYear()}</div>
           </div>
           ${this.renderNextButton()}
