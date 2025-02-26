@@ -831,6 +831,24 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
+   * Applies slotted nodes to a target element with a new slot name.
+   * @private
+   * @param {HTMLSlotElement} slot - The slot element containing the nodes to apply.
+   * @param {HTMLElement} target - The target element to apply the nodes to.
+   * @param {string} newSlotName - The new slot name for the applied nodes.
+   * @returns {void}
+   */
+  transportAssignedNodes(slot, target, newSlotName) {
+    // Remove previous slot nodes if necessary.
+    target.querySelectorAll(`[slot="${newSlotName}"]`).forEach((old) => old.remove());
+    slot.assignedNodes().forEach((node) => {
+      const clone = node.cloneNode(true);
+      clone.setAttribute('slot', newSlotName);
+      target.append(clone);
+    });
+  }
+
+  /**
    * Watch for slot changes and recalculate the menuoptions.
    * @private
    * @param {Event} event - `slotchange` event.
@@ -839,7 +857,7 @@ export class AuroCombobox extends LitElement {
   handleSlotChange(event) {
     switch (event.target.name) {
       case '':
-        // treat only generic menuoptions
+        // Treat only generic menuoptions.
         this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
         this.options.forEach((opt) => {
           if (this.checkmark) {
@@ -853,22 +871,11 @@ export class AuroCombobox extends LitElement {
         break;
       case 'label':
         // Programatically inject as the slot cannot be carried over to bibtemplate.
-        // It's because the bib is newly attach to body.
-        this.input.querySelectorAll('[slot="label"]').forEach((old) => old.remove());
-
-        event.target.assignedNodes().forEach((node) => {
-          const clone = node.cloneNode(true);
-          this.input.append(clone);
-        });
+        // It's because the bib is/will be seperated from dropdown to body.
+        this.transportAssignedNodes(event.target, this.input, 'label');
         break;
       case 'bib.fullscreen.headline':
-        this.bibtemplate.querySelectorAll('[slot="header"]').forEach((old) => old.remove());
-
-        event.target.assignedNodes().forEach((node) => {
-          const clone = node.cloneNode(true);
-          clone.setAttribute('slot', 'header');
-          this.bibtemplate.append(clone);
-        });
+        this.transportAssignedNodes(event.target, this.bibtemplate, 'header');
         break;
       default: break;
     }
