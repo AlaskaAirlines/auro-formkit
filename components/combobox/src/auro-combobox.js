@@ -396,12 +396,6 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    const bibHeader = this.querySelector('[slot="bib.fullscreen.headline"]');
-    if (bibHeader) {
-      bibHeader.setAttribute('slot', 'header');
-      this.bibtemplate.append(bibHeader);
-    }
-
     this.dropdown.setAttribute('role', 'combobox');
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
@@ -532,13 +526,6 @@ export class AuroCombobox extends LitElement {
     this.bubbleUpInputKeyEvent = this.bubbleUpInputKeyEvent.bind(this);
     this.input.addEventListener('keydown', this.bubbleUpInputKeyEvent);
     this.input.addEventListener('keyup', this.bubbleUpInputKeyEvent);
-
-    // Programatically inject as the slot cannot be carried over to bibtemplate.
-    // It's because the bib is newly attach to body.
-    const label = this.querySelector('[slot="label"]');
-    if (label) {
-      this.input.append(label);
-    }
 
     this.addEventListener('keyup', (evt) => {
       if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
@@ -850,18 +837,40 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   handleSlotChange(event) {
-    // treat only generic menuoptions
-    if (!event.target.name) {
-      this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
-      this.options.forEach((opt) => {
-        if (this.checkmark) {
-          opt.removeAttribute('nocheckmark');
-        } else {
-          opt.setAttribute('nocheckmark', '');
-        }
-      });
+    switch (event.target.name) {
+      case '':
+        // treat only generic menuoptions
+        this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
+        this.options.forEach((opt) => {
+          if (this.checkmark) {
+            opt.removeAttribute('nocheckmark');
+          } else {
+            opt.setAttribute('nocheckmark', '');
+          }
+        });
 
-      this.handleMenuOptions();
+        this.handleMenuOptions();
+        break;
+      case 'label':
+        // Programatically inject as the slot cannot be carried over to bibtemplate.
+        // It's because the bib is newly attach to body.
+        this.input.querySelectorAll('[slot="label"]').forEach((old) => old.remove());
+
+        event.target.assignedNodes().forEach((node) => {
+          const clone = node.cloneNode(true);
+          this.input.append(clone);
+        });
+        break;
+      case 'bib.fullscreen.headline':
+        this.bibtemplate.querySelectorAll('[slot="header"]').forEach((old) => old.remove());
+
+        event.target.assignedNodes().forEach((node) => {
+          const clone = node.cloneNode(true);
+          clone.setAttribute('slot', 'header');
+          this.bibtemplate.append(clone);
+        });
+        break;
+      default: break;
     }
   }
 
@@ -876,6 +885,10 @@ export class AuroCombobox extends LitElement {
             `
             : undefined
           }
+        </div>
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="label" @slotchange="${this.handleSlotChange}"></slot>
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
           for="dropdownMenu"
