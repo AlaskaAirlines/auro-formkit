@@ -62,6 +62,11 @@ export class AuroCounterGroup extends LitElement {
     /**
      * @private
      */
+    this.bibtemplate = undefined;
+
+    /**
+     * @private
+     */
     this.validation = new AuroFormValidation();
 
     /**
@@ -284,22 +289,39 @@ export class AuroCounterGroup extends LitElement {
    * This sets up a close event listener and moves any slotted `bib.fullscreen.headline` and `bib.fullscreen.footer` content into the bibtemplate.
    */
   configureBibtemplate() {
-    const bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    bibtemplate.addEventListener('close-click', () => {
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate.addEventListener('close-click', () => {
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
       }
     });
-    const bibHeader = this.querySelector('[slot="bib.fullscreen.headline"]');
-    if (bibHeader) {
-      bibHeader.setAttribute('slot', 'header');
-      bibtemplate.append(bibHeader);
-    }
+  }
 
-    const bibFooter = this.querySelector('[slot="bib.fullscreen.footer"]');
-    if (bibFooter) {
-      bibFooter.setAttribute('slot', 'footer');
-      bibtemplate.append(bibFooter);
+  /**
+   * Watch for slot changes and recalculate the menuoptions.
+   * @private
+   * @param {Event} event - `slotchange` event.
+   * @returns {void}
+   */
+  handleSlotChange(event) {
+    let targetSlot = '';
+    if (event.target.name === 'bib.fullscreen.headline') {
+      targetSlot = 'header';
+    } else if (event.target.name === 'bib.fullscreen.footer') {
+      targetSlot = 'footer';
+    }
+    if (targetSlot) {
+      if (!this.dropdown) {
+        this.configureDropdownCounters();
+      }
+
+      this.bibtemplate.querySelectorAll(`[slot="${targetSlot}"]`).forEach((old) => old.remove());
+
+      event.target.assignedNodes().forEach((node) => {
+        const clone = node.cloneNode(true);
+        clone.setAttribute('slot', targetSlot);
+        this.bibtemplate.append(clone);
+      });
     }
   }
 
@@ -378,19 +400,23 @@ export class AuroCounterGroup extends LitElement {
     return html`
     ${this.isDropdown
       ? html`<${this.dropdownTag} common chevron fullscreenBreakpoint="${this.fullscreenBreakpoint}">
-
         <div slot="trigger"><slot name="valueText">
           ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
         </slot></div>
         <div slot="label"><slot name="label"></slot></div>
         <div slot="helpText"><slot name="helpText"></slot></div>
 
-          <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}">
+        <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}">
           <auro-counter-wrapper isInDropdown>
           </auro-counter-wrapper>
         </${this.bibtemplateTag}>
       </${this.dropdownTag}>
-      <slot @slotchange=${() => this.configureDropdownCounters()}></slot>`
+      <slot @slotchange=${() => this.configureDropdownCounters()}></slot>
+      <div id="slotHolder">
+        <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        <slot name="bib.fullscreen.footer" @slotchange="${this.handleSlotChange}"></slot>
+      </div>
+      `
       : html`<auro-counter-wrapper><slot @slotchange=${() => this.configureCounters()}></slot></auro-counter-wrapper>`
     }`;
   }
