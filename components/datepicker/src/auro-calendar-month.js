@@ -23,13 +23,14 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
 
   static get properties() {
     return {
+
       /**
        * @private
        */
       monthFirst: {
         type: Boolean
       }
-    }
+    };
   }
 
   async firstUpdated() {
