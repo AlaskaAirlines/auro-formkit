@@ -10,12 +10,13 @@ export class CalendarUtilities {
    * Scroll the calendar month list to a given valid date if in mobile view.
    * @param {Object} elem - The calendar element.
    * @param {String} date - The date to scroll into view.
+   * @param {String} format - The format of the date.
    * @returns {void}
    */
-  scrollMonthIntoView(elem, date) {
+  scrollMonthIntoView(elem, date, format) {
     const mobileLayout = window.innerWidth < elem.mobileBreakpoint;
 
-    if (this.util.validDateStr(date) && mobileLayout) {
+    if (this.util.validDateStr(date, format) && mobileLayout) {
       const month = new Date(date).getMonth() + 1;
       const year = new Date(date).getFullYear();
       const selector = `#month-${month}-${year}`;

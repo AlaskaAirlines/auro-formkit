@@ -152,7 +152,7 @@ export default class AuroFormValidation {
           elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
         }
       } else if (elem.type === 'date') {
-        if (elem.value.length > 0 && elem.value.length < elem.lengthForType) {
+        if (elem.value?.length > 0 && elem.value?.length < elem.lengthForType) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         } else if (elem.value?.length === elem.lengthForType && elem.util.toNorthAmericanFormat(elem.value)) {
@@ -160,7 +160,7 @@ export default class AuroFormValidation {
           const valueDate = new Date(formattedValue.dateForComparison);
 
           // validate max
-          if (elem.max && elem.max.length === elem.lengthForType) {
+          if (elem.max?.length === elem.lengthForType) {
             const maxDate = new Date(elem.util.toNorthAmericanFormat(elem.max).dateForComparison);
 
             if (valueDate > maxDate) {
@@ -170,7 +170,7 @@ export default class AuroFormValidation {
           }
 
           // validate min
-          if (elem.min && elem.min.length === elem.lengthForType) {
+          if (elem.min?.length === elem.lengthForType) {
             const minDate = new Date(elem.util.toNorthAmericanFormat(elem.min).dateForComparison);
 
             if (valueDate < minDate) {

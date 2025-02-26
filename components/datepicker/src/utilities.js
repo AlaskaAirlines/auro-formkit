@@ -1,19 +1,121 @@
+/* eslint-disable array-element-newline, dot-location */
+
 export class AuroDatepickerUtilities {
 
   /**
    * Returns true if value passed in is a valid date.
    * @private
    * @param {String} date - Date to validate.
+   * @param {String} format - Date format to validate against.
    * @returns {Boolean}
    */
-  validDateStr(date) {
+  validDateStr(date, format) {
     const dateStrLength = 10;
 
-    if (date.length === dateStrLength && Date.parse(date)) {
+    if (date.length === dateStrLength && Date.parse(this.toNorthAmericanFormat(date, format))) {
       return true;
     }
 
     return false;
+  }
+
+  /**
+   * Converts a date string to a North American date format.
+   * @private
+   * @param {String} dateStr - Date to validate.
+   * @param {String} format - Date format to validate against.
+   * @returns {Boolean}
+   */
+  toNorthAmericanFormat(dateStr, format) {
+    if (format === 'mm/dd/yyyy') {
+      return dateStr;
+    }
+
+    const parsedDate = this.parseDate(dateStr, format);
+
+    if (!parsedDate) {
+      return parsedDate;
+    }
+
+    const { month, day, year } = parsedDate;
+
+    const dateParts = [];
+    if (month) {
+      dateParts.push(month);
+    }
+
+    if (day) {
+      dateParts.push(day);
+    }
+
+    if (year) {
+      dateParts.push(year);
+    }
+
+    return dateParts.join('/');
+  }
+
+  /**
+   * Parses a date string into its components.
+   * @private
+   * @param {string} dateStr - Date string to parse.
+   * @param {string} format - Date format to parse.
+   * @returns {void}
+   */
+  parseDate(dateStr, format) {
+    if (!dateStr) {
+      return undefined;
+    }
+
+    const dateFormat = format || 'mm/dd/yyyy';
+
+    // Define mappings for date components with named capture groups
+    const formatPatterns = {
+      'yyyy': '(?<year>\\d{4})',
+      'mm': '(?<month>\\d{2})',
+      'dd': '(?<day>\\d{2})'
+    };
+
+    // Escape slashes and replace format components with regex patterns
+    let regexPattern = dateFormat.replace(/(?:yyyy|mm|dd)/gu, (match) => formatPatterns[match]);
+    regexPattern = `^${regexPattern}$`;
+
+    const regex = new RegExp(regexPattern, 'u');
+    const match = dateStr.match(regex);
+
+    if (match && match.groups) {
+      return {
+        year: match.groups.year,
+        month: match.groups.month,
+        day: match.groups.day
+      };
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Converts a date string to a custom date format.
+   * @private
+   * @param {string} dateStr - Date string to parse.
+   * @param {string} format - Date format to parse.
+   * @returns {void}
+   */
+  toCustomFormat(dateStr, format) {
+    const [month, day, year] = dateStr.split('/');
+
+    if (!month || !day || !year) {
+      return undefined;
+    }
+
+    let formattedDate = format;
+
+    formattedDate = formattedDate
+      .replace('mm', month)
+      .replace('dd', day)
+      .replace('yyyy', year);
+
+    return formattedDate;
   }
 
   /**
