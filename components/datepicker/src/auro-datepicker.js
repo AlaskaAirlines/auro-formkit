@@ -811,6 +811,10 @@ export class AuroDatePicker extends LitElement {
         }
       }
 
+      if (this.value && this.value.length === this.inputList[0].lengthForType) {
+        this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
+      }
+
       this.validate();
     }
 
@@ -841,6 +845,10 @@ export class AuroDatePicker extends LitElement {
         } else {
           this.inputList[1].value = '';
         }
+      }
+
+      if (this.valueEnd && this.valueEnd.length === this.inputList[1].lengthForType) {
+        this.calendarRenderUtil.updateCentralDate(this, this.formattedValueEnd);
       }
 
       this.validate();
