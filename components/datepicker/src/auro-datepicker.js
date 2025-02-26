@@ -103,6 +103,8 @@ export class AuroDatePicker extends LitElement {
       'December'
     ];
 
+    this.monthFirst = true;
+
     /**
      * @private
      */
@@ -137,6 +139,11 @@ export class AuroDatePicker extends LitElement {
      * @private
      */
     this.inputTag = versioning.generateTag('auro-input', inputVersion, AuroInput);
+
+    /**
+     * @private
+     */
+    this.monthFirst = undefined;
   }
 
   // This function is to define props used within the scope of this component
@@ -230,6 +237,13 @@ export class AuroDatePicker extends LitElement {
        */
       monthNames: {
         type: Array
+      },
+
+      /**
+       * @private
+       */
+      monthFirst: {
+        type: Boolean
       },
 
       /**
@@ -734,6 +748,10 @@ export class AuroDatePicker extends LitElement {
   }
 
   updated(changedProperties) {
+    if (changedProperties.has('format')) {
+      this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    }
+
     if (changedProperties.has('calendarFocusDate')) {
       this.formattedFocusDate = this.util.toNorthAmericanFormat(this.calendarFocusDate, this.format);
 
@@ -954,6 +972,12 @@ export class AuroDatePicker extends LitElement {
     });
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+  }
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
@@ -1015,6 +1039,8 @@ export class AuroDatePicker extends LitElement {
             <auro-calendar
               ?largeMobileHeadline="${this.largeMobileHeadline}"
               ?noRange="${!this.range}"
+              .format="${this.format}"
+              .monthFirst="${this.monthFirst}"
               .min="${this.convertToWcValidTime(new Date(this.formattedMinDate))}"
               .max="${this.convertToWcValidTime(new Date(this.formattedMaxDate))}"
               .maxDate="${this.maxDate}"
