@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.48](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.47...v2.0.0-beta.48) (2025-02-27)
+
+
+### Bug Fixes
+
+* support dynamic `bib.fullscreen.headline` and `label` ([5f3b7ca](https://github.com/AlaskaAirlines/auro-formkit/commit/5f3b7ca00aeb4c11eed14451c470df6c4c2118a2))
+
 # [2.0.0-beta.47](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.46...v2.0.0-beta.47) (2025-02-27)
 
 
