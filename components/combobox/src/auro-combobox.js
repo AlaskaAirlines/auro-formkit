@@ -526,6 +526,7 @@ export class AuroCombobox extends LitElement {
     this.bubbleUpInputKeyEvent = this.bubbleUpInputKeyEvent.bind(this);
     this.input.addEventListener('keydown', this.bubbleUpInputKeyEvent);
     this.input.addEventListener('keyup', this.bubbleUpInputKeyEvent);
+    this.input.addEventListener('input', this.bubbleUpInputKeyEvent);
 
     this.addEventListener('keyup', (evt) => {
       if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
