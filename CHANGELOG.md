@@ -1,5 +1,43 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.47](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.46...v2.0.0-beta.47) (2025-02-27)
+
+
+### Bug Fixes
+
+* address linting errors ([686c11a](https://github.com/AlaskaAirlines/auro-formkit/commit/686c11ae485ccb4ccce5e561110a2a9bd49e070f))
+* address PR review comments ([8e1be49](https://github.com/AlaskaAirlines/auro-formkit/commit/8e1be4971edfc8103f7a49f419de785bf98105e8))
+* button up small bugs in autoformatting configuration ([0c47e81](https://github.com/AlaskaAirlines/auro-formkit/commit/0c47e819d53d8d3d4191ad70c49faf9a4859f3c7))
+* change calendar view to typed date [#369](https://github.com/AlaskaAirlines/auro-formkit/issues/369) ([01591cf](https://github.com/AlaskaAirlines/auro-formkit/commit/01591cf395ca3e2a6441007b91bbb121d3e254a3))
+* convert breakpoint value to integer ([7d39ac1](https://github.com/AlaskaAirlines/auro-formkit/commit/7d39ac1a02feb73cb60c273a389555176e734aab))
+* dynamically render month and year in calendar header ([35029dc](https://github.com/AlaskaAirlines/auro-formkit/commit/35029dc0b3457fdb875647b7ab67303d430b6e52))
+* handle dynamic format changes ([81d86b0](https://github.com/AlaskaAirlines/auro-formkit/commit/81d86b08a5b7686e27c061c26661a532f81d1995))
+* reference correct type in mask options ([c8db94e](https://github.com/AlaskaAirlines/auro-formkit/commit/c8db94eca09a5d3e751d56f7445d180eca212fb6))
+* update support for localized month names ([9b085d2](https://github.com/AlaskaAirlines/auro-formkit/commit/9b085d2174adf629f83b4c5192fb873b601c6de0))
+
+
+### Features
+
+* add format support to datepicker [#342](https://github.com/AlaskaAirlines/auro-formkit/issues/342) ([eacf5ea](https://github.com/AlaskaAirlines/auro-formkit/commit/eacf5eaba2e0b34facc3a3da225486f215c30dd7))
+* implement inputmask ([a7e2cae](https://github.com/AlaskaAirlines/auro-formkit/commit/a7e2cae1ce1c0facffc07b117682bea66a7c7b3c))
+* replace Inputmask with IMask [#312](https://github.com/AlaskaAirlines/auro-formkit/issues/312) ([5e83d31](https://github.com/AlaskaAirlines/auro-formkit/commit/5e83d31812e0408e1902cf5a678b1677ba06940b))
+* use bibtemplate for dropdown bib content ([62abed6](https://github.com/AlaskaAirlines/auro-formkit/commit/62abed62bca382a10f5450102edec401e4afb67b))
+
+
+### Performance Improvements
+
+* add dynamic phone number masking [#332](https://github.com/AlaskaAirlines/auro-formkit/issues/332) ([d38c0ff](https://github.com/AlaskaAirlines/auro-formkit/commit/d38c0ff5a15a94a8419d97daa20e0afc8a879223))
+* handle all date formats and write tests [#344](https://github.com/AlaskaAirlines/auro-formkit/issues/344) ([10e310b](https://github.com/AlaskaAirlines/auro-formkit/commit/10e310b3fac099be13046dbf6aa8a2e13ebb6ea9))
+* implement type date with format attribute [#329](https://github.com/AlaskaAirlines/auro-formkit/issues/329) ([20afb8d](https://github.com/AlaskaAirlines/auro-formkit/commit/20afb8df43def073abc09bd6f3a2d9d07051a26f))
+* support custom Inputmasks [#335](https://github.com/AlaskaAirlines/auro-formkit/issues/335) ([eab15e5](https://github.com/AlaskaAirlines/auro-formkit/commit/eab15e55a38b285b3bc4e3b2f945cbe90c5e4feb))
+* support dynamic credit card masking [#333](https://github.com/AlaskaAirlines/auro-formkit/issues/333) ([716eca8](https://github.com/AlaskaAirlines/auro-formkit/commit/716eca8d9ec732a7b91ef78f827877a3fd7af3d6))
+* support help text for phone number inputs ([7ec6856](https://github.com/AlaskaAirlines/auro-formkit/commit/7ec6856e849fa9a73627889e6fbfe3e4136e5b2f))
+
+
+### BREAKING CHANGES
+
+* old date types are deprecated
+
 # [2.0.0-beta.46](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.45...v2.0.0-beta.46) (2025-02-24)
 
 
