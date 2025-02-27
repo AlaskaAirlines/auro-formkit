@@ -22,6 +22,13 @@
   flex-direction: row;
 }
 
+.calendarNavButtons {
+  position: absolute;
+  top: var(--ds-size-200, $ds-size-200);
+  right: var(--ds-size-50, $ds-size-50);
+  left: var(--ds-size-50, $ds-size-50);
+}
+
 .calendarNavBtn {
   display: flex;
   width: var(--ds-size-500, $ds-size-500);
@@ -40,15 +47,15 @@
 .prevMonth,
 .nextMonth {
   position: absolute;
-  top: var(--ds-size-200, $ds-size-200);
+  top: 0;
 }
 
 .prevMonth {
-  left: var(--ds-size-50, $ds-size-50);
+  left: 0;
 }
 
 .nextMonth {
-  right: var(--ds-size-50, $ds-size-50);
+  right: 0;
 }
 
 .headerActions {
@@ -142,6 +149,8 @@
 
 :host([isfullscreen]) {
   width: 100%;
+  max-height: 100dvh;
+  overflow: hidden;
 
   .prevMonth,
   .nextMonth {
@@ -156,11 +165,8 @@
 
   .calendarWrapper {
     display: flex;
-    height: 100%;
-    max-height: 100dvh;
 
     flex-direction: column;
-    overflow: auto hidden;
   }
 
   .calendars {
