@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.49](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.48...v2.0.0-beta.49) (2025-02-27)
+
+
+### Bug Fixes
+
+* fix prev/next button position and double scrollbar in datepicker ([e5a4b1c](https://github.com/AlaskaAirlines/auro-formkit/commit/e5a4b1c37f1613c0889d6400c794c25cb307a68b))
+
 # [2.0.0-beta.48](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.47...v2.0.0-beta.48) (2025-02-27)
 
 
