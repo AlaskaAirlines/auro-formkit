@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.50](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.49...v2.0.0-beta.50) (2025-02-27)
+
+
+### Bug Fixes
+
+* bubble up input event when fullscreen bib is open ([719c8f9](https://github.com/AlaskaAirlines/auro-formkit/commit/719c8f9699711f7c405aa26135860888c1723f9a))
+
 # [2.0.0-beta.49](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.48...v2.0.0-beta.49) (2025-02-27)
 
 
