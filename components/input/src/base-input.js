@@ -461,6 +461,10 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
+    if (changedProperties.has('format')) {
+      this.configureAutoFormatting();
+    }
+
     if (this.type === 'password') {
       this.spellcheck = 'false';
     }
