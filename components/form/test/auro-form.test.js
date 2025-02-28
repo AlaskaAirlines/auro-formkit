@@ -49,7 +49,7 @@ describe('auro-form', () => {
         <auro-input name="testInput" required></auro-input>
         <auro-datepicker id="date-example" name="dateExample" required>
           <span slot="fromLabel">Choose a date</span>
-          <span slot="mobileDateLabel">Choose a date</span>
+          <span slot="bib.fullscreen.dateLabel">Choose a date</span>
         </auro-datepicker>
       </auro-form>
     `);

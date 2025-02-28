@@ -34,8 +34,8 @@ import inputVersion from './inputVersion.js';
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot helpText - Defines the content of the helpText.
- * @slot mobileHeadline - Defines the headline to display above mobileDateLabels in the mobile layout.
- * @slot mobileDateLabel - Defines the content to display above selected dates in the mobile layout.
+ * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
+ * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
  * @slot fromLabel - Defines the label content for the first input.
  * @slot date_MM_DD_YYYY - Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot.
@@ -208,7 +208,7 @@ export class AuroDatePicker extends LitElement {
       },
 
       /**
-       * If declared, make mobileHeadline in HeadingDisplay.
+       * If declared, make bib.fullscreen.headline in HeadingDisplay.
        * Otherwise, Heading 600.
        */
       largeFullscreenHeadline: {
@@ -1056,9 +1056,9 @@ export class AuroDatePicker extends LitElement {
               .monthNames="${this.monthNames}"
               part="calendar"
             >
-              <slot slot="mobileHeadline" name="mobileHeadline" @slotchange="${this.handleSlotToSlot}"></slot>
-              <slot slot="mobileDateLabel" name="mobileDateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-              <span slot="mobileDateFromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
+              <slot slot="bib.fullscreen.headline" name="bib.fullscreen.headline" @slotchange="${this.handleSlotToSlot}"></slot>
+              <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
+              <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
               ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
             </auro-calendar>
           </div>
