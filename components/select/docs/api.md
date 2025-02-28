@@ -10,7 +10,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `error`                         | `error`                         | `string`  |         | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `flexMenuWidth`                 | `flexMenuWidth`                 | `boolean` |         | If set, makes dropdown width match the size of the content, rather than the width of the trigger. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"    | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
-| `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean` |         | If declared, make mobileHeadline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean` |         | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
 | `multiSelect`                   | `multiselect`                   | `boolean` |         | Sets multi-select mode, allowing multiple options to be selected at once. |
 | `noCheckmark`                   | `noCheckmark`                   | `boolean` |         | When true, checkmark on selected option will no longer be present. |
 | `noValidate`                    | `noValidate`                    | `boolean` |         | If set, disables auto-validation on blur.        |

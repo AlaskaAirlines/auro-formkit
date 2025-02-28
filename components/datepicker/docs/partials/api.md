@@ -355,9 +355,10 @@ Sets the help text displayed below the trigger. The `helpText` slot can be used 
 
 </auro-accordion>
 
-#### mobileDateLabel
+#### bib.fullscreen.dateLabel and bib.fullscreen.headline
 
-Sets the label used for the selected date display at the top of the bib when viewed in the mobile layout. To view this demo, set your window to a mobile screen size.
+Sets the headline and the label at the top of the bib when viewed in the mobile layout. 
+To view this demo, set your window to a mobile screen size.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->

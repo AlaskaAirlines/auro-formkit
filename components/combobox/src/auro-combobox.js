@@ -202,7 +202,7 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * If declared, make mobileHeadline in HeadingDisplay.
+       * If declared, make bib.fullscreen.headline in HeadingDisplay.
        * Otherwise, Heading 600
        */
       largeFullscreenHeadline: {

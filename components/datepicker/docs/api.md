@@ -11,7 +11,7 @@
 | `disabled`                        | `disabled`                        |           | `boolean`  | false                                            | If set, disables the datepicker.                 |
 | `error`                           | `error`                           |           | `string`   |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `format`                          | `format`                          |           | `string`   | "mm/dd/yyyy"                                     | Specifies the date format. The default is `mm/dd/yyyy`. |
-| `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`  |                                                  | If declared, make mobileHeadline in HeadingDisplay.<br />Otherwise, Heading 600. |
+| `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`  |                                                  | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
 | `maxDate`                         | `maxDate`                         |           | `string`   |                                                  | Maximum date. All dates after will be disabled.  |
 | `minDate`                         | `minDate`                         |           | `string`   |                                                  | Minimum date. All dates before will be disabled. |
 | `monthNames`                      | `monthNames`                      |           | `array`    | ["January","February","March","April","May","June","July","August","September","October","November","December"] | Names of all 12 months to render in the calendar, used for localization of date string in mobile layout. |
@@ -48,15 +48,15 @@
 
 ## Slots
 
-| Name                 | Description                                      |
-|----------------------|--------------------------------------------------|
-| `date_MM_DD_YYYY`    | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |
-| `fromLabel`          | Defines the label content for the first input.   |
-| `helpText`           | Defines the content of the helpText.             |
-| `mobileDateLabel`    | Defines the content to display above selected dates in the mobile layout. |
-| `mobileHeadline`     | Defines the headline to display above mobileDateLabels in the mobile layout. |
-| `popover_MM_DD_YYYY` | Defines the content to display in the auro-calendar-cell popover for the specified date. |
-| `toLabel`            | Defines the label content for the second input when the `range` attribute is used. |
+| Name                       | Description                                      |
+|----------------------------|--------------------------------------------------|
+| `bib.fullscreen.dateLabel` | Defines the content to display above selected dates in the mobile layout. |
+| `bib.fullscreen.headline`  | Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout. |
+| `date_MM_DD_YYYY`          | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |
+| `fromLabel`                | Defines the label content for the first input.   |
+| `helpText`                 | Defines the content of the helpText.             |
+| `popover_MM_DD_YYYY`       | Defines the content to display in the auro-calendar-cell popover for the specified date. |
+| `toLabel`                  | Defines the label content for the second input when the `range` attribute is used. |
 
 ## CSS Shadow Parts
 

@@ -329,12 +329,12 @@ export class AuroCalendar extends RangeDatepicker {
       ?isFullscreen="${this.isFullscreen}"
       @close-click="${this.utilCal.requestDismiss}">
 
-      <span slot="header">${this.slots.mobileHeadline}</span>
+      <span slot="header">${this.slots["bib.fullscreen.headline"]}</span>
 
       <div slot="subheader" class="mobileHeader">
         <div class="headerDateFrom">
-          <span class="mobileDateLabel">${this.slots.mobileDateLabel}</span>
-          <slot name="mobileDateFromStr"></slot>
+          <span class="mobileDateLabel">${this.slots["bib.fullscreen.dateLabel"]}</span>
+          <slot name="bib.fullscreen.fromStr"></slot>
         </div>
         <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>
       </div>
