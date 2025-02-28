@@ -254,6 +254,34 @@ While content is loading, the menu can either remain empty or display a loading 
 
 </auro-accordion>
 
+
+### Dropdown with fullscreen bib
+
+You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
+
+The default value of `fullscreenBreakpoint` is `sm`. 
+
+Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens)
+
+
+To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMMENDED**.
+
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreenBreakpoint.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fullscreenBreakpoint.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 #### in Dialog
 
 The component can be in a dialog.

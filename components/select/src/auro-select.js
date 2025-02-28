@@ -35,6 +35,7 @@ import tokensCss from "./styles/tokens-css.js";
  * The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
  *
  * @slot - Default slot for the menu content.
+ * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
