@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.51](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.50...v2.0.0-beta.51) (2025-02-28)
+
+
+### Bug Fixes
+
+* rename `largeMobileHeadline` to `largeFullscreenHeadline` ([ff7ee2e](https://github.com/AlaskaAirlines/auro-formkit/commit/ff7ee2e21a4e0b7f640898e3221c80a2bcc4a41f))
+
+
+### Features
+
+* add fullscreen bib features on select [#360](https://github.com/AlaskaAirlines/auro-formkit/issues/360) ([7b9a3ff](https://github.com/AlaskaAirlines/auro-formkit/commit/7b9a3ffae0e029be71e81c8dd2a02e9c37cbdd6d))
+
 # [2.0.0-beta.50](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.49...v2.0.0-beta.50) (2025-02-27)
 
 
