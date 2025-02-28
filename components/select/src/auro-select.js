@@ -142,7 +142,7 @@ export class AuroSelect extends LitElement {
        * If declared, make mobileHeadline in HeadingDisplay.
        * Otherwise, Heading 600
        */
-      largeMobileHeadline: {
+      largeFullscreenHeadline: {
         type: Boolean,
         reflect: true
       },
@@ -656,7 +656,7 @@ export class AuroSelect extends LitElement {
           <div class="menuWrapper">
           </div>
 
-          <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}" @close-click="${this.hideBib}">
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
           </${this.bibtemplateTag}>
           <slot name="label" slot="label"></slot>
           <p slot="helpText">

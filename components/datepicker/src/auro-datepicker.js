@@ -211,7 +211,7 @@ export class AuroDatePicker extends LitElement {
        * If declared, make mobileHeadline in HeadingDisplay.
        * Otherwise, Heading 600.
        */
-      largeMobileHeadline: {
+      largeFullscreenHeadline: {
         type: Boolean,
         reflect: true
       },
@@ -1045,7 +1045,7 @@ export class AuroDatePicker extends LitElement {
           </div>
           <div class="calendarWrapper" part="calendarWrapper">
             <auro-calendar
-              ?largeMobileHeadline="${this.largeMobileHeadline}"
+              ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"
               ?noRange="${!this.range}"
               .format="${this.format}"
               .monthFirst="${this.monthFirst}"

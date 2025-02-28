@@ -146,7 +146,7 @@ export class AuroCounterGroup extends LitElement {
        * If declared, make mobileHeadline in HeadingDisplay.
        * Otherwise, Heading 600
        */
-      largeMobileHeadline: {
+      largeFullscreenHeadline: {
         type: Boolean,
         reflect: true
       },
@@ -406,7 +406,7 @@ export class AuroCounterGroup extends LitElement {
         <div slot="label"><slot name="label"></slot></div>
         <div slot="helpText"><slot name="helpText"></slot></div>
 
-        <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}">
+        <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
           <auro-counter-wrapper isInDropdown>
           </auro-counter-wrapper>
         </${this.bibtemplateTag}>

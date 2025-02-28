@@ -146,7 +146,7 @@ export class AuroCalendar extends RangeDatepicker {
         type: Boolean,
         reflect: false
       },
-      largeMobileHeadline: {
+      largeFullscreenHeadline: {
         type: Boolean,
         reflect: true
       },
@@ -325,7 +325,7 @@ export class AuroCalendar extends RangeDatepicker {
   render() {
     return html`
     <${this.bibtemplateTag}
-      ?large="${this.largeMobileHeadline}"
+      ?large="${this.largeFullscreenHeadline}"
       ?isFullscreen="${this.isFullscreen}"
       @close-click="${this.utilCal.requestDismiss}">
 

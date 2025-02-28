@@ -205,7 +205,7 @@ export class AuroCombobox extends LitElement {
        * If declared, make mobileHeadline in HeadingDisplay.
        * Otherwise, Heading 600
        */
-      largeMobileHeadline: {
+      largeFullscreenHeadline: {
         type: Boolean,
         reflect: true
       },
@@ -926,7 +926,7 @@ export class AuroCombobox extends LitElement {
 
           <div class="menuWrapper"></div>
 
-          <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}">
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
           </${this.bibtemplateTag}>
 
           <p slot="helpText">
