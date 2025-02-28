@@ -4,21 +4,23 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ## Properties
 
-| Property                        | Attribute                       | Type      | Default     | Description                                      |
-|---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
-| `disabled`                      | `disabled`                      | `boolean` |             | When attribute is present, element shows disabled state. |
-| `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
-| `flexMenuWidth`                 | `flexMenuWidth`                 | `boolean` |             | If set, makes dropdown width match the size of the content, rather than the width of the trigger. |
-| `multiSelect`                   | `multiselect`                   | `boolean` |             | Sets multi-select mode, allowing multiple options to be selected at once. |
-| `noCheckmark`                   | `noCheckmark`                   | `boolean` |             | When true, checkmark on selected option will no longer be present. |
-| `noValidate`                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
-| `optionSelected`                | `optionSelected`                |           | "undefined" | Specifies the current selected menuOption.       |
-| `required`                      | `required`                      | `boolean` |             | Populates the `required` attribute on the element. Used for client-side validation. |
-| `setCustomValidity`             | `setCustomValidity`             | `string`  |             | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`  |             | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
-| `validity`                      | `validity`                      | `string`  |             | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         |           | "undefined" | Value selected for the component.                |
+| Property                        | Attribute                       | Type      | Default | Description                                      |
+|---------------------------------|---------------------------------|-----------|---------|--------------------------------------------------|
+| `disabled`                      | `disabled`                      | `boolean` |         | When attribute is present, element shows disabled state. |
+| `error`                         | `error`                         | `string`  |         | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| `flexMenuWidth`                 | `flexMenuWidth`                 | `boolean` |         | If set, makes dropdown width match the size of the content, rather than the width of the trigger. |
+| `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"    | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
+| `largeMobileHeadline`           | `largeMobileHeadline`           | `boolean` |         | If declared, make mobileHeadline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `multiSelect`                   | `multiselect`                   | `boolean` |         | Sets multi-select mode, allowing multiple options to be selected at once. |
+| `noCheckmark`                   | `noCheckmark`                   | `boolean` |         | When true, checkmark on selected option will no longer be present. |
+| `noValidate`                    | `noValidate`                    | `boolean` |         | If set, disables auto-validation on blur.        |
+| `optionSelected`                | `optionSelected`                |           |         | Specifies the current selected menuOption.       |
+| `required`                      | `required`                      | `boolean` |         | Populates the `required` attribute on the element. Used for client-side validation. |
+| `setCustomValidity`             | `setCustomValidity`             | `string`  |         | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`  |         | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`  |         | Custom help text message to display when validity = `valueMissing`. |
+| `validity`                      | `validity`                      | `string`  |         | Specifies the `validityState` this element is in. |
+| `value`                         | `value`                         |           |         | Value selected for the component.                |
 
 ## Methods
 
