@@ -18,6 +18,9 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import dropdownVersion from './dropdownVersion.js';
 
+import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+import bibTemplateVersion from './bibtemplateVersion.js';
+
 import {
   arrayConverter,
   arrayOrUndefinedHasChanged
@@ -46,8 +49,7 @@ export class AuroSelect extends LitElement {
   constructor() {
     super();
 
-    this.optionSelected = undefined;
-    this.value = undefined;
+    this.privateDefaults();
 
     const idLength = 36;
     const idSubstrEnd = 8;
@@ -83,6 +85,11 @@ export class AuroSelect extends LitElement {
     /**
      * @private
      */
+    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+
+    /**
+     * @private
+     */
     this.isHiddenWhileLoading = false;
   }
 
@@ -93,6 +100,9 @@ export class AuroSelect extends LitElement {
   privateDefaults() {
     this.options = [];
     this.optionActive = null;
+    this.optionSelected = undefined;
+    this.value = undefined;
+    this.fullscreenBreakpoint = 'sm';
   }
 
   // This function is to define props used within the scope of this component
@@ -113,6 +123,25 @@ export class AuroSelect extends LitElement {
        * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
        */
       flexMenuWidth: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.
+       * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       * @default sm
+       */
+      fullscreenBreakpoint: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, make mobileHeadline in HeadingDisplay.
+       * Otherwise, Heading 600
+       */
+      largeMobileHeadline: {
         type: Boolean,
         reflect: true
       },
@@ -237,6 +266,10 @@ export class AuroSelect extends LitElement {
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
+
+    // setting up bibtemplate
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate.append(this.menuWrapper);
 
     if (this.customBibWidth) {
       this.dropdown.dropdownWidth = this.customBibWidth;
@@ -381,7 +414,11 @@ export class AuroSelect extends LitElement {
       }
 
       if (evt.key === 'Tab') {
-        this.dropdown.hide();
+        if (this.dropdown.isBibFullscreen) {
+          evt.preventDefault();
+        } else {
+          this.dropdown.hide();
+        }
       }
     });
 
@@ -435,6 +472,25 @@ export class AuroSelect extends LitElement {
       this.value = undefined;
       this.removeEventListener('focusin', this.handleFocusin);
     }
+  }
+
+  /**
+   * Watch for slot changes and recalculate the menuoptions.
+   * @private
+   * @param {Event} event - `slotchange` event.
+   * @returns {void}
+   */
+  handleSlotChange(event) {
+    // Remove previous slot nodes if necessary.
+    const oldSlots = this.bibtemplate.querySelectorAll(`[slot="header"]`);
+    oldSlots.forEach((old) => old.remove());
+
+    const newSlots = event.target.assignedNodes();
+    newSlots.forEach((node) => {
+      const clone = node.cloneNode(true);
+      clone.setAttribute('slot', "header");
+      this.bibtemplate.append(clone);
+    });
   }
 
   /**
@@ -537,6 +593,16 @@ export class AuroSelect extends LitElement {
   }
 
   /**
+   * Hide dropdownbib.
+   * @private
+   */
+  hideBib() {
+    if (this.dropdown) {
+      this.dropdown.hide();
+    }
+  }
+
+  /**
    * Validates value.
    * @param {boolean} [force=false] - Whether to force validation.
    */
@@ -570,19 +636,27 @@ export class AuroSelect extends LitElement {
             : undefined
           };
         </div>
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        </div>
         <${this.dropdownTag}
           for="selectmenu"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           common
           fluid
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           ?matchWidth="${!this.flexMenuWidth}"
           chevron
           part="dropdown">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
             <span id="placeholder" class="${classMap(placeholderClass)}"><slot name="placeholder"></slot></span>
           </span>
+
           <div class="menuWrapper">
           </div>
+
+          <${this.bibtemplateTag} ?large="${this.largeMobileHeadline}" @close-click="${this.hideBib}">
+          </${this.bibtemplateTag}>
           <slot name="label" slot="label"></slot>
           <p slot="helpText">
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
