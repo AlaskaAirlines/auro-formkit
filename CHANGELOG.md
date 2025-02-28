@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.52](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.51...v2.0.0-beta.52) (2025-02-28)
+
+
+### Bug Fixes
+
+* rename `mobileHeadline` and `mobileDateLabel` to follow `bib.fullscreen.*` pattern ([26a28e8](https://github.com/AlaskaAirlines/auro-formkit/commit/26a28e849fce9bd2ba79721cd1097b4c4cbab943))
+
+
+### BREAKING CHANGES
+
+* `mobileDateLabel` slot is renamed to `bib.fullscreen.dateLabel`
+
 # [2.0.0-beta.51](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.50...v2.0.0-beta.51) (2025-02-28)
 
 
