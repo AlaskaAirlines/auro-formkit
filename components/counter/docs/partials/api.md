@@ -145,8 +145,8 @@ The default value of `fullscreenBreakpoint` is `sm`.
 
 Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens)
 
-To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMMENDED**.
-You can also set `bib.fullscreen.footer` to add any additional options on fullscreen view.
+To support fullscreen bib, setting the `bib.fullscreen.headline` slot is **REQUIRED**.
+You can also set `bib.fullscreen.footer` slot to add any additional options on fullscreen view.
 
 
 <div class="exampleWrapper">

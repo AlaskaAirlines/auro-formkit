@@ -30,12 +30,12 @@ import './auro-counter-wrapper.js';
  *
  * @element auro-counter-group
  * @extends LitElement
- * @slot Default - Slot for counter elements.
- * @slot bib.fullscreen.headline -  Defines the headline to display above menu-options
- * @slot bib.fullscreen.footer -  Defines the footer to display at the bottom of fullscreen bib
- * @slot Label - Dropdown label content. Only used when `isDropdown` is true.
- * @slot ValueText - Dropdown value text display. Only used when `isDropdown` is true.
- * @slot HelpText - Dropdown help text content. Only used when `isDropdown` is true.
+ * @slot default - Slot for counter elements.
+ * @slot bib.fullscreen.headline -  Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required.
+ * @slot bib.fullscreen.footer -  Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true.
+ * @slot label - Dropdown label content. Only used when `isDropdown` is true.
+ * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
+ * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
  */
 export class AuroCounterGroup extends LitElement {
   constructor() {
