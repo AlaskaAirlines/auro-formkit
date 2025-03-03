@@ -318,7 +318,10 @@ export class AuroCounterGroup extends LitElement {
       this.bibtemplate.querySelectorAll(`[slot="${targetSlot}"]`).forEach((old) => old.remove());
 
       event.target.assignedNodes().forEach((node) => {
-        const clone = node.cloneNode(true);
+        const clone = node.cloneNode();
+        [...node.childNodes].forEach((child) => {
+          clone.append(child);
+        });
         clone.setAttribute('slot', targetSlot);
         this.bibtemplate.append(clone);
       });
