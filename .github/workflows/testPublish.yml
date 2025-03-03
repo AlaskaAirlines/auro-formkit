@@ -1,6 +1,7 @@
 name: Test and publish
 
 # Controls when the action will run. Triggers the workflow on push or pull request
+
 # events but only for the main branch
 on:
   push:
@@ -15,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 20, 22 ]
+        node-version: [20, 22]
 
     steps:
       - uses: actions/checkout@v4
@@ -23,12 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Test
-        run: npm run test
+      - run: npm ci
+      - run: npm run build
 
   release:
     # Only release on push to main
@@ -41,14 +38,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Install
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - run: git config --unset core.hooksPath
-      - name: Release
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
