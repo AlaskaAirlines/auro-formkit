@@ -36,6 +36,12 @@ The following sections are editable by making changes to the following files:
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
+### Design Token CSS Custom Property dependency
+
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/designTokens.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+
 ## Install from CDN
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/bundleInstallDescription.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -46,4 +52,9 @@ The following sections are editable by making changes to the following files:
 
 ## {{ withAuroNamespace name }} use cases
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Formkit development
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/partials/developmentDescription.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->

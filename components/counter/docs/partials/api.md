@@ -3,23 +3,9 @@
 
 ## API Examples
 
-### Individual Counter Features
+### Counter
 
-#### Basic Properties
-Basic Counter:
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
-#### Min/Max Values
+#### Min/Max and Value
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-minmax.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -43,7 +29,7 @@ Basic Counter:
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-### Counter Group Features
+### Counter Group
 
 #### Group Properties
 All available counter-group properties:
@@ -99,20 +85,6 @@ counter.addEventListener('input', (event) => {
 });
 ```
 
-</auro-accordion>
-
-### Counter Group Features
-
-#### Validation and Help Text
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/validation.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/validation.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
 #### Custom Value Display

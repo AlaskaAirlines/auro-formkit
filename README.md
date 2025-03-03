@@ -66,19 +66,6 @@ To start using the Auro Formkit components, follow the instructions below:
 
 You can use Auro Formkit components in your project in two ways: automatic or custom registration.
 
-#### Required CSS Styles
-**Include in global stylesheet**
-
-The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
-
-```css
-// baseline design css token variables
-@import "@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
-
-// essentials setup baseline primitive selectors for any UI development
-@import '@aurodesignsystem/webcorestylesheets/src/essentials.css';
-```
-
 #### Automatic Registration
 
 For automatic registration, simply import the component:
@@ -147,6 +134,13 @@ Here is an example of how to use the Auro Checkbox component in your HTML:
 By following these steps, you can easily integrate Auro Formkit components into your project.
 <!-- AURO-GENERATED-CONTENT:END -->
 
+### Design Token CSS Custom Property dependency
+
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/designTokens.md) -->
+The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
+
+<!-- AURO-GENERATED-CONTENT:END -->
+
 ## Development
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/developmentDescription.md) -->
@@ -158,8 +152,8 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-```
-turbo dev --filter=@aurodesignsystem/auro-input
+```shell
+npx turbo dev --filter=@aurodesignsystem/auro-input
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 

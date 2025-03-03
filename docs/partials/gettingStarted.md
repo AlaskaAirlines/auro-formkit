@@ -4,19 +4,6 @@ To start using the Auro Formkit components, follow the instructions below:
 
 You can use Auro Formkit components in your project in two ways: automatic or custom registration.
 
-#### Required CSS Styles
-**Include in global stylesheet**
-
-The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
-
-```css
-// baseline design css token variables
-@import "@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
-
-// essentials setup baseline primitive selectors for any UI development
-@import '@aurodesignsystem/webcorestylesheets/src/essentials.css';
-```
-
 #### Automatic Registration
 
 For automatic registration, simply import the component:
