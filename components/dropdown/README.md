@@ -138,15 +138,7 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
+```shell
+npx turbo dev --filter=@aurodesignsystem/auro-input
 ```
-turbo dev --filter=@aurodesignsystem/auro-input
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-
-### Start formkit development environment
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/partials/localhost.md) -->
-<!-- The below content is automatically added from ../../docs/partials/localhost.md -->
-
-## Local Development
 <!-- AURO-GENERATED-CONTENT:END -->
