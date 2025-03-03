@@ -28,6 +28,11 @@ The following sections are editable by making changes to the following files:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
+### Design Token CSS Custom Property dependency
+
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/designTokens.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
 ## Development
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/developmentDescription.md) -->

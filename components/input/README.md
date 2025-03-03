@@ -35,31 +35,11 @@ Use the `<auro-input>` custom element to create basic single-line text fields. S
 ```shell
 $ npm i @aurodesignsystem/auro-formkit
 ```
-
-**Required CSS Styles**
-
-The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
-
-```shell
-$ npm i @aurodesignsystem/design-tokens @aurodesignsystem/webcorestylesheets 
-```
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
 <!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->
 
 ### Import Options
-
-**Required CSS Styles**
-
-```css
-// Include in global stylesheet
-
-// baseline design css token variables
-@import "@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
-
-// essentials setup baseline primitive selectors for any UI development
-@import '@aurodesignsystem/webcorestylesheets/src/essentials.css';
-```
 
 #### Automatic Registration
 
@@ -106,14 +86,19 @@ This configuration enables proper module resolution for the component's TypeScri
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
+### Design Token CSS Custom Property dependency
+
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/designTokens.md) -->
+The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
+
+<!-- AURO-GENERATED-CONTENT:END -->
+
 ## Install from CDN
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/bundleInstallDescription.md) -->
 <!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets/dist/bundled/essentials.css" />
 <script type="module "src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@2.0.0-beta.52/auro-input/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -131,4 +116,20 @@ The `<auro-input>` element should be used in situations where users may:
 
 * needs to enter information
 * be filling out a form
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Formkit development
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/partials/developmentDescription.md) -->
+<!-- The below content is automatically added from ../../docs/partials/developmentDescription.md -->
+
+### Filtering
+
+Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
+
+To only develop a single component, use the `--filter` flag:
+
+```shell
+npx turbo dev --filter=@aurodesignsystem/auro-input
+```
 <!-- AURO-GENERATED-CONTENT:END -->

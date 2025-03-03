@@ -1,17 +1,5 @@
 ### Import Options
 
-**Required CSS Styles**
-
-```css
-// Include in global stylesheet
-
-// baseline design css token variables
-@import "@aurodesignsystem/design-tokens/dist/tokens/CSSCustomProperties.css";
-
-// essentials setup baseline primitive selectors for any UI development
-@import '@aurodesignsystem/webcorestylesheets/src/essentials.css';
-```
-
 #### Automatic Registration
 
 For automatic registration, simply import the component:
