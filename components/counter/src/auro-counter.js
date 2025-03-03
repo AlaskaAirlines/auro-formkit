@@ -30,7 +30,7 @@ import styleCss from "./styles/style-css.js";
  *
  * @element auro-counter
  * @extends LitElement
- * @slot Default - Main label content for the counter.
+ * @slot default - Main label content for the counter.
  * @slot description - Descriptive content for the counter.
  */
 export class AuroCounter extends LitElement {

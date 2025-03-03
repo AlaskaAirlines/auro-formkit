@@ -28,7 +28,7 @@
 
 | Name          | Description                          |
 |---------------|--------------------------------------|
-| `Default`     | Main label content for the counter.  |
+| `default`     | Main label content for the counter.  |
 | `description` | Descriptive content for the counter. |
 
 
@@ -63,9 +63,9 @@
 
 | Name                      | Description                                      |
 |---------------------------|--------------------------------------------------|
-| `Default`                 | Slot for counter elements.                       |
-| `HelpText`                | Dropdown help text content. Only used when `isDropdown` is true. |
-| `Label`                   | Dropdown label content. Only used when `isDropdown` is true. |
-| `ValueText`               | Dropdown value text display. Only used when `isDropdown` is true. |
-| `bib.fullscreen.footer`   | Defines the footer to display at the bottom of fullscreen bib |
-| `bib.fullscreen.headline` | Defines the headline to display above menu-options |
+| `bib.fullscreen.footer`   | Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true. |
+| `bib.fullscreen.headline` | Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required. |
+| `default`                 | Slot for counter elements.                       |
+| `helpText`                | Dropdown help text content. Only used when `isDropdown` is true. |
+| `label`                   | Dropdown label content. Only used when `isDropdown` is true. |
+| `valueText`               | Dropdown value text display. Only used when `isDropdown` is true. |
