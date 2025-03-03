@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 20, 22 ]
+        node-version: [20, 22]
 
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Install
         run: npm ci
       - name: Build
