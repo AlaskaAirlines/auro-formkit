@@ -20,11 +20,11 @@ The following sections are editable by making changes to the following files:
 # Form
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-`<auro-form>` is a [HTML custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) for the purpose of ...
+`<auro-form>` is a [HTML custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) designed to
+serve as the base logic for all auro-constructed forms.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis in tellus nec pellentesque. Integer bibendum ligula sit amet vehicula gravida. Maecenas accumsan, ligula vitae molestie iaculis, tellus mi laoreet ex [install instructions](https://auro.alaskaair.com/components/auro/button/install), ac malesuada velit dolor vel mi. Cras et rutrum urna. Sed mattis mi eu tortor ullamcorper, egestas bibendum mauris cursus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus viverra eros eget neque commodo vulputate. In tempus eu velit at dictum.
-
-Nulla at augue facilisis `odio lobortis` molestie vitae a nulla.
+It automatically "scrapes" its inner content for any auro form elements, and surfaces
+them (along with events) to the parent form element as a JSON object.
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -88,9 +88,10 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <auro-form>
-  <auro-input>
-      <span slot="label">Hello World</span>
+  <auro-input id="search-box" name="searchBox" required>
+    <span slot="label">Search flights</span>
   </auro-input>
+  <auro-button type="submit">Submit</auro-button>
 </auro-form>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
