@@ -21,6 +21,18 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     ];
   }
 
+  static get properties() {
+    return {
+
+      /**
+       * @private
+       */
+      monthFirst: {
+        type: Boolean
+      }
+    };
+  }
+
   async firstUpdated() {
     this.monthsList = [
       '01',
@@ -41,6 +53,16 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     });
 
     await this.updateComplete;
+  }
+
+  /**
+   * Returns month name to be rendered in the calendar header.
+   * @private
+   * @param {Number} month - The month number (1-12).
+   * @returns {String} The name of the month.
+   */
+  computeCurrentMonthName(month) {
+    return this.monthNames[month - 1];
   }
 
   /**
@@ -101,8 +123,13 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
         <div class="header">
           ${this.renderPrevButton()}
           <div class="headerTitle">
-            <div>${this.computeCurrentMonthName(this.month, this.year)}</div>
-            <div>${this.renderYear()}</div>
+            ${this.monthFirst ? html`
+              <div>${this.computeCurrentMonthName(this.month)}</div>
+              <div>${this.renderYear()}</div>
+            ` : html`
+              <div>${this.renderYear()}</div>
+              <div>${this.computeCurrentMonthName(this.month)}</div>
+            `}
           </div>
           ${this.renderNextButton()}
         </div>

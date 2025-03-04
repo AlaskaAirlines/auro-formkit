@@ -23,11 +23,3 @@
 :host([disabled]) {
   --ds-auro-radio-group-label-color: var(--ds-color-text-disabled-default, $ds-color-text-disabled-default);
 }
-
-.radioGroupElement-helpText {
-  color: var(--ds-auro-radio-group-help-text-color);
-}
-
-:host([validity]:not([validity='valid'])) {
-  --ds-auro-radio-group-help-text-color: var(--ds-color-alert-error-default, #{$ds-color-alert-error-default});
-}

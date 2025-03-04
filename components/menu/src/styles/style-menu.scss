@@ -10,7 +10,7 @@
 @import '@aurodesignsystem/design-tokens/dist/tokens/SassCustomProperties';
 @import '@aurodesignsystem/webcorestylesheets/src/core';
 
-/* stylelint-disable declaration-no-important, order/properties-order */
+/* stylelint-disable declaration-no-important, order/properties-order, selector-max-attribute, selector-no-qualifying-type, scss/selector-nest-combinators */
 
 // container styles - defines the look of the outer custom component
 :host {
@@ -23,7 +23,8 @@
   vertical-align: middle;
 
   ::slotted(auro-menuoption),
-  ::slotted([auro-menuoption]) {
+  ::slotted([auro-menuoption]),
+  auro-menuoption[loadingplaceholder] {
     padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
   }
 
@@ -48,7 +49,8 @@
 }
 
 :host([nocheckmark]) {
-  ::slotted(auro-menuoption) {
+  ::slotted(auro-menuoption),
+  auro-menuoption[loadingplaceholder] {
     padding-left: var(--ds-size-200, $ds-size-200);
   }
 }
@@ -56,3 +58,23 @@
 :host([root]) {
   overflow-y: auto;
 }
+
+[loadingplaceholder] {
+  color: var(--ds-color-text-secondary-default, $ds-color-text-secondary-default);
+
+  &.empty {
+    opacity: 0;
+    position: absolute;
+  }
+
+  slot[name="loadingIcon"]{
+    vertical-align: middle;
+    line-height: 1;
+    display: inline-block;
+
+    &::slotted(*) {
+      margin-right: var(--ds-size-150, $ds-size-150);
+    }
+  }
+}
+

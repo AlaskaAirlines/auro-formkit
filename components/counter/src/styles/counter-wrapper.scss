@@ -1,0 +1,29 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// layout styles - define any layout specifications for UI that is contained WITHIN the component
+// never define layout that would cause effect on element outside the scope of this component
+
+// Support for fallback values
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-300, $ds-size-300);
+
+  ::slotted(*:not(:first-child)) {
+    padding-top: var(--ds-size-300, $ds-size-300);
+    border-top-width: 1px;
+    border-top-style: solid;
+  }
+}
+
+:host([isindropdown]) {
+  padding: var(--ds-size-300, $ds-size-300);
+}

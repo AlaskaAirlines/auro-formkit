@@ -41,7 +41,7 @@ export class UtilitiesCalendarRender {
   /**
    * Determines how many calendar months can be rendered based on the screen size and defined range.
    * @param {Object} elem - The auro-calendar element.
-   * @param {Boolean} isMobile - true if it's to render for mobile view
+   * @param {Boolean} isMobile - True if it's to render for mobile view.
    * @private
    * @returns {Number} Returns the maximum number of months that can be rendered.
    */
@@ -75,7 +75,7 @@ export class UtilitiesCalendarRender {
   /**
    * Determines the number of months rendered inside the calendar.
    * @param {Object} elem - The auro-calendar element.
-   * @param {Boolean} isMobile - true if it's to render for mobile view
+   * @param {Boolean} isMobile - True if it's to render for mobile view.
    * @private
    * @returns {void}
    */
@@ -140,10 +140,12 @@ export class UtilitiesCalendarRender {
         .min="${elem.min}"
         .max="${elem.max}"
         ?noRange="${elem.noRange}"
+        .monthFirst="${elem.monthFirst}"
         .hoveredDate="${elem.hoveredDate}"
         .dateTo="${elem.dateTo}"
         .dateFrom="${elem.dateFrom}"
         .locale="${elem.locale}"
+        .monthNames="${elem.monthNames}"
         month="${month}"
         year="${year}"
         @hovered-date-changed="${elem.hoveredDateChanged}"

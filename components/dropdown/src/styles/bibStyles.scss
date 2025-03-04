@@ -21,7 +21,7 @@
   display: inline-block;
   overflow: auto;
   box-sizing: border-box;
-  margin-top: var(--ds-size-50, $ds-size-50);
+  margin: var(--ds-size-50, $ds-size-50) 0;
 }
 
 :host([isfullscreen]) {
@@ -37,24 +37,18 @@
     border-radius: unset;
     margin-top: 0;
     box-shadow: unset;
+    overscroll-behavior: contain;
  }
 }
 
 :host([data-show]) {
-  display: block;
+  display: flex;
 }
 
 :host([common]:not([isfullscreen])),
 :host([rounded]:not([isfullscreen])) {
   .container {
     border-radius: var(--ds-border-radius, $ds-border-radius);
-  }
-}
-
-:host([common]),
-:host([inset]) {
-  .container {
-    padding: var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100);
   }
 }
 

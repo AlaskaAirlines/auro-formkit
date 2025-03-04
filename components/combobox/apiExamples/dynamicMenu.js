@@ -50,7 +50,7 @@ export function dynamicMenuExample() {
 
   inputEl.addEventListener('input', () => {
     let data = dynamicData.getData();
-    data = dynamicData.filterData(data, dynamicMenuExample.value);
+    data = dynamicData.filterData(data, inputEl.value);
 
     generateHtml(data);
   });

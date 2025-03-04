@@ -13,7 +13,7 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Formkit
+# Auro Formkit
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
@@ -24,31 +24,120 @@ The following sections are editable by making changes to the following files:
 
 It is a monorepo that contains the following components:
 
-- `@auro-formkit/auro-checkbox`
-- `@auro-formkit/auro-combobox`
-- `@auro-formkit/auro-counter`
-- `@auro-formkit/auro-datepicker`
-- `@auro-formkit/auro-dropdown`
-- `@auro-formkit/auro-form`
-- `@auro-formkit/auro-input`
-- `@auro-formkit/auro-menu`
-- `@auro-formkit/auro-radio`
-- `@auro-formkit/auro-select`
+- `auro-checkbox`
+    - `auro-checkbox-group`
+- `auro-combobox`
+- `auro-counter`
+    - `auro-counter-group`
+- `auro-datepicker`
+- `auro-dropdown`
+- `auro-form`
+- `auro-input`
+- `auro-menu`
+    - `auro-menu-option`
+- `auro-radio`
+    - `auro-radio-group`
+- `auro-select`
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Install
 
 <!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
-[![Build Status](https://img.shields.io/github/actions/workflow/status/AlaskaAirlines/-formkit/-formkit/build-tools/testPublish.yml?style=for-the-badge)](https://github.com/AlaskaAirlines/-formkit/-formkit/build-tools/actions/workflows/testPublish.yml)
-[![See it on NPM!](https://img.shields.io/npm/v/@auro-formkit/-formkit/-formkit/build-tools?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@auro-formkit/-formkit/-formkit/build-tools)
-[![License](https://img.shields.io/npm/l/@auro-formkit/-formkit/-formkit/build-tools?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/AlaskaAirlines/auro-formkit/testPublish.yml?style=for-the-badge)](https://github.com/AlaskaAirlines/auro-formkit/actions/workflows/testPublish.yml)
+[![See it on NPM!](https://img.shields.io/npm/v/@aurodesignsystem/auro-formkit?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@aurodesignsystem/auro-formkit)
+[![License](https://img.shields.io/npm/l/@aurodesignsystem/auro-formkit?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
 ![ESM supported](https://img.shields.io/badge/ESM-compatible-FFE900?style=for-the-badge)
 
 ```shell
-$ npm i @auro-formkit/-formkit/-formkit/build-tools
+$ npm i @aurodesignsystem/auro-formkit
 ```
 
 Installing as a direct, dev or peer dependency is up to the user installing the package. If you are unsure as to what type of dependency you should use, consider reading this [stack overflow](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies) answer.
+
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Getting Started
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
+<!-- The below content is automatically added from ./docs/partials/gettingStarted.md -->
+To start using the Auro Formkit components, follow the instructions below:
+
+### Usage
+
+You can use Auro Formkit components in your project in two ways: automatic or custom registration.
+
+#### Automatic Registration
+
+For automatic registration, simply import the component:
+
+```javascript
+import "@aurodesignsystem/auro-formkit/auro-checkbox";
+```
+
+This will automatically register both the `<auro-checkbox>` and the included `<auro-checkbox-group>` component for use in your project. Note that not all Auro Formkit components have sub-components. Be sure to check the documentation for each component to understand its specific usage and registration requirements.
+
+#### Custom Registration
+
+If you prefer to register the component with a custom name, you can call the component class directly to create a custom registration:
+
+```javascript
+import { AuroCheckbox, AuroCheckboxGroup } from "@aurodesignsystem/auro-formkit/auro-checkbox/class";
+
+AuroCheckbox.register('custom-checkbox');
+AuroCheckbox.register('custom-checkbox-group');
+```
+
+This will register the component as `<custom-checkbox>` and `<custom-checkbox-group>`.
+
+#### TypeScript Module Resolution
+
+When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler"
+    }
+}
+```
+
+This configuration enables proper module resolution for the component's TypeScript files.
+
+### Basic HTML Example
+
+Here is an example of how to use the Auro Checkbox component in your HTML:
+
+`index.html -> <head>`
+
+```html
+<script type="module">
+    import "@aurodesignsystem/auro-formkit/auro-checkbox";
+</script>
+```
+
+`index.html -> <body>`
+
+```html
+<auro-checkbox-group>
+    <span slot="legend">
+        Form label goes here
+    </span>
+    <auro-checkbox value="value1" name="basic" id="checkbox-basic1">
+        Checkbox option
+    </auro-checkbox>
+    <auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>
+        Checkbox option two
+    </auro-checkbox>
+</auro-checkbox-group>
+```
+
+By following these steps, you can easily integrate Auro Formkit components into your project.
+<!-- AURO-GENERATED-CONTENT:END -->
+
+### Design Token CSS Custom Property dependency
+
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/designTokens.md) -->
+The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
 
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -63,8 +152,8 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-```
-turbo dev --filter=@auro-formkit/auro-input
+```shell
+npx turbo dev --filter=@aurodesignsystem/auro-input
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -121,7 +210,7 @@ The package's `package.json` will have every dependency that it needs. This is t
 #### Internal Dependencies
 - These are packages from within the `auro-formkit` monorepo
 - Allow sharing code between different packages in your repository
-- Example: The `@auro-formkit/combobox` package might depend on `@auro-formkit/input`
+- Example: The `@aurodesignsystem/combobox` package might depend on `@auro-formkit/input`
 - Must be declared in `package.json` just like external dependencies
 - Use workspace protocols (e.g., `"workspace:*"` or `"workspace:^1.0.0"`)
 
@@ -174,8 +263,8 @@ Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
   "name": "@auro-formkit/combobox",
   "dependencies": {
     // Internal dependencies
-    "@auro-formkit/auro-dropdown": "*",     // Required UI component
-    "@auro-formkit/auro-input": "*",        // Required UI component
+    "@aurodesignsystem/auro-dropdown": "*",     // Required UI component
+    "@aurodesignsystem/auro-input": "*",        // Required UI component
 
     // External dependencies
     "@alaskaairux/icons": "^4.44.1",  // Required UI component

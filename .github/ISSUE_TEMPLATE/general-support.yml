@@ -1,11 +1,11 @@
 name: General support
 description: Suggestions that are not related to bugs or new features
-title: 'auro-form: [issue]'
+title: 'auro-formkit: [issue]'
 labels:
   - 'Type: Question'
   - 'Type: Feature'
   - not-reviewed
-  - 'auro-form'
+  - 'auro-formkit'
 body:
   - type: textarea
     id: request

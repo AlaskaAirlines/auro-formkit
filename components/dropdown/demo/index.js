@@ -1,9 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 // import { AuroDropdownBib } from '../src/auro-dropdownBib.js';
 import { AuroDropdown } from '../src/auro-dropdown.js';
-
-// AuroDropdownBib.register();
-
 AuroDropdown.register();
 AuroDropdown.register('custom-dropdown');
 

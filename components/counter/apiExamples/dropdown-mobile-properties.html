@@ -1,0 +1,24 @@
+<div style="max-width: 350px;">
+  <auro-counter-group id="dropdownCouterExample" isDropdown fullscreenBreakpoint="lg">
+    <span slot="label">Passengers</span>
+    <span slot="bib.fullscreen.headline">Passengers</span>
+    <div slot="helpText">This is help text</div>
+    <auro-counter>
+      Adults
+      <span slot="description">18 years or older</span>
+    </auro-counter>
+    <auro-counter>
+      Children
+      <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
+    </auro-counter>
+    <auro-counter>
+      Lap Infants
+      <span slot="description">Under 2 years</span>
+    </auro-counter>
+
+    <div slot="bib.fullscreen.footer" style="display:flex; justify-content: stretch; gap: 1.5rem">
+      <auro-button id="dropdownCounterExampleResetbutton" fluid variant="secondary" style="flex: 1 50%">Reset</auro-button>
+      <auro-button id="dropdownCounterExampleSavebutton" fluid style="flex: 1 50%">Save</auro-button>
+    </div>
+  </auro-counter-group>
+</div>

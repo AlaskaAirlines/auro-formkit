@@ -1,57 +1,71 @@
 # auro-counter
 
-## Attributes
-
-| Attribute          | Type        | Description                                      |
-|--------------------|-------------|--------------------------------------------------|
-| `disableEventShow` | ` Boolean ` | If declared, the dropdown will only show by calling the API .show() public method. |
-
 ## Properties
 
-| Property                | Attribute               | Type        | Default | Description                                      |
-|-------------------------|-------------------------|-------------|---------|--------------------------------------------------|
-| `bordered`              | `bordered`              | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
-| `chevron`               | `chevron`               | ` Boolean ` |         | If declared, the dropdown displays an display state chevron on the right. |
-| `disabled`              | `disabled`              | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
-| `error`                 | `error`                 | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
-| `inset`                 | `inset`                 | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
-| `isPopoverVisible`      | `isPopoverVisible`      | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
-| `matchWidth`            | `matchWidth`            | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |
-| `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false   | If delclared, the dropdown will not hide when moving focus outside the element. |
-| `noToggle`              | `noToggle`              | ` Boolean ` |         | If declared, the trigger will only show the the dropdown bib. |
-| `ready`                 | `ready`                 | ` Boolean ` |         | When false the component API should not be called. |
-| `rounded`               | `rounded`               | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
+| Property   | Attribute  | Type      | Default     | Description                           |
+|------------|------------|-----------|-------------|---------------------------------------|
+| `disabled` | `disabled` | `boolean` | false       | Indicates if the counter is disabled. |
+| `max`      | `max`      | `number`  | 9           | The maximum value for the counter.    |
+| `min`      | `min`      | `number`  | 0           | The minimum value for the counter.    |
+| `validity` | `validity` | `string`  | "undefined" | The validity state of the counter.    |
+| `value`    | `value`    | `number`  | "undefined" | The current value of the counter.     |
 
 ## Methods
 
-| Method | Type       | Description                 |
-|--------|------------|-----------------------------|
-| `hide` | `(): void` | Hides the dropdown content. |
-| `show` | `(): void` | Shows the dropdown content. |
+| Method      | Type                                   | Description                                      |
+|-------------|----------------------------------------|--------------------------------------------------|
+| `decrement` | `(value?: number \| undefined): void`  | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
+| `increment` | `(value?: number \| undefined): void`  | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
+| `validate`  | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
-| Event                       | Type                                  | Description                                      |
-|-----------------------------|---------------------------------------|--------------------------------------------------|
-| `auroDropdown-ready`        | `CustomEvent<any>`                    | Notifies that the component has finished initializing. |
-| `auroDropdown-toggled`      | `CustomEvent<{ expanded: boolean; }>` | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | `CustomEvent<any>`                    | Notifies that the trigger has been clicked.      |
-| `dropdownToggled`           | `CustomEvent<{ expanded: boolean; }>` | (DEPRECATED) Notifies that the visibility of the dropdown bib has changed. |
+| Event   | Type                                           |
+|---------|------------------------------------------------|
+| `input` | `CustomEvent<{ value: number \| undefined; }>` |
 
 ## Slots
 
-| Name       | Description                           |
-|------------|---------------------------------------|
-|            | Default slot for the popover content. |
-| `helpText` | Defines the content of the helpText.  |
-| `label`    | Defines the content of the label.     |
-| `trigger`  | Defines the content of the trigger.   |
+| Name          | Description                          |
+|---------------|--------------------------------------|
+| `default`     | Main label content for the counter.  |
+| `description` | Descriptive content for the counter. |
 
-## CSS Shadow Parts
 
-| Part       | Description                                  |
-|------------|----------------------------------------------|
-| `chevron`  | The collapsed/expanded state icon container. |
-| `helpText` | The helpText content container.              |
-| `popover`  | The bib content container.                   |
-| `trigger`  | The trigger content container.               |
+# auro-counter-group
+
+## Properties
+
+| Property                  | Attribute                 | Type      | Default     | Description                                      |
+|---------------------------|---------------------------|-----------|-------------|--------------------------------------------------|
+| `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `string`  | "sm"        | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
+| `isDropdown`              | `isDropdown`              | `boolean` | false       | Indicates if the counter group is displayed as a dropdown. |
+| `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean` |             | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `max`                     | `max`                     | `number`  | "undefined" | The maximum value allowed for the whole group of counters. |
+| `min`                     | `min`                     | `number`  | "undefined" | The minimum value allowed for the whole group of counters. |
+| `total`                   | `total`                   | `number`  | "undefined" | The total value of the counters.                 |
+| `validity`                | `validity`                | `string`  | "undefined" | Reflects the validity state.                     |
+| `value`                   | `value`                   | `object`  | "undefined" | The current individual values of the nested counters. |
+
+## Methods
+
+| Method     | Type                                   | Description                                      |
+|------------|----------------------------------------|--------------------------------------------------|
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+
+## Events
+
+| Event   | Type                                             |
+|---------|--------------------------------------------------|
+| `input` | `CustomEvent<{ total: number \| undefined; value: {} \| undefined; }>` |
+
+## Slots
+
+| Name                      | Description                                      |
+|---------------------------|--------------------------------------------------|
+| `bib.fullscreen.footer`   | Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true. |
+| `bib.fullscreen.headline` | Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required. |
+| `default`                 | Slot for counter elements.                       |
+| `helpText`                | Dropdown help text content. Only used when `isDropdown` is true. |
+| `label`                   | Dropdown label content. Only used when `isDropdown` is true. |
+| `valueText`               | Dropdown value text display. Only used when `isDropdown` is true. |

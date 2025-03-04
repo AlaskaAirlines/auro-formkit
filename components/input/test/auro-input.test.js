@@ -1,8 +1,7 @@
 import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-input', () => {
-
   it('web component is successfully created in the document', async () => {
     // This test fails when attributes are put onto the component before it is attached to the DOM
     const el = document.createElement('auro-input');
@@ -39,7 +38,7 @@ describe('auro-input', () => {
       </auro-input>
     `);
     const input = el.shadowRoot.querySelector('input');
-    const text = el.shadowRoot.querySelector('.inputElement-helpText').innerText;
+    const text = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]').textContent;
 
     await elementUpdated(el);
 
@@ -49,7 +48,6 @@ describe('auro-input', () => {
 
     await elementUpdated(el);
 
-    expect(el.isValid).to.not.be.true;
     expect(text).to.contain(`that is not a valid entry`);
 
     input.focus();
@@ -58,7 +56,7 @@ describe('auro-input', () => {
 
     await elementUpdated(el);
 
-    expect(el.isValid).to.be.true;
+    expect(el.getAttribute('validity')).to.equal('valid');
   });
 
   it('clears the value when clicked', async () => {
@@ -106,8 +104,7 @@ describe('auro-input', () => {
       <auro-input type="number"></auro-input>
     `);
 
-    const inputMode = el.shadowRoot.querySelector('input').getAttribute('inputMode');
-    expect(inputMode).to.equal('numeric');
+    expect(el.inputMode).to.equal('numeric');
   });
 
   it('does not allow color type', async () => {
@@ -233,7 +230,7 @@ describe('auro-input', () => {
     await elementUpdated(el);
 
     expect(el.hasAttribute('validity')).to.be.true;
-    expect(el.getAttribute('validity')).to.be.equal('badInput');
+    expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
   })
 
   it ('validates type="email" correctly', async () => {
@@ -251,7 +248,7 @@ describe('auro-input', () => {
 
     await elementUpdated(el);
 
-    expect(el.getAttribute('validity')).to.be.equal('badInput');
+    expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
   })
 
   it('validates auro-input on input', async () => {
@@ -266,7 +263,7 @@ describe('auro-input', () => {
     input.focus();
     setInputValue(el, 'dale');
     await elementUpdated(el);
-    expect(el.getAttribute('validity')).to.be.equal('badInput');
+    expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
     setInputValue(el, 'dale sande');
     await elementUpdated(el);
     expect(el.getAttribute('validity')).to.be.equal('valid');
@@ -317,23 +314,35 @@ describe('auro-input', () => {
 
   it('date inputs use programmatic placeholder', async () => {
     // All date types and their default placeholders at their corresponding index
-    let dateTypes = ['month-day-year', 'month-year', 'month-fullYear', 'year-month-day'];
-    let defaultDatePH = ['MM/DD/YYYY', 'MM/YY', 'MM/YYYY', 'YYYY/MM/DD'];
+    const dateFormats = [
+      'mm/dd/yyyy',
+      'dd/mm/yyyy',
+      'yyyy/mm/dd',
+      'yyyy/dd/mm',
+      'mm/yy',
+      'yy/mm',
+      'mm/yyyy',
+      'yyyy/mm',
+      'yy',
+      'yyyy',
+      'mm',
+      'dd'
+    ];
 
-    for (let index = 0; index < dateTypes.length; index++) {
+    for (let index = 0; index < dateFormats.length; index++) {
       const el = await fixture(html`
-        <auro-input type=${dateTypes[index]}></auro-input>
+        <auro-input type="date" format=${dateFormats[index]}></auro-input>
       `);
 
       let placeholder = el.getPlaceholder();
 
-      expect(placeholder).to.equal(defaultDatePH[index]);
+      expect(placeholder).to.equal(dateFormats[index].toUpperCase());
 
       el.placeholder = "some date";
 
       placeholder = el.getPlaceholder();
 
-      expect(placeholder).not.to.equal(defaultDatePH[index]);
+      expect(placeholder).not.to.equal(dateFormats[index].toUpperCase());
     }
   });
 
@@ -344,8 +353,8 @@ describe('auro-input', () => {
 
     expect(el.getAttribute('validity')).to.be.equal('customError');
 
-    const helpTextElem = el.shadowRoot.querySelector('.inputElement-helpText');
-    expect(helpTextElem.innerText).to.be.equal('Custom Error Message');
+    const helpTextElem = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+    expect(helpTextElem.textContent).to.contain('Custom Error Message');
   });
 
   it('updates validity when error message removed after creation', async () => {
@@ -355,8 +364,8 @@ describe('auro-input', () => {
 
     expect(el.getAttribute('validity')).to.be.equal('customError');
 
-    const helpTextElem = el.shadowRoot.querySelector('.inputElement-helpText');
-    expect(helpTextElem.innerText).to.be.equal('Custom Error Message');
+    const helpTextElem = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+    expect(helpTextElem.textContent).to.be.contain('Custom Error Message');
 
     el.removeAttribute('error');
 
@@ -401,9 +410,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-day-year validity checked correctly', async () => {
+  it('type date validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="month-day-year"></auro-input>
+      <auro-input type="date"></auro-input>
     `)
 
     el.value = '10/10/202';
@@ -419,9 +428,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-year validity checked correctly', async () => {
+  it('MM/YY format validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="month-year"></auro-input>
+      <auro-input type="date" format="MM/YY"></auro-input>
     `)
 
     el.value = '10/';
@@ -437,9 +446,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-fullyear validity checked correctly', async () => {
+  it('format MM/YYYY validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="month-fullYear"></auro-input>
+      <auro-input type="date" format="MM/YYYY"></auro-input>
     `)
 
     el.value = '10/';
@@ -455,9 +464,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type year-month-date validity checked correctly', async () => {
+  it('format YYYY/MM/DD validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="year-month-day"></auro-input>
+      <auro-input type="date" format="YYYY/MM/DD"></auro-input>
     `)
 
     el.value = '20';
@@ -473,9 +482,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('type month-day-year validity checked correctly when using the max attribute', async () => {
+  it('type date validity checked correctly when using the max attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="month-day-year" max="03/03/2023"></auro-input>
+      <auro-input type="date" max="03/03/2023"></auro-input>
     `)
 
     el.value = '03/03/2023';
@@ -491,9 +500,9 @@ describe('auro-input', () => {
     expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
   });
 
-  it('type month-day-year validity checked correctly when using the min attribute', async () => {
+  it('type date validity checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="month-day-year" min="03/03/2023"></auro-input>
+      <auro-input type="date" min="03/03/2023"></auro-input>
     `)
 
     el.value = '03/04/2023';
@@ -511,7 +520,7 @@ describe('auro-input', () => {
 
   it('type numeric checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="numeric" min="10"></auro-input>
+      <auro-input type="number" min="10"></auro-input>
     `)
 
     el.value = '10';
@@ -529,7 +538,7 @@ describe('auro-input', () => {
 
   it('type numeric checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="numeric" max="10"></auro-input>
+      <auro-input type="number" max="10"></auro-input>
     `)
 
     el.value = '10';
@@ -579,38 +588,185 @@ describe('auro-input', () => {
     expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.not.have.attribute('autocapitalize');
   });
 
+  it('reset method clears the value and validity state', async () => {
+    const el = await fixture(html`
+      <auro-input required minlength="12" value="Auro Team"></auro-input>
+    `);
+
+    expect(el.getAttribute('validity')).to.be.equal('tooShort');
+
+    el.reset();
+
+    await elementUpdated(el);
+
+    expect(el.hasAttribute('validity')).to.be.false;
+    expect(el.value).to.equal(undefined);
+  });
+
+  it ('input value is formatted with passed in format and respects the format restrictions', async () => {
+    const el = await fixture(html`
+      <auro-input format="47440000"></auro-input>
+    `);
+
+    setInputValue(el, 'www');
+
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('4744');
+
+    setInputValue(el, '1234');
+
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('47441234');
+  });
+
+  describe('handles phone number formatting', () => {
+    it('default north american phone format', async () => {
+      const el = await fixture(html`
+        <auro-input type="tel"></auro-input>
+      `);
+
+      setInputValue(el, '5091234567');
+
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('+1 (509) 123-4567');
+    });
+
+    it('custom phone format', async () => {
+      const el = await fixture(html`
+        <auro-input type="tel" format="+52 000 000 0000"></auro-input>
+      `);
+
+      setInputValue(el, '1234567890');
+
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('+52 123 456 7890');
+    });
+  });
+
   describe('handles date formatting', () => {
-    it('MM/DD/YYYY', async () => {
+    it('mm/dd/yyyy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="month-day-year" required></auro-input>
+        <auro-input type="date" format="mm/dd/yyyy"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/DD/YYYY');
+    
+      setInputValue(el, '12312000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12/31/2000');
     });
-
-    it('YYYY/MM/DD', async () => {
+    
+    it('dd/mm/yyyy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="year-month-day" required></auro-input>
+        <auro-input id="format-date" type="date" format="dd/mm/yyyy"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'YYYY/MM/DD');
+    
+      setInputValue(el, '31122000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('31/12/2000');
     });
-
-    it('MM/YY', async () => {
+    
+    it('yyyy/mm/dd', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="month-year" required></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy/mm/dd"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/YY');
+    
+      setInputValue(el, '20001231');
+      await elementUpdated(el);
+      expect(el.value).to.equal('2000/12/31');
     });
-
-    it('MM/YYYY', async () => {
+    
+    it('yyyy/dd/mm', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="month-fullYear" required></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy/dd/mm"></auro-input>
       `);
-
-      expect(el.shadowRoot.querySelector('#format-date')).to.have.attribute('placeholder', 'MM/YYYY');
+    
+      setInputValue(el, '20003112');
+      await elementUpdated(el);
+      expect(el.value).to.equal('2000/31/12');
     });
+    
+    it('mm/yy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="mm/yy"></auro-input>
+      `);
+    
+      setInputValue(el, '1231');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12/31');
+    });
+    
+    it('yy/mm', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yy/mm"></auro-input>
+      `);
+    
+      setInputValue(el, '9912');
+      await elementUpdated(el);
+      expect(el.value).to.equal('99/12');
+    });
+    
+    it('mm/yyyy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="mm/yyyy"></auro-input>
+      `);
+    
+      setInputValue(el, '122000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12/2000');
+    });
+    
+    it('yyyy/mm', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yyyy/mm"></auro-input>
+      `);
+    
+      setInputValue(el, '200012');
+      await elementUpdated(el);
+      expect(el.value).to.equal('2000/12');
+    });
+    
+    it('yy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yy"></auro-input>
+      `);
+    
+      setInputValue(el, '99');
+      await elementUpdated(el);
+      expect(el.value).to.equal('99');
+    });
+    
+    it('yyyy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yyyy"></auro-input>
+      `);
+    
+      setInputValue(el, '1999');
+      await elementUpdated(el);
+      expect(el.value).to.equal('1999');
+    });
+    
+    it('mm', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="mm"></auro-input>
+      `);
+    
+      setInputValue(el, '12');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12');
+    });
+    
+    it('dd', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="dd"></auro-input>
+      `);
+    
+      setInputValue(el, '31');
+      await elementUpdated(el);
+      expect(el.value).to.equal('31');
+    });    
   });
 
   describe('handles i18n', () => {
@@ -711,7 +867,7 @@ describe('auro-input', () => {
 
       setInputValue(el,'4147 34');
       await elementUpdated(el);
-      expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-visa');
+      expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-alaska');
     });
 
     it('Any Corp Card', async () => {

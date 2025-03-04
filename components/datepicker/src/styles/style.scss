@@ -11,10 +11,8 @@
 [auro-input] {
   &::part(iconContainer) {
     top: 0;
-
     display: flex;
     height: 100%;
-
     align-items: center;
   }
 
@@ -29,25 +27,49 @@
   &::part(wrapper) {
     border-width: 0 !important;
   }
+
+  // Horizontal ruler
+  &:not(:first-child) {
+    &::part(wrapper) {
+      /* stylelint-disable-next-line selector-pseudo-element-colon-notation */
+      &::after {
+        position: absolute;
+        left: 50%;
+        width: 95%;
+        height: 1px;
+        background-color: var(--ds-auro-datepicker-range-input-divider-color);
+        content: '';
+        transform: translateX(-50%);
+      }
+    }
+  }
 }
 
 .outerWrapper {
   position: relative;
-}
-
-.datepickerElement-helpText {
-  margin: var(--ds-size-50, $ds-size-50) 0;
-  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-  line-height: 1rem;
+  container: outerwrapper / inline-size;
 }
 
 .dpTriggerContent {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   [auro-input] {
     flex: 1;
+  }
+}
 
+// Container queries
+
+/* This value is per design but relates to 
+   https://github.com/AlaskaAirlines/AuroDesignTokens/issues/206
+*/
+@container outerwrapper (min-width: 390px) {
+  .dpTriggerContent {
+    flex-direction: row;
+  }
+
+  [auro-input] {
     &:first-of-type {
       margin-right: var(--ds-size-150, $ds-size-150);
     }
@@ -78,12 +100,22 @@
         content: '';
       }
     }
-  }
-}
 
-:host([range]) {
-  [auro-input] {
-    max-width: 50%;
+    // Hide horizontal ruler
+    &:not(:first-child) {
+      /* stylelint-disable-next-line selector-pseudo-element-colon-notation */
+      &::part(wrapper) {
+        &:after {
+          content: none;
+        }
+      }
+    }
+  }
+
+  :host([range]) {
+    [auro-input] {
+      max-width: 50%;
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html } from "lit/static-html.js";
 
 import styleCss from './styles/style-auro-calendar-css.js';
 import colorCss from './styles/color-calendar-css.js';
@@ -10,10 +10,14 @@ import chevronLeft from '@alaskaairux/icons/dist/icons/interface/chevron-left.mj
 import chevronRight from '@alaskaairux/icons/dist/icons/interface/chevron-right.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroDatepickerUtilities } from './utilities.js';
 import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
+
+import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+import bibTemplateVersion from './bibtemplateVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -25,7 +29,7 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
  * @prop {Date} minDate - Minimum date. All dates before will be disabled.
  * @prop {Date | undefined} selectedDate - The selected date, usually synchronized with datepicker-input.
  * Not to be confused with the focused date (therefore not necessarily in active month view).
- * @prop {string} weekdayHeaderNotation - Weekday header notation, based on Intl DatetimeFormat:
+ * @prop {string} weekdayHeaderNotation - Weekday header notation, based on Intl DatetimeFormat:.
  * @prop {Boolean} visible - Flag indicating if the calendar is visible.
  * - 'short' (e.g., Thu)
  * - 'narrow' (e.g., T).
@@ -34,7 +38,7 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
  * @event auroCalendar-monthChanged - Notifies that the visible calendar month(s) have changed.
  */
 
-/* eslint-disable no-magic-numbers, no-undef-init, max-lines */
+/* eslint-disable no-magic-numbers, no-undef-init, max-lines, lit/binding-positions, lit/no-invalid-html */
 
 // class AuroCalendar extends LitElement {
 export class AuroCalendar extends RangeDatepicker {
@@ -85,6 +89,18 @@ export class AuroCalendar extends RangeDatepicker {
      * @private
      */
     this.slots = {};
+
+    const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
+    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+
+    /**
+     * @private
+     */
+    this.dropdown = undefined;
   }
 
   static get styles() {
@@ -129,6 +145,21 @@ export class AuroCalendar extends RangeDatepicker {
       visible: {
         type: Boolean,
         reflect: false
+      },
+      largeFullscreenHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+      isFullscreen: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * @private
+       */
+      monthFirst: {
+        type: Boolean
       }
     };
   }
@@ -160,17 +191,18 @@ export class AuroCalendar extends RangeDatepicker {
     let renderedHtml = undefined;
     if (this.visible) {
       this.utilCalRender.setFirstRenderableMonthDate(this);
+      this.utilCal.assessNavigationButtonVisibility(this);
 
       const dropdown = AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdown, [auro-dropdown]', this);
-      const dropdownbib = dropdown ? dropdown.bibContent : AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdownbib', this);
-      const mobileLayout = dropdownbib.hasAttribute('isfullscreen');
-      this.utilCalRender.determineNumCalendarsToRender(this, mobileLayout);
+      const dropdownbib = dropdown ? dropdown.bibContent : AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdownbib, [auro-dropdownbib]', this);
+      this.isFullscreen = dropdownbib.hasAttribute('isFullscreen');
+      this.utilCalRender.determineNumCalendarsToRender(this, this.isFullscreen);
 
 
       // Determine which month to render first
       let dateMatches = undefined;
 
-      if (!mobileLayout && this.centralDate) {
+      if (!this.isFullscreen && this.centralDate) {
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
         if (this.centralDate) {
           dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDate));
@@ -240,7 +272,7 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {void}
    */
   scrollMonthIntoView(date) {
-    this.utilCal.scrollMonthIntoView(this, date);
+    this.utilCal.scrollMonthIntoView(this, date, this.format);
   }
 
   firstUpdated() {
@@ -292,33 +324,42 @@ export class AuroCalendar extends RangeDatepicker {
 
   render() {
     return html`
-      <div class="calendarWrapper">
-        <div class="mobileHeader">
-          <div class="headerDateFrom">
-            <span class="mobileDateLabel">${this.slots.mobileDateLabel}</span>
-            <slot name="mobileDateFromStr"></slot>
-          </div>
-          <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>
+    <${this.bibtemplateTag}
+      ?large="${this.largeFullscreenHeadline}"
+      ?isFullscreen="${this.isFullscreen}"
+      @close-click="${this.utilCal.requestDismiss}">
+
+      <span slot="header">${this.slots["bib.fullscreen.headline"]}</span>
+
+      <div slot="subheader" class="mobileHeader">
+        <div class="headerDateFrom">
+          <span class="mobileDateLabel">${this.slots["bib.fullscreen.dateLabel"]}</span>
+          <slot name="bib.fullscreen.fromStr"></slot>
         </div>
+        <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>
+      </div>
+
+      <div class="calendarWrapper">
+
         <div class="calendars">
           ${this.renderAllCalendars()}
         </div>
-        <div class="mobileFooter">
-          <div class="mobileFooterActions">
-            <auro-button fluid @click="${this.utilCal.requestDismiss}">Done</auro-button>
-          </div>
+        <div class="calendarNavButtons">
+          ${this.showPrevMonthBtn ? html`
+            <button class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
+              ${this.util.generateIconHtml(chevronLeft)}
+            </button>
+          ` : undefined}
+          ${this.showNextMonthBtn ? html`
+            <button class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
+              ${this.util.generateIconHtml(chevronRight)}
+            </button>
+          ` : undefined}
         </div>
-        ${this.showPrevMonthBtn ? html`
-          <button class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
-            ${this.util.generateIconHtml(chevronLeft)}
-          </button>
-        ` : undefined}
-        ${this.showNextMonthBtn ? html`
-          <button class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
-            ${this.util.generateIconHtml(chevronRight)}
-          </button>
-        ` : undefined}
       </div>
+
+      <auro-button slot="footer" fluid @click="${this.utilCal.requestDismiss}">Done</auro-button>
+    </${this.bibtemplateTag}>
     `;
   }
 }

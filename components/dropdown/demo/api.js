@@ -2,7 +2,7 @@
 import { showExample } from './../apiExamples/programmaticallyShow.js';
 import { hideExample } from './../apiExamples/programmaticallyHide.js';
 import { inDialogExample } from '../apiExamples/inDialog.js';
-import '../src/index.js';
+import '../src/registered.js';
 
 export function initExamples(initialCount = 0) {
   try {

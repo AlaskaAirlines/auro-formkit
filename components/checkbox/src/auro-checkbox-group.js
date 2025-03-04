@@ -3,30 +3,27 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
-import { LitElement, html } from "lit";
+import { LitElement } from "lit";
+import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 // Import the processed CSS file into the scope of the component
 import styleCss from "./styles/auro-checkbox-group-css.js";
 import colorCss from "./styles/colorGroup-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
+
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
  *
- * @attr {String} validity - Specifies the `validityState` this element is in.
- * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
- * @attr {Boolean} horizontal - If set, checkboxes will be aligned horizontally.
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
@@ -38,10 +35,14 @@ export class AuroCheckboxGroup extends LitElement {
     super();
 
     this.validity = undefined;
-    this.value = undefined;
     this.disabled = undefined;
     this.required = false;
     this.horizontal = false;
+
+    /**
+     * @private
+     */
+    this.value = undefined;
 
     /**
      * @private
@@ -62,6 +63,16 @@ export class AuroCheckboxGroup extends LitElement {
      * @private
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    /**
+     * Generate unique names for dependency components.
+     */
+    const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
   }
 
   static get styles() {
@@ -74,38 +85,71 @@ export class AuroCheckboxGroup extends LitElement {
 
   static get properties() {
     return {
+
+      /**
+       * If set, disables the checkbox group.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
-      horizontal: {
-        type: Boolean,
-        reflect: true
-      },
-      value: {
-        type: Array
-      },
-      noValidate: {
-        type: Boolean,
-        reflect: true
-      },
-      required: {
-        type: Boolean,
-        reflect: true
-      },
+
+      /**
+       * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
+       */
       error: {
         type: String,
         reflect: true
       },
+
+      /**
+       * If set, checkboxes will be aligned horizontally.
+       */
+      horizontal: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If set, disables auto-validation on blur.
+       */
+      noValidate: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Populates the `required` attribute on the element. Used for client-side validation.
+       */
+      required: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
       setCustomValidity: {
         type: String
       },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
       setCustomValidityCustomError: {
         type: String
       },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
       setCustomValidityValueMissing: {
         type: String
       },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
       validity: {
         type: String,
         reflect: true
@@ -156,7 +200,7 @@ export class AuroCheckboxGroup extends LitElement {
       composed: true,
     }));
 
-    this.validation.validate(this, true);
+    this.validate(true);
   }
 
   firstUpdated() {
@@ -212,7 +256,7 @@ export class AuroCheckboxGroup extends LitElement {
   handlePreselectedItems() {
     let preSelectedValues = false;
 
-    this.items.forEach((item) => {
+    this.checkboxes.forEach((item) => {
       if (item.hasAttribute('checked') && this.value === undefined) {
         preSelectedValues = true;
       }
@@ -223,7 +267,7 @@ export class AuroCheckboxGroup extends LitElement {
         this.value = [];
       }
 
-      this.items.forEach((item) => {
+      this.checkboxes.forEach((item) => {
         this.handleValueUpdate(item.getAttribute('value'), Boolean(item.hasAttribute('checked')));
       });
     }
@@ -238,11 +282,23 @@ export class AuroCheckboxGroup extends LitElement {
     const groupTagName = this.tagName.toLowerCase();
     const checkboxTagName = groupTagName.substring(0, groupTagName.indexOf('-group'));
 
-    this.items = Array.from(this.querySelectorAll(checkboxTagName));
+    this.checkboxes = Array.from(this.querySelectorAll(checkboxTagName));
 
     this.handlePreselectedItems();
 
-    this.validation.validate(this);
+    this.validate();
+  }
+
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.checkboxes.forEach((checkbox) => {
+      checkbox.reset();
+    });
+
+    this.validation.reset(this);
   }
 
   /**
@@ -252,7 +308,7 @@ export class AuroCheckboxGroup extends LitElement {
    */
   updated(changedProperties) {
     if (changedProperties.has('disabled')) {
-      this.items.forEach((el) => {
+      this.checkboxes.forEach((el) => {
         if (this.disabled) {
           el.setAttribute('disabled', true);
         } else {
@@ -262,7 +318,7 @@ export class AuroCheckboxGroup extends LitElement {
     }
 
     if (changedProperties.has('validity')) {
-      this.items.forEach((el) => {
+      this.checkboxes.forEach((el) => {
         if (this.validity && this.validity !== 'valid') {
           el.setAttribute('error', true);
         } else {
@@ -286,13 +342,21 @@ export class AuroCheckboxGroup extends LitElement {
         this.removeAttribute('aria-invalid');
       }
 
-      this.validation.validate(this, true);
+      this.validate(true);
     }
+  }
+
+  /**
+   * Validates value.
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
   render() {
     const groupClasses = {
-      'displayFlex': this.horizontal && this.items.length <= this.maxNumber
+      'displayFlex': this.horizontal && this.checkboxes.length <= this.maxNumber
     };
 
     return html`
@@ -306,13 +370,13 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <p class="checkboxGroupElement-helpText" part="helpText">
+          <${this.helpTextTag} large part="helpText">
             <slot name="helpText"></slot>
-          </p>`
+          </${this.helpTextTag}>`
         : html`
-          <p class="checkboxGroupElement-helpText" role="alert" aria-live="assertive" part="helpText">
-            ${this.setCustomValidity}
-          </p>`
+          <${this.helpTextTag} error large role="alert" aria-live="assertive" part="helpText">
+            ${this.errorMessage}
+          </${this.helpTextTag}>`
       }
     `;
   }

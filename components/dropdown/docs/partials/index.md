@@ -41,23 +41,6 @@ This first common example uses the default `auro-dropdown` element with the attr
 
 </auro-accordion>
 
-## Common use with aria-labelledby
-
-This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `aria-labelledby` attribute to identify the element that labels the element it is applied to.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonLabelledby.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonLabelledby.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-
 ## Common use using the label content slot
 
 This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `slot` content container to define a string value that labels the interactive element.
@@ -106,6 +89,22 @@ This common example uses the default `auro-dropdown` element with the attributes
 
 </auro-accordion>
 
+## Common use with its width matching the trigger
+
+To make the dropdown to be just big as the trigger's content, style the `auro-dropdown` width `display: inline-block`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inline.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inline.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Supported standard and accessible interactions
 
 The dropdown can be opened with the following actions:
@@ -120,27 +119,3 @@ The dropdown can be closed with the following actions:
 1. Clicking on the trigger when the `toggle` attribute is used.
 1. Using the `esc` key.
 1. Programmatically via another control in the UI calling the `hide()` method (see api).
-
-## Recommended Use and Version Control
-
-There are two important parts of every Auro component. The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element. The class is exported and then used as part of defining the Web Component. When importing this component as described in the <a href="#install">install</a> section, the class is imported and the `auro-dropdown` custom element is defined automatically.
-
-To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our `AuroDropdown.register(name)` method and pass in a unique name.
-
-```js
-import { AuroDropdown } from './src/auro-dropdown.js';
-
-AuroDropdown.register('custom-dropdown');
-```
-
-This will create a new custom element that you can use in your HTML that will function identically to the `<auro-dropdown>` element.
-
-<div class="exampleWrapper exampleWrapper--flex">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>

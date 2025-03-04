@@ -1,49 +1,66 @@
 {
   "name": "@aurodesignsystem/auro-formkit",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.54",
   "description": "A collection of web components used to build forms.",
+  "homepage": "https://github.com/AlaskaAirlines/auro-formkit#readme",
+  "bugs": {
+    "url": "https://github.com/AlaskaAirlines/auro-formkit/issues"
+  },
   "type": "module",
-  "private": true,
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-formkit"
   },
   "engines": {
-    "node": "^18.x || ^20.x"
+    "node": "^20.x || ^22.x"
   },
-  "packageManager": "npm@10.0.0",
+  "packageManager": "npm@11.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "workspaces": [
     "components/*",
     "packages/*"
   ],
+  "files": [
+    "packages/build-tools/src/postinstall.mjs",
+    "components/*/dist/**/*",
+    "components/*/demo/**/*",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
   "scripts": {
     "build": "turbo run build",
-    "build:sass": "turbo run build:sass",
+    "sass": "turbo run sass",
     "build:version": "turbo run build:version",
-    "postCss:component": "turbo run postCss:component",
-    "sass:render": "turbo run sass:render",
-    "bundler": "turbo run bundler",
-    "types": "turbo run types",
     "dev": "turbo run dev --parallel",
+    "dev:closed": "turbo run dev:closed --parallel",
     "lint": "turbo run lint",
-    "test": "turbo run test --concurrency=1",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "postinstall": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/postinstall.mjs",
+    "postinstall": "node ./packages/build-tools/src/postinstall.mjs",
     "build:docs": "turbo run build:docs",
-    "build:docs:kit": "turbo run --filter=@auro-formkit/build-tools build:docs:kit",
-    "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
+    "build:docs:kit": "node ./packages/build-tools/src/kitDocProcessor.mjs",
+    "sweep": "find ./components ./packages -type d -name 'dist' -exec rm -rf {} + && find ./ -type d -name '.turbo' -exec rm -rf {} + && find ./components ./packages -not -path '*/node_modules/*' -type f \\( -name '*.css' -o -name '*-css.js' \\) -delete",
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
-    "prepare": "husky install"
+    "prepare": "husky",
+    "deploy-demo": "npm run build && sh ./deploy-components.sh"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-library": "^3.0.2"
+    "@aurodesignsystem/auro-library": "^3.0.10"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "*"
   },
   "devDependencies": {
     "@aurodesignsystem/eslint-config": "^1.3.3",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@open-wc/testing": "^4.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
@@ -51,35 +68,36 @@
     "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.10",
     "@web/dev-server": "^0.4.6",
+    "@web/dev-server-hmr": "^0.4.1",
     "@web/test-runner": "^0.19.0",
     "autoprefixer": "^10.4.20",
     "babel-loader": "^9.2.1",
     "compression": "^1.7.5",
     "concat": "^1.0.3",
-    "concurrently": "^9.0.1",
+    "concurrently": "^9.1.2",
     "copyfiles": "^2.4.1",
-    "core-js": "^3.38.1",
-    "eslint": "^9.14.0",
-    "eslint-plugin-jsdoc": "^50.5.0",
-    "husky": "^8.0.0",
+    "core-js": "^3.40.0",
+    "eslint": "^9.18.0",
+    "eslint-plugin-jsdoc": "^50.6.1",
+    "husky": "^9.1.7",
     "lodash": "^4.17.21",
-    "markdown-magic": "^2.6.1",
-    "nodemon": "^3.1.7",
+    "markdown-magic": "^3.3.0",
+    "nodemon": "^3.1.9",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.49",
+    "postcss": "^8.5.0",
     "postcss-custom-properties": "^14.0.4",
     "postcss-discard-comments": "^7.0.3",
-    "prettier": "^3.0.0",
-    "sass": "^1.80.7",
-    "semantic-release": "^24.1.2",
-    "stylelint": "^16.10.0",
+    "prettier": "^3.4.2",
+    "sass": "^1.83.1",
+    "semantic-release": "^24.2.1",
+    "stylelint": "^16.13.1",
     "stylelint-config-idiomatic-order": "^10.0.0",
-    "stylelint-config-standard": "^36.0.1",
-    "stylelint-config-standard-scss": "^13.1.0",
+    "stylelint-config-standard": "^37.0.0",
+    "stylelint-config-standard-scss": "^14.0.0",
     "stylelint-order": "^6.0.4",
-    "stylelint-scss": "^6.9.0",
-    "turbo": "^2.3.1",
-    "typescript": "^5.6.3",
+    "stylelint-scss": "^6.10.0",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3",
     "whatwg-fetch": "^3.6.20",
     "yaml-lint": "^1.7.0"
   },
@@ -95,47 +113,103 @@
       "./node_modules"
     ]
   },
-  "release": {
-    "branches": [
-      {
-        "name": "main"
-      },
-      {
-        "name": "beta",
-        "prerelease": true
-      }
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogFile": "./CHANGELOG.md",
-          "changelogTitle": "# Semantic Release Automated Changelog"
-        }
-      ],
-      "@semantic-release/npm",
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "./package.json",
-            "./CHANGELOG.md",
-            "./README.md",
-            "./docs/api.md",
-            "./demo/index.md",
-            "./demo/api.md"
-          ]
-        }
-      ],
-      "@semantic-release/github"
-    ]
-  },
   "keywords": [
     "alaska airlines",
     "auro",
     "design system",
     "web components"
-  ]
+  ],
+  "exports": {
+    "./readme.md": "./README.md",
+    "./auro-checkbox": "./components/checkbox/dist/registered.js",
+    "./auro-checkbox/readme.md": "./components/checkbox/README.md",
+    "./auro-checkbox/demo/*.md": "./components/checkbox/demo/*.md",
+    "./auro-checkbox/demo/*.js": "./components/checkbox/demo/*.min.js",
+    "./auro-checkbox/class": {
+      "module": "./components/checkbox/dist/index.js",
+      "types": "./components/checkbox/dist/index.d.ts",
+      "default": "./components/checkbox/dist/index.js"
+    },
+    "./auro-combobox": "./components/combobox/dist/registered.js",
+    "./auro-combobox/readme.md": "./components/combobox/README.md",
+    "./auro-combobox/demo/*.md": "./components/combobox/demo/*.md",
+    "./auro-combobox/demo/*.js": "./components/combobox/demo/*.min.js",
+    "./auro-combobox/class": {
+      "module": "./components/combobox/dist/index.js",
+      "types": "./components/combobox/dist/index.d.ts",
+      "default": "./components/combobox/dist/index.js"
+    },
+    "./auro-counter": "./components/counter/dist/registered.js",
+    "./auro-counter/readme.md": "./components/counter/README.md",
+    "./auro-counter/demo/*.md": "./components/counter/demo/*.md",
+    "./auro-counter/demo/*.js": "./components/counter/demo/*.min.js",
+    "./auro-counter/class": {
+      "module": "./components/counter/dist/index.js",
+      "types": "./components/counter/dist/index.d.ts",
+      "default": "./components/counter/dist/index.js"
+    },
+    "./auro-datepicker": "./components/datepicker/dist/registered.js",
+    "./auro-datepicker/readme.md": "./components/datepicker/README.md",
+    "./auro-datepicker/demo/*.md": "./components/datepicker/demo/*.md",
+    "./auro-datepicker/demo/*.js": "./components/datepicker/demo/*.min.js",
+    "./auro-datepicker/class": {
+      "module": "./components/datepicker/dist/index.js",
+      "types": "./components/datepicker/dist/index.d.ts",
+      "default": "./components/datepicker/dist/index.js"
+    },
+    "./auro-dropdown": "./components/dropdown/dist/registered.js",
+    "./auro-dropdown/readme.md": "./components/dropdown/README.md",
+    "./auro-dropdown/demo/*.md": "./components/dropdown/demo/*.md",
+    "./auro-dropdown/demo/*.js": "./components/dropdown/demo/*.min.js",
+    "./auro-dropdown/class": {
+      "module": "./components/dropdown/dist/index.js",
+      "types": "./components/dropdown/dist/index.d.ts",
+      "default": "./components/dropdown/dist/index.js"
+    },
+    "./auro-form": "./components/form/dist/registered.js",
+    "./auro-form/readme.md": "./components/form/README.md",
+    "./auro-form/demo/*.md": "./components/form/demo/*.md",
+    "./auro-form/demo/*.js": "./components/form/demo/*.min.js",
+    "./auro-form/class": {
+      "module": "./components/form/dist/index.js",
+      "types": "./components/form/dist/index.d.ts",
+      "default": "./components/form/dist/index.js"
+    },
+    "./auro-input": "./components/input/dist/registered.js",
+    "./auro-input/readme.md": "./components/input/README.md",
+    "./auro-input/demo/*.md": "./components/input/demo/*.md",
+    "./auro-input/demo/*.js": "./components/input/demo/*.min.js",
+    "./auro-input/class": {
+      "module": "./components/input/dist/index.js",
+      "types": "./components/input/dist/index.d.ts",
+      "default": "./components/input/dist/index.js"
+    },
+    "./auro-menu": "./components/menu/dist/registered.js",
+    "./auro-menu/readme.md": "./components/menu/README.md",
+    "./auro-menu/demo/*.md": "./components/menu/demo/*.md",
+    "./auro-menu/demo/*.js": "./components/menu/demo/*.min.js",
+    "./auro-menu/class": {
+      "module": "./components/menu/dist/index.js",
+      "types": "./components/menu/dist/index.d.ts",
+      "default": "./components/menu/dist/index.js"
+    },
+    "./auro-radio": "./components/radio/dist/registered.js",
+    "./auro-radio/readme.md": "./components/radio/README.md",
+    "./auro-radio/demo/*.md": "./components/radio/demo/*.md",
+    "./auro-radio/demo/*.js": "./components/radio/demo/*.min.js",
+    "./auro-radio/class": {
+      "module": "./components/radio/dist/index.js",
+      "types": "./components/radio/dist/index.d.ts",
+      "default": "./components/radio/dist/index.js"
+    },
+    "./auro-select": "./components/select/dist/registered.js",
+    "./auro-select/readme.md": "./components/select/README.md",
+    "./auro-select/demo/*.md": "./components/select/demo/*.md",
+    "./auro-select/demo/*.js": "./components/select/demo/*.min.js",
+    "./auro-select/class": {
+      "module": "./components/select/dist/index.js",
+      "types": "./components/select/dist/index.d.ts",
+      "default": "./components/select/dist/index.js"
+    }
+  }
 }

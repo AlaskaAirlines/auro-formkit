@@ -14,19 +14,21 @@
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
 | `validity`                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `array`   | "undefined" |                                                  |
+| `value`                         | `value`                         | `string`  | "undefined" |                                                  |
 
 ## Methods
 
-| Method  | Type       | Description                                    |
-|---------|------------|------------------------------------------------|
-| `reset` | `(): void` | Method for a total reset of the radio element. |
+| Method     | Type                                   | Description                                      |
+|------------|----------------------------------------|--------------------------------------------------|
+| `reset`    | `(): void`                             | Resets component to initial state.               |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
-| Event                       | Description                                   |
-|-----------------------------|-----------------------------------------------|
-| `auroFormElement-validated` | Notifies that the element has been validated. |
+| Event                       | Type               | Description                                      |
+|-----------------------------|--------------------|--------------------------------------------------|
+| `auroFormElement-validated` |                    | Notifies that the element has been validated.    |
+| `input`                     | `CustomEvent<any>` | Notifies every time the value prop of the element is changed. |
 
 ## Slots
 
@@ -58,6 +60,12 @@
 | `required` | `required` | `Boolean` | false   | Defines element as required.                     |
 | `tabIndex` | `tabIndex` | `number`  | -1      |                                                  |
 | `value`    | `value`    | `string`  |         |                                                  |
+
+## Methods
+
+| Method  | Type       | Description                        |
+|---------|------------|------------------------------------|
+| `reset` | `(): void` | Resets component to initial state. |
 
 ## Events
 

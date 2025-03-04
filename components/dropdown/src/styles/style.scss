@@ -14,6 +14,12 @@
 
 :host {
   position: relative;
+  display: inline-block; 
+  max-width: 100%;
+}
+
+:host([fluid]) {
+  display: block;
 }
 
 #bibSizer {
@@ -26,15 +32,26 @@
 .label {
   font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
   line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
   white-space: normal;
+
+  &[hasTrigger='false'] {
+    font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  }
 }
 
 .trigger {
   position: relative;
   display: flex;
   align-items: center;
-  border-width: 1px;
-  border-style: solid;
+
+  &[showBorder] {
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    outline-style: solid;
+    outline-width: 1px;
+  }
 }
 
 @media (hover: hover) {
@@ -56,6 +73,7 @@
 /* stylelint-disable selector-id-pattern */
 #showStateIcon {
   display: flex;
+  overflow: hidden;
   height: 100%;
   align-items: center;
   margin-left: var(--ds-size-100, $ds-size-100);
@@ -72,12 +90,6 @@
   }
 }
 /* stylelint-enable selector-id-pattern */
-
-.helpText {
-  margin-top: var(--ds-size-50, $ds-size-50);
-  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-  line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
-}
 
 :host([matchwidth]) {
   #bibSizer {

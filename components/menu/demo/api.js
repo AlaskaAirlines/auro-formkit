@@ -3,7 +3,8 @@
 import { auroMenuResetExample } from '../apiExamples/reset';
 import { auroMenuMatchWordExample } from '../apiExamples/matchWord';
 import { auroMenuCustomEventExample } from '../apiExamples/customEvent';
-import '../src/index.js';
+import { auroMenuLoadingExample } from '../apiExamples/loading';
+import '../src/registered.js';
 
 export function initExamples(initCount) {
   initCount = initCount || 0;
@@ -13,6 +14,7 @@ export function initExamples(initCount) {
     auroMenuResetExample();
     auroMenuMatchWordExample();
     auroMenuCustomEventExample();
+    auroMenuLoadingExample();
   } catch (err) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called

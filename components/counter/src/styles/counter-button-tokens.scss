@@ -1,0 +1,8 @@
+@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+:host {  
+    --ds-auro-counter-control-ui-hover: var(--ds-color-ui-bkg-hover-default, #{$ds-color-ui-bkg-hover-default});
+    --ds-auro-counter-control-ui-active: var(--ds-color-ui-active-default, #{$ds-color-ui-active-default});
+    --ds-auro-counter-control-border-hover: var(--ds-color-ui-bkg-hover-default, #{$ds-color-ui-bkg-hover-default});
+    --ds-auro-counter-control-ui-bkg: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
+}

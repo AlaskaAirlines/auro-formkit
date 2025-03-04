@@ -46,19 +46,6 @@ The most basic, simple version of `auro-dropdown`.
 
 </auro-accordion>
 
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicInput.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicInput.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
 ### Property Examples
 
 #### bordered
@@ -194,9 +181,26 @@ Adds the error state UI to the trigger.
 
 </auro-accordion>
 
+#### fluid
+
+The `fluid` property makes the trigger to have the full width.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fluid.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fluid.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### inset
 
-The `inset` property applies a predefined amount of CSS `padding` to the `trigger` slot content.
+The `inset` property applies a predefined amount of CSS `padding` to the `trigger` slot content. Use this property to apply borderless style.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inset.html) -->
@@ -257,9 +261,9 @@ In cases where it is desired behavior for `auro-dropdown` to only show, not togg
 
 </auro-accordion>
 
-#### mobileFullscreenBreakpoint
+#### fullscreenBreakpoint
 
-On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
+On mobile view, adding the `fullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customDimensions300.html) -->
@@ -275,9 +279,21 @@ On mobile view, adding the `mobileFullscreenBreakpoint="{breakpoint-token}"` wil
 
 ### Slot Examples
 
-#### trigger & default
+#### default
 
-All examples shown on this page include default and `trigger` slot content.
+All examples shown on this page include default slot content.
+
+#### trigger
+
+Content defined in the `trigger` slot will be rendered in the clickable trigger of the dropdown that is used to display the bib. Focus state visual effects will be disabled on the trigger when it contains a focusable element other than `<auro-input>`.
+
+This slot may contain any static content (e.g. plain text) and/or no more than one of the following elements:
+- `<a>`
+- `<auro-hyperlink>`
+- `<button>`
+- `<auro-button>`
+- `<input>`
+- `<auro-input>`
 
 #### label
 

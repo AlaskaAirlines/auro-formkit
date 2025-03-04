@@ -1,6 +1,6 @@
+import config from "@auro-formkit/config/wds";
+
 export default {
-  open: 'demo/',
-  nodeResolve: true,
-  watch: true,
+  ...config,
   port: 8007
-}
+};

@@ -17,7 +17,6 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
-
 import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.mjs';
 
 /**
@@ -28,7 +27,7 @@ import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.
  * @attr {Boolean} disabled - When true specifies that the menuoption is disabled.
  * @attr {Boolean} selected - Specifies that an option is selected.
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
- * @slot Specifies text for an option, but is not the value.
+ * @slot - Specifies text for an option, but is not the value.
  */
 export class AuroMenuOption extends LitElement {
   constructor() {
@@ -40,9 +39,9 @@ export class AuroMenuOption extends LitElement {
     const versioning = new AuroDependencyVersioning();
     this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
 
+    this.selected = false;
     this.nocheckmark = false;
     this.disabled = false;
-    this.selected = false;
 
     /**
      * @private
@@ -70,8 +69,7 @@ export class AuroMenuOption extends LitElement {
         reflect: true
       },
       value: {
-        type: String,
-        reflect: true
+        type: String
       },
       tabIndex: {
         type: Number,
@@ -105,6 +103,7 @@ export class AuroMenuOption extends LitElement {
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
 
     this.setAttribute('role', 'option');
+    this.setAttribute('aria-selected', 'false');
 
     this.addEventListener('mouseover', () => {
       this.dispatchEvent(new CustomEvent('auroMenuOption-mouseover', {
@@ -116,6 +115,12 @@ export class AuroMenuOption extends LitElement {
     });
   }
 
+  // observer for selected property changes
+  updated(changedProperties) {
+    if (changedProperties.has('selected')) {
+      this.setAttribute('aria-selected', this.selected.toString());
+    }
+  }
 
   /**
    * Generates an HTML element containing an SVG icon based on the provided `svgContent`.

@@ -1,0 +1,12 @@
+{
+  "name": "@auro-formkit/utils",
+  "description": "Shared utility functions for all components in auro-formkit monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "tsc",
+  "exports": {
+    ".": "./src/index.js"
+  }
+}

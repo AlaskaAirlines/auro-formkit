@@ -28,16 +28,11 @@
 @import '@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
 
 @import './notificationIcons';
-@import './helpText';
 @import './borders';
 @import './label';
 
 // container styles - defines the look of the outer custom component
 :host {
-  --size-lgsm: 1.875rem;
-  --size-xlsm: 2.75rem;
-  --size-mdxxs: 1.2rem;
-
   position: relative;
   display: block;
 }

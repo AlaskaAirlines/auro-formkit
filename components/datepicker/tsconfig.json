@@ -13,6 +13,9 @@
   "exclude": [
     "node_modules",
     "dist",
-    "build"
+    "docTemplates",
+    "test",
+    "coverage",
+    "src/registered.js"
   ]
 }

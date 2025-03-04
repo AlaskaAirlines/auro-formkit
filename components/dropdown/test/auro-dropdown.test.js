@@ -1,5 +1,5 @@
 import { fixture, html, expect, oneEvent } from '@open-wc/testing';
-import '../src/index.js';
+import '../src/registered.js';
 
 describe('auro-dropdown', () => {
   it('auro-dropdown is accessible', async () => {
@@ -73,7 +73,6 @@ describe('auro-dropdown', () => {
 
     const triggerEl = el.shadowRoot.querySelector('.trigger');
     expect(triggerEl).to.have.attribute('aria-labelledby', 'triggerLabel');
-    expect(triggerEl).to.have.attribute('aria-controls', 'popover');
   });
 
   it('auro-dropdown shows only with click when using noToggle attribute', async () => {

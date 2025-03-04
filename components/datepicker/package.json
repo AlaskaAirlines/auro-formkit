@@ -1,5 +1,5 @@
 {
-  "name": "@auro-formkit/auro-datepicker",
+  "name": "@aurodesignsystem/auro-datepicker",
   "version": "3.2.0",
   "description": "auro-datepicker HTML custom element",
   "type": "module",
@@ -13,10 +13,11 @@
   },
   "dependencies": {
     "@alaskaairux/icons": "^4.44.1",
-    "@auro-formkit/auro-dropdown": "*",
-    "@auro-formkit/auro-input": "*",
     "@auro-formkit/form-validation": "*",
-    "@aurodesignsystem/auro-popover": "^4.1.0",
+    "@aurodesignsystem/auro-bibtemplate": "*",
+    "@aurodesignsystem/auro-dropdown": "*",
+    "@aurodesignsystem/auro-input": "*",
+    "@aurodesignsystem/auro-popover": "^4.1.2",
     "@material/mwc-icon-button": "^0.27.0",
     "@material/mwc-list": "^0.27.0",
     "@material/mwc-menu": "^0.27.0",
@@ -26,14 +27,14 @@
     "wc-range-datepicker": "^1.3.0"
   },
   "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.12.1",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+    "@aurodesignsystem/design-tokens": "^4.13.0",
+    "@aurodesignsystem/webcorestylesheets": "^6.0.0"
   },
   "devDependencies": {
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^4.12.1",
+    "@aurodesignsystem/design-tokens": "^4.13.0",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "compression": "^1.7.4",
@@ -58,19 +59,22 @@
     "access": "public"
   },
   "scripts": {
-    "build": "run-s build:version build:sass bundler build:docs types",
-    "build:version": "node ./src/scripts/version.mjs",
+    "build": "run-s sass bundler types build:docs",
+    "sass": "run-s build:sass postCss:component sass:render",
+    "build:version": "node ./scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
     "bundler": "rollup -c node:@auro-formkit/config/rollup",
     "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component datepicker",
     "clean": "rm -rf dist build",
-    "dev": "web-dev-server",
+    "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
+    "dev:closed": "concurrently \"npm run build:watch\" \"npm run serve:closed\"",
+    "serve": "web-dev-server --open",
+    "serve:closed": "web-dev-server",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
-    "serve": "web-dev-server",
-    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage",
-    "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\"  --watch",
+    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7706",
+    "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\"  --watch --port 7706",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./src/**/*.scss\"",

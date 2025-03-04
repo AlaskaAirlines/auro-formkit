@@ -1,4 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+[ "${HUSKY}" = "0" ] && exit 0
 
 ./node_modules/.bin/npm-run-all preCommit lint postinstall

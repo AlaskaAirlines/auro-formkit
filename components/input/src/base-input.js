@@ -1,65 +1,29 @@
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-magic-numbers, dot-location */
+/* eslint-disable max-lines, dot-location, new-cap */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 import { LitElement, css } from "lit";
-import { ifDefined } from 'lit/directives/if-defined.js';
 
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import Cleave from 'cleave.js';
 import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
+import { AuroInputUtilities } from "./utilities.js";
+
+import IMask from 'imask';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 
 /**
  * Auro-input provides users a way to enter data into a text field.
  *
- * @attr {Boolean} activeLabel - If set, the label will remain fixed in the active position.
- * @attr {String}  autocapitalize - An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters]
- * @attr {String}  autocomplete - An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
- * @attr {String}  autocorrect - When set to `off`, stops iOS from auto correcting words when typed into a text box.
  * @attr {Boolean} bordered - Applies bordered UI variant.
  * @attr {Boolean} borderless - Applies borderless UI variant.
- * @attr {Boolean} disabled - If set, disables the input.
- * @attr {String}  error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
- * @prop {String}  errorMessage - Contains the help text message for the current validity error.
- * @attr {String}  helpText - Deprecated, see `slot`.
- * @attr {Boolean} icon - If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
- * @attr {String}  id - Sets the unique ID of the element.
- * @attr {String}  isValid - (DEPRECATED - Please use validity) Can be accessed to determine if the input validity. Returns true when validity has not yet been checked or validity = 'valid', all other cases return false. Not intended to be set by the consumer.
- * @attr {String}  label - Deprecated, see `slot`.
- * @attr {String}  lang - defines the language of an element.
- * @attr {String}  max - The maximum value allowed. This only applies for inputs with a type of `numeric` and all date formats.
- * @attr {Number}  maxLength - The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
- * @attr {String}  min - The minimum value allowed. This only applies for inputs with a type of `numeric` and all date formats.
- * @attr {Number}  minLength - The minimum number of characters the user can enter into the text input. This must be an non-negative integer value smaller than or equal to the value specified by `maxlength`.
- * @attr {String}  name - Populates the `name` attribute on the input.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} readonly - Makes the input read-only, but can be set programmatically.
- * @attr {Boolean} required - Populates the `required` attribute on the input. Used for client-side validation.
- * @attr {String}  pattern - Specifies a regular expression the form control's value should match.
- * @attr {String}  placeholder - Define custom placeholder text, only supported by date input formats.
- * @attr {String}  setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String}  setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String}  setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String}  setCustomValidityBadInput - Custom help text message to display when validity = `badInput`.
- * @attr {String}  setCustomValidityTooShort - Custom help text message to display when validity = `tooShort`.
- * @attr {String}  setCustomValidityTooLong - Custom help text message to display when validity = `tooLong`.
- * @attr {String}  setCustomValidityForType - Custom help text message to display for the declared element `type` and type validity fails.
- * @attr {String}  setCustomValidityRangeOverflow - Custom help text message to display when validity = `rangeOverflow`.
- * @attr {String}  setCustomValidityRangeUnderflow - Custom help text message to display when validity = `rangeUnderflow`.
- * @attr {String}  spellcheck - An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
- * @attr {String}  type - Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `month-day-year`, `month-year`, `year-month-day`  or `text`. If given value is not allowed or set, defaults to `text`.
- * @attr {Boolean} validateOnInput - Sets validation mode to re-eval with each input.
- * @attr {String}  validity - Specifies the `validityState` this element is in.
- * @attr {String}  value - Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
  *
  * @slot helptext - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
@@ -78,8 +42,6 @@ export default class BaseInput extends LitElement {
   constructor() {
     super();
 
-    this.isValid = false;
-
     this.icon = false;
     this.disabled = false;
     this.required = false;
@@ -88,9 +50,7 @@ export default class BaseInput extends LitElement {
     this.min = undefined;
     this.maxLength = undefined;
     this.minLength = undefined;
-    this.label = 'Input label is undefined';
     this.activeLabel = false;
-
     this.setCustomValidityForType = undefined;
   }
 
@@ -100,38 +60,21 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   privateDefaults() {
+    this.util = new AuroInputUtilities();
     this.validation = new AuroFormValidation();
     this.inputIconName = undefined;
     this.showPassword = false;
     this.validationCCLength = undefined;
     this.hasValue = false;
+    this.label = 'Input label is undefined';
 
     this.allowedInputTypes = [
       "text",
+      "number",
       "email",
       "password",
       "credit-card",
-      "month-day-year",
-      "year-month-day",
-      "month-year"
-    ];
-
-    this.dateInputTypes = [
-      "month-day-year",
-      "year-month-day",
-      "month-year",
-      "month-fullYear",
-      "month",
-      "year",
-      "fullYear"
-    ];
-
-    this.autoFormattingTypes = [
-      'credit-card',
-      'month-day-year',
-      'month-year',
-      'month-fullyear',
-      'year-month-day'
+      "tel"
     ];
 
     /**
@@ -141,8 +84,25 @@ export default class BaseInput extends LitElement {
     this.setSelectionInputTypes = [
       "text",
       "password",
-      "email",
+      "email"
     ];
+
+    this.dateFormatMap = {
+      'mm/dd/yyyy': 'dateMMDDYYYY',
+      'dd/mm/yyyy': 'dateDDMMYYYY',
+      'yyyy/mm/dd': 'dateYYYYMMDD',
+      'yyyy/dd/mm': 'dateYYYYDDMM',
+      'mm/yy': 'dateMMYY',
+      'yy/mm': 'dateYYMM',
+      'mm/yyyy': 'dateMMYYYY',
+      'yyyy/mm': 'dateYYYYMM',
+      'yy': 'dateYY',
+      'yyyy': 'dateYYYY',
+      'mm': 'dateMM',
+      'dd': 'dateDD',
+      'dd/mm': 'dateDDMM',
+      'mm/dd': 'dateMMDD'
+    };
 
     const idLength = 36;
     const idSubstrEnd = 8;
@@ -153,77 +113,283 @@ export default class BaseInput extends LitElement {
       .substring(idSubstrStart, idSubstrEnd);
   }
 
-  // function to define props used within the scope of this component
+  // function to define props used within the scope of this componentstatic
   static get properties() {
     return {
-      id:                      { type: String },
-      label:                   { type: String },
-      name:                    { type: String },
-      type:                    { type: String,
-        reflect: true },
-      value:                   { type: String },
-      lang:                    { type: String },
-      pattern:                 {
-        type: String,
-        reflect: true
-      },
-      icon:                    { type: Boolean },
-      disabled:                { type: Boolean },
-      required:                { type: Boolean },
-      noValidate:              { type: Boolean },
-      helpText:                { type: String },
-      spellcheck:              { type: String },
-      autocorrect:             { type: String },
-      autocapitalize:          { type: String },
-      autocomplete:            {
-        type: String,
-        reflect: true
-      },
-      placeholder:             { type: String },
-      activeLabel:             {
+
+      /**
+       * If set, the label will remain fixed in the active position.
+       */
+      activeLabel: {
         type: Boolean,
         reflect: true
       },
-      max:               { type: String },
-      min:               { type: String },
-      maxLength:               { type: Number },
-      minLength:               { type: Number },
+
+      /**
+       * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters].
+       */
+      autocapitalize: {
+        type: String
+      },
+
+      /**
+       * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
+       */
+      autocomplete: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * When set to `off`, stops iOS from auto-correcting words when typed into a text box.
+       */
+      autocorrect: {
+        type: String
+      },
+
+      /**
+       * If set, disables the input.
+       */
+      disabled: {
+        type: Boolean
+      },
+
+      /**
+       * When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+       */
+      error: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Contains the help text message for the current validity error.
+       */
+      errorMessage: {
+        type: String
+      },
+
+      /**
+       * Specifies the input mask format.
+       */
+      format: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
+       */
+      icon: {
+        type: Boolean
+      },
+
+      /**
+       * Sets the unique ID of the element.
+       */
+      id: {
+        type: String
+      },
+
+      /**
+       * Defines the language of an element.
+       */
+      lang: {
+        type: String
+      },
+
+      /**
+       * The maximum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       */
+      max: {
+        type: String
+      },
+
+      /**
+       * The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
+       */
+      maxLength: {
+        type: Number
+      },
+
+      /**
+       * The minimum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       */
+      min: {
+        type: String
+      },
+
+      /**
+       * The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`.
+       */
+      minLength: {
+        type: Number
+      },
+
+      /**
+       * Populates the `name` attribute on the input.
+       */
+      name: {
+        type: String
+      },
+
+      /**
+       * If set, disables auto-validation on blur.
+       */
+      noValidate: {
+        type: Boolean
+      },
+
+      /**
+       * Specifies a regular expression the form control's value should match.
+       */
+      pattern: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Define custom placeholder text, only supported by date input formats.
+       */
+      placeholder: {
+        type: String
+      },
+
+      /**
+       * Makes the input read-only, but can be set programmatically.
+       */
+      readonly: {
+        type: Boolean
+      },
+
+      /**
+       * Populates the `required` attribute on the input. Used for client-side validation.
+       */
+      required: {
+        type: Boolean
+      },
 
       /**
        * @ignore
        */
-      showPassword:            { state: true },
-      validateOnInput:         { type: Boolean },
-      readonly:                { type: Boolean },
-      error:                   {
+      showPassword: {
+        state: true
+      },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
+      setCustomValidity: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `badInput`.
+       */
+      setCustomValidityBadInput: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
+      setCustomValidityCustomError: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display for the declared element `type` and type validity fails.
+       */
+      setCustomValidityForType: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `rangeOverflow`.
+       */
+      setCustomValidityRangeOverflow: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `rangeUnderflow`.
+       */
+      setCustomValidityRangeUnderflow: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `tooLong`.
+       */
+      setCustomValidityTooLong: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `tooShort`.
+       */
+      setCustomValidityTooShort: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
+      setCustomValidityValueMissing: {
+        type: String
+      },
+
+      /**
+       * Custom help text message for email type validity.
+       */
+      customValidityTypeEmail: {
+        type: String
+      },
+
+      /**
+       * An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
+       */
+      spellcheck: {
+        type: String
+      },
+
+      /**
+       * Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `date`, `tel` or `text`. If given value is not allowed or set, defaults to `text`.
+       */
+      type: {
         type: String,
         reflect: true
       },
-      errorMessage:            { type: String },
-      isValid: {
+
+      /**
+       * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
+       */
+      value: {
+        type: String
+      },
+
+      /**
+       * Sets validation mode to re-eval with each input.
+       */
+      validateOnInput: {
+        type: Boolean
+      },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
+      validity: {
         type: String,
         reflect: true
-      },
-      validity:                {
-        type: String,
-        reflect: true
-      },
-      setCustomValidity:               { type: String },
-      setCustomValidityCustomError:    { type: String },
-      setCustomValidityValueMissing:   { type: String },
-      setCustomValidityBadInput:       { type: String },
-      setCustomValidityTooShort:       { type: String },
-      setCustomValidityTooLong:        { type: String },
-      setCustomValidityRangeOverflow:  { type: String},
-      setCustomValidityRangeUnderflow: { type: String},
-      customValidityTypeEmail:         { type: String }
+      }
     };
   }
 
+
   static get styles() {
     return [
-      css`${styleCss}`,
       css`${colorCss}`,
+      css`${styleCss}`,
       css`${tokensCss}`
     ];
   }
@@ -234,128 +400,6 @@ export default class BaseInput extends LitElement {
     this.privateDefaults();
 
     notifyOnLangChange(this);
-
-    // Process auto-formatting if defined for CleaveJS
-    if (this.type) {
-      let config = null;
-
-      // Set config for credit card
-      switch (this.type) {
-        case 'number':
-          config = {
-            numeral: true,
-            delimiter: ''
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'credit-card':
-          config = {
-            creditCard: true
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month-day-year':
-          config = {
-            date: true,
-            delimiter: '/',
-            datePattern: [
-              'm',
-              'd',
-              'Y'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'year-month-day':
-          config = {
-            date: true,
-            delimiter: '/',
-            datePattern: [
-              'Y',
-              'm',
-              'd'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month-year':
-          config = {
-            date: true,
-            datePattern: [
-              'm',
-              'y'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month-fullYear':
-          config = {
-            date: true,
-            datePattern: [
-              'm',
-              'Y'
-            ]
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'fullYear':
-          config = {
-            date: true,
-            datePattern: ['Y']
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'year':
-          config = {
-            date: true,
-            datePattern: ['y']
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        case 'month':
-          config = {
-            date: true,
-            datePattern: ['m']
-          };
-
-          this.inputMode = 'numeric';
-
-          break;
-
-        default:
-          // Do nothing
-      }
-
-      // initialize CleaveJS if we have a defined config for the requested format
-      if (config) {
-        // eslint-disable-next-line no-unused-vars
-        const cleave = new Cleave(this, config);
-      }
-    }
   }
 
   disconnectedCallback() {
@@ -372,69 +416,43 @@ export default class BaseInput extends LitElement {
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');
 
+    if (this.format) {
+      this.format = this.format.toLowerCase();
+    }
+
     // use validity message override if declared when initializing the component
     if (this.hasAttribute('setCustomValidity')) {
       this.ValidityMessageOverride = this.setCustomValidity;
     }
 
-    // if setCustomValidityForType is not set, use our default
-    if (!this.setCustomValidityForType) {
-      if (this.type === 'password') {
-        this.setCustomValidityForType = i18n(this.lang, 'password');
-      } else if (this.type === 'credit-card') {
-        this.setCustomValidityForType = i18n(this.lang, 'creditcard');
-      } else if (this.type === 'email') {
-        this.setCustomValidityForType = i18n(this.lang, 'email');
-      } else if (this.type === 'month-day-year') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
-      } else if (this.type === 'month-year') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMMYY');
-      } else if (this.type === 'month-fullyear') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMMYYYY');
-      } else if (this.type === 'year-month-day') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYYYYMMDD');
-      } else if (this.type === 'year') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYY');
-      } else if (this.type === 'fullYear') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateYYYY');
-      } else if (this.type === 'month') {
-        this.setCustomValidityForType = i18n(this.lang, 'dateMM');
-      }
+    this.setCustomHelpTextMessage();
+    this.configureAutoFormatting();
+  }
+
+  /**
+   * @private
+   * @returns {void} Sets the default help text for the input.
+   */
+  setCustomHelpTextMessage() {
+    // if setCustomValidityForType is already set, don't override it
+    if (this.setCustomValidityForType) {
+      return;
     }
 
-    this.addEventListener('keydown', (evt) => {
-      if (this.autoFormattingTypes.includes(this.type)) {
-        if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
-          if (evt.key.length === 1) {
-            const numCharSelected = this.inputElement.selectionEnd - this.inputElement.selectionStart;
+    const typeToI18n = [
+      'password',
+      'credit-card',
+      'email',
+      'tel'
+    ];
 
-            if (numCharSelected > 1) {
-              this.cursorPosition = this.inputElement.selectionStart + 1;
-            } else if (numCharSelected === 1) {
-              this.cursorPosition = this.inputElement.selectionEnd;
-            } else {
-              this.cursorPosition = this.inputElement.selectionEnd + 1;
-            }
-          } else if (evt.key === 'Backspace') {
-            this.cursorPosition = this.inputElement.selectionEnd - 1;
-          } else if (evt.key === 'Delete') {
-            this.cursorPosition = this.inputElement.selectionEnd;
-          }
-        }
-
-        if (evt.key === "ArrowUp" || evt.key === "ArrowDown" || evt.key === "ArrowLeft" || evt.key === "ArrowRight") {
-          if (evt.key === 'ArrowUp') {
-            this.cursorPosition = 0;
-          } else if (evt.key === 'ArrowDown') {
-            this.cursorPosition = this.value.length;
-          } else if (evt.key === 'ArrowLeft') {
-            this.cursorPosition = this.inputElement.selectionEnd - 1;
-          } else if (evt.key === 'ArrowRight') {
-            this.cursorPosition = this.inputElement.selectionEnd + 1;
-          }
-        }
-      }
-    });
+    if (typeToI18n.includes(this.type)) {
+      this.setCustomValidityForType = i18n(this.lang, this.type);
+    } else if (!this.format && this.type === 'date') {
+      this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
+    } else if (this.dateFormatMap[this.format]) {
+      this.setCustomValidityForType = i18n(this.lang, this.dateFormatMap[this.format]);
+    }
   }
 
   /**
@@ -443,6 +461,10 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
+    if (changedProperties.has('format')) {
+      this.configureAutoFormatting();
+    }
+
     if (this.type === 'password') {
       this.spellcheck = 'false';
     }
@@ -465,7 +487,7 @@ export default class BaseInput extends LitElement {
       }
     }
 
-    if (changedProperties.has('type')) {
+    if (changedProperties.has('type') || changedProperties.has('format')) {
       this.configureDataForType();
     }
 
@@ -491,39 +513,14 @@ export default class BaseInput extends LitElement {
 
         this.notifyValueChanged();
       }
-      this.autoFormatHandling();
     }
 
     if (changedProperties.has('error')) {
-      this.validation.validate(this, true);
+      this.validate(true);
     }
 
     if (changedProperties.has('validity')) {
       this.notifyValidityChange();
-    }
-  }
-
-  /**
-   * @private
-   * @returns {void} Handles cursor position when input auto-formats.
-   */
-  autoFormatHandling() {
-    if (this.cursorPosition >= 0 && this.autoFormattingTypes.includes(this.type)) {
-      if (this.type === 'credit-card' && this.inputElement.value.charAt(this.cursorPosition) === ' ') {
-        this.cursorPosition += 1;
-      } else if (this.dateInputTypes.includes(this.type)) {
-        const divider = '/';
-        const dividerNextChar = this.inputElement.value.charAt(this.cursorPosition) === divider;
-
-        if (this.cursorPosition > 1 && dividerNextChar && this.inputElement.value.charAt(this.cursorPosition - 2) !== divider) {
-          this.cursorPosition += 1;
-        } else if (this.cursorPosition > 0 && this.inputElement.value.charAt(this.cursorPosition + 1) === divider
-                  && this.inputElement.value.charAt(this.cursorPosition - 1) === '0') { // eslint-disable-line operator-linebreak
-          this.cursorPosition += 2;
-        }
-      }
-
-      this.inputElement.setSelectionRange(this.cursorPosition, this.cursorPosition);
     }
   }
 
@@ -537,6 +534,39 @@ export default class BaseInput extends LitElement {
       cancelable: false,
       composed: true,
     }));
+  }
+
+  /**
+   * Sets up IMasks and logic based on auto-formatting requirements.
+   * @private
+   * @returns {void}
+   */
+  configureAutoFormatting() {
+    if (this.maskInstance) {
+      this.maskInstance.destroy();
+    }
+
+    const maskOptions = this.util.getMaskOptions(this.type, this.format);
+
+    if (this.inputElement && maskOptions.mask) {
+      this.maskInstance = IMask(this.inputElement, maskOptions);
+
+      this.maskInstance.on('accept', () => {
+        this.value = this.maskInstance.value;
+      });
+
+      this.maskInstance.on('complete', () => {
+        this.value = this.maskInstance.value;
+
+        // Format date to North American format
+        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.util.toNorthAmericanFormat(this.value, this.format)) {
+          const formattedDates = this.util.toNorthAmericanFormat(this.value, this.format);
+
+          this.formattedDate = formattedDates.formattedDate;
+          this.comparisonDate = formattedDates.dateForComparison;
+        }
+      });
+    }
   }
 
   /**
@@ -608,11 +638,6 @@ export default class BaseInput extends LitElement {
    * @return {void}
    */
   handleInput() {
-    // Prevent non-numeric characters from being entered on credit card fields.
-    if (this.type === 'credit-card') {
-      this.inputElement.value = this.inputElement.value.replace(/[\D]/gu, '');
-    }
-
     // Sets value property to value of element value (el.value).
     this.value = this.inputElement.value;
 
@@ -687,13 +712,20 @@ export default class BaseInput extends LitElement {
   }
 
   /**
-   * Public method force validation of input.
-   * @returns {void}
+   * Validates value.
+   * @param {boolean} [force=false] - Whether to force validation.
    */
-  validate() {
-    this.validation.validate(this);
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.validation.reset(this);
+  }
 
   /**
    * Sets configuration data used elsewhere based on the `type` attribute.
@@ -701,16 +733,17 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   configureDataForType() {
-    if (this.type === 'month-day-year' || this.type === 'year-month-day') {
-      this.dateStrLength = 10;
-    } else if (this.type === 'month-year') {
-      this.dateStrLength = 5;
-    } else if (this.type === 'month-fullYear') {
-      this.dateStrLength = 7;
-    } else if (this.type === 'month' || this.type === 'year') {
-      this.dateStrLength = 2;
-    } else if (this.type === 'fullYear') {
-      this.dateStrLength = 4;
+    const defaultLengths = {
+      'credit-card': 19,
+      'tel': 17,
+      'date': 10
+    };
+
+    if (this.type in defaultLengths) {
+      this.lengthForType = this.format ? this.format.length : defaultLengths[this.type];
+      this.inputMode = 'numeric';
+    } else if (this.type === 'number') {
+      this.inputMode = 'numeric';
     }
   }
 
@@ -731,35 +764,25 @@ export default class BaseInput extends LitElement {
   /**
    * Determines default help text string.
    * @private
-   * @param {string} type Value entered into component prop.
    * @returns {string} Evaluates pre-determined help text.
    */
-  getHelpText(type) {
-    if (type === 'password') {
-      this.helpText = i18n(this.lang, 'password');
-    } else if (type === 'email') {
-      this.helpText = i18n(this.lang, 'email');
-    } else if (type === 'credit-card') {
-      this.helpText = i18n(this.lang, 'creditcard');
-    } else if (type === 'month-day-year') {
-      this.helpText = i18n(this.lang, 'dateMMDDYYYY');
-    } else if (type === 'month-year') {
-      this.helpText = i18n(this.lang, 'dateMMYY');
-    } else if (type === 'month-fullyear') {
-      this.helpText = i18n(this.lang, 'dateMMYYYY');
-    } else if (type === 'year-month-day') {
-      this.helpText = i18n(this.lang, 'dateYYYYMMDD');
-    } else if (type === 'month') {
-      this.helpText = i18n(this.lang, 'dateMM');
-    } else if (type === 'year') {
-      this.helpText = i18n(this.lang, 'dateYY');
-    } else if (type === 'fullYear') {
-      this.helpText = i18n(this.lang, 'dateYYYY');
-    } else {
-      this.helpText = '';
+  getHelpText() {
+    const typeHelpText = [
+      'password',
+      'email',
+      'credit-card',
+      'tel'
+    ];
+
+    if (typeHelpText.includes(this.type)) {
+      return i18n(this.lang, this.type);
     }
 
-    return this.helpText;
+    if (this.type === 'date') {
+      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
+    }
+
+    return '';
   }
 
   /**
@@ -778,23 +801,13 @@ export default class BaseInput extends LitElement {
    * @returns {string}
    */
   getPlaceholder() {
-    if (this.type === 'month-day-year') {
-      return !this.placeholder ? 'MM/DD/YYYY' : this.placeholder;
-    } else if (this.type === 'month-year') {
-      return !this.placeholder ? 'MM/YY' : this.placeholder;
-    } else if (this.type === 'month-fullYear') {
-      return !this.placeholder ? 'MM/YYYY' : this.placeholder;
-    } else if (this.type === 'year-month-day') {
-      return !this.placeholder ? 'YYYY/MM/DD' : this.placeholder;
-    } else if (this.type === 'year') {
-      return !this.placeholder ? 'YY' : this.placeholder;
-    } else if (this.type === 'fullYear') {
-      return !this.placeholder ? 'YYYY' : this.placeholder;
-    } else if (this.type === 'month') {
-      return !this.placeholder ? 'MM' : this.placeholder;
+    if (this.placeholder) {
+      return this.placeholder;
+    } else if (this.type === 'date') {
+      return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
     }
 
-    return ifDefined(this.placeholder);
+    return '';
   }
 
   /**
@@ -805,7 +818,7 @@ export default class BaseInput extends LitElement {
   defineInputIcon() {
     if (this.icon && this.type === 'credit-card') {
       return true;
-    } else if (this.dateInputTypes.includes(this.type)) {
+    } else if (this.type === 'date') {
       return true;
     }
 
@@ -820,7 +833,7 @@ export default class BaseInput extends LitElement {
   defineLabelPadding() {
     if (this.icon && this.type === 'credit-card' && (this.value === "" || this.value === undefined)) {
       return true;
-    } else if (this.dateInputTypes.includes(this.type)) {
+    } else if (this.type === 'date') {
       return true;
     }
 
@@ -836,15 +849,21 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   processCreditCard() {
-    const card = this.matchInputValueToCreditCard();
+    const creditCard = this.matchInputValueToCreditCard();
 
-    this.maxLength = card.formatLength;
-    this.minLength = card.formatMinLength;
+    this.format = creditCard.maskFormat;
 
-    this.setCustomValidity = card.setCustomValidity;
+    this.maxLength = creditCard.formatLength;
+    this.minLength = creditCard.formatMinLength;
+
+    this.errorMessage = creditCard.errorMessage;
 
     if (this.icon) {
-      this.inputIconName = card.cardIcon;
+      this.inputIconName = creditCard.cardIcon;
+    }
+
+    if (this.inputElement) {
+      this.configureAutoFormatting();
     }
   }
 
@@ -861,72 +880,82 @@ export default class BaseInput extends LitElement {
         name: 'Airlines',
         regex: /^(?<num>1|2)\d{0}/u,
         formatMinLength: 17,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'credit-card'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'credit-card',
+        maskFormat: "0000 0000 0000 0000 000"
       },
       {
         name: 'Commercial',
         regex: /^(?<num>2)\d{0}/u,
         formatMinLength: 8,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'credit-card'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'credit-card',
+        maskFormat: "0000 0000 000"
       },
       {
         name: 'Alaska Commercial',
         regex: /^(?<num>27)\d{0}/u,
         formatMinLength: 8,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'cc-alaska'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-alaska',
+        maskFormat: "0000 0000 000"
       },
       {
         name: 'American Express',
         regex: /^(?<num>34|37)\d{0}/u,
         formatLength: 17,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'cc-amex'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-amex',
+        maskFormat: "0000 000000 00000"
       },
       {
         name: 'Diners club',
         regex: /^(?<num>36|38)\d{0}/u,
         formatLength: 16,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'credit-card'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'credit-card',
+        maskFormat: "0000 000000 0000"
       },
       {
         name: 'Visa',
         regex: /^(?<num>4)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'cc-visa'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-visa',
+        maskFormat: "0000 0000 0000 0000"
       },
       {
         name: 'Alaska Airlines Visa',
         regex: /^(?<num>4147\s34|4888\s93|4800\s11|4313\s51|4313\s07)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'cc-alaska'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-alaska',
+        maskFormat: "0000 0000 0000 0000"
       },
       {
         name: 'Master Card',
         regex: /^(?<num>5)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'cc-mastercard'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-mastercard',
+        maskFormat: "0000 0000 0000 0000"
       },
       {
         name: 'Discover Card',
         regex: /^(?<num>6)\d{0}/u,
         formatLength: 19,
-        setCustomValidity: CreditCardValidationMessage,
-        cardIcon: 'cc-discover'
+        errorMessage: CreditCardValidationMessage,
+        cardIcon: 'cc-discover',
+        maskFormat: "0000 0000 0000 0000"
       }
     ];
 
     let type = {
       name: 'Default Card',
       formatLength: 19,
-      setCustomValidity: CreditCardValidationMessage,
-      cardIcon: 'credit-card'
+      errorMessage: CreditCardValidationMessage,
+      cardIcon: 'credit-card',
+      maskFormat: "0000 0000 0000 0000"
     };
 
     creditCardTypes.forEach((cardType) => {

@@ -4,7 +4,7 @@ title: '[issue summary] Please verify version before submitting new issue'
 labels:
   - 'Type: Bug'
   - not-reviewed
-  - 'auro-form'
+  - 'auro-formkit'
 body:
   - type: markdown
     attributes:
@@ -13,12 +13,12 @@ body:
   - type: input
     id: version
     attributes:
-      label: Please verify the version of auro-form you have installed
+      label: Please verify the version of auro-formkit you have installed
   - type: markdown
     attributes:
       value: >
         [![See it on
-        NPM!](https://img.shields.io/npm/v/@aurodesignsystem/auro-form?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@aurodesignsystem/auro-form)
+        NPM!](https://img.shields.io/npm/v/@aurodesignsystem/auro-formkit?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@aurodesignsystem/auro-formkit)
   - type: textarea
     id: details
     attributes:

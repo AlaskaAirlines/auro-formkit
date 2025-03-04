@@ -2,7 +2,8 @@
 // See LICENSE in the project root for license information.
 // ---------------------------------------------------------------------
 
-import { LitElement, html } from "lit";
+import { LitElement } from "lit";
+import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
 
 // Import touch detection lib
@@ -18,10 +19,13 @@ import AuroFormValidation from '@auro-formkit/form-validation';
 
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
 
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
 /**
  * @attr {String} validity - Specifies the `validityState` this element is in.
@@ -37,6 +41,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
  * @event auroFormElement-validated - Notifies that the element has been validated.
+ * @event input - Notifies every time the value prop of the element is changed.
  */
 
 export class AuroRadioGroup extends LitElement {
@@ -68,6 +73,16 @@ export class AuroRadioGroup extends LitElement {
      * @private
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    /**
+     * Generate unique names for dependency components.
+     */
+    const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
   }
 
   static get styles() {
@@ -90,7 +105,7 @@ export class AuroRadioGroup extends LitElement {
         reflect: true
       },
       value: {
-        type: Array
+        type: String
       },
       noValidate: {
         type: Boolean,
@@ -192,6 +207,14 @@ export class AuroRadioGroup extends LitElement {
       }
     }
 
+    if (changedProperties.has('value')) {
+      this.dispatchEvent(new CustomEvent('input', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      }));
+    }
+
     if (changedProperties.has('required')) {
       this.items.forEach((el) => {
         el.required = this.required;
@@ -199,7 +222,7 @@ export class AuroRadioGroup extends LitElement {
     }
 
     if (changedProperties.has('error')) {
-      this.validation.validate(this, true);
+      this.validate(true);
     }
 
     if (changedProperties.has('validity')) {
@@ -216,20 +239,28 @@ export class AuroRadioGroup extends LitElement {
   }
 
   /**
-   * Method for a total reset of the radio element.
+   * Resets component to initial state.
    * @returns {void}
    */
   reset() {
-    this.value = undefined;
+    // Sets first radio button to receive focus during keyboard navigation
     this.index = 0;
-    this.optionSelected = undefined;
+
     const buttons = this.querySelectorAll('auro-radio, [auro-radio]');
 
     buttons.forEach((button) => {
-      button.checked = false;
+      button.reset();
     });
 
-    this.validation.validate(this);
+    this.validation.reset(this);
+  }
+
+  /**
+   * Validates value.
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
   /**
@@ -420,13 +451,13 @@ export class AuroRadioGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <p class="radioGroupElement-helpText" part="helpText">
+          <${this.helpTextTag} large part="helpText">
             <slot name="helpText"></slot>
-          </p>`
+          </${this.helpTextTag}>`
         : html`
-          <p class="radioGroupElement-helpText" role="alert" aria-live="assertive" part="helpText">
-            ${this.setCustomValidity}
-          </p>`
+          <${this.helpTextTag} large role="alert" error aria-live="assertive" part="helpText">
+            ${this.errorMessage}
+          </${this.helpTextTag}>`
       }
     `;
   }

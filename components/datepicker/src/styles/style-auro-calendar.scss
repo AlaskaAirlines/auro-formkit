@@ -4,7 +4,6 @@
 // // ---------------------------------------------------------------------
 
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 /* stylelint-disable color-function-notation, at-rule-empty-line-before, order/properties-order, declaration-empty-line-before, declaration-block-no-duplicate-properties */
 
@@ -15,10 +14,19 @@
 
   height: 100vh;
   height: 100dvh; /* dvh = dynamic viewport height */
+}
 
-  @include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
-    width: 100%;
-  }
+.calendars {
+  display: flex;
+
+  flex-direction: row;
+}
+
+.calendarNavButtons {
+  position: absolute;
+  top: var(--ds-size-200, $ds-size-200);
+  right: var(--ds-size-50, $ds-size-50);
+  left: var(--ds-size-50, $ds-size-50);
 }
 
 .calendarNavBtn {
@@ -39,15 +47,15 @@
 .prevMonth,
 .nextMonth {
   position: absolute;
-  top: var(--ds-size-200, $ds-size-200);
+  top: 0;
 }
 
 .prevMonth {
-  left: var(--ds-size-50, $ds-size-50);
+  left: 0;
 }
 
 .nextMonth {
-  right: var(--ds-size-50, $ds-size-50);
+  right: 0;
 }
 
 .headerActions {
@@ -55,7 +63,6 @@
 }
 
 .mobileHeader {
-  display: none;
   width: 100%;
   height: var(--mobile-header-height);
   z-index: +1;
@@ -140,7 +147,11 @@
   }
 }
 
-@include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+:host([isfullscreen]) {
+  width: 100%;
+  max-height: 100dvh;
+  overflow: hidden;
+
   .prevMonth,
   .nextMonth {
     display: none;
@@ -154,11 +165,8 @@
 
   .calendarWrapper {
     display: flex;
-    height: 100%;
-    max-height: 100dvh;
 
     flex-direction: column;
-    overflow: auto hidden;
   }
 
   .calendars {
@@ -169,7 +177,6 @@
     align-items: center;
     width: 100%;
 
-    overflow-y: scroll;
     overscroll-behavior: contain;
 
     &:after {
@@ -179,13 +186,5 @@
 
       content: '';
     }
-  }
-}
-
-@include auro_breakpoint($min: $ds-grid-breakpoint-sm) {
-  .calendars {
-    display: flex;
-
-    flex-direction: row;
   }
 }

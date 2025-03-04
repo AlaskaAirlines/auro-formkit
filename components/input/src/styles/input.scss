@@ -1,11 +1,17 @@
+/* stylelint-disable property-no-vendor-prefix, selector-no-qualifying-type */
+
 // Support for fallback values
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
 
+@import 'mixins';
+
 input {
+  @include transition-animation;
+
   position: relative;
   overflow: hidden;
-  min-height: calc(var(--ds-size-700, $ds-size-700) + var(--ds-size-25, $ds-size-25));
-  max-height: calc(var(--ds-size-700, $ds-size-700) + var(--ds-size-25, $ds-size-25));
+  min-height: var(--ds-size-700, $ds-size-700);
+  max-height: var(--ds-size-700, $ds-size-700);
   flex: 1;
   padding: var(--ds-size-400, $ds-size-400) 0 var(--ds-size-50, $ds-size-50);
   margin: 0;
@@ -13,7 +19,6 @@ input {
   font-size: var(--ds-size-200, $ds-size-200);
   outline: none;
   text-overflow: ellipsis;
-  transition: all .3s cubic-bezier(.215, .61, .355, 1);
   white-space: nowrap;
 
   // this is to disable the toggle-password feature in MS Edge only
@@ -22,8 +27,27 @@ input {
     display: none;
   }
 
+  // Hides the number input arrows in Chrome, Safari, Edge, and Opera
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+
+  // Hides the number input arrows in Firefox
+  &[type='number'] {
+    -moz-appearance: textfield; /* For older versions of Firefox */
+    appearance: textfield; /* Standard property */
+  }
+
   &:disabled {
     background: none;
     pointer-events: none;
+  }
+}
+
+:host([bordered]) {
+  input {
+    padding: var(--ds-size-400, $ds-size-400) 0 var(--ds-size-100, $ds-size-100);
   }
 }

@@ -24,7 +24,16 @@
   .nestingSpacer {
     display: none;
   }
-}
+
+  #placeholder {
+    &.hidden {
+      position: absolute;
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+} 
 
 :host {
   [auro-dropdown] {
@@ -52,6 +61,7 @@
 }
 
 auro-menuoption {
+  padding: 0;
   pointer-events: none;
 }
 
@@ -59,8 +69,19 @@ auro-menuoption {
   padding: var(--ds-size-50, $ds-size-50) 0;
 }
 
-.selectElement-helpText {
-  margin: var(--ds-size-50, $ds-size-50) 0;
-  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-  line-height: 1rem;
+// Multiselect styles
+:host([multiselect]) {
+  [slot="trigger"] {
+    display: flex;
+  }
+
+  auro-menuoption {
+    &:not(:first-child) {
+      margin-left: var(--ds-size-100);
+    }
+  }
+}
+
+#slotHolder{
+  display: none;
 }

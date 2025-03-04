@@ -1,13 +1,16 @@
 @import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
 
+@import 'mixins';
+
 /* stylelint-disable no-duplicate-selectors, max-nesting-depth, no-descending-specificity, selector-max-combinators, selector-max-compound-selectors, selector-no-qualifying-type */
 
 label {
+  @include transition-animation;
+
   position: absolute;
   overflow: hidden;
   pointer-events: none;
   text-overflow: ellipsis;
-  transition: all .3s cubic-bezier(.215, .61, .355, 1);
   white-space: nowrap;
 }
 
@@ -41,13 +44,6 @@ label {
       left: var(--ds-size-100, $ds-size-100);
     }
   }
-}
-
-// active label for non-bordered inputs
-@mixin active-label {
-  top: var(--ds-size-25, $ds-size-25);
-  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-  transform: unset;
 }
 
 :host {

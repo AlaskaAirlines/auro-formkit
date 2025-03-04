@@ -18,12 +18,6 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 /**
  * Custom element for the purpose of allowing users to select one or more options of a limited number of choices.
  *
- * @attr {Boolean} checked - If set to true, the checkbox will be filled with a checkmark.
- * @attr {Boolean} disabled - If set to true, the checkbox will not be clickable.
- * @attr {Boolean} error - If set to true, sets an error state on the checkbox.
- * @attr {String} id - Sets the individual `id` per element.
- * @attr {String} name - Accepts any string, `DOMString` representing the value of the input.
- * @attr {String} value - Sets the element's input value.
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.
@@ -54,21 +48,48 @@ export class AuroCheckbox extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * If set to true, the checkbox will be filled with a checkmark.
+       */
       checked: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If set to true, the checkbox will not be clickable.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If set to true, the checkbox will be displayed with an error state.
+       */
       error: {
         type: Boolean,
         reflect: true
       },
-      id:       { type: String },
-      name:     { type: String },
-      value:    { type: String }
+
+      /**
+       * Sets the individual `id` per element.
+       */
+      id: { type: String },
+
+      /**
+       * Accepts any string and is used to identify related checkboxes when submitting form data.
+       */
+      name: { type: String },
+
+      /**
+       * Sets the element's input value. Must be unique within an auro-checkbox-group element.
+       */
+      value: {
+        type: String,
+        reflect: true
+      }
     };
   }
 
@@ -128,6 +149,15 @@ export class AuroCheckbox extends LitElement {
     this.svg.classList.add('svg--cbx');
 
     return this.svg;
+  }
+
+  /**
+   * Resets component to initial state.
+   * @returns {void}
+   */
+  reset() {
+    this.checked = false;
+    this.error = false;
   }
 
   firstUpdated() {

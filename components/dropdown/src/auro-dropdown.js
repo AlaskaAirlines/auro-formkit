@@ -3,42 +3,32 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions,
-arrow-body-style, no-extra-parens, block-spacing, brace-style, curly, template-curly-spacing */
+/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFloatingUI from './floatingUI.mjs';
+import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
+
+import { AuroDropdownBib } from './auro-dropdownBib.js';
+import dropdownVersion from './dropdownVersion.js';
+
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import './auro-dropdownBib.js';
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
 
 /**
- * @attr { Boolean } bordered - If declared, applies a border around the trigger slot.
- * @attr { Boolean } common - If declared, the dropdown will be styled with the common theme.
- * @attr { Boolean } chevron - If declared, the dropdown displays an display state chevron on the right.
- * @attr { Boolean } disabled - If declared, the dropdown is not interactive.
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
- * @attr { Boolean } error - If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
- * @attr { Boolean } matchWidth - If declared, the popover and trigger will be set to the same width.
- * @attr { Boolean } inset - If declared, will apply padding around trigger slot content.
- * @attr { Boolean } rounded - If declared, will apply border-radius to trigger and default slots.
- * @attr { Boolean } hoverToggle - if declared, the trigger will toggle the big on mouseover/mouseout.
- * @attr { Boolean } noToggle - If declared, the trigger will only show the the dropdown bib.
- * @attr { Boolean } focusShow - if declared, the the bib will display when focus is applied to the trigger.
- * @attr { Boolean } noHideOnThisFocusLoss - If declared, the dropdown will not hide when moving focus outside the element.
- * @attr { String } mobileFullscreenBreakpoint - Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
- * @prop { Boolean } isPopoverVisible - If true, the dropdown bib is displayed.
  * @slot - Default slot for the popover content.
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
@@ -46,7 +36,6 @@ import './auro-dropdownBib.js';
  * @csspart trigger - The trigger content container.
  * @csspart chevron - The collapsed/expanded state icon container.
  * @csspart helpText - The helpText content container.
- * @csspart popover - The bib content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
  */
@@ -55,10 +44,30 @@ export class AuroDropdown extends LitElement {
     super();
 
     this.isPopoverVisible = false;
+    this.isBibFullscreen = false;
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
     this.privateDefaults();
+
+    /**
+     * @private
+     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
+     */
+    this.constructor.shadowRootOptions = {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
+
+    /**
+     * @private
+     */
+    this.triggerContentFocusable = false;
+
+    /**
+     * @private
+     */
+    this.showTriggerBorders = true;
   }
 
   /**
@@ -75,6 +84,16 @@ export class AuroDropdown extends LitElement {
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
+
+    /**
+     * @private
+     */
+    this.hasTriggerContent = false;
+
+    /**
+     * @private
+     */
+    this.triggerContentSlot = undefined;
 
     /**
      * @private
@@ -100,7 +119,21 @@ export class AuroDropdown extends LitElement {
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
     this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
+
+    /**
+     * @private
+     */
+    this.dropdownBibTag = versioning.generateTag('auro-dropdownbib', dropdownVersion, AuroDropdownBib);
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
   }
 
   /**
@@ -122,85 +155,174 @@ export class AuroDropdown extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * If declared, applies a border around the trigger slot.
+       */
       bordered: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If declared, the dropdown displays a chevron on the right.
+       * @attr {Boolean} chevron
+       */
       chevron: {
         type: Boolean,
         reflect: true
       },
-      disabled: {
-        type: Boolean,
-        reflect: true
-      },
-      error: {
-        type: Boolean,
-        reflect: true
-      },
-      focusShow: {
-        type: Boolean,
-        reflect: true
-      },
-      hoverToggle: {
-        type: Boolean,
-        reflect: true
-      },
-      inset: {
-        type: Boolean,
-        reflect: true
-      },
-      matchWidth: {
-        type: Boolean,
-        reflect: true
-      },
-      rounded: {
-        type: Boolean,
-        reflect: true
-      },
+
+      /**
+       * If declared, the dropdown will be styled with the common theme.
+       */
       common: {
         type: Boolean,
         reflect: true
       },
-      noToggle: {
+
+      /**
+       * If declared, the dropdown is not interactive.
+       */
+      disabled: {
         type: Boolean,
         reflect: true
       },
-      noHideOnThisFocusLoss: {
+
+      /**
+       * @private
+       */
+      dropdownWidth: {
+        type: Number
+      },
+
+      /**
+       * If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
+       */
+      error: {
         type: Boolean,
         reflect: true
       },
-      isPopoverVisible: { type: Boolean },
-      onSlotChange: {
-        type: Function,
-        reflect: false
+
+      /**
+       * If declared, the bib will display when focus is applied to the trigger.
+       */
+      focusShow: {
+        type: Boolean,
+        reflect: true
       },
-      mobileFullscreenBreakpoint: {
-        type: String,
+
+      /**
+       * Makes the trigger to be full width of its parent container.
+       */
+      fluid: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, will apply padding around trigger slot content.
+       */
+      inset: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If true, the dropdown bib is displayed.
+       */
+      isPopoverVisible: {
+        type: Boolean
+      },
+
+      /**
+       * If true, the dropdown bib is taking the fullscreen when it's open
+       */
+      isBibFullscreen: {
+        type: Boolean,
         reflect: true,
       },
 
       /**
-       * @private
+       * If declared, the trigger will toggle the dropdown on mouseover/mouseout.
        */
-      dropdownWidth: { type: Number },
+      hoverToggle: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
        * @private
        */
-      placement:     { type: String },
+      hasTriggerContent: {
+        type: Boolean
+      },
+
+      /**
+       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       */
+      fullscreenBreakpoint: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, the popover and trigger will be set to the same width.
+       */
+      matchWidth: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will not hide when moving focus outside the element.
+       */
+      noHideOnThisFocusLoss: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the trigger will only show the dropdown bib.
+       */
+      noToggle: {
+        type: Boolean,
+        reflect: true
+      },
+
+      onSlotChange: {
+        type: Function,
+        reflect: false
+      },
 
       /**
        * @private
        */
-      tabIndex: { type: Number }
+      placement: {
+        type: String
+      },
+
+      /**
+       * If declared, will apply border-radius to trigger and default slots.
+       */
+      rounded: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * @private
+       */
+      tabIndex: {
+        type: Number
+      }
     };
   }
 
   static get styles() {
     return [
-      styleCss,
       colorCss,
+      styleCss,
       tokensCss
     ];
   }
@@ -228,13 +350,19 @@ export class AuroDropdown extends LitElement {
   updated(changedProperties) {
     this.floater.handleUpdate(changedProperties);
 
-    if (changedProperties.has('mobileFullscreenBreakpoint')) {
-      this.bibContent.mobileFullscreenBreakpoint = this.mobileFullscreenBreakpoint;
+    if (changedProperties.has('fullscreenBreakpoint')) {
+      this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
+    }
+
+    // when trigger's content is changed without any attribute or node change,
+    // `requestUpdate` needs to be called to update hasTriggerContnet
+    if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
+      this.handleTriggerContentSlotChange();
     }
   }
 
   firstUpdated() {
-    this.floater.configure(this);
+    this.floater.configure(this, 'auroDropdown');
     this.bibContent = this.floater.element.bib;
 
     // Add the tag name as an attribute if it is different than the component name
@@ -243,7 +371,6 @@ export class AuroDropdown extends LitElement {
 
   /**
    * Exposes CSS parts for styling from parent components.
-   * @private
    * @returns {void}
    */
   exposeCssParts() {
@@ -276,6 +403,119 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Determines if the element or any children are focusable.
+   * @private
+   * @param {HTMLElement} element - Element to check.
+   * @returns {Boolean} - True if the element or any children are focusable.
+   */
+  containsFocusableElement(element) {
+    this.showTriggerBorders = true;
+
+    const nodes = [
+      element,
+      ...element.children
+    ];
+
+    const focusableElements = [
+      'a',
+      'auro-hyperlink',
+      'button',
+      'auro-button',
+      'input',
+      'auro-input',
+    ];
+
+    const focusableElementsThatNeedBorders = ['auro-input'];
+
+    const result = nodes.some((node) => {
+      const tagName = node.tagName.toLowerCase();
+
+      if (node.tabIndex > -1) {
+        return true;
+      }
+
+      if (focusableElements.includes(tagName)) {
+        if ((tagName === 'a' || tagName === 'auro-hyperlink' || node.hasAttribute('auro-hyperlink')) && node.hasAttribute('href')) {
+          return true;
+        }
+        if (!node.hasAttribute('disabled')) {
+          return true;
+        }
+      }
+
+      if (focusableElements.some((focusableElement) => focusableElement.startsWith('auro-') && (focusableElement === tagName || node.hasAttribute(focusableElement)))) {
+        return true;
+      }
+
+      return false;
+    });
+
+    if (result) {
+      this.showTriggerBorders = !nodes.some((node) => {
+        const tagName = node.tagName.toLowerCase();
+        return focusableElements.includes(tagName) && !focusableElementsThatNeedBorders.includes(tagName);
+      });
+    }
+
+    return result;
+  }
+
+  /**
+   * Handles changes to the trigger content slot and updates related properties.
+   *
+   * It first updates the floater settings
+   * Then, it retrieves the assigned nodes from the event target and checks if any of
+   * the nodes contain non-empty text content, updating the `hasTriggerContent` property accordingly.
+   *
+   * @private
+   * @method handleTriggerContentSlotChange
+   * @param {Event} event - Native slotchange event.
+   * @returns {void}
+   */
+  handleTriggerContentSlotChange(event) {
+    this.floater.handleTriggerTabIndex();
+
+    const triggerContentNodes = this.shadowRoot.querySelector('.triggerContent slot').assignedNodes();
+
+    triggerContentNodes.forEach((node) => {
+      if (!this.triggerContentFocusable) {
+        this.triggerContentFocusable = this.containsFocusableElement(node);
+      }
+    });
+
+    const trigger = this.shadowRoot.querySelector('#trigger');
+
+    if (!this.triggerContentFocusable) {
+      trigger.setAttribute('tabindex', '0');
+      trigger.setAttribute('role', 'button');
+    } else {
+      trigger.removeAttribute('tabindex');
+      trigger.removeAttribute('role');
+    }
+
+    if (event) {
+      this.triggerNode = event.target;
+      this.triggerContentSlot = event.target.assignedNodes();
+    }
+
+    if (this.triggerContentSlot) {
+      this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
+        if (slot.textContent.trim()) {
+          return true;
+        }
+        const slotInSlot = slot.querySelector('slot');
+        if (!slotInSlot) {
+          return false;
+        }
+        const slotsInSlotNodes = slotInSlot.assignedNodes();
+        return slotsInSlotNodes.some((ss) => Boolean(ss.textContent.trim()));
+      });
+    } else {
+      this.hasTriggerContent = false;
+    }
+  }
+
+  /**
    * Handles the default slot change event and updates the content.
    *
    * This method retrieves all nodes assigned to the default slot of the event target and appends them
@@ -303,19 +543,18 @@ export class AuroDropdown extends LitElement {
           id="trigger"
           class="trigger"
           part="trigger"
-          role="button"
           aria-labelledby="triggerLabel"
-          aria-controls="popover"
           tabindex="${this.tabIndex}"
+          ?showBorder="${this.showTriggerBorders}"
           >
           <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel">
+            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
               <slot name="label"></slot>
             </label>
             <div class="triggerContent">
               <slot
                 name="trigger"
-                @slotchange="${() => {this.floater.handleTriggerTabIndex(); }}"></slot>
+                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
             </div>
           </div>
           ${this.chevron || this.common ? html`
@@ -332,22 +571,21 @@ export class AuroDropdown extends LitElement {
               </div>
             ` : undefined }
         </div>
-        <div
-          class="helpText"
-          part="helpText">
+        <${this.helpTextTag} part="helpText" ?error="${this.error}">
           <slot name="helpText"></slot>
-        </div>
+        </${this.helpTextTag}>
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>
         <div id="bibSizer" part="size"></div>
-        <auro-dropdownbib
+        <${this.dropdownBibTag}
           id="bib"
           role="tooltip"
+          ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
           ?rounded="${this.common || this.rounded}"
           ?inset="${this.common || this.inset}">
-        </auro-dropdownbib>
+        </${this.dropdownBibTag}>
       </div>
     `;
   }

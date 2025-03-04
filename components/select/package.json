@@ -1,5 +1,5 @@
 {
-  "name": "@auro-formkit/auro-select",
+  "name": "@aurodesignsystem/auro-select",
   "version": "3.3.0",
   "description": "auro-select HTML custom element",
   "type": "module",
@@ -12,14 +12,14 @@
     "url": "https://github.com/AlaskaAirlines/auro-select"
   },
   "dependencies": {
-    "@auro-formkit/auro-dropdown": "*",
-    "@auro-formkit/auro-menu": "*",
+    "@aurodesignsystem/auro-dropdown": "*",
+    "@aurodesignsystem/auro-menu": "*",
     "chalk": "^5.3.0",
     "lit-element": "^4.1.1",
     "lit-html": "^3.2.1"
   },
   "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.12.1",
+    "@aurodesignsystem/design-tokens": "^4.13.0",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^4.12.1",
+    "@aurodesignsystem/design-tokens": "^4.13.0",
     "@aurodesignsystem/webcorestylesheets": "^5.1.2",
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-node-resolve": "^15.3.0",
@@ -49,19 +49,22 @@
     "access": "public"
   },
   "scripts": {
-    "build": "run-s build:version build:sass bundler build:docs types",
-    "build:version": "node ./src/scripts/version.mjs",
+    "build": "run-s sass bundler types build:docs",
+    "sass": "run-s build:sass postCss:component sass:render",
+    "build:version": "node ./scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
     "bundler": "rollup -c node:@auro-formkit/config/rollup",
     "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component select",
     "clean": "rm -rf dist build",
-    "dev": "web-dev-server",
+    "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
+    "dev:closed": "concurrently \"npm run build:watch\" \"npm run serve:closed\"",
+    "serve": "web-dev-server --open",
+    "serve:closed": "web-dev-server",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
-    "serve": "web-dev-server",
-    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage",
-    "test:watch": "wtr --watch",
+    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7700",
+    "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --watch  --port 7700",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./src/**/*.scss\"",

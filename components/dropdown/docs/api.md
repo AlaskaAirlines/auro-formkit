@@ -8,30 +8,33 @@
 
 ## Properties
 
-| Property                     | Attribute                    | Type        | Default | Description                                      |
-|------------------------------|------------------------------|-------------|---------|--------------------------------------------------|
-| `bordered`                   | `bordered`                   | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
-| `chevron`                    | `chevron`                    | ` Boolean ` |         | If declared, the dropdown displays an display state chevron on the right. |
-| `common`                     | `common`                     | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
-| `disabled`                   | `disabled`                   | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
-| `error`                      | `error`                      | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
-| `focusShow`                  | `focusShow`                  | ` Boolean ` |         | if declared, the the bib will display when focus is applied to the trigger. |
-| `hoverToggle`                | `hoverToggle`                | ` Boolean ` |         | if declared, the trigger will toggle the big on mouseover/mouseout. |
-| `inset`                      | `inset`                      | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
-| `isPopoverVisible`           | `isPopoverVisible`           | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
-| `matchWidth`                 | `matchWidth`                 | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |
-| `mobileFullscreenBreakpoint` | `mobileFullscreenBreakpoint` | ` String `  |         | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
-| `noHideOnThisFocusLoss`      | `noHideOnThisFocusLoss`      | ` Boolean ` | false   | If declared, the dropdown will not hide when moving focus outside the element. |
-| `noToggle`                   | `noToggle`                   | ` Boolean ` |         | If declared, the trigger will only show the the dropdown bib. |
-| `onSlotChange`               | `onSlotChange`               |             |         |                                                  |
-| `rounded`                    | `rounded`                    | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
+| Property                | Attribute               | Type        | Default | Description                                      |
+|-------------------------|-------------------------|-------------|---------|--------------------------------------------------|
+| `bordered`              | `bordered`              | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
+| `chevron`               | `chevron`               | ` Boolean ` |         | If declared, the dropdown displays a chevron on the right. |
+| `common`                | `common`                | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
+| `disabled`              | `disabled`              | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
+| `error`                 | `error`                 | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
+| `fluid`                 | `fluid`                 | `Boolean`   |         | Makes the trigger to be full width of its parent container. |
+| `focusShow`             | `focusShow`             | ` Boolean ` |         | If declared, the bib will display when focus is applied to the trigger. |
+| `fullscreenBreakpoint`  | `fullscreenBreakpoint`  | ` String `  |         | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
+| `hoverToggle`           | `hoverToggle`           | ` Boolean ` |         | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
+| `inset`                 | `inset`                 | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
+| `isBibFullscreen`       | `isBibFullscreen`       | `boolean`   | false   | If true, the dropdown bib is taking the fullscreen when it's open |
+| `isPopoverVisible`      | `isPopoverVisible`      | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
+| `matchWidth`            | `matchWidth`            | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |
+| `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false   | If declared, the dropdown will not hide when moving focus outside the element. |
+| `noToggle`              | `noToggle`              | ` Boolean ` |         | If declared, the trigger will only show the dropdown bib. |
+| `onSlotChange`          | `onSlotChange`          |             |         |                                                  |
+| `rounded`               | `rounded`               | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
 
 ## Methods
 
-| Method | Type       | Description                         |
-|--------|------------|-------------------------------------|
-| `hide` | `(): void` | Public method to hide the dropdown. |
-| `show` | `(): void` | Public method to show the dropdown. |
+| Method           | Type       | Description                                      |
+|------------------|------------|--------------------------------------------------|
+| `exposeCssParts` | `(): void` | Exposes CSS parts for styling from parent components. |
+| `hide`           | `(): void` | Public method to hide the dropdown.              |
+| `show`           | `(): void` | Public method to show the dropdown.              |
 
 ## Events
 

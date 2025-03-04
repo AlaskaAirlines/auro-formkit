@@ -13,25 +13,111 @@ export default class AuroFormValidation {
   }
 
   /**
-   * Determines the validity state of the element based on the common attribute restrictions (pattern).
+   * Resets the element to its initial state.
    * @private
-   * @param {object} elem - HTML element to validate.
+   * @param {object} elem - HTML element to reset.
    * @returns {void}
    */
-  validateAttributes(elem) {
-    if (elem.pattern) {
-      const pattern = new RegExp(`^${elem.pattern}$`, 'u');
+  reset(elem) {
+    elem.validity = undefined;
+    elem.value = undefined;
 
-      if (!pattern.test(elem.value)) {
-        elem.validity = 'badInput';
-        elem.setCustomValidity = elem.setCustomValidityBadInput || '';
+    // Resets the second value of the datepicker in range state
+    if (elem.valueEnd) {
+      elem.valueEnd = undefined;
+    }
+
+    // Resets selected option of element
+    if (elem.optionSelected) {
+      elem.optionSelected = undefined;
+    }
+
+    // Runs validation to handle error attribute
+    this.validate(elem);
+  }
+
+  /**
+   * Validates the attributes of a given element based on predefined validation rules.
+   *
+   * @param {HTMLElement} elem - The element to be validated.
+   * @returns {void}
+   *
+   * @example
+   * // Assuming `inputElement` is a reference to an input element in the DOM
+   * validateElementAttributes(inputElement);
+   *
+   * The function checks the element's attributes against the validation rules defined for 'input' and 'counter' types.
+   * If a validation rule is violated, it sets the element's validity state and error message accordingly.
+   *
+   * Validation rules:
+   * - input:
+   *   - length:
+   *     - tooShort: Checks if the value length is less than the minimum length.
+   *     - tooLong: Checks if the value length exceeds the maximum length.
+   *   - pattern:
+   *     - patternMismatch: Checks if the value does not match the specified pattern.
+   * - counter:
+   *   - range:
+   *     - rangeOverflow: Checks if the value exceeds the maximum value.
+   *     - rangeUnderflow: Checks if the value is less than the minimum value.
+   */
+  validateElementAttributes(elem) {
+    const validationRules = {
+      input: {
+        length: [
+          {
+            check: (e) => e.value?.length > 0 && e.value?.length < e.minLength,
+            validity: 'tooShort',
+            message: e => e.setCustomValidityTooShort || e.setCustomValidity || ''
+          },
+          {
+            check: (e) => e.value?.length > e.maxLength,
+            validity: 'tooLong',
+            message: e => e.setCustomValidityTooLong || e.setCustomValidity || ''
+          }
+        ],
+        pattern: [
+          {
+            check: (e) => e.pattern && !new RegExp(`^${e.pattern}$`, 'u').test(e.value),
+            validity: 'patternMismatch',
+            message: e => e.setCustomValidityPatternMismatch || e.setCustomValidity || ''
+          }
+        ]
+      },
+      counter: {
+        range: [
+          {
+            check: (e) => e.max !== undefined && Number(e.max) < Number(e.value),
+            validity: 'rangeOverflow',
+            message: e => e.getAttribute('setCustomValidityRangeOverflow') || ''
+          },
+          {
+            check: (e) => e.min !== undefined && Number(e.min) > Number(e.value),
+            validity: 'rangeUnderflow',
+            message: e => e.getAttribute('setCustomValidityRangeUnderflow') || ''
+          }
+        ]
       }
-    } else if (elem.value && elem.value.length > 0 && elem.value.length < elem.minLength) {
-      elem.validity = 'tooShort';
-      elem.setCustomValidity = elem.setCustomValidityTooShort || '';
-    } else if (elem.value && elem.value.length > elem.maxLength) {
-      elem.validity = 'tooLong';
-      elem.setCustomValidity = elem.setCustomValidityTooLong || '';
+    };
+  
+    let elementType;
+    if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
+      elementType = 'input';
+    } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
+      elementType = 'counter';
+    }
+    
+    if (elementType) {
+      const rules = validationRules[elementType];
+    
+      if (rules) {
+        Object.values(rules).flat().forEach(rule => {
+          if (rule.check(elem)) {
+            elem.validity = rule.validity;
+            elem.errorMessage = rule.message(elem);
+          }
+        });
+      }
     }
   }
 
@@ -47,53 +133,49 @@ export default class AuroFormValidation {
         const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/; // eslint-disable-line require-unicode-regexp
 
         if (!elem.value.match(emailRegex)) {
-          elem.validity = 'badInput';
-          elem.setCustomValidity = elem.setCustomValidityForType || '';
+          elem.validity = 'patternMismatch';
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         }
       } else if (elem.type === 'credit-card') {
         if (elem.value.length > 0 && elem.value.length < elem.validationCCLength) {
           elem.validity = 'tooShort';
-          elem.setCustomValidity = elem.setCustomValidityForType || '';
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
         }
-      } else if (elem.type === 'number' || elem.type === 'numeric') { // 'numeric` is a deprecated alias for number'
+      } else if (elem.type === 'number') {
         if (elem.max !== undefined && Number(elem.max) < Number(elem.value)) {
           elem.validity = 'rangeOverflow';
-          elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeOverflow') || '';
+          elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
         }
 
-        if (elem.min !== undefined && Number(elem.min) > Number(elem.value)) {
+        if (elem.min !== undefined && elem.value?.length > 0 && Number(elem.min) > Number(elem.value)) {
           elem.validity = 'rangeUnderflow';
-          elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeUnderflow') || '';
+          elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
         }
-
-      } else if (elem.type === 'month-day-year' ||
-                 elem.type === 'month-year' ||
-                 elem.type === 'month-fullYear' ||
-                 elem.type === 'year-month-day'
-      ) {
-        if (elem.value && elem.value.length > 0 && elem.value.length < elem.dateStrLength) {
+      } else if (elem.type === 'date') {
+        if (elem.value?.length > 0 && elem.value?.length < elem.lengthForType) {
           elem.validity = 'tooShort';
-          elem.setCustomValidity = elem.setCustomValidityForType || '';
-        } else {
-          const valueDate = new Date(elem.value);
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
+        } else if (elem.value?.length === elem.lengthForType && elem.util.toNorthAmericanFormat(elem.value, elem.format)) {
+          const formattedValue = elem.util.toNorthAmericanFormat(elem.value, elem.format);
+          const valueDate = new Date(formattedValue.dateForComparison);
 
           // validate max
-          if (elem.max !== undefined) {
-            const maxDate = new Date(elem.max);
+          if (elem.max?.length === elem.lengthForType) {
+            const maxDate = new Date(elem.util.toNorthAmericanFormat(elem.max, elem.format).dateForComparison);
 
             if (valueDate > maxDate) {
               elem.validity = 'rangeOverflow';
-              elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeOverflow') || '';
+              elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
             }
           }
 
           // validate min
-          if (elem.min) {
-            const minDate = new Date(elem.min);
+          if (elem.min?.length === elem.lengthForType) {
+            const minDate = new Date(elem.util.toNorthAmericanFormat(elem.min, elem.format).dateForComparison);
 
             if (valueDate < minDate) {
               elem.validity = 'rangeUnderflow';
-              elem.setCustomValidity = elem.getAttribute('setCustomValidityRangeUnderflow') || '';
+              elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
             }
           }
         }
@@ -116,10 +198,10 @@ export default class AuroFormValidation {
 
     if (elem.hasAttribute('error')) {
       elem.validity = 'customError';
-      elem.setCustomValidity = elem.error;
+      elem.errorMessage = elem.setCustomValidityCustomError || elem.error || elem.setCustomValidity || '';
     } else if (validationShouldRun) {
       elem.validity = 'valid';
-      elem.setCustomValidity = '';
+      elem.errorMessage = '';
 
       /**
        * Only validate once we interact with the datepicker
@@ -131,7 +213,7 @@ export default class AuroFormValidation {
       let hasValue = elem.value && elem.value.length > 0;
 
       // If there is a second input in the elem and that value is undefined or an empty string set hasValue to false;
-      if (this.auroInputElements && this.auroInputElements.length === 2) {
+      if (this.auroInputElements?.length === 2) {
         if (!this.auroInputElements[1].value || this.auroInputElements[1].length === 0) {
           hasValue = false;
         }
@@ -139,35 +221,29 @@ export default class AuroFormValidation {
 
       if (!hasValue && elem.required) {
         elem.validity = 'valueMissing';
-        elem.setCustomValidity = elem.setCustomValidityValueMissing || '';
+        elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
         this.validateType(elem);
-        this.validateAttributes(elem);
+        this.validateElementAttributes(elem);
+      } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
+        this.validateElementAttributes(elem);
       }
     }
 
-    if (this.auroInputElements && this.auroInputElements.length > 0) {
+    if (this.auroInputElements?.length > 0) {
       elem.validity = this.auroInputElements[0].validity;
-      elem.setCustomValidity = this.auroInputElements[0].setCustomValidity;
+      elem.errorMessage = this.auroInputElements[0].errorMessage;
 
-      if (elem.validity === 'valid') {
-        if (this.auroInputElements.length > 1) {
-          elem.validity = this.auroInputElements[1].validity;
-          elem.setCustomValidity = this.auroInputElements[1].setCustomValidity;
-        }
+      if (elem.validity === 'valid' && this.auroInputElements.length > 1) {
+        elem.validity = this.auroInputElements[1].validity;
+        elem.errorMessage = this.auroInputElements[1].errorMessage;
       }
     }
 
     if (validationShouldRun || elem.hasAttribute('error')) {
-      if (elem.validity && elem.validity !== 'valid') {
-        elem.isValid = false;
-
-        // Use the validity message override if it is declared
-        if (elem.ValidityMessageOverride) {
-          elem.setCustomValidity = elem.ValidityMessageOverride;
-        }
-      } else {
-        elem.isValid = true;
+      // Use the validity message override if it is declared
+      if (elem.validity && elem.validity !== 'valid' && elem.ValidityMessageOverride) {
+        elem.errorMessage = elem.ValidityMessageOverride;
       }
 
       this.getErrorMessage(elem);
@@ -213,18 +289,18 @@ export default class AuroFormValidation {
     if (elem.validity !== 'valid') {
       if (elem.setCustomValidity) {
         elem.errorMessage = elem.setCustomValidity;
-      } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
+      } else if (this.runtimeUtils.elementMatch(elem, 'auro-input') && elem.errorMessage === '') {
         const input = elem.renderRoot.querySelector('input');
 
         if (input.validationMessage.length > 0) {
           elem.errorMessage = input.validationMessage;
         }
-      } else if (this.inputElements && this.inputElements.length > 0) {
+      } else if (this.inputElements?.length > 0  && elem.errorMessage === '') {
         const firstInput = this.inputElements[0];
 
         if (firstInput.validationMessage.length > 0) {
           elem.errorMessage = firstInput.validationMessage;
-        } else if (this.inputElements.length === 2) {
+        } else if (this.inputElements?.length === 2) {
           const secondInput = this.inputElements[1];
 
           if (secondInput.validationMessage.length > 0) {

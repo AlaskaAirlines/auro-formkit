@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -20,6 +20,9 @@ import iconVersion from './iconVersion.js';
 import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
 import buttonVersion from './buttonVersion.js';
 
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
+
 // build the component class
 export class AuroInput extends BaseInput {
   constructor() {
@@ -39,6 +42,11 @@ export class AuroInput extends BaseInput {
      * @private
      */
     this.buttonTag = versioning.generateTag('auro-button', buttonVersion, AuroButton);
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
   }
 
   /**
@@ -59,41 +67,11 @@ export class AuroInput extends BaseInput {
    * @returns {boolean} - Returns true if the input type is meant to render an icon.
    */
   hasTypeIcon() {
-    const typesWithIcons = [
-      'month-day-year',
-      'month-year',
-      'year-month-day',
-      'month-fullYear',
-      'month',
-      'year',
-      'fullYear'
-    ];
-
-    if (this.icon || typesWithIcons.includes(this.type)) {
+    if (this.icon || this.type === 'date') {
       return true;
     }
 
     return false;
-  }
-
-  isDateType() {
-    let isDateType = false;
-
-    switch (this.type) {
-      case 'month-day-year':
-      case 'month-year':
-      case 'year-month-day':
-      case 'month-fullYear':
-      case 'month':
-      case 'year':
-      case 'fullYear':
-        isDateType = true;
-        break;
-      default:
-        break;
-    }
-
-    return isDateType;
   }
 
   // function that renders the HTML and CSS into  the scope of the component
@@ -125,7 +103,7 @@ export class AuroInput extends BaseInput {
             `) : undefined
             }
 
-            ${this.isDateType()
+            ${this.type === 'date'
             ? html`
               <${this.iconTag}
                 class="accentIcon"
@@ -210,8 +188,7 @@ export class AuroInput extends BaseInput {
                 <${this.buttonTag}
                   variant="flat"
                   class="notificationBtn clearBtn"
-                  aria-hidden="true"
-                  tabindex="-1"
+                  aria-label="${i18n(this.lang, 'clearInput')}"
                   @click="${this.handleClickClear}">
                   <${this.iconTag}
                     customColor
@@ -226,17 +203,22 @@ export class AuroInput extends BaseInput {
         </div>
       </div>
       <!-- Help text and error message template -->
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
-      ? html`
-        <p class="inputElement-helpText" id="${this.uniqueId}" part="helpText">
-          <slot name="helptext">${this.getHelpText(this.type)}</slot>
-        </p>`
-      : html`
-        <p class="inputElement-helpText" id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-          ${this.errorMessage}
-        </p>`
-
-      }
+        ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+        <${this.helpTextTag}>
+          <p id="${this.uniqueId}" part="helpText">
+            <slot name="helptext">${this.getHelpText()}</slot>
+          </p>
+        </${this.helpTextTag}>
+        `
+        : html`
+        <${this.helpTextTag} error>
+          <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+            ${this.errorMessage}
+          </p>
+        </${this.helpTextTag}>
+        `
+        }
     `;
   }
 }

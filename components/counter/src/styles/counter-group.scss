@@ -10,8 +10,27 @@
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute */
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
 
 :host {
   position: relative;
+  display: block;
+}
+
+[slot="trigger"], ::slotted([slot="valueText"]) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[auro-dropdown] {
+  display: block;
+
+  &::part(trigger) {
+    max-height: var(--ds-size-300, $ds-size-300);
+  }
+}
+
+#slotHolder{
+  display: none;
 }

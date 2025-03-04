@@ -1,0 +1,6 @@
+@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+:host {
+  --ds-auro-dropdownbib-header-boxshadow-color: var(--ds-elevation-200, #{$ds-elevation-200});
+  --ds-auro-dropdownbib-footer-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
+}

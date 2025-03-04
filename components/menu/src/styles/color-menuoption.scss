@@ -29,5 +29,9 @@
   --ds-auro-menuoption-container-color: var(--ds-color-container-ui-primary-default-default, #{$ds-color-container-ui-primary-default-default});
   --ds-auro-menuoption-text-color: var(--ds-color-text-primary-inverse, #{$ds-color-text-primary-inverse});
   --ds-auro-menuoption-icon-color: var(--ds-color-icon-emphasis-inverse, #{$ds-color-icon-emphasis-inverse});
+
+  &:host(.active) {
+    --ds-auro-menuoption-container-color: var(--ds-color-container-ui-primary-active-default, #{$ds-color-container-ui-primary-active-default});
+  }
 }
 

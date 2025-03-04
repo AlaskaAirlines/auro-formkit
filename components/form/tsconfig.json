@@ -11,6 +11,11 @@
   "exclude": [
     "node_modules",
     "dist",
-    "build"
-  ]
+    "docTemplates",
+    "test",
+    "coverage"
+  ],
+  "compilerOptions": {
+    "rootDir": "./src",
+  }
 }

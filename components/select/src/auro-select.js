@@ -7,6 +7,7 @@
 
 // If using litElement base class
 import { LitElement } from "lit";
+import { classMap } from 'lit/directives/class-map.js';
 import { html } from 'lit/static-html.js';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
@@ -14,8 +15,16 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
-import { AuroDropdown } from '@auro-formkit/auro-dropdown';
-import dropdownVersion from './formkit/auro-dropdownVersion.js';
+import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
+import dropdownVersion from './dropdownVersion.js';
+
+import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+import bibTemplateVersion from './bibtemplateVersion.js';
+
+import {
+  arrayConverter,
+  arrayOrUndefinedHasChanged
+} from '@aurodesignsystem/auro-menu';
 
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
@@ -25,23 +34,13 @@ import tokensCss from "./styles/tokens-css.js";
 /**
  * The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
  *
- * @attr {String} validity - Specifies the `validityState` this element is in.
- * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
- * @attr {Boolean} flexMenuWidth - If set, makes dropdown bib width match the size of the content, rather than the width of the trigger.
- * @prop {String} placeholder - Define placeholder text to display before a value is manually selected.
- * @prop {String} value - Value selected for the component.
- * @prop {Boolean} disabled - When attribute is present element shows disabled state.
- * @prop {Boolean} noCheckmark - When true, checkmark on selected option will no longer be present.
- * @attr {Object} optionSelected - Specifies the current selected menuOption.
  * @slot - Default slot for the menu content.
+ * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
+ * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
+ * @event input - Notifies every time the value prop of the element is changed.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  * @csspart helpText - Apply CSS to the help text.
  */
@@ -51,9 +50,7 @@ export class AuroSelect extends LitElement {
   constructor() {
     super();
 
-    this.placeholder = 'Please select option';
-    this.optionSelected = undefined;
-    this.validity = undefined;
+    this.privateDefaults();
 
     const idLength = 36;
     const idSubstrEnd = 8;
@@ -85,6 +82,16 @@ export class AuroSelect extends LitElement {
      * @private
      */
     this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
+
+    /**
+     * @private
+     */
+    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+
+    /**
+     * @private
+     */
+    this.isHiddenWhileLoading = false;
   }
 
   /**
@@ -94,6 +101,9 @@ export class AuroSelect extends LitElement {
   privateDefaults() {
     this.options = [];
     this.optionActive = null;
+    this.optionSelected = undefined;
+    this.value = undefined;
+    this.fullscreenBreakpoint = 'sm';
   }
 
   // This function is to define props used within the scope of this component
@@ -101,69 +111,150 @@ export class AuroSelect extends LitElement {
   // to understand how to use reflected attributes with your property settings.
   static get properties() {
     return {
-      // ...super.properties,
-      optionSelected: {
-        type: Object
-      },
-      value: {
-        type: String,
-        reflect: true
-      },
-      noValidate: {
-        type: Boolean,
-        reflect: true
-      },
-      required: {
-        type: Boolean,
-        reflect: true
-      },
-      error: {
-        type: String,
-        reflect: true
-      },
-      setCustomValidity: {
-        type: String
-      },
-      setCustomValidityCustomError: {
-        type: String
-      },
-      setCustomValidityValueMissing: {
-        type: String
-      },
-      validity: {
-        type: String,
-        reflect: true
-      },
+
+      /**
+       * When attribute is present, element shows disabled state.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
-      noCheckmark: {
-        type: Boolean,
-        reflect: true
-      },
+
+      /**
+       * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
+       */
       flexMenuWidth: {
         type: Boolean,
         reflect: true
       },
-      placeholder: { type: String },
+
+      /**
+       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.
+       * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       * @default sm
+       */
+      fullscreenBreakpoint: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, make bib.fullscreen.headline in HeadingDisplay.
+       * Otherwise, Heading 600
+       */
+      largeFullscreenHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * When true, checkmark on selected option will no longer be present.
+       */
+      noCheckmark: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If set, disables auto-validation on blur.
+       */
+      noValidate: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
        * @private
        */
-      options: { type: Array },
+      optionActive: {
+        type: Object
+      },
+
+      /**
+       * Specifies the current selected menuOption.
+       */
+      optionSelected: {
+        // Allow HTMLElement[] arrays and undefined
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
+      },
 
       /**
        * @private
        */
-      optionActive: { type: Object },
+      options: {
+        type: Array
+      },
+
+      /**
+       * Populates the `required` attribute on the element. Used for client-side validation.
+       */
+      required: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+       */
+      error: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
+      setCustomValidity: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
+      setCustomValidityCustomError: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
+      setCustomValidityValueMissing: {
+        type: String
+      },
+
+      /**
+       * Specifies the `validityState` this element is in.
+       */
+      validity: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Value selected for the component.
+       */
+      value: {
+        // Allow string[] arrays and undefined
+        converter: arrayConverter,
+        hasChanged: arrayOrUndefinedHasChanged
+      },
+
+      /**
+       * Sets multi-select mode, allowing multiple options to be selected at once.
+       */
+      multiSelect: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'multiselect'
+      },
     };
   }
 
   static get styles() {
     return [
-      styleCss,
       colorCss,
+      styleCss,
       tokensCss
     ];
   }
@@ -176,6 +267,10 @@ export class AuroSelect extends LitElement {
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
+
+    // setting up bibtemplate
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate.append(this.menuWrapper);
 
     if (this.customBibWidth) {
       this.dropdown.dropdownWidth = this.customBibWidth;
@@ -198,36 +293,31 @@ export class AuroSelect extends LitElement {
   }
 
   /**
-   * Updates the displayed value in an Auro dropdown component based on the provided option.
-   * @param {string|HTMLElement} option - The option to display. If a string, a new span element with the value string is created. If an HTMLElement, the selected option is cloned and non-styling attributes are removed.
+   * Updates the displayed value in an Auro dropdown component based on optionSelected.
    * @private
    * @returns {void}
    */
-  updateDisplayedValue(option) {
+  updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
 
-    // remove all existing rendered value(s)
-    triggerContentEl.querySelectorAll('auro-menuoption, [valuestr], [auro-menuoption]').forEach((elm) => {
-      elm.remove();
-    });
-
-    if (typeof option === 'string' && option !== this.placeholder) {
-      // create a new span element with the value string
-      const valueElem = document.createElement('span');
-      valueElem.setAttribute('valuestr', true);
-      valueElem.textContent = option;
-
-      // append the new element into the trigger content
-      triggerContentEl.appendChild(valueElem);
-    } else if (typeof option === 'object') {
-      // clone the selected option and remove attributes that style it
-      const clone = option.cloneNode(true);
-      clone.removeAttribute('selected');
-      clone.removeAttribute('class');
-
-      // insert the non-styled clone into the trigger
-      triggerContentEl.appendChild(clone);
+    // Clear everything except placeholder
+    const placeholder = triggerContentEl.querySelector('#placeholder');
+    triggerContentEl.innerHTML = '';
+    if (placeholder) {
+      triggerContentEl.appendChild(placeholder);
     }
+
+    // Handle selected options
+    if (this.optionSelected && this.optionSelected.length) {
+      // Create display text from selected options
+      const displayText = this.optionSelected.map((option) => option.textContent).join(', ');
+
+      const span = document.createElement('span');
+      span.textContent = displayText;
+      triggerContentEl.appendChild(span);
+    }
+
+    this.dropdown.requestUpdate();
   }
 
   /**
@@ -237,6 +327,7 @@ export class AuroSelect extends LitElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+
     // racing condition on custom-select with custom-menu
     if (!this.menu) {
       setTimeout(() => {
@@ -245,19 +336,24 @@ export class AuroSelect extends LitElement {
       return;
     }
 
+    if (this.multiSelect) {
+      this.menu.multiSelect = this.multiSelect;
+    }
+
+    this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
     this.menu.setAttribute('aria-hidden', 'true');
 
     this.generateOptionsArray();
 
-    this.addEventListener('auroMenu-activatedOption', (evt) => {
+    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
     });
 
-    this.menu.addEventListener('selectedOption', () => {
+    this.menu.addEventListener('auroMenu-selectedOption', () => {
+      // Get array of selected options from menu
       this.optionSelected = this.menu.optionSelected;
-      this.value = this.optionSelected.value;
-
-      this.updateDisplayedValue(this.optionSelected);
+      // For single select, we still use arrays but only take first value
+      this.value = this.menu.value;
 
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
@@ -272,25 +368,11 @@ export class AuroSelect extends LitElement {
      * with `auro-select.value`.
      */
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
-      this.menu.optionSelected = undefined;
-      this.optionSelected = this.menu.optionSelected;
-
-      this.validity = 'badInput';
-
-      // Capitalizes the first letter of each word in this.value string
-      const valueStr = this.value.replace(/(^\w{1})|(\s+\w{1})/gu, (letter) => letter.toUpperCase());
-
-      // Pass the new string to the trigger content
-      this.updateDisplayedValue(valueStr);
+      this.menu.clearSelection();
     });
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {
-      // set the trigger content back to the placeholder
-      this.updateDisplayedValue(this.placeholder);
-
-      this.optionSelected = undefined;
-      this.value = undefined;
-
+      this.optionSelected = this.menu.optionSelected;
       this.validation.validate(this);
     });
   }
@@ -311,7 +393,7 @@ export class AuroSelect extends LitElement {
         this.dropdown.show();
 
         if (this.dropdown.isPopoverVisible) {
-          this.menu.selectNextItem('up');
+          this.menu.navigateOptions('up');
         }
       }
 
@@ -321,7 +403,7 @@ export class AuroSelect extends LitElement {
         this.dropdown.show();
 
         if (this.dropdown.isPopoverVisible) {
-          this.menu.selectNextItem('down');
+          this.menu.navigateOptions('down');
         }
       }
 
@@ -333,7 +415,11 @@ export class AuroSelect extends LitElement {
       }
 
       if (evt.key === 'Tab') {
-        this.dropdown.hide();
+        if (this.dropdown.isBibFullscreen) {
+          evt.preventDefault();
+        } else {
+          this.dropdown.hide();
+        }
       }
     });
 
@@ -342,8 +428,32 @@ export class AuroSelect extends LitElement {
     this.addEventListener('blur', () => {
       this.validation.validate(this);
     });
+  }
 
-    this.labelForSr();
+  /**
+   * Manages the visibility of the dropdown based on loading state changes.
+   *
+   * This method listens for loading state changes and adjusts the visibility of the dropdown accordingly.
+   * If the dropdown is visible and loading is true without any loading placeholders, it hides the dropdown
+   * and sets a flag to indicate it is hidden while loading. If loading is false and the dropdown was previously
+   * hidden, it checks if the active element is within the dropdown and shows it again if true.
+   *
+   * @private
+   * @param {CustomEvent} event - The event object containing details about the loading state change.
+   * @param {boolean} event.detail.loading - Indicates whether the menu is currently loading.
+   * @param {boolean} event.detail.hasLoadingPlaceholder - Indicates if there are loading placeholders present.
+   * @returns {void}
+   */
+  handleMenuLoadingChange(event) {
+    if (this.dropdown.isPopoverVisible && event.detail.loading && !event.detail.hasLoadingPlaceholder) {
+      this.isHiddenWhileLoading = true;
+      this.dropdown.hide();
+    } else if (!event.detail.loading && this.isHiddenWhileLoading) {
+      if (this.contains(document.activeElement)) {
+        this.dropdown.show();
+      }
+      this.isHiddenWhileLoading = false;
+    }
   }
 
   /**
@@ -360,9 +470,28 @@ export class AuroSelect extends LitElement {
      * input as no longer in the initial state.
      */
     if (this.value === undefined) {
-      this.value = '';
+      this.value = undefined;
       this.removeEventListener('focusin', this.handleFocusin);
     }
+  }
+
+  /**
+   * Watch for slot changes and recalculate the menuoptions.
+   * @private
+   * @param {Event} event - `slotchange` event.
+   * @returns {void}
+   */
+  handleSlotChange(event) {
+    // Remove previous slot nodes if necessary.
+    const oldSlots = this.bibtemplate.querySelectorAll(`[slot="header"]`);
+    oldSlots.forEach((old) => old.remove());
+
+    const newSlots = event.target.assignedNodes();
+    newSlots.forEach((node) => {
+      const clone = node.cloneNode(true);
+      clone.setAttribute('slot', "header");
+      this.bibtemplate.append(clone);
+    });
   }
 
   /**
@@ -418,68 +547,68 @@ export class AuroSelect extends LitElement {
     }
   }
 
-  updated(changedProperties) {
-    // After the component is ready, send direct value changes to auro-menu.
+  async updated(changedProperties) {
     if (changedProperties.has('value')) {
       if (this.value) {
         this.menu.value = this.value;
+
+        // Wait for menu to finish updating its value
+        await this.menu.updateComplete;
+
+        this.optionSelected = this.menu.optionSelected;
       } else {
         this.menu.value = undefined;
       }
 
       this.validation.validate(this);
 
+      // LEGACY EVENT
       this.dispatchEvent(new CustomEvent('auroSelect-valueSet', {
         bubbles: true,
         cancelable: false,
         composed: true,
       }));
+
+      this.dispatchEvent(new CustomEvent('input', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      }));
+    }
+
+    if (changedProperties.has('optionSelected')) {
+      this.updateDisplayedValue();
     }
 
     if (changedProperties.has('error')) {
-      this.validation.validate(this, true);
+      this.validate(true);
     }
   }
 
   /**
-   * Handles reading of auro-select by screen readers.
-   * @private
+   * Resets component to initial state.
    * @returns {void}
    */
-  labelForSr() {
-    const placeholderLabel = document.createElement("div");
-    const textId = "label";
+  reset() {
+    this.validation.reset(this);
+  }
 
-    placeholderLabel.setAttribute("id", textId);
-    placeholderLabel.setAttribute("aria-live", "polite");
+  /**
+   * Hide dropdownbib.
+   * @private
+   */
+  hideBib() {
+    if (this.dropdown) {
+      this.dropdown.hide();
+    }
+  }
 
-    const styles = {
-      position: 'absolute',
-      overflow: 'hidden',
-      clipPath: 'inset(1px, 1px, 1px, 1px)',
-      width: '1px',
-      height: '1px',
-      padding: '0',
-      border: '0'
-    };
-
-    Object.assign(placeholderLabel.style, styles);
-
-    this.addEventListener('focus', () => {
-      document.body.appendChild(placeholderLabel);
-
-      if (!this.optionSelected) {
-        document.getElementById(textId).innerHTML = this.placeholder;
-      } else {
-        document.getElementById(textId).innerHTML = `${this.optionSelected.innerText}, ${this.placeholder}`;
-      }
-    });
-
-    this.addEventListener('blur', () => {
-      if (document.contains(placeholderLabel)) {
-        document.body.removeChild(placeholderLabel);
-      }
-    });
+  /**
+   * Validates value.
+   * @param {boolean} [force=false] - Whether to force validation.
+   */
+  validate(force = false) {
+    this.validation.validate(this, force);
   }
 
   // When using auroElement, use the following attribute and function when hiding content from screen readers.
@@ -487,6 +616,10 @@ export class AuroSelect extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const placeholderClass = {
+      hidden: this.value,
+    };
+
     return html`
       <div class="outerWrapper">
         <div aria-live="polite" class="util_displayHiddenVisually">
@@ -504,31 +637,40 @@ export class AuroSelect extends LitElement {
             : undefined
           };
         </div>
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        </div>
         <${this.dropdownTag}
           for="selectmenu"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           common
+          fluid
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           ?matchWidth="${!this.flexMenuWidth}"
           chevron
           part="dropdown">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
-            ${this.value ? this.displayValue : html`<span class="placeholder">${this.placeholder}</span>`}
+            <span id="placeholder" class="${classMap(placeholderClass)}"><slot name="placeholder"></slot></span>
           </span>
+
           <div class="menuWrapper">
           </div>
+
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+          </${this.bibtemplateTag}>
           <slot name="label" slot="label"></slot>
-          <span slot="helpText">
+          <p slot="helpText">
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`
-                <p class="selectElement-helpText" id="${this.uniqueId}" part="helpText">
+                <span id="${this.uniqueId}" part="helpText">
                   <slot name="helpText"></slot>
-                </p>`
+                </span>`
               : html`
-                <p class="selectElement-helpText" id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-                  ${this.setCustomValidity}
-                </p>`
+                <span id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+                  ${this.errorMessage}
+                </span>`
             }
-          </span>
+          </p>
         </${this.dropdownTag}>
         <!-- Help text and error message template -->
       </div>

@@ -1,0 +1,61 @@
+{
+  "name": "@aurodesignsystem/auro-bibtemplate",
+  "version": "1.0.0",
+  "description": "auro-bibtemplate HTML custom element",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "@aurodesignsystem/auro-header": "^4.0.0",
+    "@aurodesignsystem/auro-icon": "^6.1.2",
+    "chalk": "^5.3.0",
+    "lit": "^3.2.1"
+  },
+  "peerDependencies": {
+    "@aurodesignsystem/design-tokens": "^4.13.0",
+    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+  },
+  "devDependencies": {
+    "@auro-formkit/build-tools": "*",
+    "@auro-formkit/config": "*",
+    "@auro-formkit/typescript": "*",
+    "@aurodesignsystem/design-tokens": "^4.13.0",
+    "@aurodesignsystem/webcorestylesheets": "^5.1.2",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "rollup": "^4.24.0",
+    "rollup-plugin-serve": "^2.0.3",
+    "wc-sass-render": "^1.4.0"
+  },
+  "overrides": {
+    "wc-sass-render": {
+      "sass": "$sass"
+    }
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "*-css.js",
+      "*.css"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "run-s sass bundler types",
+    "sass": "run-s build:sass postCss:component sass:render",
+    "build:version": "node ./scripts/version.mjs",
+    "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
+    "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "bundler": "rollup -c node:@auro-formkit/config/internal.rollup",
+    "clean": "rm -rf dist build",
+    "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
+    "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "types": "tsc --project tsconfig.json",
+    "lint": "npm-run-all scssLint esLint",
+    "scssLint": "stylelint \"./src/**/*.scss\"",
+    "esLint": "eslint \"./src/**/*.js\""
+  }
+}
