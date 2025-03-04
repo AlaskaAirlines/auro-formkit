@@ -109,7 +109,7 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module "src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@2.0.0-beta.52/auro-form/+esm"></script>
+<script type="module "src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@2.0.0/auro-form/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -122,11 +122,7 @@ For the most up to date information on [UI development browser support](https://
 ## auro-form use cases
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-form>` element should be used in situations where users may:
-
-* ...
-* ...
-* ...
+The `<auro-form>` element should be used in situations where users want to build HTML forms.
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit development
