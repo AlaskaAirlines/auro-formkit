@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.0.0-beta.53](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.52...v2.0.0-beta.53) (2025-03-04)
+
+
+### Features
+
+* fix clear button accessibility ([6c08805](https://github.com/AlaskaAirlines/auro-formkit/commit/6c0880570a73e223b5bb7ef5d0f3613d2ad6043d))
+
 # [2.0.0-beta.52](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0-beta.51...v2.0.0-beta.52) (2025-02-28)
 
 
