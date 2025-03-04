@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [2.0.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0...v2.0.1) (2025-03-04)
+
+
+### Performance Improvements
+
+* add missing auro-form documentation [#362](https://github.com/AlaskaAirlines/auro-formkit/issues/362) ([c5ebed2](https://github.com/AlaskaAirlines/auro-formkit/commit/c5ebed2311d400e5b9e77e1faab46474305c4105))
+
 # [2.0.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v1.5.0...v2.0.0) (2025-03-04)
 
 
