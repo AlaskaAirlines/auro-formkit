@@ -1,0 +1,2 @@
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../docs/api.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
