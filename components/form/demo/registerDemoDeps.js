@@ -1,3 +1,4 @@
+import "@aurodesignsystem/auro-button";
 import {AuroInput} from "@aurodesignsystem/auro-input";
 import {AuroDatePicker} from "@aurodesignsystem/auro-datepicker";
 import {AuroCounter, AuroCounterGroup} from "@aurodesignsystem/auro-counter";
