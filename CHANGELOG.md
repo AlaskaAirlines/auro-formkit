@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [2.0.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.1...v2.0.2) (2025-03-11)
+
+
+### Bug Fixes
+
+* update postinstall script import for cross-platform compatibility [#425](https://github.com/AlaskaAirlines/auro-formkit/issues/425) ([dd2dd95](https://github.com/AlaskaAirlines/auro-formkit/commit/dd2dd95e2ddd81bf34374e025ca45cabbd0abdb7))
+
 ## [2.0.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.0...v2.0.1) (2025-03-04)
 
 
