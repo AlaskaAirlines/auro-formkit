@@ -69,6 +69,11 @@ export class AuroDatePicker extends LitElement {
      */
     this.calendarRenderUtil = new UtilitiesCalendarRender();
 
+    /**
+     * @private
+     */
+    this.activeInput = 'dateFrom';
+
     // If `calendarStartDate` is set, use that as the central date. Otherwise, use the current date.
     if (this.getAttribute('calendarStartDate') && this.util.validDateStr(this.getAttribute('calendarStartDate'), this.getAttribute('format'))) {
       this.formattedStartDate = this.util.toNorthAmericanFormat(this.getAttribute('calendarStartDate'), this.getAttribute('format'));
@@ -77,17 +82,12 @@ export class AuroDatePicker extends LitElement {
       this.calendarRenderUtil.updateCentralDate(this, new Date());
     }
 
-    this.disabled = false;
-    this.required = false;
-    this.range = false;
-    this.noValidate = false;
-    this.validity = undefined;
-    this.value = undefined;
-    this.valueEnd = undefined;
-    this.calendarStartDate = undefined;
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
+    this.calendarStartDate = undefined;
+    this.disabled = false;
     this.format = 'mm/dd/yyyy';
+    this.manual = false;
     this.monthNames = [
       'January',
       'February',
@@ -102,6 +102,12 @@ export class AuroDatePicker extends LitElement {
       'November',
       'December'
     ];
+    this.noValidate = false;
+    this.range = false;
+    this.required = false;
+    this.validity = undefined;
+    this.value = undefined;
+    this.valueEnd = undefined;
 
     this.monthFirst = true;
 
@@ -212,6 +218,14 @@ export class AuroDatePicker extends LitElement {
        * Otherwise, Heading 600.
        */
       largeFullscreenHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * When set, clicking in the calender will only apply the selected date to the most recently focused input in range support.
+       */
+      manual: {
         type: Boolean,
         reflect: true
       },
@@ -541,6 +555,10 @@ export class AuroDatePicker extends LitElement {
         this.notifyValueChanged();
       });
 
+      input.addEventListener('focusin', (event) => {
+        this.activeInput = event.target.id;
+      });
+
       input.addEventListener('auroFormElement-validated', (evt) => {
         if (evt.detail.validity === 'customError') {
           this.validity = evt.detail.validity;
@@ -692,12 +710,19 @@ export class AuroDatePicker extends LitElement {
    * @returns {void}
    */
   handleCellClick(time) {
+    // THIS IS WHERE I NEED TO INTERRUPT
     this.cellClickActive = true;
 
     const convertedDate = this.convertWcTimeToDate(time);
     const newDate = this.util.toCustomFormat(convertedDate, this.format);
 
-    if (this.util.validDateStr(newDate, this.format)) {
+    if (this.manual && this.activeInput) {
+      if (this.activeInput === 'dateFrom') {
+        this.value = newDate;
+      } else {
+        this.valueEnd = newDate;
+      }
+    } else if (this.util.validDateStr(newDate, this.format)) {
       if (this.inputList.length > 1) {
         if (!this.value || !this.util.validDateStr(this.value, this.format)) {
           this.value = newDate;
@@ -1003,7 +1028,7 @@ export class AuroDatePicker extends LitElement {
           part="dropdown">
           <div slot="trigger" class="dpTriggerContent" part="trigger">
             <${this.inputTag}
-              id="${this.generateRandomString(12)}"
+              id="dateFrom"
               bordered
               class="dateFrom"
               ?required="${this.required}"
@@ -1023,7 +1048,7 @@ export class AuroDatePicker extends LitElement {
             </${this.inputTag}>
             ${this.range ? html`
               <${this.inputTag}
-                id="${this.generateRandomString(12)}"
+                id="dateTo"
                 bordered
                 class="dateTo"
                 ?required="${this.required}"
@@ -1074,6 +1099,7 @@ export class AuroDatePicker extends LitElement {
             }
           </p>
         </${this.dropdownTag}>
+        <p>this.manual = ${this.manual}</p>
       </div>
     `;
   }
