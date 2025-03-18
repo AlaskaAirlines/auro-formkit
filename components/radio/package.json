@@ -17,10 +17,6 @@
     "focus-visible": "^5.2.1",
     "lit": "^3.2.1"
   },
-  "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.13.0",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
-  },
   "devDependencies": {
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",

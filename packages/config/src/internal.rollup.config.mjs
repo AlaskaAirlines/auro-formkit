@@ -7,6 +7,16 @@ const createConfig = (input, output) => ({
     dir: output,
     entryFileNames: '[name].js'
   },
+  external: [
+    'lit',
+    '@lit/reactive-element',
+    'lit-html',
+    'lit/decorators.js',
+    'lit/static-html.js',
+    'lit/directives/repeat.js',
+    'lit/directives/class-map.js',
+    'lit/directives/if-defined.js',
+  ],
   plugins: [
     nodeResolve({
       dedupe: [
