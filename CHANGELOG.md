@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [2.0.3-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.2...v2.0.3-beta.1) (2025-03-18)
+
+
+### Bug Fixes
+
+* add external dependencies for Rollup configuration [#249](https://github.com/AlaskaAirlines/auro-formkit/issues/249) ([4c7ca14](https://github.com/AlaskaAirlines/auro-formkit/commit/4c7ca14b868bf01d234288238d097da02858c654))
+
 ## [2.0.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.1...v2.0.2) (2025-03-11)
 
 
