@@ -1,0 +1,20 @@
+import * as stories from "./form.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+
+<Meta of={stories} />
+
+# Form
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+### Basic Form
+The most basic form implementation requires an `auro-input` and an optional auro button with `type="submit"`.
+
+By default, Auro Form connects a `submit` event to all `type="submit"` buttons within the form.
+
+<Canvas of={stories.Basic} />

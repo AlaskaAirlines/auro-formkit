@@ -1,0 +1,131 @@
+import * as stories from "./select.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+import tokens from "../src/styles/tokens.scss?raw";
+
+<Meta of={stories} />
+
+# Select
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+### Default example
+
+A baseline `auro-select` using `auro-menu` and `auro-menuoption` elements.
+
+<Canvas of={stories.Basic} />
+
+### Property Examples
+
+#### value
+Use the `value` property to define a preset value on the `auro-select` element. The `value` of `auro-select` must match the `value` defined of a single `auro-menuoption`. Upon initially rendering the component, if the `value` does not match an `auro-menuoption`, the `value` of `auro-select` will be set to `undefined`.
+
+To pre-set the value of auro-select on load, use the `value` property. The `selected` attribute on auro-menuoption is designed to illustrate state in the DOM.
+
+<Canvas of={stories.Value} />
+
+#### required
+When present, the `required` attribute specifies that a select field must be filled out before submitting the form.
+
+When the validity check fails the validityState, equals `valueMissing`. The error message for the `valueMissing` validityState can be set to a custom string using the `setCustomValidityValueMissing`. There is no default error message defined.
+
+<Canvas of={stories.Required} />
+
+#### error
+Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
+
+A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
+
+<Canvas of={stories.ErrorAPI} />
+
+#### disabled
+Use the `disabled` boolean attribute to toggle the disabled UI.
+
+<Canvas of={stories.Disabled} />
+
+#### multiselect
+Sets multi-select mode, allowing multiple options to be selected at once.
+
+<Canvas of={stories.MultiSelect} />
+
+#### flexMenuWidth
+Use the `flexMenuWidth` boolean attribute to toggle the width of the `<auro-select>` element to match the width of the bib content, rather than the width of the trigger.
+
+<Canvas of={stories.FlexMenuWidth} />
+
+### Slot Examples
+
+#### label
+Use the `label` slot to give your users contextual information about their selection options. This `label` content is also helpful for assistive devices.
+
+<Canvas of={stories.Label} />
+
+#### helpText
+Use the `helptext` slot to provide additional information back to your user about their selection option(s).
+
+<Canvas of={stories.HelpText} />
+
+## Functional Examples
+
+### Reset State
+
+Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<Canvas of={stories.ResetState} />
+
+### Extract value
+
+The following example illustrates how a user may query the `element.value` or `element.optionSelected` for the current value or complete option object that is selected.
+
+<Canvas of={stories.ValueExtraction} />
+
+### Custom Validity with Error State
+
+This example programmatically adds the `error` state when a user selects an option that is greater than `2`.
+
+<Canvas of={stories.CustomErrorValidity} />
+
+### Loading
+While content is loading, the menu can either remain empty or display a loading placeholder
+
+<Canvas of={stories.Loading} />
+
+### Dropdown with fullscreen bib
+
+You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
+
+The default value of `fullscreenBreakpoint` is `sm`. 
+
+Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens)
+
+To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMMENDED**.
+
+<Canvas of={stories.FullscreenBreakpoint} />
+
+#### in Dialog
+
+The component can be in a dialog.
+
+<Canvas of={stories.InDialog} />
+
+#### Watch for value changes
+
+The following example listens for the `auroMenu-selectedOption` event. Once triggered, element.value or element.optionSelected may be queried for the new value or complete option object.
+
+<Canvas of={stories.LogValue} />
+
+### Theme Support
+
+The component may be restyled using the following code sample and changing the values of the following token(s).
+
+<Markdown>
+{`
+  \`\`\`scss
+  ${tokens}
+  \`\`\`
+`}
+</Markdown>

@@ -1,0 +1,258 @@
+import * as stories from "./input.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+import tokens from "../src/styles/tokens.scss?raw";
+
+<Meta of={stories} />
+
+# Input
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+## Localization Support
+
+The `auro-input` element supports the localization of all content managed within the scope of the element. This DOES NOT include any custom content placed in the `slot` element.
+
+{/* TODO: This needs to somehow affect the stories? thru the iFrame boundary? Replace with globalType? */}
+{/* <auro-radio-group required horizontal>
+  <span slot="legend">Use the options here to toggle between languages</span>
+  <auro-radio id="enButton" name="langDemo" value="en" checked>English</auro-radio>
+  <auro-radio id="esButton" name="langDemo" value="es">Spanish</auro-radio>
+</auro-radio-group> */}
+
+## Basic
+
+The default component supports the basic input `type="text"` structure. The `(optional)` label is provided to instruct the user that their input is not required. Use the `bordered` attribute for a bordered `<auro-input>`.
+
+<Canvas of={stories.Basic} />
+
+## Attribute Examples
+
+### Disabled
+Use the `disable` attribute to prevent the user from interacting with the input.
+
+<Canvas of={stories.Disabled} />
+
+### Placeholder
+Use the `placeholder` attribute to add a custom placeholder message within the element.
+
+<Canvas of={stories.Placeholder} />
+
+### Value
+Use the `value` attribute to programmatically set the value of the input.
+
+<Canvas of={stories.ProgrammaticValue} />
+
+#### Dynamically Set Value
+
+Use the `value` and other components to dynamically set the value of the input.
+
+Note: Setting the `value` to `undefined` will also reset the element.
+
+<Canvas of={stories.Value} />
+
+### Max
+Use the `max` attribute to define a maximum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `number` or any date format.
+
+The `setCustomValidityRangeOverflow` attribute may optionally be used in combination with the `max` attribute to define custom help text used when the input value is greater than the value of the `max` attribute.
+
+#### Date Example
+
+<Canvas of={stories.MaxDate} />
+
+#### Number Example
+
+<Canvas of={stories.MaxNumber} />
+
+### Min
+Use the `min` attribute to define a minimum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `number` or any date format.
+
+The `setCustomValidityRangeUnderflow` attribute may optionally be used in combination with the `min` attribute to define custom help text used when the input value is less than the value of the `min` attribute.
+
+#### Date Example
+
+<Canvas of={stories.MinDate} />
+
+#### Number Example
+
+<Canvas of={stories.MinNumber} />
+
+### Max Length
+Use the `maxlength` attribute to control the length of the input entered.
+
+The `setCustomValidityTooLong` attribute may optionally be used in combination with the `maxLength` attribute to define custom help text used when the length of the input is too long.
+
+<Canvas of={stories.MaxLength} />
+
+### Min Length <a name="minLength"></a>
+Use the `minlength` attribute to control the length of the input entered.
+
+The `setCustomValidityTooShort` attribute may optionally be used in combination with the `minLength` attribute to define custom help text used when the length of the input is not long enough.
+
+<Canvas of={stories.MinLength} />
+
+### Pattern
+Use the `pattern` attribute to set custom input validation. This example also uses the `spellcheck` attribute set to `false` which in turn sets `autocorrect` to `off` and `autocapitalize` to `none`. Additionally the `maxlength` attribute sets the maximum length of characters that can be entered.
+
+The `<auro-input>` component supports setting a custom validity message specific to the pattern validation by using the `setCustomValidityPatternMismatch` attribute.
+
+<Canvas of={stories.Pattern} />
+
+### Readonly
+Use the `readonly` attribute to prevent the user from editing the value of the input.
+
+In this example, the user is able to programmatically change the value of the input by clicking the button or clear out the contents of the input.
+
+<Canvas of={stories.Readonly} />
+
+### Active Label <a name="activeLabel"></a>
+Example use cases for auro-input support the `activeLabel` attribute. If set, the label will stay fixed in the active position.
+
+<Canvas of={stories.ActiveLabel} />
+
+### Disable auto-validation <a name="noValidate"></a>
+For use cases where the field is `required`, but live validation is not wanted, use the `noValidate` attribute.
+
+<Canvas of={stories.NoValidate} />
+
+### Format
+Use the `format` attribute to set the format of the IMask. 
+
+Default masking definitions:
+- 0 : number
+- a : letter
+- \* : any character
+
+See [IMask](https://imask.js.org/) for more information on how to configure a mask.
+
+<Canvas of={stories.Format} />
+
+## Error support and HTML5 Validity
+
+The `<auro-input>` component follows the HTML5 input `validity` and `validityState` [specification](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#client-side_validation).
+
+> if there is a form control that fails constraint validation, supporting browsers will display an error message on the first invalid form control; displaying a default message based on the error type, or a message set by you.
+
+### Required
+When present, the `required` attribute specifies that an input field must be filled out before submitting the form.
+
+When the validity check fails, the validityState equals `valueMissing`. The error message for the `valueMissing` validityState can be changed to a custom string using the `setCustomValidityValueMissing`.
+
+<Canvas of={stories.Required} />
+
+### Validation on input
+Use the `validateOnInput` attribute to enable live validation on the `input` event. Recommended use is with setting a custom `pattern` and validation is required prior to a `blur` event.
+
+<Canvas of={stories.ValidateOnInput} />
+
+### setCustomValidity
+The `setCustomValidity` attribute can be used to set a custom string for all validityStates. When the component is first loaded, if this attribute is set on the element, all validityStates (except `valid`) will display the defined message.
+
+**NOTE:** Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using this element property.
+
+<Canvas of={stories.SetCustomValidity} />
+
+### Error
+Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
+
+A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
+
+<Canvas of={stories.Error} />
+
+## Types
+
+### Password
+
+Use the `type="password"` attribute for a password style input. The hide/show password feature will automatically appear once a user begins to enter data.
+
+Default help text will be added to the input `type="password"` if custom help text is not provided. See the example below.
+
+<Canvas of={stories.Password} />
+
+### Email
+
+Use the `type="email"` attribute for a email style input. These examples illustrate the default error messaging per that browser. Content may vary.
+
+Default help text will be added to the input `type="email"` if custom help text is not provided. See the example below.
+
+<Canvas of={stories.Email} />
+
+### Number
+
+Use the `type="number"` attribute for a numeric style input and invoke a numeric virtual keyboard on handheld devices.
+
+This `number` input type should only be used for incremental numeric values, meaning values with decimals will be considered invalid. The `number` input type is not appropriate for values that happen to only consist of but aren't strictly speaking a number, such as postal codes in many countries or credit card numbers. See [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number) for more information.
+
+<Canvas of={stories.Number} />
+
+### Credit Card
+
+Use the `type="credit-card"` attribute for a credit card formatted input.
+
+Default help text will be added to the input `type="credit-card"` if custom help text is not provided. See the example below.
+
+<Canvas of={stories.CreditCard} />
+
+Use the `type="credit-card"` and `icon` attributes for a credit card formatted input with credit card icon support.
+
+**Dependency**: Please be sure to also install [auro-icon](https://auro.alaskaair.com/components/auro/icon/install) as a peer dependency.
+
+<Canvas of={stories.CreditCardIcon} />
+
+### Phone Number
+
+Use the `type="tel"` attribute for a phone number formatted input. The default format is `+1 (000) 000-0000`.
+
+<Canvas of={stories.Tel} />
+
+#### Formatting
+
+Use the `format` attribute to set a custom phone number format.
+
+<Canvas of={stories.TelFormat} />
+
+### Date
+
+Use the `type="date"` attribute for a date formatted input. The default date format is `mm/dd/yyyy`.
+
+<Canvas of={stories.MonthDayYear} />
+
+#### Formatting
+
+Use the `format` attribute to put together any combination of `mm`, `dd`, & `yyyy` or `yy`.
+
+<Canvas of={stories.YearMonthDay} />
+
+<Canvas of={stories.MonthYear} />
+
+<Canvas of={stories.Day} />
+
+## Additional Use Cases
+
+### Reset State
+
+Use the `reset()` method to reset the `<auro-input>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<Canvas of={stories.ResetState} />
+
+### Swapping Values Between Inputs
+
+Example illustrates using a JavaScript function attached to an `auro-button` component `click` event to swap the values of two `auro-input` elements. An example of this use case would be swapping the departure and arrival airports in a flight search form.
+
+<Canvas of={stories.SwapValue} />
+
+### Theme Support
+
+The component may be restyled using the following code sample and changing the values of the following token(s).
+
+<Markdown>
+{`
+  \`\`\`scss
+  ${tokens}
+  \`\`\`
+`}
+</Markdown>

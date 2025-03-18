@@ -1,0 +1,386 @@
+import { Meta, StoryObj } from "@storybook/web-components";
+
+import { html } from "lit-html";
+
+import { AuroCounter } from "../src/auro-counter";
+import { AuroCounterGroup } from "../src/auro-counter-group";
+
+AuroCounter.register(); // registering to `auro-counter`
+AuroCounterGroup.register(); // registering to `auro-counter-group`
+
+AuroCounter.register("custom-counter");
+AuroCounterGroup.register("custom-counter-group");
+
+const meta: Meta = {
+  component: "auro-counter-group",
+  title: "Counter & Counter Group",
+};
+export default meta;
+
+type Story = StoryObj;
+
+export const MinMax: Story = {
+  render: () => html`
+<auro-counter min="1" max="5" value="2">
+  Adults
+  <span slot="description">Min: 1, Max: 5</span>
+</auro-counter>
+  `,
+};
+
+export const Disabled: Story = {
+  render: () => html`
+<auro-counter-group>
+  <auro-counter disabled> Short label </auro-counter>
+  <auro-counter disabled>
+    This is an example of the wrapping behavior for a long label
+    <span slot="description">with short sub label text</span>
+  </auro-counter>
+</auro-counter-group>
+  `,
+};
+
+export const GroupProperties: Story = {
+  render: () => html`
+<!-- Example of counter-group properties -->
+<auro-counter-group max="10" min="2" isDropdown>
+  <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+  <div slot="label">Group with all properties</div>
+  <div slot="helpText">Total must be between 2-10</div>
+  <div slot="valueText">Custom total display</div>
+
+  <auro-counter> Counter 1 </auro-counter>
+  <auro-counter> Counter 2 </auro-counter>
+</auro-counter-group>
+  `,
+};
+
+export const Slots: Story = {
+  render: () => html`
+<!-- Example of all available slots -->
+<auro-counter-group isDropdown>
+  <!-- Group slots -->
+  <div slot="label">Group with all slots</div>
+  <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+  <div slot="helpText">Help text appears below the group</div>
+  <div slot="valueText">Custom value display</div>
+
+  <!-- Counter with all slots -->
+  <auro-counter>
+    Default slot content
+    <span slot="description">Description slot content</span>
+  </auro-counter>
+</auro-counter-group>
+  `,
+};
+
+// TODO: How to translate this to template expressions
+//       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
+//       as in checkboxStories.ResetState?
+// TODO: This should be able to use `action` from `@storybook/addon-actions`
+export const Events: Story = {
+  render: () => html`
+<code id="eventOutput"> Event values will appear here </code><br /><br />
+<auro-counter-group id="eventExample">
+  <auro-counter> Adults </auro-counter>
+  <auro-counter> Children </auro-counter>
+</auro-counter-group>
+
+<script>
+  (function () {
+    const counter = document.querySelector('#eventExample');
+    const output = document.querySelector('#eventOutput');
+  
+    counter?.addEventListener('input', (event) => {
+      if (output) {
+        output.textContent = \`Values updated: \${JSON.stringify(event.detail)}\`;
+      }
+    });
+  })();
+</script>
+  `,
+};
+
+export const DropdownValueText: Story = {
+  render: () => html`
+<div style="max-width: 350px;">
+  <auro-counter-group isDropdown>
+    <span slot="bib.fullscreen.headline">Passengers</span>
+    <div slot="valueText">Custom value text</div>
+    <div slot="label"></div>
+    <auro-counter>
+      Adults
+      <span slot="description">18 years or older</span>
+    </auro-counter>
+    <auro-counter>
+      Children
+      <span slot="description"
+        >Under 17 years old. Restrictions apply if traveling without an
+        adult.</span
+      >
+    </auro-counter>
+    <auro-counter>
+      Lap Infants
+      <span slot="description">Under 2 years</span>
+    </auro-counter>
+  </auro-counter-group>
+</div>
+  `,
+};
+
+export const GroupMax: Story = {
+  render: () => html`
+<auro-counter-group max="12" min="0">
+  <auro-counter> Short label </auro-counter>
+  <auro-counter>
+    This is an example of the wrapping behavior for a long label
+  </auro-counter>
+</auro-counter-group>
+  `,
+};
+
+export const GroupCounterMax: Story = {
+  render: () => html`
+<auro-counter-group max="12" min="0">
+  <auro-counter max="5"> This counter has a max value of 5 </auro-counter>
+  <auro-counter max="8"> This counter has a max value of 8 </auro-counter>
+</auro-counter-group>
+  `,
+};
+
+// TODO: Address type errors
+export const DropdownMobileProperties: Story = {
+  render: () => {
+    function handleResetClick() {
+      const counterGroup: AuroCounterGroup | null = document.querySelector('#dropdownCounterExample');
+      // @ts-expect-error - Private access to `AuroCounterGroup['counters']`
+      counterGroup?.counters?.forEach(counter => {
+        (counter as AuroCounter).value = 0;
+      });
+    }
+
+    function handleSaveClick() {
+      const counterGroup: AuroCounterGroup | null = document.querySelector('#dropdownCounterExample');
+      // @ts-expect-error - Private access to `AuroCounterGroup['dropdown']`
+      counterGroup?.dropdown?.hide();
+    }
+
+    return html`
+<div style="max-width: 350px;">
+  <auro-counter-group
+    id="dropdownCounterExample"
+    isDropdown
+    fullscreenBreakpoint="lg"
+  >
+    <span slot="label">Passengers</span>
+    <span slot="bib.fullscreen.headline">Passengers</span>
+    <div slot="helpText">This is help text</div>
+    <auro-counter>
+      Adults
+      <span slot="description">18 years or older</span>
+    </auro-counter>
+    <auro-counter>
+      Children
+      <span slot="description"
+        >Under 17 years old. Restrictions apply if traveling without an
+        adult.</span
+      >
+    </auro-counter>
+    <auro-counter>
+      Lap Infants
+      <span slot="description">Under 2 years</span>
+    </auro-counter>
+
+    <div
+      slot="bib.fullscreen.footer"
+      style="display:flex; justify-content: stretch; gap: 1.5rem"
+    >
+      <auro-button
+        id="dropdownCounterExampleResetbutton"
+        @click="${handleResetClick}"
+        fluid
+        variant="secondary"
+        style="flex: 1 50%"
+        >Reset</auro-button
+      >
+      <auro-button
+        id="dropdownCounterExampleSavebutton"
+        @click="${handleSaveClick}"
+        fluid
+        style="flex: 1 50%"
+        >Save</auro-button
+      >
+    </div>
+  </auro-counter-group>
+</div>
+  `},
+  parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
+  },
+};
+
+export const Properties: Story = {
+  render: () => html`
+<!-- Example of all counter properties -->
+<auro-counter-group>
+  <!-- Basic counter with min/max -->
+  <auro-counter min="1" max="5" value="2">
+    Min 1, Max 5
+  </auro-counter>
+
+  <!-- Disabled counter -->
+  <auro-counter disabled value="0">
+    Disabled counter
+  </auro-counter>
+
+</auro-counter-group>
+  `
+};
+
+export const BasicDescription: Story = {
+  render: () => html`
+<auro-counter>
+  Adults
+  <span slot="description">18 years or older</span>
+</auro-counter>
+  `
+};
+
+export const BasicStandalone: Story = {
+  render: () => html`
+<auro-counter>
+  Adults
+</auro-counter>
+
+  `
+};
+
+export const Basic: Story = {
+  render: () => html`
+<auro-counter-group>
+  <auro-counter>
+    Short label
+  </auro-counter>
+  <auro-counter>
+    Another short label
+  </auro-counter>
+  <auro-counter>
+    This is an example of the wrapping behavior for a long label
+  </auro-counter>
+</auro-counter-group>
+  `
+};
+
+export const CounterDisabled: Story = {
+  render: () => html`
+<auro-counter disabled value="0">
+  Disabled counter
+  <span slot="description">This counter cannot be modified</span>
+</auro-counter>
+  `
+};
+
+export const Description: Story = {
+  render: () => html`
+<auro-counter-group>
+  <auro-counter>
+    Short label
+    <span slot="description"
+      >This is an example of a long sub label wrapping behavior</span
+    >
+  </auro-counter>
+  <auro-counter>
+    This is an example of the wrapping behavior for a long label
+    <span slot="description">with short sub label text</span>
+  </auro-counter>
+  <auro-counter>
+    This is an example of the wrapping behavior for a long label
+    <span slot="description"
+      >Combined with an example of a long sub label wrapping behavior</span
+    >
+  </auro-counter>
+</auro-counter-group>
+  `
+};
+
+export const DropdownBasic: Story = {
+  render: () => html`
+<auro-counter-group isDropdown>
+  <div slot="bib.fullscreen.headline">Passengers</div>
+  <div slot="label">Passengers</div>
+  <auro-counter>
+    Adults
+    <span slot="description">18 years or older</span>
+  </auro-counter>
+  <auro-counter>
+    Children
+    <span slot="description">2-17 years</span>
+  </auro-counter>
+</auro-counter-group>
+  `
+};
+
+export const DropdownHelpText: Story = {
+  render: () => html`
+<div style="max-width: 350px;">
+  <auro-counter-group isDropdown>
+    <span slot="bib.fullscreen.headline">Passengers</span>
+    <div slot="helpText">This is help text</div>
+    <auro-counter>
+      Adults
+      <span slot="description">18 years or older</span>
+    </auro-counter>
+    <auro-counter>
+      Children
+      <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
+    </auro-counter>
+    <auro-counter>
+      Lap Infants
+      <span slot="description">Under 2 years</span>
+    </auro-counter>
+  </auro-counter-group>
+</div>
+  `
+};
+
+export const Dropdown: Story = {
+  render: () => html`
+<div style="max-width: 350px;">
+  <auro-counter-group isDropdown>
+    <span slot="bib.fullscreen.headline">Passengers</span>
+    <div slot="label">Passengers</div>
+    <auro-counter>
+      Adults
+      <span slot="description">18 years or older</span>
+    </auro-counter>
+    <auro-counter>
+      Children
+      <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
+    </auro-counter>
+    <auro-counter>
+      Lap Infants
+      <span slot="description">Under 2 years</span>
+    </auro-counter>
+  </auro-counter-group>
+</div>
+  `
+};
+
+export const Validation: Story = {
+  render: () => html`
+<auro-counter-group max="4" min="1">
+  <div slot="label">Room Occupants</div>
+  <div slot="helpText">Total occupants must be between 1-4 people</div>
+  <auro-counter>
+    Adults
+    <span slot="description">At least 1 adult required</span>
+  </auro-counter>
+  <auro-counter max="2">
+    Children
+    <span slot="description">Maximum 2 children per room</span>
+  </auro-counter>
+</auro-counter-group>
+  `
+};
