@@ -142,7 +142,7 @@ export const ResetState: Story = {
 //       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
 //       as in checkboxStories.ResetState?
 export const Dynamic: Story = {
-  render: () => `
+  render: () => html`
 <auro-radio-group required id="dynamicExample">
   <span slot="legend">Form label goes here</span>
 </auro-radio-group>
