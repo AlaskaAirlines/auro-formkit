@@ -138,34 +138,43 @@ export const ResetState: Story = {
   },
 };
 
-// TODO: How to translate this to template expressions
-//       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
-//       as in checkboxStories.ResetState?
 export const Dynamic: Story = {
-  render: () => html`
+  render: () => {
+    function setup() {
+      const values = ['Yes', 'No', 'Maybe'];
+      const radioGroup: AuroRadioGroup | null = document.querySelector('#dynamicExample');
+
+      for (let i = 0; i < values.length; i++) {
+        const radio = document.createElement('auro-radio') as AuroRadio;
+        
+        radio.id = `dynamicRadio${i}`;
+        // @ts-expect-error - TODO: `AuroRadio['label']` is not typed
+        radio.label = values[i];
+        // @ts-expect-error - TODO: `AuroRadio['name']` is not typed
+        radio.name = 'radioDemo';
+        // @ts-expect-error - TODO: `AuroRadio['value']` is not typed
+        radio.value = values[i];
+        radio.textContent = values[i];
+
+        radioGroup?.appendChild(radio);
+      }
+    }
+    
+    const template = html`
 <auro-radio-group required id="dynamicExample">
   <span slot="legend">Form label goes here</span>
 </auro-radio-group>
+    `;
 
-<script>
-  (function() {
-    const values = ['Yes', 'No', 'Maybe'];
-    const radioGroup = document.getElementById('dynamicExample');
+    setTimeout(setup, 0);
 
-    for (let i = 0; i < values.length; i++) {
-      const radio = document.createElement('auro-radio');
-      
-      radio.id = \`dynamicRadio\${i}\`;
-      radio.label = values[i];
-      radio.name = 'radioDemo';
-      radio.value = values[i];
-      radio.textContent = values[i];
-
-      radioGroup.appendChild(radio);
-    }
-  })();
-</script>
-  `
+    return template;
+  },
+  parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
+  },
 };
 
 export const CustomRadio: Story = {

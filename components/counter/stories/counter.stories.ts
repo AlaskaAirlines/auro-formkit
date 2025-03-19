@@ -87,32 +87,37 @@ export const SlotsOpen: Story = {
   }
 }
 
-// TODO: How to translate this to template expressions
-//       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
-//       as in checkboxStories.ResetState?
 // TODO: This should be able to use `action` from `@storybook/addon-actions`
 export const Events: Story = {
-  render: () => html`
+  render: () => {
+    function setup() {
+      const counter = document.querySelector('#eventExample');
+      const output = document.querySelector('#eventOutput');
+
+      counter?.addEventListener('input', (event) => {
+        if (output) {
+          // @ts-expect-error - TODO: Type event properly
+          output.textContent = `Values updated: ${JSON.stringify(event.detail)}`;
+        }
+      });
+    }
+
+    const template = html`
 <code id="eventOutput"> Event values will appear here </code><br /><br />
 <auro-counter-group id="eventExample">
   <auro-counter> Adults </auro-counter>
   <auro-counter> Children </auro-counter>
 </auro-counter-group>
+    `;
 
-<script>
-  (function () {
-    const counter = document.querySelector('#eventExample');
-    const output = document.querySelector('#eventOutput');
-  
-    counter?.addEventListener('input', (event) => {
-      if (output) {
-        output.textContent = \`Values updated: \${JSON.stringify(event.detail)}\`;
-      }
-    });
-  })();
-</script>
-  `,
+    setTimeout(setup, 0);
+
+    return template;
+  },
   parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
     chromatic: { disableSnapshot: true },
   },
   async play({ canvas }) {
@@ -120,7 +125,7 @@ export const Events: Story = {
     const buttons = await canvas.findAllByShadowRole('button');
     const adultsPlusButton = buttons[1];
     const childrenPlusButton = buttons[3];
-    const output = await canvas.findByText(/Values updated/i);
+    const output = await canvas.findByText(/Event values will appear here/i);
     
     await userEvent.click(adultsPlusButton);
     expect(output).toHaveTextContent('Values updated: {"total":1,"value":{"counter-0":1,"counter-1":0}}');
@@ -252,12 +257,11 @@ export const GroupCounterMax: Story = {
 };
 
 // TODO: Apply useful viewport dimensions
-// TODO: Address type errors
 export const DropdownMobileProperties: Story = {
   render: () => {
     function handleResetClick() {
       const counterGroup: AuroCounterGroup | null = document.querySelector('#dropdownCounterExample');
-      // @ts-expect-error - Private access to `AuroCounterGroup['counters']`
+      // @ts-expect-error - TODO: Private access to `AuroCounterGroup['counters']`
       counterGroup?.counters?.forEach(counter => {
         (counter as AuroCounter).value = 0;
       });
@@ -265,7 +269,7 @@ export const DropdownMobileProperties: Story = {
 
     function handleSaveClick() {
       const counterGroup: AuroCounterGroup | null = document.querySelector('#dropdownCounterExample');
-      // @ts-expect-error - Private access to `AuroCounterGroup['dropdown']`
+      // @ts-expect-error - TODO: Private access to `AuroCounterGroup['dropdown']`
       counterGroup?.dropdown?.hide();
     }
 

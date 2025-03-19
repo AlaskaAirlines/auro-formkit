@@ -14,6 +14,12 @@ AuroDatePicker.register(); // registering to `auro-datepicker`
 
 AuroDatePicker.register("custom-datepicker");
 
+function formatDateString(date) {
+  const dd = String("0" + date.getDate()).slice(-2);
+  const mm = String("0" + (date.getMonth() + 1)).slice(-2);
+  return `${mm}/${dd}/${date.getFullYear()}`;
+}
+
 const meta: Meta = {
   component: "auro-datepicker",
   title: "Datepicker",
@@ -190,12 +196,32 @@ export const MaxDate: Story = {
   },
 };
 
-// TODO: How to translate datepicker setup scripting to template expressions
-//       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
-//       as in checkboxStories.ResetState?
 export const UpdateMaxDate: Story = {
   render: () => {
-    return html`
+    function setup() {
+      const datepicker: AuroDatePicker | null = document.querySelector('#maxDateExample');
+      const changeMaxDateButton = document.querySelector('#maxDateChange');
+      const resetButton = document.querySelector('#resetMaxDate');
+    
+      const today = formatDateString(new Date());
+      let nextWeek = new Date();
+      nextWeek.setDate(nextWeek.getDate() + 7);
+      const nextWeekStr = formatDateString(nextWeek);
+    
+      datepicker?.setAttribute('value', nextWeekStr);
+      datepicker?.setAttribute('maxDate', nextWeekStr);
+    
+      changeMaxDateButton?.addEventListener('click', () => {
+        datepicker?.setAttribute('maxDate', today);
+      });
+
+      resetButton?.addEventListener('click', () => {
+        datepicker?.setAttribute('value', nextWeekStr);
+        datepicker?.setAttribute('maxDate', nextWeekStr);
+      });
+    }
+
+    const template = html`
 <auro-datepicker
   id="maxDateExample"
   setCustomValidityRangeOverflow="Selected date is later than maximum date."
@@ -208,50 +234,21 @@ export const UpdateMaxDate: Story = {
 <auro-button id="resetMaxDate"
   >Reset Datepicker to Initial Example</auro-button
 >
+  `;
 
-<script>
-  (function () {
-    const datepicker = document.querySelector('#maxDateExample');
-    const changeMaxDateButton = document.querySelector('#maxDateChange');
-    const resetButton = document.querySelector('#resetMaxDate');
-  
-    const today = formatDateString(new Date());
-  
-    let nextWeek = new Date();
-    let addOneWeek = nextWeek.getDate() + 7;
-  
-    nextWeek.setDate(addOneWeek);
-    const nextWeekStr = formatDateString(nextWeek);
-    
-    datepicker?.setAttribute('value', nextWeekStr);
-    datepicker?.setAttribute('maxDate', nextWeekStr);
-  
-    changeMaxDateButton?.addEventListener('click', () => {
-      datepicker?.setAttribute('maxDate', today);
-    });
-  
-    resetButton?.addEventListener('click', () => {
-      datepicker?.setAttribute('value', nextWeekStr);
-      datepicker?.setAttribute('maxDate', nextWeekStr);
-    });
+  setTimeout(setup, 0);
 
-    function formatDateString(date) {
-      const dd = String("0" + date.getDate()).slice(-2);
-      const mm = String("0" + (date.getMonth() + 1)).slice(-2);
-      const yyyy = date.getFullYear();
-
-      return \`\${mm}/\${dd}/\${yyyy}\`;
-    }
-  })();
-</script>
-  `},
+  return template;
+},
   parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
     chromatic: { disableSnapshot: true },
   },
   async beforeEach() {
     MockDate.set('2025-03-18');
  
-    // 👇 Reset the Date after each story
     return () => {
       MockDate.reset();
     };
@@ -263,8 +260,8 @@ export const UpdateMaxDate: Story = {
     // TODO: Cannot find this button
     // const firstPastMax = await screen.findByShadowRole('button', { name: '18', hidden: true });
     // expect(firstPastMax).toBeDisabled();
-
-    console.log(await screen.findAllByShadowRole('button', { hidden: true }));
+    
+    // console.log(await screen.findAllByShadowRole('button', { hidden: true }));
   }
 };
 
@@ -281,11 +278,35 @@ export const MinDate: Story = {
   `,
 };
 
-// TODO: How to translate datepicker setup scripting to template expressions
-//       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
-//       as in checkboxStories.ResetState?
 export const UpdateMinDate: Story = {
-  render: () => html`
+  render: () => {
+    function setup() {
+      const datepicker: AuroDatePicker | null = document.querySelector('#minDateExample');
+      const changeMinDateButton = document.querySelector('#minDateChange');
+      const resetButton = document.querySelector('#resetMinDate');
+    
+      const today = formatDateString(new Date());
+    
+      let nextWeek = new Date();
+      let addOneWeek = nextWeek.getDate() + 7;
+    
+      nextWeek.setDate(addOneWeek);
+      const nextWeekStr = formatDateString(nextWeek);
+    
+      datepicker?.setAttribute('value', today);
+      datepicker?.setAttribute('minDate', today);
+    
+      changeMinDateButton?.addEventListener('click', () => {
+        datepicker?.setAttribute('minDate', nextWeekStr);
+      });
+    
+      resetButton?.addEventListener('click', () => {
+        datepicker?.setAttribute('value', today);
+        datepicker?.setAttribute('minDate', today);
+      });
+    }
+    
+    const template = html`
 <auro-datepicker
   id="minDateExample"
   setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date."
@@ -300,43 +321,35 @@ export const UpdateMinDate: Story = {
 <auro-button id="resetMinDate"
   >Reset Datepicker to Initial Example</auro-button
 >
+    `;
 
-<script>
-  (function () {
-    const datepicker = document.querySelector('#minDateExample');
-    const changeMinDateButton = document.querySelector('#minDateChange');
-    const resetButton = document.querySelector('#resetMinDate');
-  
-    const today = formatDateString(new Date());
-  
-    let nextWeek = new Date();
-    let addOneWeek = nextWeek.getDate() + 7;
-  
-    nextWeek.setDate(addOneWeek);
-    const nextWeekStr = formatDateString(nextWeek);
-  
-    datepicker?.setAttribute('value', today);
-    datepicker?.setAttribute('minDate', today);
-  
-    changeMinDateButton?.addEventListener('click', () => {
-      datepicker?.setAttribute('minDate', nextWeekStr);
-    });
-  
-    resetButton?.addEventListener('click', () => {
-      datepicker?.setAttribute('value', today);
-      datepicker?.setAttribute('minDate', today);
-    });
+    setTimeout(setup, 0);
 
-    function formatDateString(date) {
-      const dd = String("0" + date.getDate()).slice(-2);
-      const mm = String("0" + (date.getMonth() + 1)).slice(-2);
-      const yyyy = date.getFullYear();
-
-      return \`\${mm}/\${dd}/\${yyyy}\`;
-    }
-  })();
-</script>
-  `,
+    return template;
+  },
+  parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
+    chromatic: { disableSnapshot: true },
+  },
+  async beforeEach() {
+    MockDate.set('2025-03-18');
+ 
+    return () => {
+      MockDate.reset();
+    };
+  },
+  async play({ canvas, step }) {
+    const maxDateButton = await canvas.findByShadowRole('button', { name: /Change minDate to/i });
+    await userEvent.click(maxDateButton);
+    
+    // TODO: Cannot find this button
+    // const lastBeforeMin = await screen.findByShadowRole('button', { name: '16', hidden: true });
+    // expect(lastBeforeMin).toBeDisabled();
+    
+    // console.log(await screen.findAllByShadowRole('button', { hidden: true }));
+  }
 };
 
 export const NoValidate: Story = {
@@ -503,27 +516,47 @@ export const PopoverSlot: Story = {
   `,
 };
 
-// TODO: How to translate this to template expressions
-//       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
-//       as in checkboxStories.ResetState?
 export const Localization: Story = {
-  render: () => html`
+  render: () => {
+    function setup() {
+      const datepicker: AuroDatePicker | null = document.querySelector("#localizationExample");
+    
+      if (datepicker) {
+        datepicker.monthNames = ['일월', '이월', '삼월', '사월', '오월', '유월', '칠월', '팔월', '구월', '시월', '십일월', '십이월'];
+      }
+    }
+    
+    const template = html`
 <auro-datepicker format="yyyy/mm/dd" id="localizationExample">
   <span slot="bib.fullscreen.headline">Localization Headline</span>
   <span slot="fromLabel">Choose a date</span>
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>
 </auro-datepicker>
+    `;
 
-<script>
-  (function () {
-    const datepicker = document.querySelector("#localizationExample");
-    
-    if (datepicker) {
-      datepicker.monthNames = ['일월', '이월', '삼월', '사월', '오월', '유월', '칠월', '팔월', '구월', '시월', '십일월', '십이월'];
-    }
-  })();
-</script>
-  `,
+    setTimeout(setup, 0);
+
+    return template;
+  },
+  parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
+  },
+  async beforeEach() {
+    MockDate.set('2025-03-18');
+ 
+    return () => {
+      MockDate.reset();
+    };
+  },
+  async play({ canvas, step }) {
+    const datepickerInput = await canvas.findByShadowRole('textbox');
+    await userEvent.click(datepickerInput);
+
+    // TODO: Not sure why this isn't working. Once it does, Chromatic snapshot can be disabled
+    expect((await screen.findByShadowText('삼월')));
+  },
 };
 
 export const ResetState: Story = {

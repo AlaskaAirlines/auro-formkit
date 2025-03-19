@@ -5,6 +5,8 @@ import { screen } from "shadow-dom-testing-library";
 
 import { html } from "lit-html";
 
+import { AuroMenu, AuroMenuOption } from "@aurodesignsystem/auro-menu";
+
 import "../../menu/src/registered";
 import { AuroCombobox } from "../src/auro-combobox";
 import { DynamicData } from './dynamicMenuDataApi';
@@ -48,9 +50,65 @@ export const BasicOpen: Story = {
   }
 };
 
-// TODO: How to import DynamicData?
+// TODO: This is not functioning
 export const DynamicMenu: Story = {
-  render: () => html`
+  render: () => {
+    function setup() {
+      const combobox: AuroCombobox | null = document.querySelector('#dynamicMenuExample');
+      const dropdownEl = combobox?.shadowRoot?.querySelector(combobox.dropdownTag._$litStatic$);
+      const inputEl = dropdownEl?.querySelector(combobox?.inputTag._$litStatic$);
+
+      const dynamicData = new DynamicData();
+
+      // Resets the root menu
+      function resetMenu(root) {
+        while (root.firstChild) {
+          root.removeChild(root.firstChild);
+        }
+      }
+
+      // Helper function that generates HTML for menuoptions
+      function generateMenuOptionHtml(menu, label, value) {
+        let option = document.createElement('auro-menuoption') as AuroMenuOption;
+        
+        // @ts-expect-error - TODO: `AuroMenuOption`['value'] is not typed
+        option.value = value;
+        option.innerHTML = label;
+
+        menu.appendChild(option);
+      }
+
+      // Generates HTML for menu and submenus using country & city data from an external API
+      function generateHtml(data) {
+        const initialMenu: AuroMenu | null = document.querySelector('#initMenu');
+
+        resetMenu(initialMenu);
+
+        for (let index = 0; index < data.length; index++) {
+          let country = data[index]['country'];
+          let cities = data[index]['cities'];
+
+          generateMenuOptionHtml(initialMenu, country, country);
+
+          for (let indexB = 0; indexB < cities.length; indexB++) {
+            let subMenu = document.createElement('auro-menu') as AuroMenu;
+
+            generateMenuOptionHtml(subMenu, cities[indexB], cities[indexB]);
+
+            initialMenu?.appendChild(subMenu);
+          }
+        };
+      }
+
+      inputEl.addEventListener('input', () => {
+        let data = dynamicData.getData();
+        data = dynamicData.filterData(data, inputEl.value);
+
+        generateHtml(data);
+      });
+    }
+    
+    const template = html`
 <auro-combobox id="dynamicMenuExample" noFilter>
   <span slot="bib.fullscreen.headline">Dynamic Combobox Header</span>
   <span slot="label">Name</span>
@@ -60,63 +118,17 @@ due to the requirements of auro-dropdown and auro-input
 -->
   <auro-menu id="initMenu"></auro-menu>
 </auro-combobox>
+    `;
 
-<script>
-  (function() {
-    const combobox = document.querySelector('#dynamicMenuExample');
-    const dropdownEl = combobox?.shadowRoot?.querySelector(combobox.dropdownTag._$litStatic$);
-    const inputEl = dropdownEl?.querySelector(combobox?.inputTag._$litStatic$);
+    setTimeout(setup, 0);
 
-    const dynamicData = new DynamicData();
-
-    // Resets the root menu
-    function resetMenu(root) {
-      while (root.firstChild) {
-        root.removeChild(root.firstChild);
-      }
-    }
-
-    // Helper function that generates HTML for menuoptions
-    function generateMenuOptionHtml(menu, label, value) {
-      let option = document.createElement('auro-menuoption');
-      
-      option.value = value;
-      option.innerHTML = label;
-
-      menu.appendChild(option);
-    }
-
-    // Generates HTML for menu and submenus using country & city data from an external API
-    function generateHtml(data) {
-      initialMenu = document.querySelector('#initMenu');
-
-      resetMenu(initialMenu);
-
-      for (let index = 0; index < data.length; index++) {
-        let country = data[index]['country'];
-        let cities = data[index]['cities'];
-
-        generateMenuOptionHtml(initialMenu, country, country);
-
-        for (let indexB = 0; indexB < cities.length; indexB++) {
-          let subMenu = document.createElement('auro-menu');
-
-          generateMenuOptionHtml(subMenu, cities[indexB], cities[indexB]);
-
-          initialMenu?.appendChild(subMenu);
-        }
-      };
-    }
-
-    inputEl.addEventListener('input', () => {
-      let data = dynamicData.getData();
-      data = dynamicData.filterData(data, inputEl.value);
-
-      generateHtml(data);
-    });
-  })();
-</script>
-  `,
+    return template;
+  },
+  parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
+  },
 };
 
 export const Disabled: Story = {
@@ -438,11 +450,50 @@ export const HelpText: Story = {
 };
 
 // TODO: This is not functioning
-// TODO: How to translate this to template expressions
-//       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
-//       as in checkboxStories.ResetState?
 export const Loading: Story = {
-  render: () => html`
+  render: () => {
+    function setup() {
+      const combobox: AuroCombobox | null = document.querySelector("#loadingExample");
+      const menu: AuroMenu | null = document.querySelector("#loadingExampleComboboxMenu");
+
+      function emptyMenu() {
+        const menuoptions = menu?.querySelectorAll('auro-menuoption') as NodeListOf<AuroMenuOption>;
+        menuoptions.forEach(mo => menu?.removeChild(mo));
+      }
+
+      function fillMenu() {
+        if (menu) {
+          menu.innerHTML += `
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+            <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+            <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+            <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+            <auro-menuoption static nomatch>No matching option</auro-menuoption>
+          `;
+        }
+      }
+
+      type Load = { (): void; id?: NodeJS.Timeout; };
+      const load: Load = () => {
+        clearTimeout(load.id);
+        emptyMenu();
+        menu?.setAttribute('loading', 'loading');
+        load.id = setTimeout(() => {
+          menu?.removeAttribute('loading');
+          fillMenu();
+        }, 1000);
+      }
+
+      combobox?.addEventListener("input", (e) => {
+        // @ts-expect-error - TODO: Type event properly
+        if (e.target.value && e.target.value !== e.target.optionSelected?.textContent) {
+          load();
+        }
+      });
+    }
+    
+    const template = html`
 <auro-combobox id="loadingExample">
   <span slot="bib.fullscreen.headline">Loading Combobox Header</span>
   <span slot="label">Please select a preference</span>
@@ -450,46 +501,17 @@ export const Loading: Story = {
     <auro-loader slot="loadingIcon" orbit xs></auro-loader><span slot="loadingText">Loading...</span>
   </auro-menu>
 </auro-combobox>
+    `;
 
-<script>
-(function() {
-  const combobox = document.querySelector("#loadingExample");
-  const menu = document.querySelector("#loadingExampleComboboxMenu");
+    setTimeout(setup, 0);
 
-  function emptyMenu() {
-    const menuoptions = menu.querySelectorAll('auro-menuoption');
-    menuoptions.forEach(mo => menu.removeChild(mo));
-  }
-
-  function fillMenu() {
-    menu.innerHTML += \`
-      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
-      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
-      <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
-      <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
-      <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
-      <auro-menuoption static nomatch>No matching option</auro-menuoption>
-    \`;
-  }
-
-  function load(menu) {
-    clearTimeout(load.id);
-    emptyMenu();
-    menu.setAttribute('loading', 'loading');
-    load.id = setTimeout(() => {
-      menu.removeAttribute('loading');
-      fillMenu();
-    }, 1000);
-  }
-
-  combobox.addEventListener("input", (e) => {
-    if (e.target.value && e.target.value !== e.target.optionSelected?.textContent) {
-      load();
-    }
-  });
-})();
-</script>
-  `,
+    return template;
+  },
+  parameters: {
+    docs: {
+      source: { type: 'code' },
+    },
+  },
 };
 
 // TODO: Apply useful viewport dimensions
