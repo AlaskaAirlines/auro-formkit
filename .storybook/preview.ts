@@ -130,6 +130,19 @@ const preview: Preview = {
         Meta,
         Markdown,
       },
+      source: {
+        /**
+         * When defining event handlers in a story's `render` function, the code before the return
+         * statement is not included in the source code displayed in the Docs tab. To work around this,
+         * we apply `parameters.docs.source.type = 'code'` to the story. That then prints the entire
+         * story source, which includes more than just the `render` function we're interested in.
+         * This transform function prints only the `render` function (i.e. the originalStoryFn).
+         */
+        transform: (code, { parameters, originalStoryFn }) =>
+          parameters.docs.source.type === "code"
+            ? originalStoryFn.toString()
+            : code,
+      },
       toc: true,
     },
     viewport: {
