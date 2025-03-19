@@ -24,7 +24,6 @@ const config: StorybookConfig = {
   ],
   addons: [
     getAbsolutePath("@storybook/addon-essentials"),
-    getAbsolutePath("@chromatic-com/storybook"),
     {
       // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
       name: '@storybook/addon-docs',
@@ -36,6 +35,8 @@ const config: StorybookConfig = {
         },
       },
     },
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@chromatic-com/storybook"),
   ],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
