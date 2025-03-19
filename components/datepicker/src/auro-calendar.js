@@ -100,7 +100,7 @@ export class AuroCalendar extends RangeDatepicker {
     /**
      * @private
      */
-    this.butonTag = versioning.generateTag('auro-formkit-datepicker-button', buttonVersion, AuroButton);
+    this.buttonTag = versioning.generateTag('auro-formkit-datepicker-button', buttonVersion, AuroButton);
 
     this.dropdown = undefined;
   }
@@ -362,7 +362,7 @@ export class AuroCalendar extends RangeDatepicker {
         </div>
       </div>
 
-      <${this.butonTag} slot="footer" fluid @click="${this.utilCal.requestDismiss}">Done</${this.butonTag}>
+      <${this.buttonTag} slot="footer" fluid @click="${this.utilCal.requestDismiss}">Done</${this.buttonTag}>
     </${this.bibtemplateTag}>
     `;
   }
