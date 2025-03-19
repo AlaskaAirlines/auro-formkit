@@ -3,6 +3,7 @@ import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import { DecoratorHelpers } from "@storybook/addon-themes";
 import { Canvas, Meta, Markdown } from '@storybook/blocks';
 import { html } from "lit-html";
+import { within as withinShadow } from 'shadow-dom-testing-library';
 
 const { initializeThemeState, pluckThemeFromContext } = DecoratorHelpers;
 
@@ -100,6 +101,9 @@ const containerDecorator = (Story, context) => {
 };
 
 const preview: Preview = {
+  beforeEach({ canvasElement, canvas }) {
+    Object.assign(canvas, { ...withinShadow(canvasElement) });
+  },
   decorators: [
     // (Story, context) => containerDecorator(() => Story(context), context), // Add containerDecorator globally
     withCssTheme({
@@ -133,5 +137,11 @@ const preview: Preview = {
     },
   },
 };
+
+export type ShadowQueries = ReturnType<typeof withinShadow>
+
+declare module 'storybook/internal/csf' { // since 8.6
+  interface Canvas extends ShadowQueries {}
+}
 
 export default preview;

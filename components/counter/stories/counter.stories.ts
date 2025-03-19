@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/web-components";
+import { expect, userEvent } from "@storybook/test";
 
 import { html } from "lit-html";
 
@@ -53,6 +54,10 @@ export const GroupProperties: Story = {
   <auro-counter> Counter 2 </auro-counter>
 </auro-counter-group>
   `,
+  async play({ canvas }) {
+    const counterGroupTrigger = await canvas.findByShadowText(/Custom total display/i);
+    await userEvent.click(counterGroupTrigger);
+  }
 };
 
 export const Slots: Story = {
@@ -73,6 +78,14 @@ export const Slots: Story = {
 </auro-counter-group>
   `,
 };
+
+export const SlotsOpen: Story = {
+  ...Slots,
+  async play({ canvas }) {
+    const counterGroupTrigger = await canvas.findByShadowText(/Custom value display/i);
+    await userEvent.click(counterGroupTrigger);
+  }
+}
 
 // TODO: How to translate this to template expressions
 //       (https://lit.dev/docs/templates/expressions/#event-listener-expressions),
@@ -99,6 +112,22 @@ export const Events: Story = {
   })();
 </script>
   `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async play({ canvas }) {
+    // TODO: Resorted to finding all buttons then referencing by index, because buttons do not have any accessible names
+    const buttons = await canvas.findAllByShadowRole('button');
+    const adultsPlusButton = buttons[1];
+    const childrenPlusButton = buttons[3];
+    const output = await canvas.findByText(/Values updated/i);
+    
+    await userEvent.click(adultsPlusButton);
+    expect(output).toHaveTextContent('Values updated: {"total":1,"value":{"counter-0":1,"counter-1":0}}');
+
+    await userEvent.click(childrenPlusButton);
+    expect(output).toHaveTextContent('Values updated: {"total":2,"value":{"counter-0":1,"counter-1":1}}');
+  }
 };
 
 export const DropdownValueText: Story = {
@@ -126,6 +155,10 @@ export const DropdownValueText: Story = {
   </auro-counter-group>
 </div>
   `,
+  async play({ canvas }) {
+    const counterGroupTrigger = await canvas.findByShadowText(/Custom value text/i);
+    await userEvent.click(counterGroupTrigger);
+  }
 };
 
 export const GroupMax: Story = {
@@ -137,6 +170,41 @@ export const GroupMax: Story = {
   </auro-counter>
 </auro-counter-group>
   `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async play({ canvas, step }) {
+    // TODO: Resorted to finding all buttons then referencing by index, because buttons do not have any accessible names
+    const buttons = await canvas.findAllByShadowRole('button');
+    const firstMinusButton = buttons[0];
+    const firstPlusButton = buttons[1];
+    const secondPlusButton = buttons[3];
+
+    await step('Increment both counters to 6', async () => {
+      for (let i = 0; i < 6; i++) {
+        await userEvent.click(firstPlusButton);
+      }
+  
+      for (let i = 0; i < 6; i++) {
+        await userEvent.click(secondPlusButton);
+      }
+  
+      expect(firstPlusButton).toBeDisabled();
+      expect(secondPlusButton).toBeDisabled();
+    });
+
+    await step('Decrement first counter by one', async () => {
+      await userEvent.click(firstMinusButton);
+      expect(firstPlusButton).toBeEnabled();
+      expect(secondPlusButton).toBeEnabled();
+    });
+    
+    await step('Increment second counter by one', async () => {
+      await userEvent.click(secondPlusButton);
+      expect(firstPlusButton).toBeDisabled();
+      expect(secondPlusButton).toBeDisabled();
+    });
+  }
 };
 
 export const GroupCounterMax: Story = {
@@ -146,8 +214,44 @@ export const GroupCounterMax: Story = {
   <auro-counter max="8"> This counter has a max value of 8 </auro-counter>
 </auro-counter-group>
   `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async play({ canvas, step }) {
+    // TODO: Resorted to finding all buttons then referencing by index, because buttons do not have any accessible names
+    const buttons = await canvas.findAllByShadowRole('button');
+    const firstMinusButton = buttons[0];
+    const firstPlusButton = buttons[1];
+    const secondMinusButton = buttons[2];
+    const secondPlusButton = buttons[3];
+    
+    await step('Increment first counter to max value', async () => {
+      for (let i = 0; i < 5; i++) {
+        await userEvent.click(firstPlusButton);
+      }
+      expect(firstPlusButton).toBeDisabled();
+    });
+
+    await step('Decrement first counter by one', async () => {
+      await userEvent.click(firstMinusButton);
+      expect(firstPlusButton).toBeEnabled();
+    });
+
+    await step('Increment second counter to max value', async () => {
+      for (let i = 0; i < 8; i++) {
+        await userEvent.click(secondPlusButton);
+      }
+      expect(secondPlusButton).toBeDisabled();
+    });
+
+    await step('Decrement second counter by one', async () => {
+      await userEvent.click(secondMinusButton);
+      expect(secondPlusButton).toBeEnabled();
+    });
+  }
 };
 
+// TODO: Apply useful viewport dimensions
 // TODO: Address type errors
 export const DropdownMobileProperties: Story = {
   render: () => {
@@ -236,7 +340,10 @@ export const Properties: Story = {
   </auro-counter>
 
 </auro-counter-group>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const BasicDescription: Story = {
@@ -245,7 +352,10 @@ export const BasicDescription: Story = {
   Adults
   <span slot="description">18 years or older</span>
 </auro-counter>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const BasicStandalone: Story = {
@@ -253,8 +363,10 @@ export const BasicStandalone: Story = {
 <auro-counter>
   Adults
 </auro-counter>
-
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const Basic: Story = {
@@ -270,7 +382,10 @@ export const Basic: Story = {
     This is an example of the wrapping behavior for a long label
   </auro-counter>
 </auro-counter-group>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const CounterDisabled: Story = {
@@ -282,6 +397,7 @@ export const CounterDisabled: Story = {
   `
 };
 
+// TODO: Apply useful viewport dimensions
 export const Description: Story = {
   render: () => html`
 <auro-counter-group>
@@ -319,7 +435,10 @@ export const DropdownBasic: Story = {
     <span slot="description">2-17 years</span>
   </auro-counter>
 </auro-counter-group>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const DropdownHelpText: Story = {
@@ -342,7 +461,10 @@ export const DropdownHelpText: Story = {
     </auro-counter>
   </auro-counter-group>
 </div>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const Dropdown: Story = {
@@ -365,7 +487,10 @@ export const Dropdown: Story = {
     </auro-counter>
   </auro-counter-group>
 </div>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const Validation: Story = {
@@ -382,5 +507,8 @@ export const Validation: Story = {
     <span slot="description">Maximum 2 children per room</span>
   </auro-counter>
 </auro-counter-group>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };

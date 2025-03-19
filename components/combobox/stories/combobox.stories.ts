@@ -1,5 +1,7 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 import { action } from "@storybook/addon-actions";
+import { expect, userEvent } from '@storybook/test';
+import { screen } from "shadow-dom-testing-library";
 
 import { html } from "lit-html";
 
@@ -36,6 +38,14 @@ export const Basic: Story = {
   </auro-menu>
 </auro-combobox>
   `,
+};
+
+export const BasicOpen: Story = {
+  ...Basic,
+  async play({ canvas }) {
+    const comboboxInput = await canvas.findByShadowRole('textbox');
+    await userEvent.type(comboboxInput, 'a');
+  }
 };
 
 // TODO: How to import DynamicData?
@@ -142,6 +152,16 @@ export const NoFilter: Story = {
   </auro-menu>
 </auro-combobox>
   `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async play({ canvas }) {
+    const comboboxInput = await canvas.findByShadowRole('textbox');
+    await userEvent.type(comboboxInput, 'x');
+
+    const noMatchOption = await screen.findByShadowRole('option', { name: /No matching option/i });
+    expect(noMatchOption).toBeInTheDocument();
+  }
 };
 
 export const Error: Story = {
@@ -196,6 +216,17 @@ export const Required: Story = {
   </auro-menu>
 </auro-combobox>
   `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async play({ canvas }) {
+    const comboboxInput = await canvas.findByShadowRole('textbox');
+    await userEvent.click(comboboxInput);
+    await userEvent.click(document.body);
+
+    const errorText = await screen.findAllByShadowText(/Please fill out this field/i);
+    expect(errorText.length).toBeGreaterThan(0);
+  }
 };
 
 export const ProgrammaticValue: Story = {
@@ -262,7 +293,23 @@ export const Value: Story = {
     docs: {
       source: { type: 'code' },
     },
+    chromatic: { disableSnapshot: true },
   },
+  async play({ canvas }) {
+    const comboboxInput = await canvas.findByShadowRole('textbox');
+
+    const setValidValueBtn = await canvas.findByShadowRole('button', { name: /Set to an existing option/i });
+    await userEvent.click(setValidValueBtn);
+    expect(comboboxInput).toHaveValue('Oranges');
+    
+    const setInvalidValueBtn = await canvas.findByShadowRole('button', { name: /Set to custom value/i });
+    await userEvent.click(setInvalidValueBtn);
+    expect(comboboxInput).toHaveValue('Dragon Fruit');
+    
+    const resetValueBtn = await canvas.findByShadowRole('button', { name: /Reset/i });
+    await userEvent.click(resetValueBtn);
+    expect(comboboxInput).toHaveValue('');
+  }
 };
 
 export const TypeMonthDayYear: Story = {
@@ -280,6 +327,18 @@ export const TypeMonthDayYear: Story = {
   </auro-menu>
 </auro-combobox>
   `,
+  async play({ canvas }) {
+    const comboboxInput = await canvas.findByShadowRole('textbox');
+    await userEvent.click(comboboxInput);
+  }
+};
+
+export const TypeMonthDayYearOpen: Story = {
+  ...TypeMonthDayYear,
+  async play({ canvas }) {
+    const combobox = await canvas.findByShadowRole('textbox');
+    await userEvent.type(combobox, '0');
+  }
 };
 
 export const Focus: Story = {
@@ -310,6 +369,10 @@ export const Focus: Story = {
       source: { type: 'code' },
     },
   },
+  async play({ canvas }) {
+    const btn = await canvas.findByShadowRole('button', { name: /Apply focus to combobox/i });
+    await userEvent.click(btn);
+  }
 };
 
 export const ResetState: Story = {
@@ -340,7 +403,19 @@ export const ResetState: Story = {
     docs: {
       source: { type: 'code' },
     },
+    chromatic: { disableSnapshot: true },
   },
+  async play({ canvas }) {
+    const comboboxInput = await canvas.findByShadowRole('textbox');
+    await userEvent.type(comboboxInput, 'a');
+    const option = await screen.findByShadowRole('option', { name: /Apples/i });
+    await userEvent.click(option);
+    expect(comboboxInput).toHaveValue('Apples');
+    
+    const resetValueBtn = await canvas.findByShadowRole('button', { name: /Reset/i });
+    await userEvent.click(resetValueBtn);
+    expect(comboboxInput).toHaveValue('');
+  }
 };
 
 export const HelpText: Story = {
@@ -417,6 +492,7 @@ export const Loading: Story = {
   `,
 };
 
+// TODO: Apply useful viewport dimensions
 export const FullscreenBreakpoint: Story = {
   render: () => html`
 <auro-combobox fullscreenBreakpoint="lg">
@@ -606,10 +682,14 @@ export const Airports: Story = {
     <auro-menuoption static nomatch>Unknown airport... </auro-menuoption>
   </auro-menu>
 </auro-combobox>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const Custom: Story = {
+  ...Basic,
   render: () => html`
 <custom-combobox>
   <span slot="bib.fullscreen.headline">Bib Header</span>
@@ -623,7 +703,10 @@ export const Custom: Story = {
     <auro-menuoption static nomatch>No matching option</auro-menuoption>
   </auro-menu>
 </custom-combobox>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
 
 export const TypeCreditCard: Story = {
@@ -655,9 +738,14 @@ export const TypeCreditCard: Story = {
     <auro-menuoption static nomatch>No matching credit card saved</auro-menuoption>
   </auro-menu>
 </auro-combobox>
-  `
+  `,
+  async play({ canvas }) {
+    const comboboxInput = await canvas.findByShadowRole('textbox');
+    await userEvent.type(comboboxInput, '0');
+  }
 };
 
+// TODO: No checkmark?
 export const WithCheckmark: Story = {
   render: () => html`
 <auro-combobox checkmark>

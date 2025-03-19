@@ -1,5 +1,8 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 import { action } from "@storybook/addon-actions";
+import { expect, userEvent, waitFor } from "@storybook/test";
+import MockDate from 'mockdate';
+import { screen } from "shadow-dom-testing-library";
 
 import { html } from "lit-html";
 
@@ -29,6 +32,14 @@ export const Basic: Story = {
   `,
 };
 
+export const BasicOpen: Story = {
+  ...Basic,
+  async play({ canvas }) {
+    const datepickerInput = await canvas.findByShadowRole('textbox');
+    await userEvent.click(datepickerInput);
+  }
+};
+
 export const BasicRange: Story = {
   render: () => html`
 <auro-datepicker range>
@@ -38,6 +49,14 @@ export const BasicRange: Story = {
   <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
 </auro-datepicker>
   `,
+};
+
+export const BasicRangeOpen: Story = {
+  ...BasicRange,
+  async play({ canvas }) {
+    const datepickerInput = (await canvas.findAllByShadowRole('textbox'))[0];
+    await userEvent.click(datepickerInput);
+  }
 };
 
 export const Disabled: Story = {
@@ -79,6 +98,17 @@ export const Error: Story = {
       source: { type: 'code' },
     },
   },
+  async play({ canvas }) {
+    const removeErrorButton = await canvas.findByShadowRole('button', { name: 'Remove Error' });
+    await userEvent.click(removeErrorButton);
+    await waitFor(() => {
+      expect(canvas.queryByShadowRole('alert')).not.toBeInTheDocument();
+    });
+
+    const setErrorButton = await canvas.findByShadowRole('button', { name: 'Set Error' });
+    await userEvent.click(setErrorButton);
+    expect(await canvas.findByShadowRole('alert')).toHaveTextContent('Custom New Error');    
+  }
 };
 
 export const CalendarStartAndEndDate: Story = {
@@ -94,6 +124,29 @@ export const CalendarStartAndEndDate: Story = {
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>
 </auro-datepicker>
   `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async play({ canvas, step }) {
+    const datepickerInput = await canvas.findByShadowRole('textbox');
+    await userEvent.click(datepickerInput);
+
+    // No role on the heading and the text is split into `div`s, so had to resort to this
+    expect((await screen.findByShadowText(/January/i)).parentNode).toHaveTextContent(/January 2022/i);
+
+    const nextMonthButton = await screen.findByShadowRole('button', { name: /Directional indicator; right/i });
+    await step('Navigate to end date', async () => {
+      for (let i = 0; i < 5; i++) {
+        await userEvent.click(nextMonthButton);
+      }
+    });
+    
+    // No role on the heading and the text is split into `div`s, so had to resort to this
+    expect((await screen.findByShadowText(/June/i)).parentNode).toHaveTextContent(/June 2022/i);
+    await waitFor(() => {
+      expect(nextMonthButton).not.toBeInTheDocument();
+    });
+  }
 };
 
 export const CalendarFocusDate: Story = {
@@ -108,6 +161,16 @@ export const CalendarFocusDate: Story = {
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>
 </auro-datepicker>
   `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async play({ canvas, step }) {
+    const datepickerInput = await canvas.findByShadowRole('textbox');
+    await userEvent.click(datepickerInput);
+
+    // No role on the heading and the text is split into `div`s, so had to resort to this
+    expect((await screen.findByShadowText(/November/i)).parentNode).toHaveTextContent(/November 2022/i);
+  },
 };
 
 export const MaxDate: Story = {
@@ -121,6 +184,10 @@ export const MaxDate: Story = {
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>
 </auro-datepicker>
   `,
+  async play({ canvas, step }) {
+    const datepickerInput = await canvas.findByShadowRole('textbox');
+    await userEvent.click(datepickerInput);
+  },
 };
 
 // TODO: How to translate datepicker setup scripting to template expressions
@@ -137,7 +204,7 @@ export const UpdateMaxDate: Story = {
   <span slot="fromLabel">Choose a date</span>
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>
 </auro-datepicker>
-<auro-button id="maxDateChange">Change maxDate to Today's Date</auro-button>
+<auro-button id="maxDateChange">Change maxDate to 03/18/25</auro-button>
 <auro-button id="resetMaxDate"
   >Reset Datepicker to Initial Example</auro-button
 >
@@ -178,6 +245,27 @@ export const UpdateMaxDate: Story = {
   })();
 </script>
   `},
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+  async beforeEach() {
+    MockDate.set('2025-03-18');
+ 
+    // 👇 Reset the Date after each story
+    return () => {
+      MockDate.reset();
+    };
+  },
+  async play({ canvas, step }) {
+    const maxDateButton = await canvas.findByShadowRole('button', { name: /Change maxDate to/i });
+    await userEvent.click(maxDateButton);
+    
+    // TODO: Cannot find this button
+    // const firstPastMax = await screen.findByShadowRole('button', { name: '18', hidden: true });
+    // expect(firstPastMax).toBeDisabled();
+
+    console.log(await screen.findAllByShadowRole('button', { hidden: true }));
+  }
 };
 
 export const MinDate: Story = {

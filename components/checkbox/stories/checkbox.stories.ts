@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/web-components';
+import { expect, userEvent } from '@storybook/test';
 
 import { html } from 'lit-html';
 
@@ -66,7 +67,13 @@ export const Required: Story = {
   <auro-checkbox value="value3" name="required" id="checkbox-required3">Checkbox option</auro-checkbox>
   <auro-checkbox value="value4" name="required" id="checkbox-required4">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
-  `
+  `,
+  async play({ canvas }) {
+    const checkboxes = await canvas.findAllByShadowRole('checkbox');
+    const firstCheckbox = checkboxes[0];
+    await userEvent.click(firstCheckbox);
+    await userEvent.click(firstCheckbox);
+  }
 };
 
 export const ErrorGroup: Story = {
@@ -94,7 +101,7 @@ export const ResetState: Story = {
 
 <auro-checkbox-group id="resetStateExample" required setCustomValidityValueMissing="Please select an option">
   <span slot="legend">Form label goes here</span>
-  <auro-checkbox value="value1" name="resetState" id="checkbox-basic1">Checkbox option</auro-checkbox>
+  <auro-checkbox value="value1" name="resetState" id="checkbox-basic1" checked>Checkbox option</auro-checkbox>
   <auro-checkbox value="value2" name="resetState" id="checkbox-basic2">Checkbox option</auro-checkbox>
   <auro-checkbox value="value3" name="resetState" id="checkbox-basic3">Checkbox option</auro-checkbox>
   <auro-checkbox value="value4" name="resetState" id="checkbox-basic4">Checkbox option</auro-checkbox>
@@ -105,7 +112,15 @@ export const ResetState: Story = {
     docs: {
       source: { type: 'code' },
     },
+    chromatic: { disableSnapshot: true },
   },
+  async play({ canvas }) {
+    const button = await canvas.findByShadowRole('button', { name: /Reset/i });
+    await userEvent.click(button);
+
+    const firstCheckbox = (await canvas.findAllByShadowRole('checkbox'))[0];
+    expect(firstCheckbox).not.toBeChecked();
+  }
 };
 
 export const Horizontal: Story = {
@@ -140,5 +155,8 @@ export const CustomCheckbox: Story = {
   <custom-checkbox value="value3" name="custom" id="checkbox-custom3">Custom checkbox option</custom-checkbox>
   <custom-checkbox value="value4" name="custom" id="checkbox-custom4">Custom checkbox option</custom-checkbox>
 </custom-checkbox-group>
-  `
+  `,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 };
