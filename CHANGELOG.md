@@ -1,5 +1,17 @@
 # Semantic Release Automated Changelog
 
+# [2.1.0-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.3-beta.1...v2.1.0-beta.1) (2025-03-19)
+
+
+### Bug Fixes
+
+* update component versions and refactor tags for formkit integration ([6d517b6](https://github.com/AlaskaAirlines/auro-formkit/commit/6d517b6f85318abafaebf9b2d6d8da79b2cf71e3))
+
+
+### Features
+
+* add `stacked` attribute ([e47976c](https://github.com/AlaskaAirlines/auro-formkit/commit/e47976cc2754fe487d64dd2903bb6ced720a8a60))
+
 ## [2.0.3-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.2...v2.0.3-beta.1) (2025-03-18)
 
 
