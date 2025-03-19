@@ -92,7 +92,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
       <div class="td ${this.tdIsEnabled(day)}">
         ${day
           ? html`
-              <auro-calendar-cell
+              <auro-formkit-calendar-cell
                 .disabledDays="${this.disabledDays}"
                 .min="${this.min}"
                 .max="${this.max}"
@@ -106,7 +106,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
                 @date-is-selected="${this.handleDateSelected}"
                 @date-is-hovered="${this.handleDateHovered}"
               >
-              </auro-calendar-cell>
+              </auro-formkit-calendar-cell>
           `
           : null}
       </div>
@@ -150,6 +150,6 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
   /* eslint-enable */
 }
 
-if (!customElements.get('auro-calendar-month')) {
-  customElements.define('auro-calendar-month', AuroCalendarMonth);
+if (!customElements.get('auro-formkit-calendar-month')) {
+  customElements.define('auro-formkit-calendar-month', AuroCalendarMonth);
 }
