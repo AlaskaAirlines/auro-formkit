@@ -64,7 +64,7 @@
 /* This value is per design but relates to 
    https://github.com/AlaskaAirlines/AuroDesignTokens/issues/206
 */
-@container outerwrapper (min-width: 390px) {
+:host(:not([stacked])) {
   .dpTriggerContent {
     flex-direction: row;
   }
@@ -111,11 +111,11 @@
       }
     }
   }
+}
 
-  :host([range]) {
-    [auro-input] {
-      max-width: 50%;
-    }
+:host(:not([stacked])[range]) {
+  [auro-input] {
+    max-width: 50%;
   }
 }
 

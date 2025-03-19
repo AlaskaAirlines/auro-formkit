@@ -305,6 +305,14 @@ export class AuroDatePicker extends LitElement {
       },
 
       /**
+       * Set true to make datepicker stacked style.
+       */
+      stacked: {
+        type: Boolean,
+        reflect: true,
+      },
+
+      /**
        * Specifies the `validityState` this element is in.
        */
       validity: {
