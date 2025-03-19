@@ -28,3 +28,7 @@ coverage/
 
 ## Turborepo
 .turbo
+
+# Storybook
+storybook-static/
+*storybook.log
