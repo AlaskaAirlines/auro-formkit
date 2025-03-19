@@ -128,7 +128,7 @@ export class AuroDropdown extends LitElement {
     /**
      * @private
      */
-    this.dropdownBibTag = versioning.generateTag('auro-formkit-dropdown-bibtemplate', dropdownVersion, AuroDropdownBib);
+    this.dropdownBibTag = versioning.generateTag('auro-formkit-dropdown-dropdownbib', dropdownVersion, AuroDropdownBib);
 
     /**
      * @private
