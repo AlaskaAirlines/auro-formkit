@@ -80,14 +80,14 @@ export class AuroCounterGroup extends LitElement {
      * @private
      * @type {string}
      */
-    this.dropdownTag = versioning.generateTag("auro-dropdown", dropdownVersion, AuroDropdown);
+    this.dropdownTag = versioning.generateTag("auro-formkit-counter-dropdown", dropdownVersion, AuroDropdown);
 
     /**
      * Dynamically generated bibtempalate tag.
      * @private
      * @type {string}
      */
-    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-counter-bibtemplate', bibTemplateVersion, AuroBibtemplate);
   }
 
   static get styles() {

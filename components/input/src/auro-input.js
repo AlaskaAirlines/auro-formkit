@@ -36,17 +36,17 @@ export class AuroInput extends BaseInput {
     /**
      * @private
      */
-    this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
+    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
 
     /**
      * @private
      */
-    this.buttonTag = versioning.generateTag('auro-button', buttonVersion, AuroButton);
+    this.buttonTag = versioning.generateTag('auro-formkit-input-button', buttonVersion, AuroButton);
 
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
   }
 
   /**

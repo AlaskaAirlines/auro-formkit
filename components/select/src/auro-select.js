@@ -81,12 +81,12 @@ export class AuroSelect extends LitElement {
     /**
      * @private
      */
-    this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
+    this.dropdownTag = versioning.generateTag('auro-formkit-select-dropdown', dropdownVersion, AuroDropdown);
 
     /**
      * @private
      */
-    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-select-bibtemplate', bibTemplateVersion, AuroBibtemplate);
 
     /**
      * @private

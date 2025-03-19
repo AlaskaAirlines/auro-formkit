@@ -68,3 +68,17 @@ The dropdown mode provides a more compact interface, ideal for forms where space
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dropdown-basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+
+
+### Custom Dropdown Counter Group
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-dropdown-basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-dropdown-basic.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
