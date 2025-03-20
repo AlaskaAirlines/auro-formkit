@@ -77,7 +77,7 @@ export class AuroInputUtilities {
 
         return {
           mask: Date,
-          pattern: format,
+          pattern: dateFormat,
           blocks,
           format(date) {
             if (!date) {
