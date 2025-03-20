@@ -923,6 +923,8 @@ export class AuroCombobox extends LitElement {
           rounded
           matchWidth
           nocheckmark
+          role="combobox"
+          autocomplete="list"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
@@ -936,9 +938,6 @@ export class AuroCombobox extends LitElement {
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
             role="combobox"
-            aria-autocomplete="list"
-            aria-controls="dropdownMenu"
-            aria-expanded="${Boolean(this.dropdown) && this.dropdown.isPopoverVisible}"
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"

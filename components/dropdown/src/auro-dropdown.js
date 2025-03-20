@@ -84,6 +84,8 @@ export class AuroDropdown extends LitElement {
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
+    this.role = 'button';
+    this.autocomplete = 'none';
 
     /**
      * @private
@@ -315,6 +317,22 @@ export class AuroDropdown extends LitElement {
        */
       tabIndex: {
         type: Number
+      },
+
+      /**
+       * aria-role value to be passed to the trigger node
+       */
+      role: {
+        type: String,
+        attribute: false,
+      },
+
+      /**
+       * aria-autocomplete value to be passed to the trigger node
+       */
+      autocomplete: {
+        type: String,
+        attribute: false,
       }
     };
   }
@@ -366,6 +384,10 @@ export class AuroDropdown extends LitElement {
   firstUpdated() {
     this.floater.configure(this, 'auroDropdown');
     this.bibContent = this.floater.element.bib;
+
+    // floatingUI will regenerate this id to be unique
+    const bibId = this.bibContent.getAttribute('id');
+    this.trigger.setAttribute('aria-controls', bibId);
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
@@ -548,6 +570,9 @@ export class AuroDropdown extends LitElement {
           aria-labelledby="triggerLabel"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
+          role="${this.role}"
+          aria-autocomplete="${this.autocomplete}"
+          aria-expanded="${this.isPopoverVisible ? 'true' : 'false'}"
           >
           <div class="triggerContentWrapper">
             <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
@@ -583,6 +608,7 @@ export class AuroDropdown extends LitElement {
         <${this.dropdownBibTag}
           id="bib"
           role="tooltip"
+          ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
           ?rounded="${this.common || this.rounded}"
