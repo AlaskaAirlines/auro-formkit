@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.1.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.1...v2.1.0-beta.2) (2025-03-20)
+
+
+### Bug Fixes
+
+* correct variable for default date format [#441](https://github.com/AlaskaAirlines/auro-formkit/issues/441) ([70d895a](https://github.com/AlaskaAirlines/auro-formkit/commit/70d895abd16828db7dd1099320a13b695f263965))
+
 # [2.1.0-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.3-beta.1...v2.1.0-beta.1) (2025-03-19)
 
 
