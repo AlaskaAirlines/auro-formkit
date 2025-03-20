@@ -42,6 +42,7 @@ import styleCss from './styles/style-css.js';
 
 // build the component class
 export class AuroCombobox extends LitElement {
+
   constructor() {
     super();
 
@@ -51,6 +52,15 @@ export class AuroCombobox extends LitElement {
     this.optionSelected = undefined;
 
     this.privateDefaults();
+
+    // Instance counter for creating UIDs
+    AuroCombobox.instanceCounter =
+      typeof AuroCombobox.instanceCounter !== 'undefined'
+        ? AuroCombobox.instanceCounter += 1
+        : 0;
+
+    // Unique ID for this instance
+    this.instanceId = `auro-combobox-${AuroCombobox.instanceCounter}`;
   }
 
   /**
@@ -226,7 +236,16 @@ export class AuroCombobox extends LitElement {
       isDropdownFullscreen: {
         type: Boolean,
         reflect: false
-      }
+      },
+
+      /**
+       * @private
+       * specifies the currently active option
+       */
+      optionActive: {
+        type: Object,
+        reflect: false
+      },
     };
   }
 
@@ -396,7 +415,6 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    this.dropdown.setAttribute('role', 'combobox');
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
     });
@@ -910,12 +928,17 @@ export class AuroCombobox extends LitElement {
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow>
           <${this.inputTag}
+            id="${this.instanceId}"
             slot="trigger"
             bordered
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="dropdownMenu"
+            aria-expanded="${Boolean(this.dropdown) && this.dropdown.isPopoverVisible}"
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
