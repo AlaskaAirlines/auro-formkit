@@ -684,19 +684,11 @@ export class AuroDatePicker extends LitElement {
       }
     });
 
-    // Close the datepicker when clicking outside it
-    document.addEventListener('click', (evt) => {
-      if (!evt.composedPath().includes(this) &&
-      !evt.composedPath().includes(this.dropdown.bibContent) &&
-      this.dropdown.isPopoverVisible) {
-        this.dropdown.hide();
-      }
-    });
-
     document.activeElement.addEventListener('focusin', () => {
       if (document.activeElement !== document.querySelector('body') &&
       !this.contains(document.activeElement) &&
-      !this.dropdown.bibContent.contains(document.activeElement)) {
+      !this.dropdown.bibContent.contains(document.activeElement) &&
+      this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
       }
     });
