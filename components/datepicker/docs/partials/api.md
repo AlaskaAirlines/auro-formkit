@@ -117,6 +117,9 @@ In <strong>mobile</strong> layout, upon first opening the bib, the vertical list
 
 </auro-accordion>
 
+#### centralDate
+
+The `centralDate` attribute can be used to force the calender to navigate to a specific month. WARNING: Do not set the `centralDate` attribute on blur.
 
 #### maxDate
 

@@ -205,9 +205,12 @@ export class AuroCalendar extends RangeDatepicker {
       // Determine which month to render first
       let dateMatches = undefined;
 
-      if (!this.isFullscreen && this.centralDate) {
+      if (!this.isFullscreen) {
+
+        const formattedDateStr = this.util.getDateAsString(new Date(this.centralDate), this.datepicker.format);
+
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
-        if (this.centralDate) {
+        if (this.util.validDateStr(formattedDateStr, this.datepicker.format)) {
           dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDate));
 
           if (!dateMatches) {
