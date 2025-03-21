@@ -52,15 +52,6 @@ export class AuroCombobox extends LitElement {
     this.optionSelected = undefined;
 
     this.privateDefaults();
-
-    // Instance counter for creating UIDs
-    AuroCombobox.instanceCounter =
-      typeof AuroCombobox.instanceCounter !== 'undefined'
-        ? AuroCombobox.instanceCounter += 1
-        : 0;
-
-    // Unique ID for this instance
-    this.instanceId = `auro-combobox-${AuroCombobox.instanceCounter}`;
   }
 
   /**

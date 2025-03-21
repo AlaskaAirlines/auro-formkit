@@ -9,7 +9,6 @@
 | `disabled`                      | `disabled`                      | `boolean` |             | If set, disables the combobox.                   |
 | `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"        | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
-| `instanceId`                    |                                 | `string`  |             |                                                  |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean` |             | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
 | `noFilter`                      | `noFilter`                      | `boolean` | false       | If set, combobox will not filter menuoptions based in input. |
 | `noValidate`                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |

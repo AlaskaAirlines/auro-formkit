@@ -525,6 +525,7 @@ export class AuroDropdown extends LitElement {
       this.triggerNode = event.target;
       this.triggerContentSlot = event.target.assignedNodes();
       if (this.triggerContentSlot[0].setAttribute) {
+        this.triggerContentSlot[0].setAttribute('id', `${this.getAttribute('id')}-trigger-element`);
         this.triggerContentSlot[0].setAttribute('role', this.role);
         this.triggerContentSlot[0].setAttribute('aria-autocomplete', this.autocomplete);
         this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
