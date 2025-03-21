@@ -119,7 +119,7 @@ In <strong>mobile</strong> layout, upon first opening the bib, the vertical list
 
 #### centralDate
 
-The `centralDate` attribute can be used to force the calender to navigate to a specific month. WARNING: Do not set the `centralDate` attribute on blur.
+The `centralDate` attribute can be used to force the calendar to navigate to a specific month. WARNING: Do not set the `centralDate` attribute on blur.
 
 #### maxDate
 
