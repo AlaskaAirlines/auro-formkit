@@ -402,6 +402,9 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   configureDropdown() {
+    this.dropdown.role = 'combobox';
+    this.dropdown.autocomplete = 'list';
+
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
     this.menuWrapper.append(this.menu);
 
@@ -923,21 +926,17 @@ export class AuroCombobox extends LitElement {
           rounded
           matchWidth
           nocheckmark
-          role="combobox"
-          autocomplete="list"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow>
           <${this.inputTag}
-            id="${this.instanceId}"
             slot="trigger"
             bordered
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
-            role="combobox"
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
