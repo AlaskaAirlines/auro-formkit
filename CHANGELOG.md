@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [2.1.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.2...v2.1.0-beta.3) (2025-03-21)
+
+
+### Bug Fixes
+
+* add centralDate is valid date checks ([1e24470](https://github.com/AlaskaAirlines/auro-formkit/commit/1e244700ffb693c1770779ffe2ba77ae84c89fd1))
+
 # [2.1.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.1...v2.1.0-beta.2) (2025-03-20)
 
 
