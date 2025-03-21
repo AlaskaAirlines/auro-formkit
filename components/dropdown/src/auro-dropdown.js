@@ -515,7 +515,7 @@ export class AuroDropdown extends LitElement {
 
     if (!this.triggerContentFocusable) {
       trigger.setAttribute('tabindex', '0');
-      trigger.setAttribute('role', 'button');
+      trigger.setAttribute('role', this.role);
     } else {
       trigger.removeAttribute('tabindex');
       trigger.removeAttribute('role');
@@ -524,15 +524,16 @@ export class AuroDropdown extends LitElement {
     if (event) {
       this.triggerNode = event.target;
       this.triggerContentSlot = event.target.assignedNodes();
+    }
+
+    if (this.triggerContentSlot) {
       if (this.triggerContentSlot[0].setAttribute) {
         this.triggerContentSlot[0].setAttribute('id', `${this.getAttribute('id')}-trigger-element`);
         this.triggerContentSlot[0].setAttribute('role', this.role);
         this.triggerContentSlot[0].setAttribute('aria-autocomplete', this.autocomplete);
         this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
       }
-    }
 
-    if (this.triggerContentSlot) {
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
         if (slot.textContent.trim()) {
           return true;
@@ -614,7 +615,6 @@ export class AuroDropdown extends LitElement {
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
-          role="tooltip"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"

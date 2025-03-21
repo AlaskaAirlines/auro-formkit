@@ -235,7 +235,8 @@ export class AuroCombobox extends LitElement {
        */
       optionActive: {
         type: Object,
-        reflect: false
+        reflect: false,
+        attribute: false
       },
     };
   }
