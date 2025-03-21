@@ -377,6 +377,10 @@ export class AuroDropdown extends LitElement {
     // `requestUpdate` needs to be called to update hasTriggerContnet
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
+
+      if (this.triggerContentSlot && this.triggerContentSlot[0].setAttribute) {
+        this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+      }
     }
 
   }
@@ -520,6 +524,11 @@ export class AuroDropdown extends LitElement {
     if (event) {
       this.triggerNode = event.target;
       this.triggerContentSlot = event.target.assignedNodes();
+      if (this.triggerContentSlot[0].setAttribute) {
+        this.triggerContentSlot[0].setAttribute('role', this.role);
+        this.triggerContentSlot[0].setAttribute('aria-autocomplete', this.autocomplete);
+        this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+      }
     }
 
     if (this.triggerContentSlot) {
@@ -570,9 +579,6 @@ export class AuroDropdown extends LitElement {
           aria-labelledby="triggerLabel"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
-          role="${this.role}"
-          aria-autocomplete="${this.autocomplete}"
-          aria-expanded="${this.isPopoverVisible ? 'true' : 'false'}"
           >
           <div class="triggerContentWrapper">
             <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
