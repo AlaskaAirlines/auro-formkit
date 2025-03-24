@@ -6,6 +6,10 @@ import '../src/registered.js';
 
 describe('auro-datepicker', () => {
   it('auro-datepicker is accessible', async () => {
+    await setViewport({
+      width: 600,
+      height: 800
+    });
     const el = await fixture(html`
       <auro-datepicker range cssclass="testClass"></auro-datepicker>
     `);
@@ -65,20 +69,27 @@ describe('auro-datepicker', () => {
 
   it('hides dropdown the dropdown or its children lose focus', async () => {
     const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
+      <div>
+        <auro-datepicker></auro-datepicker>
+        <button></button>
+      </div>
     `);
 
-    const input = getInput(el, 0);
+    const datepicker = el.querySelector('auro-datepicker');
+    const button = el.querySelector('button');
+
+    const input = getInput(datepicker, 0);
     input.click();
 
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
+    await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
 
-    const button = document.createElement('button');
-    document.body.appendChild(button);
+    // wait for a frame to add `click` event listener correctly
+    await nextFrame();
 
     button.click();
 
-    await expect(el.dropdown.isPopoverVisible).to.be.false;
+    await elementUpdated(datepicker);
+    await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
   });
 
   it('handles the required state being set', async () => {
@@ -153,6 +164,40 @@ describe('auro-datepicker', () => {
     const returnInputDate = new Date(returnInput.value).toDateString();
 
     await expect(returnInputDate).to.be.equal(setReturnDate);
+  });
+
+  it.skip('validity should be `invalid` when invalid value was set', async () => {
+    const el = await fixture(html`
+      <auro-datepicker maxDate="01/05/2024"></auro-datepicker>
+    `);
+
+    el.value = "02/31/2022";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+  });
+
+  it('throw an error when imcomplete value was set', async () => {
+    const el = await fixture(html`
+      <auro-datepicker maxDate="01/05/2024"></auro-datepicker>
+    `);
+
+    el.value = "02";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('tooShort');
+
+    // empty
+    el.value = "";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
+
+    // set another imcomplete value
+    el.value = "02/0";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('tooShort');
   });
 
   it('respects maxDate setting on datepicker when range is false', async () => {
