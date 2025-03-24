@@ -171,15 +171,9 @@ describe('auro-datepicker', () => {
       <auro-datepicker maxDate="01/05/2024"></auro-datepicker>
     `);
 
-    const input1 = getInput(el, 0);
-
-    input1.value = "2/31/2022";
-    
-    el.focus();
-    el.blur();
-
+    el.value = "02/31/2022";
+    el.validate();
     await elementUpdated(el);
-
     await expect(el.getAttribute('validity')).to.be.equal('invalid');
   });
 
@@ -188,33 +182,20 @@ describe('auro-datepicker', () => {
       <auro-datepicker maxDate="01/05/2024"></auro-datepicker>
     `);
 
-    const input1 = getInput(el, 0);
-
-    // set imcomplete value
-    input1.value = "02";
-    
-    el.focus();
-    el.blur();
-
+    el.value = "02";
+    el.validate();
     await elementUpdated(el);
     await expect(el.getAttribute('validity')).to.be.equal('tooShort');
 
     // empty
-    input1.value = "";
-    
-    el.focus();
-    el.blur();
-
+    el.value = "";
+    el.validate();
     await elementUpdated(el);
     await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-
     // set another imcomplete value
-    input1.value = "02/0";
-    
-    el.focus();
-    el.blur();
-
+    el.value = "02/0";
+    el.validate();
     await elementUpdated(el);
     await expect(el.getAttribute('validity')).to.be.equal('tooShort');
   });
