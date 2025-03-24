@@ -83,7 +83,12 @@ describe('auro-datepicker', () => {
 
     await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
 
-    button.focus();
+    // wait for a frame to add `click` event listener correctly
+    await nextFrame();
+
+    button.click();
+
+    await elementUpdated(datepicker);
     await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
   });
 
@@ -168,7 +173,7 @@ describe('auro-datepicker', () => {
 
     const input1 = getInput(el, 0);
 
-    input1.value = "02/31/2022";
+    input1.value = "2/31/2022";
     
     el.focus();
     el.blur();
