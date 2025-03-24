@@ -133,12 +133,12 @@ export class AuroDatePicker extends LitElement {
     /**
      * @private
      */
-    this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
+    this.dropdownTag = versioning.generateTag('auro-formkit-datepicker-dropdown', dropdownVersion, AuroDropdown);
 
     /**
      * @private
      */
-    this.inputTag = versioning.generateTag('auro-input', inputVersion, AuroInput);
+    this.inputTag = versioning.generateTag('auro-formkit-datepicker-input', inputVersion, AuroInput);
 
     /**
      * @private
@@ -302,6 +302,14 @@ export class AuroDatePicker extends LitElement {
        */
       setCustomValidityValueMissing: {
         type: String
+      },
+
+      /**
+       * Set true to make datepicker stacked style.
+       */
+      stacked: {
+        type: Boolean,
+        reflect: true,
       },
 
       /**
@@ -562,9 +570,10 @@ export class AuroDatePicker extends LitElement {
    * @returns {void}
    */
   configureCalendar() {
-    this.calendar = this.shadowRoot.querySelector('auro-calendar');
+    this.calendar = this.shadowRoot.querySelector('auro-formkit-calendar');
     this.calendar.datepicker = this;
     this.calendar.format = this.format;
+    this.calendar.dropdown = this.dropdown;
 
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
       if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
@@ -1044,7 +1053,7 @@ export class AuroDatePicker extends LitElement {
             ` : undefined}
           </div>
           <div class="calendarWrapper" part="calendarWrapper">
-            <auro-calendar
+            <auro-formkit-calendar
               ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"
               ?noRange="${!this.range}"
               .format="${this.format}"
@@ -1060,7 +1069,7 @@ export class AuroDatePicker extends LitElement {
               <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
               <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
               ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
-            </auro-calendar>
+            </auro-formkit-calendar>
           </div>
           <p slot="helpText" part="helpTextSpan">
             <!-- Help text and error message template -->

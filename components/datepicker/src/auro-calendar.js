@@ -9,7 +9,6 @@ import { RangeDatepicker } from './vendor/wc-range-datepicker/range-datepicker.j
 import chevronLeft from '@alaskaairux/icons/dist/icons/interface/chevron-left.mjs';
 import chevronRight from '@alaskaairux/icons/dist/icons/interface/chevron-right.mjs';
 
-import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroDatepickerUtilities } from './utilities.js';
@@ -18,6 +17,9 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';
+
+import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import buttonVersion from './buttonVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -81,9 +83,7 @@ export class AuroCalendar extends RangeDatepicker {
      */
     this.numCalendars = undefined;
 
-
     this.visible = false;
-
 
     /**
      * @private
@@ -95,11 +95,13 @@ export class AuroCalendar extends RangeDatepicker {
     /**
      * @private
      */
-    this.bibtemplateTag = versioning.generateTag('auro-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-datepicker-bibtemplate', bibTemplateVersion, AuroBibtemplate);
 
     /**
      * @private
      */
+    this.buttonTag = versioning.generateTag('auro-formkit-datepicker-button', buttonVersion, AuroButton);
+
     this.dropdown = undefined;
   }
 
@@ -154,6 +156,9 @@ export class AuroCalendar extends RangeDatepicker {
         type: Boolean,
         reflect: true
       },
+      dropdown: {
+        type: Object
+      },
 
       /**
        * @private
@@ -189,22 +194,23 @@ export class AuroCalendar extends RangeDatepicker {
    */
   renderAllCalendars() {
     let renderedHtml = undefined;
+
     if (this.visible) {
       this.utilCalRender.setFirstRenderableMonthDate(this);
       this.utilCal.assessNavigationButtonVisibility(this);
 
-      const dropdown = AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdown, [auro-dropdown]', this);
-      const dropdownbib = dropdown ? dropdown.bibContent : AuroLibraryRuntimeUtils.prototype.closestElement('auro-dropdownbib, [auro-dropdownbib]', this);
-      this.isFullscreen = dropdownbib.hasAttribute('isFullscreen');
+      this.isFullscreen = this.dropdown.bibContent.hasAttribute('isFullscreen');
       this.utilCalRender.determineNumCalendarsToRender(this, this.isFullscreen);
-
 
       // Determine which month to render first
       let dateMatches = undefined;
 
-      if (!this.isFullscreen && this.centralDate) {
+      if (!this.isFullscreen) {
+
+        const formattedDateStr = this.util.getDateAsString(new Date(this.centralDate), this.datepicker.format);
+
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
-        if (this.centralDate) {
+        if (this.util.validDateStr(formattedDateStr, this.datepicker.format)) {
           dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDate));
 
           if (!dateMatches) {
@@ -263,6 +269,7 @@ export class AuroCalendar extends RangeDatepicker {
         renderedHtml = html`${renderedHtml}${this.utilCalRender.renderCalendar(this, newMonth, newYear)}`;
       }
     }
+
     return renderedHtml;
   }
 
@@ -358,12 +365,12 @@ export class AuroCalendar extends RangeDatepicker {
         </div>
       </div>
 
-      <auro-button slot="footer" fluid @click="${this.utilCal.requestDismiss}">Done</auro-button>
+      <${this.buttonTag} slot="footer" fluid @click="${this.utilCal.requestDismiss}">Done</${this.buttonTag}>
     </${this.bibtemplateTag}>
     `;
   }
 }
 
-if (!customElements.get('auro-calendar')) {
-  customElements.define('auro-calendar', AuroCalendar);
+if (!customElements.get('auro-formkit-calendar')) {
+  customElements.define('auro-formkit-calendar', AuroCalendar);
 }

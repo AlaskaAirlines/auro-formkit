@@ -12,7 +12,7 @@ export class AuroDatepickerUtilities {
   validDateStr(date, format) {
     const dateStrLength = 10;
 
-    if (date.length === dateStrLength && Date.parse(this.toNorthAmericanFormat(date, format))) {
+    if (format !== undefined && date !== undefined && date.length === dateStrLength && Date.parse(this.toNorthAmericanFormat(date, format))) {
       return true;
     }
 
@@ -153,12 +153,21 @@ export class AuroDatepickerUtilities {
    */
   getDateAsString(date) {
     const year = new Date(date).getFullYear();
-    const month = new Date(date).getMonth() + 1;
-    const day = new Date(date).getDate();
+    const month = this.formatTwoDigits(new Date(date).getMonth() + 1);
+    const day = this.formatTwoDigits(new Date(date).getDate());
 
-    const dateStr = `${month}/${day}/${year}`;
+    return `${month}/${day}/${year}`;
+  }
 
-    return dateStr;
+  /**
+   * Function to format a number to two digits.
+   * @private
+   * @param {Number} num - Number to format.
+   * @returns {String} Returns the number as a string.
+   */
+  formatTwoDigits(num) {
+    const singleDigitThreshold = 10;
+    return num < singleDigitThreshold ? `0${num}` : num;
   }
 
   /**

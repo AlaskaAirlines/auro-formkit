@@ -72,7 +72,7 @@ export class AuroCheckboxGroup extends LitElement {
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-checkbox-helptext', helpTextVersion, AuroHelpText);
   }
 
   static get styles() {

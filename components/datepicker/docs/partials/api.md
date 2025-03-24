@@ -117,6 +117,9 @@ In <strong>mobile</strong> layout, upon first opening the bib, the vertical list
 
 </auro-accordion>
 
+#### centralDate
+
+The `centralDate` attribute can be used to force the calendar to navigate to a specific month. WARNING: Do not set the `centralDate` attribute on blur.
 
 #### maxDate
 
@@ -230,6 +233,23 @@ When the validity check fails the validityState, equals `valueMissing`. The erro
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
+
+#### stacked
+
+Set stacked attribute to make range datepicker stacked style.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/stacked.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/stacked.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 
 #### validity
 

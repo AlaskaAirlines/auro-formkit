@@ -43,7 +43,7 @@ export class AuroCalendarCell extends LitElement {
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
-    this.popoverTag = versioning.generateTag('auro-popover', popoverVersion, AuroPopover);
+    this.popoverTag = versioning.generateTag('auro-formkit-datepicker-popover', popoverVersion, AuroPopover);
   }
 
   // This function is to define props used within the scope of this component
@@ -312,8 +312,8 @@ export class AuroCalendarCell extends LitElement {
   }
 
   firstUpdated() {
-    const calendarMonth = this.runtimeUtils.closestElement('auro-calendar-month', this);
-    const calendar = this.runtimeUtils.closestElement('auro-calendar', calendarMonth);
+    const calendarMonth = this.runtimeUtils.closestElement('auro-formkit-calendar-month', this);
+    const calendar = this.runtimeUtils.closestElement('auro-formkit-calendar', calendarMonth);
 
     if (!calendar) {
       setTimeout(() => this.firstUpdated(), 0);
@@ -376,6 +376,6 @@ export class AuroCalendarCell extends LitElement {
   }
 }
 
-if (!customElements.get('auro-calendar-cell')) {
-  customElements.define('auro-calendar-cell', AuroCalendarCell);
+if (!customElements.get('auro-formkit-calendar-cell')) {
+  customElements.define('auro-formkit-calendar-cell', AuroCalendarCell);
 }

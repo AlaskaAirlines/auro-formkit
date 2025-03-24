@@ -4,6 +4,7 @@ import { AuroCounterGroup } from '../src/auro-counter-group.js';
 
 AuroCounter.register();
 AuroCounterGroup.register();
+AuroCounterGroup.register('custom-counter-group');
 AuroCounter.register('custom-counter');
 
 export function initExamples(initialCount = 0) {

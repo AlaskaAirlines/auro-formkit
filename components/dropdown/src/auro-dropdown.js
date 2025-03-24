@@ -123,17 +123,17 @@ export class AuroDropdown extends LitElement {
     /**
      * @private
      */
-    this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
+    this.iconTag = versioning.generateTag('auro-formkit-dropdown-icon', iconVersion, AuroIcon);
 
     /**
      * @private
      */
-    this.dropdownBibTag = versioning.generateTag('auro-dropdownbib', dropdownVersion, AuroDropdownBib);
+    this.dropdownBibTag = versioning.generateTag('auro-formkit-dropdown-dropdownbib', dropdownVersion, AuroDropdownBib);
 
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-dropdown-helptext', helpTextVersion, AuroHelpText);
   }
 
   /**
@@ -359,6 +359,7 @@ export class AuroDropdown extends LitElement {
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
     }
+
   }
 
   firstUpdated() {

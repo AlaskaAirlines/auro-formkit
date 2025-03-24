@@ -134,7 +134,7 @@ export class UtilitiesCalendarRender {
    */
   renderCalendar(elem, month, year) {
     return html`
-      <auro-calendar-month
+      <auro-formkit-calendar-month
         id="${`month-${month}-${year}`}"
         .disabledDays="${elem.disabledDays}"
         .min="${elem.min}"
@@ -152,7 +152,7 @@ export class UtilitiesCalendarRender {
         @date-from-changed="${elem.dateFromChanged}"
         @date-to-changed="${elem.dateToChanged}"
       >
-      </auro-calendar-month>
+      </auro-formkit-calendar-month>
     `;
   }
 }

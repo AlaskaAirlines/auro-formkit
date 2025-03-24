@@ -23,6 +23,7 @@
 | `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  |           | `string`   |                                                  | Custom help text message to display when validity = `rangeOverflow`. |
 | `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` |           | `string`   |                                                  | Custom help text message to display when validity = `rangeUnderflow`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   |           | `string`   |                                                  | Custom help text message to display when validity = `valueMissing`. |
+| `stacked`                         | `stacked`                         |           | `boolean`  |                                                  | Set true to make datepicker stacked style.       |
 | `validity`                        | `validity`                        |           | `string`   | "undefined"                                      | Specifies the `validityState` this element is in. |
 | `value`                           | `value`                           |           | `string`   | "undefined"                                      | Value selected for the datepicker.               |
 | `valueEnd`                        | `valueEnd`                        |           | `string`   | "undefined"                                      | Value selected for the second datepicker when using date range. |
