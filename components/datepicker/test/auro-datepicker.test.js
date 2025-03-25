@@ -166,20 +166,45 @@ describe('auro-datepicker', () => {
     await expect(returnInputDate).to.be.equal(setReturnDate);
   });
 
-  it.skip('validity should be `invalid` when invalid value was set', async () => {
+  it.skip('sets`invalid` error when invalid value was passed', async () => {
     const el = await fixture(html`
-      <auro-datepicker maxDate="01/05/2024"></auro-datepicker>
+      <auro-datepicker></auro-datepicker>
     `);
 
+    // wrong day
     el.value = "02/31/2022";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+
+    // empty
+    el.value = "";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
+
+    // wrong month
+    el.value = "15/01/2022";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+
+    // empty
+    el.value = "";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
+
+    // wrong year
+    el.value = "01/02/20222";
     el.validate();
     await elementUpdated(el);
     await expect(el.getAttribute('validity')).to.be.equal('invalid');
   });
 
-  it('throw an error when imcomplete value was set', async () => {
+  it('sets error when incomplete value was passed', async () => {
     const el = await fixture(html`
-      <auro-datepicker maxDate="01/05/2024"></auro-datepicker>
+      <auro-datepicker></auro-datepicker>
     `);
 
     el.value = "02";
@@ -198,6 +223,41 @@ describe('auro-datepicker', () => {
     el.validate();
     await elementUpdated(el);
     await expect(el.getAttribute('validity')).to.be.equal('tooShort');
+  });
+
+  it('takes customized format', async() => {
+    const el = await fixture(html`
+      <auro-datepicker format="yyyy/mm/dd"></auro-datepicker>
+    `);
+
+    el.value = "1999/08/15";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
+
+  });
+
+  it.skip('sets error when wrong formatted value was passed', async () => {
+    const el = await fixture(html`
+      <auro-datepicker></auro-datepicker>
+    `);
+
+    el.value = "02.02.2022";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+
+    // empty
+    el.value = "";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
+
+    // passing YY/MM/DD format to MM/DD/YY datepicker
+    el.value = "2021/01/02";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('invalid');
   });
 
   it('respects maxDate setting on datepicker when range is false', async () => {
