@@ -6,8 +6,9 @@
 /* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, init-declarations, radix, no-nested-ternary */
 
 import IMask from 'imask';
+import { AuroDateUtilities } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities.mjs';
 
-export class AuroInputUtilities {
+export class AuroInputUtilities extends AuroDateUtilities {
 
   /**
    * Configures the mask to be used on the input element based on format and/or type.
@@ -164,82 +165,5 @@ export class AuroInputUtilities {
     }
 
     return {};
-  }
-
-  /**
-   * @private
-   * @param {string} dateStr - Date string to format.
-   * @param {string} format - Date format to use.
-   * @returns {void}
-   */
-  toNorthAmericanFormat(dateStr, format) {
-    const parsedDate = this.parseDate(dateStr, format);
-
-    if (!parsedDate) {
-      return parsedDate;
-    }
-
-    const { month, day, year } = parsedDate;
-    const fullYear = (year && year.length === 2) ? `20${year}` : year;
-    const currentYear = new Date().getFullYear();
-
-    const dateParts = [];
-    if (month) {
-      dateParts.push(month);
-    }
-
-    if (day) {
-      dateParts.push(day);
-    }
-
-    if (year) {
-      dateParts.push(year);
-    }
-
-    const comparisonParts = [
-      month || '01',
-      day || '01',
-      fullYear || currentYear
-    ];
-
-    return {
-      formattedDate: dateParts.join('/'),
-      dateForComparison: comparisonParts.join('/')
-    };
-  }
-
-  /**
-   * @private
-   * @param {string} dateStr - Date string to parse.
-   * @param {string} format - Date format to parse.
-   * @returns {void}
-   */
-  parseDate(dateStr, format) {
-    const dateFormat = format || "mm/dd/yyyy";
-
-    // Define mappings for date components with named capture groups
-    const formatPatterns = {
-      'yyyy': '(?<year>\\d{4})',
-      'yy': '(?<year>\\d{2})',
-      'mm': '(?<month>\\d{2})',
-      'dd': '(?<day>\\d{2})'
-    };
-
-    // Escape slashes and replace format components with regex patterns
-    let regexPattern = dateFormat.replace(/(?:yyyy|yy|mm|dd)/gu, (match) => formatPatterns[match]);
-    regexPattern = `^${regexPattern}$`;
-
-    const regex = new RegExp(regexPattern, 'u');
-    const match = dateStr.match(regex);
-
-    if (match && match.groups) {
-      return {
-        year: match.groups.year,
-        month: match.groups.month,
-        day: match.groups.day
-      };
-    }
-
-    return undefined;
   }
 }

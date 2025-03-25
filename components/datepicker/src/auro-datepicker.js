@@ -771,6 +771,7 @@ export class AuroDatePicker extends LitElement {
     }
 
     if (changedProperties.has('value')) {
+
       this.formattedValue = this.util.toNorthAmericanFormat(this.value, this.format);
 
       // Change the calendar focus to the first valid date value only the first time the value is set
@@ -784,9 +785,15 @@ export class AuroDatePicker extends LitElement {
         this.cellClickActive = false;
       }
 
-      if (this.value && this.util.validDateStr(this.value, this.format)) {
-        if (this.calendar.dateFrom !== this.value) {
-          this.calendar.dateFrom = this.convertToWcValidTime(this.formattedValue);
+      if (this.value) {
+        const isValidDateStr = this.util.validDateStr(this.value, this.format);
+        if (isValidDateStr) {
+          if (this.calendar.dateFrom !== this.value) {
+            this.calendar.dateFrom = this.convertToWcValidTime(this.formattedValue);
+          }
+        } else {
+          // do nothing if the date string is not valid
+          null;
         }
       } else {
         if (this.inputList[0].value !== this.value) {
