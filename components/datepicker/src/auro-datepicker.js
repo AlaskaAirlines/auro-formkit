@@ -1053,7 +1053,6 @@ export class AuroDatePicker extends LitElement {
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow
-          noHideOnThisFocusLoss
           fullscreenBreakpoint="sm"
           .placement="${this.placement}"
           .offset="${this.offset}"
