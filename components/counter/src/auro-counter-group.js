@@ -230,7 +230,7 @@ export class AuroCounterGroup extends LitElement {
       this.dropdown.hide();
     }
 
-    if (event.key === 'Tab' && event.target.offsetParent.id === 'bib') {
+    if (event.key === 'Tab' && event.target.offsetParent === this.dropdown.bib) {
       this.dropdown.noHideOnThisFocusLoss = true;
 
       const currentIndex = Array.from(counters).indexOf(document.activeElement);
