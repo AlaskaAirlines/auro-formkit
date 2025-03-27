@@ -12,7 +12,7 @@
     "url": "https://github.com/AlaskaAirlines/auro-datepicker"
   },
   "dependencies": {
-    "@alaskaairux/icons": "^4.44.1",
+    "@alaskaairux/icons": "^5.3.0",
     "@auro-formkit/form-validation": "*",
     "@aurodesignsystem/auro-bibtemplate": "*",
     "@aurodesignsystem/auro-dropdown": "*",
