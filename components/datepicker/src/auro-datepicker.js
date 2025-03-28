@@ -635,20 +635,6 @@ export class AuroDatePicker extends LitElement {
       }
     });
 
-    document.activeElement.addEventListener('focusin', () => {
-      // if dropdown is not ready, exit
-      if (!this.dropdown || !this.dropdown.bibContent) {
-        return;
-      }
-
-      if (document.activeElement !== document.querySelector('body') &&
-      !this.contains(document.activeElement) &&
-      !this.dropdown.bibContent.contains(document.activeElement) &&
-      this.dropdown.isPopoverVisible) {
-        this.dropdown.hide();
-      }
-    });
-
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
       this.calendar.dateFrom = new Date(this.formattedValue).getTime();
     }
@@ -1004,7 +990,6 @@ export class AuroDatePicker extends LitElement {
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow
-          noHideOnThisFocusLoss
           fullscreenBreakpoint="sm"
           part="dropdown">
           <div slot="trigger" class="dpTriggerContent" part="trigger">
