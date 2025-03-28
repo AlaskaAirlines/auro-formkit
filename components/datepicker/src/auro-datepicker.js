@@ -685,6 +685,11 @@ export class AuroDatePicker extends LitElement {
     });
 
     document.activeElement.addEventListener('focusin', () => {
+      // if dropdown is not ready, exit
+      if (!this.dropdown || !this.dropdown.bibContent) {
+        return;
+      }
+
       if (document.activeElement !== document.querySelector('body') &&
       !this.contains(document.activeElement) &&
       !this.dropdown.bibContent.contains(document.activeElement) &&
