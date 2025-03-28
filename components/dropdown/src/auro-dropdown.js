@@ -575,7 +575,7 @@ export class AuroDropdown extends LitElement {
     const nodesArr = Array.from(nodes);
 
     // If the nodes array has a length, the dropdown is labeled
-    this.labeled = nodesArr.length;
+    this.labeled = nodesArr.length > 0;
   }
 
   // function that renders the HTML and CSS into  the scope of the component
