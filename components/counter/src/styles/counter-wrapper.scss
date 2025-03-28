@@ -12,7 +12,7 @@
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
 
-:host {
+.wrapper {
   display: flex;
   flex-direction: column;
   gap: var(--ds-size-300, $ds-size-300);
@@ -25,5 +25,7 @@
 }
 
 :host([isindropdown]) {
-  padding: var(--ds-size-300, $ds-size-300);
+  .wrapper {
+    padding: var(--ds-size-300, $ds-size-300);
+  }
 }

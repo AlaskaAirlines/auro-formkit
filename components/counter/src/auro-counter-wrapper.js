@@ -42,7 +42,7 @@ export class AuroCounterWrapper extends LitElement {
 
   // function that renders the HTML and CSS into the scope of the component
   render() {
-    return html`<slot></slot>`;
+    return html`<div class="wrapper"><slot></slot></div>`;
   }
 }
 
