@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
+/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
@@ -84,6 +84,7 @@ export class AuroDropdown extends LitElement {
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
+    this.labeled = true;
 
     /**
      * @private
@@ -236,7 +237,7 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If true, the dropdown bib is taking the fullscreen when it's open
+       * If true, the dropdown bib is taking the fullscreen when it's open.
        */
       isBibFullscreen: {
         type: Boolean,
@@ -263,6 +264,15 @@ export class AuroDropdown extends LitElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        reflect: true
+      },
+
+      /**
+       * Defines if there is a label preset.
+       * @private
+       */
+      labeled: {
+        type: Boolean,
         reflect: true
       },
 
@@ -477,13 +487,21 @@ export class AuroDropdown extends LitElement {
   handleTriggerContentSlotChange(event) {
     this.floater.handleTriggerTabIndex();
 
-    const triggerContentNodes = this.shadowRoot.querySelector('.triggerContent slot').assignedNodes();
+    const triggerSlot = this.shadowRoot.querySelector('.triggerContent slot');
 
-    triggerContentNodes.forEach((node) => {
-      if (!this.triggerContentFocusable) {
-        this.triggerContentFocusable = this.containsFocusableElement(node);
+    if (triggerSlot) {
+
+      const triggerContentNodes = triggerSlot.assignedNodes();
+
+      if (triggerContentNodes) {
+
+        triggerContentNodes.forEach((node) => {
+          if (!this.triggerContentFocusable) {
+            this.triggerContentFocusable = this.containsFocusableElement(node);
+          }
+        });
       }
-    });
+    }
 
     const trigger = this.shadowRoot.querySelector('#trigger');
 
@@ -537,6 +555,29 @@ export class AuroDropdown extends LitElement {
     }
   }
 
+  /**
+   * @private
+   * @method handleLabelSlotChange
+   * @param {event} event - The event object representing the slot change.
+   * @description Handles the slot change event for the label slot.
+   */
+  handleLabelSlotChange (event) {
+
+    // Get the nodes from the event
+    const nodes = event.target.assignedNodes();
+
+    // Guard clause for no nodes
+    if (!nodes) {
+      return;
+    }
+
+    // Convert the nodes to a measurable array so we can get the length
+    const nodesArr = Array.from(nodes);
+
+    // If the nodes array has a length, the dropdown is labeled
+    this.labeled = nodesArr.length;
+  }
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
@@ -551,7 +592,7 @@ export class AuroDropdown extends LitElement {
           >
           <div class="triggerContentWrapper">
             <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
-              <slot name="label"></slot>
+              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
             </label>
             <div class="triggerContent">
               <slot
