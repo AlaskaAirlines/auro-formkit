@@ -10,6 +10,7 @@
 
 | Property                | Attribute               | Type        | Default | Description                                      |
 |-------------------------|-------------------------|-------------|---------|--------------------------------------------------|
+| `autocomplete`          |                         | `string`    |         | aria-autocomplete value to be passed to the trigger node |
 | `bordered`              | `bordered`              | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
 | `chevron`               | `chevron`               | ` Boolean ` |         | If declared, the dropdown displays a chevron on the right. |
 | `common`                | `common`                | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
@@ -26,6 +27,7 @@
 | `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false   | If declared, the dropdown will not hide when moving focus outside the element. |
 | `noToggle`              | `noToggle`              | ` Boolean ` |         | If declared, the trigger will only show the dropdown bib. |
 | `onSlotChange`          | `onSlotChange`          |             |         |                                                  |
+| `role`                  |                         | `string`    |         | aria-role value to be passed to the trigger node |
 | `rounded`               | `rounded`               | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
 
 ## Methods
