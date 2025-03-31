@@ -218,15 +218,6 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
-       */
-      noFlip: {
-        type: Boolean,
-        reflect: true,
-      },
-
-      /**
        * If declared, the bib will display when focus is applied to the trigger.
        */
       focusShow: {
@@ -303,6 +294,15 @@ export class AuroDropdown extends LitElement {
       matchWidth: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true,
       },
 
       /**

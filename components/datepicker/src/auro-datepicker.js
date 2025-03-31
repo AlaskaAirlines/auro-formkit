@@ -105,6 +105,12 @@ export class AuroDatePicker extends LitElement {
 
     this.monthFirst = true;
 
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
+
     /**
      * @private
      */
@@ -152,6 +158,15 @@ export class AuroDatePicker extends LitElement {
   static get properties() {
     return {
       // ...super.properties,
+
+      /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true,
+      },
+
       /**
        * The last date that may be displayed in the calendar.
        */
@@ -247,10 +262,40 @@ export class AuroDatePicker extends LitElement {
       },
 
       /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true,
+      },
+
+      /**
        * If set, disables auto-validation on blur.
        */
       noValidate: {
         type: Boolean
+      },
+
+      /**
+       * Gap between the trigger element and bib.
+       */
+      offset: {
+        type: Number,
+        reflect: true,
+      },
+
+      /**
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
+       */
+      placement: {
+        type: String,
+        reflect: true,
       },
 
       /**
@@ -1009,6 +1054,10 @@ export class AuroDatePicker extends LitElement {
           disableEventShow
           noHideOnThisFocusLoss
           fullscreenBreakpoint="sm"
+          .placement="${this.placement}"
+          .offset="${this.offset}"
+          ?autoPlacement="${this.autoPlacement}"
+          ?noFlip="${this.noFlip}"
           part="dropdown">
           <div slot="trigger" class="dpTriggerContent" part="trigger">
             <${this.inputTag}
