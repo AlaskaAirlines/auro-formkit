@@ -264,6 +264,21 @@ While content is loading, the menu can either remain empty or display a loading 
 
 </auro-accordion>
 
+### Customized bib position
+The bib position can be customized with `placement`, `offset`, `flip`, `autoPlacement` attributes
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/floaterConfig.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/floaterConfig.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Dropdown with fullscreen bib
 
 You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
