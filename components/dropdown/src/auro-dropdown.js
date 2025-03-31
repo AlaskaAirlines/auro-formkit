@@ -132,6 +132,9 @@ export class AuroDropdown extends LitElement {
     this.helpTextTag = versioning.generateTag('auro-formkit-dropdown-helptext', helpTextVersion, AuroHelpText);
   }
 
+  /**
+   * @ignore
+   */
   get floaterConfig() {
     return {
       placement: this.placement,
