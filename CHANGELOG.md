@@ -1,5 +1,19 @@
 # Semantic Release Automated Changelog
 
+# [2.1.0-beta.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.4...v2.1.0-beta.5) (2025-03-31)
+
+
+### Bug Fixes
+
+* move host styles to div to prevent tailwindcss from overriding the padding ([3f4bc55](https://github.com/AlaskaAirlines/auro-formkit/commit/3f4bc551cebc70717ad556e7e3addaa3c5c0f9c7))
+
+# [2.1.0-beta.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.3...v2.1.0-beta.4) (2025-03-28)
+
+
+### Features
+
+* added labeled property to dropdown for sizing ([01b4d9a](https://github.com/AlaskaAirlines/auro-formkit/commit/01b4d9aa7a669728c2fb02cede26fce203360585))
+
 # [2.1.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.2...v2.1.0-beta.3) (2025-03-21)
 
 
