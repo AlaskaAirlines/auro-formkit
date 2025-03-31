@@ -120,6 +120,7 @@ export class AuroSelect extends LitElement {
 
       /**
        * If declared, bib's position will be automatically calculated where to appear.
+       * @default false
        */
       autoPlacement: {
         type: Boolean,
@@ -172,6 +173,7 @@ export class AuroSelect extends LitElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
+       * @default false
        */
       noFlip: {
         type: Boolean,
@@ -188,6 +190,7 @@ export class AuroSelect extends LitElement {
 
       /**
        * Gap between the trigger element and bib.
+       * @default 0
        */
       offset: {
         type: Number,
@@ -224,6 +227,7 @@ export class AuroSelect extends LitElement {
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
        * "left-start" | "left-end"
+       * @default bottom-start
        */
       placement: {
         type: String,

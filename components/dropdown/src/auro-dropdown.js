@@ -347,7 +347,7 @@ export class AuroDropdown extends LitElement {
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
        * "left-start" | "left-end"
-       * @default "bottom-start"
+       * @default bottom-start
        */
       placement: {
         type: String,
