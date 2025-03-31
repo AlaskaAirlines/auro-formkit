@@ -80,11 +80,16 @@ export class AuroDropdown extends LitElement {
     this.disabled = false;
     this.error = false;
     this.inset = false;
-    this.placement = 'bottom-start';
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
     this.labeled = true;
+
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
 
     /**
      * @private
@@ -107,16 +112,6 @@ export class AuroDropdown extends LitElement {
     this.floater = new AuroFloatingUI();
 
     /**
-     * @private
-     */
-    this.floaterConfig = {
-      placement: 'bottom-start',
-      flip: true,
-      autoPlacement: false,
-      offset: 0,
-    };
-
-    /**
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
@@ -135,6 +130,15 @@ export class AuroDropdown extends LitElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-dropdown-helptext', helpTextVersion, AuroHelpText);
+  }
+
+  get floaterConfig() {
+    return {
+      placement: this.placement,
+      flip: !this.noFlip,
+      autoPlacement: this.autoPlacement,
+      offset: this.offset,
+    };
   }
 
   /**
@@ -156,6 +160,14 @@ export class AuroDropdown extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true,
+      },
 
       /**
        * If declared, applies a border around the trigger slot.
@@ -203,6 +215,15 @@ export class AuroDropdown extends LitElement {
       error: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true,
       },
 
       /**
@@ -300,16 +321,30 @@ export class AuroDropdown extends LitElement {
         reflect: true
       },
 
+      /**
+       * Gap between the trigger element and bib.
+       */
+      offset: {
+        type: Number,
+        reflect: true,
+      },
+
       onSlotChange: {
         type: Function,
         reflect: false
       },
 
       /**
-       * @private
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
        */
       placement: {
-        type: String
+        type: String,
+        reflect: true,
       },
 
       /**
