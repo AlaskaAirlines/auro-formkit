@@ -499,6 +499,30 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Sets aria attributes for the trigger element if a custom one is passed in.
+   * @private
+   * @method setTriggerAriaAttributes
+   * @param { HTMLElement } triggerElement - The custom trigger element.
+   */
+  setTriggerA11yAttributes(triggerElement) {
+
+    // Guard Clause: Ensure the element can have an attribute set
+    if (!triggerElement.setAttribute) {
+      return;
+    }
+
+    // Set appropriate attributes for a11y
+    triggerElement.setAttribute('id', `${this.getAttribute('id')}-trigger-element`);
+    triggerElement.setAttribute('role', this.role);
+    triggerElement.setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+    if (this.autocomplete !== 'none') {
+      triggerElement.setAttribute('aria-autocomplete', this.autocomplete);
+    } else {
+      triggerElement.removeAttribute('aria-autocomplete');
+    }
+  }
+
+  /**
    * Handles changes to the trigger content slot and updates related properties.
    *
    * It first updates the floater settings
@@ -545,12 +569,7 @@ export class AuroDropdown extends LitElement {
     }
 
     if (this.triggerContentSlot) {
-      if (this.triggerContentSlot[0].setAttribute) {
-        this.triggerContentSlot[0].setAttribute('id', `${this.getAttribute('id')}-trigger-element`);
-        this.triggerContentSlot[0].setAttribute('role', this.role);
-        this.triggerContentSlot[0].setAttribute('aria-autocomplete', this.autocomplete);
-        this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
-      }
+      this.setTriggerA11yAttributes(this.triggerContentSlot[0]);
 
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
         if (slot.textContent.trim()) {
