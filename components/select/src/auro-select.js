@@ -56,6 +56,12 @@ export class AuroSelect extends LitElement {
     const idSubstrEnd = 8;
     const idSubstrStart = 2;
 
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
+
     /**
      * @private
      */
@@ -113,6 +119,14 @@ export class AuroSelect extends LitElement {
     return {
 
       /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true,
+      },
+
+      /**
        * When attribute is present, element shows disabled state.
        */
       disabled: {
@@ -156,11 +170,28 @@ export class AuroSelect extends LitElement {
       },
 
       /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true,
+      },
+
+      /**
        * If set, disables auto-validation on blur.
        */
       noValidate: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * Gap between the trigger element and bib.
+       */
+      offset: {
+        type: Number,
+        reflect: true,
       },
 
       /**
@@ -184,6 +215,20 @@ export class AuroSelect extends LitElement {
        */
       options: {
         type: Array
+      },
+
+
+      /**
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
+       */
+      placement: {
+        type: String,
+        reflect: true,
       },
 
       /**
@@ -648,6 +693,10 @@ export class AuroSelect extends LitElement {
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           ?matchWidth="${!this.flexMenuWidth}"
           chevron
+          .placement="${this.placement}"
+          .offset="${this.offset}"
+          ?autoPlacement="${this.autoPlacement}"
+          ?noFlip="${this.noFlip}"
           part="dropdown">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
             <span id="placeholder" class="${classMap(placeholderClass)}"><slot name="placeholder"></slot></span>
