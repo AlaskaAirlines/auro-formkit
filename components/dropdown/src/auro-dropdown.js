@@ -166,10 +166,11 @@ export class AuroDropdown extends LitElement {
 
       /**
        * If declared, bib's position will be automatically calculated where to appear.
+       * @default false
        */
       autoPlacement: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -256,7 +257,7 @@ export class AuroDropdown extends LitElement {
        */
       isBibFullscreen: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -302,10 +303,11 @@ export class AuroDropdown extends LitElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
+       * @default false
        */
       noFlip: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -326,10 +328,11 @@ export class AuroDropdown extends LitElement {
 
       /**
        * Gap between the trigger element and bib.
+       * @default 0
        */
       offset: {
         type: Number,
-        reflect: true,
+        reflect: true
       },
 
       onSlotChange: {
@@ -344,10 +347,11 @@ export class AuroDropdown extends LitElement {
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
        * "left-start" | "left-end"
+       * @default "bottom-start"
        */
       placement: {
         type: String,
-        reflect: true,
+        reflect: true
       },
 
       /**

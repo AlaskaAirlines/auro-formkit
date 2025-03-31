@@ -92,6 +92,7 @@ export class AuroCombobox extends LitElement {
 
       /**
        * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
+       * @default false
        */
       autocomplete: {
         type: String,
@@ -103,7 +104,7 @@ export class AuroCombobox extends LitElement {
        */
       autoPlacement: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -141,10 +142,11 @@ export class AuroCombobox extends LitElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
+       * @default false
        */
       noFlip: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -156,10 +158,11 @@ export class AuroCombobox extends LitElement {
 
       /**
        * Gap between the trigger element and bib.
+       * @default 0
        */
       offset: {
         type: Number,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -178,10 +181,11 @@ export class AuroCombobox extends LitElement {
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
        * "left-start" | "left-end"
+       * @default "bottom-start"
        */
       placement: {
         type: String,
-        reflect: true,
+        reflect: true
       },
 
       /**

@@ -123,7 +123,7 @@ export class AuroSelect extends LitElement {
        */
       autoPlacement: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -175,7 +175,7 @@ export class AuroSelect extends LitElement {
        */
       noFlip: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -191,7 +191,7 @@ export class AuroSelect extends LitElement {
        */
       offset: {
         type: Number,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -227,7 +227,7 @@ export class AuroSelect extends LitElement {
        */
       placement: {
         type: String,
-        reflect: true,
+        reflect: true
       },
 
       /**
