@@ -70,6 +70,12 @@ export class AuroCombobox extends LitElement {
 
     this.isHiddenWhileLoading = false;
 
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
+
     const versioning = new AuroDependencyVersioning();
 
     this.dropdownTag = versioning.generateTag('auro-formkit-checkbox-dropdown', dropdownVersion, AuroDropdown);
@@ -90,6 +96,14 @@ export class AuroCombobox extends LitElement {
       autocomplete: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true,
       },
 
       /**
@@ -125,10 +139,27 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true,
+      },
+
+      /**
        * If set, disables auto-validation on blur.
        */
       noValidate: {
         type: Boolean
+      },
+
+      /**
+       * Gap between the trigger element and bib.
+       */
+      offset: {
+        type: Number,
+        reflect: true,
       },
 
       /**
@@ -138,6 +169,19 @@ export class AuroCombobox extends LitElement {
         type: Object,
         converter: arrayConverter,
         hasChanged: arrayOrUndefinedHasChanged
+      },
+
+      /**
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
+       */
+      placement: {
+        type: String,
+        reflect: true,
       },
 
       /**
@@ -908,6 +952,10 @@ export class AuroCombobox extends LitElement {
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          .placement="${this.placement}"
+          .offset="${this.offset}"
+          ?autoPlacement="${this.autoPlacement}"
+          ?noFlip="${this.noFlip}"
           disableEventShow>
           <${this.inputTag}
             slot="trigger"

@@ -254,7 +254,6 @@ While content is loading, the menu can either remain empty or display a loading 
 
 </auro-accordion>
 
-
 ### Customized bib position
 The bib position can be customized with `placement`, `offset`, `flip`, `autoPlacement` attributes
 

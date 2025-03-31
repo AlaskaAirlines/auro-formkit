@@ -217,7 +217,6 @@ export class AuroSelect extends LitElement {
         type: Array
       },
 
-
       /**
        * Position where the bib should appear relative to the trigger.
        * Accepted values:
