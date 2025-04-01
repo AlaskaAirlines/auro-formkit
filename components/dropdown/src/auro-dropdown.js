@@ -624,6 +624,7 @@ export class AuroDropdown extends LitElement {
         <${this.dropdownBibTag}
           id="bib"
           role="tooltip"
+          ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
           ?rounded="${this.common || this.rounded}"
