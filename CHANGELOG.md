@@ -1,5 +1,16 @@
 # Semantic Release Automated Changelog
 
+# [2.1.0-beta.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.5...v2.1.0-beta.6) (2025-04-01)
+
+
+### Features
+
+* add `floaterConfig` attributes on dropdown counter-group ([9510ee0](https://github.com/AlaskaAirlines/auro-formkit/commit/9510ee034800071e97e599ef6c213bda98ef908c))
+* expose `floaterConfig` related attrs on combobox ([ea78a71](https://github.com/AlaskaAirlines/auro-formkit/commit/ea78a71617e9414069c002ea83f6d5f33df3111a))
+* expose `floaterConfig` related attrs on datepicker ([d426bf7](https://github.com/AlaskaAirlines/auro-formkit/commit/d426bf7d04a8de00cf8689c4efe3bbdaaf0e75dc))
+* expose `floaterConfig` related attrs on select ([3183fa0](https://github.com/AlaskaAirlines/auro-formkit/commit/3183fa0f137a2daeae34b5165a55158f1f5a92ae))
+* expose `placement`, `offset`, `noFlip`, `autoPlacement` attrs in dropdown ([b67a47d](https://github.com/AlaskaAirlines/auro-formkit/commit/b67a47dd8d38518da8b621d2cef88c9840682cfa))
+
 # [2.1.0-beta.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.4...v2.1.0-beta.5) (2025-03-31)
 
 
