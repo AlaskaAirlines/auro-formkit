@@ -135,7 +135,7 @@ export class AuroInput extends BaseInput {
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             aria-describedby="${this.uniqueId}"
-            aria-invalid="${this.validity !== 'valid'}"
+            ?aria-invalid="${this.validity !== 'valid'}"
             placeholder=${this.getPlaceholder()}
             lang="${ifDefined(this.lang)}"
             ?activeLabel="${this.activeLabel}"
@@ -144,6 +144,7 @@ export class AuroInput extends BaseInput {
             autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
             autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
             part="input"
+            role="${ifDefined(this.role)}"
             />
         </div>
         <div

@@ -84,6 +84,8 @@ export class AuroDropdown extends LitElement {
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
+    this.role = 'button';
+    this.autocomplete = 'none';
     this.labeled = true;
 
     /**
@@ -325,6 +327,22 @@ export class AuroDropdown extends LitElement {
        */
       tabIndex: {
         type: Number
+      },
+
+      /**
+       * aria-role value to be passed to the trigger node
+       */
+      role: {
+        type: String,
+        attribute: false,
+      },
+
+      /**
+       * aria-autocomplete value to be passed to the trigger node
+       */
+      autocomplete: {
+        type: String,
+        attribute: false,
       }
     };
   }
@@ -369,6 +387,10 @@ export class AuroDropdown extends LitElement {
     // `requestUpdate` needs to be called to update hasTriggerContnet
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
+
+      if (this.triggerContentSlot && this.triggerContentSlot[0].setAttribute) {
+        this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+      }
     }
 
   }
@@ -376,6 +398,10 @@ export class AuroDropdown extends LitElement {
   firstUpdated() {
     this.floater.configure(this, 'auroDropdown');
     this.bibContent = this.floater.element.bib;
+
+    // floatingUI will regenerate this id to be unique
+    const bibId = this.bibContent.getAttribute('id');
+    this.trigger.setAttribute('aria-controls', bibId);
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
@@ -473,6 +499,30 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Sets aria attributes for the trigger element if a custom one is passed in.
+   * @private
+   * @method setTriggerAriaAttributes
+   * @param { HTMLElement } triggerElement - The custom trigger element.
+   */
+  setTriggerA11yAttributes(triggerElement) {
+
+    // Guard Clause: Ensure the element can have an attribute set
+    if (!triggerElement.setAttribute) {
+      return;
+    }
+
+    // Set appropriate attributes for a11y
+    triggerElement.setAttribute('id', `${this.getAttribute('id')}-trigger-element`);
+    triggerElement.setAttribute('role', this.role);
+    triggerElement.setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+    if (this.autocomplete !== 'none') {
+      triggerElement.setAttribute('aria-autocomplete', this.autocomplete);
+    } else {
+      triggerElement.removeAttribute('aria-autocomplete');
+    }
+  }
+
+  /**
    * Handles changes to the trigger content slot and updates related properties.
    *
    * It first updates the floater settings
@@ -507,7 +557,7 @@ export class AuroDropdown extends LitElement {
 
     if (!this.triggerContentFocusable) {
       trigger.setAttribute('tabindex', '0');
-      trigger.setAttribute('role', 'button');
+      trigger.setAttribute('role', this.role);
     } else {
       trigger.removeAttribute('tabindex');
       trigger.removeAttribute('role');
@@ -519,6 +569,8 @@ export class AuroDropdown extends LitElement {
     }
 
     if (this.triggerContentSlot) {
+      this.setTriggerA11yAttributes(this.triggerContentSlot[0]);
+
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
         if (slot.textContent.trim()) {
           return true;
@@ -623,7 +675,6 @@ export class AuroDropdown extends LitElement {
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
-          role="tooltip"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
