@@ -137,6 +137,11 @@ export class AuroDropdown extends LitElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-dropdown-helptext', helpTextVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.bubbleUpFocusEvent = this.bubbleUpFocusEvent.bind(this);
   }
 
   /**
@@ -523,6 +528,37 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * @private
+   * Creates and dispatches a duplicate focus event on the trigger element.
+   * @param {Event} event - The original focus event.
+   */
+  bubbleUpFocusEvent(event) {
+    const dupEvent = new FocusEvent(event.type, {
+      bubbles: false,
+      cancelable: false,
+      composed: true,
+    });
+    this.trigger.dispatchEvent(dupEvent);
+  }
+
+  /**
+   * @private
+   * Sets up event listeners to bubble up focus and blur events from nested Auro components within the trigger slot.
+   * This ensures that focus/blur events originating from within these components are propagated to the trigger element itself.
+   */
+  setupTriggerFocusEventBubbleUp() {
+    this.triggerContentSlot.forEach((node) => {
+      if (node.querySelectorAll) {
+        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        auroElements.forEach((auroEl) => {
+          auroEl.addEventListener('focus', this.bubbleUpFocusEvent);
+          auroEl.addEventListener('blur', this.bubbleUpFocusEvent);
+        });
+      }
+    });
+  }
+
+  /**
    * Handles changes to the trigger content slot and updates related properties.
    *
    * It first updates the floater settings
@@ -570,7 +606,7 @@ export class AuroDropdown extends LitElement {
 
     if (this.triggerContentSlot) {
       this.setTriggerA11yAttributes(this.triggerContentSlot[0]);
-
+      this.setupTriggerFocusEventBubbleUp();
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
         if (slot.textContent.trim()) {
           return true;
