@@ -250,7 +250,6 @@ Set stacked attribute to make range datepicker stacked style.
 
 </auro-accordion>
 
-
 ### Customized bib position
 The bib position can be customized with `placement`, `offset`, `flip`, `autoPlacement` attributes.
 
