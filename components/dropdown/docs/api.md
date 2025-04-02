@@ -20,7 +20,7 @@
 | `fullscreenBreakpoint`  | `fullscreenBreakpoint`  | ` String `  |         | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `hoverToggle`           | `hoverToggle`           | ` Boolean ` |         | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
 | `inset`                 | `inset`                 | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
-| `isBibFullscreen`       | `isBibFullscreen`       | `boolean`   | false   | If true, the dropdown bib is taking the fullscreen when it's open |
+| `isBibFullscreen`       | `isBibFullscreen`       | `boolean`   | false   | If true, the dropdown bib is taking the fullscreen when it's open. |
 | `isPopoverVisible`      | `isPopoverVisible`      | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
 | `matchWidth`            | `matchWidth`            | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |
 | `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false   | If declared, the dropdown will not hide when moving focus outside the element. |

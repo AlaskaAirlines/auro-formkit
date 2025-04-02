@@ -14,7 +14,6 @@
 ### Features
 
 * add `stacked` attribute ([e47976c](https://github.com/AlaskaAirlines/auro-formkit/commit/e47976cc2754fe487d64dd2903bb6ced720a8a60))
-
 # [2.1.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.2...v2.1.0-beta.3) (2025-03-21)
 
 

@@ -114,6 +114,12 @@
   }
 }
 
+:host([inset][bordered][labeled]) {
+  .trigger {
+    padding: var(--ds-size-100, $ds-size-100) var(--ds-size-150, $ds-size-150);
+  }
+}
+
 :host([common]),
 :host([rounded]) {
   .trigger {
