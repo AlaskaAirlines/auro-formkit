@@ -416,8 +416,10 @@ export class AuroDropdown extends LitElement {
     // Let subscribers know that the dropdown ID ha been generated and added
     this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
 
-    // Set the bib ID locally
-    this.dropdownId = this.floater.element.id;
+    // Set the bib ID locally if the user hasn't provided a focusable trigger
+    if (!this.triggerContentFocusable) {
+      this.dropdownId = this.floater.element.id;
+    }
 
     this.bibContent = this.floater.element.bib;
 
@@ -547,12 +549,6 @@ export class AuroDropdown extends LitElement {
     });
   }
 
-  removeDefaultA11yAttributes () {
-    this.trigger.removeAttribute('aria-role');
-    this.trigger.removeAttribute('aria-controls');
-    this.trigger.removeAttribute('aria-expanded');
-  }
-
   /**
    * Clear aria attributes for the trigger element if a custom one is passed in.
    * @private
@@ -560,13 +556,14 @@ export class AuroDropdown extends LitElement {
    * @param { HTMLElement } triggerElement - The custom trigger element.
    */
   clearTriggerA11yAttributes(triggerElement) {
+
     if (!triggerElement || !triggerElement.removeAttribute) {
       return;
     }
 
     // Set appropriate attributes for a11y
     triggerElement.removeAttribute('aria-labelledby');
-    if (triggerElement !== this.trigger) {
+    if (triggerElement.getAttribute('id') === `${this.id}-trigger-element`) {
       triggerElement.removeAttribute('id');
     }
     triggerElement.removeAttribute('role');
@@ -574,7 +571,6 @@ export class AuroDropdown extends LitElement {
 
     triggerElement.removeAttribute('aria-controls');
     triggerElement.removeAttribute('aria-autocomplete');
-
   }
 
   /**
@@ -615,7 +611,7 @@ export class AuroDropdown extends LitElement {
         if (this.triggerContentFocusable) {
 
           // Assume the consumer will be providing their own a11y in whatever they passed in
-          this.removeDefaultA11yAttributes();
+          this.clearTriggerA11yAttributes(trigger);
 
           // Remove the tabindex from the trigger so it doesn't interrupt focus flow
           trigger.removeAttribute('tabindex');
@@ -703,9 +699,10 @@ export class AuroDropdown extends LitElement {
           part="trigger"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
-          role="${ifDefined(this.a11yRole)}"
-          aria-expanded="${this.isPopoverVisible}"
-          aria-controls="${this.dropdownId}"
+          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
+          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
         >
           <div class="triggerContentWrapper">
             <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>

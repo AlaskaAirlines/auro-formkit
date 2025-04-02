@@ -59,6 +59,8 @@ export class AuroCombobox extends LitElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
+    this.dropdownOpen = false;
+    this.dropdownId = undefined;
     this.availableOptions = [];
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';

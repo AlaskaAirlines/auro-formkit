@@ -288,19 +288,19 @@ describe('auro-input', () => {
     `);
 
     expect(el.hasAttribute('validity')).to.be.false;
-    expect(el.inputElement.getAttribute('aria-invalid')).to.equal('true');
+    expect(el.inputElement.hasAttribute('aria-invalid')).to.be.true;
 
     el.value = 'some value';
     await elementUpdated(el);
 
     expect(el.getAttribute('validity')).to.be.equal('valid');
+    expect(el.hasAttribute('aria-invalid')).to.be.false;
 
     el.value = '';
-
     await elementUpdated(el);
 
     expect(el.getAttribute('validity')).to.be.equal('valueMissing');
-    expect(el.inputElement.getAttribute('aria-invalid')).to.equal('true');
+    expect(el.inputElement.hasAttribute('aria-invalid')).to.be.true;
   });
 
   it('is programmatically focusable', async () => {
