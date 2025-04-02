@@ -388,8 +388,10 @@ export class AuroDropdown extends LitElement {
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
 
-      if (this.triggerContentSlot && this.triggerContentSlot[0].setAttribute) {
+      if (this.triggerContentFocusable && this.triggerContentSlot && this.triggerContentSlot[0].setAttribute) {
         this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+      } else {
+        this.trigger.setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
       }
     }
 
@@ -398,10 +400,6 @@ export class AuroDropdown extends LitElement {
   firstUpdated() {
     this.floater.configure(this, 'auroDropdown');
     this.bibContent = this.floater.element.bib;
-
-    // floatingUI will regenerate this id to be unique
-    const bibId = this.bibContent.getAttribute('id');
-    this.trigger.setAttribute('aria-controls', bibId);
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
@@ -505,21 +503,52 @@ export class AuroDropdown extends LitElement {
    * @param { HTMLElement } triggerElement - The custom trigger element.
    */
   setTriggerA11yAttributes(triggerElement) {
-
     // Guard Clause: Ensure the element can have an attribute set
-    if (!triggerElement.setAttribute) {
+    if (!triggerElement || !triggerElement.setAttribute) {
       return;
     }
 
     // Set appropriate attributes for a11y
-    triggerElement.setAttribute('id', `${this.getAttribute('id')}-trigger-element`);
+    triggerElement.setAttribute('aria-labelledby', "triggerLabel");
+    if (triggerElement !== this.trigger) {
+      triggerElement.setAttribute('id', `${this.id}-trigger-element`);
+    }
     triggerElement.setAttribute('role', this.role);
     triggerElement.setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+
+    // floatingUI will regenerate this id to be unique
+    const bibId = this.bibContent.id;
+    triggerElement.setAttribute('aria-controls', bibId);
+
     if (this.autocomplete !== 'none') {
       triggerElement.setAttribute('aria-autocomplete', this.autocomplete);
     } else {
       triggerElement.removeAttribute('aria-autocomplete');
     }
+  }
+
+  /**
+   * Clear aria attributes for the trigger element if a custom one is passed in.
+   * @private
+   * @method setTriggerAriaAttributes
+   * @param { HTMLElement } triggerElement - The custom trigger element.
+   */
+  clearTriggerA11yAttributes(triggerElement) {
+    if (!triggerElement || !triggerElement.removeAttribute) {
+      return;
+    }
+
+    // Set appropriate attributes for a11y
+    triggerElement.removeAttribute('aria-labelledby');
+    if (triggerElement !== this.trigger) {
+      triggerElement.removeAttribute('id');
+    }
+    triggerElement.removeAttribute('role');
+    triggerElement.removeAttribute('aria-expanded');
+
+    triggerElement.removeAttribute('aria-controls');
+    triggerElement.removeAttribute('aria-autocomplete');
+
   }
 
   /**
@@ -553,14 +582,12 @@ export class AuroDropdown extends LitElement {
       }
     }
 
-    const trigger = this.shadowRoot.querySelector('#trigger');
-
     if (!this.triggerContentFocusable) {
-      trigger.setAttribute('tabindex', '0');
-      trigger.setAttribute('role', this.role);
+      this.trigger.setAttribute('tabindex', '0');
+      this.setTriggerA11yAttributes(this.trigger);
     } else {
-      trigger.removeAttribute('tabindex');
-      trigger.removeAttribute('role');
+      this.trigger.removeAttribute('tabindex');
+      this.clearTriggerA11yAttributes(this.trigger);
     }
 
     if (event) {
@@ -568,7 +595,7 @@ export class AuroDropdown extends LitElement {
       this.triggerContentSlot = event.target.assignedNodes();
     }
 
-    if (this.triggerContentSlot) {
+    if (this.triggerContentSlot && this.triggerContentSlot.length) {
       this.setTriggerA11yAttributes(this.triggerContentSlot[0]);
 
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
@@ -638,7 +665,6 @@ export class AuroDropdown extends LitElement {
           id="trigger"
           class="trigger"
           part="trigger"
-          aria-labelledby="triggerLabel"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
           >
