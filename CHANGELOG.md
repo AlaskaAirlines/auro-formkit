@@ -2,7 +2,6 @@
 
 # [2.1.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.2...v2.1.0) (2025-03-24)
 
-
 ### Bug Fixes
 
 * add centralDate is valid date checks ([1e24470](https://github.com/AlaskaAirlines/auro-formkit/commit/1e244700ffb693c1770779ffe2ba77ae84c89fd1))
