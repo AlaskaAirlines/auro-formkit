@@ -546,7 +546,7 @@ export class AuroDropdown extends LitElement {
 
     // Set appropriate attributes for a11y
     triggerElement.setAttribute('aria-labelledby', "triggerLabel");
-    if (triggerElement !== this.trigger) {
+    if (triggerElement !== this.trigger && !triggerElement.getAttribute('id')) {
       triggerElement.setAttribute('id', `${this.id}-trigger-element`);
     }
     triggerElement.setAttribute('role', this.role);
@@ -576,7 +576,7 @@ export class AuroDropdown extends LitElement {
 
     // Set appropriate attributes for a11y
     triggerElement.removeAttribute('aria-labelledby');
-    if (triggerElement !== this.trigger) {
+    if (triggerElement.getAttribute('id') === `${this.id}-trigger-element`) {
       triggerElement.removeAttribute('id');
     }
     triggerElement.removeAttribute('role');
