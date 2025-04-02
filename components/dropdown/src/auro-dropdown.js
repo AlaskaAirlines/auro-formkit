@@ -26,6 +26,7 @@ import tokensCss from "./styles/tokens-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import helpTextVersion from './helptextVersion.js';
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
@@ -86,6 +87,7 @@ export class AuroDropdown extends LitElement {
     this.role = 'button';
     this.autocomplete = 'none';
     this.labeled = true;
+    this.a11yRole = 'combobox';
 
     // floaterConfig
     this.placement = 'bottom-start';
@@ -377,10 +379,10 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * aria-role value to be passed to the trigger node
+       * namespaced aria-role value
        */
-      role: {
-        type: String,
+      a11yRole: {
+        type: String || undefined,
         attribute: false,
       },
 
@@ -686,12 +688,12 @@ export class AuroDropdown extends LitElement {
       }
     }
 
+    const trigger = this.shadowRoot.querySelector('#trigger');
+
     if (!this.triggerContentFocusable) {
-      this.trigger.setAttribute('tabindex', '0');
-      this.setTriggerA11yAttributes(this.trigger);
+      trigger.setAttribute('tabindex', '0');
     } else {
-      this.trigger.removeAttribute('tabindex');
-      this.clearTriggerA11yAttributes(this.trigger);
+      trigger.removeAttribute('tabindex');
     }
 
     if (event) {
@@ -699,9 +701,8 @@ export class AuroDropdown extends LitElement {
       this.triggerContentSlot = event.target.assignedNodes();
     }
 
-    if (this.triggerContentSlot && this.triggerContentSlot.length) {
+    if (this.triggerContentSlot) {
       this.setupTriggerFocusEventBinding();
-      this.setTriggerA11yAttributes(this.triggerContentSlot[0]);
 
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
         if (slot.textContent.trim()) {
@@ -772,7 +773,8 @@ export class AuroDropdown extends LitElement {
           part="trigger"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
-          >
+          role="${ifDefined(this.a11yRole)}"
+        >
           <div class="triggerContentWrapper">
             <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
               <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
@@ -810,7 +812,8 @@ export class AuroDropdown extends LitElement {
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
           ?rounded="${this.common || this.rounded}"
-          ?inset="${this.common || this.inset}">
+          ?inset="${this.common || this.inset}"
+        >
         </${this.dropdownBibTag}>
       </div>
     `;
