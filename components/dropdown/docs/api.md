@@ -8,25 +8,29 @@
 
 ## Properties
 
-| Property                | Attribute               | Type        | Default | Description                                      |
-|-------------------------|-------------------------|-------------|---------|--------------------------------------------------|
-| `bordered`              | `bordered`              | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
-| `chevron`               | `chevron`               | ` Boolean ` |         | If declared, the dropdown displays a chevron on the right. |
-| `common`                | `common`                | ` Boolean ` |         | If declared, the dropdown will be styled with the common theme. |
-| `disabled`              | `disabled`              | ` Boolean ` |         | If declared, the dropdown is not interactive.    |
-| `error`                 | `error`                 | ` Boolean ` |         | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
-| `fluid`                 | `fluid`                 | `Boolean`   |         | Makes the trigger to be full width of its parent container. |
-| `focusShow`             | `focusShow`             | ` Boolean ` |         | If declared, the bib will display when focus is applied to the trigger. |
-| `fullscreenBreakpoint`  | `fullscreenBreakpoint`  | ` String `  |         | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
-| `hoverToggle`           | `hoverToggle`           | ` Boolean ` |         | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
-| `inset`                 | `inset`                 | ` Boolean ` |         | If declared, will apply padding around trigger slot content. |
-| `isBibFullscreen`       | `isBibFullscreen`       | `boolean`   | false   | If true, the dropdown bib is taking the fullscreen when it's open |
-| `isPopoverVisible`      | `isPopoverVisible`      | ` Boolean ` | false   | If true, the dropdown bib is displayed.          |
-| `matchWidth`            | `matchWidth`            | ` Boolean ` | false   | If declared, the popover and trigger will be set to the same width. |
-| `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false   | If declared, the dropdown will not hide when moving focus outside the element. |
-| `noToggle`              | `noToggle`              | ` Boolean ` |         | If declared, the trigger will only show the dropdown bib. |
-| `onSlotChange`          | `onSlotChange`          |             |         |                                                  |
-| `rounded`               | `rounded`               | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
+| Property                | Attribute               | Type        | Default        | Description                                      |
+|-------------------------|-------------------------|-------------|----------------|--------------------------------------------------|
+| `autoPlacement`         | `autoPlacement`         | `boolean`   | "false"        | If declared, bib's position will be automatically calculated where to appear. |
+| `bordered`              | `bordered`              | ` Boolean ` |                | If declared, applies a border around the trigger slot. |
+| `chevron`               | `chevron`               | ` Boolean ` |                | If declared, the dropdown displays a chevron on the right. |
+| `common`                | `common`                | ` Boolean ` |                | If declared, the dropdown will be styled with the common theme. |
+| `disabled`              | `disabled`              | ` Boolean ` |                | If declared, the dropdown is not interactive.    |
+| `error`                 | `error`                 | ` Boolean ` |                | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
+| `fluid`                 | `fluid`                 | `Boolean`   |                | Makes the trigger to be full width of its parent container. |
+| `focusShow`             | `focusShow`             | ` Boolean ` |                | If declared, the bib will display when focus is applied to the trigger. |
+| `fullscreenBreakpoint`  | `fullscreenBreakpoint`  | ` String `  |                | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
+| `hoverToggle`           | `hoverToggle`           | ` Boolean ` |                | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
+| `inset`                 | `inset`                 | ` Boolean ` |                | If declared, will apply padding around trigger slot content. |
+| `isBibFullscreen`       | `isBibFullscreen`       | `boolean`   | false          | If true, the dropdown bib is taking the fullscreen when it's open. |
+| `isPopoverVisible`      | `isPopoverVisible`      | ` Boolean ` | false          | If true, the dropdown bib is displayed.          |
+| `matchWidth`            | `matchWidth`            | ` Boolean ` | false          | If declared, the popover and trigger will be set to the same width. |
+| `noFlip`                | `noFlip`                | `boolean`   | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
+| `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false          | If declared, the dropdown will not hide when moving focus outside the element. |
+| `noToggle`              | `noToggle`              | ` Boolean ` |                | If declared, the trigger will only show the dropdown bib. |
+| `offset`                | `offset`                | `number`    | "0"            | Gap between the trigger element and bib.         |
+| `onSlotChange`          | `onSlotChange`          |             |                |                                                  |
+| `placement`             | `placement`             | `string`    | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
+| `rounded`               | `rounded`               | ` Boolean ` |                | If declared, will apply border-radius to trigger and default slots. |
 
 ## Methods
 

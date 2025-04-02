@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit-a11y/accessible-name, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
+/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
@@ -80,10 +80,16 @@ export class AuroDropdown extends LitElement {
     this.disabled = false;
     this.error = false;
     this.inset = false;
-    this.placement = 'bottom-start';
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
+    this.labeled = true;
+
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
 
     /**
      * @private
@@ -104,16 +110,6 @@ export class AuroDropdown extends LitElement {
      * @private
      */
     this.floater = new AuroFloatingUI();
-
-    /**
-     * @private
-     */
-    this.floaterConfig = {
-      placement: 'bottom-start',
-      flip: true,
-      autoPlacement: false,
-      offset: 0,
-    };
 
     /**
      * Generate unique names for dependency components.
@@ -137,6 +133,18 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * @ignore
+   */
+  get floaterConfig() {
+    return {
+      placement: this.placement,
+      flip: !this.noFlip,
+      autoPlacement: this.autoPlacement,
+      offset: this.offset,
+    };
+  }
+
+  /**
    * Public method to hide the dropdown.
    * @returns {void}
    */
@@ -155,6 +163,15 @@ export class AuroDropdown extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       * @default false
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
        * If declared, applies a border around the trigger slot.
@@ -236,11 +253,11 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If true, the dropdown bib is taking the fullscreen when it's open
+       * If true, the dropdown bib is taking the fullscreen when it's open.
        */
       isBibFullscreen: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -267,9 +284,28 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
+       * Defines if there is a label preset.
+       * @private
+       */
+      labeled: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If declared, the popover and trigger will be set to the same width.
        */
       matchWidth: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       * @default false
+       */
+      noFlip: {
         type: Boolean,
         reflect: true
       },
@@ -290,16 +326,32 @@ export class AuroDropdown extends LitElement {
         reflect: true
       },
 
+      /**
+       * Gap between the trigger element and bib.
+       * @default 0
+       */
+      offset: {
+        type: Number,
+        reflect: true
+      },
+
       onSlotChange: {
         type: Function,
         reflect: false
       },
 
       /**
-       * @private
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
+       * @default bottom-start
        */
       placement: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -345,6 +397,7 @@ export class AuroDropdown extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.floater.disconnect();
   }
 
   updated(changedProperties) {
@@ -476,13 +529,21 @@ export class AuroDropdown extends LitElement {
   handleTriggerContentSlotChange(event) {
     this.floater.handleTriggerTabIndex();
 
-    const triggerContentNodes = this.shadowRoot.querySelector('.triggerContent slot').assignedNodes();
+    const triggerSlot = this.shadowRoot.querySelector('.triggerContent slot');
 
-    triggerContentNodes.forEach((node) => {
-      if (!this.triggerContentFocusable) {
-        this.triggerContentFocusable = this.containsFocusableElement(node);
+    if (triggerSlot) {
+
+      const triggerContentNodes = triggerSlot.assignedNodes();
+
+      if (triggerContentNodes) {
+
+        triggerContentNodes.forEach((node) => {
+          if (!this.triggerContentFocusable) {
+            this.triggerContentFocusable = this.containsFocusableElement(node);
+          }
+        });
       }
-    });
+    }
 
     const trigger = this.shadowRoot.querySelector('#trigger');
 
@@ -536,6 +597,29 @@ export class AuroDropdown extends LitElement {
     }
   }
 
+  /**
+   * @private
+   * @method handleLabelSlotChange
+   * @param {event} event - The event object representing the slot change.
+   * @description Handles the slot change event for the label slot.
+   */
+  handleLabelSlotChange (event) {
+
+    // Get the nodes from the event
+    const nodes = event.target.assignedNodes();
+
+    // Guard clause for no nodes
+    if (!nodes) {
+      return;
+    }
+
+    // Convert the nodes to a measurable array so we can get the length
+    const nodesArr = Array.from(nodes);
+
+    // If the nodes array has a length, the dropdown is labeled
+    this.labeled = nodesArr.length > 0;
+  }
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
@@ -550,7 +634,7 @@ export class AuroDropdown extends LitElement {
           >
           <div class="triggerContentWrapper">
             <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
-              <slot name="label"></slot>
+              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
             </label>
             <div class="triggerContent">
               <slot

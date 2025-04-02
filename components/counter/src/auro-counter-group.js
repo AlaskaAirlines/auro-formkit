@@ -98,6 +98,25 @@ export class AuroCounterGroup extends LitElement {
     return {
 
       /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       * @default false
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.
+       * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       * @default sm
+       */
+      fullscreenBreakpoint: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * Indicates if the counter group is displayed as a dropdown.
        */
       isDropdown: {
@@ -121,11 +140,45 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
-       * Reflects the validity state.
+       * If declared, make bib.fullscreen.headline in HeadingDisplay.
+       * Otherwise, Heading 600
        */
-      validity: {
+      largeFullscreenHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       * @default false
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Gap between the trigger element and bib.
+       * @default 0
+       */
+      offset: {
+        type: Number,
+        reflect: true
+      },
+
+      /**
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
+       * @default bottom-start
+       */
+      placement: {
         type: String,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -136,30 +189,19 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
+       * Reflects the validity state.
+       */
+      validity: {
+        type: String,
+        reflect: true,
+      },
+
+      /**
        * The current individual values of the nested counters.
        */
       value: {
         type: Object,
       },
-
-      /**
-       * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600
-       */
-      largeFullscreenHeadline: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.
-       * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
-       * @default sm
-       */
-      fullscreenBreakpoint: {
-        type: String,
-        reflect: true
-      }
     };
   }
 
@@ -402,7 +444,12 @@ export class AuroCounterGroup extends LitElement {
   render() {
     return html`
     ${this.isDropdown
-      ? html`<${this.dropdownTag} common chevron fullscreenBreakpoint="${this.fullscreenBreakpoint}">
+      ? html`<${this.dropdownTag} common chevron
+        .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+        .placement="${this.placement}"
+        .offset="${this.offset}"
+        ?autoPlacement="${this.autoPlacement}"
+        ?noFlip="${this.noFlip}">
         <div slot="trigger"><slot name="valueText">
           ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
         </slot></div>
