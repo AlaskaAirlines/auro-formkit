@@ -1,30 +1,18 @@
 # Semantic Release Automated Changelog
 
-# [2.1.0-beta.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.5...v2.1.0-beta.6) (2025-04-01)
-
-
-### Features
-
-* add `floaterConfig` attributes on dropdown counter-group ([9510ee0](https://github.com/AlaskaAirlines/auro-formkit/commit/9510ee034800071e97e599ef6c213bda98ef908c))
-* expose `floaterConfig` related attrs on combobox ([ea78a71](https://github.com/AlaskaAirlines/auro-formkit/commit/ea78a71617e9414069c002ea83f6d5f33df3111a))
-* expose `floaterConfig` related attrs on datepicker ([d426bf7](https://github.com/AlaskaAirlines/auro-formkit/commit/d426bf7d04a8de00cf8689c4efe3bbdaaf0e75dc))
-* expose `floaterConfig` related attrs on select ([3183fa0](https://github.com/AlaskaAirlines/auro-formkit/commit/3183fa0f137a2daeae34b5165a55158f1f5a92ae))
-* expose `placement`, `offset`, `noFlip`, `autoPlacement` attrs in dropdown ([b67a47d](https://github.com/AlaskaAirlines/auro-formkit/commit/b67a47dd8d38518da8b621d2cef88c9840682cfa))
-
-# [2.1.0-beta.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.4...v2.1.0-beta.5) (2025-03-31)
-
+# [2.1.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.0.2...v2.1.0) (2025-03-24)
 
 ### Bug Fixes
 
-* move host styles to div to prevent tailwindcss from overriding the padding ([3f4bc55](https://github.com/AlaskaAirlines/auro-formkit/commit/3f4bc551cebc70717ad556e7e3addaa3c5c0f9c7))
-
-# [2.1.0-beta.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.3...v2.1.0-beta.4) (2025-03-28)
+* add centralDate is valid date checks ([1e24470](https://github.com/AlaskaAirlines/auro-formkit/commit/1e244700ffb693c1770779ffe2ba77ae84c89fd1))
+* add external dependencies for Rollup configuration [#249](https://github.com/AlaskaAirlines/auro-formkit/issues/249) ([4c7ca14](https://github.com/AlaskaAirlines/auro-formkit/commit/4c7ca14b868bf01d234288238d097da02858c654))
+* correct variable for default date format [#441](https://github.com/AlaskaAirlines/auro-formkit/issues/441) ([70d895a](https://github.com/AlaskaAirlines/auro-formkit/commit/70d895abd16828db7dd1099320a13b695f263965))
+* update component versions and refactor tags for formkit integration ([6d517b6](https://github.com/AlaskaAirlines/auro-formkit/commit/6d517b6f85318abafaebf9b2d6d8da79b2cf71e3))
 
 
 ### Features
 
-* added labeled property to dropdown for sizing ([01b4d9a](https://github.com/AlaskaAirlines/auro-formkit/commit/01b4d9aa7a669728c2fb02cede26fce203360585))
-
+* add `stacked` attribute ([e47976c](https://github.com/AlaskaAirlines/auro-formkit/commit/e47976cc2754fe487d64dd2903bb6ced720a8a60))
 # [2.1.0-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0-beta.2...v2.1.0-beta.3) (2025-03-21)
 
 
