@@ -404,10 +404,6 @@ export class AuroDropdown extends LitElement {
     // `requestUpdate` needs to be called to update hasTriggerContnet
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
-
-      // if (this.triggerContentSlot && this.triggerContentSlot[0].setAttribute) {
-      //   this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
-      // }
     }
 
   }
@@ -558,6 +554,30 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Clear aria attributes for the trigger element if a custom one is passed in.
+   * @private
+   * @method setTriggerAriaAttributes
+   * @param { HTMLElement } triggerElement - The custom trigger element.
+   */
+  clearTriggerA11yAttributes(triggerElement) {
+    if (!triggerElement || !triggerElement.removeAttribute) {
+      return;
+    }
+
+    // Set appropriate attributes for a11y
+    triggerElement.removeAttribute('aria-labelledby');
+    if (triggerElement !== this.trigger) {
+      triggerElement.removeAttribute('id');
+    }
+    triggerElement.removeAttribute('role');
+    triggerElement.removeAttribute('aria-expanded');
+
+    triggerElement.removeAttribute('aria-controls');
+    triggerElement.removeAttribute('aria-autocomplete');
+
+  }
+
+  /**
    * Handles changes to the trigger content slot and updates related properties.
    *
    * It first updates the floater settings
@@ -681,7 +701,6 @@ export class AuroDropdown extends LitElement {
           id="trigger"
           class="trigger"
           part="trigger"
-          aria-labelledby="triggerLabel"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
           role="${ifDefined(this.a11yRole)}"
