@@ -25,6 +25,7 @@ import helpTextVersion from './helptextVersion.js';
 
 // build the component class
 export class AuroInput extends BaseInput {
+
   constructor() {
     super();
 
@@ -47,6 +48,38 @@ export class AuroInput extends BaseInput {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+  }
+
+  static get properties() {
+    return {
+
+      /**
+       * The value for the aria-role attribute.
+       */
+      a11yRole: {
+        type: String,
+        attribute: true,
+        reflect: true
+      },
+
+      /**
+       * The value for the aria-expanded attribute.
+       */
+      a11yExpanded: {
+        type: Boolean,
+        attribute: true,
+        reflect: true
+      },
+
+      /**
+       * The value for the aria-controls attribute.
+       */
+      a11yControls: {
+        type: String,
+        attribute: true,
+        reflect: true
+      }
+    };
   }
 
   /**
@@ -144,8 +177,10 @@ export class AuroInput extends BaseInput {
             autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
             autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
             part="input"
-            role="${ifDefined(this.role)}"
-            />
+            role="${ifDefined(this.a11yRole)}"
+            aria-expanded="${ifDefined(this.a11yExpanded)}"
+            aria-controls="${ifDefined(this.a11yControls)}"
+          />
         </div>
         <div
           class="notificationIcons"
