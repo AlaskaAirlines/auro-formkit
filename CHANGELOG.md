@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [2.2.1-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.0...v2.2.1-beta.1) (2025-04-07)
+
+
+### Bug Fixes
+
+* properly closes bib when selecting an option ([51a5e91](https://github.com/AlaskaAirlines/auro-formkit/commit/51a5e91b8f3e66d6b4fbc414e2a502947394e902))
+
 # [2.2.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0...v2.2.0) (2025-04-02)
 
 
