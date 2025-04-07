@@ -110,6 +110,26 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
+       * ID for the dropdown
+       * @private
+       */
+      dropdownId: {
+        type: String,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
+       * Whether or not the dropdown is open
+       * @private
+       */
+      dropdownOpen: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
        * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
        */
       error: {
@@ -394,9 +414,18 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   configureDropdown() {
-    this.dropdown.role = 'combobox';
-    this.dropdown.autocomplete = 'list';
 
+    // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
+    this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
+      this.dropdownId = event.detail.id;
+    });
+
+    // Listen for the dropdown to be shown or hidden
+    this.dropdown.addEventListener("auroDropdown-toggled", (ev) => {
+      this.dropdownOpen = ev.detail.expanded;
+    });
+
+    // this.dropdown.addEventListener('auroDropdown-show', () => {
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
     this.menuWrapper.append(this.menu);
 
@@ -425,7 +454,6 @@ export class AuroCombobox extends LitElement {
       this.isDropdownFullscreen = event.detail.strategy === 'fullscreen';
       setTimeout(this.transportInput);
     });
-
   }
 
   /**
@@ -923,6 +951,10 @@ export class AuroCombobox extends LitElement {
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow>
           <${this.inputTag}
+            .a11yRole="${"combobox"}"
+            .a11yExpanded="${this.dropdownOpen}"
+            .a11yControls="${this.dropdownId}"
+            id="${this.id || 'auro-combobox-input'}"
             slot="trigger"
             bordered
             ?required="${this.required}"

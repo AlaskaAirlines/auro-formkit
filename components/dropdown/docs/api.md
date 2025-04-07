@@ -10,6 +10,7 @@
 
 | Property                | Attribute               | Type        | Default | Description                                      |
 |-------------------------|-------------------------|-------------|---------|--------------------------------------------------|
+| `a11yRole`              |                         |             |         | namespaced aria-role value                       |
 | `autocomplete`          |                         | `string`    |         | aria-autocomplete value to be passed to the trigger node |
 | `bordered`              | `bordered`              | ` Boolean ` |         | If declared, applies a border around the trigger slot. |
 | `chevron`               | `chevron`               | ` Boolean ` |         | If declared, the dropdown displays a chevron on the right. |
@@ -27,23 +28,24 @@
 | `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false   | If declared, the dropdown will not hide when moving focus outside the element. |
 | `noToggle`              | `noToggle`              | ` Boolean ` |         | If declared, the trigger will only show the dropdown bib. |
 | `onSlotChange`          | `onSlotChange`          |             |         |                                                  |
-| `role`                  |                         | `string`    |         | aria-role value to be passed to the trigger node |
 | `rounded`               | `rounded`               | ` Boolean ` |         | If declared, will apply border-radius to trigger and default slots. |
 
 ## Methods
 
-| Method           | Type       | Description                                      |
-|------------------|------------|--------------------------------------------------|
-| `exposeCssParts` | `(): void` | Exposes CSS parts for styling from parent components. |
-| `hide`           | `(): void` | Public method to hide the dropdown.              |
-| `show`           | `(): void` | Public method to show the dropdown.              |
+| Method                        | Type       | Description                                      |
+|-------------------------------|------------|--------------------------------------------------|
+| `exposeCssParts`              | `(): void` | Exposes CSS parts for styling from parent components. |
+| `hide`                        | `(): void` | Public method to hide the dropdown.              |
+| `removeDefaultA11yAttributes` | `(): void` |                                                  |
+| `show`                        | `(): void` | Public method to show the dropdown.              |
 
 ## Events
 
-| Event                       | Description                                      |
-|-----------------------------|--------------------------------------------------|
-| `auroDropdown-toggled`      | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | Notifies that the trigger has been clicked.      |
+| Event                       | Type                        | Description                                      |
+|-----------------------------|-----------------------------|--------------------------------------------------|
+| `auroDropdown-idAdded`      | `CustomEvent<{ id: any; }>` |                                                  |
+| `auroDropdown-toggled`      |                             | Notifies that the visibility of the dropdown bib has changed. |
+| `auroDropdown-triggerClick` |                             | Notifies that the trigger has been clicked.      |
 
 ## Slots
 
