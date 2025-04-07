@@ -105,6 +105,12 @@ export class AuroDatePicker extends LitElement {
 
     this.monthFirst = true;
 
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
+
     /**
      * @private
      */
@@ -133,12 +139,12 @@ export class AuroDatePicker extends LitElement {
     /**
      * @private
      */
-    this.dropdownTag = versioning.generateTag('auro-dropdown', dropdownVersion, AuroDropdown);
+    this.dropdownTag = versioning.generateTag('auro-formkit-datepicker-dropdown', dropdownVersion, AuroDropdown);
 
     /**
      * @private
      */
-    this.inputTag = versioning.generateTag('auro-input', inputVersion, AuroInput);
+    this.inputTag = versioning.generateTag('auro-formkit-datepicker-input', inputVersion, AuroInput);
 
     /**
      * @private
@@ -152,6 +158,16 @@ export class AuroDatePicker extends LitElement {
   static get properties() {
     return {
       // ...super.properties,
+
+      /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       * @default false
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true
+      },
+
       /**
        * The last date that may be displayed in the calendar.
        */
@@ -247,10 +263,43 @@ export class AuroDatePicker extends LitElement {
       },
 
       /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       * @default false
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If set, disables auto-validation on blur.
        */
       noValidate: {
         type: Boolean
+      },
+
+      /**
+       * Gap between the trigger element and bib.
+       * @default 0
+       */
+      offset: {
+        type: Number,
+        reflect: true
+      },
+
+      /**
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
+       * @default bottom-start
+       */
+      placement: {
+        type: String,
+        reflect: true
       },
 
       /**
@@ -302,6 +351,14 @@ export class AuroDatePicker extends LitElement {
        */
       setCustomValidityValueMissing: {
         type: String
+      },
+
+      /**
+       * Set true to make datepicker stacked style.
+       */
+      stacked: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -562,9 +619,10 @@ export class AuroDatePicker extends LitElement {
    * @returns {void}
    */
   configureCalendar() {
-    this.calendar = this.shadowRoot.querySelector('auro-calendar');
+    this.calendar = this.shadowRoot.querySelector('auro-formkit-calendar');
     this.calendar.datepicker = this;
     this.calendar.format = this.format;
+    this.calendar.dropdown = this.dropdown;
 
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
       if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
@@ -1000,6 +1058,10 @@ export class AuroDatePicker extends LitElement {
           disableEventShow
           noHideOnThisFocusLoss
           fullscreenBreakpoint="sm"
+          .placement="${this.placement}"
+          .offset="${this.offset}"
+          ?autoPlacement="${this.autoPlacement}"
+          ?noFlip="${this.noFlip}"
           part="dropdown">
           <div slot="trigger" class="dpTriggerContent" part="trigger">
             <${this.inputTag}
@@ -1044,7 +1106,7 @@ export class AuroDatePicker extends LitElement {
             ` : undefined}
           </div>
           <div class="calendarWrapper" part="calendarWrapper">
-            <auro-calendar
+            <auro-formkit-calendar
               ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"
               ?noRange="${!this.range}"
               .format="${this.format}"
@@ -1060,7 +1122,7 @@ export class AuroDatePicker extends LitElement {
               <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
               <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
               ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
-            </auro-calendar>
+            </auro-formkit-calendar>
           </div>
           <p slot="helpText" part="helpTextSpan">
             <!-- Help text and error message template -->

@@ -131,9 +131,22 @@ export class CalendarUtilities {
       increment = -1; // eslint-disable-line no-magic-numbers
     }
 
-    // calculate the new central date
-    const newCentralDate = new Date(elem.centralDate).setMonth(new Date(elem.centralDate).getMonth() + increment);
-    // set the new central date to the first day of the month
-    elem.centralDate = this.util.convertDateToFirstOfMonth(newCentralDate);
+    // Get new central date for calendar view
+    const {firstRenderedMonth, centralDate, datepicker} = elem;
+    const formattedDateStr = this.util.getDateAsString(centralDate, datepicker.format);
+    let newCentralDate = null;
+
+    if (this.util.validDateStr(formattedDateStr, datepicker.format)) {
+      // Use current date as base and adjust month by increment
+      newCentralDate = new Date(formattedDateStr).setMonth(new Date(formattedDateStr).getMonth() + increment);
+    } else {
+      // Fallback to first rendered month if central date invalid
+      newCentralDate = new Date(firstRenderedMonth).setMonth(new Date(firstRenderedMonth).getMonth() + increment);
+    }
+
+    // Update calendar central date
+    if (newCentralDate) {
+      elem.centralDate = this.util.convertDateToFirstOfMonth(newCentralDate);
+    }
   }
 }

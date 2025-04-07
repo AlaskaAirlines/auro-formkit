@@ -62,7 +62,7 @@ export class AuroCounter extends LitElement {
      * @private
      * @type {string}
      */
-    this.iconTag = versioning.generateTag("auro-icon", iconVersion, AuroIcon);
+    this.iconTag = versioning.generateTag("auro-formkit-counter-icon", iconVersion, AuroIcon);
 
     /**
      * @private

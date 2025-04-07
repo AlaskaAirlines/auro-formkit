@@ -85,6 +85,7 @@ This configuration enables proper module resolution for the component's TypeScri
 ```html
 <auro-select>
   <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Select Example</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
@@ -110,7 +111,7 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module "src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@2.0.2/auro-select/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@2.2.0/auro-select/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 

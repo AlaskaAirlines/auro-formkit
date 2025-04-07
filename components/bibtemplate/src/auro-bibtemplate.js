@@ -30,8 +30,8 @@ export class AuroBibtemplate extends LitElement {
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-bibtemplate');
 
     const versioning = new AuroDependencyVersioning();
-    this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
-    this.headerTag = versioning.generateTag('auro-header', headerVersion, AuroHeader);
+    this.iconTag = versioning.generateTag('auro-formkit-bibtemplate-icon', iconVersion, AuroIcon);
+    this.headerTag = versioning.generateTag('auro-formkit-bibtemplate-header', headerVersion, AuroHeader);
   }
 
   static get styles() {
@@ -47,11 +47,11 @@ export class AuroBibtemplate extends LitElement {
     return {
       isFullscreen: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
       large: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       }
     };
   }

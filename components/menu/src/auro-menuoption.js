@@ -37,7 +37,7 @@ export class AuroMenuOption extends LitElement {
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
-    this.iconTag = versioning.generateTag('auro-icon', iconVersion, AuroIcon);
+    this.iconTag = versioning.generateTag('auro-formkit-menuoption-icon', iconVersion, AuroIcon);
 
     this.selected = false;
     this.nocheckmark = false;

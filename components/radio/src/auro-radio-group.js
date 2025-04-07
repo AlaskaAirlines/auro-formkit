@@ -82,7 +82,7 @@ export class AuroRadioGroup extends LitElement {
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-radio-helptext', helpTextVersion, AuroHelpText);
   }
 
   static get styles() {

@@ -26,16 +26,12 @@
     "lit": "^3.2.1",
     "wc-range-datepicker": "^1.3.0"
   },
-  "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.13.0",
-    "@aurodesignsystem/webcorestylesheets": "^6.0.0"
-  },
   "devDependencies": {
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
     "@aurodesignsystem/design-tokens": "^4.13.0",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2",
+    "@aurodesignsystem/webcorestylesheets": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "compression": "^1.7.4",
     "copyfiles": "^2.4.1",

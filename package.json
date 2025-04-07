@@ -1,6 +1,6 @@
 {
   "name": "@aurodesignsystem/auro-formkit",
-  "version": "2.0.2",
+  "version": "2.2.0",
   "description": "A collection of web components used to build forms.",
   "homepage": "https://github.com/AlaskaAirlines/auro-formkit#readme",
   "bugs": {
@@ -54,7 +54,9 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-library": "^3.0.10"
+    "lit": "^3.2.1",
+    "@lit/reactive-element": "^2.0.4",
+    "@aurodesignsystem/auro-library": "^3.0.13"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"

@@ -6,9 +6,6 @@
   "scripts": {
     "clean": "rm -rf .turbo && rm -rf node_modules"
   },
-  "peerDependencies": {
-    "typescript": "^5.6.2"
-  },
   "devDependencies": {
     "typescript": "^5.6.2",
     "@types/mocha": "^10.0.9",
