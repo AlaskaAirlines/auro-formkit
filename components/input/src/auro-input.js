@@ -50,38 +50,6 @@ export class AuroInput extends BaseInput {
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
   }
 
-  static get properties() {
-    return {
-
-      /**
-       * The value for the aria-role attribute.
-       */
-      a11yRole: {
-        type: String,
-        attribute: true,
-        reflect: true
-      },
-
-      /**
-       * The value for the aria-expanded attribute.
-       */
-      a11yExpanded: {
-        type: Boolean,
-        attribute: true,
-        reflect: true
-      },
-
-      /**
-       * The value for the aria-controls attribute.
-       */
-      a11yControls: {
-        type: String,
-        attribute: true,
-        reflect: true
-      }
-    };
-  }
-
   /**
    * This will register this element with the browser.
    * @param {string} [name="auro-input"] - The name of element that you want to register to.
