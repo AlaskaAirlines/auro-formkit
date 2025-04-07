@@ -649,30 +649,6 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * Clear aria attributes for the trigger element if a custom one is passed in.
-   * @private
-   * @method setTriggerAriaAttributes
-   * @param { HTMLElement } triggerElement - The custom trigger element.
-   */
-  clearTriggerA11yAttributes(triggerElement) {
-
-    if (!triggerElement || !triggerElement.removeAttribute) {
-      return;
-    }
-
-    // Set appropriate attributes for a11y
-    triggerElement.removeAttribute('aria-labelledby');
-    if (triggerElement.getAttribute('id') === `${this.id}-trigger-element`) {
-      triggerElement.removeAttribute('id');
-    }
-    triggerElement.removeAttribute('role');
-    triggerElement.removeAttribute('aria-expanded');
-
-    triggerElement.removeAttribute('aria-controls');
-    triggerElement.removeAttribute('aria-autocomplete');
-  }
-
-  /**
    * Handles changes to the trigger content slot and updates related properties.
    *
    * It first updates the floater settings
@@ -797,7 +773,6 @@ export class AuroDropdown extends LitElement {
           id="trigger"
           class="trigger"
           part="trigger"
-          aria-labelledby="triggerLabel"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
