@@ -422,7 +422,6 @@ export class AuroDropdown extends LitElement {
     }
 
     this.bibContent = this.floater.element.bib;
-
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
   }
@@ -549,8 +548,8 @@ export class AuroDropdown extends LitElement {
     });
   }
 
-  /**
-   * Clear aria attributes for the trigger element if a custom one is passed in.
+  /*
+   * Sets aria attributes for the trigger element if a custom one is passed in.
    * @private
    * @method setTriggerAriaAttributes
    * @param { HTMLElement } triggerElement - The custom trigger element.
@@ -571,6 +570,30 @@ export class AuroDropdown extends LitElement {
 
     triggerElement.removeAttribute('aria-controls');
     triggerElement.removeAttribute('aria-autocomplete');
+  }
+
+  /**
+   * Clear aria attributes for the trigger element if a custom one is passed in.
+   * @private
+   * @method setTriggerAriaAttributes
+   * @param { HTMLElement } triggerElement - The custom trigger element.
+   */
+  clearTriggerA11yAttributes(triggerElement) {
+    if (!triggerElement || !triggerElement.removeAttribute) {
+      return;
+    }
+
+    // Set appropriate attributes for a11y
+    triggerElement.removeAttribute('aria-labelledby');
+    if (triggerElement.getAttribute('id') === `${this.id}-trigger-element`) {
+      triggerElement.removeAttribute('id');
+    }
+    triggerElement.removeAttribute('role');
+    triggerElement.removeAttribute('aria-expanded');
+
+    triggerElement.removeAttribute('aria-controls');
+    triggerElement.removeAttribute('aria-autocomplete');
+
   }
 
   /**
