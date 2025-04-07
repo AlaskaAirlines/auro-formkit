@@ -60,8 +60,8 @@ function runFulltest(mobileview) {
         return el.input.parentNode === el.dropdown;
       });
     }
-    el.focus();
-    setInputValue(el, 'p');
+    setInputValue(el, 'ra');
+
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
@@ -112,8 +112,6 @@ function runFulltest(mobileview) {
     const el = await defaultFixture(mobileview);
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
-    el.focus();
-
     setInputValue(el, 'p');
     trigger.click();
     await expect(el.dropdown.isPopoverVisible).to.be.true;
@@ -150,7 +148,6 @@ function runFulltest(mobileview) {
 
   it('navigates menu with up and down arrow keys', async () => {
     const el = await defaultFixture(mobileview);
-    el.focus();
 
     // Validate bib is shown when hitting enter but there is a value in the input
     setInputValue(el, 'pp');
@@ -357,8 +354,6 @@ function runFulltest(mobileview) {
     el.shadowRoot.activeElement.blur();
     await elementUpdated(el);
     await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
-
-    el.focus();
 
     // no error when input has a value
     setInputValue(el, 'pp');
@@ -645,8 +640,12 @@ async function noFilterFixture(mobileview) {
 function setInputValue(el, value) {
   const auroInput = el.input;
   const input = auroInput.shadowRoot.querySelector('input');
-
+  input.focus();
   input.value = value;
   input.dispatchEvent(new InputEvent('input'));
   auroInput.dispatchEvent(new Event('input', {bubbles:true}));
+  auroInput.dispatchEvent(new KeyboardEvent('keyup', {
+    key: value.slice(value.length - 1),
+    repeat: false
+  }));
 }
