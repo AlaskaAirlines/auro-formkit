@@ -1,5 +1,13 @@
 # Semantic Release Automated Changelog
 
+## [2.2.1-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.1-beta.1...v2.2.1-beta.2) (2025-04-07)
+
+
+### Bug Fixes
+
+* put checkbox to be centered programmatically ([dd5e321](https://github.com/AlaskaAirlines/auro-formkit/commit/dd5e3216be4f1bd04719395ecd97ad8de759d9b0))
+* put radio bullet to be centered programmatically ([b01be2c](https://github.com/AlaskaAirlines/auro-formkit/commit/b01be2c116db454560cffc3651fc260a58d5159a))
+
 ## [2.2.1-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.0...v2.2.1-beta.1) (2025-04-07)
 
 
