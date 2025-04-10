@@ -540,6 +540,10 @@ export class AuroDropdown extends LitElement {
    * This ensures that focus/blur events originating from within these components are propagated to the trigger element itself.
    */
   setupTriggerFocusEventBinding() {
+    if (!this.triggerContentSlot || this.triggerContentSlot.length === 0) {
+      return;
+    }
+
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
         const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
@@ -557,6 +561,10 @@ export class AuroDropdown extends LitElement {
    * @returns {void}
    */
   clearTriggerFocusEventBinding() {
+    if (!this.triggerContentSlot || this.triggerContentSlot.length === 0) {
+      return;
+    }
+
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
         const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
