@@ -41,7 +41,7 @@
 | `autoPlacement`           | `autoPlacement`           | `boolean` | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `string`  | "sm"           | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `isDropdown`              | `isDropdown`              | `boolean` | false          | Indicates if the counter group is displayed as a dropdown. |
-| `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean` |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean` |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
 | `max`                     | `max`                     | `number`  | "undefined"    | The maximum value allowed for the whole group of counters. |
 | `min`                     | `min`                     | `number`  | "undefined"    | The minimum value allowed for the whole group of counters. |
 | `noFlip`                  | `noFlip`                  | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
