@@ -403,6 +403,7 @@ export class AuroDropdown extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.floater.disconnect();
+    this.clearTriggerFocusEventBinding();
   }
 
   updated(changedProperties) {
@@ -545,6 +546,23 @@ export class AuroDropdown extends LitElement {
         auroElements.forEach((auroEl) => {
           auroEl.addEventListener('focus', this.bindFocusEventToTrigger);
           auroEl.addEventListener('blur', this.bindFocusEventToTrigger);
+        });
+      }
+    });
+  }
+
+  /**
+   * Clears focus and blur event listeners from nested Auro components within the trigger slot.
+   * @private
+   * @returns {void}
+   */
+  clearTriggerFocusEventBinding() {
+    this.triggerContentSlot.forEach((node) => {
+      if (node.querySelectorAll) {
+        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        auroElements.forEach((auroEl) => {
+          auroEl.removeEventListener('focus', this.bindFocusEventToTrigger);
+          auroEl.removeEventListener('blur', this.bindFocusEventToTrigger);
         });
       }
     });
