@@ -38,7 +38,6 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @event auroCombobox-valueSet - Notifies that the component has a new value set.
- * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
 
 // build the component class
@@ -292,6 +291,7 @@ export class AuroCombobox extends LitElement {
 
       /**
        * Value selected for the dropdown menu.
+       * @type {Array || String<Array>}
        */
       value: {
         converter: arrayConverter,
@@ -673,6 +673,7 @@ export class AuroCombobox extends LitElement {
       }
     });
 
+    // Handle validation messages from auroFormElement-validated event
     this.input.addEventListener('auroFormElement-validated', (evt) => {
       this.errorMessage = evt.detail.message;
     });
