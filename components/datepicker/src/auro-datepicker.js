@@ -51,6 +51,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @event auroDatePicker-valueSet - Notifies that the component has a new value set.
  * @event auroDatePicker-toggled - Notifies that the calendar dropdown has been opened/closed.
  * @event auroDatePicker-monthChanged - Notifies that the visible calendar month(s) have changed.
+ * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  * @event auroDatePicker-newSlotContent - Notifies that new slot content has been added to the datepicker.
  */
 
