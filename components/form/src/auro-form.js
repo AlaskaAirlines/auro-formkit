@@ -66,7 +66,10 @@ export class AuroForm extends LitElement {
     /** @type {HTMLButtonElement[]} */
     this._resetElements = [];
 
-    /** @type {MutationObserver[]} */
+    /**
+     * @private
+     * @type {MutationObserver[]}
+     */
     this.mutationObservers = [];
 
     // Bind listeners
@@ -181,7 +184,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Getter for internal _resetElements.
+   * Returns a collection of elements that will reset the form
    * @returns {HTMLButtonElement[]}
    */
   get resetElements() {
@@ -411,6 +414,7 @@ export class AuroForm extends LitElement {
 
   /**
    * Shared input listener for all form elements.
+   * @private
    * @param {Event} event - The event that is fired from the form element.
    */
   sharedInputListener(event) {
@@ -443,6 +447,7 @@ export class AuroForm extends LitElement {
 
   /**
    * Shared validation listener for all form elements.
+   * @private
    * @param {Event} event - The event that is fired from the form element.
    */
   sharedValidationListener(event) {
@@ -498,6 +503,7 @@ export class AuroForm extends LitElement {
    * root-level elements are added/removed. This is a workaround to ensure
    * nested form elements are also observed.
    *
+   * @private
    * @returns {void}
    */
   mutationEventListener() {

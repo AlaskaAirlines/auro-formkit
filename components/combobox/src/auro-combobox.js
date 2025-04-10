@@ -243,6 +243,7 @@ export class AuroCombobox extends LitElement {
 
       /**
        * Value selected for the dropdown menu.
+       * @type {Array|String<Array>}
        */
       value: {
         converter: arrayConverter,
@@ -596,6 +597,7 @@ export class AuroCombobox extends LitElement {
       }
     });
 
+    // Handle validation messages from auroFormElement-validated event
     this.input.addEventListener('auroFormElement-validated', (evt) => {
       this.errorMessage = evt.detail.message;
     });
