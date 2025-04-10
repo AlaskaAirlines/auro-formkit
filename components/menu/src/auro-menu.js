@@ -21,7 +21,7 @@ import {
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The auro-menu element provides users a way to select from a list of options.
- * @attr {Array<HTMLElement>|undefined} optionselected - An array of currently selected menu options. In single-select mode, the array will contain only one HTMLElement. `undefined` when no options are selected.
+ * @attr {Array<HTMLElement>|undefined} optionSelected - An array of currently selected menu options. In single-select mode, the array will contain only one HTMLElement. `undefined` when no options are selected.
  * @attr {object} optionactive - Specifies the current active menuOption.
  * @attr {string} matchword - Specifies a string used to highlight matched string parts in options.
  * @attr {boolean} disabled - When true, the entire menu and all options are disabled;
