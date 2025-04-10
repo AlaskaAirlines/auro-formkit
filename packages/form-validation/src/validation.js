@@ -100,17 +100,17 @@ export default class AuroFormValidation {
         ]
       }
     };
-  
+
     let elementType;
     if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
       elementType = 'input';
     } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
       elementType = 'counter';
     }
-    
+
     if (elementType) {
       const rules = validationRules[elementType];
-    
+
       if (rules) {
         Object.values(rules).flat().forEach(rule => {
           if (rule.check(elem)) {
@@ -153,43 +153,53 @@ export default class AuroFormValidation {
           elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
         }
       } else if (elem.type === 'date') {
+        
+        // Validate that the length is correct for the date type
         if (elem.value?.length > 0 && elem.value?.length < elem.lengthForType) {
+
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
-        } else if (elem.value?.length === elem.lengthForType && toNorthAmericanFormat(elem.value, elem.format)) {
-          const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
-          const valueDate = new Date(formattedValue.dateForComparison);
 
-          // validate max
-          if (elem.max?.length === elem.lengthForType) {
-            const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format).dateForComparison);
-
-            if (valueDate > maxDate) {
-              elem.validity = 'rangeOverflow';
-              elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
-            }
-          }
-
-          // validate min
-          if (elem.min?.length === elem.lengthForType) {
-            const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format).dateForComparison);
-
-            if (valueDate < minDate) {
-              elem.validity = 'rangeUnderflow';
-              elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
-            }
-          }
-
-          // Validate that the date passed was a valid date
-          if (!validDateStr(elem.value, elem.format)) {
-            elem.validity = 'invalidDate';
-            elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
-          }
+        // If the length is correct for the type, continue with validation
+        } else if (elem.value?.length === elem.lengthForType) {
 
           // Validate that the date passed was the correct format
           if (!dateAndFormatMatch(elem.value, elem.format)) {
             elem.validity = 'patternMismatch';
             elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || 'Invalid Date Format Entered';
+          }
+          
+          // Validate that the date passed was a valid date
+          else if (!validDateStr(elem.value, elem.format)) {
+            elem.validity = 'invalidDate';
+            elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
+          }
+
+          // Perform the rest of the validation
+          else {
+
+            const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
+            const valueDate = new Date(formattedValue.dateForComparison);
+
+            // Validate max date
+            if (elem.max?.length === elem.lengthForType) {
+              const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format).dateForComparison);
+
+              if (valueDate > maxDate) {
+                elem.validity = 'rangeOverflow';
+                elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
+              }
+            }
+
+            // Validate minimum date
+            if (elem.min?.length === elem.lengthForType) {
+              const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format).dateForComparison);
+
+              if (valueDate < minDate) {
+                elem.validity = 'rangeUnderflow';
+                elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
+              }
+            }
           }
         }
       }
@@ -308,7 +318,7 @@ export default class AuroFormValidation {
         if (input.validationMessage.length > 0) {
           elem.errorMessage = input.validationMessage;
         }
-      } else if (this.inputElements?.length > 0  && elem.errorMessage === '') {
+      } else if (this.inputElements?.length > 0 && elem.errorMessage === '') {
         const firstInput = this.inputElements[0];
 
         if (firstInput.validationMessage.length > 0) {
