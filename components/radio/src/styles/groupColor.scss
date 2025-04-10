@@ -11,7 +11,8 @@
    selector-class-pattern */
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+
 @import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
 
 :host {
@@ -21,5 +22,5 @@
 }
 
 :host([disabled]) {
-  --ds-auro-radio-group-label-color: var(--ds-color-text-disabled-default, $ds-color-text-disabled-default);
+  --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
 }
