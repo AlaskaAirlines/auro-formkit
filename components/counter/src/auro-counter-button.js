@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-import styleButtonTokenCss from "./styles/counter-button-tokens-css.js";
+import styleButtonTokenCss from "./styles/tokens-css.js";
 import styleButtonColorCss from "./styles/counter-button-color-css.js";
 import styleButtonCss from "./styles/counter-button-css.js";
 

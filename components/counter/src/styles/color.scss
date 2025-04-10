@@ -12,38 +12,34 @@
 @import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-.counter {
-  color: var(--ds-auro-counter-text-default);
+.label {
+  color: var(--ds-auro-counter-label-text-color);
 }
 
-[name="description"]{
+[name="description"] {
   &::slotted(*) {
-    color: var(--ds-auro-counter-text-secondary);
+    color: var(--ds-auro-counter-description-text-color);
   }
 }
   
 .controlIcon {
-  color: var(--ds-auro-counter-icon-color-default);
+  color: var(--ds-auro-counter-icon-color);
 }
 
 .quantityWrapper {
-  background-color: var(--ds-auro-counter-control-ui-bkg);
+  background-color: var(--ds-auro-counter-control-background-color);
+  color: var(--ds-auro-counter-quantity-text-color);
 }
 
 :host::part(counterControl) {
   &:focus-visible {
-    outline-color: var(--ds-auro-counter-control-border-active);
+    outline-color: var(--ds-auro-counter-control-border-color);
   }
 }
 
 [disabled], :host([disabled]) {
-  .controlIcon {
-    color: var(--ds-auro-counter-control-ui-disabled);
-  }
-
-  label,
-  [name="description"]::slotted(*),
-  &::part(counterControl) {
-    color: var(--ds-auro-counter-text-disabled);
-  }
+  --ds-auro-counter-icon-color: var(--ds-color-ui-disabled-default, #{$ds-color-ui-disabled-default});
+  --ds-auro-counter-description-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+  --ds-auro-counter-label-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+  --ds-auro-counter-quantity-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
 }
