@@ -5,12 +5,12 @@
 
 /* stylelint-disable selector-class-pattern */
 
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 
 :host {
   color: var(--ds-auro-checkbox-group-text-color);
 }
 
 :host([disabled]) {
-  --ds-auro-checkbox-group-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
 }
