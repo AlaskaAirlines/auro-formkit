@@ -141,7 +141,7 @@ export class AuroCounterGroup extends LitElement {
 
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600
+       * Otherwise, Heading 600.
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -327,11 +327,11 @@ export class AuroCounterGroup extends LitElement {
   }
 
   /**
-   * @private
    * This sets up a close event listener and moves any slotted `bib.fullscreen.headline` and `bib.fullscreen.footer` content into the bibtemplate.
+   * @private
    */
   configureBibtemplate() {
-    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.bibtemplate.addEventListener('close-click', () => {
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
