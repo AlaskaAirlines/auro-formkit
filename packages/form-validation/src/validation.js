@@ -4,10 +4,11 @@
 // ---------------------------------------------------------------------
 
 /* eslint-disable complexity, max-depth, no-extra-parens, no-magic-numbers, line-comment-position, no-inline-comments, prefer-destructuring */
-
+import { validDateStr, toNorthAmericanFormat, dateAndFormatMatch } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 export default class AuroFormValidation {
+
   constructor() {
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
   }
@@ -155,13 +156,13 @@ export default class AuroFormValidation {
         if (elem.value?.length > 0 && elem.value?.length < elem.lengthForType) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
-        } else if (elem.value?.length === elem.lengthForType && elem.util.toNorthAmericanFormat(elem.value, elem.format)) {
-          const formattedValue = elem.util.toNorthAmericanFormat(elem.value, elem.format);
+        } else if (elem.value?.length === elem.lengthForType && toNorthAmericanFormat(elem.value, elem.format)) {
+          const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
           const valueDate = new Date(formattedValue.dateForComparison);
 
           // validate max
           if (elem.max?.length === elem.lengthForType) {
-            const maxDate = new Date(elem.util.toNorthAmericanFormat(elem.max, elem.format).dateForComparison);
+            const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format).dateForComparison);
 
             if (valueDate > maxDate) {
               elem.validity = 'rangeOverflow';
@@ -171,12 +172,24 @@ export default class AuroFormValidation {
 
           // validate min
           if (elem.min?.length === elem.lengthForType) {
-            const minDate = new Date(elem.util.toNorthAmericanFormat(elem.min, elem.format).dateForComparison);
+            const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format).dateForComparison);
 
             if (valueDate < minDate) {
               elem.validity = 'rangeUnderflow';
               elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
             }
+          }
+
+          // Validate that the date passed was a valid date
+          if (!validDateStr(elem.value, elem.format)) {
+            elem.validity = 'invalidDate';
+            elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
+          }
+
+          // Validate that the date passed was the correct format
+          if (!dateAndFormatMatch(elem.value, elem.format)) {
+            elem.validity = 'patternMismatch';
+            elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || 'Invalid Date Format Entered';
           }
         }
       }
