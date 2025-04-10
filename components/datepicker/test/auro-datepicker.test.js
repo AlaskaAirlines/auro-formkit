@@ -1,6 +1,6 @@
 /* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
 
-import { fixture, html, expect, elementUpdated, nextFrame } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import '../src/registered.js';
 
@@ -90,6 +90,23 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(datepicker);
     await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
+  });
+
+
+  it('hides dropdown the dropdown on blur', async () => {
+    const el = await fixture(html`
+        <auro-datepicker></auro-datepicker>
+    `);
+    
+    el.focus();
+    el.shadowRoot.activeElement.click();
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    el.blur();
+
+    await oneEvent(el, 'auroDatePicker-toggled');
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
   it('handles the required state being set', async () => {

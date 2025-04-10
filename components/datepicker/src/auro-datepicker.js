@@ -684,23 +684,6 @@ export class AuroDatePicker extends LitElement {
       }
     });
 
-    // Close the datepicker when clicking outside it
-    document.addEventListener('click', (evt) => {
-      if (!evt.composedPath().includes(this) &&
-      !evt.composedPath().includes(this.dropdown.bibContent) &&
-      this.dropdown.isPopoverVisible) {
-        this.dropdown.hide();
-      }
-    });
-
-    document.activeElement.addEventListener('focusin', () => {
-      if (document.activeElement !== document.querySelector('body') &&
-      !this.contains(document.activeElement) &&
-      !this.dropdown.bibContent.contains(document.activeElement)) {
-        this.dropdown.hide();
-      }
-    });
-
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
       this.calendar.dateFrom = new Date(this.formattedValue).getTime();
     }
@@ -1056,7 +1039,6 @@ export class AuroDatePicker extends LitElement {
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow
-          noHideOnThisFocusLoss
           fullscreenBreakpoint="sm"
           .placement="${this.placement}"
           .offset="${this.offset}"
