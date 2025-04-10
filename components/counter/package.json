@@ -13,10 +13,10 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@alaskaairux/icons": "^5.3.0",
-    "@aurodesignsystem/auro-button": "^9.0.0",
+    "@aurodesignsystem/auro-button": "^9.3.0",
     "@aurodesignsystem/auro-bibtemplate": "*",
     "@aurodesignsystem/auro-dropdown": "*",
-    "chalk": "^5.2.0",
+    "chalk": "^5.4.1",
     "lit": "^3.2.1"
   },
   "devDependencies": {
@@ -24,12 +24,12 @@
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
     "@auro-formkit/utils": "*",
-    "@aurodesignsystem/design-tokens": "^4.13.0",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2",
-    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@aurodesignsystem/design-tokens": "^5.8.0",
+    "@aurodesignsystem/webcorestylesheets": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "postcss-selector-replace": "^1.0.2",
-    "rollup": "^4.22.4",
-    "rollup-plugin-serve": "^2.0.2",
+    "rollup": "^4.39.0",
+    "rollup-plugin-serve": "^3.0.0",
     "wc-sass-render": "^1.4.0",
     "web-component-analyzer": "^2.0.0"
   },
