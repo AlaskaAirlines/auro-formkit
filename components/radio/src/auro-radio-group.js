@@ -34,6 +34,7 @@ import helpTextVersion from './helptextVersion.js';
  * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
  * @attr {String} error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
  * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
+ * @attr {Boolean} onDark - Applies dark mode styles to the component.
  * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
  * @attr {Object} optionSelected - Specifies the current selected radio button.
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
@@ -53,6 +54,7 @@ export class AuroRadioGroup extends LitElement {
     this.validity = undefined;
     this.value = undefined;
     this.optionSelected = undefined;
+    this.onDark = false;
 
     /**
      * @private
@@ -108,6 +110,10 @@ export class AuroRadioGroup extends LitElement {
         type: String
       },
       noValidate: {
+        type: Boolean,
+        reflect: true
+      },
+      onDark: {
         type: Boolean,
         reflect: true
       },
@@ -218,6 +224,12 @@ export class AuroRadioGroup extends LitElement {
     if (changedProperties.has('required')) {
       this.items.forEach((el) => {
         el.required = this.required;
+      });
+    }
+
+    if (changedProperties.has('onDark')) {
+      this.items.forEach((el) => {
+        el.onDark = this.onDark;
       });
     }
 
