@@ -141,7 +141,7 @@ export class AuroDropdown extends LitElement {
     /**
      * @private
      */
-    this.bubbleUpFocusEvent = this.bubbleUpFocusEvent.bind(this);
+    this.bindFocusEventToTrigger = this.bindFocusEventToTrigger.bind(this);
   }
 
   /**
@@ -379,6 +379,7 @@ export class AuroDropdown extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.floater.disconnect();
+    this.clearTriggerFocusEventBinding();
   }
 
   updated(changedProperties) {
@@ -506,7 +507,7 @@ export class AuroDropdown extends LitElement {
    * Creates and dispatches a duplicate focus event on the trigger element.
    * @param {Event} event - The original focus event.
    */
-  bubbleUpFocusEvent(event) {
+  bindFocusEventToTrigger(event) {
     const dupEvent = new FocusEvent(event.type, {
       bubbles: false,
       cancelable: false,
@@ -517,20 +518,33 @@ export class AuroDropdown extends LitElement {
 
   /**
    * @private
-   * Sets up event listeners to bubble up focus and blur events from nested Auro components within the trigger slot.
+   * Sets up event listeners to deliver focus and blur events from nested Auro components within the trigger slot to trigger.
    * This ensures that focus/blur events originating from within these components are propagated to the trigger element itself.
    */
-  setupTriggerFocusEventBubbleUp() {
+  setupTriggerFocusEventBinding() {
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
         const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
         auroElements.forEach((auroEl) => {
-          auroEl.addEventListener('focus', this.bubbleUpFocusEvent);
-          auroEl.addEventListener('blur', this.bubbleUpFocusEvent);
+          auroEl.addEventListener('focus', this.bindFocusEventToTrigger);
+          auroEl.addEventListener('blur', this.bindFocusEventToTrigger);
         });
       }
     });
   }
+
+  clearTriggerFocusEventBinding() {
+    this.triggerContentSlot.forEach((node) => {
+      if (node.querySelectorAll) {
+        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        auroElements.forEach((auroEl) => {
+          auroEl.removeEventListener('focus', this.bindFocusEventToTrigger);
+          auroEl.removeEventListener('blur', this.bindFocusEventToTrigger);
+        });
+      }
+    });
+  }
+
 
   /*
    * Sets aria attributes for the trigger element if a custom one is passed in.
@@ -584,7 +598,6 @@ export class AuroDropdown extends LitElement {
 
     triggerElement.removeAttribute('aria-controls');
     triggerElement.removeAttribute('aria-autocomplete');
-
   }
 
   /**
@@ -632,7 +645,7 @@ export class AuroDropdown extends LitElement {
     }
 
     if (this.triggerContentSlot && this.triggerContentSlot.length) {
-      this.setupTriggerFocusEventBubbleUp();
+      this.setupTriggerFocusEventBinding();
       this.setTriggerA11yAttributes(this.triggerContentSlot[0]);
 
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
