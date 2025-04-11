@@ -1,11 +1,11 @@
-// Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
 /* stylelint-disable declaration-empty-line-before */
 
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 /* stylelint-disable declaration-no-important, order/properties-order */
@@ -33,7 +33,7 @@
   }
 
   [auro-icon] {
-    --ds-auro-icon-size: var(--ds-size-300, #{$ds-size-300});
+    --ds-auro-icon-size: var(--ds-size-300, $ds-size-300);
     margin-right: var(--ds-size-150, $ds-size-150);
     margin-left: var(--ds-size-100, $ds-size-100);
   }
