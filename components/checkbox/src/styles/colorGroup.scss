@@ -14,3 +14,11 @@
 :host([disabled]) {
   --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
 }
+
+:host([onDark]) {
+  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+}
+
+:host([onDark][disabled]) {
+  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+}
