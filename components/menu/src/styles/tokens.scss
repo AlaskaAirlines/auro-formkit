@@ -1,6 +1,10 @@
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+
 :host {
-  --ds-auro-menu-divider-color: var(--ds-color-border-divider-default, $ds-color-border-divider-default);
+  --ds-auro-menu-divider-color: var(--ds-basic-color-border-divider, #{$ds-basic-color-border-divider});
+  --ds-auro-menu-loader-color: var(--ds-basic-color-brand-primary, #{$ds-basic-color-brand-primary});
+  --ds-auro-menu-loader-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
   --ds-auro-menuoption-container-color: transparent;
   --ds-auro-menuoption-icon-color: transparent;
-  --ds-auro-menuoption-text-color: var(--ds-color-text-primary-default, $ds-color-text-primary-default);
+  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
 }
