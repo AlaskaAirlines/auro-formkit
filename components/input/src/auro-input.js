@@ -98,7 +98,7 @@ export class AuroInput extends BaseInput {
                 category="payment"
                 name="${name}"
                 part="accentIcon"
-                ?disabled="${this.disabled}">
+                variant="${this.disabled ? 'disabled' : 'muted'}">
               </${this.iconTag}>
             `) : undefined
             }
@@ -110,7 +110,7 @@ export class AuroInput extends BaseInput {
                 category="interface"
                 name="calendar"
                 part="accentIcon"
-                ?disabled="${this.disabled}">
+                variant="${this.disabled ? 'disabled' : 'muted'}">
               </${this.iconTag}>`
             : undefined
             }
@@ -155,7 +155,7 @@ export class AuroInput extends BaseInput {
               <${this.iconTag}
                 category="alert"
                 name="error-stroke"
-                error>
+                variant="statusError">
               </${this.iconTag}>
             </div>
           ` : undefined}
