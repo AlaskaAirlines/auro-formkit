@@ -47,11 +47,11 @@ export class AuroBibtemplate extends LitElement {
     return {
       isFullscreen: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
       large: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       }
     };
   }
