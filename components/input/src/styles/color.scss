@@ -4,7 +4,6 @@
 
 // Support for fallback values
 @import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 @import 'mixins';
 
@@ -83,7 +82,6 @@ label {
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
   --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
   --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{$ds-advanced-color-shared-background-inverse});
-
   --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
 
   .wrapper {
