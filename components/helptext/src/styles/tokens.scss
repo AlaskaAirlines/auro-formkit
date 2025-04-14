@@ -1,5 +1,5 @@
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 
 :host {
-  --ds-auro-helptext-color: var(--ds-color-text-tertiary-default, #{$ds-color-text-tertiary-default});
+  --ds-auro-helptext-color: var(--ds-basic-color-texticon-muted, #{$ds-basic-color-texticon-muted});
 }

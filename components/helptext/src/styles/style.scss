@@ -5,7 +5,8 @@
 
 /* stylelint-disable scss/selector-nest-combinators, selector-class-pattern */
 
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 
 .helptext-wrapper {
   display: none;
