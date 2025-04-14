@@ -50,6 +50,7 @@ export default class BaseInput extends LitElement {
     this.min = undefined;
     this.maxLength = undefined;
     this.minLength = undefined;
+    this.onDark = false;
     this.activeLabel = false;
     this.setCustomValidityForType = undefined;
   }
@@ -238,6 +239,14 @@ export default class BaseInput extends LitElement {
        */
       noValidate: {
         type: Boolean
+      },
+
+      /**
+       * Sets onDark styles on input.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
