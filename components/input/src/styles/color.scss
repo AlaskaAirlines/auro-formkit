@@ -38,6 +38,10 @@ label {
   color: var(--ds-auro-input-label-text-color);
 }
 
+.alertNotification {
+  color: var(--ds-auro-input-error-icon-color);
+}
+
 :host(:not([bordered], [borderless])) {
   .wrapper {
     border-bottom-color: var(--ds-auro-input-border-color);
@@ -79,6 +83,8 @@ label {
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
   --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
   --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{$ds-advanced-color-shared-background-inverse});
+
+  --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
 
   .wrapper {
     &:focus-within {

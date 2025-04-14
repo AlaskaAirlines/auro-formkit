@@ -157,7 +157,7 @@ export class AuroInput extends BaseInput {
               <${this.iconTag}
                 category="alert"
                 name="error-stroke"
-                variant="${this.onDark ? 'statusErrorSubtle' : 'statusError'}">>
+                customColor
               </${this.iconTag}>
             </div>
           ` : undefined}
