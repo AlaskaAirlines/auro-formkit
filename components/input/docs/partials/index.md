@@ -17,10 +17,18 @@ The default component supports the basic input `type="text"` structure. The `(op
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/onDark.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -51,10 +59,18 @@ Use the `disabled` attribute to prevent the user from interacting with the input
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/onDarkDisabled.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

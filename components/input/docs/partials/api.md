@@ -18,14 +18,22 @@ The `auro-input` element supports the localization of all content managed within
 The default component supports the basic input `type="text"` structure. The `(optional)` label is provided to instruct the user that their input is not required. Use the `bordered` attribute for a bordered `<auro-input>`.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/onDark.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -37,14 +45,22 @@ The default component supports the basic input `type="text"` structure. The `(op
 Use the `disable` attribute to prevent the user from interacting with the input.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/disabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/disabled.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/onDarkDisabled.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -398,6 +414,24 @@ A custom error message can be set using the `error` attribute, or it can be used
 
 </auro-accordion>
 
+#### onDark Variation
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/onDarkError.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/onDarkError.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/onDarkError.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Types
 
 ### Password
@@ -411,10 +445,16 @@ Default help text will be added to the input `type="password"` if custom help te
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/onDarkPassword.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/password.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/onDarkPassword.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

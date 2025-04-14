@@ -1,5 +1,6 @@
 import { changeLang } from "../apiExamples/changeLang";
 import { customError } from "../apiExamples/error";
+import { customErrorOnDark } from "../apiExamples/onDarkError";
 import { setReadonlyValue } from "../apiExamples/readonly";
 import { swapInputValues } from "../apiExamples/swapValue";
 import { programmaticallySetValue } from "../apiExamples/value";
@@ -12,6 +13,7 @@ export function initExamples(initCount) {
   try {
     changeLang();
     customError();
+    customErrorOnDark();
     setReadonlyValue();
     swapInputValues();
     programmaticallySetValue();

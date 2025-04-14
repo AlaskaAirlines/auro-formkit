@@ -98,6 +98,7 @@ export class AuroInput extends BaseInput {
                 category="payment"
                 name="${name}"
                 part="accentIcon"
+                ?onDark="${this.onDark}"
                 variant="${this.disabled ? 'disabled' : 'muted'}">
               </${this.iconTag}>
             `) : undefined
@@ -110,6 +111,7 @@ export class AuroInput extends BaseInput {
                 category="interface"
                 name="calendar"
                 part="accentIcon"
+                ?onDark="${this.onDark}"
                 variant="${this.disabled ? 'disabled' : 'muted'}">
               </${this.iconTag}>`
             : undefined
@@ -155,7 +157,7 @@ export class AuroInput extends BaseInput {
               <${this.iconTag}
                 category="alert"
                 name="error-stroke"
-                variant="statusError">
+                variant="${this.onDark ? 'statusErrorSubtle' : 'statusError'}">>
               </${this.iconTag}>
             </div>
           ` : undefined}
@@ -164,6 +166,7 @@ export class AuroInput extends BaseInput {
               <div class="notification">
                 <${this.buttonTag}
                   variant="flat"
+                  ?onDark="${this.onDark}"
                   aria-hidden="true"
                   tabindex="-1"
                   @click="${this.handleClickShowPassword}"
@@ -187,6 +190,7 @@ export class AuroInput extends BaseInput {
               <div class="notification">
                 <${this.buttonTag}
                   variant="flat"
+                  ?onDark="${this.onDark}"
                   class="notificationBtn clearBtn"
                   aria-label="${i18n(this.lang, 'clearInput')}"
                   @click="${this.handleClickClear}">
