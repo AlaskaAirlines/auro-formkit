@@ -22,6 +22,7 @@ export class AuroHelpText extends LitElement {
     super();
 
     this.error = false;
+    this.onDark = false;
     this.hasTextContent = false;
 
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-helptext');
@@ -60,6 +61,14 @@ export class AuroHelpText extends LitElement {
         type: Boolean,
         reflect: true,
       },
+
+      /**
+       * If declared, will apply onDark styles.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
+      }
     };
   }
 

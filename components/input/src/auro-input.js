@@ -209,14 +209,14 @@ export class AuroInput extends BaseInput {
       <!-- Help text and error message template -->
         ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-        <${this.helpTextTag}>
+        <${this.helpTextTag} ?onDark="${this.onDark}">
           <p id="${this.uniqueId}" part="helpText">
             <slot name="helptext">${this.getHelpText()}</slot>
           </p>
         </${this.helpTextTag}>
         `
         : html`
-        <${this.helpTextTag} error>
+        <${this.helpTextTag} error ?onDark="${this.onDark}">
           <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </p>
