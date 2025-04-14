@@ -3,7 +3,9 @@
 // ---------------------------------------------------------------------
 
 // Support for fallback values
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 /* stylelint-disable no-descending-specificity, declaration-empty-line-before */
 
@@ -19,48 +21,44 @@
 
   &:focus-within,
   &:active {
-    --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
-    --ds-auro-dropdown-trigger-outline-color: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
+    --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+    --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
   }
 
   &:focus-within {
     &:not(:active) {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-      --ds-auro-dropdown-trigger-outline-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
     }
-  }
-
-  &:hover {
-    --ds-auro-dropdown-trigger-container-color: var(--ds-color-container-ui-secondary-hover-default, #{$ds-color-container-ui-secondary-hover-default});
   }
 }
 
 :host([disabled]) {
-  --ds-auro-dropdown-trigger-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
-  --ds-auro-dropdown-label-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
 }
 
 :host([common]),
 :host([bordered]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-primary-default, #{$ds-color-border-primary-default});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-bold, #{$ds-basic-color-border-bold});
 
   .trigger {
     &:active,
     &:focus-within {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
     }
   }
 }
 
 :host([error]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error, #{$ds-basic-color-status-error});
 
   .trigger {
     outline: solid 1px var(--ds-auro-dropdown-trigger-border-color);
 
     &:focus-within,
     &:active {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
     }
 
     &:active {
@@ -72,5 +70,5 @@
 
 :host([disabled][common]),
 :host([disabled][bordered]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-subtle, #{$ds-basic-color-border-subtle});
 }
