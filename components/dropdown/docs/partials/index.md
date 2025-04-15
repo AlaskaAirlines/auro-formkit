@@ -33,13 +33,23 @@ This first common example uses the default `auro-dropdown` element with the attr
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/common.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommon.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/common.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommon.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
 </auro-accordion>
+
 
 ## Common use using the label content slot
 
@@ -49,10 +59,19 @@ This common example uses the default `auro-dropdown` element with the attributes
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonSlot.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommonSlot.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonSlot.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommonSlot.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

@@ -28,6 +28,7 @@
 | `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false          | If declared, the dropdown will not hide when moving focus outside the element. |
 | `noToggle`              | `noToggle`              | ` Boolean ` |                | If declared, the trigger will only show the dropdown bib. |
 | `offset`                | `offset`                | `number`    | "0"            | Gap between the trigger element and bib.         |
+| `onDark`                | `onDark`                | `boolean`   |                | If declared, onDark styles will be applied.      |
 | `onSlotChange`          | `onSlotChange`          |             |                |                                                  |
 | `placement`             | `placement`             | `string`    | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `rounded`               | `rounded`               | ` Boolean ` |                | If declared, will apply border-radius to trigger and default slots. |

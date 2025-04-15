@@ -7,7 +7,7 @@
 @import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 @import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
-/* stylelint-disable no-descending-specificity, declaration-empty-line-before */
+/* stylelint-disable no-descending-specificity, declaration-empty-line-before, selector-max-pseudo-class */
 
 .label {
   color: var(--ds-auro-dropdown-label-text-color);
@@ -23,13 +23,6 @@
   &:active {
     --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
     --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-  }
-
-  &:focus-within {
-    &:not(:active) {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-    }
   }
 }
 
@@ -59,11 +52,7 @@
     &:focus-within,
     &:active {
       --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-    }
-
-    &:active {
-      box-shadow: none;
-      outline: none;
+      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
     }
   }
 }
@@ -72,3 +61,55 @@
 :host([disabled][bordered]) {
   --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-subtle, #{$ds-basic-color-border-subtle});
 }
+
+/* onDark styles */
+
+:host([onDark]) {
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse, #{$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+
+  &:focus-within,
+  &:active {
+    --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+    --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  }
+}
+
+:host([onDark][disabled]) {
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+}
+
+:host([onDark][common]),
+:host([onDark][bordered]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
+
+  .trigger {
+    &:focus-within,
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+    }
+  }
+}
+
+:host([onDark][error]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
+
+  .trigger {
+    outline: solid 1px var(--ds-auro-dropdown-trigger-border-color);
+
+    &:focus-within,
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+    }
+  }
+}
+
+:host([onDark][disabled][common]),
+:host([onDark][disabled][bordered]) {
+  --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{$ds-advanced-color-shared-background-inverse-disabled});
+}
+
