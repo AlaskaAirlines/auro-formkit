@@ -1,5 +1,4 @@
 import { customErrorValidityExample } from "../apiExamples/customErrorValidity";
-import { setErrorExample } from "../apiExamples/errorApi";
 import { valueExample } from "../apiExamples/value";
 import { valueExtractionExample } from "../apiExamples/valueExtraction";
 import { valueAlertExample } from "../apiExamples/valueAlert.js";
@@ -19,7 +18,6 @@ export function initExamples(initCount) {
   try {
     // javascript example function calls to be added here upon creation to test examples
     customErrorValidityExample();
-    setErrorExample();
     valueExample();
     valueExtractionExample();
     valueAlertExample();
