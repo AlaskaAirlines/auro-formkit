@@ -58,6 +58,7 @@ export class AuroCombobox extends LitElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
+    this.onDark = false;
     this.availableOptions = [];
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
@@ -162,6 +163,14 @@ export class AuroCombobox extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       * If declared, onDark styles will be applied to the trigger.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -935,6 +944,7 @@ export class AuroCombobox extends LitElement {
         </div>
         <${this.dropdownTag}
           for="dropdownMenu"
+          ?onDark="${this.onDark}"
           fluid
           bordered
           rounded
@@ -951,6 +961,7 @@ export class AuroCombobox extends LitElement {
           <${this.inputTag}
             slot="trigger"
             bordered
+            ?onDark="${this.onDark}"
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
