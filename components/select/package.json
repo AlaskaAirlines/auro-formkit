@@ -18,17 +18,13 @@
     "lit-element": "^4.1.1",
     "lit-html": "^3.2.1"
   },
-  "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.13.0",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
-  },
   "devDependencies": {
     "@alaskaairux/icons": "^5.3.0",
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^5.8.0",
+    "@aurodesignsystem/design-tokens": "^5.8.2",
     "@aurodesignsystem/webcorestylesheets": "^6.1.0",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
