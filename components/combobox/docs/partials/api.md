@@ -11,10 +11,18 @@
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -51,10 +59,19 @@ If set, disables the combobox.
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -84,10 +101,18 @@ Sets a persistent error state (e.g. an error state returned from the server).
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkError.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/error.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkError.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
