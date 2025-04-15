@@ -27,8 +27,6 @@ import {
 } from '@aurodesignsystem/auro-menu';
 
 import styleCss from "./styles/style-css.js";
-import colorCss from "./styles/color-css.js";
-import tokensCss from "./styles/tokens-css.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -110,6 +108,7 @@ export class AuroSelect extends LitElement {
     this.optionSelected = undefined;
     this.value = undefined;
     this.fullscreenBreakpoint = 'sm';
+    this.onDark = false;
   }
 
   // This function is to define props used within the scope of this component
@@ -194,6 +193,14 @@ export class AuroSelect extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       * If declared, onDark styles will be applied to the trigger.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -300,11 +307,7 @@ export class AuroSelect extends LitElement {
   }
 
   static get styles() {
-    return [
-      colorCss,
-      styleCss,
-      tokensCss
-    ];
+    return [styleCss];
   }
 
   /**
@@ -691,6 +694,7 @@ export class AuroSelect extends LitElement {
         <${this.dropdownTag}
           for="selectmenu"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          ?onDark="${this.onDark}"
           common
           fluid
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
