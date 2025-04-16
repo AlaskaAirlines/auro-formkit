@@ -3,7 +3,8 @@
 
 /* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before */
 
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
@@ -23,8 +24,4 @@
       }
     }
   }
-}
-
-.placeholderDate {
-  color: var(--ds-auro-datepicker-placeholder-color);
 }

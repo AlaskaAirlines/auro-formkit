@@ -4,7 +4,8 @@
 // // ---------------------------------------------------------------------
 
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 /* stylelint-disable selector-max-class, order/properties-order, declaration-empty-line-before, scss/selector-nest-combinators,
    selector-pseudo-element-colon-notation, max-nesting-depth, at-rule-empty-line-before, no-descending-specificity, declaration-no-important */
