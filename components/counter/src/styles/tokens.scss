@@ -1,11 +1,12 @@
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 :host {
-  --ds-auro-counter-control-background-color: var(--ds-color-ui-bkg-default-default, #{$ds-color-ui-bkg-default-default});
-  --ds-auro-counter-control-border-color: var(--ds-color-border-active-default, #{$ds-color-border-active-default});
-  --ds-auro-counter-description-text-color: var(--ds-color-text-secondary-default, #{$ds-color-text-secondary-default});
-  --ds-auro-counter-icon-color: var(--ds-color-ui-default-default, #{$ds-color-ui-default-default});
-  --ds-auro-counter-label-text-color: var(--ds-color-text-primary-default, #{$ds-color-text-primary-default});
-  --ds-auro-counter-quantity-text-color: var(--ds-color-text-primary-default, #{$ds-color-text-primary-default});
-  --ds-auro-counter-divider-color: var(--ds-color-border-divider-default, #{$ds-color-border-divider-default});
+  --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background, #{$ds-advanced-color-button-tertiary-background});
+  --ds-auro-counter-control-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+  --ds-auro-counter-description-text-color: var(--ds-basic-color-texticon-muted, #{$ds-basic-color-texticon-muted});
+  --ds-auro-counter-icon-color: var(--ds-advanced-color-button-tertiary-text, #{$ds-advanced-color-button-tertiary-text});
+  --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
+  --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
+  --ds-auro-counter-divider-color: var(--ds-basic-color-border-divider, #{$ds-basic-color-border-divider});
 }

@@ -13,8 +13,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@alaskaairux/icons": "^5.3.0",
-    "@aurodesignsystem/auro-button": "^9.3.0",
     "@aurodesignsystem/auro-bibtemplate": "*",
+    "@aurodesignsystem/auro-button": "^9.3.1",
     "@aurodesignsystem/auro-dropdown": "*",
     "chalk": "^5.4.1",
     "lit": "^3.2.1"
@@ -24,7 +24,7 @@
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
     "@auro-formkit/utils": "*",
-    "@aurodesignsystem/design-tokens": "^5.8.0",
+    "@aurodesignsystem/design-tokens": "^5.8.2",
     "@aurodesignsystem/webcorestylesheets": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "postcss-selector-replace": "^1.0.2",

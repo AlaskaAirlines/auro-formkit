@@ -1,14 +1,15 @@
 // stylelint-disable selector-max-class
 
 // Import Auro Sass variables
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 // general WCSS imports
 @import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
 @import "@aurodesignsystem/webcorestylesheets/src/core";
 @import "@aurodesignsystem/webcorestylesheets/src/animation";
 
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariableMap";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariableMap";
 
 $auro-inset-spacing-options: lg;
 $auro-inset-directions: '--squish';
