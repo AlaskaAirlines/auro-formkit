@@ -43,6 +43,7 @@ export class AuroCounter extends LitElement {
     this.disableMin = false;
     this.max = 9;
     this.min = 0;
+    this.onDark = false;
     this.validity = undefined;
     this.value = undefined;
 
@@ -138,6 +139,14 @@ export class AuroCounter extends LitElement {
       min: {
         type: Number,
         reflect: true,
+      },
+
+      /**
+       * If declared, the counter will be rendered with onDark styles.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -316,6 +325,7 @@ export class AuroCounter extends LitElement {
           tabindex="-1"
           part="controlMinus"
           @click="${() => this.decrement()}"
+          ?onDark="${this.onDark}"
           ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
           >
             <${this.iconTag} class="controlIcon" slot="icon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
@@ -331,6 +341,7 @@ export class AuroCounter extends LitElement {
           tabindex="-1"
           part="controlPlus"
           @click="${() => this.increment()}"
+          ?onDark="${this.onDark}"
           ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
           >
             <${this.iconTag} class="controlIcon" slot="icon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>

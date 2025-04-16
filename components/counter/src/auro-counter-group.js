@@ -44,6 +44,7 @@ export class AuroCounterGroup extends LitElement {
     this.isDropdown = false;
     this.max = undefined;
     this.min = undefined;
+    this.onDark = false;
     this.total = undefined;
     this.validity = undefined;
     this.value = undefined;
@@ -168,6 +169,14 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
+       * If declared, counters and dropdown will be rendered with onDark styles.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * Position where the bib should appear relative to the trigger.
        * Accepted values:
        * "top" | "right" | "bottom" | "left" |
@@ -278,6 +287,7 @@ export class AuroCounterGroup extends LitElement {
   configureCounters() {
     this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
     this.counters.forEach((counter) => {
+      counter.onDark = this.onDark;
       counter.addEventListener("input", () => this.updateValue());
     });
   }
@@ -428,6 +438,10 @@ export class AuroCounterGroup extends LitElement {
         }
       );
     }
+
+    if (changedProperties.has("onDark") && !this.isDropdown) {
+      this.configureCounters();
+    }
   }
 
   /**
@@ -448,6 +462,7 @@ export class AuroCounterGroup extends LitElement {
         .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
         .placement="${this.placement}"
         .offset="${this.offset}"
+        ?onDark="${this.onDark}"
         ?autoPlacement="${this.autoPlacement}"
         ?noFlip="${this.noFlip}">
         <div slot="trigger"><slot name="valueText">

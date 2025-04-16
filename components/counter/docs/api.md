@@ -2,13 +2,14 @@
 
 ## Properties
 
-| Property   | Attribute  | Type      | Default     | Description                           |
-|------------|------------|-----------|-------------|---------------------------------------|
-| `disabled` | `disabled` | `boolean` | false       | Indicates if the counter is disabled. |
-| `max`      | `max`      | `number`  | 9           | The maximum value for the counter.    |
-| `min`      | `min`      | `number`  | 0           | The minimum value for the counter.    |
-| `validity` | `validity` | `string`  | "undefined" | The validity state of the counter.    |
-| `value`    | `value`    | `number`  | "undefined" | The current value of the counter.     |
+| Property   | Attribute  | Type      | Default     | Description                                      |
+|------------|------------|-----------|-------------|--------------------------------------------------|
+| `disabled` | `disabled` | `boolean` | false       | Indicates if the counter is disabled.            |
+| `max`      | `max`      | `number`  | 9           | The maximum value for the counter.               |
+| `min`      | `min`      | `number`  | 0           | The minimum value for the counter.               |
+| `onDark`   | `onDark`   | `boolean` | false       | If declared, the counter will be rendered with onDark styles. |
+| `validity` | `validity` | `string`  | "undefined" | The validity state of the counter.               |
+| `value`    | `value`    | `number`  | "undefined" | The current value of the counter.                |
 
 ## Methods
 
@@ -46,6 +47,7 @@
 | `min`                     | `min`                     | `number`  | "undefined"    | The minimum value allowed for the whole group of counters. |
 | `noFlip`                  | `noFlip`                  | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `offset`                  | `offset`                  | `number`  | "0"            | Gap between the trigger element and bib.         |
+| `onDark`                  | `onDark`                  | `boolean` | false          | If declared, counters and dropdown will be rendered with onDark styles. |
 | `placement`               | `placement`               | `string`  | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `total`                   | `total`                   | `number`  | "undefined"    | The total value of the counters.                 |
 | `validity`                | `validity`                | `string`  | "undefined"    | Reflects the validity state.                     |
