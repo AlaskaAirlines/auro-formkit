@@ -81,13 +81,18 @@ export class AuroDropdown extends LitElement {
     this.disabled = false;
     this.error = false;
     this.inset = false;
-    this.placement = 'bottom-start';
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
     this.a11yAutocomplete = 'none';
     this.labeled = true;
     this.a11yRole = 'combobox';
+
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
 
     /**
      * @private
@@ -108,16 +113,6 @@ export class AuroDropdown extends LitElement {
      * @private
      */
     this.floater = new AuroFloatingUI();
-
-    /**
-     * @private
-     */
-    this.floaterConfig = {
-      placement: 'bottom-start',
-      flip: true,
-      autoPlacement: false,
-      offset: 0,
-    };
 
     /**
      * Generate unique names for dependency components.
@@ -142,7 +137,19 @@ export class AuroDropdown extends LitElement {
     /**
      * @private
      */
-    this.bubbleUpFocusEvent = this.bubbleUpFocusEvent.bind(this);
+    this.bindFocusEventToTrigger = this.bindFocusEventToTrigger.bind(this);
+  }
+
+  /**
+   * @ignore
+   */
+  get floaterConfig() {
+    return {
+      placement: this.placement,
+      flip: !this.noFlip,
+      autoPlacement: this.autoPlacement,
+      offset: this.offset,
+    };
   }
 
   /**
@@ -164,6 +171,15 @@ export class AuroDropdown extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       * @default false
+       */
+      autoPlacement: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
        * If declared, applies a border around the trigger slot.
@@ -259,7 +275,7 @@ export class AuroDropdown extends LitElement {
        */
       isBibFullscreen: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -303,6 +319,16 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       * @default false
+       */
+      noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If declared, the dropdown will not hide when moving focus outside the element.
        */
       noHideOnThisFocusLoss: {
@@ -318,16 +344,32 @@ export class AuroDropdown extends LitElement {
         reflect: true
       },
 
+      /**
+       * Gap between the trigger element and bib.
+       * @default 0
+       */
+      offset: {
+        type: Number,
+        reflect: true
+      },
+
       onSlotChange: {
         type: Function,
         reflect: false
       },
 
       /**
-       * @private
+       * Position where the bib should appear relative to the trigger.
+       * Accepted values:
+       * "top" | "right" | "bottom" | "left" |
+       * "bottom-start" | "top-start" | "top-end" |
+       * "right-start" | "right-end" | "bottom-end" |
+       * "left-start" | "left-end"
+       * @default bottom-start
        */
       placement: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -391,6 +433,7 @@ export class AuroDropdown extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.floater.disconnect();
+    this.clearTriggerFocusEventBinding();
   }
 
   updated(changedProperties) {
@@ -526,7 +569,7 @@ export class AuroDropdown extends LitElement {
    * Creates and dispatches a duplicate focus event on the trigger element.
    * @param {Event} event - The original focus event.
    */
-  bubbleUpFocusEvent(event) {
+  bindFocusEventToTrigger(event) {
     const dupEvent = new FocusEvent(event.type, {
       bubbles: false,
       cancelable: false,
@@ -537,16 +580,41 @@ export class AuroDropdown extends LitElement {
 
   /**
    * @private
-   * Sets up event listeners to bubble up focus and blur events from nested Auro components within the trigger slot.
+   * Sets up event listeners to deliver focus and blur events from nested Auro components within the trigger slot to trigger.
    * This ensures that focus/blur events originating from within these components are propagated to the trigger element itself.
    */
-  setupTriggerFocusEventBubbleUp() {
+  setupTriggerFocusEventBinding() {
+    if (!this.triggerContentSlot || this.triggerContentSlot.length === 0) {
+      return;
+    }
+
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
         const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
         auroElements.forEach((auroEl) => {
-          auroEl.addEventListener('focus', this.bubbleUpFocusEvent);
-          auroEl.addEventListener('blur', this.bubbleUpFocusEvent);
+          auroEl.removeEventListener('focus', this.bindFocusEventToTrigger);
+          auroEl.removeEventListener('blur', this.bindFocusEventToTrigger);
+        });
+      }
+    });
+  }
+
+  /**
+   * Clears focus and blur event listeners from nested Auro components within the trigger slot.
+   * @private
+   * @returns {void}
+   */
+  clearTriggerFocusEventBinding() {
+    if (!this.triggerContentSlot || this.triggerContentSlot.length === 0) {
+      return;
+    }
+
+    this.triggerContentSlot.forEach((node) => {
+      if (node.querySelectorAll) {
+        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        auroElements.forEach((auroEl) => {
+          auroEl.addEventListener('focus', this.bindFocusEventToTrigger);
+          auroEl.addEventListener('blur', this.bindFocusEventToTrigger);
         });
       }
     });
@@ -564,7 +632,7 @@ export class AuroDropdown extends LitElement {
       return;
     }
 
-    // Set appropriate attributes for a11y
+    // Reset appropriate attributes for a11y
     triggerElement.removeAttribute('aria-labelledby');
     if (triggerElement.getAttribute('id') === `${this.id}-trigger-element`) {
       triggerElement.removeAttribute('id');
@@ -631,8 +699,8 @@ export class AuroDropdown extends LitElement {
       this.triggerContentSlot = event.target.assignedNodes();
     }
 
-    if (this.triggerContentSlot) {
-      this.setupTriggerFocusEventBubbleUp();
+    if (this.triggerContentSlot && this.triggerContentSlot.length) {
+      this.setupTriggerFocusEventBinding();
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
         if (slot.textContent.trim()) {
           return true;

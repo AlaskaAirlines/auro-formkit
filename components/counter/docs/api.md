@@ -36,16 +36,20 @@
 
 ## Properties
 
-| Property                  | Attribute                 | Type      | Default     | Description                                      |
-|---------------------------|---------------------------|-----------|-------------|--------------------------------------------------|
-| `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `string`  | "sm"        | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
-| `isDropdown`              | `isDropdown`              | `boolean` | false       | Indicates if the counter group is displayed as a dropdown. |
-| `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean` |             | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
-| `max`                     | `max`                     | `number`  | "undefined" | The maximum value allowed for the whole group of counters. |
-| `min`                     | `min`                     | `number`  | "undefined" | The minimum value allowed for the whole group of counters. |
-| `total`                   | `total`                   | `number`  | "undefined" | The total value of the counters.                 |
-| `validity`                | `validity`                | `string`  | "undefined" | Reflects the validity state.                     |
-| `value`                   | `value`                   | `object`  | "undefined" | The current individual values of the nested counters. |
+| Property                  | Attribute                 | Type      | Default        | Description                                      |
+|---------------------------|---------------------------|-----------|----------------|--------------------------------------------------|
+| `autoPlacement`           | `autoPlacement`           | `boolean` | "false"        | If declared, bib's position will be automatically calculated where to appear. |
+| `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `string`  | "sm"           | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
+| `isDropdown`              | `isDropdown`              | `boolean` | false          | Indicates if the counter group is displayed as a dropdown. |
+| `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean` |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `max`                     | `max`                     | `number`  | "undefined"    | The maximum value allowed for the whole group of counters. |
+| `min`                     | `min`                     | `number`  | "undefined"    | The minimum value allowed for the whole group of counters. |
+| `noFlip`                  | `noFlip`                  | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
+| `offset`                  | `offset`                  | `number`  | "0"            | Gap between the trigger element and bib.         |
+| `placement`               | `placement`               | `string`  | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
+| `total`                   | `total`                   | `number`  | "undefined"    | The total value of the counters.                 |
+| `validity`                | `validity`                | `string`  | "undefined"    | Reflects the validity state.                     |
+| `value`                   | `value`                   | `object`  | "undefined"    | The current individual values of the nested counters. |
 
 ## Methods
 
