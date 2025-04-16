@@ -6,6 +6,7 @@ describe('auro-dropdown', () => {
     const el = await fixture(html`
       <auro-dropdown>
         <div slot="trigger">Trigger</div>
+        <div slot="label">Label</div>
       </auro-dropdown>
     `);
 
