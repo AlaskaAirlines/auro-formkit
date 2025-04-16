@@ -17,6 +17,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `noFlip`                        | `noFlip`                        | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean` |                | If set, disables auto-validation on blur.        |
 | `offset`                        | `offset`                        | `number`  | "0"            | Gap between the trigger element and bib.         |
+| `onDark`                        | `onDark`                        | `boolean` |                | If declared, onDark styles will be applied to the trigger. |
 | `optionSelected`                | `optionSelected`                |           |                | Specifies the current selected menuOption.       |
 | `placement`                     | `placement`                     | `string`  | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `required`                      | `required`                      | `boolean` |                | Populates the `required` attribute on the element. Used for client-side validation. |

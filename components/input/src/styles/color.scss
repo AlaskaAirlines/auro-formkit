@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------
 
 // Support for fallback values
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 
 @import 'mixins';
 
@@ -29,12 +29,16 @@ input {
   }
 
   &:disabled {
-    --ds-auro-input-input-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+    --ds-auro-input-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
   }
 }
 
 label {
   color: var(--ds-auro-input-label-text-color);
+}
+
+.alertNotification {
+  color: var(--ds-auro-input-error-icon-color);
 }
 
 :host(:not([bordered], [borderless])) {
@@ -49,36 +53,56 @@ label {
     background-color: var(--ds-auro-input-container-color);
 
     &:focus-within {
-      --ds-auro-input-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
+      --ds-auro-input-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
 
       box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
     }
   }
 }
 
-:host(:not([borderless])) {
-  .wrapper {
-    &:focus-within {
-      --ds-auro-input-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-
-      @include border-highlight-color;
-    }
-  }
-}
-
-:host([validity]:not([validity='valid'])) {
-  --ds-auro-input-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
-}
-
 :host([validity]:not([validity='valid'])[bordered]) {
   .wrapper {
-    --ds-auro-input-border-color: var(--ds-color-border-error-default, #{$ds-color-border-error-default});
+    --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{$ds-basic-color-status-error});
 
     box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
   }
 }
 
 :host([disabled]) {
-  --ds-auro-input-border-color: var(--ds-color-border-ui-disabled-default, #{$ds-color-border-ui-disabled-default});
-  --ds-auro-input-label-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+  --ds-auro-input-border-color: var(--ds-basic-color-border-subtle, #{$ds-basic-color-border-subtle});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+}
+
+/* onDark styles */
+
+:host([onDark][bordered]) {
+  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
+  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{$ds-advanced-color-shared-background-inverse});
+  --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
+
+  .wrapper {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+
+      box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+    }
+  }
+}
+
+:host([onDark][validity]:not([validity='valid'])[bordered]) {
+  .wrapper {
+    --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
+
+    box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+  }
+}
+
+:host([onDark][disabled]) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{$ds-advanced-color-shared-background-inverse-disabled});
 }

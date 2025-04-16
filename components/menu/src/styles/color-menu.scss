@@ -3,10 +3,21 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable declaration-no-important */
+/* stylelint-disable declaration-no-important, selector-max-attribute, selector-no-qualifying-type, scss/selector-nest-combinators */
 
 :host {
   ::slotted(hr) {
-    border-top-color: var(--ds-auro-menu-divider-color) !important;
+    border-top-color: var(--ds-auro-menu-divider-color);
   }
 }
+
+[loadingplaceholder] {
+  slot[name="loadingIcon"]{
+    color: var(--ds-auro-menu-loader-color);
+  }
+
+  slot[name="loadingText"] {
+    color: var(--ds-auro-menu-loader-text-color);
+  }
+}
+

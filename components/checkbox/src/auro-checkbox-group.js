@@ -38,6 +38,7 @@ export class AuroCheckboxGroup extends LitElement {
     this.disabled = undefined;
     this.required = false;
     this.horizontal = false;
+    this.onDark = false;
 
     /**
      * @private
@@ -114,6 +115,14 @@ export class AuroCheckboxGroup extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets onDark styles for component.
+       */
+      onDark: {
         type: Boolean,
         reflect: true
       },
@@ -335,6 +344,12 @@ export class AuroCheckboxGroup extends LitElement {
       }
     }
 
+    if (changedProperties.has('onDark')) {
+      this.checkboxes.forEach((el) => {
+        el.onDark = this.onDark;
+      });
+    }
+
     if (changedProperties.has('error')) {
       if (this.error) {
         this.setAttribute('aria-invalid', true);
@@ -370,11 +385,11 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} large part="helpText">
+          <${this.helpTextTag} large part="helpText" ?onDark="${this.onDark}">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} error large role="alert" aria-live="assertive" part="helpText">
+          <${this.helpTextTag} error large ?onDark="${this.onDark}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

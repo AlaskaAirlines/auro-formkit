@@ -58,6 +58,7 @@ export class AuroCombobox extends LitElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
+    this.onDark = false;
     this.availableOptions = [];
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
@@ -78,9 +79,9 @@ export class AuroCombobox extends LitElement {
 
     const versioning = new AuroDependencyVersioning();
 
-    this.dropdownTag = versioning.generateTag('auro-formkit-checkbox-dropdown', dropdownVersion, AuroDropdown);
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-checkbox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
-    this.inputTag = versioning.generateTag('auro-formkit-checkbox-input', inputVersion, AuroInput);
+    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
   }
 
   // This function is to define props used within the scope of this component
@@ -162,6 +163,14 @@ export class AuroCombobox extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       * If declared, onDark styles will be applied to the trigger.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -935,6 +944,7 @@ export class AuroCombobox extends LitElement {
         </div>
         <${this.dropdownTag}
           for="dropdownMenu"
+          ?onDark="${this.onDark}"
           fluid
           bordered
           rounded
@@ -951,6 +961,7 @@ export class AuroCombobox extends LitElement {
           <${this.inputTag}
             slot="trigger"
             bordered
+            ?onDark="${this.onDark}"
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"

@@ -6,8 +6,9 @@
 /* stylelint-disable declaration-empty-line-before */
 
 // Import Auro tokens
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
-@import '@aurodesignsystem/design-tokens/dist/tokens/SassCustomProperties';
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+
 @import '@aurodesignsystem/webcorestylesheets/src/core';
 
 /* stylelint-disable declaration-no-important, order/properties-order, selector-max-attribute, selector-no-qualifying-type, scss/selector-nest-combinators */
@@ -60,8 +61,6 @@
 }
 
 [loadingplaceholder] {
-  color: var(--ds-color-text-secondary-default, $ds-color-text-secondary-default);
-
   &.empty {
     opacity: 0;
     position: absolute;
