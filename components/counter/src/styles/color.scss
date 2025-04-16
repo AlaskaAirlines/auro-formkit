@@ -7,7 +7,6 @@
 
 // Support for fallback values
 @import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 .label {
@@ -36,8 +35,25 @@
 }
 
 [disabled], :host([disabled]) {
-  --ds-auro-counter-icon-color: var(--ds-color-ui-disabled-default, #{$ds-color-ui-disabled-default});
+  --ds-auro-counter-icon-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
   --ds-auro-counter-description-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
   --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
   --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+}
+
+/* onDark styles */
+
+[onDark], :host([onDark]) {
+  --ds-auro-counter-description-text-color: var(--ds-basic-color-texticon-inverse-muted, #{$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+  --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+  --ds-auro-counter-control-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-inverse, #{$ds-advanced-color-button-tertiary-background-inverse});
+  --ds-auro-counter-icon-color: var(--ds-advanced-color-button-tertiary-text-inverse, #{$ds-advanced-color-button-tertiary-text-inverse});
+}
+
+[onDark][disabled], :host([onDark][disabled]) {
+  --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-counter-icon-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
 }
