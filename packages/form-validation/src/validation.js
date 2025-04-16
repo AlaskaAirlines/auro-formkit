@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------
 
 /* eslint-disable complexity, max-depth, no-extra-parens, no-magic-numbers, line-comment-position, no-inline-comments, prefer-destructuring */
-import { validDateStr, toNorthAmericanFormat, dateAndFormatMatch } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities.mjs';
+import { validDateStr, toNorthAmericanFormat, dateAndFormatMatch } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 export default class AuroFormValidation {
