@@ -84,7 +84,7 @@ export class AuroDropdown extends LitElement {
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
-    this.autocomplete = 'none';
+    this.a11yAutocomplete = 'none';
     this.labeled = true;
     this.a11yRole = 'combobox';
 
@@ -388,7 +388,7 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * namespaced aria-role value
+       * The value for the role attribute of the trigger element.
        */
       a11yRole: {
         type: String || undefined,
@@ -397,9 +397,9 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * aria-autocomplete value to be passed to the trigger node
+       * The value for the aria-autocomplete attribute of the trigger element.
        */
-      autocomplete: {
+      a11yAutocomplete: {
         type: String,
         attribute: false,
       }
@@ -456,7 +456,11 @@ export class AuroDropdown extends LitElement {
     // Configure the floater to, this will generate the ID for the bib
     this.floater.configure(this, 'auroDropdown');
 
-    // Let subscribers know that the dropdown ID ha been generated and added
+    /**
+     * @description Let subscribers know that the dropdown ID ha been generated and added.
+     * @event auroDropdown-idAdded
+     * @type {Object<key: 'id', value: string>} - The ID of the dropdown bib element.
+     */
     this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
 
     // Set the bib ID locally if the user hasn't provided a focusable trigger
