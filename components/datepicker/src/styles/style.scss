@@ -26,7 +26,16 @@
   }
 
   &::part(wrapper) {
-    border-width: 0 !important;
+    &:focus-within {
+      &:before {
+        border-bottom-width: 0 !important;
+        box-shadow: unset !important;
+        outline: unset !important;
+      }
+    }
+
+    --ds-auro-input-border-color: transparent;
+    --ds-auro-input-container-color: transparent;
   }
 
   // Horizontal ruler
