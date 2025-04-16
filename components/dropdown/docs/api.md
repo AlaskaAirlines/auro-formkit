@@ -10,9 +10,9 @@
 
 | Property                | Attribute               | Type        | Default        | Description                                      |
 |-------------------------|-------------------------|-------------|----------------|--------------------------------------------------|
-| `a11yRole`              |                         |             |                | namespaced aria-role value                       |
+| `a11yAutocomplete`      |                         | `string`    |                | The value for the aria-autocomplete attribute of the trigger element. |
+| `a11yRole`              |                         |             |                | The value for the role attribute of the trigger element. |
 | `autoPlacement`         | `autoPlacement`         | `boolean`   | "false"        | If declared, bib's position will be automatically calculated where to appear. |
-| `autocomplete`          |                         | `string`    |                | aria-autocomplete value to be passed to the trigger node |
 | `bordered`              | `bordered`              | ` Boolean ` |                | If declared, applies a border around the trigger slot. |
 | `chevron`               | `chevron`               | ` Boolean ` |                | If declared, the dropdown displays a chevron on the right. |
 | `common`                | `common`                | ` Boolean ` |                | If declared, the dropdown will be styled with the common theme. |
@@ -44,11 +44,11 @@
 
 ## Events
 
-| Event                       | Type                        | Description                                      |
-|-----------------------------|-----------------------------|--------------------------------------------------|
-| `auroDropdown-idAdded`      | `CustomEvent<{ id: any; }>` |                                                  |
-| `auroDropdown-toggled`      |                             | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` |                             | Notifies that the trigger has been clicked.      |
+| Event                       | Type                                 | Description                                      |
+|-----------------------------|--------------------------------------|--------------------------------------------------|
+| `auroDropdown-idAdded`      | `Object<key  : 'id', value: string>` | Notifies consumers that the unique ID for the dropdown bib has been generated. |
+| `auroDropdown-toggled`      |                                      | Notifies that the visibility of the dropdown bib has changed. |
+| `auroDropdown-triggerClick` |                                      | Notifies that the trigger has been clicked.      |
 
 ## Slots
 

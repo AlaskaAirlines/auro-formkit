@@ -39,6 +39,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @csspart helpText - The helpText content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
+ * @event auroDropdown-idAdded - Notifies consumers that the unique ID for the dropdown bib has been generated.
  */
 export class AuroDropdown extends LitElement {
   constructor() {
@@ -627,29 +628,22 @@ export class AuroDropdown extends LitElement {
    * @method setTriggerAriaAttributes
    * @param { HTMLElement } triggerElement - The custom trigger element.
    */
-  setTriggerA11yAttributes(triggerElement) {
-    // Guard Clause: Ensure the element can have an attribute set
-    if (!triggerElement || !triggerElement.setAttribute) {
+  clearTriggerA11yAttributes(triggerElement) {
+
+    if (!triggerElement || !triggerElement.removeAttribute) {
       return;
     }
 
-    // Set appropriate attributes for a11y
-    triggerElement.setAttribute('aria-labelledby', "triggerLabel");
-    if (triggerElement !== this.trigger) {
-      triggerElement.setAttribute('id', `${this.id}-trigger-element`);
+    // Reset appropriate attributes for a11y
+    triggerElement.removeAttribute('aria-labelledby');
+    if (triggerElement.getAttribute('id') === `${this.id}-trigger-element`) {
+      triggerElement.removeAttribute('id');
     }
-    triggerElement.setAttribute('role', this.role);
-    triggerElement.setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+    triggerElement.removeAttribute('role');
+    triggerElement.removeAttribute('aria-expanded');
 
-    // floatingUI will regenerate this id to be unique
-    const bibId = this.bibContent.id;
-    triggerElement.setAttribute('aria-controls', bibId);
-
-    if (this.autocomplete !== 'none') {
-      triggerElement.setAttribute('aria-autocomplete', this.autocomplete);
-    } else {
-      triggerElement.removeAttribute('aria-autocomplete');
-    }
+    triggerElement.removeAttribute('aria-controls');
+    triggerElement.removeAttribute('aria-autocomplete');
   }
 
   /**
