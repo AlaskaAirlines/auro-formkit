@@ -118,7 +118,7 @@ export default class BaseInput extends LitElement {
     return {
 
       /**
-       * The value for the aria-role attribute.
+       * The value for the role attribute.
        */
       a11yRole: {
         type: String,
