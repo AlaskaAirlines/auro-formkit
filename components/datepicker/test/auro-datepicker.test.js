@@ -2,7 +2,7 @@
 
 import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities.mjs';
+import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import '../src/registered.js';
 
 describe('auro-datepicker', () => {
