@@ -25,3 +25,7 @@
     }
   }
 }
+
+:host([onDark]) {
+  --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
+}

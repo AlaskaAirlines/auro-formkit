@@ -17,10 +17,18 @@
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -31,10 +39,19 @@
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicRange.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkRange.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicRange.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkRange.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
