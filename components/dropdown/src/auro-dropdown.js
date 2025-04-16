@@ -39,6 +39,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @csspart helpText - The helpText content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
+ * @event auroDropdown-idAdded - Notifies consumers that the unique ID for the dropdown bib has been generated.
  */
 export class AuroDropdown extends LitElement {
   constructor() {
