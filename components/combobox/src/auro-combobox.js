@@ -79,9 +79,9 @@ export class AuroCombobox extends LitElement {
 
     const versioning = new AuroDependencyVersioning();
 
-    this.dropdownTag = versioning.generateTag('auro-formkit-checkbox-dropdown', dropdownVersion, AuroDropdown);
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-checkbox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
-    this.inputTag = versioning.generateTag('auro-formkit-checkbox-input', inputVersion, AuroInput);
+    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
   }
 
   // This function is to define props used within the scope of this component
