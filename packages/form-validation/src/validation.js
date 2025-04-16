@@ -152,52 +152,65 @@ export default class AuroFormValidation {
           elem.validity = 'rangeUnderflow';
           elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
         }
-      } else if (elem.type === 'date') {
-        
-        // Validate that the length is correct for the date type
-        if (elem.value?.length > 0 && elem.value?.length < elem.lengthForType) {
+      } else if (elem.type === 'date' && elem.value?.length > 0) {
 
+        // If the value is too short
+        if (elem.value.length < elem.lengthForType) {
+          
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
+          return;
+
+        // If the value is too long
+        } else if (elem.value?.length > elem.lengthForType) {
+
+          elem.validity = 'tooLong';
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
+          return;
 
         // If the length is correct for the type, continue with validation
-        } else if (elem.value?.length === elem.lengthForType) {
+        } else {
 
           // Validate that the date passed was the correct format
           if (!dateAndFormatMatch(elem.value, elem.format)) {
             elem.validity = 'patternMismatch';
             elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || 'Invalid Date Format Entered';
+            return;
           }
           
           // Validate that the date passed was a valid date
           else if (!validDateStr(elem.value, elem.format)) {
             elem.validity = 'invalidDate';
             elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
+            return;
           }
 
           // Perform the rest of the validation
           else {
-
+            
             const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
-            const valueDate = new Date(formattedValue.dateForComparison);
+            const valueDate = new Date(formattedValue);
 
-            // Validate max date
+            // // Validate max date
             if (elem.max?.length === elem.lengthForType) {
-              const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format).dateForComparison);
+
+              const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format));
 
               if (valueDate > maxDate) {
                 elem.validity = 'rangeOverflow';
                 elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
+                return;
               }
             }
 
-            // Validate minimum date
+            // Validate min date
             if (elem.min?.length === elem.lengthForType) {
-              const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format).dateForComparison);
+              const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format));
 
               if (valueDate < minDate) {
                 elem.validity = 'rangeUnderflow';
                 elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
+                return;
               }
             }
           }
