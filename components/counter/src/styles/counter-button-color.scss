@@ -5,7 +5,7 @@
 
 // ---------------------------------------------------------------------
 
-@import "./../node_modules/@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 
 .auroButton {
   border-color: unset;
@@ -16,7 +16,7 @@
   @media (hover: hover) {
     &:active, &:hover {
       &:not(:disabled) {
-        --ds-auro-counter-control-background-color: var(--ds-color-ui-bkg-hover-default, #{$ds-color-ui-bkg-hover-default});
+        --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-hover, #{$ds-advanced-color-button-tertiary-background-hover});
       }
     }
   }
