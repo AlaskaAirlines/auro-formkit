@@ -593,8 +593,8 @@ export class AuroDropdown extends LitElement {
       if (node.querySelectorAll) {
         const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
         auroElements.forEach((auroEl) => {
-          auroEl.removeEventListener('focus', this.bindFocusEventToTrigger);
-          auroEl.removeEventListener('blur', this.bindFocusEventToTrigger);
+          auroEl.addEventListener('focus', this.bindFocusEventToTrigger);
+          auroEl.addEventListener('blur', this.bindFocusEventToTrigger);
         });
       }
     });
@@ -614,8 +614,8 @@ export class AuroDropdown extends LitElement {
       if (node.querySelectorAll) {
         const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
         auroElements.forEach((auroEl) => {
-          auroEl.addEventListener('focus', this.bindFocusEventToTrigger);
-          auroEl.addEventListener('blur', this.bindFocusEventToTrigger);
+          auroEl.removeEventListener('focus', this.bindFocusEventToTrigger);
+          auroEl.removeEventListener('blur', this.bindFocusEventToTrigger);
         });
       }
     });
