@@ -25,6 +25,7 @@ import helpTextVersion from './helptextVersion.js';
 
 // build the component class
 export class AuroInput extends BaseInput {
+
   constructor() {
     super();
 
@@ -144,8 +145,10 @@ export class AuroInput extends BaseInput {
             autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
             autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
             part="input"
-            role="${ifDefined(this.role)}"
-            />
+            role="${ifDefined(this.a11yRole)}"
+            aria-expanded="${ifDefined(this.a11yExpanded)}"
+            aria-controls="${ifDefined(this.a11yControls)}"
+          />
         </div>
         <div
           class="notificationIcons"
