@@ -1,5 +1,36 @@
 # Semantic Release Automated Changelog
 
+## [2.2.1-beta.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.1-beta.2...v2.2.1-beta.3) (2025-04-14)
+
+
+### Bug Fixes
+
+* bubble focusable element's focusevent up to `#trigger` ([a9aabf3](https://github.com/AlaskaAirlines/auro-formkit/commit/a9aabf3702947201225744d87b621bd2d2bc0f36))
+* clear event listeners on disconnectCallback in dropdown ([612ba3d](https://github.com/AlaskaAirlines/auro-formkit/commit/612ba3d1f2e9f80b8ecb39b2f026f8599044fe80))
+* close only datepicker if dapicker is open inside of drawer ([15e8e14](https://github.com/AlaskaAirlines/auro-formkit/commit/15e8e147ca6d95982159a4004c5ac19f43fb1057))
+* fix broken tabbing interaction ([493b453](https://github.com/AlaskaAirlines/auro-formkit/commit/493b4533353a6b03727f4448f53b3f2528c31080))
+* null check on focus event binder in dropdown ([adabb63](https://github.com/AlaskaAirlines/auro-formkit/commit/adabb630d1fdc71618281643fff747a33f159955))
+
+
+### Performance Improvements
+
+* adding condition check of dropdown existence ([1ac8070](https://github.com/AlaskaAirlines/auro-formkit/commit/1ac8070c906a18418c4636506c35a26706bf0f26))
+
+## [2.2.1-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.1-beta.1...v2.2.1-beta.2) (2025-04-07)
+
+
+### Bug Fixes
+
+* put checkbox to be centered programmatically ([dd5e321](https://github.com/AlaskaAirlines/auro-formkit/commit/dd5e3216be4f1bd04719395ecd97ad8de759d9b0))
+* put radio bullet to be centered programmatically ([b01be2c](https://github.com/AlaskaAirlines/auro-formkit/commit/b01be2c116db454560cffc3651fc260a58d5159a))
+
+## [2.2.1-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.0...v2.2.1-beta.1) (2025-04-07)
+
+
+### Bug Fixes
+
+* properly closes bib when selecting an option ([51a5e91](https://github.com/AlaskaAirlines/auro-formkit/commit/51a5e91b8f3e66d6b4fbc414e2a502947394e902))
+
 # [2.2.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.1.0...v2.2.0) (2025-04-02)
 
 

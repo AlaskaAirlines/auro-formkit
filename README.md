@@ -267,7 +267,7 @@ Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
     "@aurodesignsystem/auro-input": "*",        // Required UI component
 
     // External dependencies
-    "@alaskaairux/icons": "^4.44.1",  // Required UI component
+    "@alaskaairux/icons": "^5.3.0",  // Required UI component
     "lit": "^3.2.1"                   // Framework
   },
   "peerDependencies": {

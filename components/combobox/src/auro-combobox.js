@@ -370,11 +370,6 @@ export class AuroCombobox extends LitElement {
         this.noMatchOption.setAttribute('hidden', '');
       }
     }
-
-    const hasFocus = this.contains(document.activeElement);
-    if (hasFocus) {
-      this.showBib();
-    }
   }
 
   /**
@@ -551,7 +546,7 @@ export class AuroCombobox extends LitElement {
    * @param {KeyboardEvent} event - The keyboard event.
    */
   bubbleUpInputKeyEvent(event) {
-    if (event.currentTarget.parentNode !== this.dropdown) {
+    if (event.currentTarget.parentNode === this.dropdown) {
       if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault();
       }
@@ -722,14 +717,6 @@ export class AuroCombobox extends LitElement {
       this.hideBib();
       this.classList.remove('combobox-filled');
     } else if (!this.dropdown.isPopoverVisible && this.availableOptions) {
-      const hasFocus = this.contains(document.activeElement);
-
-      // If focus is within the combobox, show bib
-      // Prevent bib from being shown while loading & presetting the value
-      if (hasFocus) {
-        this.showBib();
-      }
-
       this.classList.add('combobox-filled');
     }
 
