@@ -42,6 +42,7 @@ import styleCss from './styles/style-css.js';
 
 // build the component class
 export class AuroCombobox extends LitElement {
+
   constructor() {
     super();
 
@@ -274,7 +275,17 @@ export class AuroCombobox extends LitElement {
       isDropdownFullscreen: {
         type: Boolean,
         reflect: false
-      }
+      },
+
+      /**
+       * @private
+       * specifies the currently active option
+       */
+      optionActive: {
+        type: Object,
+        reflect: false,
+        attribute: false
+      },
     };
   }
 
@@ -426,6 +437,9 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   configureDropdown() {
+    this.dropdown.role = 'combobox';
+    this.dropdown.autocomplete = 'list';
+
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
     this.menuWrapper.append(this.menu);
 
@@ -439,7 +453,6 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    this.dropdown.setAttribute('role', 'combobox');
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
     });

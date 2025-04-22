@@ -11,6 +11,7 @@
 | Property                | Attribute               | Type        | Default        | Description                                      |
 |-------------------------|-------------------------|-------------|----------------|--------------------------------------------------|
 | `autoPlacement`         | `autoPlacement`         | `boolean`   | "false"        | If declared, bib's position will be automatically calculated where to appear. |
+| `autocomplete`          |                         | `string`    |                | aria-autocomplete value to be passed to the trigger node |
 | `bordered`              | `bordered`              | ` Boolean ` |                | If declared, applies a border around the trigger slot. |
 | `chevron`               | `chevron`               | ` Boolean ` |                | If declared, the dropdown displays a chevron on the right. |
 | `common`                | `common`                | ` Boolean ` |                | If declared, the dropdown will be styled with the common theme. |
@@ -30,6 +31,7 @@
 | `offset`                | `offset`                | `number`    | "0"            | Gap between the trigger element and bib.         |
 | `onSlotChange`          | `onSlotChange`          |             |                |                                                  |
 | `placement`             | `placement`             | `string`    | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
+| `role`                  |                         | `string`    |                | aria-role value to be passed to the trigger node |
 | `rounded`               | `rounded`               | ` Boolean ` |                | If declared, will apply border-radius to trigger and default slots. |
 
 ## Methods

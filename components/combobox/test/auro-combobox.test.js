@@ -20,6 +20,14 @@ function runFulltest(mobileview) {
     await expect(el).to.be.true;
   });
 
+  it('auro-combobox is accessible', async () => {
+    const el = await noFilterFixture(mobileview);
+
+    await elementUpdated(el);
+
+    await expect(el).to.be.accessible();
+  });
+
   it('noFilter attribute results in no suggestion filtering', async () => {
     const el = await noFilterFixture(mobileview);
 

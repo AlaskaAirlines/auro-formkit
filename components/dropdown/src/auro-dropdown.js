@@ -83,6 +83,8 @@ export class AuroDropdown extends LitElement {
     this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
+    this.role = 'button';
+    this.autocomplete = 'none';
     this.labeled = true;
 
     // floaterConfig
@@ -372,6 +374,22 @@ export class AuroDropdown extends LitElement {
        */
       tabIndex: {
         type: Number
+      },
+
+      /**
+       * aria-role value to be passed to the trigger node
+       */
+      role: {
+        type: String,
+        attribute: false,
+      },
+
+      /**
+       * aria-autocomplete value to be passed to the trigger node
+       */
+      autocomplete: {
+        type: String,
+        attribute: false,
       }
     };
   }
@@ -417,6 +435,12 @@ export class AuroDropdown extends LitElement {
     // `requestUpdate` needs to be called to update hasTriggerContnet
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
+
+      if (this.triggerContentFocusable && this.triggerContentSlot && this.triggerContentSlot[0].setAttribute) {
+        this.triggerContentSlot[0].setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+      } else {
+        this.trigger.setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+      }
     }
 
   }
@@ -576,6 +600,61 @@ export class AuroDropdown extends LitElement {
     });
   }
 
+  /*
+   * Sets aria attributes for the trigger element if a custom one is passed in.
+   * @private
+   * @method setTriggerAriaAttributes
+   * @param { HTMLElement } triggerElement - The custom trigger element.
+   */
+  setTriggerA11yAttributes(triggerElement) {
+    // Guard Clause: Ensure the element can have an attribute set
+    if (!triggerElement || !triggerElement.setAttribute) {
+      return;
+    }
+
+    // Set appropriate attributes for a11y
+    triggerElement.setAttribute('aria-labelledby', "triggerLabel");
+    if (triggerElement !== this.trigger) {
+      triggerElement.setAttribute('id', `${this.id}-trigger-element`);
+    }
+    triggerElement.setAttribute('role', this.role);
+    triggerElement.setAttribute('aria-expanded', this.isPopoverVisible ? 'true' : 'false');
+
+    // floatingUI will regenerate this id to be unique
+    const bibId = this.bibContent.id;
+    triggerElement.setAttribute('aria-controls', bibId);
+
+    if (this.autocomplete !== 'none') {
+      triggerElement.setAttribute('aria-autocomplete', this.autocomplete);
+    } else {
+      triggerElement.removeAttribute('aria-autocomplete');
+    }
+  }
+
+  /**
+   * Clear aria attributes for the trigger element if a custom one is passed in.
+   * @private
+   * @method setTriggerAriaAttributes
+   * @param { HTMLElement } triggerElement - The custom trigger element.
+   */
+  clearTriggerA11yAttributes(triggerElement) {
+    if (!triggerElement || !triggerElement.removeAttribute) {
+      return;
+    }
+
+    // Set appropriate attributes for a11y
+    triggerElement.removeAttribute('aria-labelledby');
+    if (triggerElement !== this.trigger) {
+      triggerElement.removeAttribute('id');
+    }
+    triggerElement.removeAttribute('role');
+    triggerElement.removeAttribute('aria-expanded');
+
+    triggerElement.removeAttribute('aria-controls');
+    triggerElement.removeAttribute('aria-autocomplete');
+
+  }
+
   /**
    * Handles changes to the trigger content slot and updates related properties.
    *
@@ -607,14 +686,12 @@ export class AuroDropdown extends LitElement {
       }
     }
 
-    const trigger = this.shadowRoot.querySelector('#trigger');
-
     if (!this.triggerContentFocusable) {
-      trigger.setAttribute('tabindex', '0');
-      trigger.setAttribute('role', 'button');
+      this.trigger.setAttribute('tabindex', '0');
+      this.setTriggerA11yAttributes(this.trigger);
     } else {
-      trigger.removeAttribute('tabindex');
-      trigger.removeAttribute('role');
+      this.trigger.removeAttribute('tabindex');
+      this.clearTriggerA11yAttributes(this.trigger);
     }
 
     if (event) {
@@ -622,8 +699,10 @@ export class AuroDropdown extends LitElement {
       this.triggerContentSlot = event.target.assignedNodes();
     }
 
-    if (this.triggerContentSlot) {
+    if (this.triggerContentSlot && this.triggerContentSlot.length) {
       this.setupTriggerFocusEventBinding();
+      this.setTriggerA11yAttributes(this.triggerContentSlot[0]);
+
       this.hasTriggerContent = this.triggerContentSlot.some((slot) => {
         if (slot.textContent.trim()) {
           return true;
@@ -691,7 +770,6 @@ export class AuroDropdown extends LitElement {
           id="trigger"
           class="trigger"
           part="trigger"
-          aria-labelledby="triggerLabel"
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
           >
@@ -728,7 +806,6 @@ export class AuroDropdown extends LitElement {
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
-          role="tooltip"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
