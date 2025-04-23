@@ -136,83 +136,82 @@ export default class AuroFormValidation {
         if (!elem.value.match(emailRegex)) {
           elem.validity = 'patternMismatch';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
+          return;
         }
       } else if (elem.type === 'credit-card') {
         if (elem.value.length > 0 && elem.value.length < elem.validationCCLength) {
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
+          return;
         }
       } else if (elem.type === 'number') {
         if (elem.max !== undefined && Number(elem.max) < Number(elem.value)) {
           elem.validity = 'rangeOverflow';
           elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
+          return;
         }
 
         if (elem.min !== undefined && elem.value?.length > 0 && Number(elem.min) > Number(elem.value)) {
           elem.validity = 'rangeUnderflow';
           elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
+          return;
         }
       } else if (elem.type === 'date' && elem.value?.length > 0) {
 
-        // If the value is too short
+        // Guard Clause: if the value is too short
         if (elem.value.length < elem.lengthForType) {
           
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
           return;
-
-        // If the value is too long
-        } else if (elem.value?.length > elem.lengthForType) {
+        } 
+        
+        // Guard Clause: If the value is too long for the type
+        if (elem.value?.length > elem.lengthForType) {
 
           elem.validity = 'tooLong';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
           return;
+        }
+        
+        // Validate that the date passed was the correct format
+        if (!dateAndFormatMatch(elem.value, elem.format)) {
+          elem.validity = 'patternMismatch';
+          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || 'Invalid Date Format Entered';
+          return;
+        }
+        
+        // Validate that the date passed was a valid date
+        if (!validDateStr(elem.value, elem.format)) {
+          elem.validity = 'invalidDate';
+          elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
+          return;
+        }
 
-        // If the length is correct for the type, continue with validation
-        } else {
+        // Perform the rest of the validation
+        const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
+        const valueDate = new Date(formattedValue);
 
-          // Validate that the date passed was the correct format
-          if (!dateAndFormatMatch(elem.value, elem.format)) {
-            elem.validity = 'patternMismatch';
-            elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || 'Invalid Date Format Entered';
+        // // Validate max date
+        if (elem.max?.length === elem.lengthForType) {
+
+          const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format));
+
+          if (valueDate > maxDate) {
+            elem.validity = 'rangeOverflow';
+            elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
             return;
           }
-          
-          // Validate that the date passed was a valid date
-          else if (!validDateStr(elem.value, elem.format)) {
-            elem.validity = 'invalidDate';
-            elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
+        }
+
+        // Validate min date
+        if (elem.min?.length === elem.lengthForType) {
+          const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format));
+
+          if (valueDate < minDate) {
+            elem.validity = 'rangeUnderflow';
+            elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
             return;
-          }
-
-          // Perform the rest of the validation
-          else {
-            
-            const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
-            const valueDate = new Date(formattedValue);
-
-            // // Validate max date
-            if (elem.max?.length === elem.lengthForType) {
-
-              const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format));
-
-              if (valueDate > maxDate) {
-                elem.validity = 'rangeOverflow';
-                elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
-                return;
-              }
-            }
-
-            // Validate min date
-            if (elem.min?.length === elem.lengthForType) {
-              const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format));
-
-              if (valueDate < minDate) {
-                elem.validity = 'rangeUnderflow';
-                elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
-                return;
-              }
-            }
           }
         }
       }

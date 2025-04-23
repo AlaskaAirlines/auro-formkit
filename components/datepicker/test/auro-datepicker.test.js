@@ -2,7 +2,7 @@
 
 import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
+import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities.mjs';
 import '../src/registered.js';
 
 describe('auro-datepicker', () => {
@@ -191,7 +191,7 @@ describe('auro-datepicker', () => {
       <auro-datepicker></auro-datepicker>
     `);
 
-    // non-existent day
+    // non-existant day
     el.value = "02/31/2022";
     el.validate();
     await elementUpdated(el);
