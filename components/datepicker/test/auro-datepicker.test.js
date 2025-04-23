@@ -191,7 +191,7 @@ describe('auro-datepicker', () => {
       <auro-datepicker></auro-datepicker>
     `);
 
-    // non-existent day
+    // non-existant day
     el.value = "02/31/2022";
     el.validate();
     await elementUpdated(el);
