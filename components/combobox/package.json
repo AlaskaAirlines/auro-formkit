@@ -21,12 +21,12 @@
     "lit": "^3.2.1"
   },
   "devDependencies": {
-    "@aurodesignsystem/webcorestylesheets": "^6.1.0",
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^5.8.2",
+    "@aurodesignsystem/design-tokens": "^5.10.0",
+    "@aurodesignsystem/webcorestylesheets": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "rollup": "^4.39.0",
     "rollup-plugin-serve": "^3.0.0",
