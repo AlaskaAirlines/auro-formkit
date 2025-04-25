@@ -381,3 +381,9 @@ export class AuroCheckboxGroup extends LitElement {
     `;
   }
 }
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-checkbox-group")) {
+  customElements.define("auro-checkbox-group", AuroCheckboxGroup);
+}

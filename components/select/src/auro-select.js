@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable prefer-named-capture-group, max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html */
 
 // If using litElement base class
 import { LitElement } from "lit";
@@ -155,7 +155,7 @@ export class AuroSelect extends LitElement {
 
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600
+       * Otherwise, Heading 600.
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -226,7 +226,7 @@ export class AuroSelect extends LitElement {
        * "top" | "right" | "bottom" | "left" |
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
+       * "left-start" | "left-end".
        * @default bottom-start
        */
       placement: {
@@ -317,7 +317,7 @@ export class AuroSelect extends LitElement {
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
 
     // setting up bibtemplate
-    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.bibtemplate.append(this.menuWrapper);
 
     if (this.customBibWidth) {
@@ -728,4 +728,10 @@ export class AuroSelect extends LitElement {
       </div>
     `;
   }
+}
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-select")) {
+  customElements.define("auro-select", AuroSelect);
 }

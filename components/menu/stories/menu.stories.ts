@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/web-components';
 import { action } from "@storybook/addon-actions";
+import { getWcStorybookHelpers } from "wc-storybook-helpers";
 
 import { html } from 'lit-html';
 
@@ -13,13 +14,28 @@ AuroMenu.register(); // registering to `auro-menu`
 
 AuroMenu.register('custom-menu');
 
-const meta: Meta = {
+const { events, args, argTypes, template } =
+  getWcStorybookHelpers("auro-menu");
+
+const meta: Meta<AuroMenu> = {
   component: "auro-menu",
   title: 'Menu',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events,
+    },
+  },
 };
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<AuroMenu & typeof args>;
+
+export const Playground: Story = {
+  render: (args) => template(args),
+  args: {},
+};
 
 export const Basic: Story = {
   render: () => html`
