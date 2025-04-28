@@ -112,7 +112,7 @@ export class AuroCounterGroup extends LitElement {
       },
 
       /**
-       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`, `enabled`)
+       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
        * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
        * When expanded, the dropdown will automatically display in fullscreen mode

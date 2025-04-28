@@ -144,7 +144,7 @@ Custom height dimensions are set by using the `dropdownSize` CSS Part and then a
 
 This example overrides the default dropdown behavior to force a non-fullscreen view on any screen size. `disabled`
 ensures that the dropdown will never be fullscreen.
-Please use `xl` if you want the opposite behavior.
+Please use `xl` if you want the opposite behavior, where a dropdown is always fullscreen.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/forcedFullscreenDisabled.html) -->
