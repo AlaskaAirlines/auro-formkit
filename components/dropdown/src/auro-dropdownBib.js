@@ -17,6 +17,7 @@ import tokensCss from "./styles/tokens-css.js";
 
 const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
 const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
+  'xl',
   'lg',
   'md',
   'sm',
