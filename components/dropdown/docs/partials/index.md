@@ -124,6 +124,22 @@ To make the dropdown to be just big as the trigger's content, style the `auro-dr
 
 </auro-accordion>
 
+## Triggering a fullscreen dropdown
+This example shows how to set a dropdown fullscreen breakpoint attribute. Most consuming components use `sm` by default, but
+dropdown supports `xs`, `sm`, `md`, `lg`, `xl` and `disabled`, with `disabled` ensuring that the dropdown will never be fullscreen.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreen.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fullscreen.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Supported standard and accessible interactions
 
 The dropdown can be opened with the following actions:
