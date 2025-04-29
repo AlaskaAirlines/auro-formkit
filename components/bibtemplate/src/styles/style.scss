@@ -42,7 +42,7 @@
   cursor: pointer;
 
   [auro-icon] {
-    --ds-auro-icon-size: var(--ds-size-500, $ds-size-500);
+    --ds-auro-icon-size: var(--ds-size-500, #{$ds-size-500});
   }
 }
 
