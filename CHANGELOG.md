@@ -1,5 +1,54 @@
 # Semantic Release Automated Changelog
 
+# [3.0.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.1...v3.0.0) (2025-04-29)
+
+
+### Bug Fixes
+
+* address focus border issue in input components ([a3dd710](https://github.com/AlaskaAirlines/auro-formkit/commit/a3dd7104e23a969b6526308079f8e2300627e19a))
+* address incorrect names for combobox tags ([5047d45](https://github.com/AlaskaAirlines/auro-formkit/commit/5047d452f568229e099fa2799054ff01ef7cac5f))
+* make input height correct size ([623ab34](https://github.com/AlaskaAirlines/auro-formkit/commit/623ab346f6a9433f4c5bed0ee514f52721a23559))
+* update improper fallback reference ([5258046](https://github.com/AlaskaAirlines/auro-formkit/commit/525804665ce1e89a5211c245480ff6cfa02662cd))
+
+
+### Features
+
+* add on dark support for checkbox ([b452aa1](https://github.com/AlaskaAirlines/auro-formkit/commit/b452aa1aaa8dcbaf3fdbbadf86222a48164c4826))
+* add on dark support for combobox ([b097007](https://github.com/AlaskaAirlines/auro-formkit/commit/b097007a09a751c834e58063a332f053665aa478))
+* add on dark support for counter ([f6217bb](https://github.com/AlaskaAirlines/auro-formkit/commit/f6217bbc7527e15aa9ddeb94fd10bc4c03949053))
+* add on dark support for datepicker ([bd7ff92](https://github.com/AlaskaAirlines/auro-formkit/commit/bd7ff920400157de5477799134d1bd084f3eb7aa))
+* add on dark support for dropdown ([8cb4012](https://github.com/AlaskaAirlines/auro-formkit/commit/8cb40121b4ec02d23e368960f52a5fe5cf4b123e))
+* add on dark support for helptext component ([ab35af7](https://github.com/AlaskaAirlines/auro-formkit/commit/ab35af7f7f04586c056d30cb99184d04ca19504d))
+* add on dark support for input ([7470eb2](https://github.com/AlaskaAirlines/auro-formkit/commit/7470eb2209e0ad3e95548f47f959a60ea107b2e8))
+* add on dark support for radio ([3eaf0bb](https://github.com/AlaskaAirlines/auro-formkit/commit/3eaf0bbf5e9ed46c985ae9d79184104787a871f1))
+* add on dark support for select ([8348500](https://github.com/AlaskaAirlines/auro-formkit/commit/83485000ad0e0645244a74442335744c2541ff69))
+
+
+### Performance Improvements
+
+* update bibtemplate to use new design tokens ([8daa331](https://github.com/AlaskaAirlines/auro-formkit/commit/8daa331c089f61c2cee02b3df3016fe0e221e63b))
+* update color tokenimports for form ([0fe05d9](https://github.com/AlaskaAirlines/auro-formkit/commit/0fe05d93da5daad8f11a75eb786fc3f70ad00ec8))
+* update color tokens for alert icon ([ecb14c8](https://github.com/AlaskaAirlines/auro-formkit/commit/ecb14c8138483bafb1b7f3c086ba319a16ea9e99))
+* update color tokens for helptext component ([d55b747](https://github.com/AlaskaAirlines/auro-formkit/commit/d55b747a7af5e9a9dcc54d1eedf0fed6ab835447))
+* update color tokens for theme support in combobox [#432](https://github.com/AlaskaAirlines/auro-formkit/issues/432) ([cecf6fa](https://github.com/AlaskaAirlines/auro-formkit/commit/cecf6fa14a71a10a952b3386b834f52cf2f95990))
+* update color tokens for theme support in counter [#433](https://github.com/AlaskaAirlines/auro-formkit/issues/433) ([f261afd](https://github.com/AlaskaAirlines/auro-formkit/commit/f261afd43ecd88e8693b28d53830cdd6f06f5875))
+* update color tokens for theme support in datepicker [#434](https://github.com/AlaskaAirlines/auro-formkit/issues/434) ([e44b3d8](https://github.com/AlaskaAirlines/auro-formkit/commit/e44b3d83b7496de8614d11ac0d1c0e1068cd5ac2))
+* update color tokens for theme support in dropdown [#435](https://github.com/AlaskaAirlines/auro-formkit/issues/435) ([f8c76c2](https://github.com/AlaskaAirlines/auro-formkit/commit/f8c76c244d33c26bad1a9bb256eeca434d10b27d))
+* update color tokens for theme support in select [#439](https://github.com/AlaskaAirlines/auro-formkit/issues/439) ([fdda13b](https://github.com/AlaskaAirlines/auro-formkit/commit/fdda13b5efdb91f9b5f2346a74b6b2c36e74fd5b))
+* update color tokens in checkbox for theme support [#431](https://github.com/AlaskaAirlines/auro-formkit/issues/431) ([48b9d59](https://github.com/AlaskaAirlines/auro-formkit/commit/48b9d5933bdc4e6aea94350b8e4b129d1bf313f1))
+* update color tokens in input for theme support [#436](https://github.com/AlaskaAirlines/auro-formkit/issues/436) ([3dcde5e](https://github.com/AlaskaAirlines/auro-formkit/commit/3dcde5eae8b4ce479dba6a8b1310a987a60fca99))
+* update color tokens in menu for theme support [#437](https://github.com/AlaskaAirlines/auro-formkit/issues/437) ([94f441a](https://github.com/AlaskaAirlines/auro-formkit/commit/94f441a01e9e7eddac382b5ab27d48f1a778f18e))
+* update color tokens in radio for theme support [#438](https://github.com/AlaskaAirlines/auro-formkit/issues/438) ([d32c3fc](https://github.com/AlaskaAirlines/auro-formkit/commit/d32c3fc9f49574d3dd1a03a452f7b2bb3f2bd13f))
+* update counter to use theming token structure ([fabba60](https://github.com/AlaskaAirlines/auro-formkit/commit/fabba60cebf900af6ec2ea82756b6c78dfd3ca57))
+* update dependencies ([8f48297](https://github.com/AlaskaAirlines/auro-formkit/commit/8f482976c7b224a19f34f028972c2e670dfc863b))
+* update remaining references to old design tokens ([85eb8ef](https://github.com/AlaskaAirlines/auro-formkit/commit/85eb8efbbe6f285e88957aac306806ef993429e7))
+* update to v5.10.0 of design tokens ([2b691ca](https://github.com/AlaskaAirlines/auro-formkit/commit/2b691caf9a9b336899fdb288bbca522a59984688))
+
+
+### BREAKING CHANGES
+
+* All theme tokens now are inherited from dropdown.
+
 ## [2.2.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.0...v2.2.1) (2025-04-22)
 
 
