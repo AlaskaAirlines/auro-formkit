@@ -81,6 +81,7 @@ export class AuroDatePicker extends LitElement {
     this.required = false;
     this.onDark = false;
     this.range = false;
+    this.stacked = false;
     this.noValidate = false;
     this.validity = undefined;
     this.value = undefined;
@@ -111,6 +112,8 @@ export class AuroDatePicker extends LitElement {
     this.offset = 0;
     this.noFlip = false;
     this.autoPlacement = false;
+
+    this.largeFullscreenHeadline = false;
 
     /**
      * @private
@@ -277,7 +280,8 @@ export class AuroDatePicker extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**

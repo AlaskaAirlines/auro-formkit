@@ -41,14 +41,18 @@ export class AuroCounterGroup extends LitElement {
   constructor() {
     super();
 
-    this.isDropdown = false;
     this.max = undefined;
     this.min = undefined;
     this.onDark = false;
     this.total = undefined;
     this.validity = undefined;
     this.value = undefined;
+
+    this.isDropdown = false;
     this.fullscreenBreakpoint = 'sm';
+    this.largeFullscreenHeadline = false;
+    this.autoPlacement = false;
+    this.noFlip = false;
 
     /**
      * @private
