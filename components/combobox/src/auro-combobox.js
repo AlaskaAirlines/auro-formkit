@@ -45,11 +45,6 @@ export class AuroCombobox extends LitElement {
   constructor() {
     super();
 
-    this.noFilter = false;
-    this.validity = undefined;
-    this.value = undefined;
-    this.optionSelected = undefined;
-
     this.privateDefaults();
   }
 
@@ -59,11 +54,24 @@ export class AuroCombobox extends LitElement {
    */
   privateDefaults() {
     this.onDark = false;
+
+    this.noFilter = false;
+    this.validity = undefined;
+    this.value = undefined;
+    this.optionSelected = undefined;
+
+    this.checkmark = false;
+    this.disabled = false;
+    this.noValidate = false;
+    this.required = false;
+    this.triggerIcon = false;
+
     this.availableOptions = [];
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
 
     this.fullscreenBreakpoint = 'sm';
+    this.largeFullscreenHeadline = false;
 
     this.validation = new AuroFormValidation();
 
@@ -154,7 +162,8 @@ export class AuroCombobox extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -281,8 +290,7 @@ export class AuroCombobox extends LitElement {
        * @private
        */
       isDropdownFullscreen: {
-        type: Boolean,
-        reflect: false
+        type: Boolean
       }
     };
   }

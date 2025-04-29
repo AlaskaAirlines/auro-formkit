@@ -60,7 +60,10 @@ export class AuroCalendarCell extends LitElement {
       month:         { type: String },
       min:           { type: Number },
       max:           { type: Number },
-      disabled:      { type: Boolean },
+      disabled:      {
+        type: Boolean,
+        reflect: true
+      },
       disabledDays:  { type: Array },
       hoveredDate:   { type: String },
       isCurrentDate: { type: Boolean },

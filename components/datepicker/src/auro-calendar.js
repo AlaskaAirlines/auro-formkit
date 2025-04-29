@@ -68,6 +68,10 @@ export class AuroCalendar extends RangeDatepicker {
     this.showPrevMonthBtn = true;
     this.showNextMonthBtn = true;
 
+    this.visible = false;
+    this.largeFullscreenHeadline = false;
+    this.isFullscreen = false;
+
     /**
      * @private
      */
@@ -82,8 +86,6 @@ export class AuroCalendar extends RangeDatepicker {
      * @private
      */
     this.numCalendars = undefined;
-
-    this.visible = false;
 
     /**
      * @private
