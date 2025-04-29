@@ -28,7 +28,7 @@
 // container styles - defines the look of the outer custom component
 :host {
   display: block;
-  --cbxLocation: var(--ds-size-50, $ds-size-50);
+  --cbxLocation: var(--ds-size-50, #{$ds-size-50});
 }
 
 fieldset {
