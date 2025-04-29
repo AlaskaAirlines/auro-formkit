@@ -98,7 +98,8 @@ export class AuroInput extends BaseInput {
                 category="payment"
                 name="${name}"
                 part="accentIcon"
-                ?disabled="${this.disabled}">
+                ?onDark="${this.onDark}"
+                variant="${this.disabled ? 'disabled' : 'muted'}">
               </${this.iconTag}>
             `) : undefined
             }
@@ -110,7 +111,8 @@ export class AuroInput extends BaseInput {
                 category="interface"
                 name="calendar"
                 part="accentIcon"
-                ?disabled="${this.disabled}">
+                ?onDark="${this.onDark}"
+                variant="${this.disabled ? 'disabled' : 'muted'}">
               </${this.iconTag}>`
             : undefined
             }
@@ -155,7 +157,7 @@ export class AuroInput extends BaseInput {
               <${this.iconTag}
                 category="alert"
                 name="error-stroke"
-                error>
+                customColor
               </${this.iconTag}>
             </div>
           ` : undefined}
@@ -164,6 +166,7 @@ export class AuroInput extends BaseInput {
               <div class="notification">
                 <${this.buttonTag}
                   variant="flat"
+                  ?onDark="${this.onDark}"
                   aria-hidden="true"
                   tabindex="-1"
                   @click="${this.handleClickShowPassword}"
@@ -187,6 +190,7 @@ export class AuroInput extends BaseInput {
               <div class="notification">
                 <${this.buttonTag}
                   variant="flat"
+                  ?onDark="${this.onDark}"
                   class="notificationBtn clearBtn"
                   aria-label="${i18n(this.lang, 'clearInput')}"
                   @click="${this.handleClickClear}">
@@ -205,14 +209,14 @@ export class AuroInput extends BaseInput {
       <!-- Help text and error message template -->
         ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-        <${this.helpTextTag}>
+        <${this.helpTextTag} ?onDark="${this.onDark}">
           <p id="${this.uniqueId}" part="helpText">
             <slot name="helptext">${this.getHelpText()}</slot>
           </p>
         </${this.helpTextTag}>
         `
         : html`
-        <${this.helpTextTag} error>
+        <${this.helpTextTag} error ?onDark="${this.onDark}">
           <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </p>

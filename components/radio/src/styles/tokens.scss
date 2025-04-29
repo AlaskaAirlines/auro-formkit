@@ -1,9 +1,11 @@
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+
 :host {
   // auro-radio-group colors
   --ds-auro-radio-group-label-color: inherit;
 
   // auro-radio colors
-  --ds-auro-radio-btn-border-color: var(--ds-color-border-primary-default, $ds-color-border-primary-default);
+  --ds-auro-radio-btn-border-color: var(--ds-basic-color-border-bold, #{$ds-basic-color-border-bold});
   --ds-auro-radio-btn-fill-color: transparent;
   --ds-auro-radio-btn-inset-color: transparent;
   --ds-auro-radio-label-color: inherit;

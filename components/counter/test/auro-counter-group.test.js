@@ -369,7 +369,6 @@ describe('auro-counter-group: keyboard navigation', () => {
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await elementUpdated(el);
-    await nextFrame();
     expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 });
