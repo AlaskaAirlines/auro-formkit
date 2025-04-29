@@ -7,7 +7,9 @@
 // never define layout that would cause effect on element outside the scope of this component
 
 // Support for fallback values
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
 

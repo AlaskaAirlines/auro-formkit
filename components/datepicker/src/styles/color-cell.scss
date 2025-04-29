@@ -3,10 +3,11 @@
 
 // // ---------------------------------------------------------------------
 
-/* stylelint-disable selector-max-class, selector-max-combinators, selector-max-compound-selectors */
+/* stylelint-disable selector-max-class, selector-max-combinators, selector-max-compound-selectors, max-nesting-depth */
 
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 :host {
   ::slotted([slot^="date_"]) {
@@ -14,60 +15,54 @@
   }
 
   ::slotted([slot^="date_"][highlight]) {
-    --ds-auro-calendar-cell-price-text-color: var(--ds-color-text-success-default, #{$ds-color-text-success-default});
+    --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-status-success, #{$ds-basic-color-status-success});
   }
-}
 
-.day {
-  border-color: var(--ds-auro-calendar-cell-border-color);
-  background-color: var(--ds-auro-calendar-cell-container-color);
-  color: var(--ds-auro-calendar-cell-text-color);
+  .day {
+    border-color: var(--ds-auro-calendar-cell-border-color);
+    background-color: var(--ds-auro-calendar-cell-container-color);
+    color: var(--ds-auro-calendar-cell-text-color);
+  
+    &.selected {
+      --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-selected, #{$ds-advanced-color-state-selected});
+      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+      --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
 
-  &.selected {
-    --ds-auro-calendar-border-color: var(--ds-color-border-ui-active-default, #{$ds-color-border-ui-active-default});
-    --ds-auro-calendar-cell-container-color: var(--ds-color-container-ui-primary-active-default, #{$ds-color-container-ui-primary-active-default});
-    --ds-auro-calendar-cell-text-color: var(--ds-color-text-primary-inverse, #{$ds-color-text-primary-inverse});
+      ::slotted([slot^="date_"][highlight]) {
+        --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-status-success-subtle, #{$ds-basic-color-status-success-subtle});
+      }
+  
+      &:hover {
+        --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-selected-hover, #{$ds-advanced-color-state-selected-hover});
+        --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+      }
 
-    box-shadow: var(--ds-auro-calendar-boxshadow-color);
-
+    }
+  
     &:hover {
-      --ds-auro-calendar-cell-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
-      --ds-auro-calendar-cell-border-color: var(--ds-color-border-ui-focus-default, #{$ds-color-border-ui-focus-default});
-
-      box-shadow: unset;
+      --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-background-hover, #{$ds-advanced-color-state-background-hover});
+      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
     }
-
-    &:not(:hover) {
-      --ds-auro-calendar-cell-price-text-color: var(--ds-color-text-primary-inverse, #{$ds-color-text-primary-inverse});
+  
+    &.disabled {
+      --ds-auro-calendar-cell-container-color: transparent;
+      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+      --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
     }
-  }
-
-  &:hover {
-    --ds-auro-calendar-cell-container-color: var(--ds-color-brand-neutral-200, #{$ds-color-brand-neutral-200});
-    --ds-auro-calendar-cell-text-color: var(--ds-color-text-primary-default, #{$ds-color-text-primary-default});
-  }
-
-  &.disabled {
-    --ds-auro-calendar-cell-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
-    --ds-auro-calendar-cell-container-color: var(--ds-color-container-primary-default, #{$ds-color-container-primary-default});
-  }
-
-  &.inRange,
-  &.rangeDepartDate,
-  &.rangeReturnDate,
-  &.lastHoveredDate {
-    &:before {
-      background-color: var(--ds-auro-calendar-cell-in-range-color);
+  
+    &.inRange,
+    &.rangeDepartDate,
+    &.rangeReturnDate,
+    &.lastHoveredDate {
+      &:before {
+        background-color: var(--ds-auro-calendar-cell-in-range-color);
+      }
+    }
+  
+    &.sameDateTrip {
+      &:before {
+        --ds-auro-calendar-cell-in-range-color: transparent;
+      }
     }
   }
-
-  &.sameDateTrip {
-    &:before {
-      --ds-auro-calendar-cell-in-range-color: transparent;
-    }
-  }
-}
-
-:host([disabled]) {
-  --ds-auro-calendar-cell-price-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
 }

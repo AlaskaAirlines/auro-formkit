@@ -10,6 +10,7 @@ The auro-checkbox-group element is a wrapper for auro-checkbox element.
 | `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `horizontal`                    | `horizontal`                    | `boolean` | false       | If set, checkboxes will be aligned horizontally. |
 | `noValidate`                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
+| `onDark`                        | `onDark`                        | `boolean` | false       | Sets onDark styles for component.                |
 | `required`                      | `required`                      | `boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
 | `setCustomValidity`             | `setCustomValidity`             | `string`  |             | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`  |             | Custom help text message to display when validity = `customError`. |
@@ -52,6 +53,7 @@ Custom element for the purpose of allowing users to select one or more options o
 | `error`    | `error`    | `boolean` | false   | If set to true, the checkbox will be displayed with an error state. |
 | `id`       | `id`       | `string`  |         | Sets the individual `id` per element.            |
 | `name`     | `name`     | `string`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
+| `onDark`   | `onDark`   | `boolean` | false   | Sets onDark styles for component.                |
 | `value`    | `value`    | `string`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
 
 ## Methods

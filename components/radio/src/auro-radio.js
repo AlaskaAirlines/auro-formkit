@@ -22,6 +22,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @attr {Boolean} disabled - If set to true, the radio button will be non-clickable.
  * @attr {Boolean} required - Defines element as required.
  * @attr {Boolean} error - If set to true, sets an error state on the radio button.
+ * @attr {Boolean} onDark - If set to true, the component will render with a dark theme.
  * @event toggleSelected - Notifies that the component has toggled the checked/selected state.
  * @event focusSelected - Notifies that the component has gained focus.
  * @event auroRadio-blur - Notifies that the component has lost focus.
@@ -37,6 +38,7 @@ export class AuroRadio extends LitElement {
     this.disabled = false;
     this.required = false;
     this.error = false;
+    this.onDark = false;
     this.tabIndex = -1;
 
     /**
@@ -69,6 +71,10 @@ export class AuroRadio extends LitElement {
         reflect: true
       },
       error: {
+        type: Boolean,
+        reflect: true
+      },
+      onDark: {
         type: Boolean,
         reflect: true
       },
