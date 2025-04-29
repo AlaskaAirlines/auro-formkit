@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.0.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.0.0...v3.0.1) (2025-04-29)
+
+
+### Bug Fixes
+
+* add `reflect: true` on boolean props ([05cc3db](https://github.com/AlaskaAirlines/auro-formkit/commit/05cc3db9a5069a172a835066d4b08a2082c318e3))
+
 # [3.0.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v2.2.1...v3.0.0) (2025-04-29)
 
 

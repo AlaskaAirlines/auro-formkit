@@ -27,6 +27,8 @@ export class AuroBibtemplate extends LitElement {
   constructor() {
     super();
 
+    this.large = false;
+
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-bibtemplate');
 
     const versioning = new AuroDependencyVersioning();
