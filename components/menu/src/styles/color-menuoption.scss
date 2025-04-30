@@ -5,33 +5,36 @@
 
 /* stylelint-disable custom-property-empty-line-before, declaration-no-important */
 
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+
 
 :host {
   background-color: var(--ds-auro-menuoption-container-color);
   color: var(--ds-auro-menuoption-text-color);
 
   svg {
-    fill: var(--ds-auro-menuoption-icon-color) !important;
+    fill: var(--ds-auro-menuoption-icon-color);
   }
 }
 
 :host([disabled]) {
-  --ds-auro-menuoption-text-color: var(--ds-color-text-ui-disabled-default, #{$ds-color-text-ui-disabled-default});
+  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
 }
 
 :host(:hover),
 :host(.active) {
-  --ds-auro-menuoption-container-color: var(--ds-color-container-ui-secondary-hover-default, #{$ds-color-container-ui-secondary-hover-default});
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-neutral-subtle, #{$ds-basic-color-surface-neutral-subtle});
 }
 
 :host([selected]) {
-  --ds-auro-menuoption-container-color: var(--ds-color-container-ui-primary-default-default, #{$ds-color-container-ui-primary-default-default});
-  --ds-auro-menuoption-text-color: var(--ds-color-text-primary-inverse, #{$ds-color-text-primary-inverse});
-  --ds-auro-menuoption-icon-color: var(--ds-color-icon-emphasis-inverse, #{$ds-color-icon-emphasis-inverse});
+  --ds-auro-menuoption-container-color: var(--ds-advanced-color-state-selected, #{$ds-advanced-color-state-selected});
+  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+  --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
 
+  &:host(:hover),
   &:host(.active) {
-    --ds-auro-menuoption-container-color: var(--ds-color-container-ui-primary-active-default, #{$ds-color-container-ui-primary-active-default});
+    --ds-auro-menuoption-container-color: var(--ds-advanced-color-state-selected-hover, #{$ds-advanced-color-state-selected-hover});
   }
 }
 

@@ -50,6 +50,7 @@ export default class BaseInput extends LitElement {
     this.min = undefined;
     this.maxLength = undefined;
     this.minLength = undefined;
+    this.onDark = false;
     this.activeLabel = false;
     this.setCustomValidityForType = undefined;
   }
@@ -178,7 +179,8 @@ export default class BaseInput extends LitElement {
        * If set, disables the input.
        */
       disabled: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -208,7 +210,8 @@ export default class BaseInput extends LitElement {
        * If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
        */
       icon: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -264,7 +267,16 @@ export default class BaseInput extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets onDark styles on input.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -286,14 +298,16 @@ export default class BaseInput extends LitElement {
        * Makes the input read-only, but can be set programmatically.
        */
       readonly: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
        * Populates the `required` attribute on the input. Used for client-side validation.
        */
       required: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**

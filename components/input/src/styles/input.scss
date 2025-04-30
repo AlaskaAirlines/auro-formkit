@@ -1,7 +1,9 @@
 /* stylelint-disable property-no-vendor-prefix, selector-no-qualifying-type */
 
 // Support for fallback values
-@import '@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables';
+
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 @import 'mixins';
 
@@ -10,8 +12,8 @@ input {
 
   position: relative;
   overflow: hidden;
-  min-height: var(--ds-size-700, $ds-size-700);
-  max-height: var(--ds-size-700, $ds-size-700);
+  min-height: var(--ds-size-200, $ds-size-200);
+  max-height: var(--ds-size-200, $ds-size-200);
   flex: 1;
   padding: var(--ds-size-400, $ds-size-400) 0 var(--ds-size-50, $ds-size-50);
   margin: 0;

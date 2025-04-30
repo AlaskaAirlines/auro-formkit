@@ -88,6 +88,7 @@ export class AuroDropdown extends LitElement {
     this.a11yAutocomplete = 'none';
     this.labeled = true;
     this.a11yRole = 'combobox';
+    this.onDark = false;
 
     // floaterConfig
     this.placement = 'bottom-start';
@@ -351,6 +352,14 @@ export class AuroDropdown extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       *  If declared, onDark styles will be applied.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -795,14 +804,14 @@ export class AuroDropdown extends LitElement {
                 <${this.iconTag}
                   category="interface"
                   name="chevron-down"
-                  customColor
-                  ?disabled=${this.disabled}
+                  ?onDark="${this.onDark}"
+                  variant="${this.disabled ? 'disabled' : 'muted'}">
                   >
                 </${this.iconTag}>
               </div>
             ` : undefined }
         </div>
-        <${this.helpTextTag} part="helpText" ?error="${this.error}">
+        <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
           <slot name="helpText"></slot>
         </${this.helpTextTag}>
         <div class="slotContent">

@@ -46,11 +46,6 @@ export class AuroCombobox extends LitElement {
   constructor() {
     super();
 
-    this.noFilter = false;
-    this.validity = undefined;
-    this.value = undefined;
-    this.optionSelected = undefined;
-
     this.privateDefaults();
   }
 
@@ -61,11 +56,25 @@ export class AuroCombobox extends LitElement {
   privateDefaults() {
     this.dropdownOpen = false;
     this.dropdownId = undefined;
+    this.onDark = false;
+
+    this.noFilter = false;
+    this.validity = undefined;
+    this.value = undefined;
+    this.optionSelected = undefined;
+
+    this.checkmark = false;
+    this.disabled = false;
+    this.noValidate = false;
+    this.required = false;
+    this.triggerIcon = false;
+
     this.availableOptions = [];
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
 
     this.fullscreenBreakpoint = 'sm';
+    this.largeFullscreenHeadline = false;
 
     this.validation = new AuroFormValidation();
 
@@ -81,9 +90,9 @@ export class AuroCombobox extends LitElement {
 
     const versioning = new AuroDependencyVersioning();
 
-    this.dropdownTag = versioning.generateTag('auro-formkit-checkbox-dropdown', dropdownVersion, AuroDropdown);
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-checkbox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
-    this.inputTag = versioning.generateTag('auro-formkit-checkbox-input', inputVersion, AuroInput);
+    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
   }
 
   // This function is to define props used within the scope of this component
@@ -176,7 +185,8 @@ export class AuroCombobox extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -185,6 +195,14 @@ export class AuroCombobox extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       * If declared, onDark styles will be applied to the trigger.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -978,6 +996,7 @@ export class AuroCombobox extends LitElement {
         </div>
         <${this.dropdownTag}
           for="dropdownMenu"
+          ?onDark="${this.onDark}"
           fluid
           bordered
           rounded
@@ -998,6 +1017,7 @@ export class AuroCombobox extends LitElement {
             id="${this.id || 'auro-combobox-input'}"
             slot="trigger"
             bordered
+            ?onDark="${this.onDark}"
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"

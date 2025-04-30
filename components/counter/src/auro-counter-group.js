@@ -41,13 +41,18 @@ export class AuroCounterGroup extends LitElement {
   constructor() {
     super();
 
-    this.isDropdown = false;
     this.max = undefined;
     this.min = undefined;
+    this.onDark = false;
     this.total = undefined;
     this.validity = undefined;
     this.value = undefined;
+
+    this.isDropdown = false;
     this.fullscreenBreakpoint = 'sm';
+    this.largeFullscreenHeadline = false;
+    this.autoPlacement = false;
+    this.noFlip = false;
 
     /**
      * @private
@@ -141,7 +146,7 @@ export class AuroCounterGroup extends LitElement {
 
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600
+       * Otherwise, Heading 600.
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -164,6 +169,14 @@ export class AuroCounterGroup extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       * If declared, counters and dropdown will be rendered with onDark styles.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -278,6 +291,7 @@ export class AuroCounterGroup extends LitElement {
   configureCounters() {
     this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
     this.counters.forEach((counter) => {
+      counter.onDark = this.onDark;
       counter.addEventListener("input", () => this.updateValue());
     });
   }
@@ -327,11 +341,11 @@ export class AuroCounterGroup extends LitElement {
   }
 
   /**
-   * @private
    * This sets up a close event listener and moves any slotted `bib.fullscreen.headline` and `bib.fullscreen.footer` content into the bibtemplate.
+   * @private
    */
   configureBibtemplate() {
-    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.bibtemplate.addEventListener('close-click', () => {
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
@@ -428,6 +442,10 @@ export class AuroCounterGroup extends LitElement {
         }
       );
     }
+
+    if (changedProperties.has("onDark") && !this.isDropdown) {
+      this.configureCounters();
+    }
   }
 
   /**
@@ -448,6 +466,7 @@ export class AuroCounterGroup extends LitElement {
         .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
         .placement="${this.placement}"
         .offset="${this.offset}"
+        ?onDark="${this.onDark}"
         ?autoPlacement="${this.autoPlacement}"
         ?noFlip="${this.noFlip}">
         <div slot="trigger"><slot name="valueText">
