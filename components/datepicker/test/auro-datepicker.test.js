@@ -2,6 +2,7 @@
 
 import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
+import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import '../src/registered.js';
 
 describe('auro-datepicker', () => {
@@ -71,7 +72,7 @@ describe('auro-datepicker', () => {
     const el = await fixture(html`
       <div>
         <auro-datepicker></auro-datepicker>
-        <button></button>
+        <button>Test Button</button>
       </div>
     `);
 
@@ -92,12 +93,11 @@ describe('auro-datepicker', () => {
     await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
   });
 
-
   it('hides dropdown the dropdown on blur', async () => {
     const el = await fixture(html`
         <auro-datepicker></auro-datepicker>
     `);
-    
+
     el.focus();
     el.shadowRoot.activeElement.click();
     await elementUpdated(el);
@@ -183,40 +183,73 @@ describe('auro-datepicker', () => {
     await expect(returnInputDate).to.be.equal(setReturnDate);
   });
 
-  it.skip('sets`invalid` error when invalid value was passed', async () => {
+  it('sets `invalid` error when invalid value was passed', async () => {
+
+    const curYear = new Date().getFullYear();
+
     const el = await fixture(html`
       <auro-datepicker></auro-datepicker>
     `);
 
-    // wrong day
+    // non-existant day
     el.value = "02/31/2022";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+    await expect(el.getAttribute('validity')).to.be.equal('invalidDate');
 
-    // empty
-    el.value = "";
-    el.validate();
-    await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
-
-    // wrong month
+    // pattern mismatch
     el.value = "15/01/2022";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
 
-    // empty
-    el.value = "";
+    // Day too low
+    el.value = `05/${`0${minDay - 1}`.slice(-2)}/${curYear}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
 
-    // wrong year
-    el.value = "01/02/20222";
+    // Day too high
+    el.value = `05/${maxDay + 1}/${curYear}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+
+    // Month too low
+    el.value = `${`0${minMonth - 1}`.slice(-2)}/02/${curYear}`;
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+
+    // Month too high
+    el.value = `${maxMonth + 1}/02/${curYear}`;
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+
+    // Year too low
+    el.value = `01/02/${minYear - 1}`;
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+
+    // Year too high
+    el.value = `01/02/${maxYear + 1}`;
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+  });
+
+  it('sets an error when the passed value is too long', async () => {
+
+    const el = await fixture(html`
+      <auro-datepicker></auro-datepicker>
+    `);
+
+    el.value = "01/22/20288";
+    el.validate();
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.be.equal('tooLong');
   });
 
   it('sets error when incomplete value was passed', async () => {
