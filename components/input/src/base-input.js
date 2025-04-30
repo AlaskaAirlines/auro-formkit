@@ -772,6 +772,10 @@ export default class BaseInput extends LitElement {
     } else if (this.type === 'number') {
       this.inputMode = 'numeric';
     }
+
+    if (this.type === "date" && !this.format) {
+      this.format = 'mm/dd/yyyy';
+    }
   }
 
   /**
