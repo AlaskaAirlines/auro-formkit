@@ -10,6 +10,8 @@
 
 | Property                | Attribute               | Type        | Default        | Description                                      |
 |-------------------------|-------------------------|-------------|----------------|--------------------------------------------------|
+| `a11yAutocomplete`      |                         | `string`    |                | The value for the aria-autocomplete attribute of the trigger element. |
+| `a11yRole`              |                         |             |                | The value for the role attribute of the trigger element. |
 | `autoPlacement`         | `autoPlacement`         | `boolean`   | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `bordered`              | `bordered`              | ` Boolean ` |                | If declared, applies a border around the trigger slot. |
 | `chevron`               | `chevron`               | ` Boolean ` |                | If declared, the dropdown displays a chevron on the right. |
@@ -43,10 +45,11 @@
 
 ## Events
 
-| Event                       | Description                                      |
-|-----------------------------|--------------------------------------------------|
-| `auroDropdown-toggled`      | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | Notifies that the trigger has been clicked.      |
+| Event                       | Type                                 | Description                                      |
+|-----------------------------|--------------------------------------|--------------------------------------------------|
+| `auroDropdown-idAdded`      | `Object<key  : 'id', value: string>` | Notifies consumers that the unique ID for the dropdown bib has been generated. |
+| `auroDropdown-toggled`      |                                      | Notifies that the visibility of the dropdown bib has changed. |
+| `auroDropdown-triggerClick` |                                      | Notifies that the trigger has been clicked.      |
 
 ## Slots
 

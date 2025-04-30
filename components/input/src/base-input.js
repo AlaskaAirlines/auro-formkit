@@ -12,7 +12,7 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
+import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import { AuroInputUtilities } from "./utilities.js";
 
 import IMask from 'imask';
@@ -117,6 +117,33 @@ export default class BaseInput extends LitElement {
   // function to define props used within the scope of this componentstatic
   static get properties() {
     return {
+
+      /**
+       * The value for the role attribute.
+       */
+      a11yRole: {
+        type: String,
+        attribute: true,
+        reflect: true
+      },
+
+      /**
+       * The value for the aria-expanded attribute.
+       */
+      a11yExpanded: {
+        type: Boolean,
+        attribute: true,
+        reflect: true
+      },
+
+      /**
+       * The value for the aria-controls attribute.
+       */
+      a11yControls: {
+        type: String,
+        attribute: true,
+        reflect: true
+      },
 
       /**
        * If set, the label will remain fixed in the active position.
@@ -758,6 +785,10 @@ export default class BaseInput extends LitElement {
       this.inputMode = 'numeric';
     } else if (this.type === 'number') {
       this.inputMode = 'numeric';
+    }
+
+    if (this.type === "date" && !this.format) {
+      this.format = 'mm/dd/yyyy';
     }
   }
 

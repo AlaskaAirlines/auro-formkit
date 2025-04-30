@@ -13,6 +13,9 @@ Generate unique names for dependency components.
 
 | Property                          | Attribute                         | Type      | Default     | Description                                      |
 |-----------------------------------|-----------------------------------|-----------|-------------|--------------------------------------------------|
+| `a11yControls`                    | `a11yControls`                    | `string`  |             | The value for the aria-controls attribute.       |
+| `a11yExpanded`                    | `a11yExpanded`                    | `boolean` |             | The value for the aria-expanded attribute.       |
+| `a11yRole`                        | `a11yRole`                        | `string`  |             | The value for the role attribute.                |
 | `activeLabel`                     | `activeLabel`                     | `boolean` | false       | If set, the label will remain fixed in the active position. |
 | `autocapitalize`                  | `autocapitalize`                  | `string`  |             | An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters]. |
 | `autocomplete`                    | `autocomplete`                    | `string`  |             | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
