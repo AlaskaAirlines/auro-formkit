@@ -54,7 +54,7 @@
   "dependencies": {
     "lit": "^3.2.1",
     "@lit/reactive-element": "^2.0.4",
-    "@aurodesignsystem/auro-library": "^4.3.0"
+    "@aurodesignsystem/auro-library": "4.4.0"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"
