@@ -1,5 +1,23 @@
 # Semantic Release Automated Changelog
 
+# [3.1.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.0.1...v3.1.0) (2025-04-30)
+
+
+### Bug Fixes
+
+*  Fix accessibility for auro-combobox ([4619710](https://github.com/AlaskaAirlines/auro-formkit/commit/46197100af6612c381846128640f49260851316b))
+* move all a11y tags in triggerElement for dropdown, adding combobox a11y test ([f8f7575](https://github.com/AlaskaAirlines/auro-formkit/commit/f8f757515a8d75fb1f67c42622709cd237bf1508))
+* move all a11y tags in triggerElement for dropdown, adding combobox a11y test ([6930630](https://github.com/AlaskaAirlines/auro-formkit/commit/6930630f52b200b852313ccef5bd5cf816e64097))
+* put id on dropdown trigger's slot ([8b4153e](https://github.com/AlaskaAirlines/auro-formkit/commit/8b4153e279ae7a9f340958784c14aca00dc1f4ae))
+* resolve issues with accessibility for combobox and select components ([b75949c](https://github.com/AlaskaAirlines/auro-formkit/commit/b75949c90048d0739c20c936a74207443abdfee6))
+* set role and autocomplete values as props not attr ([46f3a79](https://github.com/AlaskaAirlines/auro-formkit/commit/46f3a792246923f3b4b06f19ff88a0e66353139a))
+* set the aria-* on trigger slotted node ([bd0ee3c](https://github.com/AlaskaAirlines/auro-formkit/commit/bd0ee3c05e65d00a8706b252e588f48b1623acb7))
+
+
+### Features
+
+* datepicker now validates that date passed is valid and matches provided format ([3059aa4](https://github.com/AlaskaAirlines/auro-formkit/commit/3059aa40d1a57e21f9b4cfbf83295e1ee2d75615))
+
 ## [3.0.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.0.0...v3.0.1) (2025-04-29)
 
 
