@@ -446,6 +446,8 @@ export class AuroSelect extends LitElement {
         if (this.dropdown.isPopoverVisible) {
           this.menu.navigateOptions('up');
         }
+
+        return;
       }
 
       if (evt.key === 'ArrowDown') {
@@ -456,6 +458,8 @@ export class AuroSelect extends LitElement {
         if (this.dropdown.isPopoverVisible) {
           this.menu.navigateOptions('down');
         }
+
+        return;
       }
 
       if (evt.key === 'Enter') {
@@ -463,6 +467,8 @@ export class AuroSelect extends LitElement {
           evt.preventDefault();
           this.menu.makeSelection();
         }
+
+        return;
       }
 
       if (evt.key === 'Tab') {
@@ -471,7 +477,12 @@ export class AuroSelect extends LitElement {
         } else {
           this.dropdown.hide();
         }
+
+        return;
       }
+
+      // Handle all other key presses by updating the active option based on the key pressed
+      this.updateActiveOptionBasedOnKey(evt.key);
     });
 
     this.addEventListener('focusin', this.handleFocusin);
@@ -479,6 +490,45 @@ export class AuroSelect extends LitElement {
     this.addEventListener('blur', () => {
       this.validation.validate(this);
     });
+  }
+
+  updateActiveOptionBasedOnKey(_key) {
+
+    // Get a lowercase version of the key pressed
+    const key = _key.toLowerCase();
+
+    // Calculate how many times the same letter has been pressed
+    this.sameLetterTimes = key === this.lastLetter ? this.sameLetterTimes + 1 : 0;
+
+    // Set last letter for tracking
+    this.lastLetter = key;
+
+    // Get all the options that start with the last letter pressed
+    const letterOptions = this.options.filter((option) => {
+      const optionText = option.value || '';
+      return optionText.toLowerCase().startsWith(this.lastLetter);
+    });
+
+    // If we have options that match the letter pressed
+    if (letterOptions.length) {
+
+      // Show the dropdown if it is not already visible
+      this.dropdown.show();
+
+      // Get the index we're after based on how many times the letter has been pressed and the length of the letterOptions array
+      const index = this.sameLetterTimes < letterOptions.length ? this.sameLetterTimes : this.sameLetterTimes % letterOptions.length;
+
+      // Select the new option in the menu
+      const newOption = letterOptions[index];
+      const newOptionIndex = this.options.indexOf(newOption);
+      this.menu.updateActiveOption(newOptionIndex);
+
+      newOption.scrollIntoView({
+        alignToTop: false,
+        block: "nearest",
+        behavior: "smooth"
+      });
+    }
   }
 
   /**

@@ -661,6 +661,7 @@ export class AuroMenu extends LitElement {
     this.items.forEach((item) => item.classList.remove('active'));
     this.items[index].classList.add('active');
     this.optionActive = this.items[index];
+    this.index = index;
 
     dispatchMenuEvent(this, 'auroMenu-activatedOption', this.items[index]);
   }
