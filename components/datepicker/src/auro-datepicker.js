@@ -79,7 +79,9 @@ export class AuroDatePicker extends LitElement {
 
     this.disabled = false;
     this.required = false;
+    this.onDark = false;
     this.range = false;
+    this.stacked = false;
     this.noValidate = false;
     this.validity = undefined;
     this.value = undefined;
@@ -110,6 +112,8 @@ export class AuroDatePicker extends LitElement {
     this.offset = 0;
     this.noFlip = false;
     this.autoPlacement = false;
+
+    this.largeFullscreenHeadline = false;
 
     /**
      * @private
@@ -276,7 +280,8 @@ export class AuroDatePicker extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -285,6 +290,14 @@ export class AuroDatePicker extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       * If declared, onDark styles will be applied to the trigger.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -1036,6 +1049,7 @@ export class AuroDatePicker extends LitElement {
           fluid
           bordered
           rounded
+          ?onDark="${this.onDark}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow
@@ -1050,6 +1064,7 @@ export class AuroDatePicker extends LitElement {
               id="${this.generateRandomString(12)}"
               bordered
               class="dateFrom"
+              ?onDark="${this.onDark}"
               ?required="${this.required}"
               noValidate
               type="date"
@@ -1070,6 +1085,7 @@ export class AuroDatePicker extends LitElement {
                 id="${this.generateRandomString(12)}"
                 bordered
                 class="dateTo"
+                ?onDark="${this.onDark}"
                 ?required="${this.required}"
                 noValidate
                 type="date"

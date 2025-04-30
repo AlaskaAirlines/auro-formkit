@@ -11,11 +11,12 @@
 | `error`                         | `error`                         | `string`  |                | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"           | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean` |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
-| `noFilter`                      | `noFilter`                      | `boolean` | false          | If set, combobox will not filter menuoptions based in input. |
+| `noFilter`                      | `noFilter`                      | `boolean` |                | If set, combobox will not filter menuoptions based in input. |
 | `noFlip`                        | `noFlip`                        | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean` |                | If set, disables auto-validation on blur.        |
 | `offset`                        | `offset`                        | `number`  | "0"            | Gap between the trigger element and bib.         |
-| `optionSelected`                | `optionSelected`                | `object`  | "undefined"    | Specifies the current selected option.           |
+| `onDark`                        | `onDark`                        | `boolean` |                | If declared, onDark styles will be applied to the trigger. |
+| `optionSelected`                | `optionSelected`                | `object`  |                | Specifies the current selected option.           |
 | `placement`                     | `placement`                     | `string`  | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `required`                      | `required`                      | `boolean` |                | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`             | `setCustomValidity`             | `string`  |                | Sets a custom help text message to display for all validityStates. |
@@ -23,8 +24,8 @@
 | `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`  |                | Custom help text message to display when validity = `valueMissing`. |
 | `triggerIcon`                   | `triggerIcon`                   | `boolean` |                | If set, the `icon` attribute will be applied to the trigger `auro-input` element. |
 | `type`                          | `type`                          | `string`  |                | Applies the defined value as the type attribute on auro-input. |
-| `validity`                      | `validity`                      | `string`  | "undefined"    | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         |           | "undefined"    | Value selected for the dropdown menu.            |
+| `validity`                      | `validity`                      | `string`  |                | Specifies the `validityState` this element is in. |
+| `value`                         | `value`                         |           |                | Value selected for the dropdown menu.            |
 
 ## Methods
 

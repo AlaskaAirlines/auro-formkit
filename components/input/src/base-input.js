@@ -12,7 +12,7 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import i18n, {notifyOnLangChange, stopNotifyingOnLangChange} from './i18n.js';
+import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import { AuroInputUtilities } from "./utilities.js";
 
 import IMask from 'imask';
@@ -50,6 +50,7 @@ export default class BaseInput extends LitElement {
     this.min = undefined;
     this.maxLength = undefined;
     this.minLength = undefined;
+    this.onDark = false;
     this.activeLabel = false;
     this.setCustomValidityForType = undefined;
   }
@@ -118,6 +119,33 @@ export default class BaseInput extends LitElement {
     return {
 
       /**
+       * The value for the role attribute.
+       */
+      a11yRole: {
+        type: String,
+        attribute: true,
+        reflect: true
+      },
+
+      /**
+       * The value for the aria-expanded attribute.
+       */
+      a11yExpanded: {
+        type: Boolean,
+        attribute: true,
+        reflect: true
+      },
+
+      /**
+       * The value for the aria-controls attribute.
+       */
+      a11yControls: {
+        type: String,
+        attribute: true,
+        reflect: true
+      },
+
+      /**
        * If set, the label will remain fixed in the active position.
        */
       activeLabel: {
@@ -151,7 +179,8 @@ export default class BaseInput extends LitElement {
        * If set, disables the input.
        */
       disabled: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -181,7 +210,8 @@ export default class BaseInput extends LitElement {
        * If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
        */
       icon: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -237,7 +267,16 @@ export default class BaseInput extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets onDark styles on input.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -259,14 +298,16 @@ export default class BaseInput extends LitElement {
        * Makes the input read-only, but can be set programmatically.
        */
       readonly: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
        * Populates the `required` attribute on the input. Used for client-side validation.
        */
       required: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -744,6 +785,10 @@ export default class BaseInput extends LitElement {
       this.inputMode = 'numeric';
     } else if (this.type === 'number') {
       this.inputMode = 'numeric';
+    }
+
+    if (this.type === "date" && !this.format) {
+      this.format = 'mm/dd/yyyy';
     }
   }
 

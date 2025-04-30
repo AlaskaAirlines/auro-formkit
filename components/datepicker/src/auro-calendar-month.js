@@ -28,7 +28,8 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
        * @private
        */
       monthFirst: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       }
     };
   }

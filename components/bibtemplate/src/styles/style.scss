@@ -1,4 +1,4 @@
-@import "@aurodesignsystem/design-tokens/dist/tokens/SCSSVariables";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 #bibTemplate {
   display: flex;
@@ -42,7 +42,7 @@
   cursor: pointer;
 
   [auro-icon] {
-    --ds-auro-icon-size: var(--ds-size-500, $ds-size-500);
+    --ds-auro-icon-size: var(--ds-size-500, #{$ds-size-500});
   }
 }
 

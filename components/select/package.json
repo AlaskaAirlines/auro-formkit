@@ -14,13 +14,9 @@
   "dependencies": {
     "@aurodesignsystem/auro-dropdown": "*",
     "@aurodesignsystem/auro-menu": "*",
-    "chalk": "^5.3.0",
+    "chalk": "^5.4.1",
     "lit-element": "^4.1.1",
     "lit-html": "^3.2.1"
-  },
-  "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.13.0",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
   },
   "devDependencies": {
     "@alaskaairux/icons": "^5.3.0",
@@ -28,14 +24,14 @@
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^4.13.0",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2",
-    "@rollup/plugin-commonjs": "^28.0.1",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "compression": "^1.7.5",
-    "rollup": "^4.26.0",
-    "rollup-plugin-serve": "^1.1.1",
-    "stylelint": "^16.10.0",
+    "@aurodesignsystem/design-tokens": "^5.10.0",
+    "@aurodesignsystem/webcorestylesheets": "^6.1.0",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "compression": "^1.8.0",
+    "rollup": "^4.39.0",
+    "rollup-plugin-serve": "^3.0.0",
+    "stylelint": "^16.18.0",
     "wc-sass-render": "^1.4.0",
     "web-component-analyzer": "^2.0.0"
   },

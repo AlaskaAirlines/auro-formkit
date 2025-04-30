@@ -42,13 +42,9 @@ import styleCss from './styles/style-css.js';
 
 // build the component class
 export class AuroCombobox extends LitElement {
+
   constructor() {
     super();
-
-    this.noFilter = false;
-    this.validity = undefined;
-    this.value = undefined;
-    this.optionSelected = undefined;
 
     this.privateDefaults();
   }
@@ -58,11 +54,27 @@ export class AuroCombobox extends LitElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
+    this.dropdownOpen = false;
+    this.dropdownId = undefined;
+    this.onDark = false;
+
+    this.noFilter = false;
+    this.validity = undefined;
+    this.value = undefined;
+    this.optionSelected = undefined;
+
+    this.checkmark = false;
+    this.disabled = false;
+    this.noValidate = false;
+    this.required = false;
+    this.triggerIcon = false;
+
     this.availableOptions = [];
     this.optionActive = null;
     this.msgSelectionMissing = 'Please select an option.';
 
     this.fullscreenBreakpoint = 'sm';
+    this.largeFullscreenHeadline = false;
 
     this.validation = new AuroFormValidation();
 
@@ -78,9 +90,9 @@ export class AuroCombobox extends LitElement {
 
     const versioning = new AuroDependencyVersioning();
 
-    this.dropdownTag = versioning.generateTag('auro-formkit-checkbox-dropdown', dropdownVersion, AuroDropdown);
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-checkbox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
-    this.inputTag = versioning.generateTag('auro-formkit-checkbox-input', inputVersion, AuroInput);
+    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
   }
 
   // This function is to define props used within the scope of this component
@@ -124,6 +136,26 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
+       * ID for the dropdown
+       * @private
+       */
+      dropdownId: {
+        type: String,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
+       * Whether or not the dropdown is open
+       * @private
+       */
+      dropdownOpen: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
        * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
        */
       error: {
@@ -153,7 +185,8 @@ export class AuroCombobox extends LitElement {
        * If set, disables auto-validation on blur.
        */
       noValidate: {
-        type: Boolean
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -162,6 +195,14 @@ export class AuroCombobox extends LitElement {
        */
       offset: {
         type: Number,
+        reflect: true
+      },
+
+      /**
+       * If declared, onDark styles will be applied to the trigger.
+       */
+      onDark: {
+        type: Boolean,
         reflect: true
       },
 
@@ -274,7 +315,17 @@ export class AuroCombobox extends LitElement {
       isDropdownFullscreen: {
         type: Boolean,
         reflect: false
-      }
+      },
+
+      /**
+       * @private
+       * specifies the currently active option
+       */
+      optionActive: {
+        type: Object,
+        reflect: false,
+        attribute: false
+      },
     };
   }
 
@@ -426,6 +477,18 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   configureDropdown() {
+
+    // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
+    this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
+      this.dropdownId = event.detail.id;
+    });
+
+    // Listen for the dropdown to be shown or hidden
+    this.dropdown.addEventListener("auroDropdown-toggled", (ev) => {
+      this.dropdownOpen = ev.detail.expanded;
+    });
+
+    // this.dropdown.addEventListener('auroDropdown-show', () => {
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
     this.menuWrapper.append(this.menu);
 
@@ -439,7 +502,6 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    this.dropdown.setAttribute('role', 'combobox');
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
     });
@@ -455,7 +517,6 @@ export class AuroCombobox extends LitElement {
       this.isDropdownFullscreen = event.detail.strategy === 'fullscreen';
       setTimeout(this.transportInput);
     });
-
   }
 
   /**
@@ -935,6 +996,7 @@ export class AuroCombobox extends LitElement {
         </div>
         <${this.dropdownTag}
           for="dropdownMenu"
+          ?onDark="${this.onDark}"
           fluid
           bordered
           rounded
@@ -949,8 +1011,13 @@ export class AuroCombobox extends LitElement {
           ?noFlip="${this.noFlip}"
           disableEventShow>
           <${this.inputTag}
+            .a11yRole="${"combobox"}"
+            .a11yExpanded="${this.dropdownOpen}"
+            .a11yControls="${this.dropdownId}"
+            id="${this.id || 'auro-combobox-input'}"
             slot="trigger"
             bordered
+            ?onDark="${this.onDark}"
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"

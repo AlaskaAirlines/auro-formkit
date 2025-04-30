@@ -10,6 +10,8 @@
 
 | Property                | Attribute               | Type        | Default        | Description                                      |
 |-------------------------|-------------------------|-------------|----------------|--------------------------------------------------|
+| `a11yAutocomplete`      |                         | `string`    |                | The value for the aria-autocomplete attribute of the trigger element. |
+| `a11yRole`              |                         |             |                | The value for the role attribute of the trigger element. |
 | `autoPlacement`         | `autoPlacement`         | `boolean`   | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `bordered`              | `bordered`              | ` Boolean ` |                | If declared, applies a border around the trigger slot. |
 | `chevron`               | `chevron`               | ` Boolean ` |                | If declared, the dropdown displays a chevron on the right. |
@@ -28,6 +30,7 @@
 | `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false          | If declared, the dropdown will not hide when moving focus outside the element. |
 | `noToggle`              | `noToggle`              | ` Boolean ` |                | If declared, the trigger will only show the dropdown bib. |
 | `offset`                | `offset`                | `number`    | "0"            | Gap between the trigger element and bib.         |
+| `onDark`                | `onDark`                | `boolean`   |                | If declared, onDark styles will be applied.      |
 | `onSlotChange`          | `onSlotChange`          |             |                |                                                  |
 | `placement`             | `placement`             | `string`    | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `rounded`               | `rounded`               | ` Boolean ` |                | If declared, will apply border-radius to trigger and default slots. |
@@ -42,10 +45,11 @@
 
 ## Events
 
-| Event                       | Description                                      |
-|-----------------------------|--------------------------------------------------|
-| `auroDropdown-toggled`      | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | Notifies that the trigger has been clicked.      |
+| Event                       | Type                                 | Description                                      |
+|-----------------------------|--------------------------------------|--------------------------------------------------|
+| `auroDropdown-idAdded`      | `Object<key  : 'id', value: string>` | Notifies consumers that the unique ID for the dropdown bib has been generated. |
+| `auroDropdown-toggled`      |                                      | Notifies that the visibility of the dropdown bib has changed. |
+| `auroDropdown-triggerClick` |                                      | Notifies that the trigger has been clicked.      |
 
 ## Slots
 

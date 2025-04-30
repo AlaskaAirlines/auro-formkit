@@ -30,6 +30,7 @@ export class AuroCheckbox extends LitElement {
     this.checked = false;
     this.disabled = false;
     this.error = false;
+    this.onDark = false;
 
     /**
      * @private
@@ -82,6 +83,14 @@ export class AuroCheckbox extends LitElement {
        * Accepts any string and is used to identify related checkboxes when submitting form data.
        */
       name: { type: String },
+
+      /**
+       * Sets onDark styles for component.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
        * Sets the element's input value. Must be unique within an auro-checkbox-group element.
