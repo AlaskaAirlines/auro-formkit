@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [3.2.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.1.0...v3.2.0) (2025-04-30)
+
+
+### Features
+
+* added press-key-to-jump-to-selection functionality to auro-select component ([66fed78](https://github.com/AlaskaAirlines/auro-formkit/commit/66fed788ab07e431b42850da4167166eaa981473)), closes [#404](https://github.com/AlaskaAirlines/auro-formkit/issues/404)
+
 # [3.1.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.0.1...v3.1.0) (2025-04-30)
 
 
