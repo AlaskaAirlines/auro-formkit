@@ -412,6 +412,7 @@ export class AuroDropdown extends LitElement {
 
   /**
    * Accessor for reusing the focusable entity query string.
+   * @private
    * @returns {string}
    */
   get focusableEntityQuery () {
