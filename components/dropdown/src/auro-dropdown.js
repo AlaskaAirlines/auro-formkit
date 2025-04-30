@@ -410,6 +410,14 @@ export class AuroDropdown extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroDropdown);
   }
 
+  /**
+   * Accessor for reusing the focusable entity query string.
+   * @returns {string}
+   */
+  get focusableEntityQuery () {
+    return 'auro-input, [auro-input], auro-button, [auro-button], button, input';
+  }
+
   connectedCallback() {
     super.connectedCallback();
   }
@@ -423,12 +431,10 @@ export class AuroDropdown extends LitElement {
   updated(changedProperties) {
     this.floater.handleUpdate(changedProperties);
 
+    // Note: `disabled` is not a breakpoint (it is not a screen size),
+    // so it looks like we never consume this - however, dropdownBib handles this in the setter as "undefined"
     if (changedProperties.has('fullscreenBreakpoint')) {
-      if (this.fullscreenBreakpoint === 'disabled') {
-        this.bibContent.mobileFullscreenBreakpoint = undefined;
-      } else {
-        this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
-      }
+      this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
     }
 
     // when trigger's content is changed without any attribute or node change,
@@ -564,7 +570,7 @@ export class AuroDropdown extends LitElement {
 
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
-        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        const auroElements = node.querySelectorAll(this.focusableEntityQuery);
         auroElements.forEach((auroEl) => {
           auroEl.addEventListener('focus', this.bindFocusEventToTrigger);
           auroEl.addEventListener('blur', this.bindFocusEventToTrigger);
@@ -585,7 +591,7 @@ export class AuroDropdown extends LitElement {
 
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
-        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        const auroElements = node.querySelectorAll(this.focusableEntityQuery);
         auroElements.forEach((auroEl) => {
           auroEl.removeEventListener('focus', this.bindFocusEventToTrigger);
           auroEl.removeEventListener('blur', this.bindFocusEventToTrigger);
