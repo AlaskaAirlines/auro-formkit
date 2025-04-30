@@ -89,6 +89,7 @@ export class AuroDropdownBib extends LitElement {
 
   set mobileFullscreenBreakpoint(value) {
     // verify the defined breakpoint is valid and exit out if not
+    // 'disabled' is a design token breakpoint so it acts as our "undefined" value
     const validatedValue = DESIGN_TOKEN_BREAKPOINT_OPTIONS.includes(value) ? value : undefined;
     if (!validatedValue) {
       this._mobileBreakpointValue = undefined;
