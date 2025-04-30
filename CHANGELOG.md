@@ -1,16 +1,11 @@
 # Semantic Release Automated Changelog
 
-# [3.2.0-beta.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.1.0...v3.2.0-beta.1) (2025-04-30)
-
-
-### Bug Fixes
-
-* pr feedback Apr 28, 2025 ([2dcd705](https://github.com/AlaskaAirlines/auro-formkit/commit/2dcd70543c206229286a69364b7e503c6e12fb5f))
+# [3.2.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.1.0...v3.2.0) (2025-04-30)
 
 
 ### Features
 
-* surface fullscreenBreakpoint with new `disabled` value ([4f00b48](https://github.com/AlaskaAirlines/auro-formkit/commit/4f00b4808254490419ca6ae387344e49834ca896))
+* added press-key-to-jump-to-selection functionality to auro-select component ([66fed78](https://github.com/AlaskaAirlines/auro-formkit/commit/66fed788ab07e431b42850da4167166eaa981473)), closes [#404](https://github.com/AlaskaAirlines/auro-formkit/issues/404)
 
 # [3.1.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.0.1...v3.1.0) (2025-04-30)
 
