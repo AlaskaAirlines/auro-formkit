@@ -69,3 +69,21 @@ This is a default configuration using the `<auro-radio-group>` and `<auro-radio>
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkGroup.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+
+### Accordion Nested Group
+
+This example shows how to use `<auro-accordion>` with the `<auro-radio-group>` and `<auro-radio>` elements for
+nested/optional groups (such as a "More Options" section in a payment processor).
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/accordionExample.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/accordionExample.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
