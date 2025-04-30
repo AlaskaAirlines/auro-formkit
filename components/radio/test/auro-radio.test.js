@@ -1,4 +1,4 @@
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import {elementUpdated, expect, fixture, html} from '@open-wc/testing';
 import '../src/registered.js';
 
 describe('auro-radio', () => {
@@ -200,6 +200,35 @@ describe('auro-radio-group', () => {
     await expect(event.target).to.equal(radioGroup);
     await expect(event.target.value).to.equal('yes');
   });
+
+  it('expect radio group to pick up nested elements', async () => {
+    const el = await fixture(html`
+      <auro-radio-group name="group">
+        <span slot="legend">Form label goes here</span>
+        <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes"></auro-radio>
+        <auro-radio id="radio2" label="No" name="radioDemo" value="no"></auro-radio>
+        <auro-radio id="radio3" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
+
+        <div>
+          <auro-radio id="radio4" label="Yes" name="radioDemo" value="yes"></auro-radio>
+        </div>
+
+        <div>
+          <div>
+            <auro-radio id="radio5" label="No" name="radioDemo" value="no"></auro-radio>
+          </div>
+        </div>
+
+        <auro-radio id="radio6" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
+      </auro-radio-group>
+    `);
+
+    const radioGroup = el;
+    const expectedCount = 6;
+
+    await expect(radioGroup.items.length).to.equal(expectedCount);
+  });
+
 });
 
 async function errorFixture() {
