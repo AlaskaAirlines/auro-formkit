@@ -493,8 +493,8 @@ export class AuroSelect extends LitElement {
   }
 
   /**
-   * @private
    * Updates the active option in the menu based on keyboard input.
+   * @private
    * @param {string} _key - The key pressed by the user.
    * @returns {void}
    */
