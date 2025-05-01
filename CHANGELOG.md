@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.2.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.2...v3.2.3) (2025-05-01)
+
+
+### Bug Fixes
+
+* update SCSS token formatting ([10a97e3](https://github.com/AlaskaAirlines/auro-formkit/commit/10a97e313f735c4b545e94041f51e8d074607e01))
+
 ## [3.2.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.1...v3.2.2) (2025-05-01)
 
 
