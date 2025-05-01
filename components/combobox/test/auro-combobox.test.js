@@ -652,7 +652,7 @@ function setInputValue(el, value) {
   input.value = value;
   input.dispatchEvent(new InputEvent('input'));
   auroInput.dispatchEvent(new Event('input', {bubbles:true}));
-  auroInput.dispatchEvent(new KeyboardEvent('keyup', {
+  el.dispatchEvent(new KeyboardEvent('keyup', {
     key: value.slice(value.length - 1),
     repeat: false
   }));

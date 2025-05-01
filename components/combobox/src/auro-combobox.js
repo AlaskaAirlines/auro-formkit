@@ -607,10 +607,7 @@ export class AuroCombobox extends LitElement {
    * @param {KeyboardEvent} event - The keyboard event.
    */
   bubbleUpInputKeyEvent(event) {
-    if (event.currentTarget.parentNode === this.dropdown) {
-      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-        event.preventDefault();
-      }
+    if (event.currentTarget.parentNode !== this.dropdown) {
       const ke = new KeyboardEvent(event.type, {
         key: event.key,
         code: event.code,
