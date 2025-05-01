@@ -111,7 +111,7 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@3.0.1/auro-select/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@3.2.2/auro-select/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
