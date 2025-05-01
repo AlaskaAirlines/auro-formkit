@@ -610,7 +610,7 @@ export class AuroCombobox extends LitElement {
    */
   bubbleUpInputKeyEvent(event) {
     if (event.currentTarget.parentNode !== this.dropdown) {
-      if (event.key.includes("Arrow")) {
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault();
       }
 
@@ -759,7 +759,7 @@ export class AuroCombobox extends LitElement {
       }));
     }
 
-    if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
+    if (this.optionSelected && this.optionSelected[0] && this.input.value !== this.optionSelected[0].textContent) {
       this.optionSelected = undefined;
       hasChange = true;
     }
