@@ -202,31 +202,60 @@ describe('auro-radio-group', () => {
   });
 
   it('expect radio group to pick up nested elements', async () => {
-    const el = await fixture(html`
+    const radioGroup = await fixture(html`
       <auro-radio-group name="group">
         <span slot="legend">Form label goes here</span>
-        <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes"></auro-radio>
-        <auro-radio id="radio2" label="No" name="radioDemo" value="no"></auro-radio>
-        <auro-radio id="radio3" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
+        <auro-radio id="radio1" label="Yes" name="radioDemo1" value="yes"></auro-radio>
+        <auro-radio id="radio2" label="No" name="radioDemo2" value="no"></auro-radio>
+        <auro-radio id="radio3" label="Maybe" name="radioDemo3" value="maybe"></auro-radio>
 
         <div>
-          <auro-radio id="radio4" label="Yes" name="radioDemo" value="yes"></auro-radio>
+          <auro-radio id="radio4" label="Yes 2" name="radioDemo4" value="yes2"></auro-radio>
         </div>
 
         <div>
           <div>
-            <auro-radio id="radio5" label="No" name="radioDemo" value="no"></auro-radio>
+            <auro-radio id="radio5" label="No 2" name="radioDemo5" value="no2"></auro-radio>
           </div>
         </div>
 
-        <auro-radio id="radio6" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
+        <auro-radio id="radio6" label="Maybe 2" name="radioDemo6" value="maybe2"></auro-radio>
       </auro-radio-group>
     `);
 
-    const radioGroup = el;
+    // setup
     const expectedCount = 6;
+    const radio1 = radioGroup.querySelector('#radio1');
+    const radio5 = radioGroup.querySelector('#radio5');
+    const radio4 = radioGroup.querySelector('#radio4');
+    const radio6 = radioGroup.querySelector('#radio6');
 
+    // check that the radio group has the correct number of items
     await expect(radioGroup.items.length).to.equal(expectedCount);
+
+    // no nesting
+    radio1.shadowRoot.querySelector('input').click();
+    await elementUpdated(radioGroup);
+    await expect(radioGroup.value).to.equal('yes');
+    await expect(radioGroup.optionSelected).to.equal(radio1);
+
+    // double nested
+    radio5.shadowRoot.querySelector('input').click();
+    await elementUpdated(radioGroup);
+    await expect(radioGroup.value).to.equal('no2');
+    await expect(radioGroup.optionSelected).to.equal(radio5);
+
+    // single nested
+    radio4.shadowRoot.querySelector('input').click();
+    await elementUpdated(radioGroup);
+    await expect(radioGroup.value).to.equal('yes2');
+    await expect(radioGroup.optionSelected).to.equal(radio4);
+
+    // no nesting, comes after nested elements
+    radio6.shadowRoot.querySelector('input').click();
+    await elementUpdated(radioGroup);
+    await expect(radioGroup.value).to.equal('maybe2');
+    await expect(radioGroup.optionSelected).to.equal(radio6);
   });
 
 });
