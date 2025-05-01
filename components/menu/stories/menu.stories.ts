@@ -34,7 +34,15 @@ type Story = StoryObj<AuroMenu & typeof args>;
 
 export const Playground: Story = {
   render: (args) => template(args),
-  args: {},
+  args: {
+    'default-slot': `
+<auro-menuoption value="stops">Stops</auro-menuoption>
+<auro-menuoption value="price">Price</auro-menuoption>
+<auro-menuoption value="duration">Duration</auro-menuoption>
+<auro-menuoption value="departure">Departure</auro-menuoption>
+<auro-menuoption value="arrival">Arrival</auro-menuoption>
+    `,
+  },
 };
 
 export const Basic: Story = {

@@ -31,13 +31,11 @@ type Story = StoryObj<AuroCheckboxGroup & typeof args>;
 export const Playground: Story = {
   render: (args) => template(args),
   args: {
-    // TODO: This does not work
-    // Trying to supply the unnamed "children" slot
-    slot: `
-      <auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
-      <auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>Checkbox option</auro-checkbox>
-      <auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option</auro-checkbox>
-      <auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
+    'default-slot': `
+<auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
+<auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>Checkbox option</auro-checkbox>
+<auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option</auro-checkbox>
+<auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
     `,
   },
 };

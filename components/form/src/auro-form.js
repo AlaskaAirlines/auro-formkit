@@ -14,6 +14,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 /**
  * @typedef {Object} FormStateMember - The form state member.
+ * @slot {HTMLSlotElement} - Form content.
  * @property {string | number | boolean | string[] | null} value - The value of the form element.
  * @property {ValidityState} validity - The validity state of the form element, stored when fired from the form element.
  * @property {boolean} required - Whether the form element is required or not.

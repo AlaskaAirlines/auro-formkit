@@ -27,5 +27,7 @@ type Story = StoryObj<AuroCounter & typeof args>;
 
 export const Playground: Story = {
   render: (args) => template(args),
-  args: {},
+  args: {
+    'default-slot': 'Label',
+  },
 };

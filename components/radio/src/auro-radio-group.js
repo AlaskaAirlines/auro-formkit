@@ -37,6 +37,7 @@ import helpTextVersion from './helptextVersion.js';
  * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
  * @attr {Object} optionSelected - Specifies the current selected radio button.
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
+ * @slot {HTMLSlotElement} - Group content.
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.

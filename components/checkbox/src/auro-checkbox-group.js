@@ -24,6 +24,7 @@ import helpTextVersion from './helptextVersion.js';
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
  *
+ * @slot {HTMLSlotElement} - Group content.
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.

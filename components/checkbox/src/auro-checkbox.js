@@ -18,6 +18,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 /**
  * Custom element for the purpose of allowing users to select one or more options of a limited number of choices.
  *
+ * @slot {HTMLSlotElement} - Checkbox label.
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.

@@ -18,6 +18,7 @@ import tokenCss from './styles/tokens-css.js';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
+ * @slot {HTMLSlotElement} - Radio label.
  * @attr {Boolean} checked - If set to true, the radio button will be filled.
  * @attr {Boolean} disabled - If set to true, the radio button will be non-clickable.
  * @attr {Boolean} required - Defines element as required.

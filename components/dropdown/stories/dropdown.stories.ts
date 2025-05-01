@@ -33,7 +33,10 @@ type Story = StoryObj<AuroDropdown & typeof args>;
 
 export const Playground: Story = {
   render: (args) => template(args),
-  args: {},
+  args: {
+    'default-slot': 'Lorem ipsum solar',
+    'trigger-slot': 'Trigger',
+  },
 };
 
 export const Basic: Story = {

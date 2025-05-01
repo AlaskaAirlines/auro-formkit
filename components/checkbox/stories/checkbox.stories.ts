@@ -27,5 +27,7 @@ type Story = StoryObj<AuroCheckbox & typeof args>;
 
 export const Playground: Story = {
   render: (args) => template(args),
-  args: {},
+  args: {
+    'default-slot': 'Label',
+  },
 };
