@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.2.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.1...v3.2.2) (2025-05-01)
+
+
+### Bug Fixes
+
+* radio group only queries for radio elements ([c696c89](https://github.com/AlaskaAirlines/auro-formkit/commit/c696c8926570abe6d2faf4aad2d85a2ad16e4b67))
+
 ## [3.2.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.0...v3.2.1) (2025-05-01)
 
 
