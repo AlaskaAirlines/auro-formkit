@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.2.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.0...v3.2.1) (2025-05-01)
+
+
+### Bug Fixes
+
+* setting the combobox value progamatically now also updates the selected menu option and match word ([194b120](https://github.com/AlaskaAirlines/auro-formkit/commit/194b1206c13fd53bffb464579ee6877090be3c34)), closes [#546](https://github.com/AlaskaAirlines/auro-formkit/issues/546)
+
 # [3.2.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.1.0...v3.2.0) (2025-04-30)
 
 
