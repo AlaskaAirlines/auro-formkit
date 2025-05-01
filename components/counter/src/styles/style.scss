@@ -56,13 +56,13 @@
   }
 
   &::part(controlMinus) {
-    --ds-auro-counter-control-border-radius: var(--ds-size-500, $ds-size-500) 0 0 var(--ds-size-500, $ds-size-500);
-    --ds-auro-counter-control-padding: var(--ds-size-50, $ds-size-50) var(--ds-size-50, $ds-size-50) var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100);
+    --ds-auro-counter-control-border-radius: var(--ds-size-500, #{$ds-size-500}) 0 0 var(--ds-size-500, #{$ds-size-500});
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100});
   }
 
   &::part(controlPlus) {
-    --ds-auro-counter-control-border-radius: 0 var(--ds-size-500, $ds-size-500) var(--ds-size-500, $ds-size-500) 0;
-    --ds-auro-counter-control-padding: var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100) var(--ds-size-50, $ds-size-50) var(--ds-size-50, $ds-size-50);
+    --ds-auro-counter-control-border-radius: 0 var(--ds-size-500, #{$ds-size-500}) var(--ds-size-500, #{$ds-size-500}) 0;
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50});
   }
 }
 
