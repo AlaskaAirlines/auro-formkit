@@ -910,6 +910,10 @@ export class AuroCombobox extends LitElement {
           const [inputValue] = this.value;
           this.input.value = inputValue;
 
+          // Update the menu value and matchWord
+          this.menu.matchWord = inputValue;
+          this.handleMenuOptions();
+
           // If the value got set programmatically make sure we hide the bib
           // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
           if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
