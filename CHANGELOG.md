@@ -1,5 +1,14 @@
 # Semantic Release Automated Changelog
 
+## [3.2.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.3...v3.2.4) (2025-05-01)
+
+
+### Bug Fixes
+
+* configure menu correctly when the menu node exists ([065b394](https://github.com/AlaskaAirlines/auro-formkit/commit/065b394ec404256fb94cce59978facc75e647707))
+* not to bubble up keydown event when the input is not in bibtemplate ([60a7ff0](https://github.com/AlaskaAirlines/auro-formkit/commit/60a7ff01f4cf20125af32fe72d806226c69a3290))
+* update selected menuoption correctly upon selecting ([4d7ee93](https://github.com/AlaskaAirlines/auro-formkit/commit/4d7ee9381d4fed035c2ef8ce1d9f3695c75d642a))
+
 ## [3.2.3](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.2...v3.2.3) (2025-05-01)
 
 
