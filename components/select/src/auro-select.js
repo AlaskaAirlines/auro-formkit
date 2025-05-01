@@ -492,6 +492,12 @@ export class AuroSelect extends LitElement {
     });
   }
 
+  /**
+   * @private
+   * Updates the active option in the menu based on keyboard input.
+   * @param {string} _key - The key pressed by the user.
+   * @returns {void}
+   */
   updateActiveOptionBasedOnKey(_key) {
 
     // Get a lowercase version of the key pressed
