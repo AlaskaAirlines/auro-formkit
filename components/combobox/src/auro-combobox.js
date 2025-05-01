@@ -490,7 +490,9 @@ export class AuroCombobox extends LitElement {
 
     // this.dropdown.addEventListener('auroDropdown-show', () => {
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
-    this.menuWrapper.append(this.menu);
+    if (this.menu) {
+      this.menuWrapper.append(this.menu);
+    }
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
@@ -526,7 +528,6 @@ export class AuroCombobox extends LitElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
-    this.menu.addEventListener('auroMenu-loadingChange', (event) => this.handleMenuLoadingChange(event));
 
     // a racing condition on custom-combobox with custom-menu
     if (!this.menu) {
@@ -537,6 +538,7 @@ export class AuroCombobox extends LitElement {
       return;
     }
 
+    this.menu.addEventListener('auroMenu-loadingChange', (event) => this.handleMenuLoadingChange(event));
     this.menu.shadowRoot.addEventListener('slotchange', (event) => this.handleSlotChange(event));
 
     if (this.checkmark) {
@@ -608,6 +610,10 @@ export class AuroCombobox extends LitElement {
    */
   bubbleUpInputKeyEvent(event) {
     if (event.currentTarget.parentNode !== this.dropdown) {
+      if (event.key.includes("Arrow")) {
+        event.preventDefault();
+      }
+
       const ke = new KeyboardEvent(event.type, {
         key: event.key,
         code: event.code,
