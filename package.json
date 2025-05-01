@@ -50,13 +50,14 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky",
     "deploy-demo": "npm run build && sh ./deploy-components.sh",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "analyze": "custom-elements-manifest analyze",
+    "storybook": "npm run analyze && storybook dev -p 6006",
+    "build-storybook": "npm run analyze && storybook build"
   },
   "dependencies": {
-    "lit": "^3.2.1",
+    "@aurodesignsystem/auro-library": "^3.0.13",
     "@lit/reactive-element": "^2.0.4",
-    "@aurodesignsystem/auro-library": "^3.0.13"
+    "lit": "^3.2.1"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"
@@ -66,6 +67,7 @@
     "@chromatic-com/storybook": "^3.2.5",
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
+    "@custom-elements-manifest/analyzer": "^0.10.4",
     "@open-wc/testing": "^4.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
@@ -117,6 +119,7 @@
     "stylelint-scss": "^6.10.0",
     "turbo": "^2.3.3",
     "typescript": "^5.7.3",
+    "wc-storybook-helpers": "^2.0.4",
     "whatwg-fetch": "^3.6.20",
     "yaml-lint": "^1.7.0"
   },

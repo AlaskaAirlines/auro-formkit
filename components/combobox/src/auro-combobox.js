@@ -180,7 +180,7 @@ export class AuroCombobox extends LitElement {
        * "top" | "right" | "bottom" | "left" |
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
+       * "left-start" | "left-end".
        * @default bottom-start
        */
       placement: {
@@ -251,7 +251,7 @@ export class AuroCombobox extends LitElement {
 
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600
+       * Otherwise, Heading 600.
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -996,4 +996,10 @@ export class AuroCombobox extends LitElement {
       </div>
     `;
   }
+}
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-combobox")) {
+  customElements.define("auro-combobox", AuroCombobox);
 }

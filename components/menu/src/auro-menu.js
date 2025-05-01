@@ -726,3 +726,8 @@ export class AuroMenu extends LitElement {
   }
 }
 
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-menu")) {
+  customElements.define("auro-menu", AuroMenu);
+}

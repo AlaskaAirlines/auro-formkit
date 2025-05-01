@@ -1,9 +1,18 @@
-import type { Preview, StoryContext, Args } from "@storybook/web-components";
+import {
+  type Preview,
+  type StoryContext,
+  type Args,
+  setCustomElementsManifest,
+} from "@storybook/web-components";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import { DecoratorHelpers } from "@storybook/addon-themes";
-import { Canvas, Meta, Markdown } from '@storybook/blocks';
+import { Canvas, Controls, Meta, Markdown } from "@storybook/blocks";
 import { html } from "lit-html";
-import { within as withinShadow } from 'shadow-dom-testing-library';
+import { within as withinShadow } from "shadow-dom-testing-library";
+
+import customElements from "../custom-elements.json";
+
+setCustomElementsManifest(customElements);
 
 const { initializeThemeState, pluckThemeFromContext } = DecoratorHelpers;
 
@@ -119,17 +128,11 @@ const preview: Preview = {
   ],
   parameters: {
     controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
+      expanded: true,
+      matchers: { color: /(background|color)$/i, date: /Date$/i }
     },
     docs: {
-      components: {
-        Canvas,
-        Meta,
-        Markdown,
-      },
+      components: { Canvas, Controls, Markdown, Meta },
       source: {
         /**
          * When defining event handlers in a story's `render` function, the code before the return
@@ -145,15 +148,14 @@ const preview: Preview = {
       },
       toc: true,
     },
-    viewport: {
-      viewports: INITIAL_VIEWPORTS,
-    },
+    viewport: { viewports: INITIAL_VIEWPORTS },
   },
 };
 
-export type ShadowQueries = ReturnType<typeof withinShadow>
+export type ShadowQueries = ReturnType<typeof withinShadow>;
 
-declare module 'storybook/internal/csf' { // since 8.6
+declare module "storybook/internal/csf" {
+  // since 8.6
   interface Canvas extends ShadowQueries {}
 }
 

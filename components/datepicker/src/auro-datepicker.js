@@ -294,7 +294,7 @@ export class AuroDatePicker extends LitElement {
        * "top" | "right" | "bottom" | "left" |
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
+       * "left-start" | "left-end".
        * @default bottom-start
        */
       placement: {
@@ -1139,4 +1139,10 @@ export class AuroDatePicker extends LitElement {
       </div>
     `;
   }
+}
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-datepicker")) {
+  customElements.define("auro-datepicker", AuroDatePicker);
 }
