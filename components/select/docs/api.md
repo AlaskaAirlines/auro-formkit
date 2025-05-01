@@ -29,10 +29,11 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `reset`    | `(): void`                             | Resets component to initial state.               |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method                         | Type                                   | Description                                      |
+|--------------------------------|----------------------------------------|--------------------------------------------------|
+| `reset`                        | `(): void`                             | Resets component to initial state.               |
+| `updateActiveOptionBasedOnKey` | `(_key: any): void`                    |                                                  |
+| `validate`                     | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

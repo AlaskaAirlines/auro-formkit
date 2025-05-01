@@ -12,9 +12,9 @@
     "url": "https://github.com/AlaskaAirlines/auro-input"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-button": "^9.3.0",
+    "@aurodesignsystem/auro-button": "^9.3.2",
     "@aurodesignsystem/auro-helptext": "*",
-    "@aurodesignsystem/auro-icon": "^8.0.1",
+    "@aurodesignsystem/auro-icon": "^8.0.2",
     "chalk": "^5.4.1",
     "imask": "^7.6.1"
   },
@@ -24,8 +24,8 @@
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^5.10.0",
-    "@aurodesignsystem/webcorestylesheets": "^6.1.0",
+    "@aurodesignsystem/design-tokens": "^5.14.0",
+    "@aurodesignsystem/webcorestylesheets": "^6.2.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "backstopjs": "^6.3.25",
     "rollup": "^4.39.0",
