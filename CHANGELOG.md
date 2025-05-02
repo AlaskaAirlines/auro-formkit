@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.2.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.4...v3.2.5) (2025-05-02)
+
+
+### Bug Fixes
+
+* remove redudant font tokens ([7067083](https://github.com/AlaskaAirlines/auro-formkit/commit/70670834ae4e48f1d191b566f12948d14eafd550))
+
 ## [3.2.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.3...v3.2.4) (2025-05-01)
 
 
