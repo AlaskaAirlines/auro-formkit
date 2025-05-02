@@ -116,6 +116,12 @@ export class AuroCheckbox extends LitElement {
 
   // This custom event is only for the purpose of supporting IE
   // .addEventListener('change', function() { })
+  /**
+   * Handles the change event for the input.
+   * @private
+   * @param {Event} event - The event object.
+   * @returns {void}
+   */
   handleChange(event) {
     this.checked = event.target.checked;
     const customEvent = new CustomEvent(event.type, event);
@@ -123,6 +129,12 @@ export class AuroCheckbox extends LitElement {
     this.dispatchEvent(customEvent);
   }
 
+  /**
+   * Handles the input event for the input.
+   * @private
+   * @param {Event} event - The event object.
+   * @returns {void}
+   */
   handleInput(event) {
     this.checked = event.target.checked;
 
