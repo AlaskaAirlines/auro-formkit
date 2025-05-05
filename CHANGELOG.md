@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.2.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.5...v3.2.6) (2025-05-05)
+
+
+### Bug Fixes
+
+* update font styles to use themable tokens ([1f3022b](https://github.com/AlaskaAirlines/auro-formkit/commit/1f3022b9d09cbecc08a389116d532c257cdc9884))
+
 ## [3.2.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.4...v3.2.5) (2025-05-02)
 
 
