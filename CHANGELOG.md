@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.2.7](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.6...v3.2.7) (2025-05-05)
+
+
+### Bug Fixes
+
+* make `focus` function to focus `input` node ([f0bef6f](https://github.com/AlaskaAirlines/auro-formkit/commit/f0bef6f344bc354fffe4bba51e6eb5c6a5628486))
+
 ## [3.2.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.5...v3.2.6) (2025-05-05)
 
 
