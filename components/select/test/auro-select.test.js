@@ -1,7 +1,11 @@
-import { fixture, html, expect, waitUntil, elementUpdated } from '@open-wc/testing';
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+
+import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
+
+useAccessibleIt();
 
 describe('auro-select', () => {
   it('auro-select custom element is defined', async () => {
