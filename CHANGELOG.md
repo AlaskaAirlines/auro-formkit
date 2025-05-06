@@ -1,5 +1,26 @@
 # Semantic Release Automated Changelog
 
+## [3.2.7](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.6...v3.2.7) (2025-05-05)
+
+
+### Bug Fixes
+
+* make `focus` function to focus `input` node ([f0bef6f](https://github.com/AlaskaAirlines/auro-formkit/commit/f0bef6f344bc354fffe4bba51e6eb5c6a5628486))
+
+## [3.2.6](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.5...v3.2.6) (2025-05-05)
+
+
+### Bug Fixes
+
+* update font styles to use themable tokens ([1f3022b](https://github.com/AlaskaAirlines/auro-formkit/commit/1f3022b9d09cbecc08a389116d532c257cdc9884))
+
+## [3.2.5](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.4...v3.2.5) (2025-05-02)
+
+
+### Bug Fixes
+
+* remove redudant font tokens ([7067083](https://github.com/AlaskaAirlines/auro-formkit/commit/70670834ae4e48f1d191b566f12948d14eafd550))
+
 ## [3.2.4](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.3...v3.2.4) (2025-05-01)
 
 

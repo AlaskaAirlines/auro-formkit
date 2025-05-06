@@ -36,6 +36,15 @@ export class AuroCheckbox extends LitElement {
      * @private
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    /**
+     * @private
+     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
+     */
+    this.constructor.shadowRootOptions = {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
   }
 
   static get styles() {
@@ -114,8 +123,14 @@ export class AuroCheckbox extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroCheckbox);
   }
 
-  // This custom event is only for the purpose of supporting IE
-  // .addEventListener('change', function() { })
+  /**
+   * Handles the change event for the checkbox input.
+   * Updates the checked state and dispatches a corresponding custom event.
+   * This custom event is only for the purpose of supporting IE
+   * @private
+   * @param {Event} event - The change event from the checkbox input.
+   * @returns {void}
+   */
   handleChange(event) {
     this.checked = event.target.checked;
     const customEvent = new CustomEvent(event.type, event);
@@ -123,6 +138,13 @@ export class AuroCheckbox extends LitElement {
     this.dispatchEvent(customEvent);
   }
 
+  /**
+   * Handles the input event for the checkbox input.
+   * Updates the checked state and dispatches a custom 'auroCheckbox-input' event.
+   * @private
+   * @param {Event} event - The input event from the checkbox input.
+   * @returns {void}
+   */
   handleInput(event) {
     this.checked = event.target.checked;
 

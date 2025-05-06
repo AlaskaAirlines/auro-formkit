@@ -32,13 +32,18 @@
 }
 
 .label {
-  font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-  line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
+  font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
+  letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
+  line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
   transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
   white-space: normal;
 
   &[hasTrigger='false'] {
-    font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+    font-size: var(--ds-basic-text-body-default-font-size, $ds-basic-text-body-default-font-size);
+    font-weight :var(--ds-basic-text-body-default-font-weight, $ds-basic-text-body-default-font-weight);
+    letter-spacing: var(--ds-basic-text-body-default-letter-spacing, $ds-basic-text-body-default-letter-spacing);
+    line-height: var(--ds-basic-text-body-default-line-height, $ds-basic-text-body-default-line-height);
   }
 }
 
