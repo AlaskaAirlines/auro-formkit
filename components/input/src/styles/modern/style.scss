@@ -1,0 +1,102 @@
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// Support for fallback values
+@use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables';
+
+@mixin activeLabel {
+  label {
+    display: block;
+    text-transform: unset;
+    font-size: 14px;
+    line-height: 20px;
+    color: gray;
+  }
+}
+
+@mixin activeInput {
+  input {
+    text-transform: uppercase;
+    font-size: 32px;
+    line-height: 38px;
+    text-align: left;
+  }
+}
+
+:host([layout^='modern']) {
+  // $dur: .1s;
+  // $easing: ease-out;
+  background-color: #00274A1A;
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 68px;
+  min-height: 68px;
+
+  .wrapper {
+    display: flex;
+    padding: 5px 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &.withValue {
+      @include activeLabel;
+      @include activeInput;
+      align-items: start;
+    }
+  }
+
+  label {
+    // transition: font-size $dur $easing, line-height $dur $easing;
+    text-transform: uppercase;
+    font-size: 30px;
+    line-height: 30px;
+  }
+
+  input {
+
+    // transition: font-size $dur $easing, line-height $dur $easing;
+    background: unset;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    outline: none;
+  }
+}
+
+:host([layout='modernPill']) {
+  border-radius: 36px;
+}
+
+:host([layout='modernPillLeft']) {
+  border-radius: 36px 0 0 36px;
+  padding: 0 25px;
+}
+
+:host([layout='modernPillRight']) {
+  border-radius: 0 36px 36px 0;
+  padding: 0 25px;
+}
+
+// FOCUS STATE
+
+:host([layout^='modern']:is(:focus-within)) {
+  border-color: #01426A;
+
+  .wrapper {
+    @include activeLabel;
+    @include activeInput;
+    align-items: start;
+  }
+}
+
+:host([layout^='modern']:is([validity]:not([validity='valid']))) {
+  border-color: var(--ds-basic-color-status-error);
+}

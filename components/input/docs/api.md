@@ -28,6 +28,7 @@ Generate unique names for dependency components.
 | `icon`                            | `icon`                            | `boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
 | `id`                              | `id`                              | `string`  |             | Sets the unique ID of the element.               |
 | `lang`                            | `lang`                            | `string`  |             | Defines the language of an element.              |
+| `layout`                          | `layout`                          | `string`  | "default"   | Defines the language of an element.              |
 | `max`                             | `max`                             | `string`  | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | `maxLength`                       | `maxLength`                       | `number`  | "undefined" | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
 | `min`                             | `min`                             | `string`  | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
@@ -56,10 +57,12 @@ Generate unique names for dependency components.
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `reset`    | `(): void`                             | Resets component to initial state.               |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method             | Type                                   | Description                                      |
+|--------------------|----------------------------------------|--------------------------------------------------|
+| `getLayoutDefault` | `(): TemplateResult`                   |                                                  |
+| `getLayoutModern`  | `(): TemplateResult`                   |                                                  |
+| `reset`            | `(): void`                             | Resets component to initial state.               |
+| `validate`         | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
