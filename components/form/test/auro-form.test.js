@@ -1,19 +1,15 @@
 /* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
 
 import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 import '../demo/registerDemoDeps.js';
 import '../src/registered.js';
 
-describe('auro-form', () => {
-  it('is accessible', async () => {
-    const el = await fixture(html`
-      <auro-form></auro-form>
-    `);
+useAccessibleIt();
 
-    await expect(el).to.be.accessible();
-  });
+describe('auro-form', () => {
 
   it('has a customElement definition', async () => {
     await customElements.whenDefined("auro-form");
@@ -307,7 +303,7 @@ describe('auro-form', () => {
       `);
 
       await elementUpdated(el);
-      expect(el.submitElements).to.have.length(1);
+      await expect(el.submitElements).to.have.length(1);
     });
 
     it('picks up type=reset buttons automatically', async () => {
@@ -318,7 +314,7 @@ describe('auro-form', () => {
       `);
 
       await elementUpdated(el);
-      expect(el.resetElements).to.have.length(1);
+      await expect(el.resetElements).to.have.length(1);
     });
 
     it('disables buttons when form is in initial state', async () => {

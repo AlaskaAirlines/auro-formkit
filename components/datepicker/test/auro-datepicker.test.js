@@ -1,42 +1,44 @@
 /* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
 
-import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
-import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
-import '../src/registered.js';
+import {
+  fixture,
+  html,
+  expect,
+  elementUpdated,
+  nextFrame,
+  oneEvent,
+} from "@open-wc/testing";
+import { setViewport } from "@web/test-runner-commands";
+import {
+  minDay,
+  minMonth,
+  minYear,
+  maxDay,
+  maxMonth,
+  maxYear,
+} from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities";
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
-describe('auro-datepicker', () => {
-  it('auro-datepicker is accessible', async () => {
-    await setViewport({
-      width: 600,
-      height: 800
-    });
-    const el = await fixture(html`
-      <auro-datepicker range cssclass="testClass"></auro-datepicker>
-    `);
+import "../src/registered.js";
 
-    await expect(el).to.be.accessible({
-      ignoredRules: ['nested-interactive']
-    });
-  });
+useAccessibleIt();
 
-  it('web component is successfully created in the document', async () => {
+describe("auro-datepicker", () => {
+  it("web component is successfully created in the document", async () => {
     // This test fails when attributes are put onto the component before it is attached to the DOM
-    const el = document.createElement('auro-datepicker');
+    const el = document.createElement("auro-datepicker");
 
-    await expect(el.localName).to.equal('auro-datepicker');
+    await expect(el.localName).to.equal("auro-datepicker");
   });
 
-  it('custom element is defined', async () => {
+  it("custom element is defined", async () => {
     const el = await Boolean(customElements.get("auro-datepicker"));
 
     await expect(el).to.be.true;
   });
 
-  it('can programmatically apply focus to input', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("can programmatically apply focus to input", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     const input = getInput(el, 0);
 
@@ -45,36 +47,32 @@ describe('auro-datepicker', () => {
     await expect(el.shadowRoot.activeElement).to.be.equal(input);
   });
 
-  it('should pass the inputmode attribute to the input', async () => {
+  it("should pass the inputmode attribute to the input", async () => {
     const el = await fixture(html`
       <auro-datepicker inputmode="numeric"></auro-datepicker>
     `);
 
     const input = getInput(el, 0);
 
-    await expect(input.getAttribute('inputmode')).to.be.equal('numeric');
+    await expect(input.getAttribute("inputmode")).to.be.equal("numeric");
 
-    input.removeAttribute('inputmode');
+    input.removeAttribute("inputmode");
     await elementUpdated(el);
-    await expect(input.hasAttribute('inputmode')).to.be.false;
+    await expect(input.hasAttribute("inputmode")).to.be.false;
   });
 
-  it('can programmatically apply focus to input desired input with range support', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range></auro-datepicker>
-    `);
+  it("can programmatically apply focus to input desired input with range support", async () => {
+    const el = await fixture(html` <auro-datepicker range></auro-datepicker> `);
 
     const input = getInput(el, 1);
 
-    el.focus('endDate');
+    el.focus("endDate");
 
     await expect(el.shadowRoot.activeElement).to.be.equal(input);
   });
 
-  it('opens the bib when clicking on the dropdown trigger', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("opens the bib when clicking on the dropdown trigger", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     const input = getInput(el, 0);
     input.click();
@@ -82,7 +80,7 @@ describe('auro-datepicker', () => {
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
-  it('hides dropdown the dropdown or its children lose focus', async () => {
+  it("hides dropdown the dropdown or its children lose focus", async () => {
     const el = await fixture(html`
       <div>
         <auro-datepicker></auro-datepicker>
@@ -90,8 +88,8 @@ describe('auro-datepicker', () => {
       </div>
     `);
 
-    const datepicker = el.querySelector('auro-datepicker');
-    const button = el.querySelector('button');
+    const datepicker = el.querySelector("auro-datepicker");
+    const button = el.querySelector("button");
 
     const input = getInput(datepicker, 0);
     input.click();
@@ -107,10 +105,8 @@ describe('auro-datepicker', () => {
     await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
   });
 
-  it('hides dropdown the dropdown on blur', async () => {
-    const el = await fixture(html`
-        <auro-datepicker></auro-datepicker>
-    `);
+  it("hides dropdown the dropdown on blur", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     el.focus();
     el.shadowRoot.activeElement.click();
@@ -119,48 +115,48 @@ describe('auro-datepicker', () => {
 
     el.blur();
 
-    await oneEvent(el, 'auroDatePicker-toggled');
+    await oneEvent(el, "auroDatePicker-toggled");
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
-  it('handles the required state being set', async () => {
+  it("handles the required state being set", async () => {
     const el = await fixture(html`
       <auro-datepicker required></auro-datepicker>
     `);
 
     const input = getInput(el, 0);
 
-    await expect(el.hasAttribute('validity')).to.be.false;
+    await expect(el.hasAttribute("validity")).to.be.false;
 
     el.focus();
     el.blur();
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+    await expect(el.getAttribute("validity")).to.be.equal("valueMissing");
 
-    input.value = '03/03/2023';
+    input.value = "03/03/2023";
 
     el.focus();
     el.blur();
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute("validity")).to.be.equal("valid");
   });
 
-  it('auro-formkit-input receives the required attribute from auro-datepicker', async () => {
+  it("auro-formkit-input receives the required attribute from auro-datepicker", async () => {
     const el = await fixture(html`
       <auro-datepicker required></auro-datepicker>
     `);
 
     const input = getInput(el, 0);
 
-    await expect(el.hasAttribute('required')).to.be.true;
-    await expect(input.hasAttribute('required')).to.be.true;
+    await expect(el.hasAttribute("required")).to.be.true;
+    await expect(input.hasAttribute("required")).to.be.true;
   });
 
-  it('can preset a value', async () => {
+  it("can preset a value", async () => {
     const el = await fixture(html`
       <auro-datepicker value="01/01/2022"></auro-datepicker>
     `);
@@ -169,127 +165,123 @@ describe('auro-datepicker', () => {
 
     const input = getInput(el, 0);
 
-    const setDate = new Date('01/01/2022').toDateString();
+    const setDate = new Date("01/01/2022").toDateString();
     const inputDate = new Date(input.value).toDateString();
 
     await expect(inputDate).to.be.equal(setDate);
   });
 
-  it('can preset a range', async () => {
+  it("can preset a range", async () => {
     const el = await fixture(html`
-      <auro-datepicker range value="01/01/2023" valueEnd="01/15/2023"></auro-datepicker>
+      <auro-datepicker
+        range
+        value="01/01/2023"
+        valueEnd="01/15/2023"
+      ></auro-datepicker>
     `);
 
     await elementUpdated(el);
 
     const departInput = getInput(el, 0);
 
-    const setDepartDate = new Date('01/01/2023').toDateString();
+    const setDepartDate = new Date("01/01/2023").toDateString();
     const departInputDate = new Date(departInput.value).toDateString();
 
     await expect(departInputDate).to.be.equal(setDepartDate);
 
     const returnInput = getInput(el, 1);
 
-    const setReturnDate = new Date('01/15/2023').toDateString();
+    const setReturnDate = new Date("01/15/2023").toDateString();
     const returnInputDate = new Date(returnInput.value).toDateString();
 
     await expect(returnInputDate).to.be.equal(setReturnDate);
   });
 
-  it('sets `invalid` error when invalid value was passed', async () => {
-
+  it("sets `invalid` error when invalid value was passed", async () => {
     const curYear = new Date().getFullYear();
 
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     // non-existant day
     el.value = "02/31/2022";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalidDate');
+    await expect(el.getAttribute("validity")).to.be.equal("invalidDate");
 
     // pattern mismatch
     el.value = "15/01/2022";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+    await expect(el.getAttribute("validity")).to.be.equal("patternMismatch");
 
     // Day too low
     el.value = `05/${`0${minDay - 1}`.slice(-2)}/${curYear}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+    await expect(el.getAttribute("validity")).to.be.equal("patternMismatch");
 
     // Day too high
     el.value = `05/${maxDay + 1}/${curYear}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+    await expect(el.getAttribute("validity")).to.be.equal("patternMismatch");
 
     // Month too low
     el.value = `${`0${minMonth - 1}`.slice(-2)}/02/${curYear}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+    await expect(el.getAttribute("validity")).to.be.equal("patternMismatch");
 
     // Month too high
     el.value = `${maxMonth + 1}/02/${curYear}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+    await expect(el.getAttribute("validity")).to.be.equal("patternMismatch");
 
     // Year too low
     el.value = `01/02/${minYear - 1}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+    await expect(el.getAttribute("validity")).to.be.equal("patternMismatch");
 
     // Year too high
     el.value = `01/02/${maxYear + 1}`;
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+    await expect(el.getAttribute("validity")).to.be.equal("patternMismatch");
   });
 
-  it('sets an error when the passed value is too long', async () => {
-
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("sets an error when the passed value is too long", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     el.value = "01/22/20288";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('tooLong');
+    await expect(el.getAttribute("validity")).to.be.equal("tooLong");
   });
 
-  it('sets error when incomplete value was passed', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("sets error when incomplete value was passed", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     el.value = "02";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('tooShort');
+    await expect(el.getAttribute("validity")).to.be.equal("tooShort");
 
     // empty
     el.reset();
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.null;
+    await expect(el.getAttribute("validity")).to.be.null;
 
     // set another imcomplete value
     el.value = "02/0";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('tooShort');
+    await expect(el.getAttribute("validity")).to.be.equal("tooShort");
   });
 
-  it('takes customized format', async() => {
+  it("takes customized format", async () => {
     const el = await fixture(html`
       <auro-datepicker format="yyyy/mm/dd"></auro-datepicker>
     `);
@@ -297,34 +289,31 @@ describe('auro-datepicker', () => {
     el.value = "1999/08/15";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
-
+    await expect(el.getAttribute("validity")).to.be.equal("valid");
   });
 
-  it.skip('sets error when wrong formatted value was passed', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it.skip("sets error when wrong formatted value was passed", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     el.value = "02.02.2022";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+    await expect(el.getAttribute("validity")).to.be.equal("invalid");
 
     // empty
     el.value = "";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute("validity")).to.be.equal("valid");
 
     // passing YY/MM/DD format to MM/DD/YY datepicker
     el.value = "2021/01/02";
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+    await expect(el.getAttribute("validity")).to.be.equal("invalid");
   });
 
-  it('respects maxDate setting on datepicker when range is false', async () => {
+  it("respects maxDate setting on datepicker when range is false", async () => {
     const el = await fixture(html`
       <auro-datepicker maxDate="01/01/2022"></auro-datepicker>
     `);
@@ -338,7 +327,7 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute("validity")).to.be.equal("valid");
 
     input.value = "01/02/2022";
 
@@ -347,10 +336,10 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
+    await expect(el.getAttribute("validity")).to.be.equal("rangeOverflow");
   });
 
-  it('respects maxDate setting on second input', async () => {
+  it("respects maxDate setting on second input", async () => {
     const el = await fixture(html`
       <auro-datepicker range maxDate="01/05/2022"></auro-datepicker>
     `);
@@ -367,49 +356,45 @@ describe('auro-datepicker', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
+    await expect(el.getAttribute("validity")).to.be.equal("rangeOverflow");
   });
 
-  it('resets datepicker when maxDate is at an earlier date than current value', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("resets datepicker when maxDate is at an earlier date than current value", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
-    el.value = '03/02/2023';
+    el.value = "03/02/2023";
 
     await elementUpdated(el);
 
-    el.maxDate = '02/26/2023';
+    el.maxDate = "02/26/2023";
 
     await elementUpdated(el);
 
     await expect(el.value).to.be.equal(undefined);
   });
 
-  it('resets datepicker when minDate is at a later date than current value', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("resets datepicker when minDate is at a later date than current value", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
-    el.value = '03/02/2023';
+    el.value = "03/02/2023";
 
     await elementUpdated(el);
 
-    el.minDate = '03/09/2023';
+    el.minDate = "03/09/2023";
 
     await elementUpdated(el);
 
     await expect(el.value).to.be.equal(undefined);
   });
 
-  it('updates centralDate when minDate is later than centralDate', async () => {
+  it("updates centralDate when minDate is later than centralDate", async () => {
     const el = await fixture(html`
       <auro-datepicker calendarFocusDate="03/02/2023"></auro-datepicker>
     `);
 
     await elementUpdated(el);
 
-    el.minDate = '04/09/2023';
+    el.minDate = "04/09/2023";
 
     await elementUpdated(el);
 
@@ -419,28 +404,30 @@ describe('auro-datepicker', () => {
     await expect(min).to.be.equal(central);
   });
 
-  it('selecting a dateFrom date by clicking on the calendar sets the correct value', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("selecting a dateFrom date by clicking on the calendar sets the correct value", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     await elementUpdated(el);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
-    const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+    const calendarMonth = calendar.shadowRoot.querySelector(
+      "auro-formkit-calendar-month",
+    );
 
-    const calendarCell = calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell');
+    const calendarCell = calendarMonth.shadowRoot.querySelectorAll(
+      "auro-formkit-calendar-cell",
+    );
 
     const dateFrom = calendarCell[1];
 
-    const dateFromBtn = dateFrom.shadowRoot.querySelector('button');
+    const dateFromBtn = dateFrom.shadowRoot.querySelector("button");
 
     dateFromBtn.click();
 
@@ -454,25 +441,27 @@ describe('auro-datepicker', () => {
     await expect(el.values[0]).to.equal(dateSelected);
   });
 
-  it('selecting a dateTo date by clicking on the calendar sets the correct value', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range></auro-datepicker>
-    `);
+  it("selecting a dateTo date by clicking on the calendar sets the correct value", async () => {
+    const el = await fixture(html` <auro-datepicker range></auro-datepicker> `);
 
     await elementUpdated(el);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
-    await dropdown.querySelector('[auro-input]').click();
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
 
-    const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+    const calendarMonth = calendar.shadowRoot.querySelector(
+      "auro-formkit-calendar-month",
+    );
 
-    const calendarCell = calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell');
+    const calendarCell = calendarMonth.shadowRoot.querySelectorAll(
+      "auro-formkit-calendar-cell",
+    );
 
     const dateFrom = calendarCell[1];
-    const dateFromBtn = dateFrom.shadowRoot.querySelector('button');
+    const dateFromBtn = dateFrom.shadowRoot.querySelector("button");
 
     dateFromBtn.click();
 
@@ -483,7 +472,7 @@ describe('auro-datepicker', () => {
     await expect(el.value).to.equal(dateFromSelected);
 
     const [, dateTo] = calendarCell;
-    const dateToBtn = dateTo.shadowRoot.querySelector('button');
+    const dateToBtn = dateTo.shadowRoot.querySelector("button");
 
     dateToBtn.click();
 
@@ -501,27 +490,29 @@ describe('auro-datepicker', () => {
     await expect(el.values[1]).to.equal(dateToSelected);
   });
 
-  it('attempting to set the dateTo to a date earlier than dateFrom by clicking on the calendar does not set the valueFrom', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range></auro-datepicker>
-    `);
+  it("attempting to set the dateTo to a date earlier than dateFrom by clicking on the calendar does not set the valueFrom", async () => {
+    const el = await fixture(html` <auro-datepicker range></auro-datepicker> `);
 
     await elementUpdated(el);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
-    const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+    const calendarMonth = calendar.shadowRoot.querySelector(
+      "auro-formkit-calendar-month",
+    );
 
-    const calendarCell = calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell');
+    const calendarCell = calendarMonth.shadowRoot.querySelectorAll(
+      "auro-formkit-calendar-cell",
+    );
 
     const dateFrom = calendarCell[10];
-    const dateFromBtn = dateFrom.shadowRoot.querySelector('button');
+    const dateFromBtn = dateFrom.shadowRoot.querySelector("button");
 
     dateFromBtn.click();
 
@@ -532,7 +523,7 @@ describe('auro-datepicker', () => {
     await expect(el.value).to.equal(dateFromSelected);
 
     const dateTo = calendarCell[8];
-    const dateToBtn = dateTo.shadowRoot.querySelector('button');
+    const dateToBtn = dateTo.shadowRoot.querySelector("button");
 
     dateToBtn.click();
 
@@ -541,7 +532,7 @@ describe('auro-datepicker', () => {
     await expect(el.valueEnd).to.equal(undefined);
   });
 
-  it('hides the prev month button when viewing the first available month', async () => {
+  it("hides the prev month button when viewing the first available month", async () => {
     const date = new Date();
     const fullDate = `${`0${date.getMonth() + 1}`.slice(-2)}/${`0${date.getDate()}`.slice(-2)}/${date.getFullYear()}`;
 
@@ -549,9 +540,9 @@ describe('auro-datepicker', () => {
       <auro-datepicker calendarStartDate="${fullDate}"></auro-datepicker>
     `);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
-    await dropdown.querySelector('[auro-input]').click();
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
@@ -559,47 +550,57 @@ describe('auro-datepicker', () => {
     await expect(calendar.showPrevMonthBtn).to.be.false;
   });
 
-  it('hides the next month button when viewing the last available month', async () => {
+  it("hides the next month button when viewing the last available month", async () => {
     const el = await fixture(html`
       <auro-datepicker maxDate="04/17/2023"></auro-datepicker>
     `);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
     await expect(calendar.showNextMonthBtn).to.be.false;
   });
 
-  it('removing error attribute reruns validity even when value is undefined', async () => {
+  it("removing error attribute reruns validity even when value is undefined", async () => {
     const el = await fixture(html`
       <auro-datepicker error="custom error message"></auro-datepicker>
     `);
 
-    await expect(el.getAttribute('validity')).to.be.equal('customError');
+    await expect(el.getAttribute("validity")).to.be.equal("customError");
 
-    el.removeAttribute('error');
+    el.removeAttribute("error");
 
     await elementUpdated(el);
 
-    await expect(el.hasAttribute('validity')).to.be.true;
+    await expect(el.hasAttribute("validity")).to.be.true;
   });
 
-  it('setting customValidityValueMissing also sets it on the input', async () => {
+  it("setting customValidityValueMissing also sets it on the input", async () => {
     const el = await fixture(html`
-      <auro-datepicker setCustomValidityValueMissing="The value is missing!"></auro-datepicker>
+      <auro-datepicker
+        setCustomValidityValueMissing="The value is missing!"
+      ></auro-datepicker>
     `);
 
     const input = getInput(el, 0);
 
     await elementUpdated(el);
 
-    await expect(input.getAttribute('setCustomValidityValueMissing')).to.be.equal('The value is missing!');
+    await expect(
+      input.getAttribute("setCustomValidityValueMissing"),
+    ).to.be.equal("The value is missing!");
   });
 
   // BUG IN ERROR MESSAGE CODE (Next two tests)
-  it('dateFrom error message shown when dateTo is also invalid', async () => {
+  it("dateFrom error message shown when dateTo is also invalid", async () => {
     const el = await fixture(html`
-      <auro-datepicker range required minDate="04/15/2023" value="04/20/2023" setCustomValidityRangeUnderflow="Before min date"></auro-datepicker>
+      <auro-datepicker
+        range
+        required
+        minDate="04/15/2023"
+        value="04/20/2023"
+        setCustomValidityRangeUnderflow="Before min date"
+      ></auro-datepicker>
     `);
 
     const input1 = getInput(el, 0);
@@ -614,46 +615,49 @@ describe('auro-datepicker', () => {
     await expect(input2.errorMessage).to.be.equal(undefined);
   });
 
-  it('dateTo error message shown when dateFrom is valid', async () => {
+  it("dateTo error message shown when dateFrom is valid", async () => {
     const el = await fixture(html`
-      <auro-datepicker range maxDate="03/03/2023" value="03/01/2023" valueEnd="03/30/2023"></auro-datepicker>
+      <auro-datepicker
+        range
+        maxDate="03/03/2023"
+        value="03/01/2023"
+        valueEnd="03/30/2023"
+      ></auro-datepicker>
     `);
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
+    await expect(el.getAttribute("validity")).to.be.equal("rangeOverflow");
   });
 
-  it('changing calendarFocusDate changes month visibility', async () => {
+  it("changing calendarFocusDate changes month visibility", async () => {
     const el = await fixture(html`
       <auro-datepicker calendarFocusDate="03/23/2023"></auro-datepicker>
     `);
 
     await elementUpdated(el);
 
-    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector("auro-formkit-calendar");
 
     const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(central).to.be.equal('03/23/2023');
+    await expect(central).to.be.equal("03/23/2023");
 
-    el.calendarFocusDate = '04/25/2024';
+    el.calendarFocusDate = "04/25/2024";
 
     await elementUpdated(el);
 
     const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(centralAfter).to.be.equal('04/25/2024');
+    await expect(centralAfter).to.be.equal("04/25/2024");
   });
 
-  it('renders a single calendar by default', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("renders a single calendar by default", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
-    await dropdown.querySelector('[auro-input]').click();
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
@@ -661,15 +665,13 @@ describe('auro-datepicker', () => {
     await expect(calendar.numCalendars).to.be.equal(1);
   });
 
-  it('renders two calendars when range attribute is present', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range></auro-datepicker>
-    `);
+  it("renders two calendars when range attribute is present", async () => {
+    const el = await fixture(html` <auro-datepicker range></auro-datepicker> `);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
@@ -677,68 +679,68 @@ describe('auro-datepicker', () => {
     await expect(calendar.numCalendars).to.be.equal(2);
   });
 
-  it('renders twelve calendars in mobile version', async () => {
+  it("renders twelve calendars in mobile version", async () => {
     await setViewport({
       width: 500,
-      height: 800
+      height: 800,
     });
 
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
 
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
     await expect(calendar.numCalendars).to.be.equal(12);
   });
 
-  it('updates input value when value is changed', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range></auro-datepicker>
-    `);
+  it("updates input value when value is changed", async () => {
+    const el = await fixture(html` <auro-datepicker range></auro-datepicker> `);
 
     const input1 = getInput(el, 0);
     const input2 = getInput(el, 1);
 
-    setInputValue(input1, '04/03/2023');
-    setInputValue(input2, '04/04/2023');
+    setInputValue(input1, "04/03/2023");
+    setInputValue(input2, "04/04/2023");
 
     await elementUpdated(el);
 
-    el.valueEnd = '04/09/202';
+    el.valueEnd = "04/09/202";
 
     await elementUpdated(el);
 
-    expect(input2.value).to.equal('04/09/202');
+    await expect(input2.value).to.equal("04/09/202");
 
     el.valueEnd = undefined;
 
     await elementUpdated(el);
 
-    expect(input2.value).to.equal('');
+    await expect(input2.value).to.equal("");
   });
 
-  it('render correct number of calendars with calendarStartDate and calendarEndDate in mobile', async () => {
+  it("render correct number of calendars with calendarStartDate and calendarEndDate in mobile", async () => {
     await setViewport({
       width: 500,
-      height: 800
+      height: 800,
     });
 
     const el = await fixture(html`
-      <auro-datepicker range calendarStartDate="03/04/2023" calendarEndDate="05/05/2023"></auro-datepicker>
+      <auro-datepicker
+        range
+        calendarStartDate="03/04/2023"
+        calendarEndDate="05/05/2023"
+      ></auro-datepicker>
     `);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
@@ -746,20 +748,20 @@ describe('auro-datepicker', () => {
     await expect(calendar.numCalendars).to.equal(3);
   });
 
-  it('handlePrevMonth changes current calendar month', async () => {
+  it("handlePrevMonth changes current calendar month", async () => {
     const el = await fixture(html`
       <auro-datepicker value="02/01/2023"></auro-datepicker>
     `);
 
     await elementUpdated(el);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
-    const prevMonthBth = calendar.shadowRoot.querySelector('.prevMonth');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
+    const prevMonthBth = calendar.shadowRoot.querySelector(".prevMonth");
 
     const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(central).to.equal('02/01/2023');
+    await expect(central).to.equal("02/01/2023");
 
     prevMonthBth.click();
 
@@ -767,7 +769,7 @@ describe('auro-datepicker', () => {
 
     const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(centralAfter).to.contain('01/01/2023');
+    await expect(centralAfter).to.contain("01/01/2023");
 
     prevMonthBth.click();
 
@@ -775,23 +777,23 @@ describe('auro-datepicker', () => {
 
     const centralAfterAgain = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(centralAfterAgain).to.contain('12/01/2022');
+    await expect(centralAfterAgain).to.contain("12/01/2022");
   });
 
-  it('handleNextMonth changes current calendar month', async () => {
+  it("handleNextMonth changes current calendar month", async () => {
     const el = await fixture(html`
       <auro-datepicker value="11/01/2023"></auro-datepicker>
     `);
 
     await elementUpdated(el);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
-    const nextMonthBth = calendar.shadowRoot.querySelector('.nextMonth');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
+    const nextMonthBth = calendar.shadowRoot.querySelector(".nextMonth");
 
     const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(central).to.equal('11/01/2023');
+    await expect(central).to.equal("11/01/2023");
 
     nextMonthBth.click();
 
@@ -799,7 +801,7 @@ describe('auro-datepicker', () => {
 
     const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(centralAfter).to.contain('12/01/2023');
+    await expect(centralAfter).to.contain("12/01/2023");
 
     nextMonthBth.click();
 
@@ -807,35 +809,31 @@ describe('auro-datepicker', () => {
 
     const centralAfterAgain = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-    await expect(centralAfterAgain).to.contain('01/01/2024');
+    await expect(centralAfterAgain).to.contain("01/01/2024");
   });
 
-  it('shows dropdown when user is typing in input', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("shows dropdown when user is typing in input", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     const input = getInput(el, 0);
 
-    input.dispatchEvent(new KeyboardEvent('keyup', { key: '0' }));
+    input.dispatchEvent(new KeyboardEvent("keyup", { key: "0" }));
 
     await elementUpdated(el);
 
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
-  it('closes the mobile bib when clicking the bottom done', async () => {
+  it("closes the mobile bib when clicking the bottom done", async () => {
     await setViewport({
       width: 500,
-      height: 800
+      height: 800,
     });
 
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
     const input = getInput(el, 0);
 
     const closeBtn = calendar.shadowRoot.querySelector('[slot="footer"]');
@@ -853,24 +851,30 @@ describe('auro-datepicker', () => {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
-  it('datepicker correctly parses date slot name and passes content down to cell correctly', async () => {
+  it("datepicker correctly parses date slot name and passes content down to cell correctly", async () => {
     const el = await dateSlotFixture();
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
-    const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
-    const calendarCell = [...calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell')];
+    const calendarMonth = calendar.shadowRoot.querySelector(
+      "auro-formkit-calendar-month",
+    );
+    const calendarCell = [
+      ...calendarMonth.shadowRoot.querySelectorAll(
+        "auro-formkit-calendar-cell",
+      ),
+    ];
 
     const dateData = [...el.querySelectorAll('[slot^="date_"]')];
 
     for (const cell of calendarCell) {
-      const span = cell.querySelector('span');
+      const span = cell.querySelector("span");
       let spanContentMatch = false;
 
       if (span) {
@@ -885,24 +889,30 @@ describe('auro-datepicker', () => {
     }
   });
 
-  it('datepicker passes popover slot content down to cell correctly', async () => {
+  it("datepicker passes popover slot content down to cell correctly", async () => {
     const el = await popoverSlotFixture();
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
-    const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
-    const calendarCell = [...calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell')];
+    const calendarMonth = calendar.shadowRoot.querySelector(
+      "auro-formkit-calendar-month",
+    );
+    const calendarCell = [
+      ...calendarMonth.shadowRoot.querySelectorAll(
+        "auro-formkit-calendar-cell",
+      ),
+    ];
 
     const popoverData = [...el.querySelectorAll('[slot^="popover_"]')];
 
     for (const cell of calendarCell) {
-      const span = cell.querySelector('span');
+      const span = cell.querySelector("span");
       let spanContentMatch = false;
 
       if (span) {
@@ -917,53 +927,62 @@ describe('auro-datepicker', () => {
     }
   });
 
-  it('auro-formkit-calendar-cells handles hover event correctly', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  it("auro-formkit-calendar-cells handles hover event correctly", async () => {
+    const el = await fixture(html` <auro-datepicker></auro-datepicker> `);
 
     await elementUpdated(el);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const dropdown = el.shadowRoot.querySelector("[auro-dropdown]");
+    const calendar = dropdown.bibContent.querySelector("auro-formkit-calendar");
 
-    await dropdown.querySelector('[auro-input]').click();
+    await dropdown.querySelector("[auro-input]").click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
-    const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
-    const calendarCell = [...calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell')];
+    const calendarMonth = calendar.shadowRoot.querySelector(
+      "auro-formkit-calendar-month",
+    );
+    const calendarCell = [
+      ...calendarMonth.shadowRoot.querySelectorAll(
+        "auro-formkit-calendar-cell",
+      ),
+    ];
 
     const cell = calendarCell[0];
-    const cellButton = cell.shadowRoot.querySelector('button');
+    const cellButton = cell.shadowRoot.querySelector("button");
 
-    cellButton.dispatchEvent(new MouseEvent('mouseover'));
+    cellButton.dispatchEvent(new MouseEvent("mouseover"));
 
     await expect(cell.hovered).to.be.true;
   });
 
-  it('reset method clears the value and validity state', async () => {
+  it("reset method clears the value and validity state", async () => {
     const el = await fixture(html`
-      <auro-datepicker range minDate="06/30/2025" value="02/14/2025" valueEnd="04/05/2025"></auro-datepicker>
+      <auro-datepicker
+        range
+        minDate="06/30/2025"
+        value="02/14/2025"
+        valueEnd="04/05/2025"
+      ></auro-datepicker>
     `);
 
-    await expect(el.value).to.be.equal('02/14/2025');
-    await expect(el.valueEnd).to.be.equal('04/05/2025');
-    await expect(el.validity).to.be.equal('rangeUnderflow');
+    await expect(el.value).to.be.equal("02/14/2025");
+    await expect(el.valueEnd).to.be.equal("04/05/2025");
+    await expect(el.validity).to.be.equal("rangeUnderflow");
 
     el.reset();
 
     await elementUpdated(el);
 
-    await expect(el.hasAttribute('validity')).to.be.false;
+    await expect(el.hasAttribute("validity")).to.be.false;
     await expect(el.value).to.be.equal(undefined);
     await expect(el.valueEnd).to.be.equal(undefined);
   });
 });
 
-describe('auro-datepicker with format', () => {
-  it('can preset a value', async () => {
+describe("auro-datepicker with format", () => {
+  it("can preset a value", async () => {
     const el = await fixture(html`
       <auro-datepicker format="yyyy/mm/dd" value="2023/02/25"></auro-datepicker>
     `);
@@ -975,9 +994,14 @@ describe('auro-datepicker with format', () => {
     await expect(input.value).to.be.equal(el.value);
   });
 
-  it('can preset a range', async () => {
+  it("can preset a range", async () => {
     const el = await fixture(html`
-      <auro-datepicker range format="yyyy/mm/dd" value="2023/02/25" valueEnd="2023/02/28"></auro-datepicker>
+      <auro-datepicker
+        range
+        format="yyyy/mm/dd"
+        value="2023/02/25"
+        valueEnd="2023/02/28"
+      ></auro-datepicker>
     `);
 
     await elementUpdated(el);
@@ -991,9 +1015,12 @@ describe('auro-datepicker with format', () => {
     await expect(returnInput.value).to.be.equal(el.valueEnd);
   });
 
-  it('respects maxDate setting on datepicker when range is false', async () => {
+  it("respects maxDate setting on datepicker when range is false", async () => {
     const el = await fixture(html`
-      <auro-datepicker format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
+      <auro-datepicker
+        format="yyyy/mm/dd"
+        maxDate="2022/03/22"
+      ></auro-datepicker>
     `);
 
     const input = getInput(el, 0);
@@ -1005,7 +1032,7 @@ describe('auro-datepicker with format', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute("validity")).to.be.equal("valid");
 
     input.value = "2022/03/25";
 
@@ -1014,12 +1041,16 @@ describe('auro-datepicker with format', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
+    await expect(el.getAttribute("validity")).to.be.equal("rangeOverflow");
   });
 
-  it('respects maxDate setting on second input', async () => {
+  it("respects maxDate setting on second input", async () => {
     const el = await fixture(html`
-      <auro-datepicker range format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
+      <auro-datepicker
+        range
+        format="yyyy/mm/dd"
+        maxDate="2022/03/22"
+      ></auro-datepicker>
     `);
 
     const input1 = getInput(el, 0);
@@ -1034,12 +1065,15 @@ describe('auro-datepicker with format', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
+    await expect(el.getAttribute("validity")).to.be.equal("rangeOverflow");
   });
 
-  it('respects minDate setting', async () => {
+  it("respects minDate setting", async () => {
     const el = await fixture(html`
-      <auro-datepicker format="yyyy/mm/dd" minDate="2022/03/22"></auro-datepicker>
+      <auro-datepicker
+        format="yyyy/mm/dd"
+        minDate="2022/03/22"
+      ></auro-datepicker>
     `);
 
     const input = getInput(el, 0);
@@ -1051,7 +1085,7 @@ describe('auro-datepicker with format', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute("validity")).to.be.equal("valid");
 
     input.value = "2022/03/18";
 
@@ -1060,12 +1094,16 @@ describe('auro-datepicker with format', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
+    await expect(el.getAttribute("validity")).to.be.equal("rangeUnderflow");
   });
 
-  it('respects minDate setting on second input', async () => {
+  it("respects minDate setting on second input", async () => {
     const el = await fixture(html`
-      <auro-datepicker range format="yyyy/mm/dd" minDate="2025/03/22"></auro-datepicker>
+      <auro-datepicker
+        range
+        format="yyyy/mm/dd"
+        minDate="2025/03/22"
+      ></auro-datepicker>
     `);
 
     const input1 = getInput(el, 0);
@@ -1079,7 +1117,7 @@ describe('auro-datepicker with format', () => {
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
+    await expect(el.getAttribute("validity")).to.be.equal("rangeUnderflow");
   });
 });
 

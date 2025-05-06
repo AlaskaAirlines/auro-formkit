@@ -1,10 +1,13 @@
 /* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
 
 import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 import '../demo/registerDemoDeps.js';
 import '../src/registered.js';
+
+useAccessibleIt();
 
 /**
  * Shared tests to dedupe maintenance effort.
@@ -15,10 +18,6 @@ function useSharedTestBehavior(name, markup) {
   const getElement = () => fixture(markup);
 
   describe(`${name} automatic form behavior`, () => {
-    it.skip('should be accessible', async () => {
-      const form = await getElement();
-      await expect(form).to.be.accessible();
-    });
 
     it('should get included as an auro form element', async () => {
       const form = await getElement();
