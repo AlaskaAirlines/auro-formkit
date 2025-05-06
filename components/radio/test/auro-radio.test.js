@@ -1,14 +1,11 @@
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+
 import {elementUpdated, expect, fixture, html} from '@open-wc/testing';
 import '../src/registered.js';
 
-describe('auro-radio', () => {
-  it('auro-radio is accessible', async () => {
-    const el = await fixture(html`
-      <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes">Yes</auro-radio>
-    `);
+useAccessibleIt();
 
-    await expect(el).to.be.accessible();
-  });
+describe('auro-radio', () => {
 
   it('auro-radio custom element is defined', async () => {
     const el = await !!customElements.get("auro-radio");
@@ -45,8 +42,8 @@ describe('auro-radio', () => {
     input.click();
 
     const event = await eventPromise;
-    expect(event).to.exist;
-    expect(event.target).to.equal(radioButton);
+    await expect(event).to.exist;
+    await expect(event.target).to.equal(radioButton);
   });
 
   it('validity is in error state when error attribute is present', async () => {
