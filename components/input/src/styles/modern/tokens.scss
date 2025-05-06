@@ -1,0 +1,10 @@
+@use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables' as v;
+
+:host {
+  --ds-auro-input-border-color: var(--ds-color-border-secondary-default, #{v.$ds-color-border-secondary-default});
+  --ds-auro-input-container-color: var(--ds-color-container-primary-default, #{v.$ds-color-container-primary-default});
+  --ds-auro-input-caret-color: var(--ds-color-text-ui-focus-default, #{v.$ds-color-text-ui-focus-default});
+  --ds-auro-input-label-text-color: var(--ds-color-text-tertiary-default, #{v.$ds-color-text-tertiary-default});
+  --ds-auro-input-placeholder-text-color: var(--ds-color-text-primary-default, #{v.$ds-color-text-primary-default});
+  --ds-auro-input-text-color: var(--ds-color-text-primary-default, #{v.$ds-color-text-primary-default});
+}

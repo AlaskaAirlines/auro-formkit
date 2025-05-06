@@ -6,17 +6,19 @@
 |---------------------------------|---------------------------------|-----------|----------------|--------------------------------------------------|
 | `autoPlacement`                 | `autoPlacement`                 | `boolean` |                | If declared, bib's position will be automatically calculated where to appear. |
 | `autocomplete`                  | `autocomplete`                  | `string`  | "false"        | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
-| `checkmark`                     | `checkmark`                     | `boolean` |                | When attribute is present auro-menu will apply checkmarks to selected options. |
+| `checkmark`                     | `checkmark`                     | `boolean` |                | When attribute is present auro-menu will apply a checkmark to each selected options. |
 | `disabled`                      | `disabled`                      | `boolean` |                | If set, disables the combobox.                   |
 | `error`                         | `error`                         | `string`  |                | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"           | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean` |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `layout`                        | `layout`                        | `string`  | "default"      | Defines the language of an element.              |
 | `noFilter`                      | `noFilter`                      | `boolean` |                | If set, combobox will not filter menuoptions based in input. |
 | `noFlip`                        | `noFlip`                        | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean` |                | If set, disables auto-validation on blur.        |
 | `offset`                        | `offset`                        | `number`  | "0"            | Gap between the trigger element and bib.         |
 | `onDark`                        | `onDark`                        | `boolean` |                | If declared, onDark styles will be applied to the trigger. |
 | `optionSelected`                | `optionSelected`                | `object`  |                | Specifies the current selected option.           |
+| `placeholder`                   | `placeholder`                   | `string`  |                | Define custom placeholder text, only supported by date input formats. |
 | `placement`                     | `placement`                     | `string`  | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `required`                      | `required`                      | `boolean` |                | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`             | `setCustomValidity`             | `string`  |                | Sets a custom help text message to display for all validityStates. |
@@ -25,7 +27,7 @@
 | `triggerIcon`                   | `triggerIcon`                   | `boolean` |                | If set, the `icon` attribute will be applied to the trigger `auro-input` element. |
 | `type`                          | `type`                          | `string`  |                | Applies the defined value as the type attribute on auro-input. |
 | `validity`                      | `validity`                      | `string`  |                | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         |           |                | Value selected for the dropdown menu.            |
+| `value`                         | `value`                         |           | "undefined"    | Value selected for the dropdown menu.            |
 
 ## Methods
 

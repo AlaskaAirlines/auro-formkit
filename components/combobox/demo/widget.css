@@ -1,0 +1,30 @@
+.widget {
+  width: 600px;
+  display: flex;
+  flex-direction: row;
+}
+
+.routePicker {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.roundTrip {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  position: relative;
+  gap: 4px;
+}
+
+.roundTrip auro-combobox {
+  flex: 1;
+}
+
+.roundTrip auro-button {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}

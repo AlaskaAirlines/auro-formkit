@@ -3,8 +3,15 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable complexity, lit/binding-positions, lit/no-invalid-html, max-lines */
 
+import styleCss from "./styles/default/style-css.js";
+import colorCss from "./styles/default/color-css.js";
+import tokensCss from "./styles/default/tokens-css.js";
+
+import modernStyleCss from "./styles/modern/style-css.js";
+
+import { css } from "lit";
 import { html } from 'lit/static-html.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -50,6 +57,15 @@ export class AuroInput extends BaseInput {
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
   }
 
+  static get styles() {
+    return [
+      css`${colorCss}`,
+      css`${styleCss}`,
+      css`${tokensCss}`,
+      css`${modernStyleCss}`,
+    ];
+  }
+
   /**
    * This will register this element with the browser.
    * @param {string} [name="auro-input"] - The name of element that you want to register to.
@@ -75,8 +91,7 @@ export class AuroInput extends BaseInput {
     return false;
   }
 
-  // function that renders the HTML and CSS into  the scope of the component
-  render() {
+  getLayoutDefault() {
     // is-disabled class - THIS IS ONLY HERE TO MAKE A TEST PASS AS FAR AS I CAN TELL
     const labelClasses = {
       'is-disabled': this.disabled,
@@ -91,7 +106,7 @@ export class AuroInput extends BaseInput {
             ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
 
             <!-- The repeat() method is used below in order to force auro-icon to re-render when the name value is updated.
-               This should be cleaned up when auro-icon issue #31 is resolved. -->
+              This should be cleaned up when auro-icon issue #31 is resolved. -->
             ${this.inputIconName
             ? repeat([this.inputIconName], (val) => val, (name) => html`
               <${this.iconTag}
@@ -227,6 +242,70 @@ export class AuroInput extends BaseInput {
         </${this.helpTextTag}>
         `
         }
+    `;
+  }
+
+  getLayoutModern() {
+    const wrapperClasses = {
+      'wrapper': true,
+      'withValue': this.value && this.value.length > 0
+    };
+
+    const labelClasses = {
+      'withValue': this.value && this.value.length > 0
+    };
+
+    return html`
+      <div class="${classMap(wrapperClasses)}" part="wrapper">
+        <label for=${this.id} class="${classMap(labelClasses)}" part="label">
+          <slot name="label">
+            ${this.label}
+          </slot>
+          <!-- HOW DO WE REFLECT REQUIRED IN THIS LAYOUT? -->
+        </label>
+        <input
+          @input="${this.handleInput}"
+          @focusin="${this.handleFocusin}"
+          @focusout="${this.handleFocusout}"
+          @blur="${this.handleBlur}"
+          required="false"
+          ?required="${this.required}"
+          ?disabled="${this.disabled}"
+          ?activeLabel="${this.activeLabel}"
+          id="${this.id}"
+          name="${ifDefined(this.name)}"
+          type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}"
+          pattern="${ifDefined(this.definePattern())}"
+          maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
+          minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
+          inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
+          aria-describedby="${this.uniqueId}"
+          aria-invalid="${this.validity !== 'valid'}"
+          .placeholder=${this.placeholderStr}
+          lang="${ifDefined(this.lang)}"
+          spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
+          autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
+          autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
+          autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
+          part="input" />
+      </div>
+    `;
+  }
+
+  // function that renders the HTML and CSS into  the scope of the component
+  render() {
+    let htmlToRender = html``;
+
+    switch (true) {
+      case this.layout.startsWith('modern'):
+        htmlToRender = this.getLayoutModern();
+        break;
+      default:
+        htmlToRender = this.getLayoutDefault();
+    }
+
+    return html`
+      ${htmlToRender}
     `;
   }
 }
