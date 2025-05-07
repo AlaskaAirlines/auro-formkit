@@ -61,6 +61,8 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   privateDefaults() {
+    this.pristine = true;
+    this.dirty = false;
     this.util = new AuroInputUtilities();
     this.validation = new AuroFormValidation();
     this.inputIconName = undefined;
@@ -422,7 +424,19 @@ export default class BaseInput extends LitElement {
       validity: {
         type: String,
         reflect: true
-      }
+      },
+
+      pristine: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'pristine'
+      },
+
+      dirty: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'dirty'
+      },
     };
   }
 
@@ -708,15 +722,8 @@ export default class BaseInput extends LitElement {
    */
   handleFocusin() {
 
-    /**
-     * The input is considered to be in it's initial state based on
-     * if this.value === undefined. The first time we interact with the
-     * input manually, by applying focusin, we need to flag the
-     * input as no longer in the initial state.
-     */
-    if (this.value === undefined) {
-      this.value = '';
-    }
+    this.pristine = false;
+    this.dirty = true;
   }
 
   /**

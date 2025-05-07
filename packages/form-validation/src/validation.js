@@ -22,6 +22,8 @@ export default class AuroFormValidation {
   reset(elem) {
     elem.validity = undefined;
     elem.value = undefined;
+    elem.pristine = true;
+    elem.dirty = false;
 
     // Resets the second value of the datepicker in range state
     if (elem.valueEnd) {
@@ -159,7 +161,7 @@ export default class AuroFormValidation {
       } else if (elem.type === 'date' && elem.value?.length > 0) {
 
         // Guard Clause: if the value is too short
-        if (elem.value.length < elem.lengthForType) {
+        if (elem.value?.length < elem.lengthForType) {
           
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
@@ -229,11 +231,17 @@ export default class AuroFormValidation {
     this.getAuroInputs(elem);
 
     // Validate only if noValidate is not true and the input does not have focus
-    const validationShouldRun = force || (!elem.contains(document.activeElement) && elem.value !== undefined) || elem.validateOnInput;
+    let validationShouldRun =
+      force ||
+      (!elem.contains(document.activeElement) &&
+        (!elem.pristine ||
+          (elem.pristine && typeof elem.value !== "undefined"))) ||
+      elem.validateOnInput;
 
     if (elem.hasAttribute('error')) {
       elem.validity = 'customError';
       elem.errorMessage = elem.setCustomValidityCustomError || elem.error || elem.setCustomValidity || '';
+      validationShouldRun = false;
     } else if (validationShouldRun) {
       elem.validity = 'valid';
       elem.errorMessage = '';
@@ -254,7 +262,7 @@ export default class AuroFormValidation {
         }
       }
 
-      if (!hasValue && elem.required) {
+      if (!hasValue && elem.required && elem.dirty) {
         elem.validity = 'valueMissing';
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
@@ -265,7 +273,7 @@ export default class AuroFormValidation {
       }
     }
 
-    if (this.auroInputElements?.length > 0) {
+    if (this.auroInputElements?.length > 0 && elem.validity !== "valueMissing") {
       elem.validity = this.auroInputElements[0].validity;
       elem.errorMessage = this.auroInputElements[0].errorMessage;
 
@@ -344,7 +352,7 @@ export default class AuroFormValidation {
         }
       }
     } else {
-      elem.errorMessage = undefined;
+      elem.errorMessage = '';
     }
   }
 }

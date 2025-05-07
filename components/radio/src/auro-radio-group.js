@@ -55,6 +55,8 @@ export class AuroRadioGroup extends LitElement {
     this.value = undefined;
     this.optionSelected = undefined;
     this.onDark = false;
+    this.pristine = true;
+    this.dirty = false;
 
     /**
      * @private
@@ -136,6 +138,14 @@ export class AuroRadioGroup extends LitElement {
       },
       optionSelected: {
         type: Object
+      },
+      pristine: {
+        type: Boolean,
+        reflect: true
+      },
+      dirty: {
+        type: Boolean,
+        reflect: true
       }
     };
   }
@@ -264,6 +274,9 @@ export class AuroRadioGroup extends LitElement {
       button.reset();
     });
 
+    this.pristine = true;
+    this.dirty = false;
+
     this.validation.reset(this);
   }
 
@@ -350,6 +363,9 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   handleToggleSelected(event) {
+    this.pristine = false;
+    this.dirty = true;
+
     this.index = this.items.indexOf(event.target);
 
     this.items.forEach((item) => {

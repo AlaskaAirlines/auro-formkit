@@ -39,6 +39,8 @@ export class AuroCheckboxGroup extends LitElement {
     this.required = false;
     this.horizontal = false;
     this.onDark = false;
+    this.pristine = true;
+    this.dirty = false;
 
     /**
      * @private
@@ -229,6 +231,9 @@ export class AuroCheckboxGroup extends LitElement {
     };
 
     this.addEventListener('auroCheckbox-focusin', () => {
+      this.pristine = false;
+      this.dirty = true;
+
       if (!this.value) {
         this.value = [];
       }
@@ -307,6 +312,8 @@ export class AuroCheckboxGroup extends LitElement {
       checkbox.reset();
     });
 
+    this.pristine = true;
+    this.dirty = false;
     this.validation.reset(this);
   }
 
