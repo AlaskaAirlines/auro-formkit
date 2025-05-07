@@ -139,10 +139,22 @@ export class AuroRadioGroup extends LitElement {
       optionSelected: {
         type: Object
       },
+
+      /**
+       * Indicates whether the checkbox group is in a pristine state (has not been interacted with).
+       * @type {boolean}
+       * @default true
+       */
       pristine: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * Indicates whether the checkbox is in a dirty state (has been interacted with).
+       * @type {boolean}
+       * @default false
+       */
       dirty: {
         type: Boolean,
         reflect: true

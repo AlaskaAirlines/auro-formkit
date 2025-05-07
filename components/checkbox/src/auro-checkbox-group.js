@@ -39,7 +39,19 @@ export class AuroCheckboxGroup extends LitElement {
     this.required = false;
     this.horizontal = false;
     this.onDark = false;
+
+    /**
+     * Indicates whether the checkbox group is in a pristine state (has not been interacted with).
+     * @type {boolean}
+     * @default true
+     */
     this.pristine = true;
+
+    /**
+     * Indicates whether the checkbox is in a dirty state (has been interacted with).
+     * @type {boolean}
+     * @default false
+     */
     this.dirty = false;
 
     /**
