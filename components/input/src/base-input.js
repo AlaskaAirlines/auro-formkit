@@ -61,8 +61,7 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   privateDefaults() {
-    this.pristine = true;
-    this.dirty = false;
+    this.touched = false;
     this.util = new AuroInputUtilities();
     this.validation = new AuroFormValidation();
     this.inputIconName = undefined;
@@ -427,26 +426,16 @@ export default class BaseInput extends LitElement {
       },
 
       /**
-       * Indicates whether the checkbox group is in a pristine state (has not been interacted with).
-       * @type {boolean}
-       * @default true
-       */
-      pristine: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'pristine'
-      },
-
-      /**
-       * Indicates whether the checkbox is in a dirty state (has been interacted with).
+       * Indicates whether the input is in a dirty state (has been interacted with).
        * @type {boolean}
        * @default false
+       * @private
        */
-      dirty: {
+      touched: {
         type: Boolean,
         reflect: true,
-        attribute: 'dirty'
-      },
+        attribute: false
+      }
     };
   }
 
@@ -732,8 +721,7 @@ export default class BaseInput extends LitElement {
    */
   handleFocusin() {
 
-    this.pristine = false;
-    this.dirty = true;
+    this.touched = true;
   }
 
   /**

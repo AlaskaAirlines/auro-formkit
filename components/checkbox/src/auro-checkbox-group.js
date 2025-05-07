@@ -41,18 +41,12 @@ export class AuroCheckboxGroup extends LitElement {
     this.onDark = false;
 
     /**
-     * Indicates whether the checkbox group is in a pristine state (has not been interacted with).
-     * @type {boolean}
-     * @default true
-     */
-    this.pristine = true;
-
-    /**
-     * Indicates whether the checkbox is in a dirty state (has been interacted with).
+     * Indicates whether the checkbox group is in a dirty state (has been interacted with).
      * @type {boolean}
      * @default false
+     * @private
      */
-    this.dirty = false;
+    this.touched = false;
 
     /**
      * @private
@@ -243,8 +237,7 @@ export class AuroCheckboxGroup extends LitElement {
     };
 
     this.addEventListener('auroCheckbox-focusin', () => {
-      this.pristine = false;
-      this.dirty = true;
+      this.touched = true;
 
       if (!this.value) {
         this.value = [];
@@ -324,8 +317,7 @@ export class AuroCheckboxGroup extends LitElement {
       checkbox.reset();
     });
 
-    this.pristine = true;
-    this.dirty = false;
+    this.touched = false;
     this.validation.reset(this);
   }
 

@@ -77,6 +77,7 @@ export class AuroDatePicker extends LitElement {
       this.calendarRenderUtil.updateCentralDate(this, new Date());
     }
 
+    this.touched = false;
     this.disabled = false;
     this.required = false;
     this.onDark = false;
@@ -394,6 +395,18 @@ export class AuroDatePicker extends LitElement {
        */
       valueEnd: {
         type: String
+      },
+
+      /**
+       * Indicates whether the datepicker is in a dirty state (has been interacted with).
+       * @type {boolean}
+       * @default false
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
       }
     };
   }
@@ -670,27 +683,15 @@ export class AuroDatePicker extends LitElement {
   configureDatepicker() {
     this.addEventListener('focusin', () => {
 
-      /**
-       * The datepicker is considered to be in it's initial state based on
-       * if this.value === undefined. The first time we interact with the
-       * datepicker manually, by applying focusin, we need to flag the
-       * datepicker as no longer in the initial state.
-       */
-      if (this.value === undefined) {
-        this.value = '';
-      }
-
-      if (this.valueEnd === undefined) {
-        this.valueEnd = '';
-      }
+      this.touched = true;
     });
 
     this.addEventListener('focusout', (evt) => {
-      if (!this.noValidate && !evt.detail.expanded && this.inputList[0].value !== undefined) {
+      if (!this.noValidate && !evt.detail.expanded && this.touched) {
         if (!this.contains(document.activeElement)) {
           this.validation.validate(this.inputList[0]);
 
-          if (this.inputList[1] && this.inputList[1].value !== undefined) {
+          if (this.inputList[1] && this.inputList[1].touched) {
             this.validation.validate(this.inputList[1]);
           }
         }

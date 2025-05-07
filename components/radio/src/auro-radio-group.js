@@ -55,8 +55,7 @@ export class AuroRadioGroup extends LitElement {
     this.value = undefined;
     this.optionSelected = undefined;
     this.onDark = false;
-    this.pristine = true;
-    this.dirty = false;
+    this.touched = false;
 
     /**
      * @private
@@ -141,23 +140,15 @@ export class AuroRadioGroup extends LitElement {
       },
 
       /**
-       * Indicates whether the checkbox group is in a pristine state (has not been interacted with).
-       * @type {boolean}
-       * @default true
-       */
-      pristine: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * Indicates whether the checkbox is in a dirty state (has been interacted with).
+       * Indicates whether the radio group is in a dirty state (has been interacted with).
        * @type {boolean}
        * @default false
+       * @private
        */
-      dirty: {
+      touched: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        attribute: false
       }
     };
   }
@@ -286,8 +277,7 @@ export class AuroRadioGroup extends LitElement {
       button.reset();
     });
 
-    this.pristine = true;
-    this.dirty = false;
+    this.touched = false;
 
     this.validation.reset(this);
   }
@@ -375,8 +365,7 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   handleToggleSelected(event) {
-    this.pristine = false;
-    this.dirty = true;
+    this.touched = true;
 
     this.index = this.items.indexOf(event.target);
 

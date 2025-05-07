@@ -22,8 +22,7 @@ export default class AuroFormValidation {
   reset(elem) {
     elem.validity = undefined;
     elem.value = undefined;
-    elem.pristine = true;
-    elem.dirty = false;
+    elem.touched = false;
 
     // Resets the second value of the datepicker in range state
     if (elem.valueEnd) {
@@ -234,8 +233,8 @@ export default class AuroFormValidation {
     let validationShouldRun =
       force ||
       (!elem.contains(document.activeElement) &&
-        (!elem.pristine ||
-          (elem.pristine && typeof elem.value !== "undefined"))) ||
+        (elem.touched ||
+          (!elem.touched && typeof elem.value !== "undefined"))) ||
       elem.validateOnInput;
 
     if (elem.hasAttribute('error')) {
@@ -262,7 +261,7 @@ export default class AuroFormValidation {
         }
       }
 
-      if (!hasValue && elem.required && elem.dirty) {
+      if (!hasValue && elem.required && elem.touched) {
         elem.validity = 'valueMissing';
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
