@@ -218,6 +218,22 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
   });
 
+  it('fired `auroCombobox-valueSet` event on value update', async () => {
+    const el = await defaultFixture(mobileview);
+
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    setTimeout(() => {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    await oneEvent(el, 'auroCombobox-valueSet');
+  });
+
   it('fires input event on typing', async () => {
     const el = await defaultFixture(mobileview);
 
@@ -387,6 +403,17 @@ function runFulltest(mobileview) {
     await elementUpdated(el);
 
     await expect(el.getAttribute('validity')).to.be.equal('valid');
+  });
+
+  it('fires `auroFormElement-validated` event after validation', async() => {
+    const el = await requiredFixture(mobileview);
+
+    // error applied on blur
+    el.focus();
+    setTimeout(() => {
+      el.shadowRoot.activeElement.blur();
+    });
+    await oneEvent(el, 'auroFormElement-validated');
   });
 
   it('default to nocheckmark on selected option', async () => {
