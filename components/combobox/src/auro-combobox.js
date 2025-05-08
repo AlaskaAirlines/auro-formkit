@@ -505,6 +505,13 @@ export class AuroCombobox extends LitElement {
     // Listen for the dropdown to be shown or hidden
     this.dropdown.addEventListener("auroDropdown-toggled", (ev) => {
       this.dropdownOpen = ev.detail.expanded;
+      this.isDropdownFullscreen = this.dropdown.isBibFullscreen;
+      // wait a frame in case the bib gets hide immediately after showing because there is no value
+      setTimeout(this.transportInput);
+    });
+
+    this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
+      this.showBib();
     });
 
     // this.dropdown.addEventListener('auroDropdown-show', () => {
@@ -523,19 +530,11 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
-      this.showBib();
-    });
-
     this.transportInput = this.transportInput.bind(this);
-    this.dropdown.addEventListener('auroDropdown-toggled', () => {
-      // wait a frame in case the bib gets hide immediately after showing because there is no value
-      setTimeout(this.transportInput);
-    });
 
     this.dropdown.addEventListener('auroDropdown-strategy-change', (event) => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
-      this.isDropdownFullscreen = event.detail.strategy === 'fullscreen';
+      this.isDropdownFullscreen = event.detail.value === 'fullscreen';
       setTimeout(this.transportInput);
     });
   }
@@ -726,7 +725,7 @@ export class AuroCombobox extends LitElement {
     const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
 
     if (this.dropdown.isPopoverVisible && this.isDropdownFullscreen) {
-      if (this.input.parentNode !== this.bibtemplate) {
+      if (this.input.parentNode === this.dropdown) {
         // keep the trigger size the same even after input gets removed
         const parentSize = window.getComputedStyle(this.dropdown.trigger);
         this.dropdown.trigger.style.height = parentSize.height;

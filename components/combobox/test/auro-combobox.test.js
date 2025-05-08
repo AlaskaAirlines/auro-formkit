@@ -1,4 +1,4 @@
-import { fixture, html, expect, waitUntil, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, waitUntil, elementUpdated, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
@@ -216,6 +216,23 @@ function runFulltest(mobileview) {
 
     await expect(visibleMenuOptions.length).to.be.equal(1);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
+  });
+
+  it('fires input event on typing', async () => {
+    const el = await defaultFixture(mobileview);
+
+    setInputValue(el, 'a');
+
+    if (mobileview) {
+      await waitUntil(() => el.dropdown.isPopoverVisible && el.input.parentNode !== el.dropdown);
+    } else {
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+    }
+    setTimeout(() => {
+      setInputValue(el, 'app');
+    });
+    await oneEvent(el, 'input');
+
   });
 
   it('using the nomatch attribute with a matching value', async () => {
@@ -651,7 +668,7 @@ function setInputValue(el, value) {
   input.focus();
   input.value = value;
   input.dispatchEvent(new InputEvent('input'));
-  auroInput.dispatchEvent(new Event('input', {bubbles:true}));
+  auroInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true}));
   el.dispatchEvent(new KeyboardEvent('keyup', {
     key: value.slice(value.length - 1),
     repeat: false
