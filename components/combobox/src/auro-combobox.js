@@ -30,6 +30,25 @@ import {
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
 
+const EVENT_BUBBLING_MAP = {
+  input: [
+    "inputType",
+    "data",
+    "dataTransfer"
+  ],
+  keydown: [
+    "key",
+    "code",
+    "repeat"
+  ],
+  keyup: [
+    "key",
+    "code",
+    "repeat"
+  ],
+};
+
+
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot - Default slot for the menu content.
@@ -619,13 +638,15 @@ export class AuroCombobox extends LitElement {
       if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault();
       }
-
-      const ke = new KeyboardEvent(event.type, {
-        key: event.key,
-        code: event.code,
-        repeat: event.repeat,
+      if (!EVENT_BUBBLING_MAP[event.type]) {
+        return;
+      }
+      const eventOption = {};
+      EVENT_BUBBLING_MAP[event.type].forEach((prop) => {
+        eventOption[prop] = event[prop];
       });
-      this.dispatchEvent(ke);
+      const dupEvent = new event.constructor(event.type, eventOption);
+      this.dispatchEvent(dupEvent);
     }
   }
 
