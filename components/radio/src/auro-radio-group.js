@@ -204,10 +204,7 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   handleRadioBlur() {
-    if (this.value === undefined) {
-      this.value = '';
-    }
-
+    this.touched = true;
     this.validation.validate(this);
   }
 
@@ -365,8 +362,6 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   handleToggleSelected(event) {
-    this.touched = true;
-
     this.index = this.items.indexOf(event.target);
 
     this.items.forEach((item) => {
