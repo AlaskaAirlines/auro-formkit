@@ -591,6 +591,12 @@ export class AuroCombobox extends LitElement {
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
+
+      this.optionActive.scrollIntoView({
+        alignToTop: false,
+        block: "nearest",
+        behavior: "smooth"
+      });
     });
 
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
