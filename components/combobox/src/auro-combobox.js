@@ -351,6 +351,14 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   handleMenuOptions() {
+    // Reset menu matchword UI
+    this.menu.updateItemsState(new Map([
+      [
+        'matchWord',
+        true
+      ]
+    ]));
+
     this.generateOptionsArray();
     this.availableOptions = [];
 
