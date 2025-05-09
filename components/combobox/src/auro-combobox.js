@@ -30,25 +30,6 @@ import {
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
 
-const EVENT_BUBBLING_MAP = {
-  input: [
-    "inputType",
-    "data",
-    "dataTransfer"
-  ],
-  keydown: [
-    "key",
-    "code",
-    "repeat"
-  ],
-  keyup: [
-    "key",
-    "code",
-    "repeat"
-  ],
-};
-
-
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot - Default slot for the menu content.
@@ -330,14 +311,6 @@ export class AuroCombobox extends LitElement {
 
       /**
        * @private
-       */
-      isDropdownFullscreen: {
-        type: Boolean,
-        reflect: false
-      },
-
-      /**
-       * @private
        * specifies the currently active option
        */
       optionActive: {
@@ -477,8 +450,6 @@ export class AuroCombobox extends LitElement {
       return;
     }
 
-    this.isDropdownFullscreen = this.dropdown.isBibFullscreen;
-
     if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
       if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
         if (this.menu.hasAttribute('loading') && !this.menu.hasLoadingPlaceholder) {
@@ -505,7 +476,7 @@ export class AuroCombobox extends LitElement {
     // Listen for the dropdown to be shown or hidden
     this.dropdown.addEventListener("auroDropdown-toggled", (ev) => {
       this.dropdownOpen = ev.detail.expanded;
-      this.isDropdownFullscreen = this.dropdown.isBibFullscreen;
+
       // wait a frame in case the bib gets hide immediately after showing because there is no value
       setTimeout(this.transportInput);
     });
@@ -532,9 +503,8 @@ export class AuroCombobox extends LitElement {
 
     this.transportInput = this.transportInput.bind(this);
 
-    this.dropdown.addEventListener('auroDropdown-strategy-change', (event) => {
+    this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
-      this.isDropdownFullscreen = event.detail.value === 'fullscreen';
       setTimeout(this.transportInput);
     });
   }
@@ -630,21 +600,16 @@ export class AuroCombobox extends LitElement {
    * @private
    * Dispatches input's keyboard events from host
    * This allows key events from the input to be handled by the parent.
-   * @param {KeyboardEvent} event - The keyboard event.
+   * @param {Event} event - The keyboard event.
    */
-  bubbleUpInputKeyEvent(event) {
+  bubbleUpInputEvent(event) {
+    // Do not need to bubble events if the input is not in bib.
     if (event.currentTarget.parentNode !== this.dropdown) {
+      // prevents browsers to move cursor in input element.
       if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault();
       }
-      if (!EVENT_BUBBLING_MAP[event.type]) {
-        return;
-      }
-      const eventOption = {};
-      EVENT_BUBBLING_MAP[event.type].forEach((prop) => {
-        eventOption[prop] = event[prop];
-      });
-      const dupEvent = new event.constructor(event.type, eventOption);
+      const dupEvent = new event.constructor(event.type, event);
       this.dispatchEvent(dupEvent);
     }
   }
@@ -656,14 +621,22 @@ export class AuroCombobox extends LitElement {
    */
   configureInput() {
     // When input is in bibtemplate, make the event to be fired at combobox element
-    this.bubbleUpInputKeyEvent = this.bubbleUpInputKeyEvent.bind(this);
-    this.input.addEventListener('keydown', this.bubbleUpInputKeyEvent);
-    this.input.addEventListener('keyup', this.bubbleUpInputKeyEvent);
-    this.input.addEventListener('input', this.bubbleUpInputKeyEvent);
+    this.bubbleUpInputEvent = this.bubbleUpInputEvent.bind(this);
+
+    const events = [
+      'input',
+      'keydown',
+      'keyup'
+    ];
+    events.forEach((eventType) => {
+      this.input.addEventListener(eventType, this.bubbleUpInputEvent);
+    });
 
     this.addEventListener('keyup', (evt) => {
       if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
-        this.showBib();
+        if (!this.dropdown.isPopoverVisible) {
+          this.showBib();
+        }
       }
     });
 
@@ -724,7 +697,7 @@ export class AuroCombobox extends LitElement {
     const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext');
     const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
 
-    if (this.dropdown.isPopoverVisible && this.isDropdownFullscreen) {
+    if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
       if (this.input.parentNode === this.dropdown) {
         // keep the trigger size the same even after input gets removed
         const parentSize = window.getComputedStyle(this.dropdown.trigger);
@@ -811,7 +784,7 @@ export class AuroCombobox extends LitElement {
     }
 
     // Force dropdown bib to hide if input value has no matching suggestions
-    if ((!this.availableOptions || this.availableOptions.length === 0) && !this.isDropdownFullscreen) {
+    if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
       this.hideBib();
     }
   }
@@ -834,7 +807,7 @@ export class AuroCombobox extends LitElement {
       if (evt.key === 'Tab') {
         this.hideBib();
 
-        if (this.dropdown.isPopoverVisible && this.isDropdownFullscreen) {
+        if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
           // if bib is open in fullscreen, just close the bib and do not move the focus to the next focasable element
           evt.preventDefault();
         }
