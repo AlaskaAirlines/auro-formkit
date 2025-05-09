@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.2.8](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.7...v3.2.8) (2025-05-08)
+
+
+### Bug Fixes
+
+* scroll to the active menuoption of combobox, select ([a31675a](https://github.com/AlaskaAirlines/auro-formkit/commit/a31675ac7aa8d049c54b865da3589359e85ee9c2))
+
 ## [3.2.7](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.6...v3.2.7) (2025-05-05)
 
 

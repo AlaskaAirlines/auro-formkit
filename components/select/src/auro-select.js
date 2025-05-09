@@ -438,6 +438,16 @@ export class AuroSelect extends LitElement {
       this.optionSelected = this.menu.optionSelected;
       this.validation.validate(this);
     });
+
+    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
+      if (evt.detail) {
+        evt.detail.scrollIntoView({
+          alignToTop: false,
+          block: "nearest",
+          behavior: "smooth"
+        });
+      }
+    });
   }
 
   /**
@@ -540,12 +550,6 @@ export class AuroSelect extends LitElement {
       const newOption = letterOptions[index];
       const newOptionIndex = this.options.indexOf(newOption);
       this.menu.updateActiveOption(newOptionIndex);
-
-      newOption.scrollIntoView({
-        alignToTop: false,
-        block: "nearest",
-        behavior: "smooth"
-      });
     }
   }
 
