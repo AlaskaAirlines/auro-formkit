@@ -12,7 +12,7 @@
     "url": "https://github.com/AlaskaAirlines/auro-menu"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-icon": "^8.0.0",
+    "@aurodesignsystem/auro-icon": "^8.0.2",
     "lit": "^3.2.1"
   },
   "devDependencies": {
@@ -20,8 +20,8 @@
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^5.10.0",
-    "@aurodesignsystem/webcorestylesheets": "^6.1.0",
+    "@aurodesignsystem/design-tokens": "^5.14.0",
+    "@aurodesignsystem/webcorestylesheets": "^6.2.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "chalk": "^5.4.1",
     "rollup": "^4.39.0",

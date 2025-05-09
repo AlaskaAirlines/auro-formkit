@@ -45,8 +45,10 @@
 
   cursor: pointer;
 
-  font-family: var(--ds-font-family-default, $ds-font-family-default);
-  font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+  font-size: var(--ds-basic-text-body-default-font-size, $ds-basic-text-body-default-font-size); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+  font-weight: var(--ds-basic-text-body-default-font-weight, $ds-basic-text-body-default-font-weight); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+  letter-spacing: var(--ds-basic-text-body-default-letter-spacing, $ds-basic-text-body-default-letter-spacing); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+  line-height: var(--ds-basic-text-body-default-line-height, $ds-basic-text-body-default-line-height); /* This must be declared here because the browser clients unset it in the user agent style sheet */
 
   user-select: none;
 
@@ -94,7 +96,10 @@
   display: flex;
   flex-direction: column;
 
-  font-size: var(--ds-text-body-size-xxs, $ds-text-body-size-xxs);
+  font-size: var(--ds-basic-text-body-xxs-font-size, $ds-basic-text-body-xxs-font-size);
+  font-weight :var(--ds-basic-text-body-xxs-font-weight, $ds-basic-text-body-xxs-font-weight);
+  letter-spacing: var(--ds-basic-text-body-xxs-letter-spacing, $ds-basic-text-body-xxs-letter-spacing);
+  line-height: var(--ds-basic-text-body-xxs-line-height, $ds-basic-text-body-xxs-line-height);
 }
 
 ::slotted([slot^="date_"]) {
@@ -135,7 +140,11 @@
     width: var(--ds-size-600, $ds-size-600);
     height: var(--ds-size-800, $ds-size-800);
 
-    font-size: var(--ds-text-body-size-lg, $ds-text-body-size-lg);
+    font-family: var(--ds-basic-text-body-lg-font-family, $ds-basic-text-body-lg-font-family);
+    font-size: var(--ds-basic-text-body-lg-font-size, $ds-basic-text-body-lg-font-size);
+    font-weight :var(--ds-basic-text-body-lg-font-weight, $ds-basic-text-body-lg-font-weight);
+    letter-spacing: var(--ds-basic-text-body-lg-letter-spacing, $ds-basic-text-body-lg-letter-spacing);
+    line-height: var(--ds-basic-text-body-lg-line-height, $ds-basic-text-body-lg-line-height);
 
     &:hover {
       cursor: pointer;
@@ -143,6 +152,9 @@
   }
 
   .dateSlot {
-    font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+    font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
+    font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
+    letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
+    line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
   }
 }

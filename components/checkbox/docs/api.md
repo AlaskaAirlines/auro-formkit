@@ -58,11 +58,9 @@ Custom element for the purpose of allowing users to select one or more options o
 
 ## Methods
 
-| Method         | Type                 | Description                        |
-|----------------|----------------------|------------------------------------|
-| `handleChange` | `(event: any): void` |                                    |
-| `handleInput`  | `(event: any): void` |                                    |
-| `reset`        | `(): void`           | Resets component to initial state. |
+| Method  | Type       | Description                        |
+|---------|------------|------------------------------------|
+| `reset` | `(): void` | Resets component to initial state. |
 
 ## Events
 

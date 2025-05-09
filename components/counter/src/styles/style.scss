@@ -23,8 +23,10 @@
 [name="description"] {
   &::slotted(*) {
     display: block;
-    font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-    line-height: var(--ds-size-200, $ds-size-200);
+    font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
+    font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
+    letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
+    line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
   }
 }
 
@@ -33,7 +35,10 @@
   height: calc(var(--ds-size-25, $ds-size-25) + var(--ds-size-400, $ds-size-400));
   align-content: center;
   cursor: default;
-  font-size: var(--ds-size-250, $ds-size-250);
+  font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
+  font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
+  letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
+  line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
   text-align: center;
 }
 
@@ -56,13 +61,13 @@
   }
 
   &::part(controlMinus) {
-    --ds-auro-counter-control-border-radius: var(--ds-size-500, $ds-size-500) 0 0 var(--ds-size-500, $ds-size-500);
-    --ds-auro-counter-control-padding: var(--ds-size-50, $ds-size-50) var(--ds-size-50, $ds-size-50) var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100);
+    --ds-auro-counter-control-border-radius: var(--ds-size-500, #{$ds-size-500}) 0 0 var(--ds-size-500, #{$ds-size-500});
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100});
   }
 
   &::part(controlPlus) {
-    --ds-auro-counter-control-border-radius: 0 var(--ds-size-500, $ds-size-500) var(--ds-size-500, $ds-size-500) 0;
-    --ds-auro-counter-control-padding: var(--ds-size-50, $ds-size-50) var(--ds-size-100, $ds-size-100) var(--ds-size-50, $ds-size-50) var(--ds-size-50, $ds-size-50);
+    --ds-auro-counter-control-border-radius: 0 var(--ds-size-500, #{$ds-size-500}) var(--ds-size-500, #{$ds-size-500}) 0;
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50});
   }
 }
 
