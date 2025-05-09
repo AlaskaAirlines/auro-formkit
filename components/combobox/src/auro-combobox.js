@@ -493,7 +493,9 @@ export class AuroCombobox extends LitElement {
 
     // this.dropdown.addEventListener('auroDropdown-show', () => {
     this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
-    this.menuWrapper.append(this.menu);
+    if (this.menu) {
+      this.menuWrapper.append(this.menu);
+    }
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
@@ -529,7 +531,6 @@ export class AuroCombobox extends LitElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
-    this.menu.addEventListener('auroMenu-loadingChange', (event) => this.handleMenuLoadingChange(event));
 
     // a racing condition on custom-combobox with custom-menu
     if (!this.menu) {
@@ -540,6 +541,7 @@ export class AuroCombobox extends LitElement {
       return;
     }
 
+    this.menu.addEventListener('auroMenu-loadingChange', (event) => this.handleMenuLoadingChange(event));
     this.menu.shadowRoot.addEventListener('slotchange', (event) => this.handleSlotChange(event));
 
     if (this.checkmark) {
@@ -592,6 +594,12 @@ export class AuroCombobox extends LitElement {
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
+
+      this.optionActive.scrollIntoView({
+        alignToTop: false,
+        block: "nearest",
+        behavior: "smooth"
+      });
     });
 
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
@@ -610,10 +618,11 @@ export class AuroCombobox extends LitElement {
    * @param {KeyboardEvent} event - The keyboard event.
    */
   bubbleUpInputKeyEvent(event) {
-    if (event.currentTarget.parentNode === this.dropdown) {
+    if (event.currentTarget.parentNode !== this.dropdown) {
       if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault();
       }
+
       const ke = new KeyboardEvent(event.type, {
         key: event.key,
         code: event.code,
@@ -759,7 +768,7 @@ export class AuroCombobox extends LitElement {
       }));
     }
 
-    if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
+    if (this.optionSelected && this.optionSelected[0] && this.input.value !== this.optionSelected[0].textContent) {
       this.optionSelected = undefined;
       hasChange = true;
     }
@@ -912,6 +921,10 @@ export class AuroCombobox extends LitElement {
           // Use first value since combobox is single-select
           const [inputValue] = this.value;
           this.input.value = inputValue;
+
+          // Update the menu value and matchWord
+          this.menu.matchWord = inputValue;
+          this.handleMenuOptions();
 
           // If the value got set programmatically make sure we hide the bib
           // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
