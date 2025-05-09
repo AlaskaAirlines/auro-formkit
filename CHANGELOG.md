@@ -1,5 +1,21 @@
 # Semantic Release Automated Changelog
 
+# [3.3.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.3.0-beta.1...v3.3.0-beta.2) (2025-05-09)
+
+
+### Bug Fixes
+
+* configure menu correctly when the menu node exists ([065b394](https://github.com/AlaskaAirlines/auro-formkit/commit/065b394ec404256fb94cce59978facc75e647707))
+* make `focus` function to focus `input` node ([f0bef6f](https://github.com/AlaskaAirlines/auro-formkit/commit/f0bef6f344bc354fffe4bba51e6eb5c6a5628486))
+* not to bubble up keydown event when the input is not in bibtemplate ([60a7ff0](https://github.com/AlaskaAirlines/auro-formkit/commit/60a7ff01f4cf20125af32fe72d806226c69a3290))
+* radio group only queries for radio elements ([c696c89](https://github.com/AlaskaAirlines/auro-formkit/commit/c696c8926570abe6d2faf4aad2d85a2ad16e4b67))
+* remove redudant font tokens ([7067083](https://github.com/AlaskaAirlines/auro-formkit/commit/70670834ae4e48f1d191b566f12948d14eafd550))
+* scroll to the active menuoption of combobox, select ([a31675a](https://github.com/AlaskaAirlines/auro-formkit/commit/a31675ac7aa8d049c54b865da3589359e85ee9c2))
+* setting the combobox value progamatically now also updates the selected menu option and match word ([194b120](https://github.com/AlaskaAirlines/auro-formkit/commit/194b1206c13fd53bffb464579ee6877090be3c34)), closes [#546](https://github.com/AlaskaAirlines/auro-formkit/issues/546)
+* update font styles to use themable tokens ([1f3022b](https://github.com/AlaskaAirlines/auro-formkit/commit/1f3022b9d09cbecc08a389116d532c257cdc9884))
+* update SCSS token formatting ([10a97e3](https://github.com/AlaskaAirlines/auro-formkit/commit/10a97e313f735c4b545e94041f51e8d074607e01))
+* update selected menuoption correctly upon selecting ([4d7ee93](https://github.com/AlaskaAirlines/auro-formkit/commit/4d7ee9381d4fed035c2ef8ce1d9f3695c75d642a))
+
 ## [3.2.8](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.7...v3.2.8) (2025-05-08)
 
 
