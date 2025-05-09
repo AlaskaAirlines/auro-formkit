@@ -216,6 +216,8 @@ function runFulltest(mobileview) {
 
     await expect(visibleMenuOptions.length).to.be.equal(1);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
   });
 
   it('using the nomatch attribute with a matching value', async () => {
@@ -236,6 +238,8 @@ function runFulltest(mobileview) {
 
     await expect(visibleMenuOptions.length).to.be.equal(1);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
   });
 
   it('using the nomatch attribute with no matching value', async () => {
@@ -277,6 +281,8 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions.length).to.be.equal(2);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
     await expect(visibleMenuOptions[1].innerText).to.be.equal('Persistent');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
   });
 
   it('using the suggest attribute matches additional options', async () => {
@@ -298,6 +304,8 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions.length).to.be.equal(2);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
     await expect(visibleMenuOptions[1].innerText).to.be.equal('Oranges');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
   });
 
   it('makes a selection programmatically', async () => {
