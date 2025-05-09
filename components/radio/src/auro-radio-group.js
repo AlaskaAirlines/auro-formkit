@@ -274,8 +274,6 @@ export class AuroRadioGroup extends LitElement {
       button.reset();
     });
 
-    this.touched = false;
-
     this.validation.reset(this);
   }
 

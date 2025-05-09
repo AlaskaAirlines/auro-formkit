@@ -317,7 +317,6 @@ export class AuroCheckboxGroup extends LitElement {
       checkbox.reset();
     });
 
-    this.touched = false;
     this.validation.reset(this);
   }
 
