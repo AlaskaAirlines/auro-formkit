@@ -297,6 +297,7 @@ describe('auro-input', () => {
     expect(el.hasAttribute('aria-invalid')).to.be.false;
 
     el.value = '';
+    el.touched = true;
     await elementUpdated(el);
 
     expect(el.getAttribute('validity')).to.be.equal('valueMissing');

@@ -55,6 +55,7 @@ export class AuroRadioGroup extends LitElement {
     this.value = undefined;
     this.optionSelected = undefined;
     this.onDark = false;
+    this.touched = false;
 
     /**
      * @private
@@ -136,6 +137,18 @@ export class AuroRadioGroup extends LitElement {
       },
       optionSelected: {
         type: Object
+      },
+
+      /**
+       * Indicates whether the radio group is in a dirty state (has been interacted with).
+       * @type {boolean}
+       * @default false
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
       }
     };
   }
@@ -191,10 +204,7 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   handleRadioBlur() {
-    if (this.value === undefined) {
-      this.value = '';
-    }
-
+    this.touched = true;
     this.validation.validate(this);
   }
 
