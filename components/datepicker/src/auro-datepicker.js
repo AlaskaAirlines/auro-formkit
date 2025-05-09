@@ -90,6 +90,7 @@ export class AuroDatePicker extends LitElement {
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
     this.format = 'mm/dd/yyyy';
+    this.fullscreenBreakpoint = 'sm';
     this.monthNames = [
       'January',
       'February',
@@ -223,6 +224,19 @@ export class AuroDatePicker extends LitElement {
        * Specifies the date format. The default is `mm/dd/yyyy`.
        */
       format: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
+       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       *
+       * When expanded, the dropdown will automatically display in fullscreen mode
+       * if the screen size is equal to or smaller than the selected breakpoint.
+       * @default sm
+       */
+      fullscreenBreakpoint: {
         type: String,
         reflect: true
       },
@@ -1053,7 +1067,7 @@ export class AuroDatePicker extends LitElement {
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           disableEventShow
-          fullscreenBreakpoint="sm"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .placement="${this.placement}"
           .offset="${this.offset}"
           ?autoPlacement="${this.autoPlacement}"

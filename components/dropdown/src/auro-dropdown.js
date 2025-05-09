@@ -296,7 +296,12 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile. When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
+       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       *
+       * When expanded, the dropdown will automatically display in fullscreen mode
+       * if the screen size is equal to or smaller than the selected breakpoint.
+       * @default sm
        */
       fullscreenBreakpoint: {
         type: String,
@@ -436,6 +441,15 @@ export class AuroDropdown extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroDropdown);
   }
 
+  /**
+   * Accessor for reusing the focusable entity query string.
+   * @private
+   * @returns {string}
+   */
+  get focusableEntityQuery () {
+    return 'auro-input, [auro-input], auro-button, [auro-button], button, input';
+  }
+
   connectedCallback() {
     super.connectedCallback();
   }
@@ -449,6 +463,8 @@ export class AuroDropdown extends LitElement {
   updated(changedProperties) {
     this.floater.handleUpdate(changedProperties);
 
+    // Note: `disabled` is not a breakpoint (it is not a screen size),
+    // so it looks like we never consume this - however, dropdownBib handles this in the setter as "undefined"
     if (changedProperties.has('fullscreenBreakpoint')) {
       this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
     }
@@ -601,7 +617,7 @@ export class AuroDropdown extends LitElement {
 
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
-        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        const auroElements = node.querySelectorAll(this.focusableEntityQuery);
         auroElements.forEach((auroEl) => {
           auroEl.addEventListener('focus', this.bindFocusEventToTrigger);
           auroEl.addEventListener('blur', this.bindFocusEventToTrigger);
@@ -622,7 +638,7 @@ export class AuroDropdown extends LitElement {
 
     this.triggerContentSlot.forEach((node) => {
       if (node.querySelectorAll) {
-        const auroElements = node.querySelectorAll('auro-input, [auro-input], auro-button, [auro-button], button, input');
+        const auroElements = node.querySelectorAll(this.focusableEntityQuery);
         auroElements.forEach((auroEl) => {
           auroEl.removeEventListener('focus', this.bindFocusEventToTrigger);
           auroEl.removeEventListener('blur', this.bindFocusEventToTrigger);

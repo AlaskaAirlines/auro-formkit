@@ -1,4 +1,4 @@
-import { fixture, html, expect, oneEvent } from '@open-wc/testing';
+import {fixture, html, expect, oneEvent} from '@open-wc/testing';
 import '../src/registered.js';
 
 describe('auro-dropdown', () => {
@@ -251,6 +251,28 @@ describe('auro-dropdown', () => {
     }));
 
     expectPopoverHidden(el);
+  });
+
+  describe('when passing fullscreenBreakpoint', () => {
+    it('passes a pixel value when selecting a valid breakpoint', async () => {
+      const el = await fixture(html`
+        <auro-dropdown fullscreenBreakpoint="sm">
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      expect(el.bibContent.mobileFullscreenBreakpoint).to.equal('576px');
+    });
+
+    it('passes "undefined" when selecting `disabled`', async () => {
+      const el = await fixture(html`
+        <auro-dropdown fullscreenBreakpoint="disabled">
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      expect(el.bibContent.mobileFullscreenBreakpoint).to.equal(undefined);
+    });
   });
 });
 
