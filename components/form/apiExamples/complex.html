@@ -1,0 +1,65 @@
+<style>
+  .submitBlock {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  .datepickerBlock {
+    margin-top: 1rem;
+  }
+
+  .complex-form {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #2a2a2a;
+    border-radius: 1rem;
+  }
+</style>
+
+<h2>auro-form testing</h2>
+<auro-form class="complex-form">
+  <auro-input id="first-name" name="firstName" required>
+    <span slot="label">First Name</span>
+  </auro-input>
+  <div>
+    <auro-input id="last-name" name="lastName" required>
+      <span slot="label">Last Name</span>
+    </auro-input>
+  </div>
+  <div>
+    <div>
+      <auro-input id="occupation" name="occupation" required>
+        <span slot="label">Occupation</span>
+      </auro-input>
+    </div>
+  </div>
+
+  <auro-input-two id="cool-fact" name="coolFact" required>
+    <span slot="label">Cool Fact</span>
+  </auro-input-two>
+
+  <div class="datepickerBlock">
+    <h4>Pick a cool date</h4>
+    <auro-datepicker id="date-example" name="dateExample" required>
+      <span slot="fromLabel">Choose a date</span>
+      <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    </auro-datepicker>
+  </div>
+
+  <div class="datepickerBlock">
+    <h4>Pick a date range</h4>
+    <auro-datepicker id="date-range" name="dateRange" required range>
+      <span slot="fromLabel">Start</span>
+      <span slot="toLabel">End</span>
+      <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+    </auro-datepicker>
+  </div>
+
+  <div class="submitBlock">
+    <auro-button type="reset">Reset</auro-button>
+    <auro-button type="submit">Submit</auro-button>
+  </div>
+</auro-form>
