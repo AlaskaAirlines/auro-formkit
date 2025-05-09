@@ -300,8 +300,11 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.
-       * When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint.
+       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
+       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       *
+       * When expanded, the dropdown will automatically display in fullscreen mode
+       * if the screen size is equal to or smaller than the selected breakpoint.
        * @default sm
        */
       fullscreenBreakpoint: {
@@ -351,6 +354,14 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   handleMenuOptions() {
+    // Reset menu matchword UI
+    this.menu.updateItemsState(new Map([
+      [
+        'matchWord',
+        true
+      ]
+    ]));
+
     this.generateOptionsArray();
     this.availableOptions = [];
 

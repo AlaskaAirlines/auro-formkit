@@ -123,7 +123,7 @@ Applying the `noCheckmark` attribute will prevent the checkmark icon from being 
 
 ## Example with custom bib height
 
-This example shows how to set a custom height for the bib from `<auro-dropdown>`. 
+This example shows how to set a custom height for the bib from `<auro-dropdown>`.
 
 Custom height dimensions are set by using the `dropdownSize` CSS Part and then applying a `max-height` rule and value.
 
@@ -139,6 +139,27 @@ Custom height dimensions are set by using the `dropdownSize` CSS Part and then a
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
+
+## Example with fullscreen dropdown breakpoint override
+
+This example overrides the default dropdown behavior to force a non-fullscreen view on any screen size. `disabled`
+ensures that the dropdown will never be fullscreen.
+Please use `xl` if you want the opposite behavior, where a dropdown is always fullscreen.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/forcedFullscreenDisabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/forcedFullscreenDisabled.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 
 ## Error State
 
