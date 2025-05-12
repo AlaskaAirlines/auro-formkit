@@ -594,9 +594,9 @@ describe('auro-input', () => {
       <auro-input id="checkSpellCheck" type="text" required spellcheck="false"></auro-input>
     `);
 
-    expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.have.attribute('spellcheck', 'false');
-    expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.have.attribute('autocorrect', 'off');
-    expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.have.attribute('autocapitalize', 'none');
+    expect(el.shadowRoot.querySelector('input')).to.have.attribute('spellcheck', 'false');
+    expect(el.shadowRoot.querySelector('input')).to.have.attribute('autocorrect', 'off');
+    expect(el.shadowRoot.querySelector('input')).to.have.attribute('autocapitalize', 'none');
   });
 
   it('Does not set spellcheck and autocapitalize values', async () => {
@@ -604,9 +604,9 @@ describe('auro-input', () => {
       <auro-input id="checkSpellCheck" type="text" required spellcheck="true"></auro-input>
     `);
 
-    expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.have.attribute('spellcheck', 'true');
-    expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.not.have.attribute('autocorrect');
-    expect(el.shadowRoot.querySelector('#checkSpellCheck')).to.not.have.attribute('autocapitalize');
+    expect(el.shadowRoot.querySelector('input')).to.have.attribute('spellcheck', 'true');
+    expect(el.shadowRoot.querySelector('input')).to.not.have.attribute('autocorrect');
+    expect(el.shadowRoot.querySelector('input')).to.not.have.attribute('autocapitalize');
   });
 
   it('reset method clears the value and validity state', async () => {
@@ -805,7 +805,7 @@ describe('auro-input', () => {
 
       expect(content).to.not.contain(`Por favor`);
       expect(eli18nContent).to.contain(`Por favor`);
-      expect(eli18n.shadowRoot.querySelector('#input01')).to.have.attribute('lang', 'es');
+      expect(eli18n.shadowRoot.querySelector('input')).to.have.attribute('lang', 'es');
     });
   });
 

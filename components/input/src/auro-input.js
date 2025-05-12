@@ -118,7 +118,7 @@ export class AuroInput extends BaseInput {
             : undefined
             }
           </div>
-          <label for=${this.id} class="${classMap(labelClasses)}" part="label">
+          <label for=${this.inputId} class="${classMap(labelClasses)}" part="label">
             <slot name="label">
               ${this.label}
             </slot>
@@ -128,7 +128,7 @@ export class AuroInput extends BaseInput {
             @input="${this.handleInput}"
             @focusin="${this.handleFocusin}"
             @blur="${this.handleBlur}"
-            id="${this.id}"
+            id="${this.inputId}"
             name="${ifDefined(this.name)}"
             type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}"
             pattern="${ifDefined(this.definePattern())}"
@@ -196,7 +196,7 @@ export class AuroInput extends BaseInput {
                   variant="flat"
                   ?onDark="${this.onDark}"
                   class="notificationBtn clearBtn"
-                  aria-label="${i18n(this.lang, 'clearInput')}"
+                  arialabel="${i18n(this.lang, 'clearInput')}"
                   @click="${this.handleClickClear}">
                   <${this.iconTag}
                     customColor
