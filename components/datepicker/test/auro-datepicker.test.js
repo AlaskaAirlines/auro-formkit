@@ -45,6 +45,20 @@ describe('auro-datepicker', () => {
     await expect(el.shadowRoot.activeElement).to.be.equal(input);
   });
 
+  it('should pass the inputmode attribute to the input', async () => {
+    const el = await fixture(html`
+      <auro-datepicker inputmode="numeric"></auro-datepicker>
+    `);
+
+    const input = getInput(el, 0);
+
+    await expect(input.getAttribute('inputmode')).to.be.equal('numeric');
+
+    input.removeAttribute('inputmode');
+    await elementUpdated(el);
+    await expect(input.hasAttribute('inputmode')).to.be.false;
+  });
+
   it('can programmatically apply focus to input desired input with range support', async () => {
     const el = await fixture(html`
       <auro-datepicker range></auro-datepicker>

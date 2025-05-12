@@ -113,10 +113,12 @@ export class AuroCheckbox extends LitElement {
       /**
        * Indicates whether the checkbox has been interacted with.
        * @type {boolean}
+       * @private
        */
       touched: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        attribute: false
       }
     };
   }

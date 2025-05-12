@@ -28,6 +28,19 @@ function runFulltest(mobileview) {
     await expect(el).to.be.accessible();
   });
 
+  it('should pass inputmode to the input element', async () => {
+    const el = await defaultFixture(mobileview);
+    const auroInput = el.input;
+    const input = auroInput.shadowRoot.querySelector('input');
+    const inputmode = 'numeric';
+    auroInput.inputmode = inputmode;
+    await elementUpdated(el);
+    await expect(input.getAttribute('inputmode')).to.equal(inputmode);
+    input.removeAttribute('inputmode');
+    await elementUpdated(el);
+    await expect(input.getAttribute('inputmode')).to.equal(null);
+  });
+
   it('noFilter attribute results in no suggestion filtering', async () => {
     const el = await noFilterFixture(mobileview);
 

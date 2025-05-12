@@ -65,6 +65,26 @@ Use the `disable` attribute to prevent the user from interacting with the input.
 
 </auro-accordion>
 
+#### Input Mode
+
+Set the input mode for the input.
+
+*IMPORTANT:* If you are also passing a `type`, most browsers will use the `type` attribute to determine what keyboard to display on mobile devices and ignore the `inputmode` attribute.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inputmode.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inputmode.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Placeholder <a name="placeholder"></a>
 
 Use the `placeholder` attribute to add a custom placeholder message within the element.

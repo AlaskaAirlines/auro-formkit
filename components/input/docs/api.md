@@ -27,6 +27,7 @@ Generate unique names for dependency components.
 | `format`                          | `format`                          | `string`  |             | Specifies the input mask format.                 |
 | `icon`                            | `icon`                            | `boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
 | `id`                              | `id`                              | `string`  |             | Sets the unique ID of the element.               |
+| `inputmode`                       | `inputmode`                       | `string`  |             | Exposes inputmode attribute for input.           |
 | `lang`                            | `lang`                            | `string`  |             | Defines the language of an element.              |
 | `max`                             | `max`                             | `string`  | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | `maxLength`                       | `maxLength`                       | `number`  | "undefined" | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
