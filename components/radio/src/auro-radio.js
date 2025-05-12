@@ -87,6 +87,11 @@ export class AuroRadio extends LitElement {
         type: Number,
         reflect: true
       },
+
+      /**
+       * Whether or not the radio button has been touched by the user.
+       * @private
+       */
       touched: {
         type: Boolean,
         reflect: true,
