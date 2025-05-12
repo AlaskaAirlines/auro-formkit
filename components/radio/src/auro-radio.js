@@ -40,6 +40,7 @@ export class AuroRadio extends LitElement {
     this.error = false;
     this.onDark = false;
     this.tabIndex = -1;
+    this.touched = false;
 
     /**
      * @private
@@ -84,6 +85,10 @@ export class AuroRadio extends LitElement {
       value:    { type: String },
       tabIndex: {
         type: Number,
+        reflect: true
+      },
+      touched: {
+        type: Boolean,
         reflect: true
       }
     };
@@ -136,6 +141,7 @@ export class AuroRadio extends LitElement {
    * @returns {void}
    */
   handleFocus(event) {
+    this.touched = true;
     this.dispatchEvent(new CustomEvent('focusSelected', {
       bubbles: true,
       composed: true,
@@ -162,6 +168,7 @@ export class AuroRadio extends LitElement {
    * @returns {void}
    */
   reset() {
+    this.touched = false;
     this.checked = false;
     this.error = false;
   }

@@ -306,6 +306,18 @@ export class AuroSelect extends LitElement {
         reflect: true,
         attribute: 'multiselect'
       },
+
+      /**
+       * Indicates whether the input is in a dirty state (has been interacted with).
+       * @type {boolean}
+       * @default false
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
+      }
     };
   }
 
@@ -577,16 +589,7 @@ export class AuroSelect extends LitElement {
    */
   handleFocusin() {
 
-    /**
-     * The input is considered to be in it's initial state based on
-     * if this.value === undefined. The first time we interact with the
-     * input manually, by applying focusin, we need to flag the
-     * input as no longer in the initial state.
-     */
-    if (this.value === undefined) {
-      this.value = undefined;
-      this.removeEventListener('focusin', this.handleFocusin);
-    }
+    this.touched = true;
   }
 
   /**
