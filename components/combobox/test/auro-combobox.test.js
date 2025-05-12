@@ -1,4 +1,4 @@
-import { fixture, html, expect, waitUntil, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, waitUntil, elementUpdated, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
@@ -216,6 +216,41 @@ function runFulltest(mobileview) {
 
     await expect(visibleMenuOptions.length).to.be.equal(1);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
+  });
+
+  it('fired `auroCombobox-valueSet` event on value update', async () => {
+    const el = await defaultFixture(mobileview);
+
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    setTimeout(() => {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    await oneEvent(el, 'auroCombobox-valueSet');
+  });
+
+  it('fires input event on typing', async () => {
+    const el = await defaultFixture(mobileview);
+
+    setInputValue(el, 'a');
+
+    if (mobileview) {
+      await waitUntil(() => el.dropdown.isPopoverVisible && el.input.parentNode !== el.dropdown);
+    } else {
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+    }
+    setTimeout(() => {
+      setInputValue(el, 'app');
+    });
+    await oneEvent(el, 'input');
+
   });
 
   it('using the nomatch attribute with a matching value', async () => {
@@ -236,6 +271,8 @@ function runFulltest(mobileview) {
 
     await expect(visibleMenuOptions.length).to.be.equal(1);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
   });
 
   it('using the nomatch attribute with no matching value', async () => {
@@ -277,6 +314,8 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions.length).to.be.equal(2);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
     await expect(visibleMenuOptions[1].innerText).to.be.equal('Persistent');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
   });
 
   it('using the suggest attribute matches additional options', async () => {
@@ -298,6 +337,8 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions.length).to.be.equal(2);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
     await expect(visibleMenuOptions[1].innerText).to.be.equal('Oranges');
+
+    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
   });
 
   it('makes a selection programmatically', async () => {
@@ -370,6 +411,17 @@ function runFulltest(mobileview) {
     await elementUpdated(el);
 
     await expect(el.getAttribute('validity')).to.be.equal('valid');
+  });
+
+  it('fires `auroFormElement-validated` event after validation', async() => {
+    const el = await requiredFixture(mobileview);
+
+    // error applied on blur
+    el.focus();
+    setTimeout(() => {
+      el.shadowRoot.activeElement.blur();
+    });
+    await oneEvent(el, 'auroFormElement-validated');
   });
 
   it('default to nocheckmark on selected option', async () => {
@@ -651,7 +703,7 @@ function setInputValue(el, value) {
   input.focus();
   input.value = value;
   input.dispatchEvent(new InputEvent('input'));
-  auroInput.dispatchEvent(new Event('input', {bubbles:true}));
+  auroInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true}));
   el.dispatchEvent(new KeyboardEvent('keyup', {
     key: value.slice(value.length - 1),
     repeat: false

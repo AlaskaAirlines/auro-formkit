@@ -263,10 +263,10 @@ describe('auro-datepicker', () => {
     await expect(el.getAttribute('validity')).to.be.equal('tooShort');
 
     // empty
-    el.value = "";
+    el.reset();
     el.validate();
     await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute('validity')).to.be.null;
 
     // set another imcomplete value
     el.value = "02/0";
