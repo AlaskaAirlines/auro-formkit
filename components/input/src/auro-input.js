@@ -50,6 +50,18 @@ export class AuroInput extends BaseInput {
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
   }
 
+  static get properties() {
+    return {
+
+      /** Exposes inputmode attribute for input.  */
+      inputmode: {
+        type: String,
+        attribute: true,
+        reflect: true
+      }
+    };
+  }
+
   /**
    * This will register this element with the browser.
    * @param {string} [name="auro-input"] - The name of element that you want to register to.
@@ -134,7 +146,7 @@ export class AuroInput extends BaseInput {
             pattern="${ifDefined(this.definePattern())}"
             maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
             minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
-            inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
+            inputMode="${ifDefined(this.inputmode ? this.inputmode : undefined)}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             aria-describedby="${this.uniqueId}"

@@ -31,6 +31,17 @@ describe('auro-input', () => {
     expect(input).to.have.attribute('placeholder', 'John Doe');
   });
 
+  it('sets inputmode attribute on the input when passed as attribute or prop', async () => {
+    const el = await fixture(html`
+      <auro-input id="demo50" required inputmode="numeric"></auro-input>
+    `);
+    const input = el.shadowRoot.querySelector('input');
+    expect(input).to.have.attribute('inputmode', 'numeric');
+    input.removeAttribute('inputmode');
+    await elementUpdated(el);
+    expect(input).to.not.have.attribute('inputmode');
+  });
+
   it('Sets custom pattern and setCustomValidity message', async () => {
     const el = await fixture(html`
       <auro-input value="other value" pattern="zzz" setCustomValidity="that is not a valid entry" keyValidate>
