@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+# [3.4.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.3.0...v3.4.0) (2025-05-12)
+
+
+### Features
+
+* expose inputmode attribute for auro-input ([2066d3a](https://github.com/AlaskaAirlines/auro-formkit/commit/2066d3a174a2e37c2ad5e33f867710c8da5ed0ca))
+
 # [3.3.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.8...v3.3.0) (2025-05-12)
 
 
