@@ -24,6 +24,10 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @attr {Boolean} error - If set to true, sets an error state on the radio button.
  * @attr {Boolean} onDark - If set to true, the component will render with a dark theme.
  * @event toggleSelected - Notifies that the component has toggled the checked/selected state.
+ *
+ * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
+ * @attr id
+ *
  * @event focusSelected - Notifies that the component has gained focus.
  * @event auroRadio-blur - Notifies that the component has lost focus.
  * @event resetRadio - Notifies that the component has reset the checked/selected state.
@@ -79,7 +83,6 @@ export class AuroRadio extends LitElement {
         type: Boolean,
         reflect: true
       },
-      id:       { type: String },
       label:    { type: String },
       name:     { type: String },
       value:    { type: String },
@@ -95,6 +98,16 @@ export class AuroRadio extends LitElement {
       touched: {
         type: Boolean,
         reflect: true,
+        attribute: false
+      },
+
+      /**
+       * @private
+       * id for input node
+       */
+      inputId: {
+        type: String,
+        reflect: false,
         attribute: false
       }
     };
@@ -231,6 +244,8 @@ export class AuroRadio extends LitElement {
 
     this.input = this.shadowRoot.querySelector('input');
 
+    this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
+
     this.addEventListener('click', () => {
       this.input.click();
     });
@@ -257,14 +272,14 @@ export class AuroRadio extends LitElement {
           aria-invalid="${this.invalid(this.error)}"
           aria-required="${this.isRequired(this.required)}"
           .checked="${this.checked}"
-          id="${ifDefined(this.id)}"
+          id="${this.inputId}"
           name="${ifDefined(this.name)}"
           type="radio"
           .value="${this.value}"
           tabIndex="-1"
         />
 
-        <label for="${ifDefined(this.id)}" class="${classMap(labelClasses)}">
+        <label for="${this.inputId}" class="${classMap(labelClasses)}">
           <slot>${this.label}</slot>
         </label>
 

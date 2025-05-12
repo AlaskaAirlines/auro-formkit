@@ -26,7 +26,7 @@ Generate unique names for dependency components.
 | `errorMessage`                    | `errorMessage`                    | `string`  |             | Contains the help text message for the current validity error. |
 | `format`                          | `format`                          | `string`  |             | Specifies the input mask format.                 |
 | `icon`                            | `icon`                            | `boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
-| `id`                              | `id`                              | `string`  |             | Sets the unique ID of the element.               |
+| `id`                              | `id`                              | `string`  |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
 | `inputmode`                       | `inputmode`                       | `string`  |             | Exposes inputmode attribute for input.           |
 | `lang`                            | `lang`                            | `string`  |             | Defines the language of an element.              |
 | `max`                             | `max`                             | `string`  | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
