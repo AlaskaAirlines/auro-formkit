@@ -54,7 +54,6 @@ Custom element for the purpose of allowing users to select one or more options o
 | `id`       | `id`       | `string`  |         | Sets the individual `id` per element.            |
 | `name`     | `name`     | `string`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
 | `onDark`   | `onDark`   | `boolean` | false   | Sets onDark styles for component.                |
-| `touched`  | `touched`  | `boolean` | false   | Indicates whether the checkbox has been interacted with. |
 | `value`    | `value`    | `string`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
 
 ## Methods

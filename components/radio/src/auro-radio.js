@@ -89,7 +89,8 @@ export class AuroRadio extends LitElement {
       },
       touched: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        attribute: false
       }
     };
   }
