@@ -222,6 +222,13 @@ export default class BaseInput extends LitElement {
         type: String
       },
 
+      /** Exposes inputmode attribute for input.  */
+      inputmode: {
+        type: String,
+        attribute: true,
+        reflect: true
+      },
+
       /**
        * Defines the language of an element.
        */
@@ -787,9 +794,9 @@ export default class BaseInput extends LitElement {
 
     if (this.type in defaultLengths) {
       this.lengthForType = this.format ? this.format.length : defaultLengths[this.type];
-      this.inputMode = 'numeric';
+      this.inputmode = this.inputmode || 'numeric';
     } else if (this.type === 'number') {
-      this.inputMode = 'numeric';
+      this.inputmode = this.inputmode || 'numeric';
     }
 
     if (this.type === "date" && !this.format) {

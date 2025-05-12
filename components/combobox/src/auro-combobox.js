@@ -29,6 +29,7 @@ import {
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
+import { ifDefined } from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -160,6 +161,13 @@ export class AuroCombobox extends LitElement {
        */
       error: {
         type: String,
+        reflect: true
+      },
+
+      /** Exposes inputmode attribute for input.  */
+      inputmode: {
+        type: String,
+        attribute: true,
         reflect: true
       },
 
@@ -1044,6 +1052,7 @@ export class AuroCombobox extends LitElement {
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
             .autocomplete="${this.autocomplete}"
             .type="${this.type}"
+            inputmode="${ifDefined(this.inputmode)}"
             @input="${this.handleInputValueChange}">
           </${this.inputTag}>
 

@@ -30,6 +30,7 @@ import dropdownVersion from './dropdownVersion.js';
 
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './inputVersion.js';
+import { ifDefined } from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -239,6 +240,13 @@ export class AuroDatePicker extends LitElement {
        */
       fullscreenBreakpoint: {
         type: String,
+        reflect: true
+      },
+
+      /** Exposes inputmode attribute for input.  */
+      inputmode: {
+        type: String,
+        attribute: true,
         reflect: true
       },
 
@@ -1092,6 +1100,7 @@ export class AuroDatePicker extends LitElement {
               setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
               setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
               ?disabled="${this.disabled}"
+              inputmode="${ifDefined(this.inputmode)}"
               part="input">
               <span slot="label"><slot name="fromLabel"></slot></span>
             </${this.inputTag}>
