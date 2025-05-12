@@ -73,6 +73,24 @@ A custom error message can be set using the `error` attribute, or it can be used
 
 </auro-accordion>
 
+#### Input Mode
+
+You can manually set the input mode for the input.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inputmode.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inputmode.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### calendarStartDate & calendarEndDate
 
 The `calendarStartDate` and `calendarEndDate` properties may be used to explicitly control which calendar months _may_ be rendered in the calendar.
