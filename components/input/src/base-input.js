@@ -25,6 +25,9 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @attr {Boolean} bordered - Applies bordered UI variant.
  * @attr {Boolean} borderless - Applies borderless UI variant.
  *
+ * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
+ * @attr id
+ *
  * @slot helptext - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
  *
@@ -213,13 +216,6 @@ export default class BaseInput extends LitElement {
       icon: {
         type: Boolean,
         reflect: true
-      },
-
-      /**
-       * Sets the unique ID of the element.
-       */
-      id: {
-        type: String
       },
 
       /** Exposes inputmode attribute for input.  */
@@ -442,6 +438,16 @@ export default class BaseInput extends LitElement {
         type: Boolean,
         reflect: true,
         attribute: false
+      },
+
+      /**
+       * @private
+       * id for input node
+       */
+      inputId: {
+        type: String,
+        reflect: false,
+        attribute: false
       }
     };
   }
@@ -473,6 +479,7 @@ export default class BaseInput extends LitElement {
     if (this.tagName.toLowerCase() !== 'auro-input') {
       this.setAttribute('auro-input', true);
     }
+    this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');

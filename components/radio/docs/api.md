@@ -55,7 +55,7 @@
 | `checked`  | `checked`  | `Boolean` | false   | If set to true, the radio button will be filled. |
 | `disabled` | `disabled` | `Boolean` | false   | If set to true, the radio button will be non-clickable. |
 | `error`    | `error`    | `Boolean` | false   | If set to true, sets an error state on the radio button. |
-| `id`       | `id`       | `string`  |         |                                                  |
+| `id`       | `id`       | `string`  |         | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
 | `label`    | `label`    | `string`  |         |                                                  |
 | `name`     | `name`     | `string`  |         |                                                  |
 | `onDark`   | `onDark`   | `Boolean` | false   | If set to true, the component will render with a dark theme. |

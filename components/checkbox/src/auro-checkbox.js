@@ -18,6 +18,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 /**
  * Custom element for the purpose of allowing users to select one or more options of a limited number of choices.
  *
+ * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
+ * @attr id
+ *
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.
@@ -85,11 +88,6 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * Sets the individual `id` per element.
-       */
-      id: { type: String },
-
-      /**
        * Accepts any string and is used to identify related checkboxes when submitting form data.
        */
       name: { type: String },
@@ -118,6 +116,16 @@ export class AuroCheckbox extends LitElement {
       touched: {
         type: Boolean,
         reflect: true,
+        attribute: false
+      },
+
+      /**
+       * @private
+       * id for input node
+       */
+      inputId: {
+        type: String,
+        reflect: false,
         attribute: false
       }
     };
@@ -209,6 +217,8 @@ export class AuroCheckbox extends LitElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-checkbox');
 
+    this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
+
     this.addEventListener('click', () => {
       this.handleFocusin();
     });
@@ -243,13 +253,13 @@ export class AuroCheckbox extends LitElement {
           @input="${this.handleInput}"
           ?disabled="${this.disabled}"
           .checked="${this.checked}"
-          id="${ifDefined(this.id)}"
+          id="${this.inputId}"
           name="${ifDefined(this.name)}"
           type="checkbox"
           .value="${this.value}"
         />
 
-        <label for="${ifDefined(this.id)}" class="${classMap(labelClasses)}" part="checkbox-label">
+        <label for="${this.inputId}" class="${classMap(labelClasses)}" part="checkbox-label">
           ${this.checked ? this.generateIconHtml() : undefined}
           <slot></slot>
         </label>
