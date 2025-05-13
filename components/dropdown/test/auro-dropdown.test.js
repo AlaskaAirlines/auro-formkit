@@ -22,6 +22,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown with chevron', async () => {
     const el = await fixture(html`
       <auro-dropdown chevron>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -33,6 +36,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown with non-focusable trigger', async () => {
     const el = await fixture(html`
       <auro-dropdown chevron>
+        <span slot="label">
+          label text
+        </span>
         <span slot="trigger">Trigger</span>
       </auro-dropdown>
     `);
@@ -43,6 +49,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown with focusable trigger', async () => {
     const el = await fixture(html`
       <auro-dropdown chevron>
+        <span slot="label">
+          label text
+        </span>
         <a slot="trigger">Trigger</a>
       </auro-dropdown>
     `);
@@ -53,6 +62,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown with focusable trigger child element', async () => {
     const el = await fixture(html`
       <auro-dropdown chevron>
+        <span slot="label">
+          label text
+        </span>
         <span slot="trigger">
           <a>Trigger</a>
         </span>
@@ -79,6 +91,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown shows only with click when using noToggle attribute', async () => {
     const el = await fixture(html`
       <auro-dropdown noToggle>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -96,6 +111,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown toggle with click', async () => {
     const el = await fixture(html`
       <auro-dropdown>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -113,6 +131,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown programmatically hide', async () => {
     const el = await fixture(html`
       <auro-dropdown toggle chevron>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -134,9 +155,14 @@ describe('auro-dropdown', () => {
   it('auro-dropdown fires event - auroDropdown-triggerClick', async () => {
     const el = await fixture(html`
       <auro-dropdown disableEventShow>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
+
+    await expect(el).to.be.accessible();
 
     const trigger = el.shadowRoot.querySelector('#trigger');
     expectPopoverHidden(el);
@@ -151,6 +177,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown fires event - auroDropdown-toggled', async () => {
     const el = await fixture(html`
       <auro-dropdown toggle>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -172,6 +201,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown toggles with spacebar', async () => {
     const el = await fixture(html`
       <auro-dropdown>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -188,6 +220,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown toggles with enter key', async () => {
     const el = await fixture(html`
       <auro-dropdown>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -204,6 +239,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown shows with spacebar', async () => {
     const el = await fixture(html`
       <auro-dropdown>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -220,6 +258,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown shows with enter key', async () => {
     const el = await fixture(html`
       <auro-dropdown>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -236,6 +277,9 @@ describe('auro-dropdown', () => {
   it('auro-dropdown hides with esc key', async () => {
     const el = await fixture(html`
       <auro-dropdown>
+        <span slot="label">
+          label text
+        </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
     `);
@@ -257,6 +301,9 @@ describe('auro-dropdown', () => {
     it('passes a pixel value when selecting a valid breakpoint', async () => {
       const el = await fixture(html`
         <auro-dropdown fullscreenBreakpoint="sm">
+          <span slot="label">
+            label text
+          </span>
           <div slot="trigger">Trigger</div>
         </auro-dropdown>
       `);
@@ -267,6 +314,9 @@ describe('auro-dropdown', () => {
     it('passes "undefined" when selecting `disabled`', async () => {
       const el = await fixture(html`
         <auro-dropdown fullscreenBreakpoint="disabled">
+          <span slot="label">
+            label text
+          </span>
           <div slot="trigger">Trigger</div>
         </auro-dropdown>
       `);

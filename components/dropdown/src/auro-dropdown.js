@@ -800,7 +800,7 @@ export class AuroDropdown extends LitElement {
           ?showBorder="${this.showTriggerBorders}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
           aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-controls="${ifDefined(this.triggerContentFocusable || !this.bibContent ? undefined : this.bibContent.id)}"
           aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
         >
           <div class="triggerContentWrapper">
