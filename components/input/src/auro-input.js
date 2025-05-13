@@ -134,7 +134,7 @@ export class AuroInput extends BaseInput {
             pattern="${ifDefined(this.definePattern())}"
             maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
             minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
-            inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
+            inputMode="${ifDefined(this.inputmode ? this.inputmode : undefined)}"
             ?required="${this.required}"
             ?disabled="${this.disabled}"
             aria-describedby="${this.uniqueId}"

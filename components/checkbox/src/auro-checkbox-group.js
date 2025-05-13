@@ -41,6 +41,14 @@ export class AuroCheckboxGroup extends LitElement {
     this.onDark = false;
 
     /**
+     * Indicates whether the checkbox group is in a dirty state (has been interacted with).
+     * @type {boolean}
+     * @default false
+     * @private
+     */
+    this.touched = false;
+
+    /**
      * @private
      */
     this.value = undefined;
@@ -229,6 +237,8 @@ export class AuroCheckboxGroup extends LitElement {
     };
 
     this.addEventListener('auroCheckbox-focusin', () => {
+      this.touched = true;
+
       if (!this.value) {
         this.value = [];
       }

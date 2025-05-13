@@ -1,5 +1,35 @@
 # Semantic Release Automated Changelog
 
+# [3.4.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.3.0...v3.4.0) (2025-05-12)
+
+
+### Features
+
+* expose inputmode attribute for auro-input ([2066d3a](https://github.com/AlaskaAirlines/auro-formkit/commit/2066d3a174a2e37c2ad5e33f867710c8da5ed0ca))
+
+# [3.3.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.2.8...v3.3.0) (2025-05-12)
+
+
+### Bug Fixes
+
+* improved touched state handling ([07ae52f](https://github.com/AlaskaAirlines/auro-formkit/commit/07ae52f6e2c9de4a99d3ed820dec9dc86fb6e091))
+* match `typeof event` to duplicate to bubble up in combobox [#576](https://github.com/AlaskaAirlines/auro-formkit/issues/576) ([0b6231b](https://github.com/AlaskaAirlines/auro-formkit/commit/0b6231bd52346d91a04088198fe6e8921c7ac299))
+* pr feedback Apr 28, 2025 ([2dcd705](https://github.com/AlaskaAirlines/auro-formkit/commit/2dcd70543c206229286a69364b7e503c6e12fb5f))
+* properly transport input on `strategy-change` in combobox ([23e079d](https://github.com/AlaskaAirlines/auro-formkit/commit/23e079d3f4ba5f22aaa8bd28cc80dd096c74e9b0))
+* render match word in bold in a combobox with dynamic menu [#551](https://github.com/AlaskaAirlines/auro-formkit/issues/551) ([63b8dac](https://github.com/AlaskaAirlines/auro-formkit/commit/63b8dac663377a4af4038ed2c5e09e34bf155409))
+
+
+### Features
+
+* implement touched state for radio and select components on user interaction ([2f4b8f6](https://github.com/AlaskaAirlines/auro-formkit/commit/2f4b8f66f097cfb932a07e5d37dd05fb6fbafaab))
+* surface fullscreenBreakpoint with new `disabled` value ([4f00b48](https://github.com/AlaskaAirlines/auro-formkit/commit/4f00b4808254490419ca6ae387344e49834ca896))
+* update form validation to be based on pristine/dirty instead of undefined and '' values ([fc0bade](https://github.com/AlaskaAirlines/auro-formkit/commit/fc0bade112a8b4e801b2851c27069592b0f024bc))
+
+
+### Performance Improvements
+
+* remove unnecessary variables ([87f3f80](https://github.com/AlaskaAirlines/auro-formkit/commit/87f3f80e17d6884a69726893bc4fc066d6934a94))
+
 # [3.3.0-beta.2](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.3.0-beta.1...v3.3.0-beta.2) (2025-05-09)
 
 

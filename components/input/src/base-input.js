@@ -61,6 +61,7 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   privateDefaults() {
+    this.touched = false;
     this.util = new AuroInputUtilities();
     this.validation = new AuroFormValidation();
     this.inputIconName = undefined;
@@ -219,6 +220,13 @@ export default class BaseInput extends LitElement {
        */
       id: {
         type: String
+      },
+
+      /** Exposes inputmode attribute for input.  */
+      inputmode: {
+        type: String,
+        attribute: true,
+        reflect: true
       },
 
       /**
@@ -422,6 +430,18 @@ export default class BaseInput extends LitElement {
       validity: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * Indicates whether the input is in a dirty state (has been interacted with).
+       * @type {boolean}
+       * @default false
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
       }
     };
   }
@@ -708,15 +728,7 @@ export default class BaseInput extends LitElement {
    */
   handleFocusin() {
 
-    /**
-     * The input is considered to be in it's initial state based on
-     * if this.value === undefined. The first time we interact with the
-     * input manually, by applying focusin, we need to flag the
-     * input as no longer in the initial state.
-     */
-    if (this.value === undefined) {
-      this.value = '';
-    }
+    this.touched = true;
   }
 
   /**
@@ -782,9 +794,9 @@ export default class BaseInput extends LitElement {
 
     if (this.type in defaultLengths) {
       this.lengthForType = this.format ? this.format.length : defaultLengths[this.type];
-      this.inputMode = 'numeric';
+      this.inputmode = this.inputmode || 'numeric';
     } else if (this.type === 'number') {
-      this.inputMode = 'numeric';
+      this.inputmode = this.inputmode || 'numeric';
     }
 
     if (this.type === "date" && !this.format) {

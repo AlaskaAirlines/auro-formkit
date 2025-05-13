@@ -31,6 +31,7 @@ export class AuroCheckbox extends LitElement {
     this.disabled = false;
     this.error = false;
     this.onDark = false;
+    this.touched = false;
 
     /**
      * @private
@@ -107,6 +108,17 @@ export class AuroCheckbox extends LitElement {
       value: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * Indicates whether the checkbox has been interacted with.
+       * @type {boolean}
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
       }
     };
   }
@@ -161,6 +173,7 @@ export class AuroCheckbox extends LitElement {
    * @returns {void}
    */
   handleFocusin() {
+    this.touched = true;
     this.dispatchEvent(new CustomEvent('auroCheckbox-focusin', {
       bubbles: true,
       cancelable: false,
@@ -189,6 +202,7 @@ export class AuroCheckbox extends LitElement {
   reset() {
     this.checked = false;
     this.error = false;
+    this.touched = false;
   }
 
   firstUpdated() {
