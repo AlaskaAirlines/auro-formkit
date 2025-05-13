@@ -91,7 +91,25 @@ export class AuroInput extends BaseInput {
     return false;
   }
 
+  getValidationErrorIconHtml() {
+    return html`
+      ${this.validity && this.validity !== 'valid' ? html`
+        <div class="notification alertNotification">
+          <${this.iconTag}
+            category="alert"
+            name="error-stroke"
+            customColor
+          </${this.iconTag}>
+        </div>
+      ` : undefined}
+    `;
+  }
+
   getLayoutDefault() {
+    const wrapperClasses = {
+      'layoutDefault': true
+    };
+
     // is-disabled class - THIS IS ONLY HERE TO MAKE A TEST PASS AS FAR AS I CAN TELL
     const labelClasses = {
       'is-disabled': this.disabled,
@@ -100,7 +118,7 @@ export class AuroInput extends BaseInput {
     };
 
     return html`
-      <div class="wrapper" part="wrapper">
+      <div class="${classMap(wrapperClasses)}" part="wrapper">
         <div class="main">
           <div class="typeIcon">
             ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
@@ -226,29 +244,31 @@ export class AuroInput extends BaseInput {
         </div>
       </div>
       <!-- Help text and error message template -->
-        ${!this.validity || this.validity === undefined || this.validity === 'valid'
-        ? html`
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+      ? html`
         <${this.helpTextTag} ?onDark="${this.onDark}">
           <p id="${this.uniqueId}" part="helpText">
             <slot name="helptext">${this.getHelpText()}</slot>
           </p>
         </${this.helpTextTag}>
-        `
-        : html`
+      `
+      : html`
         <${this.helpTextTag} error ?onDark="${this.onDark}">
           <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </p>
         </${this.helpTextTag}>
-        `
-        }
+      `
+      }
     `;
   }
 
   getLayoutModern() {
     const wrapperClasses = {
       'wrapper': true,
-      'withValue': this.value && this.value.length > 0
+      'layout-modern': true,
+      'withValue': this.value && this.value.length > 0,
+      'hasFocus': this.contains(document.activeElement)
     };
 
     const labelClasses = {
@@ -257,55 +277,121 @@ export class AuroInput extends BaseInput {
 
     return html`
       <div class="${classMap(wrapperClasses)}" part="wrapper">
-        <label for=${this.id} class="${classMap(labelClasses)}" part="label">
-          <slot name="label">
-            ${this.label}
-          </slot>
-          <!-- HOW DO WE REFLECT REQUIRED IN THIS LAYOUT? -->
-        </label>
-        <input
-          @input="${this.handleInput}"
-          @focusin="${this.handleFocusin}"
-          @focusout="${this.handleFocusout}"
-          @blur="${this.handleBlur}"
-          required="false"
-          ?required="${this.required}"
-          ?disabled="${this.disabled}"
-          ?activeLabel="${this.activeLabel}"
-          id="${this.id}"
-          name="${ifDefined(this.name)}"
-          type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}"
-          pattern="${ifDefined(this.definePattern())}"
-          maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
-          minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
-          inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
-          aria-describedby="${this.uniqueId}"
-          aria-invalid="${this.validity !== 'valid'}"
-          .placeholder=${this.placeholderStr}
-          lang="${ifDefined(this.lang)}"
-          spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
-          autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
-          autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
-          autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
-          part="input" />
+        <div class="accents left">
+          ${this.layout.toLowerCase().includes('left') ? html`
+            ${this.getValidationErrorIconHtml()}
+          ` : undefined}
+        </div>
+        <div class="mainContent">
+          <label for=${this.id} class="${classMap(labelClasses)}" part="label">
+            <slot name="label">
+              ${this.label}
+            </slot>
+          </label>
+          <input
+            @input="${this.handleInput}"
+            @focusin="${this.handleFocusin}"
+            @focusout="${this.handleFocusout}"
+            @blur="${this.handleBlur}"
+            required="false"
+            ?required="${this.required}"
+            ?disabled="${this.disabled}"
+            ?activeLabel="${this.activeLabel}"
+            id="${this.id}"
+            name="${ifDefined(this.name)}"
+            type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}"
+            pattern="${ifDefined(this.definePattern())}"
+            maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
+            minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
+            inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
+            aria-describedby="${this.uniqueId}"
+            aria-invalid="${this.validity !== 'valid'}"
+            .placeholder=${this.placeholderStr}
+            lang="${ifDefined(this.lang)}"
+            spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
+            autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
+            autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
+            autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
+            part="input" />
+        </div>
+        <div class="accents right">
+          ${this.layout.toLowerCase().includes('left') ? undefined : html`
+            ${this.getValidationErrorIconHtml()}
+          `}
+          ${this.hasValue ? html`
+            ${this.type === 'password' ? html`
+              <div class="notification">
+                <${this.buttonTag}
+                  variant="flat"
+                  ?onDark="${this.onDark}"
+                  aria-hidden="true"
+                  tabindex="-1"
+                  @click="${this.handleClickShowPassword}"
+                  class="notificationBtn passwordBtn">
+                  <${this.iconTag}
+                    category="interface"
+                    name="hide-password-stroke"
+                    customColor
+                    ?hidden=${!this.showPassword}>
+                  </${this.iconTag}>
+                  <${this.iconTag}
+                    category="interface"
+                    name="view-password-stroke"
+                    customColor
+                    ?hidden=${this.showPassword}>
+                  </${this.iconTag}>
+                </${this.buttonTag}>
+              </div>
+            ` : undefined}
+            <!--  && this.value !== undefined && this.value !== '' -->
+            ${!this.disabled && !this.readonly ? html`
+              <div class="notification clear">
+                <${this.buttonTag}
+                  variant="flat"
+                  ?onDark="${this.onDark}"
+                  class="notificationBtn clearBtn"
+                  aria-label="${i18n(this.lang, 'clearInput')}"
+                  @click="${this.handleClickClear}">
+                  <${this.iconTag}
+                    customColor
+                    category="interface"
+                    name="x-lg"
+                    >
+                  </${this.iconTag}>
+                </${this.buttonTag}>
+              </div>
+            ` : undefined}
+          ` : undefined}
+        </div>
       </div>
+      <!-- Help text and error message template -->
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helptext">${this.getHelpText()}</slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+        : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+      }
     `;
   }
 
-  // function that renders the HTML and CSS into  the scope of the component
-  render() {
-    let htmlToRender = html``;
+  getLayout(ForcedLayout) {
+    const layout = ForcedLayout || this.layout;
 
-    switch (true) {
-      case this.layout.startsWith('modern'):
-        htmlToRender = this.getLayoutModern();
-        break;
+    switch (layout) {
+      case 'modern':
+        return this.getLayoutModern();
       default:
-        htmlToRender = this.getLayoutDefault();
+        return this.getLayoutDefault();
     }
-
-    return html`
-      ${htmlToRender}
-    `;
   }
 }

@@ -1,3 +1,5 @@
+/* stylelint-disable */
+
 // Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -26,29 +28,80 @@
 }
 
 :host([layout^='modern']) {
-  // $dur: .1s;
-  // $easing: ease-out;
-  background-color: #00274A1A;
-  border-style: solid;
-  border-width: 2px;
-  border-color: transparent;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-height: 68px;
-  min-height: 68px;
+
+  width: 249px;
+  // background-color: aquamarine;
+  display: inline-block;
 
   .wrapper {
     display: flex;
-    padding: 5px 0;
-    flex-direction: column;
+    padding: 0 24px;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+
+    background-color: #00274A1A;
+    border-style: solid;
+    border-width: 2px;
+    border-color: transparent;
+    max-height: 68px;
+    min-height: 68px;
+
+    position: relative;
 
     &.withValue {
       @include activeLabel;
       @include activeInput;
       align-items: start;
+    }
+
+    &.hasFocus {
+      .alertNotification {
+        display: none;
+      }
+    }
+
+    &:not(.hasFocus):not(:hover) {
+      .notification.clear {
+        display: none;
+      }
+    }
+  }
+
+  .mainContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+  }
+
+  .accents {
+    // background-color: aquamarine;
+    max-height: 68px;
+    min-height: 68px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    // position: absolute;
+    opacity: .5;
+    // width: 24px;
+
+    &.left {
+      // left: 24px;
+      .notification {
+        margin-right: 8px;
+      }
+    }
+
+    &.right {
+      // right: 24px;
+      // padding-left: 8px;
+
+      .notification {
+        margin-left: 8px;
+      }
     }
   }
 
@@ -60,7 +113,6 @@
   }
 
   input {
-
     // transition: font-size $dur $easing, line-height $dur $easing;
     background: unset;
     text-align: center;
@@ -68,35 +120,57 @@
     padding: 0;
     border: 0;
     outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // background-color: violet;
   }
 }
 
 :host([layout='modernPill']) {
-  border-radius: 36px;
+  .wrapper {
+    border-radius: 36px;
+  }
+}
+
+:host([layout^='modernPill']) {
+  .wrapper {
+    // padding: 0 24px;
+  }
 }
 
 :host([layout='modernPillLeft']) {
-  border-radius: 36px 0 0 36px;
-  padding: 0 25px;
+  .wrapper {
+    // width: calc(249px - 24px);
+    border-radius: 36px 0 0 36px;
+    // padding-right: 32px;
+  }
+
+  [auro-helptext] {
+    display: block;
+    // margin-left: 24px;
+  }
 }
 
 :host([layout='modernPillRight']) {
-  border-radius: 0 36px 36px 0;
-  padding: 0 25px;
+  .wrapper {
+    // width: calc(249px - 24px);
+    border-radius: 0 36px 36px 0;
+    // padding-left: 32px;
+  }
 }
 
 // FOCUS STATE
-
-:host([layout^='modern']:is(:focus-within)) {
-  border-color: #01426A;
-
+:host([layout^='modern']:focus-within) {
   .wrapper {
     @include activeLabel;
     @include activeInput;
     align-items: start;
+    border-color: #01426A;
   }
 }
 
 :host([layout^='modern']:is([validity]:not([validity='valid']))) {
-  border-color: var(--ds-basic-color-status-error);
+  .wrapper {
+    border-color: var(--ds-basic-color-status-error);
+  }
 }

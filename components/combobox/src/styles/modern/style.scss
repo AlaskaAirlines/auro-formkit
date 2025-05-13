@@ -12,13 +12,13 @@
   [auro-input] {
     // min-height: unset; // var(--ds-size-700, $ds-size-700);
     // max-height: unset; // var(--ds-size-700, $ds-size-700);
-    max-height: 68px;
     min-height: 68px;
+    max-height: 68px;
   }
 
   ::part(trigger) {
-    background-color: transparent;
     border: 0;
+    background-color: transparent;
     outline: 0;
   }
 }

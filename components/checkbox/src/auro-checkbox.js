@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-import { LitElement, html } from "lit";
+import { html } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
@@ -12,6 +12,8 @@ import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
+
+import { AuroLayoutElement } from '@aurodesignsystem/auro-layout-element';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
@@ -24,7 +26,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  */
 
 // build the component class
-export class AuroCheckbox extends LitElement {
+export class AuroCheckbox extends AuroLayoutElement {
   constructor() {
     super();
     this.checked = false;
@@ -49,6 +51,7 @@ export class AuroCheckbox extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+      ...super.properties,
 
       /**
        * If set to true, the checkbox will be filled with a checkmark.
@@ -190,8 +193,11 @@ export class AuroCheckbox extends LitElement {
     });
   }
 
-  // function that renders the HTML and CSS into  the scope of the component
-  render() {
+  /**
+   * @private
+   * @returns {HTMLElement}
+   */
+  getLayoutDefault() {
     const labelClasses = {
       'label': true,
       'label--cbx': true,

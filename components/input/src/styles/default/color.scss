@@ -7,7 +7,7 @@
 
 // @use 'mixins' as m;
 
-/* stylelint-disable no-descending-specificity, selector-class-pattern */
+/* stylelint-disable no-descending-specificity, selector-class-pattern, max-nesting-depth, selector-not-notation */
 :host([layout='default']),
 :host(:not([layout])) { 
   .wrapper {
@@ -43,6 +43,7 @@
     color: var(--ds-auro-input-error-icon-color);
   }
 }
+
 :host([layout='default']:not([bordered], [borderless])),
 :host(:not([layout]):not([bordered], [borderless])) { 
   .wrapper {
@@ -98,6 +99,7 @@
     }
   }
 }
+
 :host([layout='default'][onDark][validity]:not([validity='valid'])[bordered]),
 :host(:not([layout])[onDark][validity]:not([validity='valid'])[bordered]) {
   .wrapper {

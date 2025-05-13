@@ -12,7 +12,14 @@
   visibility: hidden;
 }
 
-/* stylelint-disable  selector-max-attribute, max-nesting-depth, selector-max-class, selector-max-combinators, selector-max-compound-selectors */
+/* stylelint-disable 
+  selector-max-attribute,
+  max-nesting-depth,
+  selector-max-class,
+  selector-max-combinators,
+  selector-max-compound-selectors,
+  selector-not-notation,
+  no-duplicate-selectors */
 :host([layout='default']),
 :host(:not([layout])) { 
   .typeIcon {

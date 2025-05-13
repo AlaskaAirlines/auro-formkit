@@ -6,7 +6,6 @@
 /* eslint-disable max-lines, dot-location, new-cap */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-import { LitElement } from "lit";
 
 import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import { AuroInputUtilities } from "./utilities.js";
@@ -14,6 +13,8 @@ import { AuroInputUtilities } from "./utilities.js";
 import IMask from 'imask';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
+
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
 /**
  * Auro-input provides users a way to enter data into a text field.
@@ -33,7 +34,7 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` value has changed.
  */
 
-export default class BaseInput extends LitElement {
+export default class BaseInput extends AuroElement {
 
   constructor() {
     super();
@@ -41,7 +42,6 @@ export default class BaseInput extends LitElement {
     this.activeLabel = false;
     this.icon = false;
     this.disabled = false;
-    this.layout = 'default';
     this.max = undefined;
     this.maxLength = undefined;
     this.min = undefined;
@@ -50,6 +50,10 @@ export default class BaseInput extends LitElement {
     this.onDark = false;
     this.required = false;
     this.setCustomValidityForType = undefined;
+
+    this.layout = 'default';
+    this.shape = 'rounded';
+    this.size = 'md';
   }
 
   /**
@@ -115,6 +119,7 @@ export default class BaseInput extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+      ...super.properties,
 
       /**
        * The value for the role attribute.
@@ -224,14 +229,6 @@ export default class BaseInput extends LitElement {
        */
       lang: {
         type: String
-      },
-
-      /**
-       * Defines the language of an element.
-       */
-      layout: {
-        type: String,
-        reflect: true
       },
 
       /**
@@ -501,6 +498,7 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
+    super.updated();
     if (changedProperties.has('format')) {
       this.configureAutoFormatting();
     }
