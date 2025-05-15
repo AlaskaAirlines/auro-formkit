@@ -260,14 +260,11 @@ export default class AuroFormValidation {
       }
 
       // Check array value types for having a value
-      if (typeof elem.value === "object") {
-        if (!elem.value.length) {
-          hasValue = false;
-        }
-
-        if (typeof elem.value[0] !== "string" || !elem.value[0].length) {
-          hasValue = false;
-        }
+      if (Array.isArray(elem.value)) {
+        hasValue = Boolean(
+          elem.value.length > 0 &&
+          elem.value.some((value) => typeof value === "string" && value.length > 0)
+        )
       }
 
       // If there is a second input in the elem and that value is undefined or an empty string set hasValue to false;
