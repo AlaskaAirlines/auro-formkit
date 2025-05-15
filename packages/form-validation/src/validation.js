@@ -252,7 +252,23 @@ export default class AuroFormValidation {
        * The validityState definitions are located at https://developer.mozilla.org/en-US/docs/Web/API/ValidityState.
        */
 
-      let hasValue = elem.value && elem.value.length > 0;
+      let hasValue = false;
+
+      // Check string for having a value
+      if (typeof elem.value === "string") {
+        hasValue = elem.value && elem.value.length > 0;
+      }
+
+      // Check array value types for having a value
+      if (typeof elem.value === "object") {
+        if (!elem.value.length) {
+          hasValue = false;
+        }
+
+        if (typeof elem.value[0] !== "string" || !elem.value[0].length) {
+          hasValue = false;
+        }
+      }
 
       // If there is a second input in the elem and that value is undefined or an empty string set hasValue to false;
       if (this.auroInputElements?.length === 2) {
