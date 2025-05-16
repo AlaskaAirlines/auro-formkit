@@ -52,5 +52,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/dist/auro-button__bundled.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-dialog@latest/dist/auro-dialog__bundled.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-loader@latest/dist/auro-loader__bundled.js" type="module"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@3.2.4/auro-input/+esm"></script>
+
+    <style>
+      .autofill-example-form .input-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        gap: 15px;
+      }
+      .autofill-example-form .input-row auro-input,
+      .autofill-example-form .input-row auro-select {
+        flex: 1 0 auto;
+      }
+    </style>
   </body>
 </html>
