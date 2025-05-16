@@ -69,6 +69,23 @@ The following example illustrates the use of the `label`, `placeholder` and `hel
 
 </auro-accordion>
 
+
+## Autofill/Autocomplete Support
+
+Use the `autocomplete` attribute to let browser's know what information to use to fill out the form.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/autocomplete.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/autocomplete.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Example with auro-icons in options
 
 Displays an `<auro-select>` element with `<auro-icon>` elements in each option.
