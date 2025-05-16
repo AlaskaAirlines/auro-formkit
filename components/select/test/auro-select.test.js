@@ -1,4 +1,4 @@
-import { fixture, html, expect, waitUntil, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
@@ -15,6 +15,47 @@ describe('auro-select', () => {
     const el = document.createElement('auro-select');
 
     await expect(el.localName).to.equal('auro-select');
+  });
+
+  it('should have a native select element for autofill', async () => {
+    const element = await defaultFixture();
+    const nativeSelect = element.shadowRoot.querySelector('.nativeSelectWrapper select');
+    expect(nativeSelect).to.exist;
+  });
+
+  it('should pass the name to the native select', async () => {
+    const element = await defaultFixture();
+    const testName = 'test-name';
+    element.name = testName;
+    await elementUpdated(element);
+    const nativeSelect = element.shadowRoot.querySelector('.nativeSelectWrapper select');
+    expect(nativeSelect.name).to.equal(testName);
+  });
+
+  it('should sync value changes from native select to component', async () => {
+    const element = await defaultFixture();
+    const nativeSelect = element.shadowRoot.querySelector('.nativeSelectWrapper select');
+    nativeSelect.value = 'Apples';
+    nativeSelect.dispatchEvent(new Event('change'));
+
+    await elementUpdated(element);
+
+    const [elValue] = element.value;
+    expect(elValue).to.equal('Apples');
+
+    // Also check that the visible selection matches
+    const triggerText = element.shadowRoot.querySelector('[slot="trigger"]').textContent.trim();
+    expect(triggerText).to.equal('Apples');
+  });
+
+  it('should sync value changes from component to native select', async () => {
+    const element = await defaultFixture();
+    element.value = ['Apples'];
+
+    await elementUpdated(element);
+
+    const nativeSelect = element.shadowRoot.querySelector('.nativeSelectWrapper select');
+    expect(nativeSelect.value).to.equal('Apples');
   });
 
   it('toggles the bib on click', async () => {

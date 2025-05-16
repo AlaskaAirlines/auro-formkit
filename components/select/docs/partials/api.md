@@ -59,6 +59,21 @@ To pre-set the value of auro-select on load, use the `value` property. The `sele
 
 </auro-accordion>
 
+#### Autocomplete
+
+Use the `autocomplete` attribute to let browser's know what information to use to fill out the form.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/autocomplete.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/autocomplete.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 #### required <a name="required"></a>
 
 When present, the `required` attribute specifies that a select field must be filled out before submitting the form.
