@@ -831,6 +831,7 @@ export class AuroSelect extends LitElement {
         </${this.dropdownTag}>
         <div class="nativeSelectWrapper">
           <select 
+            tabindex="-1"
             id="${`native-select-${this.id || this.uniqueId}`}"
             name="${this.name || ''}"
             ?disabled="${this.disabled}"
