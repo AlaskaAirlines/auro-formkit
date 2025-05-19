@@ -59,7 +59,7 @@ To pre-set the value of auro-select on load, use the `value` property. The `sele
 
 </auro-accordion>
 
-#### Autocomplete
+#### Autocomplete <a name="autocomplete"></a>
 
 Use the `autocomplete` attribute to let browser's know what information to use to fill out the form.
 
