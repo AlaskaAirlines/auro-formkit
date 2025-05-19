@@ -746,6 +746,12 @@ export class AuroSelect extends LitElement {
     this.validation.validate(this, force);
   }
 
+  /**
+   * Syncs the value from the native select element to the component's value.
+   * @param {Event} event // The change event from the native select element.
+   * @returns {void}
+   * @private
+   */
   _handleNativeSelectChange(event) {
     const selectedOption = event.target.options[event.target.selectedIndex];
     const selectedValue = selectedOption.value;
@@ -753,6 +759,11 @@ export class AuroSelect extends LitElement {
     this.value = !currentValue || currentValue !== selectedValue ? [selectedValue] : this.value;
   }
 
+  /**
+   * Updates the native select element's value based on the component's value.
+   * @returns {void}
+   * @private
+   */
   _updateNativeSelect() {
     const nativeSelect = this.shadowRoot.querySelector('select');
     if (!nativeSelect) {
