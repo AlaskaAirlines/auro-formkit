@@ -7,7 +7,7 @@
 
 @import 'mixins';
 
-/* stylelint-disable no-descending-specificity, selector-class-pattern */
+/* stylelint-disable no-descending-specificity, selector-class-pattern, scss/selector-nest-combinators */
 
 .wrapper {
   border-color: transparent;
@@ -39,6 +39,12 @@ label {
 
 .alertNotification {
   color: var(--ds-auro-input-error-icon-color);
+}
+
+.clearBtn:focus-within,
+.clearBtn:focus:not(:focus-visible) {
+  // override wcss's core on flat button
+  outline-color: var(--ds-auro-input-border-color);
 }
 
 :host(:not([bordered], [borderless])) {
