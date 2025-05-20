@@ -1,5 +1,12 @@
 # Semantic Release Automated Changelog
 
+## [3.4.1](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.4.0...v3.4.1) (2025-05-20)
+
+
+### Bug Fixes
+
+* update check for hasValue to accommodate array value types ([3cf8d4d](https://github.com/AlaskaAirlines/auro-formkit/commit/3cf8d4df0b089f63e16bf65bf46d3710b7c279b9))
+
 # [3.4.0](https://github.com/AlaskaAirlines/auro-formkit/compare/v3.3.0...v3.4.0) (2025-05-12)
 
 
