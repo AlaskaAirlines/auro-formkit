@@ -41,8 +41,8 @@ label {
   color: var(--ds-auro-input-error-icon-color);
 }
 
-.clearBtn:focus-within,
-.clearBtn:focus:not(:focus-visible) {
+.notificationBtn:focus-within,
+.notificationBtn:focus:not(:focus-visible) {
   // override wcss's core on flat button
   outline-color: var(--ds-auro-input-border-color);
 }

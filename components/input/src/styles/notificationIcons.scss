@@ -57,6 +57,14 @@
   border: 0;
   background: unset;
   cursor: pointer;
+  outline-style: solid;
+  outline-width: 0;
+
+  &:focus-within,
+  &:focus:not(:focus-visible) {
+    // override wcss's core on flat button
+    outline-width: 1px;
+  }
 
   [auro-icon] {
     display: block;
@@ -82,17 +90,9 @@
   overflow: hidden;
   width: 0;
   opacity: 0;
-  outline-style: solid;
-  outline-width: 0;
 
   // @include transition-animation + no transition on outline;
   transition: all .3s cubic-bezier(.215, .61, .355, 1), outline 0ms linear;
-
-  &:focus-within,
-  &:focus:not(:focus-visible) {
-    // override wcss's core on flat button
-    outline-width: 1px;
-  }
 }
 
 :host {

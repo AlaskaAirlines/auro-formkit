@@ -171,8 +171,7 @@ export class AuroInput extends BaseInput {
                 <${this.buttonTag}
                   variant="flat"
                   ?onDark="${this.onDark}"
-                  ariahidden="true"
-                  tindex="-1"
+                  arialabel="${this.showPassword ? i18n(this.lang, "hidePassword") : i18n(this.lang, "showPassword")}"
                   @click="${this.handleClickShowPassword}"
                   class="notificationBtn passwordBtn">
                   <${this.iconTag}

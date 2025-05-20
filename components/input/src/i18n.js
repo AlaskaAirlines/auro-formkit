@@ -59,6 +59,8 @@ const stringsES = {
   'dateMM': 'Ingrese una fecha completa en el formato MM',
   'dateDD': 'Ingrese una fecha completa en el formato DD',
   'clearInput': 'Borrar campo de entrada',
+  'showPassword': 'Mostrar contraseña',
+  'hidePassword': 'Ocultar contraseña'
 };
 
 const stringsEN = {
@@ -83,6 +85,8 @@ const stringsEN = {
   'dateMM': 'Please enter a complete date in the format MM',
   'dateDD': 'Please enter a complete date in the format DD',
   'clearInput': 'Clear input field',
+  'showPassword': 'Show password',
+  'hidePassword': 'Hide password'
 };
 
 /**
