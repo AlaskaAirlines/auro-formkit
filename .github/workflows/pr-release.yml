@@ -1,4 +1,4 @@
-name: PR release
+name: pr-release
 
 # Runs when a pull request is opened but not for PRs into main or rc branches
 on:
