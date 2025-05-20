@@ -30,7 +30,7 @@ jobs:
       - name: Test
         run: npm run test
       - name: Generate PR release version
-        run: npx --package=@aurodesignsystem/auro-cli -- pr-release -p ${{ github.event.pull_request.number }}
+        run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
       - name: Publish to NPM
         run: npm publish --registry=https://registry.npmjs.org
         env:
