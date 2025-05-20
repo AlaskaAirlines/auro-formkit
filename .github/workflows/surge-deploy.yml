@@ -1,0 +1,23 @@
+name: surge-deploy
+
+# Runs when the pr-release workflow is completed
+on:
+  workflow_run:
+    workflows: [pr-release]
+    types:
+      - completed
+
+permissions:
+  contents: read
+  id-token: write # for npm provenance
+  pull-requests: write # permission to comment on PRs
+
+jobs:
+  steps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test workflow_run
+        run: echo "This workflow is triggered by the completion of the pr-release workflow."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
