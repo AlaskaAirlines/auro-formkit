@@ -1,0 +1,182 @@
+/* stylelint-disable */
+
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+@use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
+
+// COMMON FOR ALL ---------------------------------------------------
+
+:host {
+  display: block;
+}
+
+.wrapper {
+  --auro-input-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --auro-input-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --auro-input-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+}
+
+input {
+  background: unset;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// LAYOUTS ---------------------------------------------------
+
+@mixin emphasizedActiveLabel {
+  label {
+    display: block;
+    text-transform: unset;
+    font-size: 10px;
+    line-height: 14px;
+    width: calc(100%);
+    text-align: left;
+  }
+}
+
+@mixin emphasizedActiveInput {
+  input {
+    text-transform: uppercase;
+    font-size: 32px;
+    line-height: 38px;
+    text-align: left;
+    width: calc(100%);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='right'])) {
+  .leftIndent {
+    margin-left: 24px;
+    width: calc(100% - 24px);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left'])) {
+  .rightIndent {
+    margin-right: 24px;
+    width: calc(100% - 24px);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left']):not([layout*='right'])) {
+  .rightIndent {
+    margin-right: 24px;
+    width: calc(100% - 48px);
+  }
+}
+
+@mixin emphasizedTransition {
+  // transition: all .2s ease-in-out;
+}
+
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  label {
+    text-transform: uppercase;
+    font-size: 32px;
+    line-height: 38px;
+    @include emphasizedTransition;
+  }
+
+  input {
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+
+    @include emphasizedTransition;
+  }
+
+  .mainContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+  }
+
+  .displayValue {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+
+    &.hasContent:is(.withValue):not(.hasFocus) {
+      display: block;
+    }
+  }
+
+  .accents {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.withValue {
+    @include emphasizedActiveLabel;
+    @include emphasizedActiveInput;
+    justify-content: flex-start;
+  }
+
+  // FOCUS STATE
+  &:focus-within {
+    @include emphasizedActiveLabel;
+    @include emphasizedActiveInput;
+    justify-content: flex-start;
+
+    .alertNotification {
+      display: none;
+    }
+  }
+}
+
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  .accents {
+    &.left {
+      padding-left: 24px;
+    }
+
+    &.right {
+      padding-right: 24px;
+    }
+  }
+}
+
+.layout-emphasized-left {
+  .alertNotification {
+    margin-right: 8px;
+  }
+
+  .clear {
+    margin-left: 8px;
+  }
+}
+
+.layout-emphasized-right {
+  .alertNotification {
+    margin-left: 8px;
+  }
+
+  .clear {
+    margin-right: 8px;
+  }
+}

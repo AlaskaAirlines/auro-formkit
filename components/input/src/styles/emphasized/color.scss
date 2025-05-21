@@ -1,0 +1,47 @@
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern */
+
+// Support for fallback values
+@use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
+
+.wrapper {
+  border-color: var(--auro-input-border-color);
+  background-color: var(--auro-input-background-color);
+  color: var(--auro-input-color);
+}
+
+:host(:is([validity]:not([validity='valid']))) {
+  .wrapper {
+    --auro-input-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+  }
+}
+
+@mixin emphasized-active-label {
+  label {
+    color: var(--ds-basic-color-texticon-muted);
+  }
+}
+
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  input {
+    &::placeholder {
+      color: var(--ds-basic-color-texticon-default);
+    }
+  }
+
+  .displayValue {
+    background-color: var(--auro-input-background-color);
+  }
+
+  // FOCUS STATE
+  &:focus-within {
+    @include emphasized-active-label;
+
+    --auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand}); // NEED THE CORRECT TOKEN - THIS WOULD GET DISABLED BY THE HOME PAGE SEARCH WIDGET
+  }
+}

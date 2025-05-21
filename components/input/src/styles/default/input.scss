@@ -1,0 +1,63 @@
+/* stylelint-disable property-no-vendor-prefix, selector-no-qualifying-type, selector-attribute-quotes */
+
+// Support for fallback values
+
+@use "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables" as v;
+@use "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska" as vAsc;
+
+@use 'mixins' as m;
+
+.layoutDefault,
+:host(:not([layout])) {
+  input {
+    @include m.transition-animation;
+
+    position: relative;
+    overflow: hidden;
+    min-height: var(--ds-size-200, #{v.$ds-size-200});
+    max-height: var(--ds-size-200, #{v.$ds-size-200});
+    flex: 1;
+    padding: var(--ds-size-400, #{v.$ds-size-400}) 0 var(--ds-size-50, #{v.$ds-size-50});
+    margin: 0;
+    font-family: var(--ds-basic-text-body-default-font-family, #{vAsc.$ds-basic-text-body-default-font-family}); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+    font-size: var(--ds-basic-text-body-default-font-size, #{vAsc.$ds-basic-text-body-default-font-size}); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+    font-weight: var(--ds-basic-text-body-default-font-weight, #{vAsc.$ds-basic-text-body-default-font-weight}); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+    letter-spacing: var(--ds-basic-text-body-default-letter-spacing, #{vAsc.$ds-basic-text-body-default-letter-spacing}); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+    line-height: var(--ds-basic-text-body-default-line-height, #{vAsc.$ds-basic-text-body-default-line-height}); /* This must be declared here because the browser clients unset it in the user agent style sheet */
+    outline: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    // this is to disable the toggle-password feature in MS Edge only
+    &::-ms-reveal,
+    &::-ms-clear {
+      display: none;
+    }
+
+    // Hides the number input arrows in Chrome, Safari, Edge, and Opera
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      margin: 0;
+      -webkit-appearance: none;
+    }
+
+    // Hides the number input arrows in Firefox
+    &[type='number'] {
+      -moz-appearance: textfield; /* For older versions of Firefox */
+      appearance: textfield; /* Standard property */
+    }
+
+    &:disabled {
+      background: none;
+      pointer-events: none;
+    }
+  }
+}
+
+
+:host([class="layoutDefault"][bordered]),
+:host(:not([layout])[bordered]) {
+  input {
+    padding: var(--ds-size-400, #{v.$ds-size-400}) 0 var(--ds-size-100, #{v.$ds-size-100});
+  }
+}
