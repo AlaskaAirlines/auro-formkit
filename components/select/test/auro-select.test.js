@@ -124,13 +124,13 @@ describe('auro-select', () => {
     const el = await defaultFixture();
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
-    
+
     el.value = ['Apples'];
     await elementUpdated(el);
     await elementUpdated(menu);
-    
+
     const selectedOption = menu.querySelector('auro-menuoption[value="Apples"]');
-    
+
     await expect(el.value).to.deep.equal(['Apples']);
     await expect(el.optionSelected[0]).to.equal(selectedOption);
   });
@@ -142,7 +142,7 @@ describe('auro-select', () => {
 
     el.value = ['flight course'];
     await elementUpdated(el);
-    
+
     await expect(el.optionSelected).to.be.equal(undefined);
     await expect(el.getAttribute('validity')).to.equal('valid');
   });
@@ -156,7 +156,7 @@ describe('auro-select', () => {
     await elementUpdated(menu);
 
     await expect(el.optionSelected).to.be.equal(undefined);
-});
+  });
 
   it('default to checkmark on selected option', async () => {
     const el = await defaultFixture();
@@ -197,6 +197,128 @@ describe('auro-select', () => {
     await elementUpdated(el);
 
     await expect(el.value).to.be.undefined;
+  });
+});
+
+describe('auro-select keyboard interaction', () => {
+  it('selects the first option starting with pressed key', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <auro-menu>
+          <auro-menuoption value="apple">Apple</auro-menuoption>
+          <auro-menuoption value="banana">Banana</auro-menuoption>
+          <auro-menuoption value="apricot">Apricot</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+
+    // Simulate pressing "b"
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+
+    await elementUpdated(el);
+
+    // The menu's active option should be "banana"
+    const menu = el.menu;
+    expect(menu.optionActive).to.exist;
+    expect(menu.optionActive.value).to.equal('banana');
+    expect(menu.optionActive.textContent.trim()).to.equal('Banana');
+  });
+
+  it('cycles through options with the same starting letter', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <auro-menu>
+          <auro-menuoption value="apple">Apple</auro-menuoption>
+          <auro-menuoption value="apricot">Apricot</auro-menuoption>
+          <auro-menuoption value="banana">Banana</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+
+    // Press "a" once
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive).to.exist;
+    expect(el.menu.optionActive.value).to.equal('apple');
+    expect(el.menu.optionActive.textContent.trim()).to.equal('Apple');
+
+    // Press "a" again to cycle to next "a" option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive).to.exist;
+    expect(el.menu.optionActive.value).to.equal('apricot');
+    expect(el.menu.optionActive.textContent.trim()).to.equal('Apricot');
+  });
+
+  it('does nothing if there is no matching value for pressed key', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <auro-menu>
+          <auro-menuoption value="apple">Apple</auro-menuoption>
+          <auro-menuoption value="banana">Banana</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+
+    // Set an initial value and active option
+    el.value = ['apple'];
+    await elementUpdated(el);
+
+    const previousActive = el.menu.optionActive;
+
+    // Press a key that does not match any option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'z' }));
+    await elementUpdated(el);
+
+    // The menu's active option should remain unchanged
+    expect(el.menu.optionActive).to.equal(previousActive);
+  });
+
+  it('loops through available values if the same key is pressed repeatedly', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <auro-menu>
+          <auro-menuoption value="apple">Apple</auro-menuoption>
+          <auro-menuoption value="apricot">Apricot</auro-menuoption>
+          <auro-menuoption value="avocado">Avocado</auro-menuoption>
+          <auro-menuoption value="banana">Banana</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+
+    // Press "a" repeatedly and check that it cycles through all "a" options
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive).to.exist;
+    expect(el.menu.optionActive.value).to.equal('apple');
+    expect(el.menu.optionActive.textContent.trim()).to.equal('Apple');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive).to.exist;
+    expect(el.menu.optionActive.value).to.equal('apricot');
+    expect(el.menu.optionActive.textContent.trim()).to.equal('Apricot');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive).to.exist;
+    expect(el.menu.optionActive.value).to.equal('avocado');
+    expect(el.menu.optionActive.textContent.trim()).to.equal('Avocado');
+
+    // Should loop back to the first "a" option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive).to.exist;
+    expect(el.menu.optionActive.value).to.equal('apple');
+    expect(el.menu.optionActive.textContent.trim()).to.equal('Apple');
   });
 });
 
