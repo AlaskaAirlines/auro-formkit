@@ -1,3 +1,5 @@
+/* eslint-disable require-unicode-regexp */
+
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 const createConfig = (input, output) => ({
@@ -8,14 +10,11 @@ const createConfig = (input, output) => ({
     entryFileNames: '[name].js'
   },
   external: [
-    'lit',
-    '@lit/reactive-element',
-    'lit-html',
-    'lit/decorators.js',
-    'lit/static-html.js',
-    'lit/directives/repeat.js',
-    'lit/directives/class-map.js',
-    'lit/directives/if-defined.js',
+    /node_modules\/lit/,
+    /node_modules\/lit-element/,
+    /node_modules\/lit-html/,
+    /node_modules\/@lit/,
+    /node_modules\/@lit-labs/,
   ],
   plugins: [
     nodeResolve({
