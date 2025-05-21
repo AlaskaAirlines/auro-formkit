@@ -79,7 +79,7 @@
   &:after {
     position: absolute;
     z-index: 1;
-    top: 50%;
+    top: var(--ds-size-200, $ds-size-200); // half of `.rdoGroup`'s line-height
     left: var(--ds-size-50, $ds-size-50);
 
     width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
