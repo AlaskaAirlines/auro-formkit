@@ -132,7 +132,7 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * ID for the dropdown
+       * ID for the dropdown.
        * @private
        */
       dropdownId: {
@@ -142,7 +142,7 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * Whether or not the dropdown is open
+       * Whether or not the dropdown is open.
        * @private
        */
       dropdownOpen: {
@@ -217,6 +217,7 @@ export class AuroCombobox extends LitElement {
         type: Object
       },
 
+      /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
        * Position where the bib should appear relative to the trigger.
        * Accepted values:
@@ -227,6 +228,15 @@ export class AuroCombobox extends LitElement {
        * @default bottom-start
        */
       placement: {
+        type: String,
+        reflect: true
+      },
+      /* eslint-enable jsdoc/require-description-complete-sentence */
+
+      /**
+       * Define custom placeholder text, only supported by date input formats.
+       */
+      placeholder: {
         type: String,
         reflect: true
       },
@@ -292,6 +302,7 @@ export class AuroCombobox extends LitElement {
         type: Object
       },
 
+      /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
        * Otherwise, Heading 600
@@ -300,6 +311,7 @@ export class AuroCombobox extends LitElement {
         type: Boolean,
         reflect: true
       },
+      /* eslint-enable jsdoc/require-description-complete-sentence */
 
       /**
        * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
@@ -315,8 +327,8 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
+       * Specifies the currently active option.
        * @private
-       * specifies the currently active option
        */
       optionActive: {
         type: Object,
@@ -608,10 +620,10 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
-   * @private
    * Dispatches input's keyboard events from host
    * This allows key events from the input to be handled by the parent.
-   * @param {Event} event - The keyboard event.
+   * @private
+   * @param {KeyboardEvent} event - The keyboard event.
    */
   bubbleUpInputEvent(event) {
     // Do not need to bubble events if the input is not in bib.
@@ -690,7 +702,6 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
-   * @private
    * When the dropdown is visible in fullscreen mode, the input is moved to the subheader slot of bibtemplate.
    * Otherwise, it's moved back to the trigger slot.
    * @private
@@ -715,7 +726,7 @@ export class AuroCombobox extends LitElement {
         this.input.setAttribute('borderless', true);
         this.input.setAttribute('slot', 'subheader');
 
-        // set disply of helpText and alert icon programatically
+        // set display of helpText and alert icon programmatically
         // because ::slotted and ::part do not work together
         inputHelpText.style.display = 'none';
         if (inputAlertIcon) {
@@ -978,8 +989,8 @@ export class AuroCombobox extends LitElement {
         this.handleMenuOptions();
         break;
       case 'label':
-        // Programatically inject as the slot cannot be carried over to bibtemplate.
-        // It's because the bib is/will be seperated from dropdown to body.
+        // Programmatically inject as the slot cannot be carried over to bibtemplate.
+        // It's because the bib is/will be separated from dropdown to body.
         this.transportAssignedNodes(event.target, this.input, 'label');
         break;
       case 'bib.fullscreen.headline':
@@ -1022,23 +1033,25 @@ export class AuroCombobox extends LitElement {
           ?noFlip="${this.noFlip}"
           disableEventShow>
           <${this.inputTag}
-            .a11yRole="${"combobox"}"
             .a11yExpanded="${this.dropdownOpen}"
             .a11yControls="${this.dropdownId}"
-            id="${this.id || 'auro-combobox-input'}"
-            slot="trigger"
-            bordered
+            .autocomplete="${this.autocomplete}"
+            .placeholder="${this.placeholder}"
+            .type="${this.type}"
             ?onDark="${this.onDark}"
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
+            id="${this.id}"
+            a11yRole="combobox"
+            bordered
+            layout="${this.layout}"
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-            .autocomplete="${this.autocomplete}"
-            .type="${this.type}"
             inputmode="${ifDefined(this.inputmode)}"
+            slot="trigger"
             @input="${this.handleInputValueChange}">
           </${this.inputTag}>
 
