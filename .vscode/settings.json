@@ -1,3 +1,24 @@
 {
-    "explorer.excludeGitIgnore": false
+    "explorer.excludeGitIgnore": false,
+    "cSpell.words": [
+        "autocorrect",
+        "bibtemplate",
+        "borderless",
+        "csspart",
+        "DDMM",
+        "describedby",
+        "formkit",
+        "helptext",
+        "imask",
+        "matchwidth",
+        "maxlength",
+        "menuoption",
+        "menuoptions",
+        "MMDD",
+        "MMYY",
+        "nocheckmark",
+        "texticon",
+        "YYMM",
+        "YYYYDDMM"
+    ]
 }
