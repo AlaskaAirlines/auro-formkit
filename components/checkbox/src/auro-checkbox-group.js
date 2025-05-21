@@ -5,6 +5,7 @@
 
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
+import { LitElement } from 'lit';
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -20,8 +21,6 @@ import tokensCss from "./styles/tokens-css.js";
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import helpTextVersion from './helptextVersion.js';
 
-import { AuroLayoutElement } from '@aurodesignsystem/auro-layout-element';
-
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
  *
@@ -31,7 +30,7 @@ import { AuroLayoutElement } from '@aurodesignsystem/auro-layout-element';
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  */
 
-export class AuroCheckboxGroup extends AuroLayoutElement {
+export class AuroCheckboxGroup extends LitElement {
   constructor() {
     super();
 
