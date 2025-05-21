@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-import { html } from "lit";
+import { LitElement, html } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
@@ -12,8 +12,6 @@ import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
-
-import { AuroLayoutElement } from '@aurodesignsystem/auro-layout-element';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
@@ -29,7 +27,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  */
 
 // build the component class
-export class AuroCheckbox extends AuroLayoutElement {
+export class AuroCheckbox extends LitElement {
   constructor() {
     super();
     this.checked = false;

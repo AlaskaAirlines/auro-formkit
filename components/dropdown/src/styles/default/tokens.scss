@@ -2,7 +2,7 @@
 @import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 @import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
-:host {
+:host(:not([layout*='emphasized'])) {
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-muted, #{$ds-basic-color-texticon-muted});
   --ds-auro-dropdown-trigger-container-color: var(--ds-basic-color-surface-default, #{$ds-basic-color-surface-default});
   --ds-auro-dropdown-trigger-border-color: transparent;
