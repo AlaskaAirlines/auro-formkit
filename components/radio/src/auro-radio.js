@@ -32,6 +32,10 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @event auroRadio-blur - Notifies that the component has lost focus.
  * @event resetRadio - Notifies that the component has reset the checked/selected state.
  * @event auroRadio-selected - Notifies that the component has been marked as checked/selected.
+ *
+ * @csspart radio - apply css to a specific checkbox.
+ * @csspart radio-input - apply css to a specific checkbox's input.
+ * @csspart radio-label - apply css to a specific checkbox's label.
  */
 
 // build the component class
@@ -262,9 +266,10 @@ export class AuroRadio extends LitElement {
     };
 
     return html`
-      <div class="ods-inputGroup rdoGroup">
+      <div class="ods-inputGroup rdoGroup" part="radio">
         <input
           class="util_displayHiddenVisually ods-inputOption rdo--input"
+          part="radio-input"
           @focus="${this.handleFocus}"
           @input="${this.handleInput}"
           @change="${this.handleChange}"
@@ -276,13 +281,16 @@ export class AuroRadio extends LitElement {
           name="${ifDefined(this.name)}"
           type="radio"
           .value="${this.value}"
-          tabIndex="-1"
+          tabindex="-1"
         />
 
-        <label for="${this.inputId}" class="${classMap(labelClasses)}">
+        <label
+          for="${this.inputId}"
+          class="${classMap(labelClasses)}"
+          part="radio-label"
+        >
           <slot>${this.label}</slot>
         </label>
-
       </div>
       <slot name="content" class="slotContent"></slot>
     `;
