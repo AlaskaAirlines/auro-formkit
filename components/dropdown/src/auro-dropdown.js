@@ -6,6 +6,7 @@
 /* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
 
 import { html } from "lit/static-html.js";
+import { classMap } from 'lit/directives/class-map.js';
 import { LitElement } from "lit";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -20,13 +21,18 @@ import iconVersion from './iconVersion.js';
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
-import styleCss from "./styles/style-css.js";
-import colorCss from "./styles/color-css.js";
-import tokensCss from "./styles/tokens-css.js";
+import shapeSizeCss from "../../input/src/styles/shapeSize-css.js";
+import styleCss from "./styles/default/style-css.js";
+import colorCss from "./styles/default/color-css.js";
+import tokensCss from "./styles/default/tokens-css.js";
+import styleEmphasizedCss from "./styles/emphasized/style-css.js";
+import colorEmphasizedCss from "./styles/emphasized/color-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import helpTextVersion from './helptextVersion.js';
 import { ifDefined } from "lit/directives/if-defined.js";
+
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
 /**
  * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
@@ -41,7 +47,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
  * @event auroDropdown-idAdded - Notifies consumers that the unique ID for the dropdown bib has been generated.
  */
-export class AuroDropdown extends LitElement {
+export class AuroDropdown extends AuroElement {
   constructor() {
     super();
 
@@ -49,6 +55,13 @@ export class AuroDropdown extends LitElement {
     this.isBibFullscreen = false;
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
+
+    this.errorMessage = 'NEED TO GET IT FROM THE NESTED COMPONENT';
+
+    // Layout Config
+    this.layout = 'default';
+    this.shape = 'rounded';
+    this.size = 'xl';
 
     this.privateDefaults();
 
@@ -70,6 +83,21 @@ export class AuroDropdown extends LitElement {
      * @private
      */
     this.showTriggerBorders = true;
+  }
+
+  get commonLabelClasses() {
+    return {
+      // 'withValue': this.value && this.value.length > 0
+    };
+  }
+
+  get commonWrapperClasses() {
+    return {
+      'trigger': true,
+      'wrapper': true,
+      // 'withValue': this.value && this.value.length > 0,
+      'hasFocus': this.hasFocus
+    };
   }
 
   /**
@@ -242,6 +270,13 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
+       * Contains the help text message for the current validity error.
+       */
+      errorMessage: {
+        type: String
+      },
+
+      /**
        * If declared, the bib will display when focus is applied to the trigger.
        */
       focusShow: {
@@ -370,11 +405,6 @@ export class AuroDropdown extends LitElement {
 
       /**
        * Position where the bib should appear relative to the trigger.
-       * Accepted values:
-       * "top" | "right" | "bottom" | "left" |
-       * "bottom-start" | "top-start" | "top-end" |
-       * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
        * @default bottom-start
        */
       placement: {
@@ -420,7 +450,10 @@ export class AuroDropdown extends LitElement {
     return [
       colorCss,
       styleCss,
-      tokensCss
+      tokensCss,
+      styleEmphasizedCss,
+      colorEmphasizedCss,
+      shapeSizeCss
     ];
   }
 
@@ -447,6 +480,7 @@ export class AuroDropdown extends LitElement {
   }
 
   updated(changedProperties) {
+    super.updated(changedProperties);
     this.floater.handleUpdate(changedProperties);
 
     if (changedProperties.has('fullscreenBreakpoint')) {
@@ -454,7 +488,7 @@ export class AuroDropdown extends LitElement {
     }
 
     // when trigger's content is changed without any attribute or node change,
-    // `requestUpdate` needs to be called to update hasTriggerContnet
+    // `requestUpdate` needs to be called to update hasTriggerContent
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
     }
@@ -518,6 +552,24 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Function to support @focusin event.
+   * @private
+   * @return {void}
+   */
+  handleFocusin() {
+    this.hasFocus = true;
+  }
+
+  /**
+   * Function to support @focusout event.
+   * @private
+   * @return {void}
+   */
+  handleFocusout() {
+    this.hasFocus = false;
+  }
+
+  /**
    * Determines if the element or any children are focusable.
    * @private
    * @param {HTMLElement} element - Element to check.
@@ -576,8 +628,8 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * @private
    * Creates and dispatches a duplicate focus event on the trigger element.
+   * @private
    * @param {Event} event - The original focus event.
    */
   bindFocusEventToTrigger(event) {
@@ -590,9 +642,9 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * @private
    * Sets up event listeners to deliver focus and blur events from nested Auro components within the trigger slot to trigger.
    * This ensures that focus/blur events originating from within these components are propagated to the trigger element itself.
+   * @private
    */
   setupTriggerFocusEventBinding() {
     if (!this.triggerContentSlot || this.triggerContentSlot.length === 0) {
@@ -686,7 +738,7 @@ export class AuroDropdown extends LitElement {
       // If there are children
       if (triggerContentNodes) {
 
-        // See if any of them are focusable elemeents
+        // See if any of them are focusable elements
         this.triggerContentFocusable = triggerContentNodes.some((node) => this.containsFocusableElement(node));
 
         // If any of them are focusable elements
@@ -772,8 +824,95 @@ export class AuroDropdown extends LitElement {
     this.labeled = nodesArr.length > 0;
   }
 
-  // function that renders the HTML and CSS into  the scope of the component
-  render() {
+  // Help text and error message template
+  getHtmlHelpText() {
+    return html`
+      ${!this.error
+        ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helpText"></slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+        : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+      }
+    `;
+  }
+
+  getLayoutEmphasized() {
+    const helpTextClasses = {
+      'leftIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('right'),
+      'rightIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('left')
+    };
+
+    return html`
+      <div>
+        <div
+          id="trigger"
+          class="${classMap(this.commonWrapperClasses)}" part="wrapper"
+          tabindex="${this.tabIndex}"
+          ?showBorder="${this.showTriggerBorders}"
+          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
+          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+          @focusin="${this.handleFocusin}"
+          @blur="${this.handleFocusOut}">
+          <div class="triggerContentWrapper">
+            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
+              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
+            </label>
+            <div class="triggerContent">
+              <slot
+                name="trigger"
+                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
+            </div>
+          </div>
+          ${this.chevron || this.common ? html`
+              <div
+                id="showStateIcon"
+                part="chevron">
+                <${this.iconTag}
+                  category="interface"
+                  name="chevron-down"
+                  ?onDark="${this.onDark}"
+                  variant="${this.disabled ? 'disabled' : 'muted'}">
+                  >
+                </${this.iconTag}>
+              </div>
+            ` : undefined }
+        </div>
+        <div class="${classMap(helpTextClasses)}">
+          ${this.getHtmlHelpText()}
+        </div>
+        <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
+          <slot name="helpText"></slot>
+        </${this.helpTextTag}>
+        <div class="slotContent">
+          <slot @slotchange="${this.handleDefaultSlot}"></slot>
+        </div>
+        <div id="bibSizer" part="size"></div>
+        <${this.dropdownBibTag}
+          id="bib"
+          ?data-show="${this.isPopoverVisible}"
+          ?isfullscreen="${this.isBibFullscreen}"
+          ?common="${this.common}"
+          ?rounded="${this.common || this.rounded}"
+          ?inset="${this.common || this.inset}"
+        >
+        </${this.dropdownBibTag}>
+      </div>
+    `;
+  }
+
+  getLayoutDefault() {
     return html`
       <div>
         <div
@@ -811,9 +950,6 @@ export class AuroDropdown extends LitElement {
               </div>
             ` : undefined }
         </div>
-        <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
-          <slot name="helpText"></slot>
-        </${this.helpTextTag}>
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
         </div>
@@ -829,5 +965,21 @@ export class AuroDropdown extends LitElement {
         </${this.dropdownBibTag}>
       </div>
     `;
+  }
+
+  getLayout(ForcedLayout) {
+    console.warn('getLayout'); // eslint-disable-line no-console
+    const layout = ForcedLayout || this.layout;
+
+    switch (layout) {
+      case 'emphasized':
+        return this.getLayoutEmphasized();
+      case 'emphasized-left':
+        return this.getLayoutEmphasized();
+      case 'emphasized-right':
+        return this.getLayoutEmphasized();
+      default:
+        return this.getLayoutDefault();
+    }
   }
 }

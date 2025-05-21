@@ -1,0 +1,189 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// layout styles - define any layout specifications for UI that is contained WITHIN the component
+// never define layout that would cause effect on element outside the scope of this component
+
+// Support for fallback values
+
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+/* stylelint-disable no-descending-specificity, selector-max-attribute */
+
+// COMMON FOR ALL --------------------------------------------
+
+:host {
+  display: block;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.trigger {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.triggerContentWrapper {
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+// LAYOUTS ---------------------------------------------------
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='right'])) {
+  .leftIndent {
+    margin-left: 24px;
+    width: calc(100% - 24px);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left'])) {
+  .rightIndent {
+    margin-right: 24px;
+    width: calc(100% - 24px);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left']):not([layout*='right'])) {
+  .rightIndent {
+    margin-right: 24px;
+    width: calc(100% - 48px);
+  }
+}
+
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  //
+}
+
+// :host {
+//   position: relative;
+//   display: inline-block; 
+//   max-width: 100%;
+// }
+
+// :host([fluid]) {
+//   display: block;
+// }
+
+// #bibSizer {
+//   position: absolute;
+//   z-index: -1;
+//   opacity: 0;
+//   pointer-events: none;
+// }
+
+// .label {
+//   font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
+//   line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
+//   transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
+//   white-space: normal;
+
+//   &[hasTrigger='false'] {
+//     font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+//   }
+// }
+
+// .trigger {
+//   position: relative;
+//   display: flex;
+//   align-items: center;
+
+//   &[showBorder] {
+//     border-width: 1px;
+//     border-style: solid;
+//     cursor: pointer;
+//     outline-style: solid;
+//     outline-width: 1px;
+//   }
+// }
+
+// @media (hover: hover) {
+//   .trigger {
+//     &:hover {
+//       cursor: pointer;
+//     }
+//   }
+// }
+
+// .triggerContentWrapper {
+//   overflow: hidden;
+//   flex: 1;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+
+// /* stylelint-disable selector-id-pattern */
+// #showStateIcon {
+//   display: flex;
+//   overflow: hidden;
+//   height: 100%;
+//   align-items: center;
+//   margin-left: var(--ds-size-100, $ds-size-100);
+
+//   [auro-icon] {
+//     height: var(--ds-size-300, $ds-size-300);
+//     line-height: var(--ds-size-300, $ds-size-300);
+//   }
+
+//   &[data-expanded='true'] {
+//     [auro-icon] {
+//       transform: rotate(-180deg);
+//     }
+//   }
+// }
+// /* stylelint-enable selector-id-pattern */
+
+// :host([matchwidth]) {
+//   #bibSizer {
+//     width: 100%;
+//   }
+// }
+
+// :host([disabled]) {
+//   pointer-events: none;
+// }
+
+// :host([inset]) {
+//   .trigger {
+//     padding: var(--ds-size-150, $ds-size-150) var(--ds-size-200, $ds-size-200);
+//   }
+// }
+
+// :host([common]),
+// :host([inset][bordered]) {
+//   .trigger {
+//     padding: var(--ds-size-200, $ds-size-200) var(--ds-size-150, $ds-size-150);
+//   }
+// }
+
+// :host([inset][bordered][labeled]) {
+//   .trigger {
+//     padding: var(--ds-size-100, $ds-size-100) var(--ds-size-150, $ds-size-150);
+//   }
+// }
+
+// :host([common]),
+// :host([rounded]) {
+//   .trigger {
+//     border-radius: var(--ds-border-radius, $ds-border-radius);
+//   }
+// }
