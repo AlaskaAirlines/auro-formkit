@@ -12,6 +12,7 @@
     "url": "https://github.com/AlaskaAirlines/auro-input"
   },
   "dependencies": {
+    "@aurodesignsystem/auro-layout-element": "*",
     "@aurodesignsystem/auro-button": "^9.3.0",
     "@aurodesignsystem/auro-helptext": "*",
     "@aurodesignsystem/auro-icon": "^8.0.1",

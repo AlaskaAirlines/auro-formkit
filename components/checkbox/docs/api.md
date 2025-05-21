@@ -9,6 +9,7 @@ The auro-checkbox-group element is a wrapper for auro-checkbox element.
 | `disabled`                      | `disabled`                      | `boolean` | "undefined" | If set, disables the checkbox group.             |
 | `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `horizontal`                    | `horizontal`                    | `boolean` | false       | If set, checkboxes will be aligned horizontally. |
+| `layout`                        |                                 | `string`  |             |                                                  |
 | `noValidate`                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
 | `onDark`                        | `onDark`                        | `boolean` | false       | Sets onDark styles for component.                |
 | `required`                      | `required`                      | `boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
@@ -52,6 +53,7 @@ Custom element for the purpose of allowing users to select one or more options o
 | `disabled` | `disabled` | `boolean` | false   | If set to true, the checkbox will not be clickable. |
 | `error`    | `error`    | `boolean` | false   | If set to true, the checkbox will be displayed with an error state. |
 | `id`       | `id`       | `string`  |         | Sets the individual `id` per element.            |
+| `layout`   |            | `string`  |         |                                                  |
 | `name`     | `name`     | `string`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
 | `onDark`   | `onDark`   | `boolean` | false   | Sets onDark styles for component.                |
 | `value`    | `value`    | `string`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |

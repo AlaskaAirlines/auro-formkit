@@ -18,32 +18,36 @@
 
 // ---------------------------------------------------------------------
 
+@use './notificationIcons';
+@use './borders';
+@use './label';
+@use './input';
+
 // Import Auro tokens
-@import '@aurodesignsystem/webcorestylesheets/src/core';
+@use '@aurodesignsystem/webcorestylesheets/src/core';
 
 // Support for auroElement styles
-@import '@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
+@use '@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
 
-@import './notificationIcons';
-@import './borders';
-@import './label';
 
-// container styles - defines the look of the outer custom component
-:host {
-  position: relative;
-  display: block;
+.layoutDefault,
+:host(:not([layout])) {
+
+  // container styles - defines the look of the outer custom component
+  :host {
+    position: relative;
+    display: block;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    flex: 1;
+  }
 }
-
-.wrapper {
-  display: flex;
-  flex-direction: row;
-}
-
-.main {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  flex: 1;
-}
-
-@import './input';

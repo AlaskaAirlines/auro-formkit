@@ -6,11 +6,6 @@
 /* eslint-disable max-lines, dot-location, new-cap */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-import { LitElement, css } from "lit";
-
-import styleCss from "./styles/style-css.js";
-import colorCss from "./styles/color-css.js";
-import tokensCss from "./styles/tokens-css.js";
 
 import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import { AuroInputUtilities } from "./utilities.js";
@@ -18,6 +13,8 @@ import { AuroInputUtilities } from "./utilities.js";
 import IMask from 'imask';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
+
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
 /**
  * Auro-input provides users a way to enter data into a text field.
@@ -37,22 +34,26 @@ import AuroFormValidation from '@auro-formkit/form-validation';
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` value has changed.
  */
 
-export default class BaseInput extends LitElement {
+export default class BaseInput extends AuroElement {
 
   constructor() {
     super();
 
+    this.activeLabel = false;
     this.icon = false;
     this.disabled = false;
-    this.required = false;
-    this.noValidate = false;
     this.max = undefined;
-    this.min = undefined;
     this.maxLength = undefined;
+    this.min = undefined;
     this.minLength = undefined;
+    this.noValidate = false;
     this.onDark = false;
-    this.activeLabel = false;
+    this.required = false;
     this.setCustomValidityForType = undefined;
+
+    this.layout = 'default';
+    this.shape = 'rounded';
+    this.size = 'xl';
   }
 
   /**
@@ -68,6 +69,7 @@ export default class BaseInput extends LitElement {
     this.validationCCLength = undefined;
     this.hasValue = false;
     this.label = 'Input label is undefined';
+    this.placeholderStr = '';
 
     this.allowedInputTypes = [
       "text",
@@ -114,9 +116,10 @@ export default class BaseInput extends LitElement {
       .substring(idSubstrStart, idSubstrEnd);
   }
 
-  // function to define props used within the scope of this componentstatic
+  // function to define props used within the scope of this component
   static get properties() {
     return {
+      ...super.properties,
 
       /**
        * The value for the role attribute.
@@ -426,15 +429,6 @@ export default class BaseInput extends LitElement {
     };
   }
 
-
-  static get styles() {
-    return [
-      css`${colorCss}`,
-      css`${styleCss}`,
-      css`${tokensCss}`
-    ];
-  }
-
   connectedCallback() {
     super.connectedCallback();
 
@@ -449,6 +443,7 @@ export default class BaseInput extends LitElement {
   }
 
   firstUpdated() {
+    this.addEventListener('click', this.handleClick);
     // add attribute for query selectors when auro-input is registered under a custom name
     if (this.tagName.toLowerCase() !== 'auro-input') {
       this.setAttribute('auro-input', true);
@@ -466,6 +461,7 @@ export default class BaseInput extends LitElement {
       this.ValidityMessageOverride = this.setCustomValidity;
     }
 
+    this.getPlaceholder();
     this.setCustomHelpTextMessage();
     this.configureAutoFormatting();
   }
@@ -502,6 +498,8 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
+    super.updated(changedProperties);
+
     if (changedProperties.has('format')) {
       this.configureAutoFormatting();
     }
@@ -660,6 +658,16 @@ export default class BaseInput extends LitElement {
     this.dispatchEvent(inputEvent);
   }
 
+
+  /**
+   * Handles clicking on the auro-input anywhere outside of the HTML5 input and still moving focus in.
+   * @private
+   * @return {void}
+   */
+  handleClick() {
+    this.focus();
+  }
+
   /**
    * Handles event of clearing input content by clicking the X icon.
    * @private
@@ -707,6 +715,9 @@ export default class BaseInput extends LitElement {
    * @return {void}
    */
   handleFocusin() {
+    this.hasFocus = true;
+
+    this.getPlaceholder();
 
     /**
      * The input is considered to be in it's initial state based on
@@ -717,6 +728,16 @@ export default class BaseInput extends LitElement {
     if (this.value === undefined) {
       this.value = '';
     }
+  }
+
+  /**
+   * Function to support @focusout event.
+   * @private
+   * @return {void}
+   */
+  handleFocusout() {
+    this.hasFocus = false;
+    this.getPlaceholder();
   }
 
   /**
@@ -843,16 +864,31 @@ export default class BaseInput extends LitElement {
   /**
    * Support placeholder text.
    * @private
-   * @returns {string}
+   * @returns {void}
    */
   getPlaceholder() {
-    if (this.placeholder) {
-      return this.placeholder;
-    } else if (this.type === 'date') {
-      return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+    const isFocused = this.inputElement === this.getActiveElement();
+
+    // console.warn('isFocused', isFocused);
+    // console.warn(this.inputElement);
+    // console.warn(this.getActiveElement());
+
+    if (!isFocused) {
+      if (this.placeholder) {
+        this.placeholderStr = this.placeholder;
+        // return this.placeholder;
+      } else if (this.type === 'date') {
+        this.placeholderStr = this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+        // return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+      }
+    } else {
+      this.placeholderStr = '';
     }
 
-    return '';
+    this.requestUpdate();
+
+    // console.warn('this.placeholderStr', this.placeholderStr);
+    // return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
   }
 
   /**
