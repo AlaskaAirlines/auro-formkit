@@ -1,0 +1,18 @@
+:host([layout*='emphasized'][shape*='pill']) {
+  background-color: aqua;
+  [auro-dropdown] {
+    border: 0;
+  }
+
+  [auro-input] { // CAN I MOVE THESE INTO DROPDOWN?
+    width: 100%;
+
+    &::part(wrapper) {
+      border: 0;
+    }
+
+    &::part(inputHelpText) {
+      display: none;
+    }
+  }
+}

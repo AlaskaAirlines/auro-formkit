@@ -34,6 +34,14 @@
 }
 
 .triggerContentWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.triggerContent {
   overflow: hidden;
   flex: 1;
   display: flex;
