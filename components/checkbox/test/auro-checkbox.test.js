@@ -16,13 +16,13 @@ describe('auro-checkbox-group', () => {
           id="alaska"
           name="states"
           value="alaska"
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
 
         <auro-checkbox
           id="washington"
           name="states"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -51,13 +51,13 @@ describe('auro-checkbox-group', () => {
           id="alaska"
           name="states"
           value="alaska"
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
 
         <auro-checkbox
           id="washington"
           name="states"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -81,13 +81,13 @@ describe('auro-checkbox-group', () => {
           id="alaska"
           name="states"
           value="alaska"
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
 
         <auro-checkbox
           id="washington"
           name="states"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -111,7 +111,7 @@ describe('auro-checkbox-group', () => {
         id="alaska"
         name="states-unchecking"
         value="alaska"
-      ></auro-checkbox>
+      >Alaska</auro-checkbox>
     `);
 
     const alaskaCheckbox = el,
@@ -134,13 +134,13 @@ describe('auro-checkbox-group', () => {
           id="alaska"
           name="states"
           value="alaska"
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
 
         <auro-checkbox
           id="washington"
           name="states"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -168,12 +168,12 @@ describe('auro-checkbox-group', () => {
           id="alaska"
           name="states"
           value="alaska"
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
         <auro-checkbox
           id="washington"
           name="states"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -215,14 +215,13 @@ describe('auro-checkbox-group', () => {
           name="states"
           value="alaska"
           checked
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
 
         <auro-checkbox
           id="washington"
           name="states"
-          type="radio"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -248,14 +247,13 @@ describe('auro-checkbox-group', () => {
           name="states"
           value="alaska"
           disabled
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
 
         <auro-checkbox
           id="washington"
           name="states"
-          type="radio"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -287,13 +285,12 @@ describe('auro-checkbox-group', () => {
           id="alaska"
           name="states"
           value="alaska"
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
         <auro-checkbox
           id="washington"
           name="states"
-          type="radio"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 
@@ -313,13 +310,13 @@ describe('auro-checkbox-group', () => {
           id="alaska"
           name="states"
           value="alaska"
-        ></auro-checkbox>
+        >Alaska</auro-checkbox>
         <auro-checkbox
           id="washington"
           name="states"
           type="radio"
           value="washington"
-        ></auro-checkbox>
+        >Washington</auro-checkbox>
       </auro-checkbox-group>
     `);
 

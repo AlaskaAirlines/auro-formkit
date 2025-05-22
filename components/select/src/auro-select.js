@@ -27,6 +27,7 @@ import {
 } from '@aurodesignsystem/auro-menu';
 
 import styleCss from "./styles/style-css.js";
+import { ifDefined } from "lit-html/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -118,6 +119,14 @@ export class AuroSelect extends LitElement {
     return {
 
       /**
+       * If declared, sets the autocomplete attribute for the select element.
+       */
+      autocomplete: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * If declared, bib's position will be automatically calculated where to appear.
        * @default false
        */
@@ -131,6 +140,14 @@ export class AuroSelect extends LitElement {
        */
       disabled: {
         type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * The name for the select element.
+       */
+      name: {
+        type: String,
         reflect: true
       },
 
@@ -677,6 +694,7 @@ export class AuroSelect extends LitElement {
         this.menu.value = undefined;
       }
 
+      this._updateNativeSelect();
       this.validation.validate(this);
 
       // LEGACY EVENT
@@ -727,6 +745,34 @@ export class AuroSelect extends LitElement {
   validate(force = false) {
     this.validation.validate(this, force);
   }
+
+  /**
+   * Syncs the value from the native select element to the component's value.
+   * @param {Event} event // The change event from the native select element.
+   * @returns {void}
+   * @private
+   */
+  _handleNativeSelectChange(event) {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    const selectedValue = selectedOption.value;
+    const [currentValue] = this.value || [];
+    this.value = !currentValue || currentValue !== selectedValue ? [selectedValue] : this.value;
+  }
+
+  /**
+   * Updates the native select element's value based on the component's value.
+   * @returns {void}
+   * @private
+   */
+  _updateNativeSelect() {
+    const nativeSelect = this.shadowRoot.querySelector('select');
+    if (!nativeSelect) {
+      return;
+    }
+    const [value] = this.value || [];
+    nativeSelect.value = value || '';
+  }
+
 
   // When using auroElement, use the following attribute and function when hiding content from screen readers.
   // aria-hidden="${this.hideAudible(this.hiddenAudible)}"
@@ -794,6 +840,29 @@ export class AuroSelect extends LitElement {
             }
           </p>
         </${this.dropdownTag}>
+        <div class="nativeSelectWrapper">
+          <select 
+            tabindex="-1"
+            id="${`native-select-${this.id || this.uniqueId}`}"
+            name="${this.name || ''}"
+            ?disabled="${this.disabled}"
+            ?required="${this.required}"
+            aria-hidden="true"
+            autocomplete="${ifDefined(this.autocomplete)}"
+            @change="${this._handleNativeSelectChange}">
+            <option value="" ?selected="${!this.value}"></option>
+            ${this.options.map((option) => {
+              const optionValue = option.value || option.textContent;
+              return html`
+                <option 
+                  value="${optionValue}" 
+                  ?selected="${this.value === optionValue}">
+                  ${option.textContent}
+                </option>
+              `;
+            })}
+          </select>
+        </div>
         <!-- Help text and error message template -->
       </div>
     `;

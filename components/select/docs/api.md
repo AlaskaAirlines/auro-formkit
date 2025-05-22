@@ -7,12 +7,14 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | Property                        | Attribute                       | Type      | Default        | Description                                      |
 |---------------------------------|---------------------------------|-----------|----------------|--------------------------------------------------|
 | `autoPlacement`                 | `autoPlacement`                 | `boolean` | "false"        | If declared, bib's position will be automatically calculated where to appear. |
+| `autocomplete`                  | `autocomplete`                  | `string`  |                | If declared, sets the autocomplete attribute for the select element. |
 | `disabled`                      | `disabled`                      | `boolean` |                | When attribute is present, element shows disabled state. |
 | `error`                         | `error`                         | `string`  |                | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `flexMenuWidth`                 | `flexMenuWidth`                 | `boolean` |                | If set, makes dropdown width match the size of the content, rather than the width of the trigger. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean` |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
 | `multiSelect`                   | `multiselect`                   | `boolean` |                | Sets multi-select mode, allowing multiple options to be selected at once. |
+| `name`                          | `name`                          | `string`  |                | The name for the select element.                 |
 | `noCheckmark`                   | `noCheckmark`                   | `boolean` |                | When true, checkmark on selected option will no longer be present. |
 | `noFlip`                        | `noFlip`                        | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean` |                | If set, disables auto-validation on blur.        |

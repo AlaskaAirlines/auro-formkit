@@ -1,0 +1,48 @@
+name: pr-release
+
+# Runs when a pull request is opened but not for PRs into main or rc branches
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches-ignore: 
+      - main
+      - rc/**
+
+permissions:
+  contents: read
+  id-token: write # for npm provenance
+  pull-requests: write # permission to comment on PRs
+
+jobs:
+  steps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm run test
+      - name: Generate PR release version
+        run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
+      - name: Publish to NPM
+        run: npm publish --registry=https://registry.npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Comment on PR
+        run: |
+          # Extract package info from package.json
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          
+          # Create the comment with markdown formatting
+          gh pr comment ${{ github.event.pull_request.number }} -b "🚀 PR Release Published! \`$PACKAGE_NAME@$PACKAGE_VERSION\` [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

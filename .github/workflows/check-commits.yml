@@ -1,0 +1,33 @@
+name: check-commits
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Ensure Git is installed
+        run: |
+          which git || (apt-get update && apt-get install -y git)
+          git --version
+      - name: Build
+        run: npm run build
+      - name: Auro Check Commits
+        run: npx --package=@aurodesignsystem/auro-cli -- auro cc -l -d
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}

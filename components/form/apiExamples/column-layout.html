@@ -1,0 +1,48 @@
+<style>
+  .columned-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .columned-form div {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+</style>
+
+<auro-form>
+  <div class="columned-form">
+    <div>
+      <auro-input id="search-box" name="searchBox" required>
+        <span slot="label">Search flights</span>
+      </auro-input>
+
+      <auro-input id="last-name" name="lastName" required>
+        <span slot="label">Last Name</span>
+      </auro-input>
+    </div>
+
+    <div>
+      <div class="datepickerBlock">
+        <h4>Pick a date range</h4>
+        <auro-datepicker id="date-range" name="dateRange" required range>
+          <span slot="fromLabel">Start</span>
+          <span slot="toLabel">End</span>
+          <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+        </auro-datepicker>
+      </div>
+
+      <div class="controls">
+        <auro-button type="submit">Submit</auro-button>
+      </div>
+    </div>
+  </div>
+</auro-form>
