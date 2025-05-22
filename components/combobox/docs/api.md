@@ -12,6 +12,7 @@
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`      | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `inputmode`                     | `inputmode`                     | `string`      |                | Exposes inputmode attribute for input.           |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`     |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
+| `layout`                        |                                 | `string`      |                |                                                  |
 | `noFilter`                      | `noFilter`                      | `boolean`     |                | If set, combobox will not filter menuoptions based in input. |
 | `noFlip`                        | `noFlip`                        | `boolean`     | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean`     |                | If set, disables auto-validation on blur.        |
@@ -34,6 +35,7 @@
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
 | `focus`    | `(): void`                             | Focuses the combobox trigger input.              |
+| `isValid`  | `(): boolean`                          |                                                  |
 | `reset`    | `(): void`                             | Resets component to initial state.               |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
