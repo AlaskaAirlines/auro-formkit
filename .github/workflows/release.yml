@@ -1,21 +1,17 @@
-name: test-and-release
+name: release
 
-# Controls when the action will run.
-# - For PRs: runs tests on any PR to main, rc/**, or dev branches
-# - For pushes: runs tests and (if successful) the release job, but only on main and rc/** branches
 on:
-  push:
-    branches: [ main, rc/** ]
-  pull_request:
-    branches: [ main, rc/**, dev ]
+  workflow_run:
+    workflows: ["build-and-test"]
+    types:
+      - completed
+    branches:
+      - 'rc/**'
+      - 'main'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test:
-    uses: ./.github/workflows/test.yml
-  release:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/rc/'))
-    needs: test
+  main-or-rc:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write # to be able to publish a GitHub release
