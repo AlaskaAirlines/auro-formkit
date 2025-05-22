@@ -1,4 +1,4 @@
-name: Test & Release
+name: test-and-release
 
 # Controls when the action will run.
 # - For PRs: runs tests on any PR to main, rc/**, or dev branches
@@ -12,31 +12,10 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [20, 22]
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        run: npm clean-install
-      - name: Build
-        run: npm run build
-      - name: Test
-        run: npm run test
-
+    uses: ./.github/workflows/test.yml
   release:
-    # only release to main or rc branches
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/rc/'))
     needs: test
-    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write # to be able to publish a GitHub release
@@ -44,20 +23,16 @@ jobs:
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
-        run: npm clean-install
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: npm audit signatures
-      - name: Build
-        run: npm run build
+      - name: Download and Restore Build Artifact
+        uses: ./.github/workflows/download-and-restore-artifact.yml
+        with:
+          os: ubuntu-latest
+          node-version: 22
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -14,21 +14,22 @@ permissions:
   pull-requests: write # permission to comment on PRs
 
 jobs:
-  steps:
+  test:
+    uses: ./.github/workflows/test.yml
+  release:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: 'https://registry.npmjs.org'
-      - name: Install dependencies
-        run: npm clean-install
-      - name: Build
-        run: npm run build
-      - name: Test
-        run: npm run test
+          node-version: 22
+      - name: Download and Restore Build Artifact
+        uses: ./.github/workflows/download-and-restore-artifact.yml
+        with:
+          os: ubuntu-latest
+          node-version: 22
       - name: Generate PR release version
         run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
       - name: Publish to NPM
