@@ -1,7 +1,10 @@
-name: build
+name: build-and-test
 
 on:
-  workflow_call:
+  push:
+    branches: [ main, rc/** ]
+  pull_request:
+    branches: [ main, rc/**, dev ]
 
 jobs:
   build:
@@ -20,6 +23,8 @@ jobs:
         run: npm clean-install
       - name: Build
         run: npm run build
+      - name: Test
+        run: npm run test
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:

@@ -1,12 +1,13 @@
 name: pr-release
 
-# Runs when a pull request is opened but not for PRs into main or rc branches
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches-ignore: 
-      - main
-      - rc/**
+  workflow_run:
+    workflows: ["build-and-test"]
+    types:
+      - completed
+    branches-ignore:
+      - 'rc/**'
+      - 'main' 
 
 permissions:
   contents: read
@@ -14,13 +15,19 @@ permissions:
   pull-requests: write # permission to comment on PRs
 
 jobs:
-  test:
-    uses: ./.github/workflows/test.yml
   release:
-    needs: test
+    # This job will only run if the previous workflow (test) was successful and the event is a pull request opened or synchronized also only if pr is not pointed to rc/** or main branch
+    if: github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Get PR number from commit SHA
+        id: get_pr
+        run: |
+          PR_NUMBER=$(gh pr list --state open --json number,headRefName --jq ".[] | select(.headRefName == '${{ github.event.workflow_run.head_branch }}') | .number")
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,7 +38,7 @@ jobs:
           os: ubuntu-latest
           node-version: 22
       - name: Generate PR release version
-        run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
+        run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ steps.get_pr.outputs.pr_number }}
       - name: Publish to NPM
         run: npm publish --registry=https://registry.npmjs.org
         env:
@@ -39,11 +46,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Comment on PR
         run: |
-          # Extract package info from package.json
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          
-          # Create the comment with markdown formatting
-          gh pr comment ${{ github.event.pull_request.number }} -b "🚀 PR Release Published! \`$PACKAGE_NAME@$PACKAGE_VERSION\` [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)"
+          gh pr comment ${{ steps.get_pr.outputs.pr_number }} -b "🚀 PR Release Published! \`$PACKAGE_NAME@$PACKAGE_VERSION\` [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
