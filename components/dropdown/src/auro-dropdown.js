@@ -56,7 +56,7 @@ export class AuroDropdown extends AuroElement {
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
-    this.errorMessage = 'NEED TO GET IT FROM THE NESTED COMPONENT';
+    this.errorMessage = 'NEED TO GET IT FROM THE NESTED COMPONENT'; // TODO!
 
     // Layout Config
     this.layout = 'default';
@@ -115,7 +115,7 @@ export class AuroDropdown extends AuroElement {
     this.noToggle = false;
     this.a11yAutocomplete = 'none';
     this.labeled = true;
-    this.a11yRole = 'combobox';
+    this.a11yRole = 'combobox'; // Why is this defaulting to combobox? This should be 'button' and shouldn't it be public so our other components can set it correctly? e.g. the input in combobox is 'combobox' and datepicker is 'dialog'
     this.onDark = false;
 
     // floaterConfig
@@ -842,6 +842,7 @@ export class AuroDropdown extends AuroElement {
 
   // Help text and error message template
   getHtmlHelpText() {
+    // TODO: Need to check that there is help text to return first
     return html`
       ${!this.error
         ? html`
@@ -862,73 +863,7 @@ export class AuroDropdown extends AuroElement {
     `;
   }
 
-  getLayoutEmphasized() {
-    const helpTextClasses = {
-      'leftIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('right'),
-      'rightIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('left')
-    };
-
-    return html`
-      <div>
-        <div
-          id="trigger"
-          class="${classMap(this.commonWrapperClasses)}" part="wrapper"
-          tabindex="${this.tabIndex}"
-          ?showBorder="${this.showTriggerBorders}"
-          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
-          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
-          @focusin="${this.handleFocusin}"
-          @blur="${this.handleFocusOut}">
-          <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
-              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
-            </label>
-            <div class="triggerContent">
-              <slot
-                name="trigger"
-                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
-            </div>
-          </div>
-          ${this.chevron || this.common ? html`
-              <div
-                id="showStateIcon"
-                part="chevron">
-                <${this.iconTag}
-                  category="interface"
-                  name="chevron-down"
-                  ?onDark="${this.onDark}"
-                  variant="${this.disabled ? 'disabled' : 'muted'}">
-                  >
-                </${this.iconTag}>
-              </div>
-            ` : undefined }
-        </div>
-        <div class="${classMap(helpTextClasses)}">
-          ${this.getHtmlHelpText()}
-        </div>
-        <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
-          <slot name="helpText"></slot>
-        </${this.helpTextTag}>
-        <div class="slotContent">
-          <slot @slotchange="${this.handleDefaultSlot}"></slot>
-        </div>
-        <div id="bibSizer" part="size"></div>
-        <${this.dropdownBibTag}
-          id="bib"
-          ?data-show="${this.isPopoverVisible}"
-          ?isfullscreen="${this.isBibFullscreen}"
-          ?common="${this.common}"
-          ?rounded="${this.common || this.rounded}"
-          ?inset="${this.common || this.inset}"
-        >
-        </${this.dropdownBibTag}>
-      </div>
-    `;
-  }
-
-  getLayoutDefault() {
+  getLayoutClassic() {
     return html`
       <div>
         <div
@@ -983,6 +918,74 @@ export class AuroDropdown extends AuroElement {
     `;
   }
 
+  getLayoutEmphasized() {
+    const helpTextClasses = {
+      'leftIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('right'),
+      'rightIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('left')
+    };
+
+    return html`
+      <div>
+        <div
+          id="trigger"
+          class="${classMap(this.commonWrapperClasses)}" part="wrapper"
+          tabindex="${this.tabIndex}"
+          ?showBorder="${this.showTriggerBorders}"
+          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
+          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+          @focusin="${this.handleFocusin}"
+          @blur="${this.handleFocusOut}">
+          <div class="triggerContentWrapper">
+            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
+              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
+            </label>
+            <div class="triggerContent">
+              <slot
+                name="trigger"
+                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
+            </div>
+          </div>
+          ${this.chevron || this.common ? html`
+              <div
+                id="showStateIcon"
+                part="chevron">
+                <${this.iconTag}
+                  category="interface"
+                  name="chevron-down"
+                  ?onDark="${this.onDark}"
+                  variant="${this.disabled ? 'disabled' : 'muted'}">
+                  >
+                </${this.iconTag}>
+              </div>
+            ` : undefined }
+        </div>
+        <div class="${classMap(helpTextClasses)}">
+          ${this.getHtmlHelpText()}
+        </div>
+        <div class="hasHelpText">
+          <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
+            <slot name="helpText"></slot>
+          </${this.helpTextTag}>
+        </div>
+        <div class="slotContent">
+          <slot @slotchange="${this.handleDefaultSlot}"></slot>
+        </div>
+        <div id="bibSizer" part="size"></div>
+        <${this.dropdownBibTag}
+          id="bib"
+          ?data-show="${this.isPopoverVisible}"
+          ?isfullscreen="${this.isBibFullscreen}"
+          ?common="${this.common}"
+          ?rounded="${this.common || this.rounded}"
+          ?inset="${this.common || this.inset}"
+        >
+        </${this.dropdownBibTag}>
+      </div>
+    `;
+  }
+
   getLayout(ForcedLayout) {
     console.warn('getLayout'); // eslint-disable-line no-console
     const layout = ForcedLayout || this.layout;
@@ -995,7 +998,7 @@ export class AuroDropdown extends AuroElement {
       case 'emphasized-right':
         return this.getLayoutEmphasized();
       default:
-        return this.getLayoutDefault();
+        return this.getLayoutClassic();
     }
   }
 }
