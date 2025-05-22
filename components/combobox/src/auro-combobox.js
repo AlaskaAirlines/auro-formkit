@@ -6,8 +6,9 @@
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
 // If using litElement base class
-import { LitElement } from "lit";
+import { css } from "lit";
 import { html } from 'lit/static-html.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -24,7 +25,9 @@ import bibTemplateVersion from './bibtemplateVersion.js';
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
-import { ifDefined } from "lit/directives/if-defined.js";
+import styleEmphasizedCss from './styles/emphasized/style-css.js';
+
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -37,7 +40,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  */
 
 // build the component class
-export class AuroCombobox extends LitElement {
+export class AuroCombobox extends AuroElement {
 
   constructor() {
     super();
@@ -77,6 +80,11 @@ export class AuroCombobox extends LitElement {
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
     this.isHiddenWhileLoading = false;
+
+    // Layout Config
+    this.layout = 'classic';
+    this.shape = 'rounded';
+    this.size = 'xl';
 
     // floaterConfig
     this.placement = 'bottom-start';
@@ -339,7 +347,22 @@ export class AuroCombobox extends LitElement {
   }
 
   static get styles() {
-    return [styleCss];
+    return [
+      css`${styleCss}`,
+      css`${styleEmphasizedCss}`
+    ];
+  }
+
+  isValid() {
+    console.warn('isValid()', this.validity);
+    let valid = true;
+
+    if (this.validity !== undefined && this.validity !== 'valid') {
+      valid = false;
+    }
+    console.info('isValid() - valid:', valid);
+
+    return valid;
   }
 
   /**
@@ -675,7 +698,7 @@ export class AuroCombobox extends LitElement {
       return;
     }
 
-    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext');
+    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
     const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
 
     if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
@@ -966,6 +989,16 @@ export class AuroCombobox extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const helpTextContentClasses = {
+      'util_displayHidden': this.validity === undefined || this.validity !== 'valid',
+      'helpTextMessage': true,
+    };
+
+    const errorTextContentClasses = {
+      'util_displayHidden': this.validity === undefined || this.validity === 'valid',
+      'errorMessage': true,
+    };
+
     return html`
       <div>
         <div aria-live="polite" class="util_displayHiddenVisually">
@@ -976,30 +1009,35 @@ export class AuroCombobox extends LitElement {
             : undefined
           }
         </div>
-        <div id="slotHolder" aria-hidden="true">
+        <div class="util_displayHiddenVisually" aria-hidden="true">
           <slot name="label" @slotchange="${this.handleSlotChange}"></slot>
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
-          for="dropdownMenu"
-          ?onDark="${this.onDark}"
-          fluid
-          bordered
-          rounded
-          matchWidth
-          nocheckmark
-          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          .placement="${this.placement}"
-          .offset="${this.offset}"
-          ?autoPlacement="${this.autoPlacement}"
           ?noFlip="${this.noFlip}"
-          disableEventShow>
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          bordered
+          disableEventShow
+          fluid
+          for="dropdownMenu"
+          layout="${this.layout}"
+          matchWidth
+          nocheckmark
+          rounded
+          shape="${this.shape}"
+          size="${this.size}">
           <${this.inputTag}
+            @input="${this.handleInputValueChange}"
             .a11yExpanded="${this.dropdownOpen}"
             .a11yControls="${this.dropdownId}"
             .autocomplete="${this.autocomplete}"
+            .inputmode="${this.inputmode}"
             .placeholder="${this.placeholder}"
             .type="${this.type}"
             ?onDark="${this.onDark}"
@@ -1007,33 +1045,26 @@ export class AuroCombobox extends LitElement {
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
-            id="${this.id}"
             a11yRole="combobox"
             bordered
+            id="${this.id}"
             layout="${this.layout}"
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-            inputmode="${ifDefined(this.inputmode)}"
-            slot="trigger"
-            @input="${this.handleInputValueChange}">
+            shape="${this.shape}"
+            size="${this.size}"
+            slot="trigger">
           </${this.inputTag}>
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
             <slot></slot>
           </${this.bibtemplateTag}>
 
-          <p slot="helpText">
-            <!-- Help text and error message template -->
-            ${!this.validity || this.validity === undefined || this.validity === 'valid'
-              ? html`
-                <slot name="helpText"></slot>
-              ` : html`
-                <span role="alert" aria-live="assertive" part="helpText">
-                  ${this.errorMessage}
-                </span>`
-            }
-          </p>
+          <span slot="helpText">
+            <span class="${classMap(helpTextContentClasses)}">a</span>
+            <span class="${classMap(errorTextContentClasses)}">b</span>
+          </span>
         </${this.dropdownTag}>
       </div>
     `;

@@ -4,40 +4,44 @@
 /* stylelint-disable max-nesting-depth */
 
 @use "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables" as v;
+@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-[auro-input] {
-  min-height: var(--ds-size-700, #{v.$ds-size-700});
-  max-height: var(--ds-size-700, #{v.$ds-size-700});
+:host(:not([layout*='emphasized'])) {
+  [auro-input] {
+    min-height: var(--ds-size-700, #{v.$ds-size-700});
+    max-height: var(--ds-size-700, #{v.$ds-size-700});
 
-  &::part(iconContainer) {
-    top: 0;
-    display: flex;
-    height: 100%;
-    align-items: center;
+    &::part(iconContainer) {
+      top: 0;
+      display: flex;
+      height: 100%;
+      align-items: center;
+    }
+
+    &::part(accentIcon) {
+      transition: all .3s cubic-bezier(.215, .61, .355, 1);
+    }
+
+    &::part(helpText) {
+      display: none;
+    }
+
+    &::part(wrapper) {
+      &:focus-within {
+        /* stylelint-disable declaration-no-important */
+        border-bottom-width: 0 !important;
+        box-shadow: unset !important;
+        outline: unset !important;
+        /* stylelint-enable declaration-no-important */
+      }
+
+      --ds-auro-input-border-color: transparent;
+      --ds-auro-input-container-color: transparent;
+    }
   }
 
-  &::part(accentIcon) {
-    transition: all .3s cubic-bezier(.215, .61, .355, 1);
-  }
-
-  &::part(helpText) {
+  #slotHolder{
     display: none;
   }
 
-  &::part(wrapper) {
-    &:focus-within {
-      /* stylelint-disable declaration-no-important */
-      border-bottom-width: 0 !important;
-      box-shadow: unset !important;
-      outline: unset !important;
-      /* stylelint-enable declaration-no-important */
-    }
-
-    --ds-auro-input-border-color: transparent;
-    --ds-auro-input-container-color: transparent;
-  }
-}
-
-#slotHolder{
-  display: none;
 }

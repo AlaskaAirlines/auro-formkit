@@ -48,7 +48,7 @@
 | `exposeCssParts`      | `(): void`                            | Exposes CSS parts for styling from parent components. |
 | `getHtmlHelpText`     | `(): TemplateResult`                  |                                                  |
 | `getLayout`           | `(ForcedLayout: any): TemplateResult` |                                                  |
-| `getLayoutDefault`    | `(): TemplateResult`                  |                                                  |
+| `getLayoutClassic`    | `(): TemplateResult`                  |                                                  |
 | `getLayoutEmphasized` | `(): TemplateResult`                  |                                                  |
 | `hide`                | `(): void`                            | Public method to hide the dropdown.              |
 | `show`                | `(): void`                            | Public method to show the dropdown.              |
