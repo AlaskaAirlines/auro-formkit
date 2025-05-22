@@ -1,0 +1,29 @@
+name: test
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    needs: build
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Download and Restore Build Artifact
+        uses: ./.github/workflows/download-and-restore-artifact.yml
+        with:
+          os: ${{ matrix.os }}
+          node-version: ${{ matrix.node-version }}
+      - name: Test
+        run: npm run test

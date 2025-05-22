@@ -8,25 +8,27 @@ permissions:
   contents: read
 
 jobs:
-  steps:
+  build:
+    uses: ./.github/workflows/build.yml
+  check:
     runs-on: ubuntu-latest
+    needs: build
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
-        run: npm install
+      - name: Download and Restore Build Artifact
+        uses: ./.github/workflows/download-and-restore-artifact.yml
+        with:
+          os: ubuntu-latest
+          node-version: 22
       - name: Ensure Git is installed
         run: |
           which git || (apt-get update && apt-get install -y git)
           git --version
-      - name: Build
-        run: npm run build
       - name: Auro Check Commits
         run: npx --package=@aurodesignsystem/auro-cli -- auro cc -l -d
         env:
