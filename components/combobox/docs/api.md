@@ -11,7 +11,7 @@
 | `error`                         | `error`                         | `string`  |                | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`  | "sm"           | Defines the screen size breakpoint (`lg`, `md`, `sm`, or `xs`) at which the dropdown switches to fullscreen mode on mobile.<br />When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean` |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
-| `layout`                        | `layout`                        | `string`  | "default"      | Defines the language of an element.              |
+| `layout`                        |                                 | `string`  |                |                                                  |
 | `noFilter`                      | `noFilter`                      | `boolean` |                | If set, combobox will not filter menuoptions based in input. |
 | `noFlip`                        | `noFlip`                        | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean` |                | If set, disables auto-validation on blur.        |
@@ -27,13 +27,14 @@
 | `triggerIcon`                   | `triggerIcon`                   | `boolean` |                | If set, the `icon` attribute will be applied to the trigger `auro-input` element. |
 | `type`                          | `type`                          | `string`  |                | Applies the defined value as the type attribute on auro-input. |
 | `validity`                      | `validity`                      | `string`  |                | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         |           | "undefined"    | Value selected for the dropdown menu.            |
+| `value`                         | `value`                         |           |                | Value selected for the dropdown menu.            |
 
 ## Methods
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
 | `focus`    | `(): void`                             | Focuses the combobox trigger input.              |
+| `isValid`  | `(): boolean`                          |                                                  |
 | `reset`    | `(): void`                             | Resets component to initial state.               |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 

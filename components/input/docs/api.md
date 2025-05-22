@@ -27,6 +27,7 @@ Generate unique names for dependency components.
 | `error`                           | `error`                           |           | `string`                                         |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `errorMessage`                    | `errorMessage`                    |           | `string`                                         |             | Contains the help text message for the current validity error. |
 | `format`                          | `format`                          |           | `string`                                         |             | Specifies the input mask format.                 |
+| `helpTextClasses`                 |                                   | readonly  | `{ helpTextWrapper: boolean; leftIndent: boolean; rightIndent: boolean; }` |             |                                                  |
 | `icon`                            | `icon`                            |           | `boolean`                                        | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
 | `id`                              | `id`                              |           | `string`                                         |             | Sets the unique ID of the element.               |
 | `lang`                            | `lang`                            |           | `string`                                         |             | Defines the language of an element.              |
@@ -61,19 +62,10 @@ Generate unique names for dependency components.
 
 ## Methods
 
-| Method                        | Type                                   | Description                                      |
-|-------------------------------|----------------------------------------|--------------------------------------------------|
-| `getHtmlActionClear`          | `(): TemplateResult`                   |                                                  |
-| `getHtmlHelpText`             | `(): TemplateResult`                   |                                                  |
-| `getHtmlInput`                | `(): TemplateResult`                   |                                                  |
-| `getHtmlNotificationPassword` | `(): TemplateResult`                   |                                                  |
-| `getHtmlTypeIcon`             | `(): TemplateResult`                   |                                                  |
-| `getLayout`                   | `(ForcedLayout: any): TemplateResult`  |                                                  |
-| `getLayoutDefault`            | `(): TemplateResult`                   |                                                  |
-| `getLayoutEmphasized`         | `(): TemplateResult`                   |                                                  |
-| `getValidationErrorIconHtml`  | `(): TemplateResult`                   |                                                  |
-| `reset`                       | `(): void`                             | Resets component to initial state.               |
-| `validate`                    | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method     | Type                                   | Description                                      |
+|------------|----------------------------------------|--------------------------------------------------|
+| `reset`    | `(): void`                             | Resets component to initial state.               |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
