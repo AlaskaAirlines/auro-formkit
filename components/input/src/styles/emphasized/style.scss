@@ -17,6 +17,12 @@
   --auro-input-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --auro-input-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
   --auro-input-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+
+  cursor: text;
+}
+
+.helpTextClasses {
+  cursor: default;
 }
 
 input {

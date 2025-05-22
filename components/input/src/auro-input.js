@@ -46,12 +46,12 @@ export class AuroInput extends BaseInput {
     /**
      * @private
      */
-    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
+    this.buttonTag = versioning.generateTag('auro-formkit-input-button', buttonVersion, AuroButton);
 
     /**
      * @private
      */
-    this.buttonTag = versioning.generateTag('auro-formkit-input-button', buttonVersion, AuroButton);
+    this.hasDisplayValueContent = false;
 
     /**
      * @private
@@ -61,7 +61,7 @@ export class AuroInput extends BaseInput {
     /**
      * @private
      */
-    this.hasDisplayValueContent = false;
+    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
   }
 
   static get styles() {
@@ -88,6 +88,14 @@ export class AuroInput extends BaseInput {
       'hasFocus': this.hasFocus
     };
   }
+
+  get helpTextClasses() {
+    return {
+      'helpTextWrapper': true,
+      'leftIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('right'),
+      'rightIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('left')
+    };
+  };
 
   /**
    * This will register this element with the browser.
@@ -119,7 +127,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {void}
    */
-  handleDisplayValueSlotChange() {
+  checkDisplayValueSlotChange() {
     const nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
 
     let hasContent = false;
@@ -131,6 +139,11 @@ export class AuroInput extends BaseInput {
     this.hasDisplayValueContent = hasContent;
   }
 
+  /**
+   * Returns HTML for the validation error icon.
+   * @private
+   * @returns {html} - Returns HTML for the validation error icon.
+   */
   getValidationErrorIconHtml() {
     return html`
       ${this.validity && this.validity !== 'valid' ? html`
@@ -138,14 +151,193 @@ export class AuroInput extends BaseInput {
           <${this.iconTag}
             category="alert"
             name="error-stroke"
-            customColor
+            variant="statusError"
+          >
           </${this.iconTag}>
         </div>
       ` : undefined}
     `;
   }
 
-  getLayoutDefault() {
+  /**
+   * Returns HTML for the HTML5 input element.
+   * @private
+   * @returns {html} - Returns HTML for the HTML5 input element.
+   */
+  getHtmlInput() {
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.hasFocus,
+      'withValue': this.value && this.value.length > 0
+    };
+
+    return html`
+      <label for=${this.id} class="${classMap(this.commonLabelClasses)}" part="label">
+        <slot name="label">
+          ${this.label}
+        </slot>
+      </label>
+      <input
+        @blur="${this.handleBlur}"
+        @focusin="${this.handleFocusin}"
+        @focusout="${this.handleFocusout}"
+        @input="${this.handleInput}"
+        ?activeLabel="${this.activeLabel}"
+        ?disabled="${this.disabled}"
+        ?required="${this.required}"
+        .placeholder=${this.placeholderStr}
+        aria-describedby="${this.uniqueId}"
+        aria-invalid="${this.validity !== 'valid'}"
+        autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
+        autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
+        autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
+        name="${ifDefined(this.name)}"
+        id="${this.inputId}"
+        inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
+        lang="${ifDefined(this.lang)}"
+        maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
+        minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
+        part="input"
+        pattern="${ifDefined(this.definePattern())}"
+        spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
+        type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}" />
+      <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+        <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the clear action button.
+   * @private
+   * @returns {html} - Returns HTML for the clear action button.
+   */
+  getHtmlActionClear() {
+    return html`
+      <div class="notification clear">
+        <${this.buttonTag}
+          @click="${this.handleClickClear}"
+          ?onDark="${this.onDark}"
+          aria-label="${i18n(this.lang, 'clearInput')}"
+          class="notificationBtn clearBtn"
+          tabindex="-1"
+          variant="flat">
+          <${this.iconTag}
+            category="interface"
+            customColor
+            name="x-lg"
+            >
+          </${this.iconTag}>
+        </${this.buttonTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the show password button.
+   * @private
+   * @returns {html} - Returns HTML for the show password button.
+   */
+  getHtmlNotificationPassword() {
+    return html`
+      <div class="notification">
+        <${this.buttonTag}
+          @click="${this.handleClickShowPassword}
+          ?onDark="${this.onDark}"
+          aria-hidden="true"
+          class="notificationBtn passwordBtn"
+          tabindex="-1"
+          variant="flat">
+          <${this.iconTag}
+            ?hidden=${!this.showPassword}
+            category="interface"
+            customColor
+            name="hide-password-stroke">
+          </${this.iconTag}>
+          <${this.iconTag}
+            ?hidden=${this.showPassword}
+            category="interface"
+            customColor
+            name="view-password-stroke">
+          </${this.iconTag}>
+        </${this.buttonTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the input type icon.
+   * @private
+   * @returns {html} - Returns HTML for the input type icon.
+   */
+  getHtmlTypeIcon() {
+    return html`
+      <div class="typeIcon">
+        ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
+
+        <!-- The repeat() method is used below in order to force auro-icon to re-render when the name value is updated.
+          This should be cleaned up when auro-icon issue #31 is resolved. -->
+        ${this.inputIconName
+        ? repeat([this.inputIconName], (val) => val, (name) => html`
+          <${this.iconTag}
+            ?onDark="${this.onDark}"
+            category="payment"
+            class="accentIcon"
+            name="${name}"
+            part="accentIcon"
+            variant="${this.disabled ? 'disabled' : 'muted'}">
+          </${this.iconTag}>
+        `) : undefined
+        }
+        ${this.type === 'date'
+        ? html`
+          <${this.iconTag}
+            ?onDark="${this.onDark}"
+            category="interface"
+            class="accentIcon"
+            name="calendar"
+            part="accentIcon"
+            variant="${this.disabled ? 'disabled' : 'muted'}">
+          </${this.iconTag}>`
+        : undefined
+        }
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the help text and error message.
+   * @private
+   * @returns {html} - Returns HTML for the help text and error message.
+   */
+  getHtmlHelpText() {
+    return html`
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helptext">${this.getHelpText()}</slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+        : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+      }
+    `;
+  }
+
+  /**
+   * Returns HTML for the default layout.
+   * @private
+   * @returns {html} - Returns HTML for the default layout.
+   */
+  getLayoutClassic() {
     const wrapperClasses = {
       'layoutDefault': true
     };
@@ -191,39 +383,14 @@ export class AuroInput extends BaseInput {
             : undefined
             }
           </div>
-          <label for=${this.inputId} class="${classMap(labelClasses)}" part="label">
+          <label for=${this.id} class="${classMap(labelClasses)}" part="label">
             <slot name="label">
               ${this.label}
             </slot>
             ${this.required ? '' : ` (${i18n(this.lang, 'optional')})`}
           </label>
-          <input
-            @input="${this.handleInput}"
-            @focusin="${this.handleFocusin}"
-            @blur="${this.handleBlur}"
-            id="${this.inputId}"
-            name="${ifDefined(this.name)}"
-            type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}"
-            pattern="${ifDefined(this.definePattern())}"
-            maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
-            minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
-            inputMode="${ifDefined(this.inputmode ? this.inputmode : undefined)}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            aria-describedby="${this.uniqueId}"
-            ?aria-invalid="${this.validity !== 'valid'}"
-            placeholder=${this.getPlaceholder()}
-            lang="${ifDefined(this.lang)}"
-            ?activeLabel="${this.activeLabel}"
-            spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
-            autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
-            autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
-            autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
-            part="input"
-            role="${ifDefined(this.a11yRole)}"
-            aria-expanded="${ifDefined(this.a11yExpanded)}"
-            aria-controls="${ifDefined(this.a11yControls)}"
-          />
+
+          ${this.getHtmlInput()}
         </div>
         <div
           class="notificationIcons"
@@ -242,23 +409,23 @@ export class AuroInput extends BaseInput {
             ${this.type === 'password' ? html`
               <div class="notification">
                 <${this.buttonTag}
-                  variant="flat"
+                  @click="${this.handleClickShowPassword}"
                   ?onDark="${this.onDark}"
                   aria-hidden="true"
+                  class="notificationBtn passwordBtn"
                   tabindex="-1"
-                  @click="${this.handleClickShowPassword}"
-                  class="notificationBtn passwordBtn">
+                  variant="flat">
                   <${this.iconTag}
+                    ?hidden=${!this.showPassword}
                     category="interface"
-                    name="hide-password-stroke"
                     customColor
-                    ?hidden=${!this.showPassword}>
+                    name="hide-password-stroke">
                   </${this.iconTag}>
                   <${this.iconTag}
+                    ?hidden=${this.showPassword}
                     category="interface"
-                    name="view-password-stroke"
                     customColor
-                    ?hidden=${this.showPassword}>
+                    name="view-password-stroke">
                   </${this.iconTag}>
                 </${this.buttonTag}>
               </div>
@@ -266,16 +433,15 @@ export class AuroInput extends BaseInput {
             ${!this.disabled && !this.readonly ? html`
               <div class="notification">
                 <${this.buttonTag}
-                  variant="flat"
+                  @click="${this.handleClickClear}"
                   ?onDark="${this.onDark}"
-                  class="notificationBtn clearBtn"
                   arialabel="${i18n(this.lang, 'clearInput')}"
-                  @click="${this.handleClickClear}">
+                  class="notificationBtn clearBtn"
+                  variant="flat">
                   <${this.iconTag}
-                    customColor
                     category="interface"
-                    name="x-lg"
-                    >
+                    customColor
+                    name="x-lg">
                   </${this.iconTag}>
                 </${this.buttonTag}>
               </div>
@@ -303,156 +469,11 @@ export class AuroInput extends BaseInput {
     `;
   }
 
-  getHtmlInput() {
-    const displayValueClasses = {
-      'displayValue': true,
-      'withValue': this.value && this.value.length > 0,
-      'hasFocus': this.hasFocus,
-      'hasContent': this.hasDisplayValueContent,
-    };
-
-    return html`
-      <label for=${this.id} class="${classMap(this.commonLabelClasses)}" part="label">
-        <slot name="label">
-          ${this.label}
-        </slot>
-      </label>
-      <input
-        @input="${this.handleInput}"
-        @focusin="${this.handleFocusin}"
-        @focusout="${this.handleFocusout}"
-        @blur="${this.handleBlur}"
-        required="false"
-        ?required="${this.required}"
-        ?disabled="${this.disabled}"
-        ?activeLabel="${this.activeLabel}"
-        id="${this.id}"
-        name="${ifDefined(this.name)}"
-        type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}"
-        pattern="${ifDefined(this.definePattern())}"
-        maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
-        minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
-        inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
-        aria-describedby="${this.uniqueId}"
-        aria-invalid="${this.validity !== 'valid'}"
-        .placeholder=${this.placeholderStr}
-        lang="${ifDefined(this.lang)}"
-        spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
-        autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
-        autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
-        autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
-        part="input" />
-      <div class="${classMap(displayValueClasses)}">
-        <slot name="displayValue" @slotchange=${this.handleDisplayValueSlotChange}></slot>
-      </div>
-    `;
-  }
-
-  getHtmlActionClear() {
-    return html`
-      <div class="notification clear">
-        <${this.buttonTag}
-          variant="flat"
-          tabindex="-1"
-          ?onDark="${this.onDark}"
-          class="notificationBtn clearBtn"
-          aria-label="${i18n(this.lang, 'clearInput')}"
-          @click="${this.handleClickClear}">
-          <${this.iconTag}
-            customColor
-            category="interface"
-            name="x-lg"
-            >
-          </${this.iconTag}>
-        </${this.buttonTag}>
-      </div>
-    `;
-  }
-
-  getHtmlNotificationPassword() {
-    return html`
-      <div class="notification">
-        <${this.buttonTag}
-          variant="flat"
-          ?onDark="${this.onDark}"
-          aria-hidden="true"
-          tabindex="-1"
-          @click="${this.handleClickShowPassword}"
-          class="notificationBtn passwordBtn">
-          <${this.iconTag}
-            category="interface"
-            name="hide-password-stroke"
-            customColor
-            ?hidden=${!this.showPassword}>
-          </${this.iconTag}>
-          <${this.iconTag}
-            category="interface"
-            name="view-password-stroke"
-            customColor
-            ?hidden=${this.showPassword}>
-          </${this.iconTag}>
-        </${this.buttonTag}>
-      </div>
-    `;
-  }
-
-  getHtmlTypeIcon() {
-    return html`
-      <div class="typeIcon">
-        ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
-
-        <!-- The repeat() method is used below in order to force auro-icon to re-render when the name value is updated.
-          This should be cleaned up when auro-icon issue #31 is resolved. -->
-        ${this.inputIconName
-        ? repeat([this.inputIconName], (val) => val, (name) => html`
-          <${this.iconTag}
-            class="accentIcon"
-            category="payment"
-            name="${name}"
-            part="accentIcon"
-            ?onDark="${this.onDark}"
-            variant="${this.disabled ? 'disabled' : 'muted'}">
-          </${this.iconTag}>
-        `) : undefined
-        }
-        ${this.type === 'date'
-        ? html`
-          <${this.iconTag}
-            class="accentIcon"
-            category="interface"
-            name="calendar"
-            part="accentIcon"
-            ?onDark="${this.onDark}"
-            variant="${this.disabled ? 'disabled' : 'muted'}">
-          </${this.iconTag}>`
-        : undefined
-        }
-      </div>
-    `;
-  }
-
-  // Help text and error message template
-  getHtmlHelpText() {
-    return html`
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
-        ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}">
-            <p id="${this.uniqueId}" part="helpText">
-              <slot name="helptext">${this.getHelpText()}</slot>
-            </p>
-          </${this.helpTextTag}>
-        `
-        : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
-            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-              ${this.errorMessage}
-            </p>
-          </${this.helpTextTag}>
-        `
-      }
-    `;
-  }
-
+  /**
+   * Returns HTML for the emphasized layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the emphasized layout.
+   */
   getLayoutEmphasized() {
     // CURRENT IMPLEMENTATION OF THIS DOES NOT SUPPORT TYPE="*" OR VALIDATION
     const helpTextClasses = {
@@ -481,12 +502,18 @@ export class AuroInput extends BaseInput {
           ` : undefined}
         </div>
       </div>
-      <div class="${classMap(helpTextClasses)}">
+      <div class="${classMap(this.helpTextClasses)}" part="inputHelpText">
         ${this.getHtmlHelpText()}
       </div>
     `;
   }
 
+  /**
+   * Logic to determine the layout of the component.
+   * @private
+   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
+   * @returns {void}
+   */
   getLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;
 
@@ -498,7 +525,7 @@ export class AuroInput extends BaseInput {
       case 'emphasized-right':
         return this.getLayoutEmphasized();
       default:
-        return this.getLayoutDefault();
+        return this.getLayoutClassic();
     }
   }
 }
