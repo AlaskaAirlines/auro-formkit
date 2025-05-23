@@ -992,6 +992,16 @@ export class AuroCombobox extends AuroElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const helpTextContentClasses = {
+      'util_displayHidden': this.validity !== undefined && this.validity !== 'valid',
+      'helpTextMessage': true,
+    };
+
+    const errorTextContentClasses = {
+      'util_displayHidden': this.validity === undefined || this.validity === 'valid',
+      'errorMessage': true,
+    };
+
     return html`
       <div>
         <div aria-live="polite" class="util_displayHiddenVisually">
@@ -1057,21 +1067,20 @@ export class AuroCombobox extends AuroElement {
           <span slot="helpText">
             ${!this.validity || this.validity === 'valid'
               ? html`
-                <${this.helpTextTag} ?onDark="${this.onDark}">
+                <${this.helpTextTag} class="${classMap(helpTextContentClasses)}" ?onDark="${this.onDark}">
                   <p id="${this.uniqueId}" part="helpText">
                     <slot name="helpText"></slot>
                   </p>
                 </${this.helpTextTag}>
               `
               : html`
-                <${this.helpTextTag} error ?onDark="${this.onDark}">
+                <${this.helpTextTag} class="${classMap(errorTextContentClasses)}" error ?onDark="${this.onDark}">
                   <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
                     ${this.errorMessage}
                   </p>
                 </${this.helpTextTag}>
               `
             }
-
           </span>
         </${this.dropdownTag}>
       </div>
