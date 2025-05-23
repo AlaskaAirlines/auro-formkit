@@ -25,9 +25,21 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install Surge
+    - name: Install Surge and jq
       shell: bash
-      run: npm install -g surge
+      run: |
+        npm install -g surge
+        # Install jq if not already installed
+        if ! command -v jq &> /dev/null; then
+          if command -v apt-get &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
+          elif command -v brew &> /dev/null; then
+            brew install jq
+          else
+            echo "Unable to install jq. Please install it manually."
+            exit 1
+          fi
+        fi
       
     # Deploy components to Surge
     - name: Deploy to Surge
@@ -35,10 +47,16 @@ runs:
       shell: bash
       env:
         SURGE_TOKEN: ${{ inputs.surge-token }}
-        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GH_TOKEN: ${{ inputs.github-token }}
       run: |
         components="${{ inputs.components }}"
         demo_dir="${{ inputs.demo-dir-pattern }}"
+        
+        # Debug information
+        echo "GitHub Repository: ${GITHUB_REPOSITORY}"
+        echo "GitHub Ref: ${GITHUB_REF}"
+        echo "GitHub Head Ref: ${GITHUB_HEAD_REF}"
+        echo "GitHub PR Number: ${{ inputs.pr-number }}"
         
         # Build the comment body
         comment_body="## Deployed components to surge\n---\n"
@@ -48,10 +66,68 @@ runs:
             dir=$(printf "$demo_dir" "$component")
             echo "Deploying $component from $dir"
             if [ -d "$dir" ]; then
+              # Create a deployment for this component using GitHub Deployments API
+              echo "Creating deployment for component: ${component}"
+              deployment_response=$(gh api \
+                --method POST \
+                /repos/${GITHUB_REPOSITORY}/deployments \
+                -f ref="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" \
+                -f environment="PR-${{ inputs.pr-number }}-${component}" \
+                -f description="Deploy ${component} component to Surge" \
+                -f required_contexts=[] \
+                -f auto_merge=false \
+                -f task="deploy" || echo "Error creating deployment")
+              
+              if [[ "$deployment_response" == *"Error"* ]]; then
+                echo "Failed to create deployment: $deployment_response"
+                deployment_id=""
+              else
+                deployment_id=$(echo "$deployment_response" | jq -r '.id')
+                echo "Created deployment with ID: $deployment_id for $component"
+              fi
+              
+              # Set deployment status to "in_progress" if we have a valid deployment ID
+              if [ -n "$deployment_id" ]; then
+                echo "Setting deployment status to in_progress"
+                gh api \
+                  --method POST \
+                  /repos/${GITHUB_REPOSITORY}/deployments/$deployment_id/statuses \
+                  -f state="in_progress" \
+                  -f description="Deploying ${component} component to Surge" || \
+                  echo "Failed to set deployment status to in_progress"
+              fi
+              
+              # Perform the deployment
               cd "$dir" || exit
-              surge . "auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh" --token ${{env.SURGE_TOKEN}}
-              # Add component URL to comment body on its own line
-              comment_body+="[${component}](https://auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh)\n"
+              surge_url="auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh"
+              if surge . "$surge_url" --token ${{env.SURGE_TOKEN}}; then
+                # Add component URL to comment body on its own line
+                comment_body+="[${component}](https://${surge_url})\n"
+                
+                # Update deployment status to "success" if we have a valid deployment ID
+                if [ -n "$deployment_id" ]; then
+                  echo "Setting deployment status to success"
+                  gh api \
+                    --method POST \
+                    /repos/${GITHUB_REPOSITORY}/deployments/$deployment_id/statuses \
+                    -f state="success" \
+                    -f description="Successfully deployed ${component} component to Surge" \
+                    -f environment_url="https://${surge_url}" \
+                    -f auto_inactive=false || \
+                    echo "Failed to set deployment status to success"
+                fi
+              else
+                # Update deployment status to "failure" if surge deployment failed and we have a valid deployment ID
+                if [ -n "$deployment_id" ]; then
+                  echo "Setting deployment status to failure"
+                  gh api \
+                    --method POST \
+                    /repos/${GITHUB_REPOSITORY}/deployments/$deployment_id/statuses \
+                    -f state="failure" \
+                    -f description="Failed to deploy ${component} component to Surge" || \
+                    echo "Failed to set deployment status to failure"
+                fi
+              fi
               cd - > /dev/null || exit
             fi
         done
@@ -65,9 +141,15 @@ runs:
       shell: bash
       env:
         SURGE_TOKEN: ${{ inputs.surge-token }}
-        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GH_TOKEN: ${{ inputs.github-token }}
       run: |
         components="${{ inputs.components }}"
+        
+        # Debug information
+        echo "GitHub Repository: ${GITHUB_REPOSITORY}"
+        echo "GitHub Ref: ${GITHUB_REF}"
+        echo "GitHub Head Ref: ${GITHUB_HEAD_REF}"
+        echo "GitHub PR Number: ${{ inputs.pr-number }}"
         
         echo "🧹 Removing Surge deployments for PR #${{ inputs.pr-number }}"
         
@@ -75,6 +157,33 @@ runs:
         for component in $components; do
           surge_url="auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh"
           echo "Tearing down $surge_url"
+          
+          # Mark the deployment as inactive in GitHub
+          # First, find the deployment ID
+          echo "Finding deployments for environment: PR-${{ inputs.pr-number }}-${component}"
+          deployment_ids=$(gh api \
+            /repos/${GITHUB_REPOSITORY}/deployments \
+            -q ".[] | select(.environment == \"PR-${{ inputs.pr-number }}-${component}\") | .id" || echo "Error finding deployments")
+          
+          if [[ "$deployment_ids" == *"Error"* ]]; then
+            echo "Failed to find deployments: $deployment_ids"
+          elif [ -n "$deployment_ids" ]; then
+            echo "Found deployment IDs: $deployment_ids"
+            for deployment_id in $deployment_ids; do
+              echo "Marking deployment $deployment_id as inactive"
+              # Set deployment as inactive
+              gh api \
+                --method POST \
+                /repos/${GITHUB_REPOSITORY}/deployments/$deployment_id/statuses \
+                -f state="inactive" \
+                -f description="Deployment removed for PR #${{ inputs.pr-number }}" || \
+                echo "Failed to set deployment $deployment_id to inactive"
+            done
+          else
+            echo "No deployments found for environment: PR-${{ inputs.pr-number }}-${component}"
+          fi
+          
+          # Now actually remove from Surge
           surge teardown "$surge_url" --token ${{env.SURGE_TOKEN}}
         done
         

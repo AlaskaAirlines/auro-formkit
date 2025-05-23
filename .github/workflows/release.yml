@@ -5,12 +5,8 @@ on:
     branches:
       - 'rc/**'
       - 'main'
-  pull_request:
-    branches-ignore:
-      - 'rc/**'
 
 jobs:
-  if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/rc/') }}
   build:
     name: Build
     runs-on: ubuntu-latest

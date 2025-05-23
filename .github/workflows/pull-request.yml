@@ -15,6 +15,7 @@ permissions:
   contents: read
   id-token: write # for npm provenance
   pull-requests: write # permission to comment on PRs
+  deployments: write # permission to manage deployments
 
 jobs:
 
@@ -49,14 +50,15 @@ jobs:
     name: PR Release
     needs: [build, test]
     runs-on: ubuntu-latest
-    # Skip on PR close
-    if: github.event.action != 'closed'
+    # Skip on PR close and on release branches
+    if: github.event.action != 'closed' && !startsWith(github.ref, 'refs/heads/rc/')
     steps:
         - uses: actions/checkout@v4
         - name: Setup Node.js
           uses: actions/setup-node@v4
           with:
             node-version: 22
+            registry-url: 'https://registry.npmjs.org'
         - name: Setup cache
           uses: actions/cache@v4
           id: build-ubuntu-latest-node-v22
@@ -76,7 +78,7 @@ jobs:
             PACKAGE_VERSION=$(node -p "require('./package.json').version")
             gh pr comment ${{ github.event.pull_request.number }} -b "🚀 PR Release Published! \`$PACKAGE_NAME@$PACKAGE_VERSION\` [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)"
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
   check-commits:
     name: Check Commits
     needs: [build, test]
@@ -91,7 +93,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
   preview:
-    name: Preview Deployment
+    name: Preview Docs
     needs: [build, test]
     runs-on: ubuntu-latest
     # Skip on PR close
@@ -116,10 +118,10 @@ jobs:
           pr-number: ${{ github.event.pull_request.number }}
           demo-dir-pattern: "components/%s/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ACCESS_TOKEN }}
 
   surge-teardown:
-    name: Preview Teardown
+    name: Teardown Docs
     runs-on: ubuntu-latest
     # Only run on PR close
     if: github.event.action == 'closed'
@@ -133,4 +135,4 @@ jobs:
           pr-number: ${{ github.event.pull_request.number }}
           demo-dir-pattern: "components/%s/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ACCESS_TOKEN }}
