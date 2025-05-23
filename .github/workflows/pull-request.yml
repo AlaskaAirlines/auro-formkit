@@ -27,10 +27,11 @@ jobs:
       matrix:
         node-version: [20, 22]
     steps:
-      - uses: "./.github/workflows/reuse/build.yml"
-        with:
-          os: ubuntu-latest
-          node-version: ${{ matrix.node-version }}
+
+    - uses: ./.github/workflows/reuse/build.yml
+      with:
+        os: ubuntu-latest
+        node-version: ${{ matrix.node-version }}
 
   test:
     name: Test (${{ matrix.node-version }})
@@ -42,7 +43,7 @@ jobs:
       matrix:
         node-version: [20, 22]
     steps:
-      - uses: "./.github/workflows/reuse/test.yml"
+      - uses: ./.github/workflows/reuse/test.yml
         with:
           os: ubuntu-latest
           node-version: ${{ matrix.node-version }}
@@ -86,10 +87,12 @@ jobs:
     # Skip on PR close
     if: github.event.action != 'closed'
     steps:
-      - uses: "./.github/workflows/reuse/check-commits.yml"
+      - uses: ./.github/workflows/reuse/check-commits.yml
         with:
           os: ubuntu-latest
           node-version: 22
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
   preview:
     name: Preview Deployment
     needs: [build, test]

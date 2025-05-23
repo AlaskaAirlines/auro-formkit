@@ -1,4 +1,4 @@
-name: build
+name: Build
 
 on:
   workflow_call:
@@ -10,21 +10,23 @@ on:
         required: true
         type: string
 
-runs-on: ${{ inputs.os }}
-steps:
-  - uses: actions/checkout@v4
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: ${{ inputs.node-version }}
-  - name: NPM install
-    run: npm ci
-  - name: Build
-    run: npm run build
-  - name: Setup cache
-    uses: actions/cache@v4
-    id: build-${{ inputs.os }}-node-v${{ inputs.node-version }}
-    with:
-      path: ./*
-      key: ${{ github.sha }}
+jobs:
+  build:
+    runs-on: ${{ inputs.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+      - name: NPM install
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Setup cache
+        uses: actions/cache@v4
+        id: build-${{ inputs.os }}-node-v${{ inputs.node-version }}
+        with:
+          path: ./*
+          key: ${{ github.sha }}
 
