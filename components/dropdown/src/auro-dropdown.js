@@ -824,30 +824,6 @@ export class AuroDropdown extends AuroElement {
     this.labeled = nodesArr.length > 0;
   }
 
-  // Help text and error message template
-  getHtmlHelpText() {
-    // TODO: Need to check that there is help text to return first
-    return html`
-      ${!this.error
-        ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}">
-            <p id="${this.uniqueId}" part="helpText">
-              <slot name="helpText"></slot>
-            </p>
-          </${this.helpTextTag}>
-        `
-        : html``
-        // : html`
-        //   <${this.helpTextTag} error ?onDark="${this.onDark}">
-        //     <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-        //       ${this.errorMessage}
-        //     </p>
-        //   </${this.helpTextTag}>
-        // `
-      }
-    `;
-  }
-
   getLayoutClassic() {
     return html`
       <div>
@@ -947,12 +923,7 @@ export class AuroDropdown extends AuroElement {
             ` : undefined }
         </div>
         <div class="${classMap(helpTextClasses)}">
-          ${this.getHtmlHelpText()}
-        </div>
-        <div class="hasHelpText">
-          <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
-            <slot name="helpText"></slot>
-          </${this.helpTextTag}>
+          <slot name="helpText"></slot>
         </div>
         <div class="slotContent">
           <slot @slotchange="${this.handleDefaultSlot}"></slot>
