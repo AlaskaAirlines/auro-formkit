@@ -1,5 +1,4 @@
 name: download-and-restore-artifact
-run-name: Download and Restore Build Artifact
 
 on:
   workflow_call:
