@@ -1,5 +1,5 @@
 name: code-ql"
-
+run-name: CodeQL Analysis
 on:
   push:
     branches: [ "main" ]

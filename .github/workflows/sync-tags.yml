@@ -1,4 +1,5 @@
-name: Sync Tags
+name: sync-tags
+run-name: Sync Tags to Dev Branch
 
 on:
   release:
