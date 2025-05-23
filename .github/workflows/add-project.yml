@@ -1,5 +1,5 @@
 name: add-project
-run-name: Add Project to Issue
+run-name: Add Project to Issue "${{ github.event.issue.title }}"
 
 on:
   issues:
