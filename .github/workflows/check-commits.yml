@@ -11,9 +11,15 @@ permissions:
   contents: read
 
 jobs:
+  get-artifact:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: ./.github/workflows/download-and-restore-artifact.yml
+    with:
+      os: ubuntu-latest
+      node-version: 22
   check:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: get-artifact
     steps:
       - uses: actions/checkout@v4
       - name: Download and Restore Build Artifact
