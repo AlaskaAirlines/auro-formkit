@@ -1,5 +1,4 @@
 name: release
-run-name: Release of ${{ github.ref_name }}
 
 on:
   workflow_run:

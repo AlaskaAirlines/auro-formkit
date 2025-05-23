@@ -1,5 +1,4 @@
 name: sync-tags
-run-name: Sync ${{ github.event.release.tag_name }} tag to Dev
 
 on:
   release:

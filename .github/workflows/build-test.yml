@@ -1,5 +1,5 @@
 name: build-and-test
-run-name: Build and Test for ${{ github.ref_name }}
+
 on:
   push:
     branches: [ main, rc/** ]
