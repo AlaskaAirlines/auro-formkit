@@ -49,7 +49,7 @@ runs:
             echo "Deploying $component from $dir"
             if [ -d "$dir" ]; then
               cd "$dir" || exit
-              surge . "auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh"
+              surge . "auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh" --token ${{env.SURGE_TOKEN}}
               # Add component URL to comment body on its own line
               comment_body+="[${component}](https://auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh)\n"
               cd - > /dev/null || exit
@@ -75,7 +75,7 @@ runs:
         for component in $components; do
           surge_url="auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh"
           echo "Tearing down $surge_url"
-          surge teardown "$surge_url"
+          surge teardown "$surge_url" --token ${{env.SURGE_TOKEN}}
         done
         
         # Comment on the PR
