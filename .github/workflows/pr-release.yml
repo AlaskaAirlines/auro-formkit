@@ -24,10 +24,11 @@ jobs:
       - name: Get PR number from commit SHA
         id: get_pr
         run: |
-          PR_NUMBER=$(gh pr list --state open --json number,headRefName --jq ".[] | select(.headRefName == '${{ github.event.workflow_run.head_branch }}') | .number")
+          PR_NUMBER=$(gh pr list --state open --json number,headRefName --jq ".[] | select(.headRefName == '$HEAD_BRANCH') | .number")
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
