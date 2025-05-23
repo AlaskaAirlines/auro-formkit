@@ -10,6 +10,7 @@ on:
       - 'rc/**'
 
 jobs:
+  if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/rc/') }}
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -25,7 +26,7 @@ jobs:
 
   test:
     name: Test
-    needs: build
+    needs: [build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -62,10 +63,11 @@ jobs:
           node-version: 22
       - name: Setup cache
         uses: actions/cache@v4
-        id: build-ubuntu-latest-node-v22
+        id: build_cache
+
         with:
           path: ./*
-          key: ${{ github.sha }}
+          key: build-${{ github.sha }}-22
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

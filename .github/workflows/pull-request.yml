@@ -46,7 +46,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
   release:
-    name: Release
+    name: PR Release
     needs: [build, test]
     runs-on: ubuntu-latest
     # Skip on PR close
@@ -62,7 +62,7 @@ jobs:
           id: build-ubuntu-latest-node-v22
           with:
             path: ./*
-            key: ${{ github.sha }}
+            key: build-${{ github.sha }}-22
         - name: Generate PR release version
           run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
         - name: Publish to NPM
@@ -104,10 +104,10 @@ jobs:
           node-version: 22
       - name: Setup cache
         uses: actions/cache@v4
-        id: build-ubuntu-latest-node-v22
+        id: build_cache
         with:
           path: ./*
-          key: ${{ github.sha }}
+          key: build-${{ github.sha }}-22
       - name: Deploy to Surge
         uses: "./.github/actions/surge"
         with:
