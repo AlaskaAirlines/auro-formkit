@@ -1,0 +1,30 @@
+name: 'Build'
+description: 'Builds the project'
+inputs:
+  os:
+    description: 'Operating system to run on'
+    required: true
+  node-version:
+    description: 'Node.js version to use'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      if: ${{ github.action_repository != github.repository }}
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: NPM install
+      run: npm ci
+      shell: bash
+    - name: Build
+      run: npm run build
+      shell: bash
+    - name: Setup cache
+      uses: actions/cache@v4
+      id: 'build-${{ inputs.os }}-node-v${{ inputs.node-version }}'
+      with:
+        path: ./*
+        key: ${{ github.sha }}

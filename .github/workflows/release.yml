@@ -11,26 +11,28 @@ on:
 
 jobs:
   build:
-    name: Build (${{ matrix.node-version }})
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [20, 22]
     steps:
-      - uses: ./.github/workflows/reuse/build.yml
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
         with:
           os: ubuntu-latest
           node-version: ${{ matrix.node-version }}
 
   test:
-    name: Test (${{ matrix.node-version }})
+    name: Test
     needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [20, 22]
     steps:
-      - uses: ./.github/workflows/reuse/test.yml
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/test
         with:
           os: ubuntu-latest
           node-version: ${{ matrix.node-version }}
@@ -39,7 +41,8 @@ jobs:
     needs: [build, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/workflows/reuse/check-commits.yml
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/check-commits
         with:
           os: ubuntu-latest
           node-version: 22
