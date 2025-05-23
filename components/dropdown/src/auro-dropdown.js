@@ -56,7 +56,7 @@ export class AuroDropdown extends AuroElement {
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
-    this.errorMessage = 'NEED TO GET IT FROM THE NESTED COMPONENT'; // TODO!
+    this.errorMessage = ''; // TODO!
 
     // Layout Config
     this.layout = 'default';
@@ -836,13 +836,14 @@ export class AuroDropdown extends AuroElement {
             </p>
           </${this.helpTextTag}>
         `
-        : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
-            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-              ${this.errorMessage}
-            </p>
-          </${this.helpTextTag}>
-        `
+        : html``
+        // : html`
+        //   <${this.helpTextTag} error ?onDark="${this.onDark}">
+        //     <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+        //       ${this.errorMessage}
+        //     </p>
+        //   </${this.helpTextTag}>
+        // `
       }
     `;
   }

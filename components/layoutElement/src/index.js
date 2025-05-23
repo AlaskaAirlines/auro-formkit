@@ -1,3 +1,3 @@
-import { AuroLayoutElement } from './auro-layout-element.js';
+import { AuroLayoutElement } from '@aurodesignsystem/auro-layout-element';
 
 export { AuroLayoutElement };

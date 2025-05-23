@@ -32,6 +32,7 @@ import styleCss from './styles/style-css.js';
 import styleEmphasizedCss from './styles/emphasized/style-css.js';
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
+import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -85,6 +86,9 @@ export class AuroCombobox extends AuroElement {
 
     this.isHiddenWhileLoading = false;
 
+    // Error message
+    this.errorMessage = null;
+
     // Layout Config
     this.layout = 'classic';
     this.shape = 'rounded';
@@ -101,6 +105,7 @@ export class AuroCombobox extends AuroElement {
     this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
     this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
     this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', '1.0.0', AuroHelpText);
   }
 
   // This function is to define props used within the scope of this component
@@ -357,13 +362,11 @@ export class AuroCombobox extends AuroElement {
   }
 
   isValid() {
-    console.warn('isValid()', this.validity);
     let valid = true;
 
     if (this.validity !== undefined && this.validity !== 'valid') {
       valid = false;
     }
-    console.info('isValid() - valid:', valid);
 
     return valid;
   }
@@ -726,7 +729,7 @@ export class AuroCombobox extends AuroElement {
       return;
     }
 
-    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext');
+    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
     const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
 
     if (this.dropdown.isPopoverVisible && this.isDropdownFullscreen) {
@@ -1014,16 +1017,6 @@ export class AuroCombobox extends AuroElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
-    const helpTextContentClasses = {
-      'util_displayHidden': this.validity === undefined || this.validity !== 'valid',
-      'helpTextMessage': true,
-    };
-
-    const errorTextContentClasses = {
-      'util_displayHidden': this.validity === undefined || this.validity === 'valid',
-      'errorMessage': true,
-    };
-
     return html`
       <div>
         <div aria-live="polite" class="util_displayHiddenVisually">
@@ -1087,8 +1080,23 @@ export class AuroCombobox extends AuroElement {
           </${this.bibtemplateTag}>
 
           <span slot="helpText">
-            <span class="${classMap(helpTextContentClasses)}">a</span>
-            <span class="${classMap(errorTextContentClasses)}">b</span>
+            ${!this.validity || this.validity === 'valid'
+              ? html`
+                <${this.helpTextTag} ?onDark="${this.onDark}">
+                  <p id="${this.uniqueId}" part="helpText">
+                    <slot name="helpText"></slot>
+                  </p>
+                </${this.helpTextTag}>
+              `
+              : html`
+                <${this.helpTextTag} error ?onDark="${this.onDark}">
+                  <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+                    ${this.errorMessage}
+                  </p>
+                </${this.helpTextTag}>
+              `
+            }
+
           </span>
         </${this.dropdownTag}>
       </div>
