@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ inputs.os }}
     steps:
       - name: Set artifact name
-        run: echo "ARTIFACT_NAME=build-${{ inputs.os }}-node-v${{ inputs.node-version }}-${{ github.run_id }}" >> $GITHUB_ENV
+        run: echo "ARTIFACT_NAME=build-${{ inputs.os }}-node-v${{ inputs.node-version }}" >> $GITHUB_ENV
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:

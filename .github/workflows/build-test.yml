@@ -28,5 +28,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ github.run_id }}
+          name: build-${{ matrix.os }}-node-v${{ matrix.node-version }}
           path: .
