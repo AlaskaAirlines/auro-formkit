@@ -1,4 +1,5 @@
 name: add-project
+run-name: Add Project to Issue
 
 on:
   issues:

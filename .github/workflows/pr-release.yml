@@ -1,10 +1,10 @@
 name: pr-release
+run-name: PR Release
 
 on:
   workflow_run:
-    workflows: ["build-and-test"]
-    types:
-      - completed
+    workflows: [build-and-test]
+    types: [completed]
     branches-ignore:
       - 'rc/**'
       - 'main' 
@@ -16,9 +16,8 @@ permissions:
 
 jobs:
   release:
-    # This job will only run if the previous workflow (test) was successful and the event is a pull request opened or synchronized also only if pr is not pointed to rc/** or main branch
-    if: github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     steps:
       - uses: actions/checkout@v4
       - name: Get PR number from commit SHA

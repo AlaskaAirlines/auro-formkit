@@ -1,10 +1,10 @@
 name: check-commits
+run-name: Check Commits
 
 on:
   workflow_run:
-    workflows: ["build-and-test"]
-    types:
-      - completed
+    workflows: [build-and-test]
+    types: [completed]
     branches-ignore:
       - 'main'
 
@@ -13,8 +13,8 @@ permissions:
 
 jobs:
   check:
-    if: github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
     steps:
       - uses: actions/checkout@v4
       - name: Download and Restore Build Artifact
