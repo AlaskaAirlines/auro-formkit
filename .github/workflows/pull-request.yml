@@ -1,0 +1,136 @@
+name: PR Workflow
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+    branches-ignore:
+      - 'rc/**'
+      - 'main' 
+
+permissions:
+  contents: read
+  id-token: write # for npm provenance
+  pull-requests: write # permission to comment on PRs
+
+jobs:
+
+  build:
+    name: Build (${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    # Skip on PR close
+    if: github.event.action != 'closed'
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: ./.github/workflows/reuse/build.yml
+        with:
+          os: ubuntu-latest
+          node-version: ${{ matrix.node-version }}
+
+  test:
+    name: Test (${{ matrix.node-version }})
+    needs: build
+    runs-on: ubuntu-latest
+    # Skip on PR close
+    if: github.event.action != 'closed'
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: ./.github/workflows/reuse/test.yml
+        with:
+          os: ubuntu-latest
+          node-version: ${{ matrix.node-version }}
+
+  release:
+    name: Release
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    # Skip on PR close
+    if: github.event.action != 'closed'
+    steps:
+        - uses: actions/checkout@v4
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 22
+        - name: Setup cache
+          uses: actions/cache@v4
+          id: build-ubuntu-latest-node-v22
+          with:
+            path: ./*
+            key: ${{ github.sha }}
+        - name: Generate PR release version
+          run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
+        - name: Publish to NPM
+          run: npm publish --registry=https://registry.npmjs.org
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        - name: Comment on PR
+          run: |
+            PACKAGE_NAME=$(node -p "require('./package.json').name")
+            PACKAGE_VERSION=$(node -p "require('./package.json').version")
+            gh pr comment ${{ github.event.pull_request.number }} -b "🚀 PR Release Published! \`$PACKAGE_NAME@$PACKAGE_VERSION\` [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)"
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  check-commits:
+    name: Check Commits
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    # Skip on PR close
+    if: github.event.action != 'closed'
+    steps:
+      - uses: ./.github/workflows/reuse/check-commits.yml
+        with:
+          os: ubuntu-latest
+          node-version: 22
+  preview:
+    name: Preview Deployment
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    # Skip on PR close
+    if: github.event.action != 'closed'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Setup cache
+        uses: actions/cache@v4
+        id: build-ubuntu-latest-node-v22
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+      - name: Deploy to Surge
+        uses: ./.github/actions/surge
+        with:
+          action: deploy
+          components: "checkbox combobox counter datepicker dropdown form input menu radio select"
+          pr-number: ${{ github.event.pull_request.number }}
+          demo-dir-pattern: "components/%s/demo"
+          surge-token: ${{ secrets.SURGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  surge-teardown:
+    name: Preview Teardown
+    runs-on: ubuntu-latest
+    # Only run on PR close
+    if: github.event.action == 'closed'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Teardown from Surge
+        uses: ./.github/actions/surge
+        with:
+          action: teardown
+          components: "checkbox combobox counter datepicker dropdown form input menu radio select"
+          pr-number: ${{ github.event.pull_request.number }}
+          demo-dir-pattern: "components/%s/demo"
+          surge-token: ${{ secrets.SURGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

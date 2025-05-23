@@ -1,0 +1,82 @@
+name: "PR Preview"
+description: "Deploy or teardown components to/from Surge"
+
+inputs:
+  action:
+    description: "The action to perform: 'deploy' or 'teardown'"
+    required: true
+  components:
+    description: "Space-separated list of components to deploy/teardown"
+    required: true
+  pr-number:
+    description: "The PR number for the deployment"
+    required: true
+  demo-dir-pattern:
+    description: "Directory pattern for component demos (e.g., 'components/%s/demo')"
+    required: true
+    default: "components/%s/demo"
+  surge-token:
+    description: "Surge token for authentication"
+    required: true
+  github-token:
+    description: "GitHub token for PR comments"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Surge
+      shell: bash
+      run: npm install -g surge
+      
+    # Deploy components to Surge
+    - name: Deploy to Surge
+      if: inputs.action == 'deploy'
+      shell: bash
+      env:
+        SURGE_TOKEN: ${{ inputs.surge-token }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        components="${{ inputs.components }}"
+        demo_dir="${{ inputs.demo-dir-pattern }}"
+        
+        # Build the comment body
+        comment_body="## Deployed components to surge\n---\n"
+        
+        # Iterate over components
+        for component in $components; do
+            dir=$(printf "$demo_dir" "$component")
+            echo "Deploying $component from $dir"
+            if [ -d "$dir" ]; then
+              cd "$dir" || exit
+              surge . "auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh"
+              # Add component URL to comment body on its own line
+              comment_body+="[${component}](https://auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh)\n"
+              cd - > /dev/null || exit
+            fi
+        done
+
+        # Post comment to PR
+        gh pr comment ${{ inputs.pr-number }} --body-file - <<< "$comment_body"
+        
+    # Teardown components from Surge
+    - name: Teardown from Surge
+      if: inputs.action == 'teardown'
+      shell: bash
+      env:
+        SURGE_TOKEN: ${{ inputs.surge-token }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        components="${{ inputs.components }}"
+        
+        echo "🧹 Removing Surge deployments for PR #${{ inputs.pr-number }}"
+        
+        # Iterate over components and teardown each one
+        for component in $components; do
+          surge_url="auro-formkit-${component}-${{ inputs.pr-number }}.surge.sh"
+          echo "Tearing down $surge_url"
+          surge teardown "$surge_url"
+        done
+        
+        # Comment on the PR
+        gh pr comment ${{ inputs.pr-number }} -b "## Surge deployments removed\nAll component preview deployments for this PR have been torn down."

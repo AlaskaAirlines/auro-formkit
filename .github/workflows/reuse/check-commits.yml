@@ -1,0 +1,33 @@
+name: check-commits
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      node-version:
+        required: true
+        type: string
+
+runs-on: ${{ inputs.os }}
+steps:
+  - uses: actions/checkout@v4
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: ${{ inputs.node-version }}
+  - name: Setup cache
+    uses: actions/cache@v4
+    id: build-${{ inputs.os }}-node-v${{ inputs.node-version }}
+    with:
+      path: ./*
+      key: ${{ github.sha }}
+  - name: Ensure Git is installed
+    run: |
+      which git || (apt-get update && apt-get install -y git)
+      git --version
+  - name: Auro Check Commits
+    run: npx --package=@aurodesignsystem/auro-cli -- auro cc -l -d
+    env:
+      GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}

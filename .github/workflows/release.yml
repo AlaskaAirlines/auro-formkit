@@ -1,24 +1,51 @@
-name: release
+name: Release Workflow
 
 on:
-  workflow_run:
-    workflows: [build-and-test]
-    types: [completed]
+  push:
     branches:
       - 'rc/**'
       - 'main'
+  pull_request:
+    branches-ignore:
+      - 'rc/**'
 
 jobs:
-  get-artifact:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: ./.github/workflows/download-and-restore-artifact.yml
-    with:
-      os: ubuntu-latest
-      node-version: 22
+  build:
+    name: Build (${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: ./.github/workflows/reuse/build.yml
+        with:
+          os: ubuntu-latest
+          node-version: ${{ matrix.node-version }}
+
+  test:
+    name: Test (${{ matrix.node-version }})
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: ./.github/workflows/reuse/test.yml
+        with:
+          os: ubuntu-latest
+          node-version: ${{ matrix.node-version }}
+  check-commits:
+    name: Check Commits
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/reuse/check-commits.yml
+        with:
+          os: ubuntu-latest
+          node-version: 22
   release:
     runs-on: ubuntu-latest
-    needs: get-artifact
-    if: ${{ github.event.workflow_run.head_branch == 'main' || startsWith(github.event.workflow_run.head_branch, 'rc/') }}
+    needs: [build, test]
     permissions:
       contents: write # to be able to publish a GitHub release
       issues: write # to be able to comment on released issues
@@ -30,6 +57,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Setup cache
+        uses: actions/cache@v4
+        id: build-ubuntu-latest-node-v22
+        with:
+          path: ./*
+          key: ${{ github.sha }}
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
