@@ -46,7 +46,6 @@
 | Method                | Type                                  | Description                                      |
 |-----------------------|---------------------------------------|--------------------------------------------------|
 | `exposeCssParts`      | `(): void`                            | Exposes CSS parts for styling from parent components. |
-| `getHtmlHelpText`     | `(): TemplateResult`                  |                                                  |
 | `getLayout`           | `(ForcedLayout: any): TemplateResult` |                                                  |
 | `getLayoutClassic`    | `(): TemplateResult`                  |                                                  |
 | `getLayoutEmphasized` | `(): TemplateResult`                  |                                                  |
