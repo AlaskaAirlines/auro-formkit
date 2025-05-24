@@ -27,14 +27,6 @@ runs:
     - name: Install Surge
       shell: bash
       run: npm install -g surge
-    - name: Start deployment
-      if: ${{ inputs.action == 'deploy' }}
-      uses: bobheadxi/deployments@v1
-      id: deployment-${ inputs.component }
-      with:
-        step: start
-        token: ${{ inputs.github-token }}
-        env: release
     - name: Deploy or Teardown
       uses: actions/github-script@v6
       env:
@@ -71,12 +63,3 @@ runs:
           } else {
             console.error('Invalid action. Use "deploy" or "teardown".');
           }
-    - name: Update deployment status
-      uses: bobheadxi/deployments@v1
-      if: always() && inputs.action == 'deploy'
-      with:
-        step: finish
-        token: ${{ inputs.github-token }}
-        status: ${{ job.status }}
-        env: ${{ steps.deployment.outputs.env }}
-        deployment_id: ${{ steps.deployment.outputs.deployment_id }}

@@ -95,7 +95,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
   preview:
-    name: Preview Docs
+    name: Preview
     needs: [build, test]
     runs-on: ubuntu-latest
     # Skip on PR close
@@ -115,6 +115,14 @@ jobs:
         with:
           path: ./*
           key: build-${{ github.sha }}-22
+
+      - name: Start deployment
+        uses: bobheadxi/deployments@v1
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.ACCESS_TOKEN }}
+          env: release-${{ matrix.component }}
       - name: Deploy ${{ matrix.component }} to Surge
         uses: "./.github/actions/surge"
         with:
@@ -124,9 +132,18 @@ jobs:
           demo-path: "components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
           github-token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Update deployment status
+        uses: bobheadxi/deployments@v1
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.ACCESS_TOKEN }}
+          status: ${{ job.status }}
+          env: ${{ steps.deployment.outputs.env }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
   surge-teardown:
-    name: Teardown Docs
+    name: Teardown
     runs-on: ubuntu-latest
     # Only run on PR close
     if: github.event.action == 'closed'
