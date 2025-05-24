@@ -94,8 +94,8 @@ jobs:
           node-version: 22
     env:
       GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-  preview:
-    name: Preview
+  deploy:
+    name: Deploy
     needs: [build, test]
     runs-on: ubuntu-latest
     # Skip on PR close
@@ -115,32 +115,30 @@ jobs:
         with:
           path: ./*
           key: build-${{ github.sha }}-22
-
-      - name: Start deployment
-        uses: bobheadxi/deployments@v1
-        id: deployment
-        with:
-          step: start
-          token: ${{ secrets.ACCESS_TOKEN }}
-          env: release-${{ matrix.component }}
       - name: Deploy ${{ matrix.component }} to Surge
         uses: "./.github/actions/surge"
         with:
           action: deploy
           component: ${{ matrix.component }}
           pr-number: ${{ github.event.pull_request.number }}
-          demo-path: "components/${{ matrix.component }}/demo"
+          demo-path: "./components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
           github-token: ${{ secrets.ACCESS_TOKEN }}
-      - name: Update deployment status
-        uses: bobheadxi/deployments@v1
-        if: always()
+      - name: Success
+        if: success()
+        uses: zattoo/deploy-status@v1
         with:
-          step: finish
           token: ${{ secrets.ACCESS_TOKEN }}
-          status: ${{ job.status }}
-          env: ${{ steps.deployment.outputs.env }}
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          environment: ${{ matrix.component }}
+          environment_url: https://auro-formkit-${{ matrix.component }}-${{ github.event.pull_request.number }}.surge.sh
+          state: success
+      - name: Failure
+        if: failure()
+        uses: zattoo/deploy-status@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          environment: ${{ matrix.component }}
+          state: failure
 
   surge-teardown:
     name: Teardown

@@ -33,7 +33,7 @@ runs:
         COMPONENT: ${{ inputs.component }}
         ACTION: ${{ inputs.action }}
         PR_NUMBER: ${{ inputs.pr-number }}
-        DEMO_PATTERN: ${{ inputs.demo-dir-pattern }}
+        DEMO_PATH: ${{ inputs.demo-path }}
         SURGE_TOKEN: ${{ inputs.surge-token }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
       with:
@@ -44,7 +44,7 @@ runs:
           const action = process.env.ACTION;
           const component = process.env.COMPONENT;
           const prNumber = process.env.PR_NUMBER;
-          const demoPath = process.env.DEMO_PATTERN.replace('%s', component);
+          const demoPath = process.env.DEMO_PATH;
           const surgeToken = process.env.SURGE_TOKEN;
           const githubToken = process.env.GITHUB_TOKEN;
 
@@ -53,13 +53,17 @@ runs:
             if (fs.existsSync(demoPath)) {
               execSync(`surge ${demoPath} https://auro-formkit-${component}-${prNumber}.surge.sh --token ${surgeToken}`, { stdio: 'inherit' });
               console.log(`Deployed ${component} to Surge`);
+              process.exit(0);
             } else {
               console.error(`Directory ${demoPath} does not exist`);
+              process.exit(1);
             }
           } else if (action === 'teardown') {
             // Teardown from Surge
             execSync(`surge teardown https://auro-formkit-${component}-${prNumber}.surge.sh --token ${surgeToken}`, { stdio: 'inherit' });
             console.log(`Teared down ${component} from Surge`);
+            process.exit(0);
           } else {
             console.error('Invalid action. Use "deploy" or "teardown".');
+            process.exit(1);
           }
