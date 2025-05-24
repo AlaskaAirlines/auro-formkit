@@ -119,11 +119,10 @@ jobs:
         uses: bobheadxi/deployments@v1.5.0
         id: deployment
         with:
-          deployment_id: ${{ matrix.component }}-demo
           step: start
+          task: '${{ matrix.component }}-demo'
           token: ${{ secrets.ACCESS_TOKEN }}
           env: ${{ matrix.component }}-demo
-          env_url: https://auro-formkit-${{ matrix.component }}-${{ github.event.pull_request.number }}.surge.sh
       - name: Deploy ${{ matrix.component }} demo
         uses: "./.github/actions/surge"
         with:
@@ -140,8 +139,9 @@ jobs:
           step: finish
           token: ${{ secrets.ACCESS_TOKEN }}
           status: ${{ job.status }}
-          env: ${{ matrix.component }}-demo
-          deployment_id: ${{ matrix.component }}-demo
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env_url: https://auro-formkit-${{ matrix.component }}-${{ github.event.pull_request.number }}.surge.sh
+          env: ${{ steps.deployment.outputs.env }}
   prune:
     name: Teardown
     runs-on: ubuntu-latest
