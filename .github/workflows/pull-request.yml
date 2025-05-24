@@ -13,9 +13,9 @@ on:
 
 permissions:
   contents: read
-  id-token: write # for npm provenance
-  pull-requests: write # permission to comment on PRs
-  deployments: write # permission to manage deployments
+  deployments: write
+  issues: write
+  pull-requests: write
 
 jobs:
 
@@ -117,12 +117,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Queued ${{ matrix.component }} for deployment
-        uses: zattoo/deploy-status@v1
-        with:
-          token: ${{ github.token }}
-          environment: ${{ matrix.component }}-demo
-          state: queued
       - name: Setup cache
         uses: actions/cache@v4
         id: build_cache
@@ -138,14 +132,6 @@ jobs:
           demo-path: "./components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
           github-token: ${{ github.token }}
-      - name: Success
-        if: success()
-        uses: zattoo/deploy-status@v1
-        with:
-          token: ${{ github.token }}
-          environment: ${{ matrix.component }}-demo
-          environment_url: "https://auro-formkit-${{ matrix.component }}-${{ github.event.pull_request.number }}.surge.sh"
-          state: success
   prune:
     name: Teardown
     runs-on: ubuntu-latest

@@ -21,12 +21,6 @@ inputs:
     description: "GitHub token for PR comments"
     required: true
 
-permissions:
-  contents: read
-  deployments: write
-  issues: write
-  pull-requests: write
-
 runs:
   using: "composite"
   steps:
@@ -46,6 +40,7 @@ runs:
         script: |
           const { execSync } = require('child_process');
           const fs = require('fs');
+          const { Octokit } = require('@octokit/rest');
 
           const action = process.env.ACTION;
           const component = process.env.COMPONENT;
@@ -53,19 +48,21 @@ runs:
           const demoPath = process.env.DEMO_PATH;
           const surgeToken = process.env.SURGE_TOKEN;
           const githubToken = process.env.GITHUB_TOKEN;
-          
-          // Get repo information from GitHub context
+
           const owner = context.repo.owner;
           const repo = context.repo.repo;
           const sha = context.sha;
-          const ref = context.ref; // Use the branch ref for deployment association
-          console.log('DEBUG: context.ref =', ref); // Debug log for troubleshooting
+          const ref = context.ref;
+          console.log('DEBUG: context.ref =', ref);
           const deploymentUrl = `https://auro-formkit-${component}-${prNumber}.surge.sh`;
           const environmentName = `${component}-demo`;
           
+          // Initialize Octokit
+          const octokit = new Octokit({ auth: githubToken });
+          
           // GitHub API for deployment status
           async function createDeployment() {
-            return await github.rest.repos.createDeployment({
+            return await octokit.rest.repos.createDeployment({
               owner,
               repo,
               ref: ref, // Use branch ref, not sha
@@ -79,7 +76,7 @@ runs:
           }
           
           async function updateDeploymentStatus(deploymentId, state, description, environmentUrl) {
-            return await github.rest.repos.createDeploymentStatus({
+            return await octokit.rest.repos.createDeploymentStatus({
               owner,
               repo,
               deployment_id: deploymentId,
@@ -110,7 +107,7 @@ runs:
                 await updateDeploymentStatus(deploymentId, 'success', 'Deployment successful', deploymentUrl);
                 
                 // Find existing Surge preview comment
-                const comments = await github.rest.issues.listComments({
+                const comments = await octokit.rest.issues.listComments({
                   owner,
                   repo,
                   issue_number: prNumber
@@ -154,7 +151,7 @@ runs:
                 
                 // Update existing comment or create a new one
                 if (existingComment) {
-                  await github.rest.issues.updateComment({
+                  await octokit.rest.issues.updateComment({
                     owner,
                     repo,
                     comment_id: existingComment.id,
@@ -162,7 +159,7 @@ runs:
                   });
                   console.log(`Updated preview comment with ${component}`);
                 } else {
-                  await github.rest.issues.createComment({
+                  await octokit.rest.issues.createComment({
                     owner,
                     repo,
                     issue_number: prNumber,
@@ -181,7 +178,7 @@ runs:
               }
             } else if (action === 'teardown') {
               // Find active deployments for this environment
-              const deployments = await github.rest.repos.listDeployments({
+              const deployments = await octokit.rest.repos.listDeployments({
                 owner,
                 repo,
                 environment: environmentName
@@ -197,7 +194,7 @@ runs:
               console.log(`Teared down ${component} from Surge: ${deploymentUrl}`);
               
               // Find existing Surge preview comment
-              const comments = await github.rest.issues.listComments({
+              const comments = await octokit.rest.issues.listComments({
                 owner,
                 repo,
                 issue_number: prNumber
@@ -232,7 +229,7 @@ runs:
                     if (commentBody.trim() === `${commentTag}` || 
                         commentBody.trim() === `${commentTag}\n## 🔍 Component Preview Links`) {
                       // Delete the comment if no components are left
-                      await github.rest.issues.deleteComment({
+                      await octokit.rest.issues.deleteComment({
                         owner,
                         repo,
                         comment_id: existingComment.id
@@ -241,7 +238,7 @@ runs:
                     } else {
                       // Update comment to show no components left
                       commentBody = `${commentTag}\n## 🔍 Component Preview Links\n\nNo active component previews available.`;
-                      await github.rest.issues.updateComment({
+                      await octokit.rest.issues.updateComment({
                         owner,
                         repo,
                         comment_id: existingComment.id,
@@ -251,7 +248,7 @@ runs:
                     }
                   } else {
                     // Update comment with the component removed
-                    await github.rest.issues.updateComment({
+                    await octokit.rest.issues.updateComment({
                       owner,
                       repo,
                       comment_id: existingComment.id,
