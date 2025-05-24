@@ -131,7 +131,7 @@ jobs:
           pr-number: ${{ github.event.pull_request.number }}
           demo-path: "./components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
-          github-token: ${{ secrets.ACCESS_TOKEN }}
+          github-token: ${{ github.token }}
   prune:
     name: Teardown
     runs-on: ubuntu-latest
@@ -150,4 +150,4 @@ jobs:
           pr-number: ${{ github.event.pull_request.number }}
           demo-path: "components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
-          github-token: ${{ secrets.ACCESS_TOKEN }}
+          github-token: ${{ github.token }}
