@@ -61,7 +61,7 @@ runs:
           const ref = context.ref; // Use the branch ref for deployment association
           console.log('DEBUG: context.ref =', ref); // Debug log for troubleshooting
           const deploymentUrl = `https://auro-formkit-${component}-${prNumber}.surge.sh`;
-          const environmentName = `${component} demo - PR ${prNumber}`;
+          const environmentName = `${component}-demo`;
           
           // GitHub API for deployment status
           async function createDeployment() {
