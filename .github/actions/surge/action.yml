@@ -59,6 +59,7 @@ runs:
           const repo = context.repo.repo;
           const sha = context.sha;
           const deploymentUrl = `https://auro-formkit-${component}-${prNumber}.surge.sh`;
+          const environmentName = `${component} demo - PR ${prNumber}`;
           
           // GitHub API for deployment status
           async function createDeployment() {
@@ -66,7 +67,7 @@ runs:
               owner,
               repo,
               ref: sha,
-              environment: `${component} demo - PR ${prNumber}`,
+              environment: environmentName,
               auto_merge: false,
               required_contexts: [],
               description: `Deploy preview for ${component}`,
@@ -106,13 +107,38 @@ runs:
                 // Update status to 'success'
                 await updateDeploymentStatus(deploymentId, 'success', 'Deployment successful', deploymentUrl);
                 
-                // Add a comment to the PR with the preview URL
-                await github.rest.issues.createComment({
+                // Find existing comments for the PR that mention this component deployment
+                const comments = await github.rest.issues.listComments({
                   owner,
                   repo,
-                  issue_number: prNumber,
-                  body: `✅ Preview for **${component}** deployed to: [${deploymentUrl}](${deploymentUrl})`
+                  issue_number: prNumber
                 });
+                
+                const commentTag = `<!-- surge-preview-${component} -->`;
+                const existingComment = comments.data.find(comment => 
+                  comment.body.includes(commentTag)
+                );
+                
+                const commentBody = `${commentTag}\n✅ Preview for **${component}** deployed to: [${deploymentUrl}](${deploymentUrl})`;
+                
+                // Update existing comment or create a new one
+                if (existingComment) {
+                  await github.rest.issues.updateComment({
+                    owner,
+                    repo,
+                    comment_id: existingComment.id,
+                    body: commentBody
+                  });
+                  console.log(`Updated existing comment for ${component}`);
+                } else {
+                  await github.rest.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number: prNumber,
+                    body: commentBody
+                  });
+                  console.log(`Created new comment for ${component}`);
+                }
                 
                 process.exit(0);
               } else {
@@ -127,7 +153,7 @@ runs:
               const deployments = await github.rest.repos.listDeployments({
                 owner,
                 repo,
-                environment: `PR ${prNumber} - ${component}`
+                environment: environmentName
               });
               
               // Mark deployments as inactive
@@ -139,13 +165,38 @@ runs:
               execSync(`surge teardown ${deploymentUrl} --token ${surgeToken}`, { stdio: 'inherit' });
               console.log(`Teared down ${component} from Surge: ${deploymentUrl}`);
               
-              // Add a comment to the PR
-              await github.rest.issues.createComment({
+              // Find existing comments for the PR that mention this component deployment
+              const comments = await github.rest.issues.listComments({
                 owner,
                 repo,
-                issue_number: prNumber,
-                body: `🔄 Preview for **${component}** has been removed`
+                issue_number: prNumber
               });
+              
+              const commentTag = `<!-- surge-preview-${component} -->`;
+              const existingComment = comments.data.find(comment => 
+                comment.body.includes(commentTag)
+              );
+              
+              const commentBody = `${commentTag}\n🔄 Preview for **${component}** has been removed`;
+              
+              // Update existing comment or create a new one
+              if (existingComment) {
+                await github.rest.issues.updateComment({
+                  owner,
+                  repo,
+                  comment_id: existingComment.id,
+                  body: commentBody
+                });
+                console.log(`Updated existing comment for ${component}`);
+              } else {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: commentBody
+                });
+                console.log(`Created new comment for ${component}`);
+              }
               
               process.exit(0);
             } else {

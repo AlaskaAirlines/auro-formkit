@@ -75,10 +75,18 @@ jobs:
             NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         - name: Comment on PR
-          run: |
-            PACKAGE_NAME=$(node -p "require('./package.json').name")
-            PACKAGE_VERSION=$(node -p "require('./package.json').version")
-            gh pr comment ${{ github.event.pull_request.number }} -b "🚀 PR Release Published! \`$PACKAGE_NAME@$PACKAGE_VERSION\` [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)"
+          uses: actions/github-script@v6
+          with:
+            script: |
+              const packageName = require('./package.json').name;
+              const packageVersion = require('./package.json').version;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: ${{ github.event.pull_request.number }},
+                body: `🚀 PR Release Published! \`${packageName}@${packageVersion}\` [View on npmjs.com](https://www.npmjs.com/package/${packageName}/v/${packageVersion})`
+              });
           env:
             GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
   check-commits:
