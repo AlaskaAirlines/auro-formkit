@@ -58,6 +58,7 @@ runs:
           const owner = context.repo.owner;
           const repo = context.repo.repo;
           const sha = context.sha;
+          const ref = context.ref; // Use the branch ref for deployment association
           const deploymentUrl = `https://auro-formkit-${component}-${prNumber}.surge.sh`;
           const environmentName = `${component} demo - PR ${prNumber}`;
           
@@ -66,7 +67,7 @@ runs:
             return await github.rest.repos.createDeployment({
               owner,
               repo,
-              ref: sha,
+              ref: ref, // Use branch ref, not sha
               environment: environmentName,
               auto_merge: false,
               required_contexts: [],
@@ -107,19 +108,48 @@ runs:
                 // Update status to 'success'
                 await updateDeploymentStatus(deploymentId, 'success', 'Deployment successful', deploymentUrl);
                 
-                // Find existing comments for the PR that mention this component deployment
+                // Find existing Surge preview comment
                 const comments = await github.rest.issues.listComments({
                   owner,
                   repo,
                   issue_number: prNumber
                 });
                 
-                const commentTag = `<!-- surge-preview-${component} -->`;
+                const commentTag = `<!-- surge-preview-summary -->`;
                 const existingComment = comments.data.find(comment => 
                   comment.body.includes(commentTag)
                 );
                 
-                const commentBody = `${commentTag}\n✅ Preview for **${component}** deployed to: [${deploymentUrl}](${deploymentUrl})`;
+                // Get the current comment content or create new one
+                let commentBody = '';
+                if (existingComment) {
+                  commentBody = existingComment.body;
+                } else {
+                  commentBody = `${commentTag}\n## 🔍 Component Preview Links\n\n`;
+                }
+                
+                // Component tag to identify this component in the comment
+                const componentTag = `<!-- component-${component} -->`;
+                
+                // Create component section with link
+                const componentSection = `${componentTag}\n✅ **${component}**: [${deploymentUrl}](${deploymentUrl})\n`;
+                
+                // If the component is already in the comment, update it
+                if (commentBody.includes(componentTag)) {
+                  // Extract the start and end indices of the component section
+                  const startIndex = commentBody.indexOf(componentTag);
+                  const endIndex = commentBody.indexOf('<!-- component-', startIndex + componentTag.length);
+                  
+                  // Replace the component section
+                  if (endIndex !== -1) {
+                    commentBody = commentBody.substring(0, startIndex) + componentSection + commentBody.substring(endIndex);
+                  } else {
+                    commentBody = commentBody.substring(0, startIndex) + componentSection;
+                  }
+                } else {
+                  // Add new component section
+                  commentBody += componentSection;
+                }
                 
                 // Update existing comment or create a new one
                 if (existingComment) {
@@ -129,7 +159,7 @@ runs:
                     comment_id: existingComment.id,
                     body: commentBody
                   });
-                  console.log(`Updated existing comment for ${component}`);
+                  console.log(`Updated preview comment with ${component}`);
                 } else {
                   await github.rest.issues.createComment({
                     owner,
@@ -137,7 +167,7 @@ runs:
                     issue_number: prNumber,
                     body: commentBody
                   });
-                  console.log(`Created new comment for ${component}`);
+                  console.log(`Created new preview comment with ${component}`);
                 }
                 
                 process.exit(0);
@@ -165,37 +195,70 @@ runs:
               execSync(`surge teardown ${deploymentUrl} --token ${surgeToken}`, { stdio: 'inherit' });
               console.log(`Teared down ${component} from Surge: ${deploymentUrl}`);
               
-              // Find existing comments for the PR that mention this component deployment
+              // Find existing Surge preview comment
               const comments = await github.rest.issues.listComments({
                 owner,
                 repo,
                 issue_number: prNumber
               });
               
-              const commentTag = `<!-- surge-preview-${component} -->`;
+              const commentTag = `<!-- surge-preview-summary -->`;
               const existingComment = comments.data.find(comment => 
                 comment.body.includes(commentTag)
               );
               
-              const commentBody = `${commentTag}\n🔄 Preview for **${component}** has been removed`;
-              
-              // Update existing comment or create a new one
               if (existingComment) {
-                await github.rest.issues.updateComment({
-                  owner,
-                  repo,
-                  comment_id: existingComment.id,
-                  body: commentBody
-                });
-                console.log(`Updated existing comment for ${component}`);
-              } else {
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: prNumber,
-                  body: commentBody
-                });
-                console.log(`Created new comment for ${component}`);
+                let commentBody = existingComment.body;
+                const componentTag = `<!-- component-${component} -->`;
+                
+                // If the component is in the comment, remove it
+                if (commentBody.includes(componentTag)) {
+                  // Extract the start and end indices of the component section
+                  const startIndex = commentBody.indexOf(componentTag);
+                  let endIndex = commentBody.indexOf('<!-- component-', startIndex + componentTag.length);
+                  
+                  if (endIndex === -1) {
+                    // If this is the last component section, remove to the end
+                    commentBody = commentBody.substring(0, startIndex);
+                  } else {
+                    // Remove this component section
+                    commentBody = commentBody.substring(0, startIndex) + commentBody.substring(endIndex);
+                  }
+                  
+                  // If there are no more components left, add a message or remove comment entirely
+                  if (!commentBody.includes('<!-- component-')) {
+                    // Check if there's any content left after removing the header
+                    if (commentBody.trim() === `${commentTag}` || 
+                        commentBody.trim() === `${commentTag}\n## 🔍 Component Preview Links`) {
+                      // Delete the comment if no components are left
+                      await github.rest.issues.deleteComment({
+                        owner,
+                        repo,
+                        comment_id: existingComment.id
+                      });
+                      console.log(`Deleted preview comment as no components remain`);
+                    } else {
+                      // Update comment to show no components left
+                      commentBody = `${commentTag}\n## 🔍 Component Preview Links\n\nNo active component previews available.`;
+                      await github.rest.issues.updateComment({
+                        owner,
+                        repo,
+                        comment_id: existingComment.id,
+                        body: commentBody
+                      });
+                      console.log(`Updated preview comment - removed ${component}`);
+                    }
+                  } else {
+                    // Update comment with the component removed
+                    await github.rest.issues.updateComment({
+                      owner,
+                      repo,
+                      comment_id: existingComment.id,
+                      body: commentBody
+                    });
+                    console.log(`Updated preview comment - removed ${component}`);
+                  }
+                }
               }
               
               process.exit(0);
