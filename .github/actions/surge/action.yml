@@ -28,7 +28,7 @@ runs:
       shell: bash
       run: npm install -g surge
     - name: Deploy or Teardown
-      uses: actions/github-script@v7.0.1
+      uses: actions/github-script@v6
       env:
         COMPONENT: ${{ inputs.component }}
         ACTION: ${{ inputs.action }}
