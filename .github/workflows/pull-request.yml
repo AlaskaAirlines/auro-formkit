@@ -119,6 +119,7 @@ jobs:
         uses: bobheadxi/deployments@v1.5.0
         id: deployment
         with:
+          deployment_id: ${{ matrix.component }}-demo
           step: start
           token: ${{ secrets.ACCESS_TOKEN }}
           env: ${{ matrix.component }}-demo
@@ -139,8 +140,8 @@ jobs:
           step: finish
           token: ${{ secrets.ACCESS_TOKEN }}
           status: ${{ job.status }}
-          env: ${{ steps.deployment.outputs.env }}
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env: ${{ matrix.component }}-demo
+          deployment_id: ${{ matrix.component }}-demo
   prune:
     name: Teardown
     runs-on: ubuntu-latest
@@ -165,5 +166,6 @@ jobs:
         with:
           step: delete-env
           token: ${{ secrets.ACCESS_TOKEN }}
-          env: ${{ steps.get_branch.outputs.branch }}
+          env: ${{ matrix.component }}-demo
+          deployment_id: ${{ matrix.component }}-demo
           desc: ${{ matrix.component }} demo was unpublished
