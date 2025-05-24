@@ -115,7 +115,15 @@ jobs:
         with:
           path: ./*
           key: build-${{ github.sha }}-22
-      - name: Deploy ${{ matrix.component }} to Surge
+      - name: start deployment
+        uses: bobheadxi/deployments@v1.5.0
+        id: deployment
+        with:
+          step: start
+          token: ${{ secrets.ACCESS_TOKEN }}
+          env: ${{ matrix.component }}-demo
+          env_url: https://auro-formkit-${{ matrix.component }}-${{ github.event.pull_request.number }}.surge.sh
+      - name: Deploy ${{ matrix.component }} demo
         uses: "./.github/actions/surge"
         with:
           action: deploy
@@ -124,23 +132,16 @@ jobs:
           demo-path: "./components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
           github-token: ${{ secrets.ACCESS_TOKEN }}
-      - name: Success
-        if: success()
-        uses: zattoo/deploy-status@v1
+      - name: update deployment status
+        uses: bobheadxi/deployments@v1.5.0
+        if: always()
         with:
+          step: finish
           token: ${{ secrets.ACCESS_TOKEN }}
-          environment: ${{ matrix.component }}
-          environment_url: https://auro-formkit-${{ matrix.component }}-${{ github.event.pull_request.number }}.surge.sh
-          state: success
-      - name: Failure
-        if: failure()
-        uses: zattoo/deploy-status@v1
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          environment: ${{ matrix.component }}
-          state: failure
-
-  surge-teardown:
+          status: ${{ job.status }}
+          env: ${{ steps.deployment.outputs.env }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+  prune:
     name: Teardown
     runs-on: ubuntu-latest
     # Only run on PR close
@@ -159,3 +160,10 @@ jobs:
           demo-path: "components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
           github-token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Mark deployment as unpublished
+        uses: bobheadxi/deployments@v1.5.0
+        with:
+          step: delete-env
+          token: ${{ secrets.ACCESS_TOKEN }}
+          env: ${{ steps.get_branch.outputs.branch }}
+          desc: ${{ matrix.component }} demo was unpublished
