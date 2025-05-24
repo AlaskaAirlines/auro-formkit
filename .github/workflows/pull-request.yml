@@ -100,6 +100,9 @@ jobs:
     runs-on: ubuntu-latest
     # Skip on PR close
     if: github.event.action != 'closed'
+    strategy:
+      matrix:
+        component: ["checkbox", "combobox", "counter", "datepicker", "dropdown", "form", "input", "menu", "radio", "select"]
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -112,13 +115,13 @@ jobs:
         with:
           path: ./*
           key: build-${{ github.sha }}-22
-      - name: Deploy to Surge
+      - name: Deploy ${{ matrix.component }} to Surge
         uses: "./.github/actions/surge"
         with:
           action: deploy
-          components: "checkbox combobox counter datepicker dropdown form input menu radio select"
+          component: ${{ matrix.component }}
           pr-number: ${{ github.event.pull_request.number }}
-          demo-dir-pattern: "components/%s/demo"
+          demo-path: "components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
           github-token: ${{ secrets.ACCESS_TOKEN }}
 
@@ -127,14 +130,17 @@ jobs:
     runs-on: ubuntu-latest
     # Only run on PR close
     if: github.event.action == 'closed'
+    strategy:
+      matrix:
+        component: ["checkbox", "combobox", "counter", "datepicker", "dropdown", "form", "input", "menu", "radio", "select"]
     steps:
       - uses: actions/checkout@v4
-      - name: Teardown from Surge
+      - name: Teardown ${{ matrix.component }} from Surge
         uses: "./.github/actions/surge"
         with:
           action: teardown
-          components: "checkbox combobox counter datepicker dropdown form input menu radio select"
+          component: ${{ matrix.component }}
           pr-number: ${{ github.event.pull_request.number }}
-          demo-dir-pattern: "components/%s/demo"
+          demo-path: "components/${{ matrix.component }}/demo"
           surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
           github-token: ${{ secrets.ACCESS_TOKEN }}
