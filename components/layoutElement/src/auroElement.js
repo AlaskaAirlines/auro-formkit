@@ -25,6 +25,12 @@ export class AuroElement extends LitElement {
         attribute: "size",
         reflect: true
       },
+
+      onDark: {
+        type: Boolean,
+        attribute: "ondark",
+        reflect: true
+      }
     };
   }
 
@@ -75,7 +81,7 @@ export class AuroElement extends LitElement {
   // This will catch if an invalid layout value is passed in and render the default layout if so.
   render() {
     try {
-      return this.getLayout();
+      return this.renderLayout();
     } catch (error) {
       // failed to get the defined layout
       console.error('Failed to get the defined layout - using the default layout', error); // eslint-disable-line no-console
