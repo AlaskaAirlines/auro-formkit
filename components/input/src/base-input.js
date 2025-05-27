@@ -469,15 +469,20 @@ export default class BaseInput extends AuroElement {
   }
 
   firstUpdated() {
-    this.addEventListener('click', this.handleClick);
+    // clicking anywhere in the main wrapper will focus the input. Clicking the helptext or label will not focus the input.
+    this.wrapperElement = this.shadowRoot.querySelector('.wrapper');
+    this.inputElement = this.renderRoot.querySelector('input');
+    this.labelElement = this.shadowRoot.querySelector('label');
+
+    if (this.wrapperElement) {
+      this.wrapperElement.addEventListener('click', this.handleClick);
+    }
+
     // add attribute for query selectors when auro-input is registered under a custom name
     if (this.tagName.toLowerCase() !== 'auro-input') {
       this.setAttribute('auro-input', true);
     }
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
-
-    this.inputElement = this.renderRoot.querySelector('input');
-    this.labelElement = this.shadowRoot.querySelector('label');
 
     if (this.format) {
       this.format = this.format.toLowerCase();
@@ -648,15 +653,6 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Function to set element focus.
-   * @private
-   * @return {void}
-   */
-  focus() {
-    this.inputElement.focus();
-  }
-
-  /**
    * Required to convert SVG icons from data to HTML string.
    * @private
    * @param {string} icon HTML string for requested icon.
@@ -693,6 +689,15 @@ export default class BaseInput extends AuroElement {
    */
   handleClick() {
     this.focus();
+  }
+
+  /**
+   * Function to set element focus.
+   * @private
+   * @return {void}
+   */
+  focus() {
+    this.inputElement.focus();
   }
 
   /**

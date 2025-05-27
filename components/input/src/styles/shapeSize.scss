@@ -5,12 +5,26 @@
 // SIZES
 $borderSize: 2px;
 $xl: calc(72px - ($borderSize * 2));
-$lg: calc(48px - ($borderSize * 2));
-$md: calc(36px - ($borderSize * 2));
-$sm: calc(24px - ($borderSize * 2));
-$xs: calc(16px - ($borderSize * 2));
+$lg: calc(56px - ($borderSize * 2));
+$md: calc(48px - ($borderSize * 2));
+$sm: calc(36px - ($borderSize * 2));
+$xs: calc(24px - ($borderSize * 2));
 
 // SHAPES ---------------------------------------------------
+
+.shape-snowflake-xl,
+.shape-snowflake-lg,
+.shape-snowflake-md,
+.shape-snowflake-sm,
+.shape-snowflake-xs {
+  min-height: 56px;
+  max-height: 56px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: 30px;
+  overflow: hidden;
+}
 
 .shape-box-xl {
   min-height: $xl;
@@ -21,13 +35,13 @@ $xs: calc(16px - ($borderSize * 2));
   overflow: hidden;
 }
 
-.shape-rounded-xl {
-  min-height: $xl;
-  max-height: $xl;
+.shape-rounded-lg {
+  min-height: $lg;
+  max-height: $lg;
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
-  border-radius: calc($xl / 2);
+  border-radius: 6px;
   overflow: hidden;
 }
 
