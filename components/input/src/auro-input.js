@@ -3,15 +3,17 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, lit/binding-positions, lit/no-invalid-html, max-lines */
+/* eslint-disable lit-a11y/click-events-have-key-events, lit/binding-positions, lit/no-invalid-html, max-lines */
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
 import styleCss from "./styles/default/style-css.js";
-import colorCss from "./styles/default/color-css.js";
-import tokensCss from "./styles/default/tokens-css.js";
+import colorBaseCss from "./styles/color-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 import emphasizedStyleCss from "./styles/emphasized/style-css.js";
 import emphasizedColorCss from "./styles/emphasized/color-css.js";
+
+import snowflakeStyleCss from "./styles/snowflake/style-css.js";
 
 import { css } from "lit";
 import { html } from 'lit/static-html.js';
@@ -67,11 +69,12 @@ export class AuroInput extends BaseInput {
   static get styles() {
     return [
       css`${shapeSizeCss}`,
-      css`${colorCss}`,
+      css`${colorBaseCss}`,
       css`${styleCss}`,
       css`${tokensCss}`,
       css`${emphasizedStyleCss}`,
-      css`${emphasizedColorCss}`
+      css`${emphasizedColorCss}`,
+      css`${snowflakeStyleCss}`
     ];
   }
 
@@ -144,7 +147,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the validation error icon.
    */
-  getValidationErrorIconHtml() {
+  renderValidationErrorIconHtml() {
     return html`
       ${this.validity && this.validity !== 'valid' ? html`
         <div class="notification alertNotification">
@@ -152,7 +155,7 @@ export class AuroInput extends BaseInput {
             category="alert"
             name="error-stroke"
             variant="statusError"
-          >
+            ondark="${this.onDark}">
           </${this.iconTag}>
         </div>
       ` : undefined}
@@ -164,7 +167,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the HTML5 input element.
    */
-  getHtmlInput() {
+  renderHtmlInput() {
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
@@ -213,7 +216,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the clear action button.
    */
-  getHtmlActionClear() {
+  renderHtmlActionClear() {
     return html`
       <div class="notification clear">
         <${this.buttonTag}
@@ -239,7 +242,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the show password button.
    */
-  getHtmlNotificationPassword() {
+  renderHtmlNotificationPassword() {
     return html`
       <div class="notification">
         <${this.buttonTag}
@@ -271,7 +274,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the input type icon.
    */
-  getHtmlTypeIcon() {
+  renderHtmlTypeIcon() {
     return html`
       <div class="typeIcon">
         ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
@@ -311,7 +314,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the help text and error message.
    */
-  getHtmlHelpText() {
+  renderHtmlHelpText() {
     return html`
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
@@ -337,7 +340,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the default layout.
    */
-  getLayoutClassic() {
+  renderLayoutClassic() {
     const wrapperClasses = {
       'layoutDefault': true
     };
@@ -390,7 +393,7 @@ export class AuroInput extends BaseInput {
             ${this.required ? '' : ` (${i18n(this.lang, 'optional')})`}
           </label>
 
-          ${this.getHtmlInput()}
+          ${this.renderHtmlInput()}
         </div>
         <div
           class="notificationIcons"
@@ -474,30 +477,65 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {html} - Returns HTML for the emphasized layout.
    */
-  getLayoutEmphasized() {
+  renderLayoutEmphasized() {
     return html`
-      <div class="${classMap(this.commonWrapperClasses)}" part="wrapper">
+      <div
+        @click="${this.handleClick}"
+        class="${classMap(this.commonWrapperClasses)}"
+        part="wrapper">
         <div class="accents left">
           ${this.layout.includes('left') ? html`
-            ${this.getValidationErrorIconHtml()}
+            ${this.renderValidationErrorIconHtml()}
           ` : undefined}
         </div>
         <div class="mainContent">
-          ${this.getHtmlInput()}
+          ${this.renderHtmlInput()}
         </div>
         <div class="accents right">
           ${this.layout.includes('right') || this.layout === "emphasized" ? html`
-            ${this.getValidationErrorIconHtml()}
+            ${this.renderValidationErrorIconHtml()}
           ` : undefined}
           ${this.hasValue ? html`
             ${!this.disabled && !this.readonly ? html`
-              ${this.getHtmlActionClear()}
+              ${this.renderHtmlActionClear()}
             ` : undefined}
           ` : undefined}
         </div>
       </div>
       <div class="${classMap(this.helpTextClasses)}" part="inputHelpText">
-        ${this.getHtmlHelpText()}
+        ${this.renderHtmlHelpText()}
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the emphasized layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the emphasized layout.
+   */
+  renderLayoutSnowflake() {
+    return html`
+      <div
+        @click="${this.handleClick}"
+        class="${classMap(this.commonWrapperClasses)}"
+        part="wrapper">
+        <div class="accents left">
+           ${this.renderHtmlTypeIcon()}
+        </div>
+        <div class="mainContent">
+          ${this.renderHtmlInput()}
+        </div>
+        <div class="accents right">
+          ${this.renderValidationErrorIconHtml()}
+          ${this.hasValue ? html`
+            ${!this.disabled && !this.readonly ? html`
+              ${this.renderHtmlActionClear()}
+            ` : undefined}
+          ` : undefined}
+        </div>
+      </div>
+      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
+        ${this.renderHtmlHelpText()}
       </div>
     `;
   }
@@ -508,18 +546,24 @@ export class AuroInput extends BaseInput {
    * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
    * @returns {void}
    */
-  getLayout(ForcedLayout) {
+  renderLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;
 
     switch (layout) {
       case 'emphasized':
-        return this.getLayoutEmphasized();
+        return this.renderLayoutEmphasized();
       case 'emphasized-left':
-        return this.getLayoutEmphasized();
+        return this.renderLayoutEmphasized();
       case 'emphasized-right':
-        return this.getLayoutEmphasized();
+        return this.renderLayoutEmphasized();
+      case 'snowflake':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-left':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-right':
+        return this.renderLayoutSnowflake();
       default:
-        return this.getLayoutClassic();
+        return this.renderLayoutClassic();
     }
   }
 }
