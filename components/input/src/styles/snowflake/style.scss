@@ -1,0 +1,92 @@
+/* stylelint-disable */
+
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+@use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
+
+:host([layout*='snowflake']) {
+  .leftIndent {
+    margin-left: 24px;
+    width: calc(100% - 48px);
+  }
+
+  .rightIndent {
+    margin-right: 24px;
+    width: calc(100% - 48px);
+  }
+}
+
+.layout-snowflake {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  label {
+    font-size: var(--ds-text-body-size-xs);
+    line-height: 20px;
+  }
+
+  input {
+    text-align: center;
+    font-size: 18px;
+    line-height: 26px;
+  }
+
+  .mainContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+  }
+
+  .displayValue {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+
+    &.hasContent:is(.withValue):not(.hasFocus) {
+      display: block;
+    }
+  }
+
+  .accents {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.withValue {
+    justify-content: flex-start;
+  }
+
+  // FOCUS STATE
+  &:focus-within {
+    justify-content: flex-start;
+
+    .alertNotification {
+      display: none;
+    }
+  }
+}
+
+.layout-snowflake {
+  .accents {
+    &.left {
+      padding-left: 24px;
+    }
+
+    &.right {
+      padding-right: 24px;
+    }
+  }
+}
