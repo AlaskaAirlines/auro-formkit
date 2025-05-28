@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -11,24 +11,22 @@ import tokensCss from "./styles/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import {
-  arrayOrUndefinedHasChanged,
   isOptionInteractive,
-  dispatchMenuEvent,
-  arrayConverter
+  dispatchMenuEvent
 } from './auro-menu-utils.js';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The auro-menu element provides users a way to select from a list of options.
- * @attr {Array<HTMLElement>|undefined} optionSelected - An array of currently selected menu options. In single-select mode, the array will contain only one HTMLElement. `undefined` when no options are selected.
+ * @attr {HTMLElement|Array<HTMLElement>} optionSelected - An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements.
  * @attr {object} optionactive - Specifies the current active menuOption.
  * @attr {string} matchword - Specifies a string used to highlight matched string parts in options.
  * @attr {boolean} disabled - When true, the entire menu and all options are disabled;
  * @attr {boolean} nocheckmark - When true, selected option will not show the checkmark.
  * @attr {boolean} loading - When true, displays a loading state using the loadingIcon and loadingText slots if provided.
  * @attr {boolean} multiselect - When true, the selected option can be multiple options.
- * @attr {Array<string>|undefined} value - Value selected for the menu. `undefined` when no selection has been made, otherwise an array of strings. In single-select mode, the array will contain only one value.
+ * @attr {String|Array<string>} value - Value selected for the menu, type `string` by default. In multi-select mode, `value` is an array of strings.
  * @prop {boolean} hasLoadingPlaceholder - Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state.
  * @event {CustomEvent<Element>} auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
@@ -41,7 +39,7 @@ import {
  * @slot - Slot for insertion of menu options.
  */
 
-/* eslint-disable no-magic-numbers, max-lines */
+/* eslint-disable no-magic-numbers, max-lines, no-extra-parens */
 
 export class AuroMenu extends LitElement {
   constructor() {
@@ -121,9 +119,8 @@ export class AuroMenu extends LitElement {
         reflect: true
       },
       optionSelected: {
-        // Allow HTMLElement[] arrays and undefined
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
+        // Allow HTMLElement, HTMLElement[] arrays and undefined
+        type: Object
       },
       optionActive: {
         type: Object,
@@ -139,10 +136,8 @@ export class AuroMenu extends LitElement {
         attribute: 'multiselect'
       },
       value: {
-        // Allow string[] arrays and undefined
-        type: Object,
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
+        // Allow string, string[] arrays and undefined
+        type: Object
       }
     };
   }
@@ -199,26 +194,30 @@ export class AuroMenu extends LitElement {
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
         this.optionSelected = undefined;
-        // Reset index tracking
         this.index = -1;
       } else {
-        // Convert single values to arrays
-        const valueArray = Array.isArray(this.value) ? this.value : [this.value];
+        if (this.multiSelect) {
+          // In multiselect mode, this.value should be an array of strings
+          const valueArray = Array.isArray(this.value) ? this.value : [this.value];
+          const matchingOptions = this.items.filter((item) => valueArray.includes(item.value));
 
-        // Find all matching options
-        const matchingOptions = this.items.filter((item) => valueArray.includes(item.value));
-
-        if (matchingOptions.length > 0) {
-          if (this.multiSelect) {
-            // For multiselect, keep all matching options
-            this.optionSelected = matchingOptions;
-          } else {
-            // For single select, only use the first match
-            this.optionSelected = [matchingOptions[0]];
-            this.index = this.items.indexOf(matchingOptions[0]);
-          }
+          this.optionSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
         } else {
-          // No matches found - trigger failure event
+          // In single-select mode, this.value should be a string
+          const matchingOptions = this.items.find((item) => item.value === this.value);
+
+          if (matchingOptions) {
+            this.optionSelected = matchingOptions;
+            this.index = this.items.indexOf(matchingOptions);
+          } else {
+            // If no matching option found, reset selection
+            this.optionSelected = undefined;
+            this.index = -1;
+          }
+        }
+
+        // If no matching options were found in either mode
+        if (!this.optionSelected || (Array.isArray(this.optionSelected) && this.optionSelected.length === 0)) {
           dispatchMenuEvent(this, 'auroMenu-selectValueFailure');
           this.optionSelected = undefined;
           this.index = -1;
@@ -370,8 +369,8 @@ export class AuroMenu extends LitElement {
       }
     } else {
       // Single select - use arrays with single values
-      this.value = [option.value];
-      this.optionSelected = [option];
+      this.value = option.value;
+      this.optionSelected = option;
     }
 
     this.index = this.items.indexOf(option);
@@ -695,8 +694,13 @@ export class AuroMenu extends LitElement {
     if (!this.optionSelected) {
       return false;
     }
-    // Always treat as array for both single and multi-select
-    return Array.isArray(this.optionSelected) && this.optionSelected.includes(option);
+
+    if (this.multiSelect) {
+      // In multi-select mode, check if the option is in the selected array
+      return Array.isArray(this.optionSelected) && this.optionSelected.some((selectedOption) => selectedOption === option);
+    }
+
+    return this.optionSelected === option;
   }
 
   /**
