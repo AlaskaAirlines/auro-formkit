@@ -19,6 +19,12 @@
     &::placeholder {
       color: var(--ds-auro-input-placeholder-text-color);
     }
+
+    &:focus {
+      &::placeholder {
+        color: var(--ds-auro-input-placeholder-text-color);
+      }
+    }
   }
 
   .displayValue {

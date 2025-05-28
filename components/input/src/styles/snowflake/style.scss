@@ -58,6 +58,10 @@
     }
   }
 
+  .displayValueWrapper {
+    transform: translateY(-50%);
+  }
+
   .accents {
     display: flex;
     flex-direction: row;
@@ -81,6 +85,8 @@
 
 .layout-snowflake {
   .accents {
+    width: 24px;
+
     &.left {
       padding-left: 24px;
     }
@@ -89,4 +95,8 @@
       padding-right: 24px;
     }
   }
+}
+
+.helpTextWrapper {
+  text-align: center;
 }
