@@ -1,0 +1,46 @@
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern */
+
+// Support for fallback values
+@use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
+
+:host {
+  .wrapper {
+    border-color: var(--ds-auro-dropdown-trigger-border-color);
+    background-color: var(--ds-auro-dropdown-trigger-background-color);
+    color: var(--ds-auro-dropdown-trigger-text-color);
+  }
+}
+
+:host(:not([ondark])) {
+  .wrapper {
+    &:focus,
+    &:focus-within {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+    }
+  }
+}
+
+:host([ondark]) {
+  .wrapper {
+    &:focus,
+    &:focus-within {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+    }
+  }
+}
+
+:host([error]:not([ondark])) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+}
+
+:host([error][ondark]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+}
+
+.helpText {
+  color: var(--ds-auro-dropdown-helptext-text-color);
+}

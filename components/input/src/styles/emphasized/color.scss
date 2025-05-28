@@ -8,17 +8,18 @@
 @use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
 
 @mixin emphasized-active-label {
-  label {
-    color: var(--ds-auro-input-label-text-color);
-  }
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});;
 }
 
 .layout-emphasized,
 .layout-emphasized-left,
 .layout-emphasized-right {
-  &:focus-within {
+  &:focus-within,
+  &.withValue {
     @include emphasized-active-label;
+  }
 
+  &:focus-within {
     --auro-input-border-color: var(--ds-auro-input-border-color);
   }
 }

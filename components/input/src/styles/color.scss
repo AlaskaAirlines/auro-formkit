@@ -12,6 +12,10 @@
   background-color: var(--ds-auro-input-background-color);
   color: var(--ds-auro-input-text-color);
 
+  label {
+    color: var(--ds-auro-input-label-text-color);
+  }
+
   input {
     color: var(--ds-auro-input-text-color);
     caret-color: var(--ds-auro-input-caret-color);
@@ -30,9 +34,21 @@
   .displayValue {
     background-color: var(--ds-auro-input-background-color);
   }
+}
 
-  &:focus-within {
-    --auro-input-border-color: var(--ds-auro-input-border-color);
+:host(:not([ondark])) {
+  .wrapper {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+    }
+  }
+}
+
+:host([ondark]) {
+  .wrapper {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+    }
   }
 }
 
