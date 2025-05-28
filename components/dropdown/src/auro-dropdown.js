@@ -23,10 +23,10 @@ import dropdownVersion from './dropdownVersion.js';
 
 import shapeSizeCss from "../../input/src/styles/shapeSize-css.js";
 import styleCss from "./styles/default/style-css.js";
-import colorCss from "./styles/default/color-css.js";
-import tokensCss from "./styles/default/tokens-css.js";
+import colorCss from "./styles/color-css.js";
+import tokensCss from "./styles/tokens-css.js";
 import styleEmphasizedCss from "./styles/emphasized/style-css.js";
-import colorEmphasizedCss from "./styles/emphasized/color-css.js";
+import styleSnowflakeCss from "./styles/snowflake/style-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import helpTextVersion from './helptextVersion.js';
@@ -457,7 +457,7 @@ export class AuroDropdown extends AuroElement {
       styleCss,
       tokensCss,
       styleEmphasizedCss,
-      colorEmphasizedCss,
+      styleSnowflakeCss,
       shapeSizeCss
     ];
   }
@@ -839,7 +839,75 @@ export class AuroDropdown extends AuroElement {
     this.labeled = nodesArr.length > 0;
   }
 
-  getLayoutClassic() {
+  /**
+   * Returns HTML for the common portion of the layouts.
+   * @private
+   * @param {Object} helpTextClasses - Classes to apply to the help text container.
+   * @returns {html} - Returns HTML.
+   */
+  renderBasicHtml(helpTextClasses) {
+    return html`
+      <div>
+        <div
+          id="trigger"
+          class="${classMap(this.commonWrapperClasses)}" part="wrapper"
+          tabindex="${this.tabIndex}"
+          ?showBorder="${this.showTriggerBorders}"
+          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
+          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+          @focusin="${this.handleFocusin}"
+          @blur="${this.handleFocusOut}">
+          <div class="triggerContentWrapper">
+            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
+              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
+            </label>
+            <div class="triggerContent">
+              <slot
+                name="trigger"
+                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
+            </div>
+          </div>
+          ${this.chevron || this.common ? html`
+              <div
+                id="showStateIcon"
+                part="chevron">
+                <${this.iconTag}
+                  category="interface"
+                  name="chevron-down"
+                  ?onDark="${this.onDark}"
+                  variant="${this.disabled ? 'disabled' : 'muted'}">
+                  >
+                </${this.iconTag}>
+              </div>
+            ` : undefined }
+        </div>
+        <div class="${classMap(helpTextClasses)}">
+          <slot name="helpText"></slot>
+        </div>
+        <div class="slotContent">
+          <slot @slotchange="${this.handleDefaultSlot}"></slot>
+        </div>
+        <div id="bibSizer" part="size"></div>
+        <${this.dropdownBibTag}
+          id="bib"
+          ?data-show="${this.isPopoverVisible}"
+          ?isfullscreen="${this.isBibFullscreen}"
+          ?common="${this.common}"
+          ?rounded="${this.common || this.rounded}"
+          ?inset="${this.common || this.inset}">
+        </${this.dropdownBibTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the classic layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the classic layout.
+   */
+  renderLayoutClassic() {
     return html`
       <div>
         <div
@@ -898,82 +966,64 @@ export class AuroDropdown extends AuroElement {
     `;
   }
 
-  getLayoutEmphasized() {
+  /**
+   * Returns HTML for the snowflake layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the snowflake layout.
+   */
+  renderLayoutSnowflake() {
     const helpTextClasses = {
+      'helpText': true,
+      'leftIndent': true,
+      'rightIndent': true
+    };
+
+    return html`
+      ${this.renderBasicHtml(helpTextClasses)}
+    `;
+  }
+
+  /**
+   * Returns HTML for the emphasized layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the emphasized layout.
+   */
+  renderLayoutEmphasized() {
+    const helpTextClasses = {
+      'helpText': true,
       'leftIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('right'),
       'rightIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('left')
     };
 
     return html`
-      <div>
-        <div
-          id="trigger"
-          class="${classMap(this.commonWrapperClasses)}" part="wrapper"
-          tabindex="${this.tabIndex}"
-          ?showBorder="${this.showTriggerBorders}"
-          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
-          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
-          @focusin="${this.handleFocusin}"
-          @blur="${this.handleFocusOut}">
-          <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
-              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
-            </label>
-            <div class="triggerContent">
-              <slot
-                name="trigger"
-                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
-            </div>
-          </div>
-          ${this.chevron || this.common ? html`
-              <div
-                id="showStateIcon"
-                part="chevron">
-                <${this.iconTag}
-                  category="interface"
-                  name="chevron-down"
-                  ?onDark="${this.onDark}"
-                  variant="${this.disabled ? 'disabled' : 'muted'}">
-                  >
-                </${this.iconTag}>
-              </div>
-            ` : undefined }
-        </div>
-        <div class="${classMap(helpTextClasses)}">
-          <slot name="helpText"></slot>
-        </div>
-        <div class="slotContent">
-          <slot @slotchange="${this.handleDefaultSlot}"></slot>
-        </div>
-        <div id="bibSizer" part="size"></div>
-        <${this.dropdownBibTag}
-          id="bib"
-          ?data-show="${this.isPopoverVisible}"
-          ?isfullscreen="${this.isBibFullscreen}"
-          ?common="${this.common}"
-          ?rounded="${this.common || this.rounded}"
-          ?inset="${this.common || this.inset}"
-        >
-        </${this.dropdownBibTag}>
-      </div>
+      ${this.renderBasicHtml(helpTextClasses)}
     `;
   }
 
-  getLayout(ForcedLayout) {
-    console.warn('getLayout'); // eslint-disable-line no-console
+  /**
+   * Logic to determine the layout of the component.
+   * @private
+   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
+   * @returns {HTMLCollection} - Returns the HTML for the layout.
+   */
+  renderLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;
 
     switch (layout) {
       case 'emphasized':
-        return this.getLayoutEmphasized();
+        return this.renderLayoutEmphasized();
       case 'emphasized-left':
-        return this.getLayoutEmphasized();
+        return this.renderLayoutEmphasized();
       case 'emphasized-right':
-        return this.getLayoutEmphasized();
+        return this.renderLayoutEmphasized();
+      case 'snowflake':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-left':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-right':
+        return this.renderLayoutSnowflake();
       default:
-        return this.getLayoutClassic();
+        return this.renderLayoutClassic();
     }
   }
 }
