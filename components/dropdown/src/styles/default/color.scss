@@ -9,7 +9,7 @@
 
 /* stylelint-disable no-descending-specificity, declaration-empty-line-before, selector-max-pseudo-class */
 
-:host(:not([layout*='emphasized'])) {
+:host([layout*='classic']) {
   .label {
     color: var(--ds-auro-dropdown-label-text-color);
   }

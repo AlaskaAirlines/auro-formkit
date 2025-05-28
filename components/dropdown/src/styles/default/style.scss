@@ -13,7 +13,7 @@
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
-:host(:not([layout*='emphasized'])) {
+:host([layout*='classic']) {
   position: relative;
   display: inline-block;
   max-width: 100%;
@@ -93,42 +93,42 @@
   /* stylelint-enable selector-id-pattern */
 }
 
-:host(:not([layout*='emphasized'])[fluid]) {
+:host([layout*='classic'][fluid]) {
   display: block;
 }
 
 
-:host(:not([layout*='emphasized'])[matchwidth]) {
+:host([layout*='classic'][matchwidth]) {
   #bibSizer {
     width: 100%;
   }
 }
 
-:host(:not([layout*='emphasized'])[disabled]) {
+:host([layout*='classic'][disabled]) {
   pointer-events: none;
 }
 
-:host(:not([layout*='emphasized'])[inset]) {
+:host([layout*='classic'][inset]) {
   .trigger {
     padding: var(--ds-size-150, $ds-size-150) var(--ds-size-200, $ds-size-200);
   }
 }
 
-:host(:not([layout*='emphasized'])[common]),
-:host(:not([layout*='emphasized'])[inset][bordered]) {
+:host([layout*='classic'][common]),
+:host([layout*='classic'][inset][bordered]) {
   .trigger {
     padding: var(--ds-size-200, $ds-size-200) var(--ds-size-150, $ds-size-150);
   }
 }
 
-:host(:not([layout*='emphasized'])[inset][bordered][labeled]) {
+:host([layout*='classic'][inset][bordered][labeled]) {
   .trigger {
     padding: var(--ds-size-100, $ds-size-100) var(--ds-size-150, $ds-size-150);
   }
 }
 
-:host(:not([layout*='emphasized'])[common]),
-:host(:not([layout*='emphasized'])[rounded]) {
+:host([layout*='classic'][common]),
+:host([layout*='classic'][rounded]) {
   .trigger {
     border-radius: var(--ds-border-radius, $ds-border-radius);
   }

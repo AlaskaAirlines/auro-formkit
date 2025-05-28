@@ -12,7 +12,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import styleCss from "./styles/default/bibStyles-css.js";
 import colorCss from "./styles/default/bibColors-css.js";
-import tokensCss from "./styles/default/tokens-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 
 const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';

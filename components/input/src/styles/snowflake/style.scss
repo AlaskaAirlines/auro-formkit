@@ -73,6 +73,11 @@
     justify-content: flex-start;
   }
 
+  // HIDE BORDER WHEN NOT FOCUSED AND NOT INVALID
+  &:not(:focus-within):not(:is([validity]:not([validity='valid']))) {
+    --ds-auro-input-border-color: transparent;
+  }
+
   // FOCUS STATE
   &:focus-within {
     justify-content: flex-start;
