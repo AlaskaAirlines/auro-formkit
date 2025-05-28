@@ -6,7 +6,9 @@
 /* eslint-disable lit-a11y/click-events-have-key-events, lit/binding-positions, lit/no-invalid-html, max-lines */
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
-import styleCss from "./styles/default/style-css.js";
+
+import styleCss from "./styles/style-css.js";
+import styleDefaultCss from "./styles/default/style-css.js";
 import colorBaseCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
@@ -71,6 +73,7 @@ export class AuroInput extends BaseInput {
       css`${shapeSizeCss}`,
       css`${colorBaseCss}`,
       css`${styleCss}`,
+      css`${styleDefaultCss}`,
       css`${tokensCss}`,
       css`${emphasizedStyleCss}`,
       css`${emphasizedColorCss}`,
@@ -78,9 +81,26 @@ export class AuroInput extends BaseInput {
     ];
   }
 
+  /**
+   * Returns classmap configuration for html5 input labels in all layouts.
+   * @private
+   * @returns {void}
+   */
   get commonLabelClasses() {
     return {
-      'withValue': this.value && this.value.length > 0
+      'withValue': this.value && this.value.length > 0,
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+    };
+  }
+
+  /**
+   * Returns classmap configuration for html5 inputs in all layouts.
+   * @private
+   * @returns {void}
+   */
+  get commonInputClasses() {
+    return {
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
     };
   }
 
@@ -155,7 +175,7 @@ export class AuroInput extends BaseInput {
             category="alert"
             name="error-stroke"
             variant="statusError"
-            ondark="${this.onDark}">
+            ?ondark="${this.onDark}">
           </${this.iconTag}>
         </div>
       ` : undefined}
@@ -195,18 +215,21 @@ export class AuroInput extends BaseInput {
         autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
         autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
         autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
-        name="${ifDefined(this.name)}"
+        class="${classMap(this.commonInputClasses)}"
         id="${this.id}"
         inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
         lang="${ifDefined(this.lang)}"
         maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
         minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
+        name="${ifDefined(this.name)}"
         part="input"
         pattern="${ifDefined(this.definePattern())}"
         spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
         type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}" />
       <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
-        <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
+        <div class="displayValueWrapper">
+          <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
+        </div>
       </div>
     `;
   }
