@@ -43,14 +43,11 @@
 
 ## Methods
 
-| Method                | Type                                  | Description                                      |
-|-----------------------|---------------------------------------|--------------------------------------------------|
-| `exposeCssParts`      | `(): void`                            | Exposes CSS parts for styling from parent components. |
-| `getLayout`           | `(ForcedLayout: any): TemplateResult` |                                                  |
-| `getLayoutClassic`    | `(): TemplateResult`                  |                                                  |
-| `getLayoutEmphasized` | `(): TemplateResult`                  |                                                  |
-| `hide`                | `(): void`                            | Public method to hide the dropdown.              |
-| `show`                | `(): void`                            | Public method to show the dropdown.              |
+| Method           | Type       | Description                                      |
+|------------------|------------|--------------------------------------------------|
+| `exposeCssParts` | `(): void` | Exposes CSS parts for styling from parent components. |
+| `hide`           | `(): void` | Public method to hide the dropdown.              |
+| `show`           | `(): void` | Public method to show the dropdown.              |
 
 ## Events
 
