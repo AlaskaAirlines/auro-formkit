@@ -15,7 +15,6 @@ describe('auro-menu', () => {
     await expect(el).to.be.accessible();
   });
 
-
   it('Enter keyboardEvent marks option as selected', async () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
@@ -41,8 +40,7 @@ describe('auro-menu', () => {
     // Verify selection
     expect(options[index].hasAttribute('selected')).to.be.true;
     expect(options[index].getAttribute('aria-selected')).to.equal('true');
-    expect(menuEl.optionSelected).to.be.an('array').with.lengthOf(1);
-    expect(menuEl.optionSelected[0]).to.equal(options[index]);
+    expect(menuEl.optionSelected).to.equal(options[index]);
   });
 
   it('Enter ArrowDown marks option as selected', async () => {
@@ -74,8 +72,7 @@ describe('auro-menu', () => {
     }));
     await elementUpdated(menuEl);
   
-    expect(menuEl.optionSelected).to.be.an('array').with.lengthOf(1);
-    expect(menuEl.optionSelected[0]).to.equal(options[1]);
+    expect(menuEl.optionSelected).to.equal(options[1]);
   });
 
   it('ArrowDown loops to 1st option in slot', async () => {
@@ -684,7 +681,7 @@ describe('value states', () => {
     await elementUpdated(menu);
 
     // Verify selection results in array
-    expect(menu.value).to.deep.equal(['option 1']);
+    expect(menu.value).to.deep.equal('option 1');
     
     // Try to deselect by clicking again
     menu.dispatchEvent(new KeyboardEvent('keydown', {
@@ -695,7 +692,7 @@ describe('value states', () => {
     await elementUpdated(menu);
     
     // Selection should persist
-    expect(menu.value).to.deep.equal(['option 1']);
+    expect(menu.value).to.deep.equal('option 1');
   });
 
   // Verify reset() returns to undefined
@@ -723,8 +720,7 @@ describe('value states', () => {
     await elementUpdated(menu);
     
     // Verify selection
-    expect(menu.value).to.deep.equal(['option 1']);
-    expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+    expect(menu.value).to.deep.equal('option 1');
     
     // Reset
     menu.reset();
@@ -759,8 +755,7 @@ describe('value states', () => {
     await elementUpdated(menu);
   
     // Verify array after selection
-    expect(menu.value).to.deep.equal(['option 1']);
-    expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+    expect(menu.value).to.deep.equal('option 1');
     
     // Try to deselect - should have no effect
     menu.dispatchEvent(new KeyboardEvent('keydown', {
@@ -771,8 +766,7 @@ describe('value states', () => {
     await elementUpdated(menu);
   
     // Selection should persist
-    expect(menu.value).to.deep.equal(['option 1']);
-    expect(menu.optionSelected).to.be.an('array').with.lengthOf(1);
+    expect(menu.value).to.deep.equal('option 1');
   
     // Reset
     menu.reset();
