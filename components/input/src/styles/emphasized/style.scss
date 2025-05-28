@@ -124,6 +124,10 @@ input {
     }
   }
 
+  .displayValueWrapper {
+    transform: translateY(-50%);
+  }
+
   .accents {
     display: flex;
     flex-direction: row;
@@ -137,7 +141,6 @@ input {
     justify-content: flex-start;
   }
 
-  // FOCUS STATE
   &:focus-within {
     @include emphasizedActiveLabel;
     @include emphasizedActiveInput;
