@@ -347,7 +347,6 @@ export class AuroSelect extends LitElement {
    */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
-    this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
