@@ -4,6 +4,7 @@
 
 | Attribute          | Type        | Description                                      |
 |--------------------|-------------|--------------------------------------------------|
+| `bordered`         | ` Boolean ` | If declared, applies a border around the trigger slot. |
 | `disableEventShow` | ` Boolean ` | If declared, the dropdown will only show by calling the API .show() public method. |
 
 ## Properties
@@ -13,13 +14,12 @@
 | `a11yAutocomplete`      |                         |           | `string`                                         |                | The value for the aria-autocomplete attribute of the trigger element. |
 | `a11yRole`              |                         |           |                                                  |                | The value for the role attribute of the trigger element. |
 | `autoPlacement`         | `autoPlacement`         |           | `boolean`                                        | "false"        | If declared, bib's position will be automatically calculated where to appear. |
-| `bordered`              | `bordered`              |           | ` Boolean `                                      |                | If declared, applies a border around the trigger slot. |
 | `chevron`               | `chevron`               |           | ` Boolean `                                      |                | If declared, the dropdown displays a chevron on the right. |
 | `common`                | `common`                |           | ` Boolean `                                      |                | If declared, the dropdown will be styled with the common theme. |
 | `commonLabelClasses`    |                         | readonly  | `object`                                         |                |                                                  |
-| `commonWrapperClasses`  |                         | readonly  | `{ trigger: boolean; wrapper: boolean; hasFocus: boolean \| undefined; }` |                |                                                  |
+| `commonWrapperClasses`  |                         | readonly  | `{ trigger: boolean; wrapper: boolean; hasFocus: boolean \| undefined; simple: boolean \| undefined; }` |                |                                                  |
 | `disabled`              | `disabled`              |           | ` Boolean `                                      |                | If declared, the dropdown is not interactive.    |
-| `error`                 | `error`                 |           | ` Boolean `                                      |                | If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both. |
+| `error`                 | `error`                 |           | ` Boolean `                                      |                | If declared in combination with not using the `simple` property or `helpText` slot content, will apply red color to both. |
 | `errorMessage`          | `errorMessage`          |           | `string`                                         | ""             | Contains the help text message for the current validity error. |
 | `fluid`                 | `fluid`                 |           | `Boolean`                                        |                | Makes the trigger to be full width of its parent container. |
 | `focusShow`             | `focusShow`             |           | ` Boolean `                                      |                | If declared, the bib will display when focus is applied to the trigger. |
@@ -39,6 +39,7 @@
 | `placement`             | `placement`             |           | `string`                                         | "bottom-start" | Position where the bib should appear relative to the trigger. |
 | `rounded`               | `rounded`               |           | ` Boolean `                                      |                | If declared, will apply border-radius to trigger and default slots. |
 | `shape`                 |                         |           | `string`                                         | "rounded"      |                                                  |
+| `simple`                | `simple`                |           | `boolean`                                        |                | If declared, applies a border around the trigger slot. |
 | `size`                  |                         |           | `string`                                         | "xl"           |                                                  |
 
 ## Methods
