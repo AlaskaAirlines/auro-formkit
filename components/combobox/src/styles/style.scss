@@ -6,7 +6,11 @@
 @use "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables" as v;
 @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-:host(:not([layout*='emphasized'])) {
+:host {
+  display: block;
+}
+
+:host([layout*='classic']) {
   [auro-input] {
     min-height: var(--ds-size-700, #{v.$ds-size-700});
     max-height: var(--ds-size-700, #{v.$ds-size-700});
@@ -43,5 +47,4 @@
   #slotHolder{
     display: none;
   }
-
 }
