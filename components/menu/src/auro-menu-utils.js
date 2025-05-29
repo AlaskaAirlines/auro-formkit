@@ -71,34 +71,6 @@ export function arraysAreEqual(arr1, arr2) {
 }
 
 /**
- * Compares array for changes.
- * @private
- * @param {Array|any} newVal - New value to compare.
- * @param {Array|any} oldVal - Old value to compare.
- * @returns {boolean} True if arrays have changed.
- */
-export function arrayOrUndefinedHasChanged(newVal, oldVal) {
-  try {
-    // Check if values are undefined or arrays
-    const isArrayOrUndefined = (val) => val === undefined || Array.isArray(val);
-
-    // If non-array or non-undefined, throw error
-    if (!isArrayOrUndefined(newVal) || !isArrayOrUndefined(oldVal)) {
-      const invalidValue = isArrayOrUndefined(newVal) ? oldVal : newVal;
-      throw new Error(`Value must be an array or undefined, received ${typeof invalidValue}`);
-    }
-
-    // Return true if arrays have changed, false if they are the same
-    return !arraysAreEqual(newVal, oldVal);
-  } catch (error) {
-    /* eslint-disable no-console */
-    console.error(error);
-    // If validation fails, it has changed
-    return true;
-  }
-}
-
-/**
  * Validates if an option can be interacted with.
  * @private
  * @param {HTMLElement} option - The option to check.
