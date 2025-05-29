@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable prefer-named-capture-group, max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html */
 
 // If using litElement base class
 import { LitElement } from "lit";
@@ -22,8 +22,7 @@ import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';
 
 import {
-  arrayConverter,
-  arrayOrUndefinedHasChanged
+  arrayConverter
 } from '@aurodesignsystem/auro-menu';
 
 import styleCss from "./styles/style-css.js";
@@ -174,7 +173,7 @@ export class AuroSelect extends LitElement {
 
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600
+       * Otherwise, Heading 600.
        */
       largeFullscreenHeadline: {
         type: Boolean,
@@ -232,12 +231,10 @@ export class AuroSelect extends LitElement {
       },
 
       /**
-       * Specifies the current selected menuOption.
+       * Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true.
        */
       optionSelected: {
-        // Allow HTMLElement[] arrays and undefined
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
+        type: Object
       },
 
       /**
@@ -307,12 +304,10 @@ export class AuroSelect extends LitElement {
       },
 
       /**
-       * Value selected for the component.
+       * Value selected for the component. Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
        */
       value: {
-        // Allow string[] arrays and undefined
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
+        type: Object
       },
 
       /**
@@ -391,9 +386,15 @@ export class AuroSelect extends LitElement {
     }
 
     // Handle selected options
-    if (this.optionSelected && this.optionSelected.length) {
-      // Create display text from selected options
-      const displayText = this.optionSelected.map((option) => option.textContent).join(', ');
+    if (this.optionSelected) {
+      let displayText = '';
+
+      if (this.multiSelect && this.optionSelected.length > 0) {
+        // Create display text from selected options
+        displayText = this.optionSelected.map((option) => option.textContent).join(', ');
+      } else {
+        displayText = this.optionSelected.textContent;
+      }
 
       const span = document.createElement('span');
       span.textContent = displayText;
@@ -677,6 +678,7 @@ export class AuroSelect extends LitElement {
 
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
+      this.value = this.multiSelect ? arrayConverter(this.getAttribute('value')) : this.getAttribute('value');
       this.menu.value = this.value;
     }
   }
@@ -684,6 +686,8 @@ export class AuroSelect extends LitElement {
   async updated(changedProperties) {
     if (changedProperties.has('value')) {
       if (this.value) {
+        this.value = this.multiSelect ? arrayConverter(this.value) : this.value;
+
         this.menu.value = this.value;
 
         // Wait for menu to finish updating its value
@@ -755,8 +759,23 @@ export class AuroSelect extends LitElement {
   _handleNativeSelectChange(event) {
     const selectedOption = event.target.options[event.target.selectedIndex];
     const selectedValue = selectedOption.value;
-    const [currentValue] = this.value || [];
-    this.value = !currentValue || currentValue !== selectedValue ? [selectedValue] : this.value;
+
+    if (this.multiSelect) {
+      const currentArray = Array.isArray(this.value) ? this.value : [];
+
+      if (!currentArray.includes(selectedValue)) {
+        this.value = [
+          ...currentArray,
+          selectedValue
+        ];
+      }
+    } else {
+      const currentValue = this.value;
+
+      if (currentValue !== selectedValue) {
+        this.value = selectedValue;
+      }
+    }
   }
 
   /**
@@ -769,10 +788,13 @@ export class AuroSelect extends LitElement {
     if (!nativeSelect) {
       return;
     }
-    const [value] = this.value || [];
-    nativeSelect.value = value || '';
-  }
 
+    if (this.multiSelect) {
+      nativeSelect.value = this.value[0] || [];
+    } else {
+      nativeSelect.value = this.value || '';
+    }
+  }
 
   // When using auroElement, use the following attribute and function when hiding content from screen readers.
   // aria-hidden="${this.hideAudible(this.hiddenAudible)}"
