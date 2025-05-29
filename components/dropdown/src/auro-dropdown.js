@@ -757,8 +757,7 @@ export class AuroDropdown extends LitElement {
    * @param {Event} event - The event object representing the slot change.
    * @fires Function#onSlotChange - Optional callback invoked when the slot content changes.
    */
-  handleDefaultSlot(event) {
-    [...event.target.assignedNodes()].forEach((node) => this.bibContent.append(node));
+  handleDefaultSlot() {
 
     if (this.onSlotChange) {
       this.onSlotChange();
@@ -830,9 +829,7 @@ export class AuroDropdown extends LitElement {
         <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
           <slot name="helpText"></slot>
         </${this.helpTextTag}>
-        <div class="slotContent">
-          <slot @slotchange="${this.handleDefaultSlot}"></slot>
-        </div>
+        
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
@@ -842,6 +839,9 @@ export class AuroDropdown extends LitElement {
           ?rounded="${this.common || this.rounded}"
           ?inset="${this.common || this.inset}"
         >
+          <div class="slotContent">
+            <slot @slotchange="${this.handleDefaultSlot}"></slot>
+          </div>
         </${this.dropdownBibTag}>
       </div>
     `;
