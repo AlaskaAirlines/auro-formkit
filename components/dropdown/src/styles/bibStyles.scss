@@ -14,9 +14,10 @@
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
 
 :host {
-  position: absolute;
+  position: fixed;
   z-index: var(--depth-tooltip, $ds-depth-tooltip);
   display: none;
+  isolation: isolate;
 }
 
 .container {
