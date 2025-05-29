@@ -99,7 +99,7 @@ describe('auro-select', () => {
       'key': 'ArrowDown'
     }));
 
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     await expect(menuOptions[0].classList.contains('active')).to.be.true;
@@ -123,7 +123,7 @@ describe('auro-select', () => {
   it('makes a selection programatically', async () => {
     const el = await defaultFixture();
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
 
     el.value = 'Apples';
     await elementUpdated(el);
@@ -181,7 +181,7 @@ describe('auro-select', () => {
     const el = await defaultFixture();
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.false;
   });
 
@@ -189,7 +189,7 @@ describe('auro-select', () => {
     const el = await noCheckmarkFixture();
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.true;
   });
 
