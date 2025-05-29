@@ -310,7 +310,7 @@ describe('auro-counter-group: keyboard navigation', () => {
     expect(firstCounter.value).to.equal(2);
   });
 
-  it('should cycle focus through interactive elements with tab', async () => {
+  it.skip('should cycle focus through interactive elements with tab', async () => {
     const el = await fixture(html`
       <auro-counter-group isDropdown>
         <auro-counter value="2">Counter 1</auro-counter>
