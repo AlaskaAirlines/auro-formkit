@@ -19,9 +19,6 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
 /**
  * Auro-input provides users a way to enter data into a text field.
  *
- * @attr {Boolean} bordered - Applies bordered UI variant.
- * @attr {Boolean} borderless - Applies borderless UI variant.
- *
  * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
  * @attr id
  *
