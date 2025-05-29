@@ -2,13 +2,6 @@
 
 Generate unique names for dependency components.
 
-## Attributes
-
-| Attribute    | Type      | Description                    |
-|--------------|-----------|--------------------------------|
-| `bordered`   | `Boolean` | Applies bordered UI variant.   |
-| `borderless` | `Boolean` | Applies borderless UI variant. |
-
 ## Properties
 
 | Property                          | Attribute                         | Modifiers | Type                                             | Default     | Description                                      |
