@@ -643,6 +643,17 @@ export class AuroSelect extends LitElement {
   }
 
   /**
+   * Resets all options to their default state.
+   * @private
+   */
+  clearSelection() {
+    this.value = undefined;
+    this.optionSelected = undefined;
+
+    this.menu.multiSelect = this.multiSelect;
+  }
+
+  /**
    * Handle element attributes on update.
    * @private
    * @returns {void}
@@ -684,6 +695,10 @@ export class AuroSelect extends LitElement {
   }
 
   async updated(changedProperties) {
+    if (changedProperties.has('multiSelect')) {
+      this.clearSelection();
+    }
+
     if (changedProperties.has('value')) {
       if (this.value) {
         this.value = this.multiSelect ? arrayConverter(this.value) : this.value;
@@ -790,7 +805,7 @@ export class AuroSelect extends LitElement {
     }
 
     if (this.multiSelect) {
-      nativeSelect.value = this.value[0] || [];
+      nativeSelect.value = this.value ? this.value[0] : '';
     } else {
       nativeSelect.value = this.value || '';
     }

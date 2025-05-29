@@ -190,6 +190,11 @@ export class AuroMenu extends LitElement {
   }
 
   updated(changedProperties) {
+    if (changedProperties.has('multiSelect')) {
+      // Reset selection if multiSelect mode changes
+      this.clearSelection();
+    }
+
     if (changedProperties.has('value')) {
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
