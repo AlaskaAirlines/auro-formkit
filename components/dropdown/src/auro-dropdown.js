@@ -21,7 +21,7 @@ import iconVersion from './iconVersion.js';
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
-import shapeSizeCss from "../../input/src/styles/shapeSize-css.js";
+import shapeSizeCss from "./styles/shapeSize-css.js";
 import styleCss from "./styles/default/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
@@ -64,25 +64,6 @@ export class AuroDropdown extends AuroElement {
     this.size = 'xl';
 
     this.privateDefaults();
-
-    /**
-     * @private
-     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
-     */
-    this.constructor.shadowRootOptions = {
-      ...LitElement.shadowRootOptions,
-      delegatesFocus: true,
-    };
-
-    /**
-     * @private
-     */
-    this.triggerContentFocusable = false;
-
-    /**
-     * @private
-     */
-    this.showTriggerBorders = true;
   }
 
   get commonLabelClasses() {
@@ -95,8 +76,8 @@ export class AuroDropdown extends AuroElement {
     return {
       'trigger': true,
       'wrapper': true,
-      // 'withValue': this.value && this.value.length > 0,
-      'hasFocus': this.hasFocus
+      'hasFocus': this.hasFocus,
+      'simple': this.simple
     };
   }
 
@@ -105,7 +86,6 @@ export class AuroDropdown extends AuroElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
-    this.bordered = false;
     this.chevron = false;
     this.disabled = false;
     this.error = false;
@@ -115,14 +95,26 @@ export class AuroDropdown extends AuroElement {
     this.noToggle = false;
     this.a11yAutocomplete = 'none';
     this.labeled = true;
-    this.a11yRole = 'combobox'; // Why is this defaulting to combobox? This should be 'button' and shouldn't it be public so our other components can set it correctly? e.g. the input in combobox is 'combobox' and datepicker is 'dialog'
+    this.a11yRole = 'button';
     this.onDark = false;
+    this.showTriggerBorders = true;
+    this.triggerContentFocusable = false;
+    this.simple = false;
 
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
     this.autoPlacement = false;
+
+    /**
+     * @private
+     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
+     */
+    this.constructor.shadowRootOptions = {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
 
     /**
      * @private
@@ -214,7 +206,7 @@ export class AuroDropdown extends AuroElement {
       /**
        * If declared, applies a border around the trigger slot.
        */
-      bordered: {
+      simple: {
         type: Boolean,
         reflect: true
       },
@@ -262,7 +254,7 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
+       * If declared in combination with not using the `simple` property or `helpText` slot content, will apply red color to both.
        */
       error: {
         type: Boolean,

@@ -26,6 +26,7 @@ import bibTemplateVersion from './bibtemplateVersion.js';
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
 import styleEmphasizedCss from './styles/emphasized/style-css.js';
+import styleSnowflakeCss from './styles/snowflake/style-css.js';
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
@@ -354,7 +355,8 @@ export class AuroCombobox extends AuroElement {
   static get styles() {
     return [
       css`${styleCss}`,
-      css`${styleEmphasizedCss}`
+      css`${styleEmphasizedCss}`,
+      css`${styleSnowflakeCss}`
     ];
   }
 
@@ -1061,7 +1063,7 @@ export class AuroCombobox extends AuroElement {
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .offset="${this.offset}"
           .placement="${this.placement}"
-          bordered
+          simple
           disableEventShow
           fluid
           for="dropdownMenu"
@@ -1085,7 +1087,6 @@ export class AuroCombobox extends AuroElement {
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
             a11yRole="combobox"
-            bordered
             id="${this.id}"
             layout="${this.layout}"
             setCustomValidity="${this.setCustomValidity}"
