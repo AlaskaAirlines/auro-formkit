@@ -1,3 +1,30 @@
 {
-    "explorer.excludeGitIgnore": false
+    "explorer.excludeGitIgnore": false,
+    "cSpell.words": [
+        "autocorrect",
+        "bibtemplate",
+        "borderless",
+        "boxshadow",
+        "csspart",
+        "DDMM",
+        "describedby",
+        "dropdownbib",
+        "exportparts",
+        "formkit",
+        "helptext",
+        "imask",
+        "isfullscreen",
+        "labelledby",
+        "matchwidth",
+        "maxlength",
+        "menuoption",
+        "menuoptions",
+        "MMDD",
+        "MMYY",
+        "nocheckmark",
+        "ondark",
+        "texticon",
+        "YYMM",
+        "YYYYDDMM"
+    ]
 }
