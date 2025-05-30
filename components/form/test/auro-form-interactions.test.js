@@ -182,7 +182,7 @@ describe('auro-form', () => {
       combobox.input.value = 'Oranges';
 
       await elementUpdated(form);
-      await expect(form.value.comboTest).to.deep.equal(['Oranges']);
+      await expect(form.value.comboTest).to.deep.equal('Oranges');
     });
   });
 

@@ -40,7 +40,7 @@ describe('auro-select', () => {
 
     await elementUpdated(element);
 
-    const [elValue] = element.value;
+    const elValue = element.value;
     expect(elValue).to.equal('Apples');
 
     // Also check that the visible selection matches
@@ -50,7 +50,7 @@ describe('auro-select', () => {
 
   it('should sync value changes from component to native select', async () => {
     const element = await defaultFixture();
-    element.value = ['Apples'];
+    element.value = 'Apples';
 
     await elementUpdated(element);
 
@@ -125,22 +125,41 @@ describe('auro-select', () => {
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const menu = dropdown.bibContent.querySelector('auro-menu');
 
-    el.value = ['Apples'];
+    el.value = 'Apples';
     await elementUpdated(el);
     await elementUpdated(menu);
 
     const selectedOption = menu.querySelector('auro-menuoption[value="Apples"]');
 
-    await expect(el.value).to.deep.equal(['Apples']);
-    await expect(el.optionSelected[0]).to.equal(selectedOption);
+    await expect(el.value).to.deep.equal('Apples');
+    await expect(el.optionSelected).to.equal(selectedOption);
+  });
+
+  it('makes a selection programatically in multiselect', async () => {
+    const el = await multiSelectFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const menu = dropdown.bibContent.querySelector('auro-menu');
+
+    el.value = '["Apples", "Bananas"]';
+    await elementUpdated(el);
+    await elementUpdated(menu);
+
+    const selectedOption1 = menu.querySelector('auro-menuoption[value="Apples"]');
+    const selectedOption2 = menu.querySelector('auro-menuoption[value="Bananas"]');
+
+    await expect(el.value[0]).to.deep.equal('Apples');
+    await expect(el.value[1]).to.deep.equal('Bananas');
+    
+    await expect(el.optionSelected[0]).to.equal(selectedOption1);
+    await expect(el.optionSelected[1]).to.equal(selectedOption2);
   });
 
   it('making invalid selection programmatically results in resetting of component', async () => {
     const el = await presetValueFixture();
     await elementUpdated(el);
-    await expect(el.value).to.deep.equal(['price']);
+    await expect(el.value).to.deep.equal('price');
 
-    el.value = ['flight course'];
+    el.value = 'flight course';
     await elementUpdated(el);
 
     await expect(el.optionSelected).to.be.equal(undefined);
@@ -190,7 +209,7 @@ describe('auro-select', () => {
     const el = await presetValueFixture();
     await elementUpdated(el);
 
-    await expect(el.value).to.deep.equal(['price']);
+    await expect(el.value).to.deep.equal('price');
     await expect(el.getAttribute('validity')).to.equal('valid');
 
     el.reset();
@@ -267,7 +286,7 @@ describe('auro-select keyboard interaction', () => {
     await elementUpdated(el);
 
     // Set an initial value and active option
-    el.value = ['apple'];
+    el.value = 'apple';
     await elementUpdated(el);
 
     const previousActive = el.menu.optionActive;
@@ -336,7 +355,7 @@ async function defaultFixture() {
 
 async function presetValueFixture() {
   return await fixture(html`
-  <auro-select value='["price"]'>
+  <auro-select value="price">
     <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -369,6 +388,20 @@ async function errorFixture() {
     <auro-menu>
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
       <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+
+async function multiSelectFixture() {
+  return await fixture(html`
+  <auro-select multiselect>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+      <auro-menuoption value="Bananas" id="option-2">Bananas</auro-menuoption>
+      <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     </auro-menu>
   </auro-select>
   `);

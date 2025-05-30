@@ -357,15 +357,15 @@ function runFulltest(mobileview) {
   it('makes a selection programmatically', async () => {
     const el = await defaultFixture(mobileview);
 
-    el.value = ['Apples'];
+    el.value = 'Apples';
     await elementUpdated(el);
 
     const selectedOption = el.querySelector('auro-menuoption[value="Apples"]');
-    el.optionSelected = [selectedOption];
+    el.optionSelected = selectedOption;
     await elementUpdated(el);
 
-    await expect(el.value).to.deep.equal(['Apples']);
-    await expect(el.optionSelected[0]).to.equal(selectedOption);
+    await expect(el.value).to.deep.equal('Apples');
+    await expect(el.optionSelected).to.equal(selectedOption);
   });
 
   it('reset selection value programmatically', async () => {
@@ -390,18 +390,15 @@ function runFulltest(mobileview) {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await elementUpdated(el);
 
-    await expect(Array.isArray(el.value)).to.be.true;
-    await expect(el.value[0]).to.equal('Apples');
+    await expect(el.value).to.equal('Apples');
   });
 
   it('Does not throw an error state when trying to programmatically set a value that doesn\'t match an option', async () => {
     const el = await defaultFixture(mobileview);
 
-    const menu = el.querySelector('auro-menu');
-
     await expect(el.hasAttribute('error')).to.be.false;
 
-    el.value = ['Dragon Fruit'];
+    el.value = 'Dragon Fruit';
 
     await elementUpdated(el);
 
@@ -513,7 +510,7 @@ async function presetValueFixture(mobileview) {
     });
   }
   return await fixture(html`
-    <auro-combobox value='["Apples"]'>
+    <auro-combobox value="Apples">
       <span slot="label">Name</span>
       <auro-menu>
         <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>

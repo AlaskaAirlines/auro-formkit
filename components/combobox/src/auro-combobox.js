@@ -22,11 +22,6 @@ import inputVersion from './inputVersion.js';
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';
 
-import {
-  arrayConverter,
-  arrayOrUndefinedHasChanged
-} from '@aurodesignsystem/auro-menu';
-
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
 import { ifDefined } from "lit/directives/if-defined.js";
@@ -216,11 +211,10 @@ export class AuroCombobox extends LitElement {
 
       /**
        * Specifies the current selected option.
+       * @type {HTMLElement}
        */
       optionSelected: {
-        type: Object,
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
+        type: Object
       },
 
       /**
@@ -292,11 +286,10 @@ export class AuroCombobox extends LitElement {
 
       /**
        * Value selected for the dropdown menu.
-       * @type {Array|String<Array>}
+       * @type {string}
        */
       value: {
-        converter: arrayConverter,
-        hasChanged: arrayOrUndefinedHasChanged
+        type: Object
       },
 
       /**
@@ -368,17 +361,15 @@ export class AuroCombobox extends LitElement {
 
     if (this.menu.optionSelected) {
       // Get first option since combobox is single-select
-      const [selected] = this.menu.optionSelected;
+      const selected = this.menu.optionSelected;
 
-      if (!this.optionSelected || this.optionSelected[0] !== selected) {
-        // Store as array
-        this.optionSelected = [selected];
+      if (!this.optionSelected || this.optionSelected !== selected) {
+        this.optionSelected = selected;
       }
 
-      if (!this.value || this.value[0] !== selected.value) {
-        // Store as array
-        this.value = [selected.value];
-        // Menu already expects array
+      if (!this.value || this.value !== selected.value) {
+        this.value = selected.value;
+
         this.menu.value = this.value;
       }
 
@@ -558,14 +549,14 @@ export class AuroCombobox extends LitElement {
     // handle the menu event for an option selection
     this.menu.addEventListener('auroMenu-selectedOption', () => {
       if (this.menu.optionSelected) {
-        const [selected] = this.menu.optionSelected;
+        const selected = this.menu.optionSelected;
 
-        if (!this.optionSelected || this.optionSelected[0] !== selected) {
-          this.optionSelected = [selected];
+        if (!this.optionSelected || this.optionSelected !== selected) {
+          this.optionSelected = selected;
         }
 
-        if (!this.value || this.value[0] !== this.optionSelected[0].value) {
-          this.value = [this.optionSelected[0].value];
+        if (!this.value || this.value !== this.optionSelected.value) {
+          this.value = this.optionSelected.value;
           this.menu.value = this.value;
         }
 
@@ -667,11 +658,6 @@ export class AuroCombobox extends LitElement {
       if (document.activeElement !== this) {
         this.validate();
       }
-
-      // Set to undefined if empty
-      if (this.value && this.value.length === 0) {
-        this.value = undefined;
-      }
     });
 
     // Handle validation messages from auroFormElement-validated event
@@ -766,10 +752,8 @@ export class AuroCombobox extends LitElement {
 
     let hasChange = false;
 
-    // Store value as array or undefined
-    if (!this.value || this.value[0] !== this.input.value) {
-      // Menu expects an array
-      this.menu.value = this.input.value ? [this.input.value] : undefined;
+    if (!this.value || this.value !== this.input.value) {
+      this.menu.value = this.input.value;
       this.value = this.menu.value;
       hasChange = true;
       this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
@@ -779,7 +763,7 @@ export class AuroCombobox extends LitElement {
       }));
     }
 
-    if (this.optionSelected && this.optionSelected[0] && this.input.value !== this.optionSelected[0].textContent) {
+    if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
       this.optionSelected = undefined;
       hasChange = true;
     }
@@ -922,15 +906,15 @@ export class AuroCombobox extends LitElement {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
       if (this.value) {
-        if (this.optionSelected && this.optionSelected[0] && this.optionSelected[0].value === this.value[0]) {
+        if (this.optionSelected && this.optionSelected.value === this.value) {
           // If value updates and the previously selected option already matches the new value
           // just update the input value to use the textContent of the optionSelected
-          this.input.value = this.optionSelected[0].textContent;
+          this.input.value = this.optionSelected.textContent;
         } else {
           // Otherwise just enter the value into the input
           this.optionSelected = undefined;
-          // Use first value since combobox is single-select
-          const [inputValue] = this.value;
+
+          const inputValue = this.value;
           this.input.value = inputValue;
 
           // Update the menu value and matchWord
