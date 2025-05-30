@@ -8,6 +8,7 @@ The auro-menu element provides users a way to select from a list of options.
 |-------------------------|------------------|---------------------------------|-------------|--------------------------------------------------|
 | `disabled`              | `disabled`       | `boolean`                       |             | When true, the entire menu and all options are disabled; |
 | `hasLoadingPlaceholder` |                  | `boolean`                       |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| `layout`                |                  | `string`                        | "default"   |                                                  |
 | `loading`               | `loading`        | `boolean`                       | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
 | `matchWord`             | `matchword`      | `string`                        | "undefined" | Specifies a string used to highlight matched string parts in options. |
 | `multiSelect`           | `multiselect`    | `boolean`                       | false       | When true, the selected option can be multiple options. |
@@ -54,13 +55,14 @@ The auro-menu element provides users a way to define a menu option.
 
 ## Properties
 
-| Property      | Attribute     | Type      | Default | Description                                      |
-|---------------|---------------|-----------|---------|--------------------------------------------------|
-| `disabled`    | `disabled`    | `Boolean` | false   | When true specifies that the menuoption is disabled. |
-| `iconTag`     |               | `string`  |         |                                                  |
-| `nocheckmark` | `nocheckmark` | `boolean` | false   |                                                  |
-| `selected`    | `selected`    | `Boolean` | false   | Specifies that an option is selected.            |
-| `value`       | `value`       | `String`  |         | Specifies the value to be sent to a server.      |
+| Property      | Attribute     | Type      | Default   | Description                                      |
+|---------------|---------------|-----------|-----------|--------------------------------------------------|
+| `disabled`    | `disabled`    | `Boolean` | false     | When true specifies that the menuoption is disabled. |
+| `iconTag`     |               | `string`  |           |                                                  |
+| `layout`      |               | `string`  | "default" |                                                  |
+| `nocheckmark` | `nocheckmark` | `boolean` | false     |                                                  |
+| `selected`    | `selected`    | `Boolean` | false     | Specifies that an option is selected.            |
+| `value`       | `value`       | `String`  |           | Specifies the value to be sent to a server.      |
 
 ## Events
 

@@ -10,24 +10,20 @@
 
 /* stylelint-disable declaration-no-important, order/properties-order */
 
-:host {
-  display: flex;
+:host([layout="default"]) {
+  .wrapper {
+    display: flex;
+    align-items: center;
+    padding: var(--ds-size-50, $ds-size-50) var(--ds-size-200, $ds-size-200) var(--ds-size-50, $ds-size-50) 0;
+    
+    padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
 
-  align-items: center;
-
-  padding: var(--ds-size-50, $ds-size-50) var(--ds-size-200, $ds-size-200) var(--ds-size-50, $ds-size-50) 0;
-
-  cursor: pointer;
-
-  user-select: none;
-
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
 
   slot {
     display: block;
-
     overflow: hidden;
-
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -46,6 +42,31 @@
   ::slotted(strong) {
     font-weight: 700;
   }
+}
+
+:host([loadingplaceholder][layout="default"]) {
+  .wrapper {
+    padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
+  }
+}
+
+:host([selected][layout="default"]) {
+  .wrapper {
+    padding-left: 0;
+  }
+}
+
+:host([nocheckmark][layout="default"]) {
+  .wrapper {
+    padding-left: var(--ds-size-200, $ds-size-200);
+  }
+}
+
+// cursor and interactivity
+:host {
+  cursor: pointer;
+
+  user-select: none;
 }
 
 :host([hidden]) {

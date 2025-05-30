@@ -1,0 +1,15 @@
+// Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable custom-property-empty-line-before, declaration-no-important */
+
+@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+
+
+:host([layout="emphasized"]:hover),
+:host([layout="emphasized"].active) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{$ds-basic-color-surface-accent1-muted});
+}

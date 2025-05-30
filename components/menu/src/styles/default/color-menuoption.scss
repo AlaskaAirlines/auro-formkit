@@ -10,8 +10,10 @@
 
 
 :host {
-  background-color: var(--ds-auro-menuoption-container-color);
-  color: var(--ds-auro-menuoption-text-color);
+  .wrapper {
+    background-color: var(--ds-auro-menuoption-container-color);
+    color: var(--ds-auro-menuoption-text-color);
+  }
 
   svg {
     fill: var(--ds-auro-menuoption-icon-color);
