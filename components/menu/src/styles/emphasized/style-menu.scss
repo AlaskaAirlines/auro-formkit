@@ -1,0 +1,24 @@
+// Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable declaration-empty-line-before */
+
+// Import Auro tokens
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+@use '@aurodesignsystem/webcorestylesheets/src/core';
+
+/* stylelint-disable declaration-no-important, order/properties-order, selector-max-attribute, selector-max-combinators, selector-max-compound-selectors, selector-no-qualifying-type, scss/selector-nest-combinators, max-nesting-depth */
+
+// container styles - defines the look of the outer custom component
+
+:host([layout*="emphasized"][root]) {
+  .wrapper[class*="-large"] {
+    padding: var(--ds-size-150, vac.$ds-size-150);
+  }
+  .wrapper[class*="-xlarge"] {
+    padding: var(--ds-size-200, vac.$ds-size-200);
+  }
+}

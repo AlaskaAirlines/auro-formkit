@@ -27,8 +27,49 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/essentials-as.css" />
+    <style>
+      header {
+        background: lightgray;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 10;
+      }
+    </style>
+    <script>
+      function onRadioInput(event) {
+        if (event.constructor.name === 'CustomEvent') {
+          const group = event.target.getAttribute('name');
+          const menus = document.querySelectorAll('auro-menu');
+          if (menus) {
+            menus.forEach((menu) => {
+              menu.setAttribute(group, event.target.value);
+            });
+          }
+        };
+      }
+    </script>
   </head>
   <body class="auro-markdown">
+    <header oninput="onRadioInput(event)">
+      <auro-radio-group required horizontal name="layout">
+        <span slot="legend">Layout</span>
+        <auro-radio label="classic" value="classic" checked></auro-radio>
+        <auro-radio label="emphasized" value="emphasized"></auro-radio>
+      </auro-radio-group>
+      <auro-radio-group required horizontal name="shape">
+        <span slot="legend">Shape</span>
+        <auro-radio label="box" value="box" checked></auro-radio>
+        <auro-radio label="rounded" value="rounded"></auro-radio>
+      </auro-radio-group>
+      <auro-radio-group required horizontal name="size">
+        <span slot="legend">Size</span>
+        <auro-radio label="medium(default)" value="medium" checked></auro-radio>
+        <auro-radio label="large" value="large"></auro-radio>
+        <auro-radio label="xlarge" value="xlarge"></auro-radio>
+      </auro-radio-group>
+
+    </header>
     <main></main>
 
     <script type="module">
@@ -47,6 +88,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-input@latest/dist/auro-input__bundled.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/dist/auro-button__bundled.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-loader@latest/dist/auro-loader__bundled.js" type="module"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-radio/+esm"></script>
     <script type="module" data-demo-script="true">
       import { initExamples } from "./api.min.js"
       initExamples();
