@@ -232,6 +232,7 @@ export class AuroSelect extends LitElement {
 
       /**
        * Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true.
+       * @type {HTMLElement|Array<HTMLElement>}
        */
       optionSelected: {
         type: Object
@@ -305,6 +306,7 @@ export class AuroSelect extends LitElement {
 
       /**
        * Value selected for the component. Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
+       * @type {String|Array<String>}
        */
       value: {
         type: Object
