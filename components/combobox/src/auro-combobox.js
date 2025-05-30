@@ -571,6 +571,7 @@ export class AuroCombobox extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+    this.menu.setAttribute('layout', this.layout);
 
     // a racing condition on custom-combobox with custom-menu
     if (!this.menu || this.menuShadowRoot === null) {
@@ -949,6 +950,10 @@ export class AuroCombobox extends AuroElement {
     if (changedProperties.has('error')) {
       this.input.setAttribute('error', this.getAttribute('error'));
       this.validate();
+    }
+
+    if (changedProperties.has('layout') && this.menu) {
+      this.menu.setAttribute('layout', this.layout);
     }
   }
 

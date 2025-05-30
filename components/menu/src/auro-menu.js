@@ -3,11 +3,14 @@
 
 // ---------------------------------------------------------------------
 
-import { LitElement, html } from "lit";
+import { html } from "lit";
 
-import styleCss from "./styles/style-menu-css.js";
-import colorCss from "./styles/color-menu-css.js";
-import tokensCss from "./styles/tokens-css.js";
+import styleCss from "./styles/default/style-menu-css.js";
+import emphasizedStyleCss from "./styles/emphasized/style-menu-css.js";
+import colorCss from "./styles/default/color-menu-css.js";
+import tokensCss from "./styles/default/tokens-css.js";
+
+import { AuroElement } from "../../layoutElement/src/auroElement.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import {
@@ -41,11 +44,14 @@ import {
 
 /* eslint-disable no-magic-numbers, max-lines, no-extra-parens */
 
-export class AuroMenu extends LitElement {
+export class AuroMenu extends AuroElement {
   constructor() {
     super();
 
     // State properties (reactive)
+
+    this.layout = "classic";
+    this.size = "medium";
 
     // Value of the selected options
     this.value = undefined;
@@ -105,6 +111,7 @@ export class AuroMenu extends LitElement {
 
   static get properties() {
     return {
+      ...super.properties,
       noCheckmark: {
         type: Boolean,
         reflect: true,
@@ -145,6 +152,7 @@ export class AuroMenu extends LitElement {
   static get styles() {
     return [
       styleCss,
+      emphasizedStyleCss,
       colorCss,
       tokensCss
     ];
@@ -190,12 +198,15 @@ export class AuroMenu extends LitElement {
   }
 
   updated(changedProperties) {
+    super.updated(changedProperties);
+
     if (changedProperties.has('multiSelect')) {
       // Reset selection if multiSelect mode changes
       this.clearSelection();
     }
 
-    if (changedProperties.has('value')) {
+
+    if (changedProperties.has("value")) {
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
         this.optionSelected = undefined;
@@ -262,6 +273,29 @@ export class AuroMenu extends LitElement {
       // Update both menus and options
       this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]').forEach((element) => element.setAttribute('noCheckmark', ''));
     }
+
+    if (changedProperties.has('layout')) {
+      // Update both menus and options
+      if (this.layout.includes("emphasized")) {
+        this.shape = "rounded";
+      } else {
+        this.shape = undefined;
+      }
+    }
+
+    // Handle layout propagation to all menus and options
+    const propagationTargets = this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]');
+    [
+      'size',
+      'shape',
+      'layout'
+    ].forEach((prop) => {
+      if (changedProperties.has(prop)) {
+        propagationTargets.forEach((el) => {
+          el.setAttribute(prop, this[prop]);
+        });
+      }
+    });
 
     // Regex for matchWord if needed
     let regexWord = null;
@@ -464,6 +498,7 @@ export class AuroMenu extends LitElement {
     nestedMenus.forEach((nestedMenu) => {
       // role="listbox" only allows "role=group" for children.
       nestedMenu.setAttribute('role', 'group');
+      nestedMenu.removeAttribute("root");
       if (!nestedMenu.hasAttribute('aria-label')) {
         nestedMenu.setAttribute('aria-label', 'submenu');
       }
@@ -717,22 +752,62 @@ export class AuroMenu extends LitElement {
   }
 
   /**
-   * Renders the component.
-   * @returns {boolean} - True if loading slots are present and non-empty.
+   * Logic to determine the layout of the component.
+   * @protected
+   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
+   * @returns {void}
    */
-  render() {
+  renderLayout(ForcedLayout) {
+    const layout = ForcedLayout || this.layout;
+
+    switch (layout) {
+      case "emphasized":
+        return this.renderLayoutEmphasized();
+      default:
+        return this.renderLayoutClassic();
+    }
+  }
+
+  /**
+   * Renders the component.
+   * @private
+   * @returns {TemplateResult} - True if loading slots are present and non-empty.
+   */
+  renderLayoutClassic() {
     if (this.loading) {
       return html`
-        <auro-menuoption disabled loadingplaceholder class="${this.hasLoadingPlaceholder ? '' : 'empty'}">
-          <div>
-            <slot name="loadingIcon"></slot>
-            <slot name="loadingText"></slot>
-          </div>
-        </auro-menuoption>
+        <div class="wrapper">
+          <auro-menuoption
+            disabled
+            loadingplaceholder
+            .class=${this.layout}
+            class="${this.hasLoadingPlaceholder ? "" : "empty"}"
+          >
+            <div>
+              <slot name="loadingIcon"></slot>
+              <slot name="loadingText"></slot>
+            </div>
+          </auro-menuoption>
+        </div>
       `;
     }
 
-    return html`<slot @slotchange=${this.handleSlotChange}></slot>`;
+    return html`
+      <div class="wrapper">
+        <slot @slotchange=${this.handleSlotChange}></slot>
+      </div>
+    `;
+  }
+
+  /**
+   * Renders the emphasized layout for the menu component.
+   * Currently, this method returns the classic layout as a placeholder for future customization.
+   * @private
+   * @returns {TemplateResult} The rendered emphasized layout template.
+   */
+  renderLayoutEmphasized() {
+    // same as classic for now
+    return this.renderLayoutClassic();
   }
 }
 
