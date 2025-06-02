@@ -2,21 +2,40 @@
 
 @use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables';
 
+@function getCalculatedSize($size, $borderSize) {
+  @return calc(#{$size} - (2 * #{$borderSize}));
+}
+
 // SIZES
-$borderSize: 2px;
-$xl: calc(72px - ($borderSize * 2));
-$lg: calc(56px - ($borderSize * 2));
-$md: calc(48px - ($borderSize * 2));
-$sm: calc(36px - ($borderSize * 2));
-$xs: calc(24px - ($borderSize * 2));
+$defaultBorderSize: 2px;
+$xl: 72px;
+$lg: 56px;
+$md: 48px;
+$sm: 36px;
+$xs: 24px;
 
 // SHAPES ---------------------------------------------------
 
 @mixin simple($size) {
+  $simpleBorderSize: 0px;
+
   &.simple {
-    border-width: 0;
-    min-height: $size;
-    max-height: $size;
+    border-width: $simpleBorderSize;
+    min-height: getCalculatedSize($size, $simpleBorderSize);
+    max-height: getCalculatedSize($size, $simpleBorderSize);
+    background-color: unset;
+  }
+}
+
+// shape thin for 1px border
+
+@mixin thin($size) {
+  $thinBorderSize: 1px;
+
+  &.thin {
+    border-width: $thinBorderSize;
+    min-height: getCalculatedSize($size, $thinBorderSize);
+    max-height: getCalculatedSize($size, $thinBorderSize);
     background-color: unset;
   }
 }
@@ -34,16 +53,18 @@ $xs: calc(24px - ($borderSize * 2));
   border-radius: 30px;
 
   @include simple(60px);
+  @include thin(60px);
 }
 
 .shape-box-xl {
-  min-height: $xl;
-  max-height: $xl;
+  min-height: getCalculatedSize($xl, $defaultBorderSize);
+  max-height: getCalculatedSize($xl, $defaultBorderSize);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($xl);
+  @include thin($xl);
 }
 
 .shape-rounded-lg {
@@ -54,7 +75,8 @@ $xs: calc(24px - ($borderSize * 2));
   border-color: transparent;
   border-radius: 6px;
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($lg);
+  @include thin($lg);
 }
 
 .shape-pill-xl {
@@ -65,7 +87,8 @@ $xs: calc(24px - ($borderSize * 2));
   border-color: transparent;
   border-radius: calc($xl / 2);
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($xl);
+  @include thin($xl);
 }
 
 .shape-pill-left-xl {
@@ -76,7 +99,8 @@ $xs: calc(24px - ($borderSize * 2));
   border-color: transparent;
   border-radius: calc($xl / 2) 0 0 calc($xl / 2);
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($xl);
+  @include thin($xl);
 }
 
 .shape-pill-right-xl {
@@ -87,7 +111,8 @@ $xs: calc(24px - ($borderSize * 2));
   border-color: transparent;
   border-radius: 0 calc($xl / 2) calc($xl / 2) 0;
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($xl);
+  @include thin($xl);
 }
 
 .shape-pill-md {
@@ -98,7 +123,8 @@ $xs: calc(24px - ($borderSize * 2));
   border-color: transparent;
   border-radius: calc($xl / 2);
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($md);
+  @include thin($md);
 }
 
 .shape-pill-left-md {
@@ -109,7 +135,8 @@ $xs: calc(24px - ($borderSize * 2));
   border-color: transparent;
   border-radius: calc($xl / 2) 0 0 calc($xl / 2);
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($md);
+  @include thin($md);
 }
 
 .shape-pill-right-md {
@@ -120,5 +147,6 @@ $xs: calc(24px - ($borderSize * 2));
   border-color: transparent;
   border-radius: 0 calc($xl / 2) calc($xl / 2) 0;
 
-  @include simple($xl + $borderSize + $borderSize);
+  @include simple($md);
+  @include thin($md);
 }
