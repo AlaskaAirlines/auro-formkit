@@ -12,6 +12,9 @@ import styleDefaultCss from "./styles/default/style-css.js";
 import colorBaseCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+import classicStyleCss from "./styles/classic/style-css.js";
+import classicColorCss from "./styles/classic/color-css.js";
+
 import emphasizedStyleCss from "./styles/emphasized/style-css.js";
 import emphasizedColorCss from "./styles/emphasized/color-css.js";
 
@@ -75,6 +78,8 @@ export class AuroInput extends BaseInput {
       css`${styleCss}`,
       css`${styleDefaultCss}`,
       css`${tokensCss}`,
+      css`${classicStyleCss}`,
+      css`${classicColorCss}`,
       css`${emphasizedStyleCss}`,
       css`${emphasizedColorCss}`,
       css`${snowflakeStyleCss}`
@@ -185,14 +190,19 @@ export class AuroInput extends BaseInput {
   /**
    * Returns HTML for the HTML5 input element.
    * @private
+   * @param {boolean} [hideInputWhenBlurred=false] - If true, the input will be visually hidden when not focused and has no value.
    * @returns {html} - Returns HTML for the HTML5 input element.
    */
-  renderHtmlInput() {
+  renderHtmlInput(hideInputWhenBlurred = false) {
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.hasFocus,
-      'withValue': this.value && this.value.length > 0
+      'withValue': this.value && this.value.length > 0,
+    };
+
+    const inputClasses = {
+      'util_displayHiddenVisually': hideInputWhenBlurred && !this.hasFocus && !this.value
     };
 
     return html`
@@ -215,6 +225,7 @@ export class AuroInput extends BaseInput {
         autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
         autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
         autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
+        class="${classMap(inputClasses)}"
         id="${this.inputId}"
         inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
         lang="${ifDefined(this.lang)}"
@@ -360,137 +371,32 @@ export class AuroInput extends BaseInput {
   /**
    * Returns HTML for the default layout.
    * @private
-   * @returns {html} - Returns HTML for the default layout.
+   * @returns {import("lit").TemplateResult} - Returns HTML for the default layout.
    */
   renderLayoutClassic() {
-    const wrapperClasses = {
-      'layoutDefault': true
-    };
-
-    // is-disabled class - THIS IS ONLY HERE TO MAKE A TEST PASS AS FAR AS I CAN TELL
-    const labelClasses = {
-      'is-disabled': this.disabled,
-      'withIcon': this.hasTypeIcon(),
-      'withValue': this.value && this.value.length > 0
-    };
-
     return html`
-      <div class="${classMap(wrapperClasses)}" part="wrapper">
-        <div class="main">
-          <div class="typeIcon">
-            ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
-
-            <!-- The repeat() method is used below in order to force auro-icon to re-render when the name value is updated.
-              This should be cleaned up when auro-icon issue #31 is resolved. -->
-            ${this.inputIconName
-            ? repeat([this.inputIconName], (val) => val, (name) => html`
-              <${this.iconTag}
-                class="accentIcon"
-                category="payment"
-                name="${name}"
-                part="accentIcon"
-                ?onDark="${this.onDark}"
-                variant="${this.disabled ? 'disabled' : 'muted'}">
-              </${this.iconTag}>
-            `) : undefined
-            }
-
-            ${this.type === 'date'
-            ? html`
-              <${this.iconTag}
-                class="accentIcon"
-                category="interface"
-                name="calendar"
-                part="accentIcon"
-                ?onDark="${this.onDark}"
-                variant="${this.disabled ? 'disabled' : 'muted'}">
-              </${this.iconTag}>`
-            : undefined
-            }
-          </div>
-          <label for=${this.id} class="${classMap(labelClasses)}" part="label">
-            <slot name="label">
-              ${this.label}
-            </slot>
-            ${this.required ? '' : ` (${i18n(this.lang, 'optional')})`}
-          </label>
-
-          ${this.renderHtmlInput()}
+      <div
+        @click="${this.handleClick}"
+        class="${classMap(this.commonWrapperClasses)} thin"
+        part="wrapper">
+        <div class="accents left">
+           ${this.renderHtmlTypeIcon()}
         </div>
-        <div
-          class="notificationIcons"
-          part="notificationIcons"
-          ?hasValue="${this.hasValue}">
-          ${this.validity && this.validity !== 'valid' ? html`
-            <div class="notification alertNotification">
-              <${this.iconTag}
-                category="alert"
-                customColor
-                name="error-stroke"
-              </${this.iconTag}>
-            </div>
-          ` : undefined}
+        <div class="mainContent">
+          ${this.renderHtmlInput(true)}
+        </div>
+        <div class="accents right">
+          ${this.renderValidationErrorIconHtml()}
           ${this.hasValue ? html`
-            ${this.type === 'password' ? html`
-              <div class="notification">
-                <${this.buttonTag}
-                  @click="${this.handleClickShowPassword}"
-                  ?onDark="${this.onDark}"
-                  aria-hidden="true"
-                  class="notificationBtn passwordBtn"
-                  tabindex="-1"
-                  variant="flat">
-                  <${this.iconTag}
-                    ?hidden=${!this.showPassword}
-                    category="interface"
-                    customColor
-                    name="hide-password-stroke">
-                  </${this.iconTag}>
-                  <${this.iconTag}
-                    ?hidden=${this.showPassword}
-                    category="interface"
-                    customColor
-                    name="view-password-stroke">
-                  </${this.iconTag}>
-                </${this.buttonTag}>
-              </div>
-            ` : undefined}
             ${!this.disabled && !this.readonly ? html`
-              <div class="notification">
-                <${this.buttonTag}
-                  @click="${this.handleClickClear}"
-                  ?onDark="${this.onDark}"
-                  arialabel="${i18n(this.lang, 'clearInput')}"
-                  class="notificationBtn clearBtn"
-                  variant="flat">
-                  <${this.iconTag}
-                    category="interface"
-                    customColor
-                    name="x-lg">
-                  </${this.iconTag}>
-                </${this.buttonTag}>
-              </div>
+              ${this.renderHtmlActionClear()}
             ` : undefined}
           ` : undefined}
         </div>
       </div>
-      <!-- Help text and error message template -->
-      ${!this.validity || this.validity === undefined || this.validity === 'valid'
-      ? html`
-        <${this.helpTextTag} ?onDark="${this.onDark}">
-          <p id="${this.uniqueId}" part="helpText">
-            <slot name="helptext">${this.getHelpText()}</slot>
-          </p>
-        </${this.helpTextTag}>
-      `
-      : html`
-        <${this.helpTextTag} error ?onDark="${this.onDark}">
-          <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-            ${this.errorMessage}
-          </p>
-        </${this.helpTextTag}>
-      `
-      }
+      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
+        ${this.renderHtmlHelpText()}
+      </div>
     `;
   }
 
