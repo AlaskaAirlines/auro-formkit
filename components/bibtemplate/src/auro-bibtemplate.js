@@ -108,6 +108,18 @@ export class AuroBibtemplate extends LitElement {
     this.setAttribute('exportparts', 'bibtemplate:dropdownBibTemplate');
   }
 
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+
+    this.dispatchEvent(new CustomEvent("auro-bibtemplate-connected", {
+      bubbles: true,
+      composed: true,
+      detail: {
+        element: this
+      }
+    }));
+  }
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`

@@ -52,9 +52,9 @@
     "deploy-demo": "npm run build && sh ./deploy-components.sh"
   },
   "dependencies": {
-    "lit": "^3.2.1",
+    "@aurodesignsystem/auro-library": "^5.0.2",
     "@lit/reactive-element": "^2.1.0",
-    "@aurodesignsystem/auro-library": "^5.0.0"
+    "lit": "^3.2.1"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"
