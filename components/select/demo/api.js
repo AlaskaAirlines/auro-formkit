@@ -5,6 +5,7 @@ import { valueAlertExample } from "../apiExamples/valueAlert.js";
 import { inDialogExample } from '../apiExamples/inDialog';
 import { resetStateExample } from "../apiExamples/resetState";
 import { auroMenuLoadingExample } from "../apiExamples/loading";
+import { valueTextExample } from '../apiExamples/valueText.js';
 
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 import { AuroSelect } from '../src/auro-select.js';
@@ -24,6 +25,7 @@ export function initExamples(initCount) {
     inDialogExample();
     resetStateExample();
     auroMenuLoadingExample();
+    valueTextExample();
   } catch (err) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called

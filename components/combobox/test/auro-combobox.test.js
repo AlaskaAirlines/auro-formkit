@@ -230,7 +230,7 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions.length).to.be.equal(1);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
 
-    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
+    await expect(visibleMenuOptions[0].querySelector("strong")).to.exist;
   });
 
   it('fired `auroCombobox-valueSet` event on value update', async () => {
@@ -285,7 +285,7 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions.length).to.be.equal(1);
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
 
-    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
+    await expect(visibleMenuOptions[0].querySelector('strong')).to.exist;
   });
 
   it('using the nomatch attribute with no matching value', async () => {
@@ -328,7 +328,7 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
     await expect(visibleMenuOptions[1].innerText).to.be.equal('Persistent');
 
-    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
+    await expect(visibleMenuOptions[0].querySelector("strong")).to.exist;
   });
 
   it('using the suggest attribute matches additional options', async () => {
@@ -351,7 +351,7 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions[0].innerText).to.be.equal('Apples');
     await expect(visibleMenuOptions[1].innerText).to.be.equal('Oranges');
 
-    await expect(visibleMenuOptions[0].querySelector('strong')).exist;
+    await expect(visibleMenuOptions[0].querySelector("strong")).to.exist;
   });
 
   it('makes a selection programmatically', async () => {

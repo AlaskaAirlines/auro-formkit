@@ -1,4 +1,4 @@
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
@@ -297,6 +297,36 @@ describe('auro-select keyboard interaction', () => {
 
     // The menu's active option should remain unchanged
     expect(el.menu.optionActive).to.equal(previousActive);
+  });
+
+  it('shows given `valueText` slot when there is selected option(s)', async () => {
+    const el = await fixture(html`
+      <auro-select id="valueTextExample" autocomplete="address-level1">
+        <span slot="label">Gender</span>
+        <span slot="valueText"></span>
+          <auro-menu>
+            <auro-menuoption value="m" data-display="Male">M - Male</auro-menuoption>
+            <auro-menuoption value="f" data-display="Female">F - Female</auro-menuoption>
+            <auro-menuoption value="x" data-display="Unspecified">X - Unspecified</auro-menuoption>
+            <auro-menuoption value="u" data-display="Undisclosed">U - Undisclosed</auro-menuoption>
+        </auro-menu>
+      </auro-select>`);
+
+    setTimeout(() => {
+      el.value = "m";
+    });
+
+    const inputEvent = await oneEvent(el, 'input');
+
+    const valueText = el.dropdown.querySelector("#valueText");
+    const valueTextSlot = valueText.assignedElements()[0];
+    
+    await expect(valueTextSlot).to.exist;
+
+    valueTextSlot.textContent = inputEvent.detail.optionSelected.dataset.display;
+
+    expect(valueText.textContent).to.equal("M - Male");
+    expect(valueTextSlot.textContent).to.equal("Male");
   });
 
   it('loops through available values if the same key is pressed repeatedly', async () => {

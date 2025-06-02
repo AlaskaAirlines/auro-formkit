@@ -38,11 +38,11 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ## Events
 
-| Event                       | Type               | Description                                      |
-|-----------------------------|--------------------|--------------------------------------------------|
-| `auroFormElement-validated` |                    | Notifies that the `validity` and `errorMessage` values have changed. |
-| `auroSelect-valueSet`       | `CustomEvent<any>` | Notifies that the component has a new value set. |
-| `input`                     | `CustomEvent<any>` | Notifies every time the value prop of the element is changed. |
+| Event                       | Type                                             | Description                                      |
+|-----------------------------|--------------------------------------------------|--------------------------------------------------|
+| `auroFormElement-validated` |                                                  | Notifies that the `validity` and `errorMessage` values have changed. |
+| `auroSelect-valueSet`       | `CustomEvent<any>`                               | Notifies that the component has a new value set. |
+| `input`                     | `CustomEvent<{ optionSelected: any; value: any; }>` | Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object. |
 
 ## Slots
 
@@ -53,6 +53,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `helpText`                | Defines the content of the helpText.             |
 | `label`                   | Defines the content of the label.                |
 | `placeholder`             | Defines the content of the placeholder to be shown when there is no value |
+| `valueText`               | Dropdown value text display.                     |
 
 ## CSS Shadow Parts
 
