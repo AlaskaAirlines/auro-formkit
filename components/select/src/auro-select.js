@@ -37,8 +37,9 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
+ * @slot valueText - Dropdown value text display.
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
- * @event input - Notifies every time the value prop of the element is changed.
+ * @event input - Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  * @csspart helpText - Apply CSS to the help text.
  */
@@ -380,12 +381,8 @@ export class AuroSelect extends LitElement {
   updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
 
-    // Clear everything except placeholder
-    const placeholder = triggerContentEl.querySelector('#placeholder');
-    triggerContentEl.innerHTML = '';
-    if (placeholder) {
-      triggerContentEl.appendChild(placeholder);
-    }
+    const valueText = triggerContentEl.querySelector("#valueText");
+    valueText.textContent = '';
 
     // Handle selected options
     if (this.optionSelected) {
@@ -398,9 +395,7 @@ export class AuroSelect extends LitElement {
         displayText = this.optionSelected.textContent;
       }
 
-      const span = document.createElement('span');
-      span.textContent = displayText;
-      triggerContentEl.appendChild(span);
+      valueText.textContent = displayText;
     }
 
     this.dropdown.requestUpdate();
@@ -729,6 +724,10 @@ export class AuroSelect extends LitElement {
         bubbles: true,
         cancelable: true,
         composed: true,
+        detail: {
+          optionSelected: this.optionSelected,
+          value: this.value
+        }
       }));
     }
 
@@ -857,7 +856,13 @@ export class AuroSelect extends LitElement {
           ?noFlip="${this.noFlip}"
           part="dropdown">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
-            <span id="placeholder" class="${classMap(placeholderClass)}"><slot name="placeholder"></slot></span>
+            <span id="placeholder"
+              class="${classMap(placeholderClass)}"
+              ?aria-hidden="${this.optionSelected && this.optionSelected.length ? 'true' : false}"
+              >
+              <slot name="placeholder"></slot>
+            </span>
+            <slot name="valueText" id="valueText"></slot>
           </span>
 
           <div class="menuWrapper">
