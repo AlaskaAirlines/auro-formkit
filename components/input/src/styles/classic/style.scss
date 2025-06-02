@@ -1,0 +1,100 @@
+/* stylelint-disable */
+
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+@use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
+
+.layout-classic {
+  display: flex;
+  flex-direction: row;
+
+  .mainContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    cursor: text;
+
+
+    label {
+      cursor: text;
+      padding-top: 4px;
+      font-size: var(--ds-text-body-size-xs);
+      line-height: 20px;
+      transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    input {
+      font-size: var(--ds-basic-text-body-default-font-size, 16px);
+      line-height: var(--ds-basic-text-body-default-line-height, 24px);
+      padding-bottom: 8px;
+      transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+      height: auto;
+    }
+  }
+
+  .mainContent:has(input.util_displayHiddenVisually) {
+    label {
+      justify-self: flex-start;
+      padding-top: 0;
+      font-size: var(--ds-text-body-size-default, 1rem);
+      line-height: var(--ds-text-body-size-default);
+    }
+
+    input {
+      height: 0;
+      line-height: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .displayValue {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+
+    &.hasContent:is(.withValue):not(.hasFocus) {
+      display: block;
+    }
+  }
+
+  .accents {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.withValue {
+    justify-content: flex-start;
+  }
+
+  // FOCUS STATE
+  &:focus-within {
+    box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+    justify-content: flex-start;
+
+    .alertNotification {
+      display: none;
+    }
+  }
+}
+
+.layout-classic {
+  .accents {
+    &.left {
+      padding-left: 8px;
+    }
+
+    &.right {
+      padding-right: 8px;
+    }
+  }
+}

@@ -51,9 +51,9 @@ export default class BaseInput extends AuroElement {
     this.required = false;
     this.setCustomValidityForType = undefined;
 
-    this.layout = 'default';
+    this.layout = 'classic';
     this.shape = 'rounded';
-    this.size = 'xl';
+    this.size = 'lg';
   }
 
   /**
