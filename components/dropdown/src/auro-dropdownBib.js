@@ -14,7 +14,6 @@ import styleCss from "./styles/bibStyles-css.js";
 import colorCss from "./styles/bibColors-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-
 const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
 const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
   'xl',
@@ -84,6 +83,13 @@ export class AuroDropdownBib extends LitElement {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * A reference to the associated bib template element.
+       */
+      bibTemplate: {
+        type: Object
+      }
     };
   }
 
@@ -116,7 +122,48 @@ export class AuroDropdownBib extends LitElement {
           }
         }
       });
+
+      if (this.bibTemplate) {
+        // If the bib template is found, set the fullscreen attribute
+        if (this.isFullscreen) {
+          this.bibTemplate.setAttribute('isFullscreen', 'true');
+        } else {
+          this.bibTemplate.removeAttribute('isFullscreen');
+        }
+      }
     }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    // Listen for the auro-bibtemplate-connected event to set the fullscreen attribute
+    this.addEventListener('auro-bibtemplate-connected', (event) => {
+      const bibTemplate = event.detail.element;
+      this.bibTemplate = bibTemplate;
+
+      if (bibTemplate) {
+        // If the bib template is found, set the fullscreen attribute
+        if (this.isFullscreen) {
+          bibTemplate.setAttribute('isFullscreen', 'true');
+        } else {
+          bibTemplate.removeAttribute('isFullscreen');
+        }
+      }
+    });
+  }
+
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+
+    // Dispatch a custom event when the component is connected
+    this.dispatchEvent(new CustomEvent('auro-dropdownbib-connected', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        element: this
+      }
+    }));
   }
 
   // function that renders the HTML and CSS into  the scope of the component
