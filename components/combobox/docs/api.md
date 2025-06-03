@@ -13,6 +13,7 @@
 | `inputmode`                     | `inputmode`                     | `string`      |                | Exposes inputmode attribute for input.           |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`     |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
 | `layout`                        |                                 | `string`      |                |                                                  |
+| `matchWidth`                    | `matchWidth`                    | `boolean`     | true           | If declared, the popover and trigger will be set to the same width. |
 | `noFilter`                      | `noFilter`                      | `boolean`     |                | If set, combobox will not filter menuoptions based in input. |
 | `noFlip`                        | `noFlip`                        | `boolean`     | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean`     |                | If set, disables auto-validation on blur.        |
