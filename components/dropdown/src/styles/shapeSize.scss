@@ -1,6 +1,6 @@
 /* stylelint-disable */
 
-@use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables';
+@use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables' as v;
 
 // SIZES
 $borderSize: 2px;
@@ -20,6 +20,21 @@ $xs: calc(24px - ($borderSize * 2));
     background-color: unset;
   }
 }
+
+.shape-classic-xl,
+.shape-classic-lg,
+.shape-classic-md,
+.shape-classic-sm,
+.shape-classic-xs {
+  min-height: 58px;
+  max-height: 58px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: var(--ds-border-radius, #{v.$ds-border-radius});
+
+  @include simple(60px);
+}
+
 
 .shape-snowflake-xl,
 .shape-snowflake-lg,

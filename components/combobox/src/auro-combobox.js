@@ -88,7 +88,7 @@ export class AuroCombobox extends AuroElement {
 
     // Layout Config
     this.layout = 'classic';
-    this.shape = 'rounded';
+    this.shape = 'classic';
     this.size = 'xl';
 
     // floaterConfig

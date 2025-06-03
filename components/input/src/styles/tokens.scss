@@ -2,7 +2,7 @@
 
 $ds-basic-color-border-bold: #585e67;
 
-:host(:not(ondark)) {
+:host(:not([ondark])) {
   --ds-auro-input-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
   --ds-auro-input-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
   --ds-auro-input-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
@@ -11,6 +11,9 @@ $ds-basic-color-border-bold: #585e67;
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-input-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+
+  //--ds-auro-input-outline-color: transparent;
+  --ds-auro-input-outline-color: transparent;
 }
 
 :host([ondark]) {
@@ -22,4 +25,6 @@ $ds-basic-color-border-bold: #585e67;
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+
+  --ds-auro-input-outline-color: transparent;
 }
