@@ -47,6 +47,7 @@ jobs:
         with:
           os: ubuntu-latest
           node-version: 22
+          github-token: ${{ secrets.ACCESS_TOKEN }}
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -76,4 +77,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm ci && npx semantic-release
+        run: npx semantic-release

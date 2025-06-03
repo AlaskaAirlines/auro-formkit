@@ -100,6 +100,7 @@ jobs:
         with:
           os: ubuntu-latest
           node-version: 22
+          github-token: ${{ secrets.ACCESS_TOKEN }}
     env:
       GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
   deploy:

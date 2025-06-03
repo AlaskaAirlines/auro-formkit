@@ -7,6 +7,9 @@ inputs:
   node-version:
     description: 'Node.js version to use'
     required: true
+  github-token:
+    description: "GitHub token"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -32,4 +35,4 @@ runs:
       run: npx --package=@aurodesignsystem/auro-cli -- auro cc -l -d
       shell: bash
       env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.github-token }}
