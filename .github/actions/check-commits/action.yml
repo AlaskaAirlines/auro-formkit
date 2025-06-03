@@ -31,3 +31,5 @@ runs:
     - name: Auro Check Commits
       run: npx --package=@aurodesignsystem/auro-cli -- auro cc -l -d
       shell: bash
+      env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
