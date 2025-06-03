@@ -87,7 +87,7 @@ This configuration enables proper module resolution for the component's TypeScri
   <span slot="legend">Form label goes here</span>
   <auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
   <auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>Checkbox option</auro-checkbox>
-  <auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option</auro-checkbox>
+  <auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
   <auro-checkbox value="value4" name="basic" id="checkbox-basic4">Checkbox option</auro-checkbox>
 </auro-checkbox-group>
 ```
@@ -106,7 +106,7 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@3.2.8/auro-checkbox/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@0.0.0/auro-checkbox/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
