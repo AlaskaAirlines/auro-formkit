@@ -30,6 +30,7 @@ import styleSnowflakeCss from './styles/snowflake/style-css.js';
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -46,6 +47,8 @@ export class AuroCombobox extends AuroElement {
 
   constructor() {
     super();
+
+    this.matchWidth = true;
 
     this.privateDefaults();
   }
@@ -177,6 +180,14 @@ export class AuroCombobox extends AuroElement {
       inputmode: {
         type: String,
         attribute: true,
+        reflect: true
+      },
+
+      /**
+       * If declared, the popover and trigger will be set to the same width.
+       */
+      matchWidth: {
+        type: Boolean,
         reflect: true
       },
 
@@ -1068,7 +1079,7 @@ export class AuroCombobox extends AuroElement {
           fluid
           for="dropdownMenu"
           layout="${this.layout}"
-          matchWidth
+          matchWidth="${ifDefined(this.matchWidth)}"
           nocheckmark
           rounded
           shape="${this.shape}"
