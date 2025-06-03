@@ -101,11 +101,23 @@ export class AuroInput extends BaseInput {
   /**
    * Returns classmap configuration for html5 inputs in all layouts.
    * @private
-   * @returns {void}
+   * @returns {object} - Returns classmap configuration for html5 inputs in all layouts.
    */
   get commonInputClasses() {
     return {
       'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+    };
+  }
+
+  /**
+   * Returns classmap configuration for html5 inputs in all layouts.
+   * @private
+   * @return {object} - Returns classmap configuration for "classic" html5 inputs.
+   */
+  get legacyInputClasses() {
+    return {
+      ...this.commonInputClasses,
+      'util_displayHiddenVisually': !this.hasFocus && !this.value
     };
   }
 
@@ -190,10 +202,10 @@ export class AuroInput extends BaseInput {
   /**
    * Returns HTML for the HTML5 input element.
    * @private
-   * @param {boolean} [hideInputWhenBlurred=false] - If true, the input will be visually hidden when not focused and has no value.
+   * @param {boolean} [useLegacyHiddenState=false] - If true, the input will be visually hidden when not focused and has no value.
    * @returns {html} - Returns HTML for the HTML5 input element.
    */
-  renderHtmlInput(hideInputWhenBlurred = false) {
+  renderHtmlInput(useLegacyHiddenState = false) {
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
@@ -201,9 +213,10 @@ export class AuroInput extends BaseInput {
       'withValue': this.value && this.value.length > 0,
     };
 
-    const inputClasses = {
-      'util_displayHiddenVisually': hideInputWhenBlurred && !this.hasFocus && !this.value
-    };
+    // Remove this when the classic layout is sunset.
+    const inputOverrideClasses = useLegacyHiddenState
+      ? this.legacyInputClasses
+      : this.commonInputClasses;
 
     return html`
       <label for=${this.id} class="${classMap(this.commonLabelClasses)}" part="label">
@@ -225,7 +238,7 @@ export class AuroInput extends BaseInput {
         autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
         autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
         autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
-        class="${classMap(inputClasses)}"
+        class="${classMap(inputOverrideClasses)}"
         id="${this.inputId}"
         inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
         lang="${ifDefined(this.lang)}"
