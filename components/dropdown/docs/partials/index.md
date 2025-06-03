@@ -25,6 +25,21 @@ To meet our accessibility requirement, all uses of `auro-dropdown` should have a
 
 Not including one of the above options will result in your UI being non-compliant with Alaska's accessibility policies.
 
+## Classic Layouts
+
+This first common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `aria-label` attribute is used to define a string value that labels an interactive element.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/common.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommon.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+
 ## Emphasized Layouts
 
 <div class="exampleWrapper--ondark">

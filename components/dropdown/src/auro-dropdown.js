@@ -22,9 +22,14 @@ import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
-import styleCss from "./styles/default/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
+
+// default layout
+import classicColorCss from "./styles/default/color-css.js";
+import classicLayoutCss from "./styles/default/style-css.js";
+
+
 import styleEmphasizedCss from "./styles/emphasized/style-css.js";
 import styleSnowflakeCss from "./styles/snowflake/style-css.js";
 
@@ -59,7 +64,7 @@ export class AuroDropdown extends AuroElement {
     this.errorMessage = ''; // TODO!
 
     // Layout Config
-    this.layout = 'default';
+    this.layout = 'classic';
     this.shape = 'rounded';
     this.size = 'xl';
 
@@ -446,10 +451,18 @@ export class AuroDropdown extends AuroElement {
   static get styles() {
     return [
       colorCss,
-      styleCss,
       tokensCss,
+
+      // default layout
+      classicColorCss,
+      classicLayoutCss,
+
+      // emphasized layout
       styleEmphasizedCss,
+
+      // snowflake layout
       styleSnowflakeCss,
+
       shapeSizeCss
     ];
   }
@@ -844,7 +857,6 @@ export class AuroDropdown extends AuroElement {
           id="trigger"
           class="${classMap(this.commonWrapperClasses)}" part="wrapper"
           tabindex="${this.tabIndex}"
-          ?showBorder="${this.showTriggerBorders}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
           aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
           aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
@@ -900,6 +912,12 @@ export class AuroDropdown extends AuroElement {
    * @returns {html} - Returns HTML for the classic layout.
    */
   renderLayoutClassic() {
+    const helpTextClasses = {
+      'helpText': true,
+      'leftIndent': false,
+      'rightIndent': false
+    };
+
     return html`
       <div>
         <div
@@ -956,6 +974,58 @@ export class AuroDropdown extends AuroElement {
         </${this.dropdownBibTag}>
       </div>
     `;
+    // return html`
+    //   <div>
+    //     <div
+    //       id="trigger"
+    //       class="trigger"
+    //       part="trigger"
+    //       tabindex="${this.tabIndex}"
+    //       ?showBorder="${this.showTriggerBorders}"
+    //       role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
+    //       aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+    //       aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+    //       aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+    //     >
+    //       <div class="triggerContentWrapper">
+    //         <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
+    //           <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
+    //         </label>
+    //         <div class="triggerContent">
+    //           <slot
+    //             name="trigger"
+    //             @slotchange="${this.handleTriggerContentSlotChange}"></slot>
+    //         </div>
+    //       </div>
+    //       ${this.chevron || this.common ? html`
+    //           <div
+    //             id="showStateIcon"
+    //             part="chevron">
+    //             <${this.iconTag}
+    //               category="interface"
+    //               name="chevron-down"
+    //               ?onDark="${this.onDark}"
+    //               variant="${this.disabled ? 'disabled' : 'muted'}">
+    //               >
+    //             </${this.iconTag}>
+    //           </div>
+    //         ` : undefined }
+    //     </div>
+    //     <div class="slotContent">
+    //       <slot @slotchange="${this.handleDefaultSlot}"></slot>
+    //     </div>
+    //     <div id="bibSizer" part="size"></div>
+    //     <${this.dropdownBibTag}
+    //       id="bib"
+    //       ?data-show="${this.isPopoverVisible}"
+    //       ?isfullscreen="${this.isBibFullscreen}"
+    //       ?common="${this.common}"
+    //       ?rounded="${this.common || this.rounded}"
+    //       ?inset="${this.common || this.inset}"
+    //     >
+    //     </${this.dropdownBibTag}>
+    //   </div>
+    // `;
   }
 
   /**

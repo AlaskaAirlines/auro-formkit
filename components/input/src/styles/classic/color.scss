@@ -1,5 +1,56 @@
-.layout-default {
+@use "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska" as v;
+
+.layout-classic {
   label {
     color: var(--ds-auro-input-label-text-color);
+  }
+
+  // focus state
+  &:focus-within {
+    --ds-auro-input-outline-color: var(--ds-auro-input-border-color);
+  }
+}
+
+// not valid state
+
+:host(:not([ondark])) {
+  .layout-classic {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+      --ds-auro-input-outline-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+    }
+  }
+}
+
+:host([ondark]) {
+  .layout-classic {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+      --ds-auro-input-outline-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+    }
+  }
+}
+
+:host([layout*="classic"]:not([ondark]):is([validity]:not([validity='valid']))) {
+  --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+  --ds-auro-input-outline-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+
+  .layout-classic {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+      --ds-auro-input-outline-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+    }
+  }
+}
+
+:host([layout*="classic"][ondark]:is([validity]:not([validity='valid']))) {
+  --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+  --ds-auro-input-outline-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+
+  .layout-classic {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+      --ds-auro-input-outline-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+    }
   }
 }

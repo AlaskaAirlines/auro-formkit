@@ -28,7 +28,7 @@
 | `inset`                 | `inset`                 |           | ` Boolean `                                      |                | If declared, will apply padding around trigger slot content. |
 | `isBibFullscreen`       | `isBibFullscreen`       |           | `boolean`                                        | false          | If true, the dropdown bib is taking the fullscreen when it's open. |
 | `isPopoverVisible`      | `isPopoverVisible`      |           | ` Boolean `                                      | false          | If true, the dropdown bib is displayed.          |
-| `layout`                |                         |           | `string`                                         | "default"      |                                                  |
+| `layout`                |                         |           | `string`                                         | "classic"      |                                                  |
 | `matchWidth`            | `matchWidth`            |           | ` Boolean `                                      | false          | If declared, the popover and trigger will be set to the same width. |
 | `noFlip`                | `noFlip`                |           | `boolean`                                        | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` |           | ` Boolean `                                      | false          | If declared, the dropdown will not hide when moving focus outside the element. |

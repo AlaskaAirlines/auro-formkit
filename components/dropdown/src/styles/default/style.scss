@@ -15,13 +15,7 @@
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
 :host([layout*='classic']) {
   position: relative;
-  display: inline-block;
   max-width: 100%;
-
-
-  // :host([fluid]) {
-  //   display: block;
-  // }
 
   #bibSizer {
     position: absolute;
@@ -42,17 +36,8 @@
   }
 
   .trigger {
-    position: relative;
     display: flex;
-    align-items: center;
-
-    &[showBorder] {
-      border-width: 1px;
-      border-style: solid;
-      cursor: pointer;
-      outline-style: solid;
-      outline-width: 1px;
-    }
+    flex-direction: row;
   }
 
   @media (hover: hover) {

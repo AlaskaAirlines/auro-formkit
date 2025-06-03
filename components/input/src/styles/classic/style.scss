@@ -11,6 +11,8 @@
   display: flex;
   flex-direction: row;
 
+  box-shadow: inset 0 0 0 1px var(--ds-auro-input-outline-color);
+
   .mainContent {
     position: relative;
     display: flex;
@@ -78,7 +80,6 @@
 
   // FOCUS STATE
   &:focus-within {
-    box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
     justify-content: flex-start;
 
     .alertNotification {

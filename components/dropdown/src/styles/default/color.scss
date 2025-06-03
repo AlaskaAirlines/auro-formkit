@@ -27,13 +27,13 @@
     }
   }
 
-  :host([disabled]) {
+  &[disabled] {
     --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
     --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
   }
 
-  :host([common]),
-  :host([bordered]) {
+  &[common],
+  &[bordered] {
     --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-bold, #{$ds-basic-color-border-bold});
 
     .trigger {
@@ -44,7 +44,7 @@
     }
   }
 
-  :host([error]) {
+  &[error] {
     --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error, #{$ds-basic-color-status-error});
 
     .trigger {
@@ -58,14 +58,14 @@
     }
   }
 
-  :host([disabled][common]),
-  :host([disabled][bordered]) {
+  &[disabled][common],
+  &[disabled][bordered] {
     --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-subtle, #{$ds-basic-color-border-subtle});
   }
 
   /* onDark styles */
 
-  :host([onDark]) {
+  &[onDark] {
     --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{$ds-basic-color-texticon-inverse-muted});
     --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse, #{$ds-advanced-color-shared-background-inverse});
     --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
@@ -77,13 +77,13 @@
     }
   }
 
-  :host([onDark][disabled]) {
+  &[onDark][disabled] {
     --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
     --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
   }
 
-  :host([onDark][common]),
-  :host([onDark][bordered]) {
+  &[onDark][common],
+  &[onDark][bordered] {
     --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
 
     .trigger {
@@ -95,7 +95,7 @@
     }
   }
 
-  :host([onDark][error]) {
+  &[onDark][error] {
     --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
 
     .trigger {
@@ -109,8 +109,8 @@
     }
   }
 
-  :host([onDark][disabled][common]),
-  :host([onDark][disabled][bordered]) {
+  &[onDark][disabled][common],
+  &[onDark][disabled][bordered] {
     --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{$ds-advanced-color-shared-background-inverse-disabled});
   }
 }

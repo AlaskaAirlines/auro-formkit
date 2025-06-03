@@ -10,6 +10,19 @@
 
 ## Example(s)
 
+## Classic Layout
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+
 ### Emphasized
 
 <div class="exampleWrapper--ondark">
