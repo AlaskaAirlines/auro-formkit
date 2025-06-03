@@ -47,7 +47,7 @@ jobs:
         with:
           os: ubuntu-latest
           node-version: 22
-          github-token: ${{ secrets.ACCESS_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -75,6 +75,6 @@ jobs:
           key: build-${{ github.sha }}-22
       - name: Semantic release
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release

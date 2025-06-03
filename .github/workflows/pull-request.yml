@@ -88,7 +88,7 @@ jobs:
                 body: `🚀 PR Release Published! \`${packageName}@${packageVersion}\` [View on npmjs.com](https://www.npmjs.com/package/${packageName}/v/${packageVersion})`
               });
           env:
-            GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   check-commits:
     name: Check Commits
     needs: [build, test]
@@ -100,9 +100,9 @@ jobs:
         with:
           os: ubuntu-latest
           node-version: 22
-          github-token: ${{ secrets.ACCESS_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
     env:
-      GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     name: Deploy
     needs: [build, test]
