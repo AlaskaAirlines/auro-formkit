@@ -15,7 +15,7 @@
   selector-max-class
   */
 .layoutDefault,
-:host(:not([layout])) { 
+:host(:not([layout])) {
   .wrapper {
     border-color: var(--ds-auro-input-border-color);
     background-color: var(--ds-auro-input-container-color);
@@ -51,7 +51,7 @@
 }
 
 :host([class='layoutDefault']:not([bordered], [borderless])),
-:host(:not([layout]):not([bordered], [borderless])) { 
+:host(:not([layout]):not([bordered], [borderless])) {
   .wrapper {
     border-bottom-color: var(--ds-auro-input-border-color);
   }
