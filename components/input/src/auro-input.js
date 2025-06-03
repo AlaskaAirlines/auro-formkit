@@ -73,13 +73,13 @@ export class AuroInput extends BaseInput {
 
   static get styles() {
     return [
+      css`${classicStyleCss}`,
+      css`${classicColorCss}`,
       css`${shapeSizeCss}`,
       css`${colorBaseCss}`,
       css`${styleCss}`,
       css`${styleDefaultCss}`,
       css`${tokensCss}`,
-      css`${classicStyleCss}`,
-      css`${classicColorCss}`,
       css`${emphasizedStyleCss}`,
       css`${emphasizedColorCss}`,
       css`${snowflakeStyleCss}`

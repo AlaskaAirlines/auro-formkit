@@ -1,4 +1,4 @@
-@use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables';
+@use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables' as v;
 
 @function getCalculatedSize($size, $borderSize) {
   @return calc(#{$size} - (2 * #{$borderSize}));
@@ -36,6 +36,21 @@ $xs: 24px;
     max-height: getCalculatedSize($size, $thinBorderSize);
     background-color: unset;
   }
+}
+
+.shape-classic-xl,
+.shape-classic-lg,
+.shape-classic-md,
+.shape-classic-sm,
+.shape-classic-xs {
+  min-height: 58px;
+  max-height: 58px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: var(--ds-border-radius, #{v.$ds-border-radius});
+
+  @include simple(60px);
+  @include thin(60px);
 }
 
 .shape-snowflake-xl,
