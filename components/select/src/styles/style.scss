@@ -5,6 +5,7 @@
 
 // Import Auro tokens
 @use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 @import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
 // @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
@@ -39,22 +40,13 @@
   margin-right: 8px;
 }
 
-// .layout-emphasized,
-// .layout-emphasized-left,
-// .layout-emphasized-right {
-//   .accents {
-//     &.left {
-//       // margin-left: 24px;
-//       // margin-right: 8px;
-//       padding-left: 24px;
-//       // width: 24px;
-//     }
+.displayValue {
+  display: none;
 
-//     &.right {
-//       padding-right: 24px;
-//     }
-//   }
-// }
+  &.hasContent:is(.withValue):not(.hasFocus) {
+    display: block;
+  }
+}
 
 .triggerContent {
   display: flex;
@@ -78,78 +70,6 @@
   }
 }
 
-// [slot='trigger'] {
-//   width: 100%;
-//   padding: 0;
-//   border: 0;
-//   cursor: pointer;
-//   font-family: inherit;
-//   font-size: inherit;
-//   text-align: left;
-
-//   .nestingSpacer {
-//     display: none;
-//   }
-
-//   #placeholder {
-//     &.hidden {
-//       position: absolute;
-//       z-index: -1;
-//       opacity: 0;
-//       pointer-events: none;
-//     }
-//   }
-// } 
-
-// :host {
-//   .nativeSelectWrapper {
-//     position: absolute;
-//     overflow: hidden;
-//     width: 1px;
-//     height: 1px;
-//     padding: 0;
-//     border: 0;
-//     margin: -1px;
-//     clip: rect(0, 0, 0, 0);
-//     opacity: 0.01;
-//   }
-
-//   [auro-dropdown] {
-//     position: relative;
-
-//     &::part(trigger) {
-//       max-height: var(--ds-size-300, $ds-size-300);
-//     }
-
-//     &::part(popover) {
-//       max-width: -webkit-fill-available;
-//       overflow-y: scroll;
-//     }
-//   }
-// }
-
-// .outerWrapper,
-// .wrapper {
-//   position: relative;
-// }
-
-// .menuWrapper {
-//   padding: var(--ds-size-50, $ds-size-50) 0;
-// }
-
-// // Multiselect styles
-// :host([multiselect]) {
-//   [slot="trigger"] {
-//     display: flex;
-//   }
-
-//   auro-menuoption {
-//     &:not(:first-child) {
-//       margin-left: var(--ds-size-100);
-//     }
-//   }
-// }
-
 #slotHolder{
   display: none;
 }
@@ -159,8 +79,3 @@
     user-select: none;
   }
 }
-
-// auro-menuoption {
-//   padding: 0;
-//   pointer-events: none;
-// }
