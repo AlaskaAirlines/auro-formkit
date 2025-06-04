@@ -67,6 +67,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Ensure Git is has access to the repository
+        run: git ls-remote --heads https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/AlaskaAirlines/auro-formkit.git
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
