@@ -1,0 +1,266 @@
+name: "Component PR Preview"
+description: "Deploy or teardown a single component to/from Surge with GitHub deployment status integration"
+
+inputs:
+  action:
+    description: "The action to perform: 'deploy' or 'teardown'"
+    required: true
+  component:
+    description: "The single component to deploy/teardown"
+    required: true
+  pr-number:
+    description: "The PR number for the deployment"
+    required: true
+  demo-path:
+    description: "Directory path for component demos (e.g., 'components/checkbox/demo')"
+    required: true
+  surge-token:
+    description: "Surge token for authentication"
+    required: true
+  github-token:
+    description: "GitHub token for PR comments"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Surge
+      shell: bash
+      run: npm install -g surge
+    - name: Deploy or Teardown
+      uses: actions/github-script@v6
+      env:
+        COMPONENT: ${{ inputs.component }}
+        ACTION: ${{ inputs.action }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        DEMO_PATH: ${{ inputs.demo-path }}
+        SURGE_TOKEN: ${{ inputs.surge-token }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      with:
+        script: | 
+          const { execSync } = require('child_process');
+          const fs = require('fs');
+
+          const action = process.env.ACTION;
+          const component = process.env.COMPONENT;
+          const prNumber = process.env.PR_NUMBER;
+          const demoPath = process.env.DEMO_PATH;
+          const surgeToken = process.env.SURGE_TOKEN;
+          const githubToken = process.env.GITHUB_TOKEN;
+
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const sha = context.sha;
+          const ref = context.ref;
+          console.log('DEBUG: context.ref =', ref);
+          const deploymentUrl = `https://auro-formkit-${component}-${prNumber}.surge.sh`;
+          const environmentName = `${component}-demo`;
+          
+          // GitHub API for deployment status
+          async function createDeployment() {
+            return await github.rest.repos.createDeployment({
+              owner,
+              repo,
+              ref: ref, // Use branch ref, not sha
+              environment: environmentName,
+              auto_merge: false,
+              required_contexts: [],
+              description: `Deploy preview for ${component}`,
+              transient_environment: true,
+              production_environment: false
+            });
+          }
+          
+          async function updateDeploymentStatus(deploymentId, state, description, environmentUrl) {
+            return await github.rest.repos.createDeploymentStatus({
+              owner,
+              repo,
+              deployment_id: deploymentId,
+              state,
+              description,
+              environment_url: environmentUrl,
+              auto_inactive: false,
+              log_url: environmentUrl
+            });
+          }
+          
+          try {
+            if (action === 'deploy') {
+              // Create a deployment on GitHub
+              console.log(`Creating deployment for ${component}...`);
+              const deployment = await createDeployment();
+              const deploymentId = deployment.data.id;
+              
+              // Update status to 'in_progress'
+              await updateDeploymentStatus(deploymentId, 'in_progress', 'Deploying to Surge...', deploymentUrl);
+              
+              // Deploy to Surge
+              if (fs.existsSync(demoPath)) {
+                execSync(`surge ${demoPath} ${deploymentUrl} --token ${surgeToken}`, { stdio: 'inherit' });
+                console.log(`Deployed ${component} to Surge: ${deploymentUrl}`);
+                
+                // Update status to 'success'
+                await updateDeploymentStatus(deploymentId, 'success', 'Deployment successful', deploymentUrl);
+                
+                // Find existing Surge preview comment
+                const comments = await github.rest.issues.listComments({
+                  owner,
+                  repo,
+                  issue_number: prNumber
+                });
+                
+                const commentTag = `<!-- surge-preview-summary -->`;
+                const existingComment = comments.data.find(comment => 
+                  comment.body.includes(commentTag)
+                );
+                
+                // Get the current comment content or create new one
+                let commentBody = '';
+                if (existingComment) {
+                  commentBody = existingComment.body;
+                } else {
+                  commentBody = `${commentTag}\n## Component Demo Links\n\n`;
+                }
+                
+                // Component tag to identify this component in the comment
+                const componentTag = `<!-- component-${component} -->`;
+                
+                // Create component section with link
+                const componentSection = `${componentTag}\n **${component}**: [${deploymentUrl}](${deploymentUrl})\n`;
+                
+                // If the component is already in the comment, update it
+                if (commentBody.includes(componentTag)) {
+                  // Extract the start and end indices of the component section
+                  const startIndex = commentBody.indexOf(componentTag);
+                  const endIndex = commentBody.indexOf('<!-- component-', startIndex + componentTag.length);
+                  
+                  // Replace the component section
+                  if (endIndex !== -1) {
+                    commentBody = commentBody.substring(0, startIndex) + componentSection + commentBody.substring(endIndex);
+                  } else {
+                    commentBody = commentBody.substring(0, startIndex) + componentSection;
+                  }
+                } else {
+                  // Add new component section
+                  commentBody += componentSection;
+                }
+                
+                // Update existing comment or create a new one
+                if (existingComment) {
+                  await github.rest.issues.updateComment({
+                    owner,
+                    repo,
+                    comment_id: existingComment.id,
+                    body: commentBody
+                  });
+                  console.log(`Updated preview comment with ${component}`);
+                } else {
+                  await github.rest.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number: prNumber,
+                    body: commentBody
+                  });
+                  console.log(`Created new preview comment with ${component}`);
+                }
+                
+                process.exit(0);
+              } else {
+                console.error(`Directory ${demoPath} does not exist`);
+                
+                // Update status to 'failure'
+                await updateDeploymentStatus(deploymentId, 'failure', `Error: Directory ${demoPath} does not exist`, deploymentUrl);
+                process.exit(1);
+              }
+            } else if (action === 'teardown') {
+              // Find active deployments for this environment
+              const deployments = await github.rest.repos.listDeployments({
+                owner,
+                repo,
+                environment: environmentName
+              });
+              
+              // Mark deployments as inactive
+              for (const deployment of deployments.data) {
+                await updateDeploymentStatus(deployment.id, 'inactive', 'Deployment removed', deploymentUrl);
+              }
+              
+              // Teardown from Surge
+              execSync(`surge teardown ${deploymentUrl} --token ${surgeToken}`, { stdio: 'inherit' });
+              console.log(`Teared down ${component} from Surge: ${deploymentUrl}`);
+              
+              // Find existing Surge preview comment
+              const comments = await github.rest.issues.listComments({
+                owner,
+                repo,
+                issue_number: prNumber
+              });
+              
+              const commentTag = `<!-- surge-preview-summary -->`;
+              const existingComment = comments.data.find(comment => 
+                comment.body.includes(commentTag)
+              );
+              
+              if (existingComment) {
+                let commentBody = existingComment.body;
+                const componentTag = `<!-- component-${component} -->`;
+                
+                // If the component is in the comment, remove it
+                if (commentBody.includes(componentTag)) {
+                  // Extract the start and end indices of the component section
+                  const startIndex = commentBody.indexOf(componentTag);
+                  let endIndex = commentBody.indexOf('<!-- component-', startIndex + componentTag.length);
+                  
+                  if (endIndex === -1) {
+                    // If this is the last component section, remove to the end
+                    commentBody = commentBody.substring(0, startIndex);
+                  } else {
+                    // Remove this component section
+                    commentBody = commentBody.substring(0, startIndex) + commentBody.substring(endIndex);
+                  }
+                  
+                  // If there are no more components left, add a message or remove comment entirely
+                  if (!commentBody.includes('<!-- component-')) {
+                    // Check if there's any content left after removing the header
+                    if (commentBody.trim() === `${commentTag}` || 
+                        commentBody.trim() === `${commentTag}\n## Component Demo Links`) {
+                      // Delete the comment if no components are left
+                      await github.rest.issues.deleteComment({
+                        owner,
+                        repo,
+                        comment_id: existingComment.id
+                      });
+                      console.log(`Deleted preview comment as no components remain`);
+                    } else {
+                      // Update comment to show no components left
+                      commentBody = `${commentTag}\n## Component Demo Links\n\nNo active component demos available.`;
+                      await github.rest.issues.updateComment({
+                        owner,
+                        repo,
+                        comment_id: existingComment.id,
+                        body: commentBody
+                      });
+                      console.log(`Updated preview comment - removed ${component}`);
+                    }
+                  } else {
+                    // Update comment with the component removed
+                    await github.rest.issues.updateComment({
+                      owner,
+                      repo,
+                      comment_id: existingComment.id,
+                      body: commentBody
+                    });
+                    console.log(`Updated preview comment - removed ${component}`);
+                  }
+                }
+              }
+              
+              process.exit(0);
+            } else {
+              console.error('Invalid action. Use "deploy" or "teardown".');
+              process.exit(1);
+            }
+          } catch (error) {
+            console.error(`Error: ${error.message}`);
+            process.exit(1);
+          }

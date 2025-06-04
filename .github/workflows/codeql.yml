@@ -1,4 +1,4 @@
-name: code-ql"
+name: code-ql
 
 on:
   push:

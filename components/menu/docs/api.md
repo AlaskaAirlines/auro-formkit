@@ -2,25 +2,19 @@
 
 The auro-menu element provides users a way to select from a list of options.
 
-## Attributes
-
-| Attribute        | Type                            | Description                                      |
-|------------------|---------------------------------|--------------------------------------------------|
-| `optionselected` | `Array<HTMLElement>\|undefined` | An array of currently selected menu options. In single-select mode, the array will contain only one HTMLElement. `undefined` when no options are selected. |
-
 ## Properties
 
-| Property                | Attribute        | Type                       | Default     | Description                                      |
-|-------------------------|------------------|----------------------------|-------------|--------------------------------------------------|
-| `disabled`              | `disabled`       | `boolean`                  |             | When true, the entire menu and all options are disabled; |
-| `hasLoadingPlaceholder` |                  | `boolean`                  |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
-| `loading`               | `loading`        | `boolean`                  | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
-| `matchWord`             | `matchword`      | `string`                   | "undefined" | Specifies a string used to highlight matched string parts in options. |
-| `multiSelect`           | `multiselect`    | `boolean`                  | false       | When true, the selected option can be multiple options. |
-| `noCheckmark`           | `nocheckmark`    | `boolean`                  | false       | When true, selected option will not show the checkmark. |
-| `optionActive`          | `optionactive`   | `object`                   | "undefined" | Specifies the current active menuOption.         |
-| `optionSelected`        | `optionSelected` |                            | "undefined" |                                                  |
-| `value`                 | `value`          | `Array<string>\|undefined` | "undefined" | Value selected for the menu. `undefined` when no selection has been made, otherwise an array of strings. In single-select mode, the array will contain only one value. |
+| Property                | Attribute        | Type                              | Default     | Description                                      |
+|-------------------------|------------------|-----------------------------------|-------------|--------------------------------------------------|
+| `disabled`              | `disabled`       | `boolean`                         |             | When true, the entire menu and all options are disabled; |
+| `hasLoadingPlaceholder` |                  | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| `loading`               | `loading`        | `boolean`                         | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
+| `matchWord`             | `matchword`      | `string`                          | "undefined" | Specifies a string used to highlight matched string parts in options. |
+| `multiSelect`           | `multiselect`    | `boolean`                         | false       | When true, the selected option can be multiple options. |
+| `noCheckmark`           | `nocheckmark`    | `boolean`                         | false       | When true, selected option will not show the checkmark. |
+| `optionActive`          | `optionactive`   | `object`                          | "undefined" | Specifies the current active menuOption.         |
+| `optionSelected`        | `optionSelected` | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
+| `value`                 | `value`          | `String\|Array<string>`           | "undefined" | Value selected for the menu, type `string` by default. In multi-select mode, `value` is an array of strings. |
 
 ## Methods
 

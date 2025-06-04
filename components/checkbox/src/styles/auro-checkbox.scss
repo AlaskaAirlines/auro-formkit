@@ -76,7 +76,7 @@ fieldset {
     position: absolute;
     content: '';
 
-    top: 50%;
+    top: var(--ds-size-200, $ds-size-200); // half of `.cbxContainer`'s line-height
     left: var(--cbxLocation);
     width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
     height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));

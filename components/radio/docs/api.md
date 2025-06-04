@@ -78,3 +78,11 @@
 | `focusSelected`      | `CustomEvent<any>` | Notifies that the component has gained focus.    |
 | `resetRadio`         | `CustomEvent<any>` | Notifies that the component has reset the checked/selected state. |
 | `toggleSelected`     | `CustomEvent<any>` | Notifies that the component has toggled the checked/selected state. |
+
+## CSS Shadow Parts
+
+| Part          | Description                               |
+|---------------|-------------------------------------------|
+| `radio`       | apply css to a specific checkbox.         |
+| `radio-input` | apply css to a specific checkbox's input. |
+| `radio-label` | apply css to a specific checkbox's label. |
