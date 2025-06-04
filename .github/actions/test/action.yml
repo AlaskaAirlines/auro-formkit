@@ -23,6 +23,8 @@ runs:
         path: |
           ./components/**/dist
           ./components/**/demo
+          ./components/**/node_modules
+          ./node_modules
         key: build-${{ github.sha }}-${{ inputs.node-version }}
     - name: Test
       run: npm run test
