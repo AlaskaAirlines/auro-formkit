@@ -25,6 +25,8 @@ runs:
           ./components/**/demo
           ./components/**/node_modules
           ./node_modules
+          ./.turbo
+          ./components/**/.turbo
         key: build-${{ github.sha }}-${{ inputs.node-version }}
     - name: Test
       run: npm run test

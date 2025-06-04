@@ -70,6 +70,8 @@ jobs:
               ./components/**/demo
               ./components/**/node_modules
               ./node_modules
+              ./.turbo
+              ./components/**/.turbo
             key: build-${{ github.sha }}-22
         - name: Generate PR release version
           run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
@@ -129,8 +131,10 @@ jobs:
           path: |
             ./components/**/dist
             ./components/**/demo
-./components/**/node_modules
-./node_modules
+            ./components/**/node_modules
+            ./node_modules
+            ./.turbo
+            ./components/**/.turbo
           key: build-${{ github.sha }}-22
       - name: Deploy ${{ matrix.component }} demo
         uses: "./.github/actions/surge"
