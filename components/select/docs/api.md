@@ -13,6 +13,8 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `flexMenuWidth`                 | `flexMenuWidth`                 | `boolean`                         |                | If set, makes dropdown width match the size of the content, rather than the width of the trigger. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`                          | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`                         |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
+| `layout`                        |                                 | `string`                          | "classic"      |                                                  |
+| `matchWidth`                    | `matchWidth`                    | `boolean`                         | true           | If declared, the popover and trigger will be set to the same width. |
 | `multiSelect`                   | `multiselect`                   | `boolean`                         |                | Sets multi-select mode, allowing multiple options to be selected at once. |
 | `name`                          | `name`                          | `string`                          |                | The name for the select element.                 |
 | `noCheckmark`                   | `noCheckmark`                   | `boolean`                         |                | When true, checkmark on selected option will no longer be present. |
@@ -26,15 +28,20 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `setCustomValidity`             | `setCustomValidity`             | `string`                          |                | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                          |                | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                          |                | Custom help text message to display when validity = `valueMissing`. |
+| `shape`                         |                                 | `string`                          | "classic"      |                                                  |
+| `size`                          |                                 | `string`                          | "xl"           |                                                  |
 | `validity`                      | `validity`                      | `string`                          |                | Specifies the `validityState` this element is in. |
 | `value`                         | `value`                         | `String\|Array<String>`           |                | Value selected for the component. Default type is `String`, changing to `Array<String>` when `multiSelect` is true. |
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `reset`    | `(): void`                             | Resets component to initial state.               |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method               | Type                                   | Description                                      |
+|----------------------|----------------------------------------|--------------------------------------------------|
+| `renderAriaHtml`     | `(): TemplateResult`                   |                                                  |
+| `renderBACKUP`       | `(): TemplateResult`                   |                                                  |
+| `renderNativeSelect` | `(): TemplateResult`                   |                                                  |
+| `reset`              | `(): void`                             | Resets component to initial state.               |
+| `validate`           | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
