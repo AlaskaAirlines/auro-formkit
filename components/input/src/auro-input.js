@@ -101,7 +101,7 @@ export class AuroInput extends BaseInput {
   /**
    * Returns classmap configuration for html5 inputs in all layouts.
    * @private
-   * @returns {object} - Returns classmap configuration for html5 inputs in all layouts.
+   * @returns {object} - Returns classmap.
    */
   get commonInputClasses() {
     return {
@@ -110,9 +110,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for html5 inputs in all layouts.
+   * Returns classmap configuration for html5 inputs in each layout.
    * @private
-   * @return {object} - Returns classmap configuration for "classic" html5 inputs.
+   * @return {object} - Returns classmap.
    */
   get legacyInputClasses() {
     return {
@@ -121,6 +121,11 @@ export class AuroInput extends BaseInput {
     };
   }
 
+  /**
+   * Returns classmap configuration for wrapper elements in each layout.
+   * @private
+   * @return {object} - Returns classmap.
+   */
   get commonWrapperClasses() {
     return {
       'wrapper': true,
@@ -129,6 +134,11 @@ export class AuroInput extends BaseInput {
     };
   }
 
+  /**
+   * Returns classmap configuration for helpText elements in each layout.
+   * @private
+   * @return {object} - Returns classmap.
+   */
   get helpTextClasses() {
     return {
       'helpTextWrapper': true,
@@ -382,9 +392,9 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns HTML for the default layout.
+   * Returns HTML for the classic layout.
    * @private
-   * @returns {import("lit").TemplateResult} - Returns HTML for the default layout.
+   * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
    */
   renderLayoutClassic() {
     return html`

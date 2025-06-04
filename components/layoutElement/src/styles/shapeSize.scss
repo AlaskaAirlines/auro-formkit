@@ -14,6 +14,7 @@ $xs: 24px;
 
 // SHAPES ---------------------------------------------------
 
+
 @mixin simple($size) {
   $simpleBorderSize: 0px;
 
@@ -38,6 +39,20 @@ $xs: 24px;
   }
 }
 
+@mixin parentBorder($size) {
+  &.parentBorder {
+    border: 0;
+    min-height: getCalculatedSize($size, 2px);
+    max-height: getCalculatedSize($size, 2px);
+  }
+}
+
+@mixin variants($size) {
+  @include simple($size);
+  @include thin($size);
+  @include parentBorder($size);
+}
+
 .shape-classic-xl,
 .shape-classic-lg,
 .shape-classic-md,
@@ -49,8 +64,7 @@ $xs: 24px;
   border-width: 1px;
   border-radius: var(--ds-border-radius, #{v.$ds-border-radius});
 
-  @include simple(60px);
-  @include thin(60px);
+  @include variants(60px);
 }
 
 .shape-snowflake-xl,
@@ -65,8 +79,7 @@ $xs: 24px;
   border-color: transparent;
   border-radius: 30px;
 
-  @include simple(60px);
-  @include thin(60px);
+  @include variants(60px);
 }
 
 .shape-box-xl {
@@ -76,8 +89,7 @@ $xs: 24px;
   border-width: 2px;
   border-color: transparent;
 
-  @include simple($xl);
-  @include thin($xl);
+  @include variants($xl);
 }
 
 .shape-rounded-lg {
@@ -88,20 +100,18 @@ $xs: 24px;
   border-color: transparent;
   border-radius: 6px;
 
-  @include simple($lg);
-  @include thin($lg);
+  @include variants($lg);
 }
 
 .shape-pill-xl {
-  min-height: $xl;
-  max-height: $xl;
+  min-height: getCalculatedSize($xl, 2px);
+  max-height: getCalculatedSize($xl, 2px);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
   border-radius: calc($xl / 2);
 
-  @include simple($xl);
-  @include thin($xl);
+  @include variants($xl);
 }
 
 .shape-pill-left-xl {
@@ -112,8 +122,7 @@ $xs: 24px;
   border-color: transparent;
   border-radius: calc($xl / 2) 0 0 calc($xl / 2);
 
-  @include simple($xl);
-  @include thin($xl);
+  @include variants($xl);
 }
 
 .shape-pill-right-xl {
@@ -124,8 +133,7 @@ $xs: 24px;
   border-color: transparent;
   border-radius: 0 calc($xl / 2) calc($xl / 2) 0;
 
-  @include simple($xl);
-  @include thin($xl);
+  @include variants($xl);
 }
 
 .shape-pill-md {
@@ -136,8 +144,7 @@ $xs: 24px;
   border-color: transparent;
   border-radius: calc($xl / 2);
 
-  @include simple($md);
-  @include thin($md);
+  @include variants($md);
 }
 
 .shape-pill-left-md {
@@ -148,8 +155,7 @@ $xs: 24px;
   border-color: transparent;
   border-radius: calc($xl / 2) 0 0 calc($xl / 2);
 
-  @include simple($md);
-  @include thin($md);
+  @include variants($md);
 }
 
 .shape-pill-right-md {
@@ -160,6 +166,5 @@ $xs: 24px;
   border-color: transparent;
   border-radius: 0 calc($xl / 2) calc($xl / 2) 0;
 
-  @include simple($md);
-  @include thin($md);
+  @include variants($md);
 }

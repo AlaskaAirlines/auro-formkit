@@ -76,6 +76,8 @@ export class AuroSelect extends AuroElement {
     this.noFlip = false;
     this.autoPlacement = false;
 
+    this.forceDisplayValue = false;
+
     /**
      * @private
      */
@@ -117,6 +119,11 @@ export class AuroSelect extends AuroElement {
      * @private
      */
     this.isHiddenWhileLoading = false;
+
+    /**
+     * @private
+     */
+    this.hasDisplayValueContent = false;
   }
 
   /**
@@ -143,6 +150,14 @@ export class AuroSelect extends AuroElement {
        */
       autocomplete: {
         type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, the label and value will be visually hidden and the displayValue will render 100% of the time.
+       */
+      forceDisplayValue: {
+        type: Boolean,
         reflect: true
       },
 
@@ -422,8 +437,13 @@ export class AuroSelect extends AuroElement {
   updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
 
-    const valueText = triggerContentEl.querySelector("#valueText");
-    valueText.textContent = '';
+    // Clear out old value
+    // const placeholder = triggerContentEl.querySelector('#placeholder');
+    const valueElem = triggerContentEl.querySelector('#value');
+    if (valueElem) {
+      valueElem.innerHTML = '';
+      // valueElem.innerHTML = ''.appendChild(value);
+    }
 
     // Handle selected options
     if (this.optionSelected) {
@@ -436,7 +456,9 @@ export class AuroSelect extends AuroElement {
         displayText = this.optionSelected.textContent;
       }
 
-      valueText.textContent = displayText;
+      const span = document.createElement('span');
+      span.textContent = displayText;
+      valueElem.appendChild(span);
     }
 
     this.dropdown.requestUpdate();
@@ -926,14 +948,49 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Function to determine if there is any displayValue content to render.
+   * @private
+   * @returns {void}
+   */
+  checkDisplayValueSlotChange() {
+    const nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
+
+    let hasContent = false;
+
+    if (nodes.length > 0) {
+      hasContent = true;
+    }
+
+    this.hasDisplayValueContent = hasContent;
+  }
+
+  /**
    * Returns HTML for the emphasized layout.
    * @private
    * @returns {import("lit").TemplateResult} - Returns HTML for the emphasized layout.
    */
+  // TODO update to use util class
   renderLayoutEmphasized() {
     const placeholderClass = {
       hidden: this.value,
     };
+
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': true,
+      'hasFocus': false,
+      'withValue': true,
+    };
+
+    const valueContainerClasses = {
+      'valueContainer': true,
+      'util_displayHiddenVisually': this.forceDisplayValue
+    };
+
+    // 'displayValue': true,
+    // 'hasContent': this.hasDisplayValueContent,
+    // 'hasFocus': this.hasFocus,
+    // 'withValue': this.value && this.value.length > 0,
 
     return html`
       <div
@@ -963,10 +1020,20 @@ export class AuroSelect extends AuroElement {
               <slot name="typeIcon"></slot>
             </div>
             <div class="mainContent">
-              <label>
-                <slot name="label"></slot>
-              </label>
-              <div id="placeholder" class="${classMap(placeholderClass)}">PLACEHOLDER FIX ME<slot name="placeholder"></slot></div>
+              <div class="${classMap(valueContainerClasses)}">
+                <label>
+                  test<slot name="label"></slot>
+                </label>
+                <div class="value" id="value"></div>
+                ${this.value ? undefined : html`
+                  <div id="placeholder" class="${classMap(placeholderClass)}">PLACEHOLDER FIX ME<slot name="placeholder"></slot></div>
+                `}
+              </div>
+              <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+                <div class="displayValueWrapper">
+                  <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
+                </div>
+              </div>
             </div>
             <div class="accents right"></div>
           </div>

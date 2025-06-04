@@ -1,6 +1,7 @@
 {
     "explorer.excludeGitIgnore": false,
     "cSpell.words": [
+        "aria-haspopup",
         "autocorrect",
         "bibtemplate",
         "borderless",
@@ -13,9 +14,11 @@
         "formkit",
         "helptext",
         "imask",
+        "inputmode",
         "isfullscreen",
         "labelledby",
         "matchwidth",
+        "matchword",
         "maxlength",
         "menuoption",
         "menuoptions",
