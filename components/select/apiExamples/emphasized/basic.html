@@ -1,12 +1,15 @@
-<auro-select layout="emphasized" shape="pill" size="xl" required>
+<auro-select layout="emphasized" shape="pill" size="xl" value="flights" required forceDisplayValue style="display:inline-block;">
   <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Select Example</span>
   <span slot="helptext">Example help text</span>
-  <auro-menu>
-    <auro-menuoption value="stops"><auro-icon category="terminal" name="plane-diag-fill"></auro-icon> Flights</auro-menuoption>
-    <auro-menuoption value="price"><auro-icon category="destination" name="car-rental-stroke"></auro-icon> Cars</auro-menuoption>
-    <auro-menuoption value="duration"><auro-icon category="destination" name="hotel-stroke"></auro-icon> Hotels</auro-menuoption>
-    <auro-menuoption value="departure"><auro-icon category="shop" name="gift-stroke"></auro-icon> Packages</auro-menuoption>
-    <auro-menuoption value="arrival"><auro-icon category="in-flight" name="boarding"></auro-icon> Cruises</auro-menuoption>
+  <div slot="displayValue">
+    <auro-icon style="--ds-auro-icon-size: 40px;" category="terminal" name="plane-diag-fill"></auro-icon>
+  </div>
+  <auro-menu nocheckmark>
+    <auro-menuoption value="flights"><auro-icon category="terminal" name="plane-diag-fill" customcolor></auro-icon> Flights</auro-menuoption>
+    <auro-menuoption value="cars"><auro-icon category="destination" name="car-rental-stroke" customcolor></auro-icon> Cars</auro-menuoption>
+    <auro-menuoption value="hotels"><auro-icon category="destination" name="hotel-stroke" customcolor></auro-icon> Hotels</auro-menuoption>
+    <auro-menuoption value="packages"><auro-icon category="shop" name="gift-stroke" customcolor></auro-icon> Packages</auro-menuoption>
+    <auro-menuoption value="cruises"><auro-icon category="in-flight" name="boarding" customcolor></auro-icon> Cruises</auro-menuoption>
   </auro-menu>
 </auro-select>

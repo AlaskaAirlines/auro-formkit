@@ -20,9 +20,18 @@
   display: block;
 }
 
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  .chevron {
+    margin-left: 8px;
+    margin-right: 24px;
+  }
+}
+
 .wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .trigger {
@@ -75,11 +84,11 @@
   }
 }
 
-.layout-emphasized,
-.layout-emphasized-left,
-.layout-emphasized-right {
-  //
-}
+// .layout-emphasized,
+// .layout-emphasized-left,
+// .layout-emphasized-right {
+//   //
+// }
 
 // :host {
 //   position: relative;
