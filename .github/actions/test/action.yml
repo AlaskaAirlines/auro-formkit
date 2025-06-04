@@ -16,11 +16,13 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
-    - name: Setup cache
+    - name: Restore dist/demo directories from cache
       uses: actions/cache@v4
       id: build_cache
       with:
-        path: ./*
+        path: |
+          ./components/**/dist
+          ./components/**/demo
         key: build-${{ github.sha }}-${{ inputs.node-version }}
     - name: Test
       run: npm run test

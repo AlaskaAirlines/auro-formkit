@@ -58,18 +58,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Ensure Git is has access to the repository
-        run: git ls-remote --heads https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/AlaskaAirlines/auro-formkit.git
-      - name: Setup cache
+      - name: Restore dist/demo directories to cache
         uses: actions/cache@v4
         id: build_cache
         with:
-          path: ./*
+          path: |
+            ./components/**/dist
+            ./components/**/demo
           key: build-${{ github.sha }}-22
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
