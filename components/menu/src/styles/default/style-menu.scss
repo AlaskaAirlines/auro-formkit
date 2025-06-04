@@ -15,14 +15,17 @@
 
 // container styles - defines the look of the outer custom component
 :host {
+  display: block;
+  vertical-align: middle;
+
   .wrapper {
+    box-sizing: border-box;
     display: inline-block;
     width: 100%;
 
     margin: 0;
     padding: 0;
 
-    vertical-align: middle;
   }
 
   // Styles are set to `important` to ensure they over-ride any styles
@@ -58,8 +61,6 @@
   }
 }
 
-:host([root]) {
-  .wrapper {
-    overflow-y: auto;
-  }
+:host([root]) { 
+  overflow-y: auto;
 }

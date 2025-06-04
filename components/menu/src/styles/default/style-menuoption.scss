@@ -18,11 +18,29 @@
   .wrapper {
     display: flex;
     align-items: center;
-    padding: var(--ds-size-50, $ds-size-50) var(--ds-size-200, $ds-size-200) var(--ds-size-50, $ds-size-50) 0;
+
+    padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
+    padding-right: var(--ds-size-200, $ds-size-200);
     
     padding-left: calc(var(--ds-size-150, $ds-size-150) + 24px + var(--ds-size-100, $ds-size-100));
 
     -webkit-tap-highlight-color: transparent;
+
+    &[class*="shape-rounded"] {
+      border-radius: var(--ds-size-100, $ds-size-100);
+    }
+
+    &[class*="-medium"] {
+      //default
+      padding-top: var(--ds-size-50, $ds-size-50);
+      padding-bottom: var(--ds-size-50, $ds-size-50);
+    }
+
+    &[class*="-large"] {
+      padding-top: var(--ds-size-100, $ds-size-100);
+      padding-bottom: var(--ds-size-100, $ds-size-100);
+      margin-bottom: var(--ds-size-100, $ds-size-100);
+    }
   }
 
   slot {

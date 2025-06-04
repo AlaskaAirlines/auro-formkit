@@ -51,6 +51,7 @@ export class AuroMenu extends AuroElement {
     // State properties (reactive)
 
     this.layout = "classic";
+    this.shape = "box";
     this.size = "medium";
 
     // Value of the selected options
@@ -272,15 +273,6 @@ export class AuroMenu extends AuroElement {
     if (changedProperties.has('noCheckmark') && this.noCheckmark) {
       // Update both menus and options
       this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]').forEach((element) => element.setAttribute('noCheckmark', ''));
-    }
-
-    if (changedProperties.has('layout')) {
-      // Update both menus and options
-      if (this.layout.includes("emphasized")) {
-        this.shape = "rounded";
-      } else {
-        this.shape = undefined;
-      }
     }
 
     // Handle layout propagation to all menus and options
