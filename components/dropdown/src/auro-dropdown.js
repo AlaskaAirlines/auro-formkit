@@ -67,6 +67,7 @@ export class AuroDropdown extends AuroElement {
     this.layout = 'classic';
     this.shape = 'rounded';
     this.size = 'xl';
+    this.parentBorder = false;
 
     this.privateDefaults();
   }
@@ -82,7 +83,8 @@ export class AuroDropdown extends AuroElement {
       'trigger': true,
       'wrapper': true,
       'hasFocus': this.hasFocus,
-      'simple': this.simple
+      'simple': this.simple,
+      'parentBorder': this.parentBorder
     };
   }
 
@@ -345,6 +347,15 @@ export class AuroDropdown extends AuroElement {
        * @private
        */
       labeled: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Defines if the trigger should size based on the parent element providing the border UI.
+       * @private
+       */
+      parentBorder: {
         type: Boolean,
         reflect: true
       },
@@ -876,6 +887,7 @@ export class AuroDropdown extends AuroElement {
           ${this.chevron || this.common ? html`
               <div
                 id="showStateIcon"
+                class="chevron"
                 part="chevron">
                 <${this.iconTag}
                   category="interface"

@@ -91,15 +91,12 @@ input {
     text-transform: uppercase;
     font-size: 32px;
     line-height: 38px;
-    @include emphasizedTransition;
   }
 
   input {
     text-align: center;
     font-size: 14px;
     line-height: 20px;
-
-    @include emphasizedTransition;
   }
 
   .mainContent {
