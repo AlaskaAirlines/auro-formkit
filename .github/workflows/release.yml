@@ -67,8 +67,6 @@ jobs:
             ./components/**/demo
             ./components/**/node_modules
             ./node_modules
-            ./.turbo
-            ./components/**/.turbo
           key: build-${{ github.sha }}-22
       - name: Release
         env:
