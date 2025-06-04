@@ -137,8 +137,7 @@ describe('auro-select', () => {
 
   it('makes a selection programatically in multiselect', async () => {
     const el = await multiSelectFixture();
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
 
     el.value = '["Apples", "Bananas"]';
     await elementUpdated(el);
@@ -149,7 +148,7 @@ describe('auro-select', () => {
 
     await expect(el.value[0]).to.deep.equal('Apples');
     await expect(el.value[1]).to.deep.equal('Bananas');
-    
+
     await expect(el.optionSelected[0]).to.equal(selectedOption1);
     await expect(el.optionSelected[1]).to.equal(selectedOption2);
   });
