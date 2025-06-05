@@ -1,0 +1,15 @@
+name: Label required approvals
+on:
+  pull_request_review:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled]
+jobs:
+  required-approvals:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label required approvals
+        uses: lvegerano/label-required-approvals@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/label-approvers.yml
+          status: "Required Release Managers Review"
