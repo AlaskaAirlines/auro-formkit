@@ -29,6 +29,10 @@
   flex: 1;
 }
 
+.valueContainer [slot="displayValue"] {
+  display: none;
+}
+
 .accents {
   display: flex;
   flex-direction: row;
@@ -41,10 +45,14 @@
 }
 
 .displayValue {
-  display: none;
+  display: block;
 
-  &.hasContent:is(.withValue):not(.hasFocus) {
-    display: block;
+  &:not(.force) {
+    display: none;
+
+    &.hasContent:is(.withValue):not(.hasFocus) {
+      display: block;
+    }
   }
 }
 
