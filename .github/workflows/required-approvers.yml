@@ -1,0 +1,35 @@
+name: Required Approvals
+on:
+  pull_request_review:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled]
+jobs:
+  required-approvals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Label required approvals
+        uses: lvegerano/label-required-approvals@v1.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/team-approvers.yml
+  add-reviewers:
+    if: contains(github.event.pull_request.labels.*.name, 'semantic-status: breaking')
+    runs-on: ubuntu-latest            
+    steps:
+      - name: Add Pull Request Reviewer
+        uses: ej2015/add-remove-pr-reviewer@v1
+        with:
+          reviewers: "auro-release-managers"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          action: add
+  remove-reviewers:
+    if: !contains(github.event.pull_request.labels.*.name, 'semantic-status: breaking')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove Pull Request Reviewer
+        uses: ej2015/add-remove-pr-reviewer@v1
+        with:
+          reviewers: "auro-release-managers"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          action: remove
