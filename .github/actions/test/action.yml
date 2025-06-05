@@ -26,8 +26,6 @@ runs:
           ./components/**/node_modules
           ./node_modules
         key: build-${{ inputs.node-version }}-${{ github.run_id }}
-        restore-keys: |
-          build-${{ inputs.node-version }}-
     - name: Test
       run: npm run test
       shell: bash
