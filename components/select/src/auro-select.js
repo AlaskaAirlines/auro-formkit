@@ -122,6 +122,11 @@ export class AuroSelect extends AuroElement {
     /**
      * @private
      */
+    this.hasFocus = false;
+
+    /**
+     * @private
+     */
     this.hasDisplayValueContent = false;
   }
 
@@ -374,7 +379,25 @@ export class AuroSelect extends AuroElement {
         type: Boolean,
         reflect: true,
         attribute: false
-      }
+      },
+
+      /**
+       * @private
+       */
+      hasFocus: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
+       * @private
+       */
+      hasDisplayValueContent: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
     };
   }
 
@@ -448,18 +471,21 @@ export class AuroSelect extends AuroElement {
 
     // Handle selected options
     if (this.optionSelected) {
-      let displayText = '';
-
       if (this.multiSelect && this.optionSelected.length > 0) {
-        // Create display text from selected options
-        displayText = this.optionSelected.map((option) => option.textContent).join(', ');
-      } else {
-        displayText = this.optionSelected.textContent;
-      }
+        const displayText = this.optionSelected.map((option) => option.textContent).join(', ');
 
-      const span = document.createElement('span');
-      span.textContent = displayText;
-      valueElem.appendChild(span);
+        valueElem.textContent = displayText;
+      } else {
+        valueElem.innerHTML = this.optionSelected.innerHTML;
+        const displayValueEl = this.optionSelected.querySelector("[slot='displayValue']");
+        if (displayValueEl) {
+          const oldDisplayValueEl = this.querySelectorAll("[slot='displayValue']");
+          oldDisplayValueEl.forEach((el) => el.remove());
+
+          this.appendChild(displayValueEl.cloneNode(true));
+        }
+        this.hasDisplayValueContent = displayValueEl !== null;
+      }
     }
 
     this.dropdown.requestUpdate();
@@ -593,6 +619,7 @@ export class AuroSelect extends AuroElement {
 
     this.addEventListener('blur', () => {
       this.validation.validate(this);
+      this.hasFocus = false;
     });
   }
 
@@ -668,6 +695,7 @@ export class AuroSelect extends AuroElement {
    */
   handleFocusin() {
 
+    this.hasFocus = true;
     this.touched = true;
   }
 
@@ -947,23 +975,6 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Function to determine if there is any displayValue content to render.
-   * @private
-   * @returns {void}
-   */
-  checkDisplayValueSlotChange() {
-    const nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
-
-    let hasContent = false;
-
-    if (nodes.length > 0) {
-      hasContent = true;
-    }
-
-    this.hasDisplayValueContent = hasContent;
-  }
-
-  /**
    * Returns HTML for the emphasized layout.
    * @private
    * @returns {import("lit").TemplateResult} - Returns HTML for the emphasized layout.
@@ -976,20 +987,16 @@ export class AuroSelect extends AuroElement {
 
     const displayValueClasses = {
       'displayValue': true,
-      'hasContent': true,
-      'hasFocus': false,
-      'withValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.hasFocus,
+      'withValue': this.value && this.value.length > 0,
+      'force': this.forceDisplayValue,
     };
 
     const valueContainerClasses = {
       'valueContainer': true,
-      'util_displayHiddenVisually': this.forceDisplayValue
+      'util_displayHiddenVisually': (this.forceDisplayValue || !this.hasFocus) && this.hasDisplayValueContent
     };
-
-    // 'displayValue': true,
-    // 'hasContent': this.hasDisplayValueContent,
-    // 'hasFocus': this.hasFocus,
-    // 'withValue': this.value && this.value.length > 0,
 
     return html`
       <div
@@ -1021,17 +1028,17 @@ export class AuroSelect extends AuroElement {
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
                 <label>
-                  test<slot name="label"></slot>
+                  <slot name="label"></slot>
                 </label>
                 <div class="value" id="value"></div>
                 ${this.value ? undefined : html`
-                  <div id="placeholder" class="${classMap(placeholderClass)}">PLACEHOLDER FIX ME<slot name="placeholder"></slot></div>
+                  <div id="placeholder" class="${classMap(placeholderClass)}">
+                    <slot name="placeholder"></slot>
+                  </div>
                 `}
               </div>
               <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
-                <div class="displayValueWrapper">
-                  <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
-                </div>
+                <slot name="displayValue"></slot>
               </div>
             </div>
             <div class="accents right"></div>
