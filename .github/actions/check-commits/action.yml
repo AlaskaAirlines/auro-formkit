@@ -20,16 +20,6 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
-    - name: Restore dist/demo directories from cache
-      uses: actions/cache@v4
-      id: build_cache
-      with:
-        path: |
-          ./components/**/dist
-          ./components/**/demo
-          ./components/**/node_modules
-          ./node_modules
-        key: build-${{ inputs.node-version }}-${{ github.run_id }}
     - name: Ensure Git is installed
       run: |
         which git || (apt-get update && apt-get install -y git)
