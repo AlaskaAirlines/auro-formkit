@@ -13,4 +13,3 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/team-approvers.yml
-          status: "Required Release Managers Review"
