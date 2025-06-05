@@ -1,0 +1,5 @@
+who:
+  - label: "semantic-status: breaking"
+    assign:
+      teams:
+        - auro-release-managers
