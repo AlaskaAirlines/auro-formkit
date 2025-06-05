@@ -1,0 +1,24 @@
+name: Add Reviewers
+
+on:
+  pull_request:
+    types:
+      - labeled
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Pull Request Reviewer
+        if: github.event.label.name == 'semantic-status: breaking'
+        uses: rhs/add-reviewer-gh-action@1.0.10
+        with: 
+          reviewers: "auro-release-managers"
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Remove Pull Request Reviewer
+        if: github.event.label.name != 'semantic-status: breaking'
+        uses: rhs/remove-reviewer-gh-action@1.0.10
+        with:
+          reviewers: "auro-release-managers"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          remove: true
