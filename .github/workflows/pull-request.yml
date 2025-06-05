@@ -71,8 +71,6 @@ jobs:
               ./components/**/node_modules
               ./node_modules
             key: build-22-${{ github.run_id }}
-            restore-keys: |
-              build-22-
         - name: Generate PR release version
           run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
         - name: Publish to NPM
@@ -122,8 +120,6 @@ jobs:
             
             
           key: build-22-${{ github.run_id }}
-          restore-keys: |
-            build-22-
       - name: Deploy ${{ matrix.component }} demo
         uses: "./.github/actions/surge"
         with:
