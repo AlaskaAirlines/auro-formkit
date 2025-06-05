@@ -7,9 +7,10 @@ jobs:
   required-approvals:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Label required approvals
-        uses: lvegerano/label-required-approvals@v1
+        uses: lvegerano/label-required-approvals@v1.0.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          configuration-path: .github/label-approvers.yml
+          configuration-path: .github/team-approvers.yml
           status: "Required Release Managers Review"
