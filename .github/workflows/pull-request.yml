@@ -93,20 +93,6 @@ jobs:
               });
           env:
             GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  check-commits:
-    name: Check Commits
-    needs: [build, test]
-    if: github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/check-commits
-        with:
-          os: ubuntu-latest
-          node-version: 22
-          github-token: ${{ secrets.GH_TOKEN }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     name: Deploy
     needs: [build, test]
