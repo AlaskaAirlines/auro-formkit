@@ -1,0 +1,19 @@
+name: Check PR
+on:
+  pull_request_review:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled]
+jobs:
+  require-reviewers:
+    # Optional: skip check if no relevant label is present
+    # This needs to be kept in sync with the labels being checked
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'semantic-status') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require Reviewers
+        uses: travelperk/label-requires-reviews-action@2.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          rules_yaml: | # define which PR labels require how many approving reviewers
+            "semantic-status: breaking": 2
+
