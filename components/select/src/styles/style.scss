@@ -64,6 +64,28 @@
   padding: 0 8px 0 24px;
 }
 
+
+.layout-emphasized,
+.layout-snowflake {
+  .triggerContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 8px 0 24px;
+  }
+}
+
+.layout-classic {
+  .triggerContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 8px 0 24px;
+  }
+}
+
 :host(:is([validity]:not([validity='valid']))) {
   [auro-dropdown] {
     --ds-auro-select-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});

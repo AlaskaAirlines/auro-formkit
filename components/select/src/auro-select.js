@@ -142,6 +142,7 @@ export class AuroSelect extends AuroElement {
     this.value = undefined;
     this.fullscreenBreakpoint = 'sm';
     this.onDark = false;
+    this.isPopoverVisible = false;
   }
 
   // This function is to define props used within the scope of this component
@@ -181,6 +182,14 @@ export class AuroSelect extends AuroElement {
       disabled: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * @private
+       */
+      isPopoverVisible: {
+        type: Boolean,
+        reflect: false
       },
 
       /**
@@ -429,6 +438,10 @@ export class AuroSelect extends AuroElement {
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
 
+    this.dropdown.addEventListener('auroDropdown-toggled', () => {
+      this.isPopoverVisible = this.dropdown.isPopoverVisible;
+    });
+
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
 
@@ -461,12 +474,17 @@ export class AuroSelect extends AuroElement {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
 
     // Clear out old value
-    // const placeholder = triggerContentEl.querySelector('#placeholder');
     const valueElem = triggerContentEl.querySelector('#value');
     if (valueElem) {
       valueElem.innerHTML = '';
-      // valueElem.innerHTML = ''.appendChild(value);
     }
+
+    const slot = this.shadowRoot.querySelector('slot[name="displayValue"]');
+    const slottedElements = slot.assignedElements();
+
+    slottedElements.forEach((element) => {
+      element.remove();
+    });
 
     // Handle selected options
     if (this.optionSelected) {
@@ -477,10 +495,8 @@ export class AuroSelect extends AuroElement {
       } else {
         valueElem.innerHTML = this.optionSelected.innerHTML;
         const displayValueEl = this.optionSelected.querySelector("[slot='displayValue']");
-        if (displayValueEl) {
-          const oldDisplayValueEl = this.querySelectorAll("[slot='displayValue']");
-          oldDisplayValueEl.forEach((el) => el.remove());
 
+        if (displayValueEl) {
           this.appendChild(displayValueEl.cloneNode(true));
         }
         this.hasDisplayValueContent = displayValueEl !== null;
@@ -989,14 +1005,14 @@ export class AuroSelect extends AuroElement {
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
-      'hasFocus': this.hasFocus,
+      'hasFocus': this.isPopoverVisible,
       'withValue': this.value && this.value.length > 0,
       'force': this.forceDisplayValue,
     };
 
     const valueContainerClasses = {
       'valueContainer': true,
-      'util_displayHiddenVisually': (this.forceDisplayValue || !this.hasFocus) && this.hasDisplayValueContent
+      'util_displayHiddenVisually': (this.forceDisplayValue || !(this.dropdown && this.dropdown.isPopoverVisible)) && this.hasDisplayValueContent
     };
 
     return html`
@@ -1046,6 +1062,7 @@ export class AuroSelect extends AuroElement {
           </div>
           <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot></slot>
           </${this.bibtemplateTag}>
           <div slot="helpText">
             ${this.renderHtmlHelpText()}
@@ -1068,14 +1085,14 @@ export class AuroSelect extends AuroElement {
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
-      'hasFocus': this.hasFocus,
+      'hasFocus': this.isPopoverVisible,
       'withValue': this.value && this.value.length > 0,
       'force': this.forceDisplayValue,
     };
 
     const valueContainerClasses = {
       'valueContainer': true,
-      'util_displayHiddenVisually': (this.forceDisplayValue || !this.hasFocus) && this.hasDisplayValueContent
+      'util_displayHiddenVisually': (this.forceDisplayValue || !(this.dropdown && this.dropdown.isPopoverVisible)) && this.hasDisplayValueContent
     };
 
     return html`
@@ -1125,6 +1142,7 @@ export class AuroSelect extends AuroElement {
           </div>
           <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot></slot>
           </${this.bibtemplateTag}>
           <div slot="helpText">
             ${this.renderHtmlHelpText()}
@@ -1207,19 +1225,21 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
+          ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${!this.flexMenuWidth}"
-          ?onDark="${this.onDark}"
           ?noFlip="${this.noFlip}"
+          ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .offset="${this.offset}"
           .placement="${this.placement}"
           chevron
-          common
           fluid
           for="selectMenu"
           layout="${this.layout}"
-          part="dropdown">
+          part="dropdown"
+          shape="${this.shape}"
+          size="${this.size}">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
             <span id="placeholder"
               class="${classMap(placeholderClass)}"
