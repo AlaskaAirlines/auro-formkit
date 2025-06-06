@@ -1,10 +1,8 @@
-name: RC Check Commits
+name: Check Commits
 
 on:
   pull_request:
-    branches:
-      - 'rc/**'
-      - 'main'
+    types: [opened, reopened, unlabeled, synchronize]
 permissions:
   contents: read
   deployments: write

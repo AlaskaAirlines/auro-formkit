@@ -67,7 +67,7 @@ jobs:
             ./components/**/demo
             ./components/**/node_modules
             ./node_modules
-          key: build-${{ github.sha }}-22
+          key: build-22-${{ github.run_id }}
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
