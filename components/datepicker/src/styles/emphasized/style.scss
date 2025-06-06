@@ -1,0 +1,15 @@
+:host([layout*='emphasized'][shape*='pill']) {
+  [auro-input] {
+    width: 100%;
+
+    &::part(wrapper) {
+      .accent {
+        display: none; // does this work??
+      }
+    }
+
+    &::part(inputHelpText) {
+      display: none;
+    }
+  }
+}
