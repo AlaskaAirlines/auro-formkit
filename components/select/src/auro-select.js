@@ -1061,11 +1061,75 @@ export class AuroSelect extends AuroElement {
    * @returns {import("lit").TemplateResult} - Returns HTML for the snowflake layout.
    */
   renderLayoutSnowflake() {
+    const placeholderClass = {
+      hidden: this.value,
+    };
+
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.hasFocus,
+      'withValue': this.value && this.value.length > 0,
+      'force': this.forceDisplayValue,
+    };
+
+    const valueContainerClasses = {
+      'valueContainer': true,
+      'util_displayHiddenVisually': (this.forceDisplayValue || !this.hasFocus) && this.hasDisplayValueContent
+    };
+
     return html`
       <div
         class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
-        snowflake
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        </div>
+        <${this.dropdownTag}
+          ?autoPlacement="${this.autoPlacement}"
+          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          ?matchWidth="${!this.flexMenuWidth}"
+          ?noFlip="${this.noFlip}"
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          chevron
+          fluid
+          for="selectMenu"
+          layout="${this.layout}"
+          part="dropdown"
+          shape="${this.shape}"
+          size="${this.size}">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+            <div class="accents left">
+              <slot name="typeIcon"></slot>
+            </div>
+            <div class="mainContent">
+              <div class="${classMap(valueContainerClasses)}">
+                <label>
+                  <slot name="label"></slot>
+                </label>
+                <div class="value" id="value"></div>
+                ${this.value ? undefined : html`
+                  <div id="placeholder" class="${classMap(placeholderClass)}">
+                    <slot name="placeholder"></slot>
+                  </div>
+                `}
+              </div>
+              <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+                <slot name="displayValue"></slot>
+              </div>
+            </div>
+            <div class="accents right"></div>
+          </div>
+          <div class="menuWrapper"></div>
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+          </${this.bibtemplateTag}>
+          <div slot="helpText">
+            ${this.renderHtmlHelpText()}
+          </div>
+        </${this.dropdownTag}>
       </div>
     `;
   }
