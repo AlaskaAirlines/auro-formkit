@@ -68,12 +68,10 @@ jobs:
             
             const approvedCount = approvedReviewers.size;
             const requiredReviewers = 2;
-            const remainingReviews = Math.max(0, requiredReviewers - approvedCount);
             
             return {
               approved: approvedCount,
-              required: requiredReviewers,
-              remaining: remainingReviews
+              required: requiredReviewers
             };
             
       - uses: marocchino/sticky-pull-request-comment@v2
@@ -82,6 +80,6 @@ jobs:
           message: |
             ## 🚨 Breaking Change Review Policy
             
-            This PR contains breaking changes and requires at least **2** approving reviews to be merged.
+            This PR contains breaking changes and requires at least `2` approving reviews to be merged.
 
-            **Approvals:** ${{ steps.pr-data.outputs.result.approved }} of ${{ steps.pr-data.outputs.result.remaining }} reviews
+            **Approvals:** `${{ steps.pr-data.outputs.result.approved }} of ${{ steps.pr-data.outputs.result.required }}`
