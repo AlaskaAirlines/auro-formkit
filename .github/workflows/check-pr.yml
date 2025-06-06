@@ -1,13 +1,18 @@
-name: Check PR
+name: Review Policy
 
 on:
   pull_request_review:
+    types: [submitted, edited, dismissed]
   pull_request:
-    types: [labeled, unlabeled]
+    types: [labeled, unlabeled, opened, synchronize, reopened]
 
 jobs:
   require-reviewers:
     runs-on: ubuntu-latest
+    # Use concurrency to ensure only one job runs at a time and cancels in-progress runs
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,4 +24,64 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           rules_yaml: | # define which PR labels require how many approving reviewers
             "semantic-status: breaking": 2
+  enough-approvals:
+    runs-on: ubuntu-latest
+    needs: require-reviewers
+    if: success()
+    steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: review-policy
+          delete: true
+  needs-approvals:
+    runs-on: ubuntu-latest
+    needs: require-reviewers
+    if: failure()
+    steps:
+      - name: Get PR data
+        id: pr-data
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pr_number = context.payload.pull_request ? context.payload.pull_request.number : context.payload.issue.number;
+            
+            const { data: pr } = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: pr_number,
+            });
+            
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner,
+              repo,
+              pull_number: pr_number,
+            });
+            
+            // Count approved reviews from unique reviewers
+            const approvedReviewers = new Set();
+            reviews.forEach(review => {
+              if (review.state === 'APPROVED') {
+                approvedReviewers.add(review.user.login);
+              }
+            });
+            
+            const approvedCount = approvedReviewers.size;
+            const requiredReviewers = 2;
+            const remainingReviews = Math.max(0, requiredReviewers - approvedCount);
+            
+            return {
+              approved: approvedCount,
+              required: requiredReviewers,
+              remaining: remainingReviews
+            };
+            
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: review-policy
+          message: |
+            ## 🚨 Breaking Change Review Policy
+            
+            This PR contains breaking changes and requires at least **2** approving reviews to be merged.
 
+            **Approvals:** ${{ steps.pr-data.outputs.result.approved }} of ${{ steps.pr-data.outputs.result.remaining }} reviews
