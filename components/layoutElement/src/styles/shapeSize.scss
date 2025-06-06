@@ -53,6 +53,10 @@ $xs: 24px;
   @include parentBorder($size);
 }
 
+.wrapper {
+  overflow: hidden;
+}
+
 .shape-classic-xl,
 .shape-classic-lg,
 .shape-classic-md,

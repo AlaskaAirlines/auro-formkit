@@ -27,3 +27,15 @@ A baseline `<auro-select>` using `<auro-menu>` and `<auro-menuoption>` elements.
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+### Snowflake 
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic-ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
