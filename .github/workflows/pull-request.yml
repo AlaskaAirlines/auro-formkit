@@ -70,26 +70,42 @@ jobs:
             key: build-22-${{ github.run_id }}
         - name: Generate PR release version
           run: npx --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }}
+        - name: Read package.json
+          id: package
+          uses: actions/github-script@v6
+          with:
+            script: |
+              const fs = require('fs');
+              const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+              core.setOutput('name', packageJson.name);
+              core.setOutput('version', packageJson.version);
+              return packageJson;
+            result-encoding: string
         - name: Publish to NPM
           run: npm publish --registry=https://registry.npmjs.org
           env:
             NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         - name: Comment on PR
-          uses: actions/github-script@v6
+          uses: marocchino/sticky-pull-request-comment@v2
           with:
-            script: |
-              const packageName = require('./package.json').name;
-              const packageVersion = require('./package.json').version;
+            header: release
+            message: |
+              🚀 PR Release Published! 
+              
+              Package: `${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}`
 
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: ${{ github.event.pull_request.number }},
-                body: `🚀 PR Release Published! \`${packageName}@${packageVersion}\` [View on npmjs.com](https://www.npmjs.com/package/${packageName}/v/${packageVersion})`
-              });
-          env:
-            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+              To install normally:
+              ```bash
+              npm install ${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}
+              ```
+
+              To install via alias:
+              ```bash
+              npm install @aurodesignsystem@npm:${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}
+              ```
+
+              [View on npmjs.com](https://www.npmjs.com/package/${{ steps.package.outputs.name }}/v/${{ steps.package.outputs.version }})
   deploy:
     name: Deploy
     needs: [build, test]

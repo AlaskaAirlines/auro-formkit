@@ -69,10 +69,9 @@ jobs:
             const approvedCount = approvedReviewers.size;
             const requiredReviewers = 2;
             
-            return {
-              approved: approvedCount,
-              required: requiredReviewers
-            };
+            // Set outputs for use in subsequent steps
+            core.setOutput('approved', approvedCount);
+            core.setOutput('required', requiredReviewers);
             
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -82,4 +81,4 @@ jobs:
             
             This PR contains breaking changes and requires at least `2` approving reviews to be merged.
 
-            **Approvals:** `${{ steps.pr-data.outputs.result.approved }} of ${{ steps.pr-data.outputs.result.required }}`
+            **Approvals:** `${{ steps.pr-data.outputs.approved }} of ${{ steps.pr-data.outputs.required }}`
