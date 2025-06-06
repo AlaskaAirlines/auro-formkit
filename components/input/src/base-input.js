@@ -385,6 +385,14 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * borderless
+       */
+      simple: {
+        type: Boolean,
+        reflect: true,
+      },
+
+      /**
        * Custom help text message for email type validity.
        */
       customValidityTypeEmail: {
