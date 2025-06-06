@@ -35,8 +35,6 @@ export class AuroElement extends LitElement {
   }
 
   resetShapeClasses() {
-    console.warn('resetShapeClasses');
-    console.info(this);
     if (this.shape && this.size) {
       const wrapper = this.shadowRoot.querySelector('.wrapper');
 
