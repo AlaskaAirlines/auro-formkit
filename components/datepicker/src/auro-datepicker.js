@@ -7,7 +7,6 @@
    lit/no-invalid-html, no-unused-expressions */
 
 // If using litElement base class
-import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
@@ -23,6 +22,9 @@ import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+// layouts
+import classicLayoutColor from "./styles/default/color-css.js";
+
 import './auro-calendar.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
@@ -31,6 +33,7 @@ import dropdownVersion from './dropdownVersion.js';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './inputVersion.js';
 import { ifDefined } from "lit/directives/if-defined.js";
+import {AuroElement} from "@aurodesignsystem/auro-layout-element";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -56,7 +59,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  */
 
 // build the component class
-export class AuroDatePicker extends LitElement {
+export class AuroDatePicker extends AuroElement {
   constructor() {
     super();
 
@@ -157,6 +160,11 @@ export class AuroDatePicker extends LitElement {
      * @private
      */
     this.monthFirst = undefined;
+
+    // Layout Config
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'lg';
   }
 
   // This function is to define props used within the scope of this component
@@ -437,7 +445,10 @@ export class AuroDatePicker extends LitElement {
     return [
       styleCss,
       colorCss,
-      tokensCss
+      tokensCss,
+
+      // layouts
+      classicLayoutColor
     ];
   }
 
@@ -622,7 +633,7 @@ export class AuroDatePicker extends LitElement {
    * @returns {void}
    */
   configureInput() {
-    this.triggerInput = this.dropdown.querySelector('[slot="trigger"');
+    this.triggerInput = this.dropdown.querySelector('[slot="trigger"]');
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
@@ -1063,70 +1074,152 @@ export class AuroDatePicker extends LitElement {
     this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
   }
 
+  // layout render methods
+  // ------------------------------------
+
+  /**
+   * Base wrapper for the datepicker layout - every layout follows this same structure
+   * with minor variations in DOM structure.
+   * @param {import("lit").TemplateResult} content - The content to be rendered inside the base layout.
+   * @return {import("lit").TemplateResult}
+   * @private
+   */
+  _renderBaseLayout(content) {
+    return html`
+      <div
+        part="wrapper">
+        <div class="accents left">
+          calendar icon
+        </div>
+        <div class="mainContent">
+          ${content}
+        </div>
+        <div class="accents right">
+          error and/or close icon here :)
+        </div>
+      </div>
+      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
+        help text here (see combobox for example)
+      </div>
+    `;
+  }
+
+  /**
+   * Renders the emphasized layout for the datepicker.
+   * @private
+   * @return {import("lit").TemplateResult}
+   */
+  renderEmphasizedLayout() {
+    return html`
+      <div
+        part="wrapper">
+        <div class="accents left">
+          calendar icon
+        </div>
+        <div class="mainContent">
+          ${this.renderTempInputs()}
+        </div>
+        <div class="accents right">
+          error and/or close icon here :)
+        </div>
+      </div>
+      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
+        help text here (see combobox for example)
+      </div>
+    `;
+  }
+
+  renderLayoutFromAttributes() {
+    switch (this.layout) {
+      case 'emphasized':
+        return this.renderEmphasizedLayout();
+      default:
+        // TODO: remove when all base layouts are implemented and instead return classic
+        return html`
+          <p>Please implement layout "${this.layout}" for datepicker</p>
+        `;
+    }
+  }
+
+  renderTempInputs() {
+    return html`
+      <${this.inputTag}
+        id="${this.generateRandomString(12)}"
+        bordered
+        class="dateFrom"
+        ?onDark="${this.onDark}"
+        ?required="${this.required}"
+        noValidate
+        type="date"
+        .format="${this.format}"
+        .max="${this.maxDate}"
+        .min="${this.minDate}"
+        setCustomValidity="${this.setCustomValidity}"
+        setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+        setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
+        setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
+        setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
+        ?disabled="${this.disabled}"
+        inputmode="${ifDefined(this.inputmode)}"
+        part="input">
+        <span slot="label"><slot name="fromLabel"></slot></span>
+      </${this.inputTag}>
+      ${this.range ? html`
+        <${this.inputTag}
+          id="${this.generateRandomString(12)}"
+          bordered
+          class="dateTo"
+          ?onDark="${this.onDark}"
+          ?required="${this.required}"
+          noValidate
+          type="date"
+          .format="${this.format}"
+          .max="${this.maxDate}"
+          .min="${this.minDate}"
+          setCustomValidity="${this.setCustomValidity}"
+          setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+          setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
+          setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
+          setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
+          ?disabled="${this.disabled}"
+          part="input">
+          <span slot="label"><slot name="toLabel"></slot></span>
+        </${this.inputTag}>
+      ` : undefined}`;
+  }
+
+  // ------------------------------------
+  // end of layout render methods
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    // Base HTML render() handles dropdown and calendar bib
     return html`
-      <div class="outerWrapper">
+      <div>
         <${this.dropdownTag}
-          for="dropdownMenu"
-          fluid
-          bordered
-          rounded
+          ?autoPlacement="${this.autoPlacement}"
           ?onDark="${this.onDark}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          disableEventShow
-          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
-          .placement="${this.placement}"
-          .offset="${this.offset}"
-          ?autoPlacement="${this.autoPlacement}"
           ?noFlip="${this.noFlip}"
-          part="dropdown">
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .layout="${this.layout}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          .shape="${this.shape}"
+          .size="${this.size}"
+          bordered
+          disableEventShow
+          fluid
+          for="dropdownMenu"
+          part="dropdown"
+          rounded
+          simple
+        >
           <div slot="trigger" class="dpTriggerContent" part="trigger">
-            <${this.inputTag}
-              id="${this.generateRandomString(12)}"
-              bordered
-              class="dateFrom"
-              ?onDark="${this.onDark}"
-              ?required="${this.required}"
-              noValidate
-              type="date"
-              .format="${this.format}"
-              .max="${this.maxDate}"
-              .min="${this.minDate}"
-              setCustomValidity="${this.setCustomValidity}"
-              setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-              setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
-              setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
-              setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-              ?disabled="${this.disabled}"
-              inputmode="${ifDefined(this.inputmode)}"
-              part="input">
-              <span slot="label"><slot name="fromLabel"></slot></span>
-            </${this.inputTag}>
-            ${this.range ? html`
-              <${this.inputTag}
-                id="${this.generateRandomString(12)}"
-                bordered
-                class="dateTo"
-                ?onDark="${this.onDark}"
-                ?required="${this.required}"
-                noValidate
-                type="date"
-                .format="${this.format}"
-                .max="${this.maxDate}"
-                .min="${this.minDate}"
-                setCustomValidity="${this.setCustomValidity}"
-                setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-                setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
-                setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
-                setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-                ?disabled="${this.disabled}"
-                part="input">
-                <span slot="label"><slot name="toLabel"></slot></span>
-              </${this.inputTag}>
-            ` : undefined}
+            ${this.renderLayoutFromAttributes()}
           </div>
+
           <div class="calendarWrapper" part="calendarWrapper">
             <auro-formkit-calendar
               ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"

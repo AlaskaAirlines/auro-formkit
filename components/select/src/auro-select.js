@@ -6,9 +6,14 @@
 /* eslint-disable max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html */
 
 // If using litElement base class
-import { LitElement } from "lit";
+import { css } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 import { html } from 'lit/static-html.js';
+
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
+
+import shapeSizeCss from "./styles/shapeSize-css.js";
+import tokensCss from "./styles/tokens-css.js";
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -20,6 +25,9 @@ import dropdownVersion from './dropdownVersion.js';
 
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';
+
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helpTextVersion from './helptextVersion.js';
 
 import {
   arrayConverter
@@ -45,7 +53,7 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  */
 
 // build the component class
-export class AuroSelect extends LitElement {
+export class AuroSelect extends AuroElement {
   constructor() {
     super();
 
@@ -55,11 +63,20 @@ export class AuroSelect extends LitElement {
     const idSubstrEnd = 8;
     const idSubstrStart = 2;
 
+    this.matchWidth = true;
+
+    // Layout Config
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'xl';
+
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
     this.autoPlacement = false;
+
+    this.forceDisplayValue = false;
 
     /**
      * @private
@@ -96,7 +113,22 @@ export class AuroSelect extends LitElement {
     /**
      * @private
      */
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
     this.isHiddenWhileLoading = false;
+
+    /**
+     * @private
+     */
+    this.hasFocus = false;
+
+    /**
+     * @private
+     */
+    this.hasDisplayValueContent = false;
   }
 
   /**
@@ -110,6 +142,7 @@ export class AuroSelect extends LitElement {
     this.value = undefined;
     this.fullscreenBreakpoint = 'sm';
     this.onDark = false;
+    this.isPopoverVisible = false;
   }
 
   // This function is to define props used within the scope of this component
@@ -127,6 +160,14 @@ export class AuroSelect extends LitElement {
       },
 
       /**
+       * If declared, the label and value will be visually hidden and the displayValue will render 100% of the time.
+       */
+      forceDisplayValue: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If declared, bib's position will be automatically calculated where to appear.
        * @default false
        */
@@ -139,6 +180,22 @@ export class AuroSelect extends LitElement {
        * When attribute is present, element shows disabled state.
        */
       disabled: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * @private
+       */
+      isPopoverVisible: {
+        type: Boolean,
+        reflect: false
+      },
+
+      /**
+       * If declared, the popover and trigger will be set to the same width.
+       */
+      matchWidth: {
         type: Boolean,
         reflect: true
       },
@@ -332,12 +389,45 @@ export class AuroSelect extends LitElement {
         type: Boolean,
         reflect: true,
         attribute: false
-      }
+      },
+
+      /**
+       * @private
+       */
+      hasFocus: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
+       * @private
+       */
+      hasDisplayValueContent: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
     };
   }
 
   static get styles() {
-    return [styleCss];
+    return [
+      css`${shapeSizeCss}`,
+      css`${tokensCss}`,
+      css`${styleCss}`,
+    ];
+  }
+
+  /**
+   * Returns classmap configuration for wrapper elements in each layout.
+   * @private
+   * @return {object} - Returns classmap.
+   */
+  get commonWrapperClasses() {
+    return {
+      'wrapper': true
+    };
   }
 
   /**
@@ -347,6 +437,10 @@ export class AuroSelect extends LitElement {
    */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+
+    this.dropdown.addEventListener('auroDropdown-toggled', () => {
+      this.isPopoverVisible = this.dropdown.isPopoverVisible;
+    });
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
@@ -379,21 +473,34 @@ export class AuroSelect extends LitElement {
   updateDisplayedValue() {
     const triggerContentEl = this.dropdown.querySelector('#triggerFocus');
 
-    const valueText = triggerContentEl.querySelector("#valueText");
-    valueText.textContent = '';
+    // Clear out old value
+    const valueElem = triggerContentEl.querySelector('#value');
+    if (valueElem) {
+      valueElem.innerHTML = '';
+    }
+
+    const slot = this.shadowRoot.querySelector('slot[name="displayValue"]');
+    const slottedElements = slot.assignedElements();
+
+    slottedElements.forEach((element) => {
+      element.remove();
+    });
 
     // Handle selected options
     if (this.optionSelected) {
-      let displayText = '';
-
       if (this.multiSelect && this.optionSelected.length > 0) {
-        // Create display text from selected options
-        displayText = this.optionSelected.map((option) => option.textContent).join(', ');
-      } else {
-        displayText = this.optionSelected.textContent;
-      }
+        const displayText = this.optionSelected.map((option) => option.textContent).join(', ');
 
-      valueText.textContent = displayText;
+        valueElem.textContent = displayText;
+      } else {
+        valueElem.innerHTML = this.optionSelected.innerHTML;
+        const displayValueEl = this.optionSelected.querySelector("[slot='displayValue']");
+
+        if (displayValueEl) {
+          this.appendChild(displayValueEl.cloneNode(true));
+        }
+        this.hasDisplayValueContent = displayValueEl !== null;
+      }
     }
 
     this.dropdown.requestUpdate();
@@ -525,6 +632,7 @@ export class AuroSelect extends LitElement {
 
     this.addEventListener('blur', () => {
       this.validation.validate(this);
+      this.hasFocus = false;
     });
   }
 
@@ -600,6 +708,7 @@ export class AuroSelect extends LitElement {
    */
   handleFocusin() {
 
+    this.hasFocus = true;
     this.touched = true;
   }
 
@@ -808,11 +917,288 @@ export class AuroSelect extends LitElement {
     }
   }
 
+  renderAriaHtml() {
+    return html`
+      <div aria-live="polite" class="util_displayHiddenVisually">
+        ${this.optionActive && this.options.length > 0
+          ? html`
+            ${`${this.optionActive.innerText}, option ${this.options.indexOf(this.optionActive) + 1} of ${this.options.length}`}
+          `
+          : undefined
+        };
+
+        ${this.optionSelected && this.options.length > 0
+          ? html`
+          ${`${this.optionSelected.innerText} selected`}
+          `
+          : undefined
+        };
+      </div>
+    `;
+  }
+
+  renderNativeSelect() {
+    return html`
+      <div class="nativeSelectWrapper">
+        <select 
+          tabindex="-1"
+          id="${`native-select-${this.id || this.uniqueId}`}"
+          name="${this.name || ''}"
+          ?disabled="${this.disabled}"
+          ?required="${this.required}"
+          aria-hidden="true"
+          autocomplete="${ifDefined(this.autocomplete)}"
+          @change="${this._handleNativeSelectChange}">
+          <option value="" ?selected="${!this.value}"></option>
+          ${this.options.map((option) => {
+            const optionValue = option.value || option.textContent;
+            return html`
+              <option 
+                value="${optionValue}" 
+                ?selected="${this.value === optionValue}">
+                ${option.textContent}
+              </option>
+            `;
+          })}
+        </select>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the help text and error message.
+   * @private
+   * @returns {html} - Returns HTML for the help text and error message.
+   */
+  renderHtmlHelpText() {
+    return html`
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helptext"></slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+        : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ERROR MESSAGE ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+      }
+    `;
+  }
+
+  /**
+   * Returns HTML for the emphasized layout.
+   * @private
+   * @returns {import("lit").TemplateResult} - Returns HTML for the emphasized layout.
+   */
+  // TODO update to use util class
+  renderLayoutEmphasized() {
+    const placeholderClass = {
+      hidden: this.value,
+    };
+
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.isPopoverVisible,
+      'withValue': this.value && this.value.length > 0,
+      'force': this.forceDisplayValue,
+    };
+
+    const valueContainerClasses = {
+      'valueContainer': true,
+      'util_displayHiddenVisually': (this.forceDisplayValue || !(this.dropdown && this.dropdown.isPopoverVisible)) && this.hasDisplayValueContent
+    };
+
+    return html`
+      <div
+        class="${classMap(this.commonWrapperClasses)}"
+        part="wrapper">
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        </div>
+        <${this.dropdownTag}
+          ?autoPlacement="${this.autoPlacement}"
+          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          ?matchWidth="${!this.flexMenuWidth}"
+          ?noFlip="${this.noFlip}"
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          chevron
+          fluid
+          for="selectMenu"
+          layout="${this.layout}"
+          part="dropdown"
+          shape="${this.shape}"
+          size="${this.size}">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+            <div class="accents left">
+              <slot name="typeIcon"></slot>
+            </div>
+            <div class="mainContent">
+              <div class="${classMap(valueContainerClasses)}">
+                <label>
+                  <slot name="label"></slot>
+                </label>
+                <div class="value" id="value"></div>
+                ${this.value ? undefined : html`
+                  <div id="placeholder" class="${classMap(placeholderClass)}">
+                    <slot name="placeholder"></slot>
+                  </div>
+                `}
+              </div>
+              <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+                <slot name="displayValue"></slot>
+              </div>
+            </div>
+            <div class="accents right"></div>
+          </div>
+          <div class="menuWrapper"></div>
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot></slot>
+          </${this.bibtemplateTag}>
+          <div slot="helpText">
+            ${this.renderHtmlHelpText()}
+          </div>
+        </${this.dropdownTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the snowflake layout.
+   * @private
+   * @returns {import("lit").TemplateResult} - Returns HTML for the snowflake layout.
+   */
+  renderLayoutSnowflake() {
+    const placeholderClass = {
+      hidden: this.value,
+    };
+
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.isPopoverVisible,
+      'withValue': this.value && this.value.length > 0,
+      'force': this.forceDisplayValue,
+    };
+
+    const valueContainerClasses = {
+      'valueContainer': true,
+      'util_displayHiddenVisually': (this.forceDisplayValue || !(this.dropdown && this.dropdown.isPopoverVisible)) && this.hasDisplayValueContent
+    };
+
+    return html`
+      <div
+        class="${classMap(this.commonWrapperClasses)}"
+        part="wrapper">
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        </div>
+        <${this.dropdownTag}
+          ?autoPlacement="${this.autoPlacement}"
+          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          ?matchWidth="${!this.flexMenuWidth}"
+          ?noFlip="${this.noFlip}"
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          chevron
+          fluid
+          for="selectMenu"
+          layout="${this.layout}"
+          part="dropdown"
+          shape="${this.shape}"
+          size="${this.size}">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+            <div class="accents left">
+              <slot name="typeIcon"></slot>
+            </div>
+            <div class="mainContent">
+              <div class="${classMap(valueContainerClasses)}">
+                <label>
+                  <slot name="label"></slot>
+                </label>
+                <div class="value" id="value"></div>
+                ${this.value ? undefined : html`
+                  <div id="placeholder" class="${classMap(placeholderClass)}">
+                    <slot name="placeholder"></slot>
+                  </div>
+                `}
+              </div>
+              <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+                <slot name="displayValue"></slot>
+              </div>
+            </div>
+            <div class="accents right"></div>
+          </div>
+          <div class="menuWrapper"></div>
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot></slot>
+          </${this.bibtemplateTag}>
+          <div slot="helpText">
+            ${this.renderHtmlHelpText()}
+          </div>
+        </${this.dropdownTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the classic layout.
+   * @private
+   * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
+   */
+  renderLayoutClassic() {
+    return html`
+      <div
+        class="${classMap(this.commonWrapperClasses)} thin"
+        part="wrapper">
+        classic
+      </div>
+    `;
+  }
+
+  /**
+   * Logic to determine the layout of the component.
+   * @private
+   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
+   * @returns {void}
+   */
+  renderLayout(ForcedLayout) {
+    const layout = ForcedLayout || this.layout;
+
+    switch (layout) {
+      case 'emphasized':
+        return this.renderLayoutEmphasized();
+      case 'emphasized-left':
+        return this.renderLayoutEmphasized();
+      case 'emphasized-right':
+        return this.renderLayoutEmphasized();
+      case 'snowflake':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-left':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-right':
+        return this.renderLayoutSnowflake();
+      default:
+        return this.renderLayoutClassic();
+    }
+  }
+
   // When using auroElement, use the following attribute and function when hiding content from screen readers.
   // aria-hidden="${this.hideAudible(this.hiddenAudible)}"
 
   // function that renders the HTML and CSS into  the scope of the component
-  render() {
+  renderBACKUP() {
     const placeholderClass = {
       hidden: this.value,
     };
@@ -838,19 +1224,22 @@ export class AuroSelect extends LitElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
-          for="selectmenu"
-          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?onDark="${this.onDark}"
-          common
-          fluid
-          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
-          ?matchWidth="${!this.flexMenuWidth}"
-          chevron
-          .placement="${this.placement}"
-          .offset="${this.offset}"
           ?autoPlacement="${this.autoPlacement}"
+          ?disabled="${this.disabled}"
+          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          ?matchWidth="${!this.flexMenuWidth}"
           ?noFlip="${this.noFlip}"
-          part="dropdown">
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          chevron
+          fluid
+          for="selectMenu"
+          layout="${this.layout}"
+          part="dropdown"
+          shape="${this.shape}"
+          size="${this.size}">
           <span slot="trigger" aria-haspopup="true" id="triggerFocus">
             <span id="placeholder"
               class="${classMap(placeholderClass)}"
@@ -902,6 +1291,7 @@ export class AuroSelect extends LitElement {
           </select>
         </div>
         <!-- Help text and error message template -->
+        ${this.renderHtmlHelpText()}
       </div>
     `;
   }

@@ -4,8 +4,7 @@
 // ---------------------------------------------------------------------
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariableMap';
+@use '@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariableMap';
 
 // general WCSS imports
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';

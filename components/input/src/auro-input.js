@@ -3,8 +3,24 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable lit-a11y/click-events-have-key-events, lit/binding-positions, lit/no-invalid-html, max-lines */
 
+import shapeSizeCss from "./styles/shapeSize-css.js";
+
+import styleCss from "./styles/style-css.js";
+import styleDefaultCss from "./styles/default/style-css.js";
+import colorBaseCss from "./styles/color-css.js";
+import tokensCss from "./styles/tokens-css.js";
+
+import classicStyleCss from "./styles/classic/style-css.js";
+import classicColorCss from "./styles/classic/color-css.js";
+
+import emphasizedStyleCss from "./styles/emphasized/style-css.js";
+import emphasizedColorCss from "./styles/emphasized/color-css.js";
+
+import snowflakeStyleCss from "./styles/snowflake/style-css.js";
+
+import { css } from "lit";
 import { html } from 'lit/static-html.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -37,18 +53,99 @@ export class AuroInput extends BaseInput {
     /**
      * @private
      */
-    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
-
-    /**
-     * @private
-     */
     this.buttonTag = versioning.generateTag('auro-formkit-input-button', buttonVersion, AuroButton);
 
     /**
      * @private
      */
+    this.hasDisplayValueContent = false;
+
+    /**
+     * @private
+     */
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
   }
+
+  static get styles() {
+    return [
+      css`${classicStyleCss}`,
+      css`${classicColorCss}`,
+      css`${shapeSizeCss}`,
+      css`${colorBaseCss}`,
+      css`${styleCss}`,
+      css`${styleDefaultCss}`,
+      css`${tokensCss}`,
+      css`${emphasizedStyleCss}`,
+      css`${emphasizedColorCss}`,
+      css`${snowflakeStyleCss}`
+    ];
+  }
+
+  /**
+   * Returns classmap configuration for html5 input labels in all layouts.
+   * @private
+   * @returns {void}
+   */
+  get commonLabelClasses() {
+    return {
+      'withValue': this.value && this.value.length > 0,
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+    };
+  }
+
+  /**
+   * Returns classmap configuration for html5 inputs in all layouts.
+   * @private
+   * @returns {object} - Returns classmap.
+   */
+  get commonInputClasses() {
+    return {
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+    };
+  }
+
+  /**
+   * Returns classmap configuration for html5 inputs in each layout.
+   * @private
+   * @return {object} - Returns classmap.
+   */
+  get legacyInputClasses() {
+    return {
+      ...this.commonInputClasses,
+      'util_displayHiddenVisually': !this.hasFocus && !this.value
+    };
+  }
+
+  /**
+   * Returns classmap configuration for wrapper elements in each layout.
+   * @private
+   * @return {object} - Returns classmap.
+   */
+  get commonWrapperClasses() {
+    return {
+      'wrapper': true,
+      'withValue': this.value && this.value.length > 0,
+      'hasFocus': this.hasFocus
+    };
+  }
+
+  /**
+   * Returns classmap configuration for helpText elements in each layout.
+   * @private
+   * @return {object} - Returns classmap.
+   */
+  get helpTextClasses() {
+    return {
+      'helpTextWrapper': true,
+      'leftIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('right'),
+      'rightIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('left')
+    };
+  };
 
   /**
    * This will register this element with the browser.
@@ -75,158 +172,349 @@ export class AuroInput extends BaseInput {
     return false;
   }
 
-  // function that renders the HTML and CSS into  the scope of the component
-  render() {
-    // is-disabled class - THIS IS ONLY HERE TO MAKE A TEST PASS AS FAR AS I CAN TELL
-    const labelClasses = {
-      'is-disabled': this.disabled,
-      'withIcon': this.hasTypeIcon(),
-      'withValue': this.value && this.value.length > 0
+  /**
+   * Function to determine if there is any displayValue content to render.
+   * @private
+   * @returns {void}
+   */
+  checkDisplayValueSlotChange() {
+    const nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
+
+    let hasContent = false;
+
+    if (nodes.length > 0) {
+      hasContent = true;
+    }
+
+    this.hasDisplayValueContent = hasContent;
+  }
+
+  /**
+   * Returns HTML for the validation error icon.
+   * @private
+   * @returns {html} - Returns HTML for the validation error icon.
+   */
+  renderValidationErrorIconHtml() {
+    return html`
+      ${this.validity && this.validity !== 'valid' ? html`
+        <div class="notification alertNotification">
+          <${this.iconTag}
+            category="alert"
+            name="error-stroke"
+            variant="statusError"
+            ?ondark="${this.onDark}">
+          </${this.iconTag}>
+        </div>
+      ` : undefined}
+    `;
+  }
+
+  /**
+   * Returns HTML for the HTML5 input element.
+   * @private
+   * @param {boolean} [useLegacyHiddenState=false] - If true, the input will be visually hidden when not focused and has no value.
+   * @returns {html} - Returns HTML for the HTML5 input element.
+   */
+  renderHtmlInput(useLegacyHiddenState = false) {
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.hasFocus,
+      'withValue': this.value && this.value.length > 0,
     };
 
+    // Remove this when the classic layout is sunset.
+    const inputOverrideClasses = useLegacyHiddenState
+      ? this.legacyInputClasses
+      : this.commonInputClasses;
+
     return html`
-      <div class="wrapper" part="wrapper">
-        <div class="main">
-          <div class="typeIcon">
-            ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
-
-            <!-- The repeat() method is used below in order to force auro-icon to re-render when the name value is updated.
-               This should be cleaned up when auro-icon issue #31 is resolved. -->
-            ${this.inputIconName
-            ? repeat([this.inputIconName], (val) => val, (name) => html`
-              <${this.iconTag}
-                class="accentIcon"
-                category="payment"
-                name="${name}"
-                part="accentIcon"
-                ?onDark="${this.onDark}"
-                variant="${this.disabled ? 'disabled' : 'muted'}">
-              </${this.iconTag}>
-            `) : undefined
-            }
-
-            ${this.type === 'date'
-            ? html`
-              <${this.iconTag}
-                class="accentIcon"
-                category="interface"
-                name="calendar"
-                part="accentIcon"
-                ?onDark="${this.onDark}"
-                variant="${this.disabled ? 'disabled' : 'muted'}">
-              </${this.iconTag}>`
-            : undefined
-            }
-          </div>
-          <label for=${this.inputId} class="${classMap(labelClasses)}" part="label">
-            <slot name="label">
-              ${this.label}
-            </slot>
-            ${this.required ? '' : ` (${i18n(this.lang, 'optional')})`}
-          </label>
-          <input
-            @input="${this.handleInput}"
-            @focusin="${this.handleFocusin}"
-            @blur="${this.handleBlur}"
-            id="${this.inputId}"
-            name="${ifDefined(this.name)}"
-            type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}"
-            pattern="${ifDefined(this.definePattern())}"
-            maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
-            minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
-            inputMode="${ifDefined(this.inputmode ? this.inputmode : undefined)}"
-            ?required="${this.required}"
-            ?disabled="${this.disabled}"
-            aria-describedby="${this.uniqueId}"
-            ?aria-invalid="${this.validity !== 'valid'}"
-            placeholder=${this.getPlaceholder()}
-            lang="${ifDefined(this.lang)}"
-            ?activeLabel="${this.activeLabel}"
-            spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
-            autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
-            autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
-            autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
-            part="input"
-            role="${ifDefined(this.a11yRole)}"
-            aria-expanded="${ifDefined(this.a11yExpanded)}"
-            aria-controls="${ifDefined(this.a11yControls)}"
-          />
+      <label for=${this.id} class="${classMap(this.commonLabelClasses)}" part="label">
+        <slot name="label">
+          ${this.label}
+        </slot>
+      </label>
+      <input
+        @blur="${this.handleBlur}"
+        @focusin="${this.handleFocusin}"
+        @focusout="${this.handleFocusout}"
+        @input="${this.handleInput}"
+        ?activeLabel="${this.activeLabel}"
+        ?disabled="${this.disabled}"
+        ?required="${this.required}"
+        .placeholder=${this.placeholderStr}
+        aria-describedby="${this.uniqueId}"
+        aria-invalid="${this.validity !== 'valid'}"
+        autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
+        autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
+        autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
+        class="${classMap(inputOverrideClasses)}"
+        id="${this.inputId}"
+        inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
+        lang="${ifDefined(this.lang)}"
+        maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
+        minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
+        name="${ifDefined(this.name)}"
+        part="input"
+        pattern="${ifDefined(this.definePattern())}"
+        spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
+        type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}" />
+      <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+        <div class="displayValueWrapper">
+          <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
         </div>
-        <div
-          class="notificationIcons"
-          part="notificationIcons"
-          ?hasValue="${this.hasValue}">
-          ${this.validity && this.validity !== 'valid' ? html`
-            <div class="notification alertNotification">
-              <${this.iconTag}
-                category="alert"
-                name="error-stroke"
-                customColor
-              </${this.iconTag}>
-            </div>
-          ` : undefined}
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the clear action button.
+   * @private
+   * @returns {html} - Returns HTML for the clear action button.
+   */
+  renderHtmlActionClear() {
+    return html`
+      <div class="notification clear">
+        <${this.buttonTag}
+          @click="${this.handleClickClear}"
+          ?onDark="${this.onDark}"
+          aria-label="${i18n(this.lang, 'clearInput')}"
+          class="notificationBtn clearBtn"
+          tabindex="-1"
+          variant="flat">
+          <${this.iconTag}
+            category="interface"
+            customColor
+            name="x-lg"
+            >
+          </${this.iconTag}>
+        </${this.buttonTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the show password button.
+   * @private
+   * @returns {html} - Returns HTML for the show password button.
+   */
+  renderHtmlNotificationPassword() {
+    return html`
+      <div class="notification">
+        <${this.buttonTag}
+          @click="${this.handleClickShowPassword}
+          ?onDark="${this.onDark}"
+          aria-hidden="true"
+          class="notificationBtn passwordBtn"
+          tabindex="-1"
+          variant="flat">
+          <${this.iconTag}
+            ?hidden=${!this.showPassword}
+            category="interface"
+            customColor
+            name="hide-password-stroke">
+          </${this.iconTag}>
+          <${this.iconTag}
+            ?hidden=${this.showPassword}
+            category="interface"
+            customColor
+            name="view-password-stroke">
+          </${this.iconTag}>
+        </${this.buttonTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the input type icon.
+   * @private
+   * @returns {html} - Returns HTML for the input type icon.
+   */
+  renderHtmlTypeIcon() {
+    return html`
+      <div class="typeIcon">
+        ${this.type === 'credit-card' ? this.processCreditCard() : undefined}
+
+        <!-- The repeat() method is used below in order to force auro-icon to re-render when the name value is updated.
+          This should be cleaned up when auro-icon issue #31 is resolved. -->
+        ${this.inputIconName
+        ? repeat([this.inputIconName], (val) => val, (name) => html`
+          <${this.iconTag}
+            ?onDark="${this.onDark}"
+            category="payment"
+            class="accentIcon"
+            name="${name}"
+            part="accentIcon"
+            variant="${this.disabled ? 'disabled' : 'muted'}">
+          </${this.iconTag}>
+        `) : undefined
+        }
+        ${this.type === 'date'
+        ? html`
+          <${this.iconTag}
+            ?onDark="${this.onDark}"
+            category="interface"
+            class="accentIcon"
+            name="calendar"
+            part="accentIcon"
+            variant="${this.disabled ? 'disabled' : 'muted'}">
+          </${this.iconTag}>`
+        : undefined
+        }
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the help text and error message.
+   * @private
+   * @returns {html} - Returns HTML for the help text and error message.
+   */
+  renderHtmlHelpText() {
+    return html`
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helptext">${this.getHelpText()}</slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+        : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+      }
+    `;
+  }
+
+  /**
+   * Returns HTML for the classic layout.
+   * @private
+   * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
+   */
+  renderLayoutClassic() {
+    return html`
+      <div
+        @click="${this.handleClick}"
+        class="${classMap(this.commonWrapperClasses)} thin"
+        part="wrapper">
+        <div class="accents left">
+           ${this.renderHtmlTypeIcon()}
+        </div>
+        <div class="mainContent">
+          ${this.renderHtmlInput(true)}
+        </div>
+        <div class="accents right">
+          ${this.renderValidationErrorIconHtml()}
           ${this.hasValue ? html`
-            ${this.type === 'password' ? html`
-              <div class="notification">
-                <${this.buttonTag}
-                  variant="flat"
-                  ?onDark="${this.onDark}"
-                  aria-hidden="true"
-                  tabindex="-1"
-                  @click="${this.handleClickShowPassword}"
-                  class="notificationBtn passwordBtn">
-                  <${this.iconTag}
-                    category="interface"
-                    name="hide-password-stroke"
-                    customColor
-                    ?hidden=${!this.showPassword}>
-                  </${this.iconTag}>
-                  <${this.iconTag}
-                    category="interface"
-                    name="view-password-stroke"
-                    customColor
-                    ?hidden=${this.showPassword}>
-                  </${this.iconTag}>
-                </${this.buttonTag}>
-              </div>
-            ` : undefined}
             ${!this.disabled && !this.readonly ? html`
-              <div class="notification">
-                <${this.buttonTag}
-                  variant="flat"
-                  ?onDark="${this.onDark}"
-                  class="notificationBtn clearBtn"
-                  arialabel="${i18n(this.lang, 'clearInput')}"
-                  @click="${this.handleClickClear}">
-                  <${this.iconTag}
-                    customColor
-                    category="interface"
-                    name="x-lg"
-                    >
-                  </${this.iconTag}>
-                </${this.buttonTag}>
-              </div>
+              ${this.renderHtmlActionClear()}
             ` : undefined}
           ` : undefined}
         </div>
       </div>
-      <!-- Help text and error message template -->
-        ${!this.validity || this.validity === undefined || this.validity === 'valid'
-        ? html`
-        <${this.helpTextTag} ?onDark="${this.onDark}">
-          <p id="${this.uniqueId}" part="helpText">
-            <slot name="helptext">${this.getHelpText()}</slot>
-          </p>
-        </${this.helpTextTag}>
-        `
-        : html`
-        <${this.helpTextTag} error ?onDark="${this.onDark}">
-          <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-            ${this.errorMessage}
-          </p>
-        </${this.helpTextTag}>
-        `
-        }
+      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
+        ${this.renderHtmlHelpText()}
+      </div>
     `;
+  }
+
+  /**
+   * Returns HTML for the emphasized layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the emphasized layout.
+   */
+  renderLayoutEmphasized() {
+    return html`
+      <div
+        @click="${this.handleClick}"
+        class="${classMap(this.commonWrapperClasses)}"
+        part="wrapper">
+        <div class="accents left">
+          ${this.layout.includes('left') ? html`
+            ${this.renderValidationErrorIconHtml()}
+          ` : undefined}
+        </div>
+        <div class="mainContent">
+          ${this.renderHtmlInput()}
+        </div>
+        <div class="accents right">
+          ${this.layout.includes('right') || this.layout === "emphasized" ? html`
+            ${this.renderValidationErrorIconHtml()}
+          ` : undefined}
+          ${this.hasValue ? html`
+            ${!this.disabled && !this.readonly ? html`
+              ${this.renderHtmlActionClear()}
+            ` : undefined}
+          ` : undefined}
+        </div>
+      </div>
+      <div class="${classMap(this.helpTextClasses)}" part="inputHelpText">
+        ${this.renderHtmlHelpText()}
+      </div>
+    `;
+  }
+
+  /**
+   * Returns HTML for the emphasized layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the emphasized layout.
+   */
+  renderLayoutSnowflake() {
+    return html`
+      <div
+        @click="${this.handleClick}"
+        class="${classMap(this.commonWrapperClasses)}"
+        part="wrapper">
+        <div class="accents left">
+           ${this.renderHtmlTypeIcon()}
+        </div>
+        <div class="mainContent">
+          ${this.renderHtmlInput()}
+        </div>
+        <div class="accents right">
+          ${this.renderValidationErrorIconHtml()}
+          ${this.hasValue ? html`
+            ${!this.disabled && !this.readonly ? html`
+              ${this.renderHtmlActionClear()}
+            ` : undefined}
+          ` : undefined}
+        </div>
+      </div>
+      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
+        ${this.renderHtmlHelpText()}
+      </div>
+    `;
+  }
+
+  /**
+   * Logic to determine the layout of the component.
+   * @private
+   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
+   * @returns {void}
+   */
+  renderLayout(ForcedLayout) {
+    const layout = ForcedLayout || this.layout;
+
+    switch (layout) {
+      case 'emphasized':
+        return this.renderLayoutEmphasized();
+      case 'emphasized-left':
+        return this.renderLayoutEmphasized();
+      case 'emphasized-right':
+        return this.renderLayoutEmphasized();
+      case 'snowflake':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-left':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-right':
+        return this.renderLayoutSnowflake();
+      default:
+        return this.renderLayoutClassic();
+    }
   }
 }
