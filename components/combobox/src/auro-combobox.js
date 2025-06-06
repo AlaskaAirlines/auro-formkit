@@ -540,7 +540,7 @@ export class AuroCombobox extends AuroElement {
       this.dropdownOpen = ev.detail.expanded;
 
       // wait a frame in case the bib gets hide immediately after showing because there is no value
-      setTimeout(this.transportInput);
+      setTimeout(this.setInputFocus, 0);
     });
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
@@ -549,6 +549,7 @@ export class AuroCombobox extends AuroElement {
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
 
     // Exposes the CSS parts from the bibtemplate for styling
     this.bibtemplate.exposeCssParts();
@@ -556,12 +557,22 @@ export class AuroCombobox extends AuroElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    this.transportInput = this.transportInput.bind(this);
-
+    this.setInputFocus = this.setInputFocus.bind(this);
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
-      setTimeout(this.transportInput);
+      setTimeout(this.setInputFocus, 0);
     });
+  }
+
+  /**
+   * @private
+   */
+  setInputFocus() {
+    if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
+      this.inputInBib.focus();
+    } else {
+      this.input.focus();
+    }
   }
 
   /**
@@ -704,63 +715,18 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * When the dropdown is visible in fullscreen mode, the input is moved to the subheader slot of bibtemplate.
-   * Otherwise, it's moved back to the trigger slot.
-   * @private
-   * @returns {void}
-   */
-  transportInput() {
-    if (!this.input) {
-      return;
-    }
-
-    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
-    const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
-
-    if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-
-      if (this.input.parentNode === this.dropdown) {
-        // keep the trigger size the same even after input gets removed
-        const parentSize = window.getComputedStyle(this.dropdown.trigger);
-        this.dropdown.trigger.style.height = parentSize.height;
-
-        // input will not have border on bib
-        this.input.removeAttribute('bordered');
-        this.input.setAttribute('borderless', true);
-        this.input.setAttribute('slot', 'subheader');
-
-        // set display of helpText and alert icon programmatically
-        // because ::slotted and ::part do not work together
-        inputHelpText.style.display = 'none';
-        if (inputAlertIcon) {
-          inputAlertIcon.style.display = 'none';
-        }
-
-        this.bibtemplate.prepend(this.input);
-        this.input.focus();
-      }
-    } else if (this.input.parentNode !== this.dropdown) {
-      this.input.setAttribute('bordered', true);
-      this.input.removeAttribute('borderless');
-      this.input.setAttribute('slot', 'trigger');
-
-      // reset display of helpText and alert icon to be visible
-      inputHelpText.style.display = '';
-      if (inputAlertIcon) {
-        inputAlertIcon.style.display = '';
-      }
-
-      this.dropdown.prepend(this.input);
-      this.input.focus();
-    }
-  }
-
-  /**
    * Handle changes to the input value and trigger changes that should result.
    * @private
    * @returns {void}
    */
-  handleInputValueChange() {
+  handleInputValueChange(e) {
+    if (e.target === this.inputInBib) {
+      this.input.value = this.inputInBib.value;
+      return;
+    }
+
+    this.inputInBib.value = this.input.value;
+
     this.menu.matchWord = this.input.value;
     this.optionActive = null;
 
@@ -994,7 +960,7 @@ export class AuroCombobox extends AuroElement {
       case 'label':
         // Programmatically inject as the slot cannot be carried over to bibtemplate.
         // It's because the bib is/will be separated from dropdown to body.
-        this.transportAssignedNodes(event.target, this.input, 'label');
+        this.transportAssignedNodes(event.target, this.inputInBib, "label");
         break;
       case 'bib.fullscreen.headline':
         this.transportAssignedNodes(event.target, this.bibtemplate, 'header');
@@ -1024,10 +990,6 @@ export class AuroCombobox extends AuroElement {
             `
             : undefined
           }
-        </div>
-        <div class="util_displayHiddenVisually" aria-hidden="true">
-          <slot name="label" @slotchange="${this.handleSlotChange}"></slot>
-          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
@@ -1070,10 +1032,28 @@ export class AuroCombobox extends AuroElement {
             shape="${this.shape}"
             size="${this.size}"
             slot="trigger">
+            <slot name="label" slot="label" @slotchange="${this.handleSlotChange}"></slot>
           </${this.inputTag}>
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
+            <slot name="bib.fullscreen.headline" slot="header"></slot>
             <slot></slot>
+            <${this.inputTag}
+              @input="${this.handleInputValueChange}"
+              .autocomplete="${this.autocomplete}"
+              .inputmode="${this.inputmode}"
+              .placeholder="${this.placeholder}"
+              .type="${this.type}"
+              ?required="${this.required}"
+              ?noValidate="${this.noValidate}"
+              ?disabled="${this.disabled}"
+              ?icon="${this.triggerIcon}"
+              simple
+              layout="classic"
+              shape="classic"
+              size="sm"
+              slot="subheader">
+            </${this.inputTag}>
           </${this.bibtemplateTag}>
 
           <span slot="helpText">

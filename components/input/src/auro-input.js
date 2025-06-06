@@ -130,6 +130,7 @@ export class AuroInput extends BaseInput {
   get commonWrapperClasses() {
     return {
       'wrapper': true,
+      'simple': this.simple,
       'withValue': this.value && this.value.length > 0,
       'hasFocus': this.hasFocus
     };
@@ -251,7 +252,7 @@ export class AuroInput extends BaseInput {
         autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
         class="${classMap(inputOverrideClasses)}"
         id="${this.inputId}"
-        inputMode="${ifDefined(this.inputMode ? this.inputMode : undefined)}"
+        inputmode="${ifDefined(this.inputmode ? this.inputmode : undefined)}"
         lang="${ifDefined(this.lang)}"
         maxlength="${ifDefined(this.maxLength ? this.maxLength : undefined)}"
         minlength="${ifDefined(this.minLength ? this.minLength : undefined)}"
@@ -259,7 +260,11 @@ export class AuroInput extends BaseInput {
         part="input"
         pattern="${ifDefined(this.definePattern())}"
         spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
-        type="${this.type === 'password' && this.showPassword ? 'text' : this.getInputType(this.type)}" />
+        type="${this.type === "password" && this.showPassword ? "text" : this.getInputType(this.type)}"
+        .role=${this.a11yRole}
+        aria-expanded=${this.a11yExpanded ? 'true' : 'false'}
+        aria-controls=${ifDefined(this.a11yControls)}
+      />
       <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
         <div class="displayValueWrapper">
           <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
@@ -398,10 +403,15 @@ export class AuroInput extends BaseInput {
    * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
    */
   renderLayoutClassic() {
+    const classicClassMap = {
+      ...this.commonWrapperClasses,
+      'thin': !this.simple
+    };
+
     return html`
       <div
         @click="${this.handleClick}"
-        class="${classMap(this.commonWrapperClasses)} thin"
+        class="${classMap(classicClassMap)}"
         part="wrapper">
         <div class="accents left">
            ${this.renderHtmlTypeIcon()}

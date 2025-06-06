@@ -253,11 +253,8 @@ function runFulltest(mobileview) {
 
     setInputValue(el, 'a');
 
-    if (mobileview) {
-      await waitUntil(() => el.dropdown.isPopoverVisible && el.input.parentNode !== el.dropdown);
-    } else {
-      await waitUntil(() => el.dropdown.isPopoverVisible);
-    }
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
     setTimeout(() => {
       setInputValue(el, 'app');
     });
