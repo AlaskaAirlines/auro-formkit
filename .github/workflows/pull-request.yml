@@ -91,16 +91,14 @@ jobs:
           with:
             header: release
             message: |
-              🚀 PR Release Published! 
-              
-              Package: `${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}`
+              🚀 PR Release Published! `v${{ steps.package.outputs.version }}`
 
-              To install normally:
+              To install:
               ```bash
               npm install ${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}
               ```
 
-              To install via alias:
+              Install via alias:
               ```bash
               npm install @aurodesignsystem@npm:${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}
               ```
