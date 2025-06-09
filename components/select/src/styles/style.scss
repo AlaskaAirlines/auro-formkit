@@ -12,7 +12,12 @@
 // @import '@aurodesignsystem/webcorestylesheets/src/core';
 // @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-/* stylelint-disable selector-class-pattern */
+/* stylelint-disable
+  selector-class-pattern,
+  scss/selector-nest-combinators,
+  selector-max-class,
+  selector-max-pseudo-class
+*/
 
 [auro-dropdown] {
   --ds-auro-dropdown-trigger-border-color: var(--ds-auro-select-border-color);
@@ -23,10 +28,10 @@
 .mainContent {
   position: relative;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .valueContainer [slot="displayValue"] {
@@ -36,8 +41,8 @@
 .accents {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 ::slotted([slot="typeIcon"]) {
@@ -58,9 +63,9 @@
 
 .triggerContent {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: center;
-  width: 100%;
   padding: 0 8px 0 24px;
 }
 
@@ -69,9 +74,9 @@
 .layout-snowflake {
   .triggerContent {
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
-    width: 100%;
     padding: 0 8px 0 24px;
   }
 }
@@ -79,9 +84,9 @@
 .layout-classic {
   .triggerContent {
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
-    width: 100%;
     padding: 0 8px 0 24px;
   }
 }

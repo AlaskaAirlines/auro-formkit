@@ -3,7 +3,13 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable
+  max-lines,
+  no-underscore-dangle,
+  lit/binding-positions,
+  lit/no-invalid-html,
+  indent
+*/
 
 // If using litElement base class
 import { css } from "lit";
@@ -422,7 +428,7 @@ export class AuroSelect extends AuroElement {
   /**
    * Returns classmap configuration for wrapper elements in each layout.
    * @private
-   * @return {object} - Returns classmap.
+   * @returns {object} - Returns classmap.
    */
   get commonWrapperClasses() {
     return {
@@ -443,7 +449,7 @@ export class AuroSelect extends AuroElement {
     });
 
     // setting up bibtemplate
-    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
 
     if (this.customBibWidth) {
       this.dropdown.dropdownWidth = this.customBibWidth;
@@ -996,7 +1002,6 @@ export class AuroSelect extends AuroElement {
    * @private
    * @returns {import("lit").TemplateResult} - Returns HTML for the emphasized layout.
    */
-  // TODO update to use util class
   renderLayoutEmphasized() {
     const placeholderClass = {
       hidden: this.value,
