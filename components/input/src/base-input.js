@@ -441,8 +441,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * The id for input node.
        * @private
-       * id for input node
        */
       inputId: {
         type: String,

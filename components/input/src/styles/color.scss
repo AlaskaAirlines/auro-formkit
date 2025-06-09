@@ -2,7 +2,7 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern */
+/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern, max-nesting-depth, selector-max-class */
 
 // Support for fallback values
 @use '@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska' as v;
@@ -17,8 +17,8 @@
   }
 
   input {
-    color: var(--ds-auro-input-text-color);
     caret-color: var(--ds-auro-input-caret-color);
+    color: var(--ds-auro-input-text-color);
 
     &::placeholder {
       color: var(--ds-auro-input-placeholder-text-color);
