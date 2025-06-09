@@ -26,8 +26,8 @@ import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 // default layout
-import classicColorCss from "./styles/default/color-css.js";
-import classicLayoutCss from "./styles/default/style-css.js";
+import classicColorCss from "./styles/classic/color-css.js";
+import classicLayoutCss from "./styles/classic/style-css.js";
 
 
 import styleEmphasizedCss from "./styles/emphasized/style-css.js";
@@ -61,7 +61,7 @@ export class AuroDropdown extends AuroElement {
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
-    this.errorMessage = ''; // TODO!
+    this.errorMessage = ''; // TODO - check with Doug if there is still more to do here
 
     // Layout Config
     this.layout = 'classic';
@@ -822,7 +822,6 @@ export class AuroDropdown extends AuroElement {
    *
    * @private
    * @method handleDefaultSlot
-   * @param {Event} event - The event object representing the slot change.
    * @fires Function#onSlotChange - Optional callback invoked when the slot content changes.
    */
   handleDefaultSlot() {
@@ -924,6 +923,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {html} - Returns HTML for the classic layout.
    */
   renderLayoutClassic() {
+    // TODO: check with Doug why this was never used?
     const helpTextClasses = {
       'helpText': true,
       'leftIndent': false,

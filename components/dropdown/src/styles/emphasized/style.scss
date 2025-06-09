@@ -12,7 +12,7 @@
 @import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 @import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute */
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-max-class, selector-class-pattern, selector-not-notation */
 
 // COMMON FOR ALL --------------------------------------------
 
@@ -34,51 +34,51 @@
 }
 
 .trigger {
-  flex: 1;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   outline: none;
 }
 
 .triggerContentWrapper {
-  flex: 1;
   display: flex;
+  width: 100%;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  width: 100%;
 }
 
 .triggerContent {
-  overflow: hidden;
-  flex: 1;
   display: flex;
+  overflow: hidden;
+  width: 100%;
+  flex: 1;
   align-items: center;
   justify-content: center;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
 }
 
 // LAYOUTS ---------------------------------------------------
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='right'])) {
   .leftIndent {
-    margin-left: var(--ds-size-300, $ds-size-300);
     width: calc(100% - var(--ds-size-300, $ds-size-300));
+    margin-left: var(--ds-size-300, $ds-size-300);
   }
 }
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='left'])) {
   .rightIndent {
-    margin-right: var(--ds-size-300, $ds-size-300);
     width: calc(100% - var(--ds-size-300, $ds-size-300));
+    margin-right: var(--ds-size-300, $ds-size-300);
   }
 }
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='left']):not([layout*='right'])) {
   .rightIndent {
-    margin-right: var(--ds-size-300, $ds-size-300);
     width: calc(100% - var(--ds-size-600, $ds-size-600));
+    margin-right: var(--ds-size-300, $ds-size-300);
   }
 }
