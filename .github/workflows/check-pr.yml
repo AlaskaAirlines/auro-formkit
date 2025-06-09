@@ -6,13 +6,13 @@ on:
   pull_request:
     types: [labeled, unlabeled, opened, synchronize, reopened]
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
   require-reviewers:
     runs-on: ubuntu-latest
-    # Use concurrency to ensure only one job runs at a time and cancels in-progress runs
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-      cancel-in-progress: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
