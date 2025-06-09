@@ -1,3 +1,5 @@
+/* stylelint-disable custom-property-empty-line-before */
+
 @use "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska" as v;
 
 $ds-basic-color-border-bold: #585e67;
@@ -12,7 +14,6 @@ $ds-basic-color-border-bold: #585e67;
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-input-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
 
-  //--ds-auro-input-outline-color: transparent;
   --ds-auro-input-outline-color: transparent;
 }
 
