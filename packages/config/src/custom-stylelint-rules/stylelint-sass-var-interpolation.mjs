@@ -1,3 +1,4 @@
+/* eslint-disable init-declarations */
 import stylelint from "stylelint";
 
 const ruleName = "custom/sass-var-interpolation-in-var-fallback";
@@ -7,8 +8,10 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 
 /**
  * Stylelint rule to enforce Sass variables in var() fallbacks are interpolated.
+ * @param {boolean} primaryOption - Whether the rule is enabled.
+ * @returns {Function} The rule function that processes CSS and reports violations.
  */
-const plugin = stylelint.createPlugin(ruleName, (primaryOption) => (root, result) => {
+const ruleFunction = (primaryOption) => (root, result) => {
   if (!primaryOption) {
     return;
   }
@@ -23,12 +26,10 @@ const plugin = stylelint.createPlugin(ruleName, (primaryOption) => (root, result
 
     // Find var() with a fallback argument containing a Sass variable
     const varWithFallbackRegex = /var\((?:[^,]+),\s*(?:[^)]+)\)/gu;
-    let matchArray = null;
+    let matchArray;
 
     while ((matchArray = varWithFallbackRegex.exec(value)) !== null) {
-      // Get the full match and extract the fallback part
       const [fullMatch] = matchArray;
-      // Extract the fallback (between the comma and the closing parenthesis)
       const commaIndex = fullMatch.indexOf(',');
       const closingParenIndex = fullMatch.lastIndexOf(')');
       const fallback = fullMatch.substring(commaIndex + 1, closingParenIndex).trim();
@@ -40,13 +41,17 @@ const plugin = stylelint.createPlugin(ruleName, (primaryOption) => (root, result
           node: decl,
           result,
           ruleName,
-          word: fallback
+          word: fallback,
         });
       }
     }
   });
-});
+};
+
+ruleFunction.ruleName = ruleName;
+ruleFunction.messages = messages;
+ruleFunction.meta = { fixable: false };
 
 // This export format is required for Stylelint plugins
-export default plugin;
+export default stylelint.createPlugin(ruleName, ruleFunction);
 export { ruleName, messages };
