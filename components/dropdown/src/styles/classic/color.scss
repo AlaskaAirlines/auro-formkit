@@ -7,7 +7,14 @@
 @import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
 @import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
 
-/* stylelint-disable no-descending-specificity, declaration-empty-line-before, selector-max-pseudo-class */
+/* stylelint-disable
+  no-descending-specificity,
+  declaration-empty-line-before,
+  selector-max-pseudo-class,
+  max-nesting-depth,
+  selector-max-attribute,
+  scss/selector-nest-combinators
+*/
 
 :host([layout*='classic']) {
   .label {

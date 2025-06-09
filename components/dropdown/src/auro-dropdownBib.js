@@ -10,8 +10,8 @@ import { LitElement } from "lit";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import styleCss from "./styles/default/bibStyles-css.js";
-import colorCss from "./styles/default/bibColors-css.js";
+import styleCss from "./styles/classic/bibStyles-css.js";
+import colorCss from "./styles/classic/bibColors-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
