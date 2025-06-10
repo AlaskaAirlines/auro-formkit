@@ -93,6 +93,7 @@ export class AuroInput extends BaseInput {
    */
   get commonLabelClasses() {
     return {
+      'is-disabled': this.disabled,
       'withValue': this.value && this.value.length > 0,
       'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
     };
@@ -229,7 +230,7 @@ export class AuroInput extends BaseInput {
       : this.commonInputClasses;
 
     return html`
-      <label for=${this.id} class="${classMap(this.commonLabelClasses)}" part="label">
+      <label for=${this.inputId} class="${classMap(this.commonLabelClasses)}" part="label">
         <slot name="label">
           ${this.label}
         </slot>
@@ -302,7 +303,7 @@ export class AuroInput extends BaseInput {
     return html`
       <div class="notification">
         <${this.buttonTag}
-          @click="${this.handleClickShowPassword}
+          @click="${this.handleClickShowPassword}"
           ?onDark="${this.onDark}"
           aria-hidden="true"
           class="notificationBtn passwordBtn"
@@ -410,6 +411,7 @@ export class AuroInput extends BaseInput {
         </div>
         <div class="accents right">
           ${this.renderValidationErrorIconHtml()}
+          ${this.hasValue && this.type === 'password' ? this.renderHtmlNotificationPassword() : undefined}
           ${this.hasValue ? html`
             ${!this.disabled && !this.readonly ? html`
               ${this.renderHtmlActionClear()}

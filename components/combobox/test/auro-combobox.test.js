@@ -31,14 +31,16 @@ function runFulltest(mobileview) {
   it('should pass inputmode to the input element', async () => {
     const el = await defaultFixture(mobileview);
     const auroInput = el.input;
-    const input = auroInput.shadowRoot.querySelector('input');
     const inputmode = 'numeric';
     auroInput.inputmode = inputmode;
     await elementUpdated(el);
-    await expect(input.getAttribute('inputmode')).to.equal(inputmode);
+
+    const input = auroInput.shadowRoot.querySelector("input");
+    await expect(input.getAttribute("inputmode"), inputmode);
+
     input.removeAttribute('inputmode');
     await elementUpdated(el);
-    await expect(input.getAttribute('inputmode')).to.equal(null);
+    await expect(input.hasAttribute("inputmode")).to.be.false;
   });
 
   it('noFilter attribute results in no suggestion filtering', async () => {

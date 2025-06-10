@@ -908,8 +908,7 @@ export default class BaseInput extends AuroElement {
 
     this.requestUpdate();
 
-    // console.warn('this.placeholderStr', this.placeholderStr);
-    // return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+    return this.placeholderStr;
   }
 
   /**
