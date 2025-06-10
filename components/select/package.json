@@ -24,8 +24,6 @@
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^5.14.0",
-    "@aurodesignsystem/webcorestylesheets": "^6.2.0",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "compression": "^1.8.0",

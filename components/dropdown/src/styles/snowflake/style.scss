@@ -8,9 +8,8 @@
 
 // Support for fallback values
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute, selector-max-class, selector-class-pattern */
 
@@ -56,13 +55,13 @@
 
 :host([layout*='snowflake']) {
   .leftIndent {
-    width: calc(100% - var(--ds-size-600, $ds-size-600));
-    margin-left: var(--ds-size-300, $ds-size-300);
+    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
+    margin-left: var(--ds-size-300, vac.$ds-size-300);
   }
 
   .rightIndent {
-    width: calc(100% - var(--ds-size-600, $ds-size-600));
-    margin-right: var(--ds-size-300, $ds-size-300);
+    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
   }
 }
 
@@ -70,6 +69,6 @@
 .layout-snowflake-left,
 .layout-snowflake-right {
   .chevron {
-    margin-right: var(--ds-size-300, $ds-size-300);
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
   }
 }

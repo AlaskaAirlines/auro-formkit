@@ -30,8 +30,6 @@
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/typescript": "*",
-    "@aurodesignsystem/design-tokens": "^5.14.0",
-    "@aurodesignsystem/webcorestylesheets": "^6.3.1",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "compression": "^1.8.0",
     "copyfiles": "^2.4.1",

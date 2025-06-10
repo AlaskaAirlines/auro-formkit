@@ -10,9 +10,9 @@
 
 /* stylelint-disable max-nesting-depth, selector-max-combinators, selector-max-compound-selectors, selector-max-attribute, no-descending-specificity */
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 :host([layout*='classic']) {
   position: relative;
@@ -26,13 +26,13 @@
   }
 
   .label {
-    font-size: var(--ds-text-body-size-xs, $ds-text-body-size-xs);
-    line-height: var(--ds-text-body-size-default, $ds-text-body-size-default);
+    font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
+    line-height: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
     transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
     white-space: normal;
 
     &[hasTrigger='false'] {
-      font-size: var(--ds-text-body-size-default, $ds-text-body-size-default);
+      font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
     }
   }
 
@@ -63,11 +63,11 @@
     overflow: hidden;
     height: 100%;
     align-items: center;
-    margin-left: var(--ds-size-100, $ds-size-100);
+    margin-left: var(--ds-size-100, vac.$ds-size-100);
 
     [auro-icon] {
-      height: var(--ds-size-300, $ds-size-300);
-      line-height: var(--ds-size-300, $ds-size-300);
+      height: var(--ds-size-300, vac.$ds-size-300);
+      line-height: var(--ds-size-300, vac.$ds-size-300);
     }
 
     &[data-expanded='true'] {
@@ -96,26 +96,26 @@
 
 :host([layout*='classic'][inset]) {
   .trigger {
-    padding: var(--ds-size-150, $ds-size-150) var(--ds-size-200, $ds-size-200);
+    padding: var(--ds-size-150, vac.$ds-size-150) var(--ds-size-200, vac.$ds-size-200);
   }
 }
 
 :host([layout*='classic'][common]),
 :host([layout*='classic'][inset][bordered]) {
   .trigger {
-    padding: var(--ds-size-200, $ds-size-200) var(--ds-size-150, $ds-size-150);
+    padding: var(--ds-size-200, vac.$ds-size-200) var(--ds-size-150, vac.$ds-size-150);
   }
 }
 
 :host([layout*='classic'][inset][bordered][labeled]) {
   .trigger {
-    padding: var(--ds-size-100, $ds-size-100) var(--ds-size-150, $ds-size-150);
+    padding: var(--ds-size-100, vac.$ds-size-100) var(--ds-size-150, vac.$ds-size-150);
   }
 }
 
 :host([layout*='classic'][common]),
 :host([layout*='classic'][rounded]) {
   .trigger {
-    border-radius: var(--ds-border-radius, $ds-border-radius);
+    border-radius: var(--ds-border-radius, vac.$ds-border-radius);
   }
 }
