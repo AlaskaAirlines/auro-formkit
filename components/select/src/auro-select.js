@@ -84,6 +84,10 @@ export class AuroSelect extends AuroElement {
 
     this.forceDisplayValue = false;
 
+    this.layout = 'snowflake'; // Default layout
+    this.shape = 'snowflake'; // Default shape
+    this.size = 'xl'; // Default size
+
     /**
      * @private
      */
@@ -791,8 +795,8 @@ export class AuroSelect extends AuroElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-select');
 
-    this.configureMenu();
     this.configureDropdown();
+    this.configureMenu();
     this.configureSelect();
 
     // Set the initial value in auro-menu if defined
@@ -945,7 +949,7 @@ export class AuroSelect extends AuroElement {
 
   renderNativeSelect() {
     return html`
-      <div class="nativeSelectWrapper">
+      <div class="nativeSelectWrapper util_displayHidden">
         <select 
           tabindex="-1"
           id="${`native-select-${this.id || this.uniqueId}`}"
@@ -1153,6 +1157,7 @@ export class AuroSelect extends AuroElement {
             ${this.renderHtmlHelpText()}
           </div>
         </${this.dropdownTag}>
+        ${this.renderNativeSelect()}
       </div>
     `;
   }
