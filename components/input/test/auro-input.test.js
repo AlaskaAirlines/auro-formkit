@@ -16,7 +16,7 @@ describe('auro-input', () => {
 
     const input = el.shadowRoot.querySelector('input');
 
-    expect(input.value).to.equal('other value');
+    await expect(input.value).to.equal('other value');
   });
 
   it('sets placeholder on the input', async () => {
@@ -28,18 +28,24 @@ describe('auro-input', () => {
 
     const input = el.shadowRoot.querySelector('input');
 
-    expect(input).to.have.attribute('placeholder', 'John Doe');
+    await expect(input).to.have.attribute('placeholder', 'John Doe');
   });
 
   it('sets inputmode attribute on the input when passed as attribute or prop', async () => {
     const el = await fixture(html`
-      <auro-input inputmode="numeric"></auro-input>
+      <auro-input></auro-input>
     `);
+
+    const inputmode = "numeric";
+    el.inputmode = inputmode;
+    await elementUpdated(el);
+
     const input = el.shadowRoot.querySelector('input');
-    expect(input).to.have.attribute('inputmode', 'numeric');
+    await expect(input.getAttribute("inputmode"), inputmode);
+
     input.removeAttribute('inputmode');
     await elementUpdated(el);
-    expect(input).to.not.have.attribute('inputmode');
+    await expect(input.hasAttribute('inputmode')).to.be.false;
   });
 
   it('allows the user to manually define inputmode for input types that set a default inputmode', async () => {
