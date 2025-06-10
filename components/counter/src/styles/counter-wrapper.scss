@@ -4,18 +4,18 @@
 // ---------------------------------------------------------------------
 
 // Support for fallback values
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--ds-size-300, $ds-size-300);
+  gap: var(--ds-size-300, vac.$ds-size-300);
 
   ::slotted(*:not(:first-child)) {
-    padding-top: var(--ds-size-300, $ds-size-300);
+    padding-top: var(--ds-size-300, vac.$ds-size-300);
     border-top-width: 1px;
     border-top-style: solid;
   }
@@ -23,6 +23,6 @@
 
 :host([isindropdown]) {
   .wrapper {
-    padding: var(--ds-size-300, $ds-size-300);
+    padding: var(--ds-size-300, vac.$ds-size-300);
   }
 }

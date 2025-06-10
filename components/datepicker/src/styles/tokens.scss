@@ -1,23 +1,22 @@
 /* stylelint-disable color-function-notation */
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 :host {
-  --ds-auro-datepicker-placeholder-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
-  --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-border-bold, #{$ds-basic-color-border-bold});
-  --ds-auro-calendar-mobile-header-container-color: var(--ds-basic-color-surface-default, #{$ds-basic-color-surface-default});
-  --ds-auro-calendar-mobile-header-divider-color: var(--ds-basic-color-border-divider, #{$ds-basic-color-border-divider});
-  --ds-auro-calendar-mobile-header-text-color: var(--ds-basic-color-texticon-muted, #{$ds-basic-color-texticon-muted});
+  --ds-auro-datepicker-placeholder-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-calendar-mobile-header-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-calendar-mobile-header-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
+  --ds-auro-calendar-mobile-header-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
   --ds-auro-calendar-nav-btn-border-color: transparent;
-  --ds-auro-calendar-nav-btn-chevron-color: var(--ds-basic-color-brand-primary, #{$ds-basic-color-brand-primary});
+  --ds-auro-calendar-nav-btn-chevron-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
   --ds-auro-calendar-nav-btn-container-color: transparent;
-  --ds-auro-calendar-month-container-color: var(--ds-basic-color-surface-default, #{$ds-basic-color-surface-default});
-  --ds-auro-calendar-month-divider-color: var(--ds-basic-color-border-divider, #{$ds-basic-color-border-divider});
-  --ds-auro-calendar-month-header-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
+  --ds-auro-calendar-month-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-calendar-month-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
+  --ds-auro-calendar-month-header-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-calendar-cell-border-color: transparent;
   --ds-auro-calendar-cell-container-color: transparent;
-  --ds-auro-calendar-cell-in-range-color: var(--ds-advanced-color-shared-background-muted, #{$ds-advanced-color-shared-background-muted});
-  --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
-  --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
+  --ds-auro-calendar-cell-in-range-color: var(--ds-advanced-color-shared-background-muted, #{v.$ds-advanced-color-shared-background-muted});
+  --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
 }

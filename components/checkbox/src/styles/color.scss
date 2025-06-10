@@ -5,8 +5,8 @@
 
 /* stylelint-disable selector-class-pattern, order/properties-order, no-descending-specificity */
 
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 :host {
   .label {
@@ -21,7 +21,7 @@
     }
 
     &:hover {
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-hover, #{$ds-advanced-color-boolean-isfalse-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-hover, #{v.$ds-advanced-color-boolean-isfalse-hover});
     }
   }
 
@@ -32,83 +32,83 @@
 }
 
 :host(:focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
 }
 
 :host([checked]) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-istrue, #{$ds-advanced-color-boolean-istrue});
-  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue, #{$ds-advanced-color-boolean-istrue});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-istrue, #{v.$ds-advanced-color-boolean-istrue});
+  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue, #{v.$ds-advanced-color-boolean-istrue});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-istrue-hover, #{$ds-advanced-color-boolean-istrue-hover});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-hover, #{$ds-advanced-color-boolean-istrue-hover});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-istrue-hover, #{v.$ds-advanced-color-boolean-istrue-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-hover, #{v.$ds-advanced-color-boolean-istrue-hover});
     }
   }
 }
 
 :host([checked]:focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-hover, #{$ds-advanced-color-boolean-istrue-hover});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-hover, #{v.$ds-advanced-color-boolean-istrue-hover});
     }
   }
 }
 
 :host([disabled]) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-disabled, #{$ds-advanced-color-state-background-disabled});
-  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
+  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-disabled, #{$ds-advanced-color-state-background-disabled});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse, #{$ds-advanced-color-boolean-isfalse});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse, #{v.$ds-advanced-color-boolean-isfalse});
     }
   }
 }
 
 :host([disabled][checked]) {
-  --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-disabled, #{$ds-advanced-color-state-background-disabled});
+  --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-disabled, #{$ds-advanced-color-state-background-disabled});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
     }
   }
 }
 
 :host([error]) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error, #{$ds-advanced-color-boolean-error});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error, #{v.$ds-advanced-color-boolean-error});
 }
 
 :host([error]:not([checked]):focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
 }
 
 :host([error][checked]) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error, #{$ds-advanced-color-boolean-error});
-  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error, #{$ds-advanced-color-boolean-error});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error, #{v.$ds-advanced-color-boolean-error});
+  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error, #{v.$ds-advanced-color-boolean-error});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-hover, #{$ds-advanced-color-boolean-error-hover});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-hover, #{$ds-advanced-color-boolean-error-hover});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-hover, #{v.$ds-advanced-color-boolean-error-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-hover, #{v.$ds-advanced-color-boolean-error-hover});
     }
   }
 }
 
 :host([error][checked]:focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-hover, #{$ds-advanced-color-boolean-error-hover});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-hover, #{v.$ds-advanced-color-boolean-error-hover});
     }
   }
 }
@@ -116,95 +116,95 @@
 /* onDark Styles */
 
 :host([onDark]) {
-  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
-  --ds-auro-checkbox-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
+  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-checkbox-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
   --ds-auro-checkbox-container-color: transparent;
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-inverse-hover, #{$ds-advanced-color-boolean-isfalse-inverse-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-inverse-hover, #{v.$ds-advanced-color-boolean-isfalse-inverse-hover});
     }
   }
 }
 
 :host([onDark]:focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
-  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
 }
 
 :host([onDark][checked]) {
-  --ds-auro-checkbox-checkmark-color: var(--ds-advanced-color-boolean-indicator-inverse, #{$ds-advanced-color-boolean-indicator-inverse});
-  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-inverse, #{$ds-advanced-color-boolean-istrue-inverse});
+  --ds-auro-checkbox-checkmark-color: var(--ds-advanced-color-boolean-indicator-inverse, #{v.$ds-advanced-color-boolean-indicator-inverse});
+  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-inverse, #{v.$ds-advanced-color-boolean-istrue-inverse});
 
   .label--cbx {
     &:hover {
       --ds-auro-checkbox-border-color: transparent;
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-inverse-hover, #{$ds-advanced-color-boolean-istrue-inverse-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-inverse-hover, #{v.$ds-advanced-color-boolean-istrue-inverse-hover});
     }
   }
 }
 
 :host([onDark][checked]:focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-inverse-hover, #{$ds-advanced-color-boolean-istrue-inverse-hover});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-inverse-hover, #{v.$ds-advanced-color-boolean-istrue-inverse-hover});
     }
   }
 }
 
 :host([onDark][disabled]) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{$ds-advanced-color-state-background-inverse-disabled});
-  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
+  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{$ds-advanced-color-state-background-inverse-disabled});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
       --ds-auro-checkbox-container-color: transparent;
     }
   }
 }
 
 :host([onDark][disabled][checked]) {
-  --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-inverse-disabled, #{$ds-advanced-color-state-background-inverse-disabled});
+  --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-inverse-disabled, #{$ds-advanced-color-state-background-inverse-disabled});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
     }
   }
 }
 
 :host([onDark][error]) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse, #{$ds-advanced-color-boolean-error-inverse});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse, #{v.$ds-advanced-color-boolean-error-inverse});
 }
 
 :host([onDark][error]:not([checked]):focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
-  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+  --ds-auro-checkbox-outline-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
 }
 
 :host([onDark][error][checked]) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse, #{$ds-advanced-color-boolean-error-inverse});
-  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-inverse, #{$ds-advanced-color-boolean-error-inverse});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse, #{v.$ds-advanced-color-boolean-error-inverse});
+  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-inverse, #{v.$ds-advanced-color-boolean-error-inverse});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse-hover, #{$ds-advanced-color-boolean-error-inverse-hover});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-inverse-hover, #{$ds-advanced-color-boolean-error-inverse-hover});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse-hover, #{v.$ds-advanced-color-boolean-error-inverse-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-inverse-hover, #{v.$ds-advanced-color-boolean-error-inverse-hover});
     }
   }
 }
 
 :host([onDark][error][checked]:focus-within) {
-  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+  --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
 
   .label--cbx {
     &:hover {
-      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-inverse-hover, #{$ds-advanced-color-boolean-error-inverse-hover});
+      --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-inverse-hover, #{v.$ds-advanced-color-boolean-error-inverse-hover});
     }
   }
 }

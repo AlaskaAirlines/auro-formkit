@@ -1,0 +1,74 @@
+/* stylelint-disable
+  no-duplicate-selectors,
+  max-nesting-depth,
+  no-descending-specificity,
+  selector-not-notation,
+  selector-max-class
+  */
+
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as v;
+
+// Handles highlighting the border during focus and invalid states
+@mixin border-highlight-style {
+  &:before {
+    position: absolute;
+    display: block;
+
+    /* stylelint-disable declaration-block-no-redundant-longhand-properties */
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    /* stylelint-enable declaration-block-no-redundant-longhand-properties */
+
+    content: '';
+    inset: 0;
+    pointer-events: none;
+  }
+}
+
+.layoutDefault,
+:host(:not([layout])) {
+  input {
+    border: unset;
+  }
+
+  .wrapper {
+    position: relative;
+    overflow: hidden;
+    border-style: solid;
+  }
+}
+
+:host([class='layoutDefault']:not([bordered], [borderless])),
+:host(:not([layout]):not([bordered], [borderless])) {
+  .wrapper {
+    border-width: 1px 0;
+  }
+}
+
+:host([class='layoutDefault'][bordered]),
+:host(:not([layout])[bordered]) {
+  .wrapper {
+    border-width: 1px;
+    border-radius: var(--ds-border-radius, #{v.$ds-border-radius});
+  }
+}
+
+// FOCUS STATE
+:host([class='layoutDefault']:not([borderless])),
+:host(:not([layout]):not([borderless])) {
+  .wrapper {
+    &:focus-within {
+      @include border-highlight-style;
+    }
+  }
+}
+
+  // INVALID STATE
+:host([class='layoutDefault'][validity]:not([validity='valid'])),
+:host(:not([layout])[validity]:not([validity='valid'])) {
+  .wrapper {
+    &:before {
+      border-bottom: 0;
+    }
+  }
+}

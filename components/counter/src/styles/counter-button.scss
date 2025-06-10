@@ -1,19 +1,17 @@
 // stylelint-disable selector-max-class
 
 // Import Auro Sass variables
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 // general WCSS imports
-@import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
-@import "@aurodesignsystem/webcorestylesheets/src/core";
-@import "@aurodesignsystem/webcorestylesheets/src/animation";
-
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariableMap";
+@use "@aurodesignsystem/webcorestylesheets/src/breakpoints";
+@use "@aurodesignsystem/webcorestylesheets/src/core";
+@use "@aurodesignsystem/webcorestylesheets/src/animation";
 
 $auro-inset-spacing-options: lg;
 $auro-inset-directions: '--squish';
 
-@import "@aurodesignsystem/webcorestylesheets/src/utilityMixins/insetUtility";
+@use "@aurodesignsystem/webcorestylesheets/src/utilityMixins/insetUtility";
 
 // adjust alignment for slotted SVG icon
 ::slotted(svg) {
@@ -31,7 +29,7 @@ slot {
 
   span {
       display: block;
-      height: var(--ds-size-300, $ds-size-300);
+      height: var(--ds-size-300, vac.$ds-size-300);
   }
 }
 
@@ -39,8 +37,8 @@ slot {
   position: relative;
   display: inline-flex;
   overflow: visible;
-  width: calc(var(--ds-size-50, $ds-size-50) + var(--ds-size-400, $ds-size-400));
-  height: calc(var(--ds-size-25, $ds-size-25) + var(--ds-size-400, $ds-size-400));
+  width: calc(var(--ds-size-50, vac.$ds-size-50) + var(--ds-size-400, vac.$ds-size-400));
+  height: calc(var(--ds-size-25, vac.$ds-size-25) + var(--ds-size-400, vac.$ds-size-400));
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -51,7 +49,7 @@ slot {
   // removes margins around button in Safari
   margin: 0;
   cursor: pointer;
-  gap: var(--ds-size-100, $ds-size-100);
+  gap: var(--ds-size-100, vac.$ds-size-100);
   line-height: unset;
 
   // prevent double-tap zoom on iOS (included in counterControl for disabled state behaving differently)

@@ -5,20 +5,20 @@
 
 /* stylelint-disable selector-class-pattern */
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 :host {
   color: var(--ds-auro-checkbox-group-text-color);
 }
 
 :host([disabled]) {
-  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
 :host([onDark]) {
-  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
 }
 
 :host([onDark][disabled]) {
-  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 }

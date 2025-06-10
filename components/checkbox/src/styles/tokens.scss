@@ -1,11 +1,10 @@
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 :host {
-  --ds-auro-checkbox-border-color: var(--ds-basic-color-border-bold, #{$ds-basic-color-border-bold});
-  --ds-auro-checkbox-checkmark-color: var(--ds-advanced-color-boolean-indicator, #{$ds-advanced-color-boolean-indicator});
-  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse, #{$ds-advanced-color-boolean-isfalse});
-  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
+  --ds-auro-checkbox-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-checkbox-checkmark-color: var(--ds-advanced-color-boolean-indicator, #{v.$ds-advanced-color-boolean-indicator});
+  --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse, #{v.$ds-advanced-color-boolean-isfalse});
+  --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-checkbox-outline-color: transparent;
-  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
+  --ds-auro-checkbox-group-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
 }

@@ -62,6 +62,7 @@ export class AuroCheckbox extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+      ...super.properties,
 
       /**
        * If set to true, the checkbox will be filled with a checkmark.
@@ -236,7 +237,10 @@ export class AuroCheckbox extends LitElement {
     });
   }
 
-  // function that renders the HTML and CSS into  the scope of the component
+  /**
+   * @private
+   * @returns {HTMLElement}
+   */
   render() {
     const labelClasses = {
       'label': true,

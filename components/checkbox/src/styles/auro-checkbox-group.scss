@@ -13,11 +13,11 @@
    scss/selector-nest-combinators,
    selector-class-pattern */
 
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host {
   display: block;
-  padding-bottom: var(--ds-size-150, $ds-size-150);
+  padding-bottom: var(--ds-size-150, #{vac.$ds-size-150});
 }
 
 .displayFlex {
@@ -33,6 +33,6 @@ fieldset {
 }
 
 legend {
-  margin-bottom: var(--ds-size-150, $ds-size-150);
+  margin-bottom: var(--ds-size-150, #{vac.$ds-size-150});
 }
 

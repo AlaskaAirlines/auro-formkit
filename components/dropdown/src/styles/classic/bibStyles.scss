@@ -8,14 +8,13 @@
 
 // Support for fallback values
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute */
 
 :host {
   position: fixed;
-  z-index: var(--depth-tooltip, $ds-depth-tooltip);
+  z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
   display: none;
   isolation: isolate;
 }
@@ -24,7 +23,7 @@
   display: inline-block;
   overflow: auto;
   box-sizing: border-box;
-  margin: var(--ds-size-50, $ds-size-50) 0;
+  margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
 }
 
 :host([isfullscreen]) {
@@ -51,7 +50,7 @@
 :host([common]:not([isfullscreen])),
 :host([rounded]:not([isfullscreen])) {
   .container {
-    border-radius: var(--ds-border-radius, $ds-border-radius);
+    border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
   }
 }
 

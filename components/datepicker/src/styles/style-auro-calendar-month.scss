@@ -4,26 +4,26 @@
 // ---------------------------------------------------------------------
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import '@aurodesignsystem/webcorestylesheets/src/core';
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
+@use '@aurodesignsystem/webcorestylesheets/src/core';
 
 /* stylelint-disable selector-class-pattern, property-no-vendor-prefix, order/properties-order, no-descending-specificity, color-function-notation, max-line-length, declaration-empty-line-before */
 
 $calendar-width: 336px;
-$calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
+$calendar-padding-desktop: var(--ds-size-200, vac.$ds-size-200);
 
 :host {
   position: relative;
 
   display: block;
-  width: calc(100% - var(--ds-size-200, $ds-size-200) - var(--ds-size-200, $ds-size-200));
+  width: calc(100% - var(--ds-size-200, vac.$ds-size-200) - var(--ds-size-200, vac.$ds-size-200));
 
-  margin: 0 var(--ds-size-200, $ds-size-200);
+  margin: 0 var(--ds-size-200, vac.$ds-size-200);
 
-  @include auro_grid-breakpoint--sm {
+  @include vb.auro_grid-breakpoint--sm {
     width: $calendar-width;
 
     padding: $calendar-padding-desktop;
@@ -31,12 +31,12 @@ $calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
 }
 
 :host(:not(:last-of-type)) {
-  @include auro_grid-breakpoint--sm {
+  @include vb.auro_grid-breakpoint--sm {
     &:after {
       position: absolute;
 
       top: $calendar-padding-desktop;
-      right: calc(-1 * var(--ds-size-200, $ds-size-200));
+      right: calc(-1 * var(--ds-size-200, vac.$ds-size-200));
 
       height: calc(100% - $calendar-padding-desktop - $calendar-padding-desktop);
 
@@ -50,8 +50,8 @@ $calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
 
 .header {
   display: flex;
-  height: var(--ds-size-500, $ds-size-500);
-  margin-bottom: var(--ds-size-150, $ds-size-150);
+  height: var(--ds-size-500, vac.$ds-size-500);
+  margin-bottom: var(--ds-size-150, vac.$ds-size-150);
 
   align-items: center;
   flex-direction: row;
@@ -67,14 +67,14 @@ $calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
   flex-direction: row;
   justify-content: center;
  
-  font-size: var(--ds-basic-text-heading-xs-breakpoint-md-font-size, $ds-basic-text-heading-xs-breakpoint-md-font-size);
-  font-weight :var(--ds-basic-text-heading-xs-breakpoint-md-font-weight, $ds-basic-text-heading-xs-breakpoint-md-font-weight);
-  letter-spacing: var(--ds-basic-text-heading-xs-breakpoint-md-letter-spacing, $ds-basic-text-heading-xs-breakpoint-md-letter-spacing);
-  line-height: var(--ds-basic-text-heading-xs-breakpoint-md-line-height, $ds-basic-text-heading-xs-breakpoint-md-line-height);
+  font-size: 20px; // var(--ds-basic-text-heading-xs-breakpoint-md-font-size, v.$ds-basic-text-heading-xs-breakpoint-md-font-size);
+  font-weight: 450; // var(--ds-basic-text-heading-xs-breakpoint-md-font-weight, v.$ds-basic-text-heading-xs-breakpoint-md-font-weight);
+  letter-spacing: 0; // var(--ds-basic-text-heading-xs-breakpoint-md-letter-spacing, v.$ds-basic-text-heading-xs-breakpoint-md-letter-spacing);
+  line-height: 130%; // var(--ds-basic-text-heading-xs-breakpoint-md-line-height, v.$ds-basic-text-heading-xs-breakpoint-md-line-height);
 
   div {
     &:first-child {
-      margin-right: var(--ds-size-100, $ds-size-100);
+      margin-right: var(--ds-size-100, vac.$ds-size-100);
     }
   }
 }
@@ -83,8 +83,8 @@ $calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
   position: relative;
 
   display: flex;
-  width: var(--ds-size-500, $ds-size-500);
-  height: var(--ds-size-500, $ds-size-500);
+  width: var(--ds-size-500, vac.$ds-size-500);
+  height: var(--ds-size-500, vac.$ds-size-500);
 
   align-items: center;
   justify-content: center;
@@ -103,7 +103,7 @@ $calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
 }
 
 .thead {
-  margin-bottom: var(--ds-size-100, $ds-size-100);
+  margin-bottom: var(--ds-size-100, vac.$ds-size-100);
 }
 
 .th {
@@ -122,7 +122,7 @@ $calendar-padding-desktop: var(--ds-size-200, $ds-size-200);
   transition: all 0ms;
   transform: translateX(0);
   
-  @include auro_grid-breakpoint--sm {
+  @include vb.auro_grid-breakpoint--sm {
     height: 384px; // height is fixed to always leave room for months spanning 6 rows
   }
 }

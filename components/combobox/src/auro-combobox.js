@@ -6,8 +6,9 @@
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
 // If using litElement base class
-import { LitElement } from "lit";
+import { css } from "lit";
 import { html } from 'lit/static-html.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -24,7 +25,12 @@ import bibTemplateVersion from './bibtemplateVersion.js';
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
-import { ifDefined } from "lit/directives/if-defined.js";
+import styleEmphasizedCss from './styles/emphasized/style-css.js';
+import styleSnowflakeCss from './styles/snowflake/style-css.js';
+
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
+import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -37,10 +43,12 @@ import { ifDefined } from "lit/directives/if-defined.js";
  */
 
 // build the component class
-export class AuroCombobox extends LitElement {
+export class AuroCombobox extends AuroElement {
 
   constructor() {
     super();
+
+    this.matchWidth = true;
 
     this.privateDefaults();
   }
@@ -78,6 +86,14 @@ export class AuroCombobox extends LitElement {
 
     this.isHiddenWhileLoading = false;
 
+    // Error message
+    this.errorMessage = null;
+
+    // Layout Config
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'xl';
+
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -89,6 +105,7 @@ export class AuroCombobox extends LitElement {
     this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
     this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
     this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', '1.0.0', AuroHelpText);
   }
 
   // This function is to define props used within the scope of this component
@@ -132,7 +149,7 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * ID for the dropdown
+       * ID for the dropdown.
        * @private
        */
       dropdownId: {
@@ -142,7 +159,7 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * Whether or not the dropdown is open
+       * Whether or not the dropdown is open.
        * @private
        */
       dropdownOpen: {
@@ -163,6 +180,14 @@ export class AuroCombobox extends LitElement {
       inputmode: {
         type: String,
         attribute: true,
+        reflect: true
+      },
+
+      /**
+       * If declared, the popover and trigger will be set to the same width.
+       */
+      matchWidth: {
+        type: Boolean,
         reflect: true
       },
 
@@ -217,6 +242,7 @@ export class AuroCombobox extends LitElement {
         type: Object
       },
 
+      /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
        * Position where the bib should appear relative to the trigger.
        * Accepted values:
@@ -227,6 +253,15 @@ export class AuroCombobox extends LitElement {
        * @default bottom-start
        */
       placement: {
+        type: String,
+        reflect: true
+      },
+      /* eslint-enable jsdoc/require-description-complete-sentence */
+
+      /**
+       * Define custom placeholder text, only supported by date input formats.
+       */
+      placeholder: {
         type: String,
         reflect: true
       },
@@ -292,6 +327,7 @@ export class AuroCombobox extends LitElement {
         type: Object
       },
 
+      /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
        * Otherwise, Heading 600
@@ -300,6 +336,7 @@ export class AuroCombobox extends LitElement {
         type: Boolean,
         reflect: true
       },
+      /* eslint-enable jsdoc/require-description-complete-sentence */
 
       /**
        * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
@@ -315,8 +352,8 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
+       * Specifies the currently active option.
        * @private
-       * specifies the currently active option
        */
       optionActive: {
         type: Object,
@@ -327,7 +364,21 @@ export class AuroCombobox extends LitElement {
   }
 
   static get styles() {
-    return [styleCss];
+    return [
+      css`${styleCss}`,
+      css`${styleEmphasizedCss}`,
+      css`${styleSnowflakeCss}`
+    ];
+  }
+
+  isValid() {
+    let valid = true;
+
+    if (this.validity !== undefined && this.validity !== 'valid') {
+      valid = false;
+    }
+
+    return valid;
   }
 
   /**
@@ -653,7 +704,6 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
-   * @private
    * When the dropdown is visible in fullscreen mode, the input is moved to the subheader slot of bibtemplate.
    * Otherwise, it's moved back to the trigger slot.
    * @private
@@ -664,7 +714,7 @@ export class AuroCombobox extends LitElement {
       return;
     }
 
-    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext');
+    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
     const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
 
     if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
@@ -679,7 +729,7 @@ export class AuroCombobox extends LitElement {
         this.input.setAttribute('borderless', true);
         this.input.setAttribute('slot', 'subheader');
 
-        // set disply of helpText and alert icon programatically
+        // set display of helpText and alert icon programmatically
         // because ::slotted and ::part do not work together
         inputHelpText.style.display = 'none';
         if (inputAlertIcon) {
@@ -942,8 +992,8 @@ export class AuroCombobox extends LitElement {
         this.handleMenuOptions();
         break;
       case 'label':
-        // Programatically inject as the slot cannot be carried over to bibtemplate.
-        // It's because the bib is/will be seperated from dropdown to body.
+        // Programmatically inject as the slot cannot be carried over to bibtemplate.
+        // It's because the bib is/will be separated from dropdown to body.
         this.transportAssignedNodes(event.target, this.input, 'label');
         break;
       case 'bib.fullscreen.headline':
@@ -955,6 +1005,16 @@ export class AuroCombobox extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const helpTextContentClasses = {
+      'util_displayHidden': this.validity !== undefined && this.validity !== 'valid',
+      'helpTextMessage': true,
+    };
+
+    const errorTextContentClasses = {
+      'util_displayHidden': this.validity === undefined || this.validity === 'valid',
+      'errorMessage': true,
+    };
+
     return html`
       <div>
         <div aria-live="polite" class="util_displayHiddenVisually">
@@ -965,62 +1025,75 @@ export class AuroCombobox extends LitElement {
             : undefined
           }
         </div>
-        <div id="slotHolder" aria-hidden="true">
+        <div class="util_displayHiddenVisually" aria-hidden="true">
           <slot name="label" @slotchange="${this.handleSlotChange}"></slot>
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
-          for="dropdownMenu"
-          ?onDark="${this.onDark}"
-          fluid
-          bordered
-          rounded
-          matchWidth
-          nocheckmark
-          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          .placement="${this.placement}"
-          .offset="${this.offset}"
-          ?autoPlacement="${this.autoPlacement}"
           ?noFlip="${this.noFlip}"
-          disableEventShow>
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          simple
+          disableEventShow
+          fluid
+          for="dropdownMenu"
+          layout="${this.layout}"
+          matchWidth="${ifDefined(this.matchWidth)}"
+          nocheckmark
+          rounded
+          shape="${this.shape}"
+          size="${this.size}">
           <${this.inputTag}
-            .a11yRole="${"combobox"}"
+            @input="${this.handleInputValueChange}"
             .a11yExpanded="${this.dropdownOpen}"
             .a11yControls="${this.dropdownId}"
-            id="${this.id || 'auro-combobox-input'}"
-            slot="trigger"
-            bordered
+            .autocomplete="${this.autocomplete}"
+            .inputmode="${this.inputmode}"
+            .placeholder="${this.placeholder}"
+            .type="${this.type}"
             ?onDark="${this.onDark}"
             ?required="${this.required}"
             ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
+            a11yRole="combobox"
+            id="${this.id}"
+            layout="${this.layout}"
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-            .autocomplete="${this.autocomplete}"
-            .type="${this.type}"
-            inputmode="${ifDefined(this.inputmode)}"
-            @input="${this.handleInputValueChange}">
+            shape="${this.shape}"
+            size="${this.size}"
+            slot="trigger">
           </${this.inputTag}>
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
             <slot></slot>
           </${this.bibtemplateTag}>
 
-          <p slot="helpText">
-            <!-- Help text and error message template -->
-            ${!this.validity || this.validity === undefined || this.validity === 'valid'
+          <span slot="helpText">
+            ${!this.validity || this.validity === 'valid'
               ? html`
-                <slot name="helpText"></slot>
-              ` : html`
-                <span role="alert" aria-live="assertive" part="helpText">
-                  ${this.errorMessage}
-                </span>`
+                <${this.helpTextTag} class="${classMap(helpTextContentClasses)}" ?onDark="${this.onDark}">
+                  <p id="${this.uniqueId}" part="helpText">
+                    <slot name="helpText"></slot>
+                  </p>
+                </${this.helpTextTag}>
+              `
+              : html`
+                <${this.helpTextTag} class="${classMap(errorTextContentClasses)}" error ?onDark="${this.onDark}">
+                  <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+                    ${this.errorMessage}
+                  </p>
+                </${this.helpTextTag}>
+              `
             }
-          </p>
+          </span>
         </${this.dropdownTag}>
       </div>
     `;

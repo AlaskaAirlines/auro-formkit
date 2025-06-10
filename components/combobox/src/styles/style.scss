@@ -3,42 +3,23 @@
 
 /* stylelint-disable max-nesting-depth */
 
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as v;
 @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-[auro-input] {
-  min-height: var(--ds-size-700, $ds-size-700);
-  max-height: var(--ds-size-700, $ds-size-700);
-
-  &::part(iconContainer) {
-    top: 0;
-    display: flex;
-    height: 100%;
-    align-items: center;
-  }
-
-  &::part(accentIcon) {
-    transition: all .3s cubic-bezier(.215, .61, .355, 1);
-  }
-
-  &::part(helpText) {
-    display: none;
-  }
-
-  &::part(wrapper) {
-    &:focus-within {
-      /* stylelint-disable declaration-no-important */
-      border-bottom-width: 0 !important;
-      box-shadow: unset !important;
-      outline: unset !important;
-      /* stylelint-enable declaration-no-important */
-    }
-
-    --ds-auro-input-border-color: transparent;
-    --ds-auro-input-container-color: transparent;
-  }
+:host {
+  display: block;
 }
 
-#slotHolder{
-  display: none;
+:host([layout*='classic']) {
+  [auro-input] {
+    width: 100%;
+
+    &::part(helpText) {
+      display: none;
+    }
+  }
+
+  #slotHolder{
+    display: none;
+  }
 }

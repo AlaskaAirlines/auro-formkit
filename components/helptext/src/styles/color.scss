@@ -1,17 +1,17 @@
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 /* stylelint-disable selector-class-pattern */
 
 :host([error]) {
-  --ds-auro-helptext-color: var(--ds-basic-color-status-error, #{$ds-basic-color-status-error});
+  --ds-auro-helptext-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
 }
 
 :host([onDark]) {
-  --ds-auro-helptext-color: var(--ds-basic-color-texticon-inverse-muted, #{$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-helptext-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
 }
 
 :host([onDark][error]) {
-  --ds-auro-helptext-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
+  --ds-auro-helptext-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 }
 
 .helptext-wrapper {

@@ -11,9 +11,9 @@
    selector-class-pattern */
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
-@import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
+@use "@aurodesignsystem/webcorestylesheets/src/breakpoints";
 
 :host {
   legend {
@@ -22,13 +22,13 @@
 }
 
 :host([disabled]) {
-  --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+  --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
 :host([onDark]) {
-  --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+  --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
 }
 
 :host([onDark][disabled]) {
-  --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 }

@@ -3,10 +3,10 @@
 
 // // ---------------------------------------------------------------------
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
 
 .calendarNavBtn {
   border-color: var(--ds-auro-calendar-nav-btn-border-color);
@@ -14,16 +14,16 @@
   color: var(--ds-auro-calendar-nav-btn-chevron-color);
 
   &:hover {
-    --ds-auro-calendar-nav-btn-container-color: var(--ds-advanced-color-state-background-hover, #{$ds-advanced-color-state-background-hover});
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{$ds-basic-color-brand-primary});
+    --ds-auro-calendar-nav-btn-container-color: var(--ds-advanced-color-state-background-hover, #{v.$ds-advanced-color-state-background-hover});
+    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
   }
 
   &:focus {
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{$ds-basic-color-brand-primary});
+    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
   }
 
   &:active {
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{$ds-basic-color-brand-primary});
+    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
     
     box-shadow: inset 0 0 0 1px var(--ds-auro-calendar-nav-btn-border-color);
   }
@@ -49,8 +49,8 @@
   color: var(--ds-auro-datepicker-placeholder-color);
 }
 
-@include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+@include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
   .calendarNavBtn {
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{$ds-basic-color-brand-primary});
+    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
   }
 }

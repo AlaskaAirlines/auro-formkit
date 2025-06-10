@@ -1,0 +1,134 @@
+
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use './mixins' as m;
+
+// Handles the hidden state of the notification icons
+@mixin hidden-notification {
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  visibility: hidden;
+}
+
+/* stylelint-disable 
+  selector-max-attribute,
+  max-nesting-depth,
+  selector-max-class,
+  selector-max-combinators,
+  selector-max-compound-selectors,
+  selector-not-notation,
+  no-duplicate-selectors,
+  no-descending-specificity */
+.layoutDefault,
+:host(:not([layout])) { 
+  .typeIcon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    [auro-icon] {
+      --ds-auro-icon-size: var(--ds-size-300, #{vac.$ds-size-300});
+      
+      height: var(--ds-size-300, #{vac.$ds-size-300});
+      margin-right: var(--ds-size-100, #{vac.$ds-size-100});
+    }
+  }
+
+  .notificationIcons {
+    display: flex;
+    flex-direction: row;
+    padding-right: var(--ds-size-100, #{vac.$ds-size-100});
+  }
+}
+
+:host([class="layoutDefault"][bordered]),
+:host(:not([layout])[bordered]) {
+  .typeIcon {
+    padding-left: var(--ds-size-100, #{vac.$ds-size-100});
+  }
+
+  .notificationIcons {
+    align-items: center;
+  }
+
+  .notification {
+    &:not(:first-of-type) {
+      margin-left: var(--ds-size-100, #{vac.$ds-size-100});
+    }
+  }
+
+  .alertNotification {
+    width: calc(var(--ds-size-300, #{vac.$ds-size-300}) + var(--ds-size-25, #{vac.$ds-size-25})); 
+    height: calc(var(--ds-size-300, #{vac.$ds-size-300}) + var(--ds-size-25, #{vac.$ds-size-25}));
+  }
+
+  .passwordBtn {
+    width: calc(var(--ds-size-300, #{vac.$ds-size-300}));
+    height: calc(var(--ds-size-300, #{vac.$ds-size-300}));
+  }
+
+  .notificationBtn {
+    display: block;
+    width: var(--ds-size-300, #{vac.$ds-size-300});
+    height: var(--ds-size-300, #{vac.$ds-size-300});
+    padding: 0;
+    border: 0;
+    background: unset;
+    cursor: pointer;
+
+    [auro-icon] {
+      display: block;
+      height: var(--ds-size-300, #{vac.$ds-size-300});
+
+      --ds-auro-icon-size: var(--ds-size-300, #{#{vac.$ds-size-300}});
+
+      &[hidden] {
+        display: none;
+      }
+    }
+  }
+}
+
+:host([class="layoutDefault"]:not([bordered])),
+:host(:not([layout]):not([bordered])) { 
+  .typeIcon,
+  .notificationIcons {
+    align-items: flex-end;
+    padding-bottom: var(--ds-size-50, #{vac.$ds-size-50});
+  }
+
+  .clearBtn {
+    @include m.transition-animation;
+
+    overflow: hidden;
+    width: 0;
+    opacity: 0;
+  }
+}
+
+.layoutDefault,
+:host(:not([layout])) {
+  .wrapper {
+    &:hover,
+    &:focus-within {
+      .clearBtn {
+        width: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-25, #{vac.$ds-size-25})); 
+        height: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-25, #{vac.$ds-size-25}));
+        opacity: 1;
+      }
+    }
+  }
+}
+
+:host([class="layoutDefault"]:focus-within[type="password"]),
+:host(:not([layout]):focus-within[type="password"]) {
+  .notificationIcons {
+    &[hasValue] {
+      .alertNotification {
+        @include hidden-notification;
+      }
+    }
+  }
+}

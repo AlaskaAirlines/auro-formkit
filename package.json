@@ -61,6 +61,8 @@
   },
   "devDependencies": {
     "@aurodesignsystem/eslint-config": "^1.3.4",
+    "@aurodesignsystem/webcorestylesheets": "^8.1.1",
+    "@aurodesignsystem/design-tokens": "^8.2.0",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@open-wc/testing": "^4.0.0",

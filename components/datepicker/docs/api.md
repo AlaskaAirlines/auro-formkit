@@ -15,6 +15,7 @@
 | `fullscreenBreakpoint`            | `fullscreenBreakpoint`            |           | `string`   | "sm"                                             | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `inputmode`                       | `inputmode`                       |           | `string`   |                                                  | Exposes inputmode attribute for input.           |
 | `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`  | false                                            | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
+| `layout`                          |                                   |           | `string`   | "classic"                                        |                                                  |
 | `maxDate`                         | `maxDate`                         |           | `string`   |                                                  | Maximum date. All dates after will be disabled.  |
 | `minDate`                         | `minDate`                         |           | `string`   |                                                  | Minimum date. All dates before will be disabled. |
 | `monthNames`                      | `monthNames`                      |           | `array`    | ["January","February","March","April","May","June","July","August","September","October","November","December"] | Names of all 12 months to render in the calendar, used for localization of date string in mobile layout. |
@@ -30,6 +31,8 @@
 | `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  |           | `string`   |                                                  | Custom help text message to display when validity = `rangeOverflow`. |
 | `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` |           | `string`   |                                                  | Custom help text message to display when validity = `rangeUnderflow`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   |           | `string`   |                                                  | Custom help text message to display when validity = `valueMissing`. |
+| `shape`                           |                                   |           | `string`   | "classic"                                        |                                                  |
+| `size`                            |                                   |           | `string`   | "lg"                                             |                                                  |
 | `stacked`                         | `stacked`                         |           | `boolean`  | false                                            | Set true to make datepicker stacked style.       |
 | `validity`                        | `validity`                        |           | `string`   | "undefined"                                      | Specifies the `validityState` this element is in. |
 | `value`                           | `value`                           |           | `string`   | "undefined"                                      | Value selected for the datepicker.               |
@@ -38,11 +41,16 @@
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `focus`    | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
-| `reset`    | `(): void`                             | Resets component to initial state.               |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method                        | Type                                   | Description                                      |
+|-------------------------------|----------------------------------------|--------------------------------------------------|
+| `focus`                       | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
+| `renderLayoutFromAttributes`  | `(): TemplateResult<ResultType>`       |                                                  |
+| `renderTempInputs`            | `(): TemplateResult`                   |                                                  |
+| `reset`                       | `(): void`                             | Resets component to initial state.               |
+| `resetLayoutClasses`          | `(): void`                             |                                                  |
+| `resetShapeClasses`           | `(): void`                             |                                                  |
+| `updateComponentArchitecture` | `(): void`                             |                                                  |
+| `validate`                    | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

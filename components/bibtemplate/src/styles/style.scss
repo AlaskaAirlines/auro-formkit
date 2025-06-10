@@ -1,4 +1,4 @@
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 #bibTemplate {
   display: flex;
@@ -16,12 +16,12 @@
 #header {
   display: flex;
   width: 100%;
-  min-height: var(--ds-size-1000, $ds-size-1000);
+  min-height: var(--ds-size-1000, #{vac.$ds-size-1000});
   box-sizing: border-box;
   align-items: end;
-  padding-top: var(--ds-size-400, $ds-size-400);
-  padding-right: var(--ds-size-700, $ds-size-700);
-  padding-left: var(--ds-size-200, $ds-size-200);
+  padding-top: var(--ds-size-400, #{vac.$ds-size-400});
+  padding-right: var(--ds-size-700, #{vac.$ds-size-700});
+  padding-left: var(--ds-size-200, #{vac.$ds-size-200});
   pointer-events: none;
 }
 
@@ -29,20 +29,20 @@
   width: 100%;
 
   ::slotted([auro-input]) {
-    padding: 0 var(--ds-size-200, $ds-size-200);
+    padding: 0 var(--ds-size-200, #{vac.$ds-size-200});
   }
 }
 
 #closeButton{
   position: absolute;
-  top: var(--ds-size-400, $ds-size-400);
-  right: var(--ds-size-200, $ds-size-200);
+  top: var(--ds-size-400, #{vac.$ds-size-400});
+  right: var(--ds-size-200, #{vac.$ds-size-200});
   border: none;
   background-color: transparent;
   cursor: pointer;
 
   [auro-icon] {
-    --ds-auro-icon-size: var(--ds-size-500, #{$ds-size-500});
+    --ds-auro-icon-size: var(--ds-size-500, #{vac.$ds-size-500});
   }
 }
 
@@ -58,7 +58,7 @@
   }
 
   #bodyContainer {
-    margin-top: var(--ds-size-100, $ds-size-100);
+    margin-top: var(--ds-size-100, #{vac.$ds-size-100});
   }
 }
 
@@ -67,5 +67,5 @@
   right: 0;
   bottom: 0;
   left: 0;
-  padding: var(--ds-size-200, $ds-size-200);
+  padding: var(--ds-size-200, #{vac.$ds-size-200});
 }
