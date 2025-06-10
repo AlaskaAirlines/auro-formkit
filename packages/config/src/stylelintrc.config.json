@@ -1,9 +1,13 @@
 {
   "extends": ["stylelint-config-recommended", "stylelint-config-idiomatic-order", "stylelint-config-standard-scss"],
   "plugins": [
-    "stylelint-scss"
+    "stylelint-scss",
+    "./custom-stylelint-rules/stylelint-sass-var-interpolation.mjs",
+    "./custom-stylelint-rules/stylelint-unused-namespace.mjs"
   ],
   "rules": {
+    "custom/sass-var-interpolation-in-var-fallback": true,
+    "custom/scss-unused-namespace": true,
     "alpha-value-notation": "number",
     "at-rule-empty-line-before": [ "always", {
       "except": [

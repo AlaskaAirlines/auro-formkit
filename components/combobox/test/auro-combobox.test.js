@@ -44,8 +44,7 @@ function runFulltest(mobileview) {
   it('noFilter attribute results in no suggestion filtering', async () => {
     const el = await noFilterFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     const visibleMenuOptions = [];
 
@@ -63,7 +62,7 @@ function runFulltest(mobileview) {
   it('can programmatically apply focus to input', async () => {
     const el = await defaultFixture(mobileview);
 
-    const {input} = el;
+    const { input } = el;
 
     el.focus();
 
@@ -188,8 +187,7 @@ function runFulltest(mobileview) {
     await elementUpdated(el);
 
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     await expect(el.optionActive).to.be.equal(menuOptions[0]);
@@ -214,8 +212,7 @@ function runFulltest(mobileview) {
   it('typing filters list of options', async () => {
     const el = await defaultFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     const visibleMenuOptions = [];
 
@@ -269,8 +266,7 @@ function runFulltest(mobileview) {
   it('using the nomatch attribute with a matching value', async () => {
     const el = await noMatchFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     const visibleMenuOptions = [];
 
@@ -291,8 +287,7 @@ function runFulltest(mobileview) {
   it('using the nomatch attribute with no matching value', async () => {
     const el = await noMatchFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     const visibleMenuOptions = [];
 
@@ -311,8 +306,7 @@ function runFulltest(mobileview) {
   it('using the persistent attribute always displays the persistent option', async () => {
     const el = await persistentFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     const visibleMenuOptions = [];
 
@@ -334,8 +328,7 @@ function runFulltest(mobileview) {
   it('using the suggest attribute matches additional options', async () => {
     const el = await suggestFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
     const visibleMenuOptions = [];
 
@@ -423,7 +416,7 @@ function runFulltest(mobileview) {
     await expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  it('fires `auroFormElement-validated` event after validation', async() => {
+  it('fires `auroFormElement-validated` event after validation', async () => {
     const el = await requiredFixture(mobileview);
 
     // error applied on blur
@@ -437,16 +430,14 @@ function runFulltest(mobileview) {
   it('default to nocheckmark on selected option', async () => {
     const el = await defaultFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.true;
   });
 
   it('selected options have checkmark when checkmark attribute is present', async () => {
     const el = await checkmarkFixture(mobileview);
 
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const menu = dropdown.bibContent.querySelector('auro-menu');
+    const menu = el.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.false;
   });
 
@@ -713,7 +704,7 @@ function setInputValue(el, value) {
   input.focus();
   input.value = value;
   input.dispatchEvent(new InputEvent('input'));
-  auroInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true}));
+  auroInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
   el.dispatchEvent(new KeyboardEvent('keyup', {
     key: value.slice(value.length - 1),
     repeat: false

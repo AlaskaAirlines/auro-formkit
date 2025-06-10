@@ -25,7 +25,7 @@ runs:
           ./components/**/demo
           ./components/**/node_modules
           ./node_modules
-        key: build-${{ github.sha }}-${{ inputs.node-version }}
+        key: build-${{ inputs.node-version }}-${{ github.run_id }}
     - name: Test
       run: npm run test
       shell: bash

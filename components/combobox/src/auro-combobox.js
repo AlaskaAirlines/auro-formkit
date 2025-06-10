@@ -496,15 +496,8 @@ export class AuroCombobox extends LitElement {
       this.showBib();
     });
 
-    // this.dropdown.addEventListener('auroDropdown-show', () => {
-    this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
-    if (this.menu) {
-      this.menuWrapper.append(this.menu);
-    }
-
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    this.bibtemplate.append(this.menuWrapper);
 
     // Exposes the CSS parts from the bibtemplate for styling
     this.bibtemplate.exposeCssParts();
@@ -529,10 +522,9 @@ export class AuroCombobox extends LitElement {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
 
     // a racing condition on custom-combobox with custom-menu
-    if (!this.menu) {
+    if (!this.menu || this.menuShadowRoot === null) {
       setTimeout(() => {
         this.configureMenu();
-        this.menuWrapper.append(this.menu);
       }, 0);
       return;
     }
@@ -608,40 +600,11 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
-   * @private
-   * Dispatches input's keyboard events from host
-   * This allows key events from the input to be handled by the parent.
-   * @param {Event} event - The keyboard event.
-   */
-  bubbleUpInputEvent(event) {
-    // Do not need to bubble events if the input is not in bib.
-    if (event.currentTarget.parentNode !== this.dropdown) {
-      // prevents browsers to move cursor in input element.
-      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-        event.preventDefault();
-      }
-      const dupEvent = new event.constructor(event.type, event);
-      this.dispatchEvent(dupEvent);
-    }
-  }
-
-  /**
    * Binds all behavior needed to the input after rendering.
    * @private
    * @returns {void}
    */
   configureInput() {
-    // When input is in bibtemplate, make the event to be fired at combobox element
-    this.bubbleUpInputEvent = this.bubbleUpInputEvent.bind(this);
-
-    const events = [
-      'input',
-      'keydown',
-      'keyup'
-    ];
-    events.forEach((eventType) => {
-      this.input.addEventListener(eventType, this.bubbleUpInputEvent);
-    });
 
     this.addEventListener('keyup', (evt) => {
       if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
@@ -705,6 +668,7 @@ export class AuroCombobox extends LitElement {
     const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
 
     if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
+
       if (this.input.parentNode === this.dropdown) {
         // keep the trigger size the same even after input gets removed
         const parentSize = window.getComputedStyle(this.dropdown.trigger);
@@ -722,7 +686,7 @@ export class AuroCombobox extends LitElement {
           inputAlertIcon.style.display = 'none';
         }
 
-        this.bibtemplate.append(this.input);
+        this.bibtemplate.prepend(this.input);
         this.input.focus();
       }
     } else if (this.input.parentNode !== this.dropdown) {
@@ -736,7 +700,7 @@ export class AuroCombobox extends LitElement {
         inputAlertIcon.style.display = '';
       }
 
-      this.dropdown.append(this.input);
+      this.dropdown.prepend(this.input);
       this.input.focus();
     }
   }
@@ -1042,9 +1006,8 @@ export class AuroCombobox extends LitElement {
             @input="${this.handleInputValueChange}">
           </${this.inputTag}>
 
-          <div class="menuWrapper"></div>
-
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
+            <slot></slot>
           </${this.bibtemplateTag}>
 
           <p slot="helpText">

@@ -427,7 +427,7 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
@@ -462,7 +462,7 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
@@ -509,7 +509,7 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
@@ -550,7 +550,7 @@ describe('auro-datepicker', () => {
     `);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
@@ -565,7 +565,7 @@ describe('auro-datepicker', () => {
     `);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await expect(calendar.showNextMonthBtn).to.be.false;
   });
@@ -652,7 +652,7 @@ describe('auro-datepicker', () => {
     `);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
     await elementUpdated(calendar.shadowRoot);
@@ -667,7 +667,7 @@ describe('auro-datepicker', () => {
     `);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
@@ -692,7 +692,7 @@ describe('auro-datepicker', () => {
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
 
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     await elementUpdated(calendar.shadowRoot);
     await nextFrame();
 
@@ -736,7 +736,7 @@ describe('auro-datepicker', () => {
     `);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
@@ -754,7 +754,7 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     const prevMonthBth = calendar.shadowRoot.querySelector('.prevMonth');
 
     const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
@@ -786,7 +786,7 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     const nextMonthBth = calendar.shadowRoot.querySelector('.nextMonth');
 
     const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
@@ -835,7 +835,7 @@ describe('auro-datepicker', () => {
     `);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     const input = getInput(el, 0);
 
     const closeBtn = calendar.shadowRoot.querySelector('[slot="footer"]');
@@ -857,7 +857,7 @@ describe('auro-datepicker', () => {
     const el = await dateSlotFixture();
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
@@ -889,7 +889,7 @@ describe('auro-datepicker', () => {
     const el = await popoverSlotFixture();
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;
@@ -925,7 +925,7 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const calendar = dropdown.bibContent.querySelector('auro-formkit-calendar');
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
     await dropdown.querySelector('[auro-input]').click();
     await expect(dropdown.isPopoverVisible).to.be.true;

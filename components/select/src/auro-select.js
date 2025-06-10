@@ -347,11 +347,9 @@ export class AuroSelect extends LitElement {
    */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
-    this.menuWrapper = this.dropdown.querySelector('.menuWrapper');
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    this.bibtemplate.append(this.menuWrapper);
 
     if (this.customBibWidth) {
       this.dropdown.dropdownWidth = this.customBibWidth;
@@ -474,8 +472,6 @@ export class AuroSelect extends LitElement {
    * @returns {void}
    */
   configureSelect() {
-    // inject menu into menuWrapper
-    this.menuWrapper.append(this.menu);
 
     this.addEventListener('keydown', (evt) => {
       if (evt.key === 'ArrowUp') {
@@ -865,10 +861,8 @@ export class AuroSelect extends LitElement {
             <slot name="valueText" id="valueText"></slot>
           </span>
 
-          <div class="menuWrapper">
-          </div>
-
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot></slot>
           </${this.bibtemplateTag}>
           <slot name="label" slot="label"></slot>
           <p slot="helpText">
