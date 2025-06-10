@@ -28,7 +28,7 @@
 // container styles - defines the look of the outer custom component
 :host {
   display: block;
-  --cbxLocation: var(--ds-size-50, #{$ds-size-50});
+  margin-bottom: var(--ds-size-100, $ds-size-100);
 }
 
 fieldset {
@@ -45,9 +45,17 @@ fieldset {
 
 .cbxContainer {
   position: relative;
+  display: flex;
+  flex-direction: row;
   padding-left: var(--ds-size-100, $ds-size-100);
   padding-right: var(--ds-size-100, $ds-size-100);
-  line-height: var(--ds-size-400, $ds-size-400);
+}
+
+.inputContainer {
+  display: block;
+  width: 24px;
+  height: 24px;  
+  margin-right: var(--ds-size-50, $ds-size-50);
 }
 
 .cbx--input {
@@ -61,8 +69,9 @@ fieldset {
 }
 
 .label {
-  margin-left: var(--ds-size-300, $ds-size-300);
-  display: block;
+  flex: 1;
+  display: flex;
+  pointer-events: none;
 
   &:hover {
     cursor: pointer;
@@ -70,17 +79,17 @@ fieldset {
 }
 
 // No tokens available for values used here
-.label--cbx {
+.inputContainer {
+  position: relative;
   &:after {
     -webkit-tap-highlight-color: transparent;
-    position: absolute;
+    display: block;
     content: '';
+    align-items: center;
+    justify-content: center;
 
-    top: var(--ds-size-200, $ds-size-200); // half of `.cbxContainer`'s line-height
-    left: var(--cbxLocation);
     width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
     height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
-    transform: translateY(-50%);
 
     border-width: 1px;
     border-style: solid;
@@ -93,11 +102,8 @@ fieldset {
 
 .svg--cbx {
   position: absolute;
-  top: var(--ds-size-25, $ds-size-25);
-  left: var(--ds-size-25, $ds-size-25);
-
-  padding-top: 3px;
-  padding-bottom: 3px;
-
+  left: -1px;
+  top: -1px;
   z-index: 1;
+  pointer-events: none;
 }
