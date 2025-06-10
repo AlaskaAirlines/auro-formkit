@@ -284,13 +284,16 @@ export class AuroInput extends BaseInput {
     return html`
       <div class="notification clear">
         <${this.buttonTag}
+          shape="circle"
+          size="xs"
           @click="${this.handleClickClear}"
           ?onDark="${this.onDark}"
-          aria-label="${i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
-          tabindex="-1"
+          aria-hidden="true"
+          tIndex="-1"
           variant="flat">
           <${this.iconTag}
+            slot="icon"
             category="interface"
             customColor
             name="x-lg"
@@ -310,19 +313,23 @@ export class AuroInput extends BaseInput {
     return html`
       <div class="notification">
         <${this.buttonTag}
+          shape="circle"
+          size="xs"
           @click="${this.handleClickShowPassword}"
           ?onDark="${this.onDark}"
-          aria-hidden="true"
           class="notificationBtn passwordBtn"
-          tabindex="-1"
+          tIndex="-1"
+          aria-hidden="true"
           variant="flat">
           <${this.iconTag}
+            slot="icon"
             ?hidden=${!this.showPassword}
             category="interface"
             customColor
             name="hide-password-stroke">
           </${this.iconTag}>
           <${this.iconTag}
+            slot="icon"
             ?hidden=${this.showPassword}
             category="interface"
             customColor
