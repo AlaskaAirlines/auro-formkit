@@ -1045,7 +1045,7 @@ export class AuroCombobox extends AuroElement {
               .placeholder="${this.placeholder}"
               .type="${this.type}"
               ?required="${this.required}"
-              ?noValidate="${this.noValidate}"
+              noValidate="true"
               ?disabled="${this.disabled}"
               ?icon="${this.triggerIcon}"
               simple

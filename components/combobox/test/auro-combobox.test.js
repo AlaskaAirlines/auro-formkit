@@ -408,7 +408,7 @@ function runFulltest(mobileview) {
 
     // no error when input has a value
     setInputValue(el, 'pp');
-    el.input.blur();
+    el.shadowRoot.activeElement.blur();
 
     await elementUpdated(el);
 
