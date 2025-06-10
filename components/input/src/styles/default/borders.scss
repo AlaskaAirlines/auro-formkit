@@ -6,7 +6,7 @@
   selector-max-class
   */
 
-@use "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as v;
 
 // Handles highlighting the border during focus and invalid states
 @mixin border-highlight-style {

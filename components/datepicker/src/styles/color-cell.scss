@@ -5,9 +5,9 @@
 
 /* stylelint-disable selector-max-class, selector-max-combinators, selector-max-compound-selectors, max-nesting-depth */
 
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host {
   ::slotted([slot^="date_"]) {
@@ -15,7 +15,7 @@
   }
 
   ::slotted([slot^="date_"][highlight]) {
-    --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-status-success, #{$ds-basic-color-status-success});
+    --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-status-success, #{v.$ds-basic-color-status-success});
   }
 
   .day {
@@ -24,30 +24,29 @@
     color: var(--ds-auro-calendar-cell-text-color);
   
     &.selected {
-      --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-selected, #{$ds-advanced-color-state-selected});
-      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
-      --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+      --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-selected, #{v.$ds-advanced-color-state-selected});
+      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+      --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
 
       ::slotted([slot^="date_"][highlight]) {
-        --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-status-success-subtle, #{$ds-basic-color-status-success-subtle});
+        --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-status-success-subtle, #{v.$ds-basic-color-status-success-subtle});
       }
   
       &:hover {
-        --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-selected-hover, #{$ds-advanced-color-state-selected-hover});
-        --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
+        --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-selected-hover, #{v.$ds-advanced-color-state-selected-hover});
+        --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
       }
-
     }
   
     &:hover {
-      --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-background-hover, #{$ds-advanced-color-state-background-hover});
-      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
+      --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-background-hover, #{v.$ds-advanced-color-state-background-hover});
+      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
     }
   
     &.disabled {
       --ds-auro-calendar-cell-container-color: transparent;
-      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
-      --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+      --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
     }
   
     &.inRange,

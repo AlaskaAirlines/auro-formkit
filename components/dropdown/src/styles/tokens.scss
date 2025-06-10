@@ -1,6 +1,6 @@
 
-@use "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska" as v;
-@use "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables" as vac;
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host(:not([ondark])) {
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});

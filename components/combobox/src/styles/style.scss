@@ -3,7 +3,7 @@
 
 /* stylelint-disable max-nesting-depth */
 
-@use "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as v;
 @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
 :host {

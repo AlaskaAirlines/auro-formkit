@@ -18,7 +18,7 @@
    rule-empty-line-before */
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 .label {
   color: var(--ds-auro-radio-label-color);
@@ -34,61 +34,61 @@
 }
 
 :host([checked]) {
-  --ds-auro-radio-btn-inset-color: var(--ds-advanced-color-boolean-indicator, #{$ds-advanced-color-boolean-indicator});
-  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-istrue, #{$ds-advanced-color-boolean-istrue});
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-istrue, #{$ds-advanced-color-boolean-istrue});
+  --ds-auro-radio-btn-inset-color: var(--ds-advanced-color-boolean-indicator, #{v.$ds-advanced-color-boolean-indicator});
+  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-istrue, #{v.$ds-advanced-color-boolean-istrue});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-istrue, #{v.$ds-advanced-color-boolean-istrue});
 }
 
 :host([error]) {
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-error, #{$ds-advanced-color-boolean-error});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-error, #{v.$ds-advanced-color-boolean-error});
 }
 
 :host([checked][error]) {
-  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-error, #{$ds-advanced-color-boolean-error});
+  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-error, #{v.$ds-advanced-color-boolean-error});
 }
 
 :host([disabled]) {
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-background-disabled, #{$ds-advanced-color-state-background-disabled});
-  --ds-auro-radio-label-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
+  --ds-auro-radio-label-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
 :host([checked][disabled]) {
-  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-state-background-disabled, #{$ds-advanced-color-state-background-disabled});
+  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
 }
 
 :host(.focus-visible) {
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
 }
 
 /* onDark styles */
 :host([onDark]) {
-  --ds-auro-radio-label-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
-  --ds-auro-radio-btn-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
+  --ds-auro-radio-label-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-radio-btn-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
 }
 
 :host([onDark][checked]) {
-  --ds-auro-radio-btn-inset-color: var(--ds-advanced-color-boolean-indicator-inverse, #{$ds-advanced-color-boolean-indicator-inverse});
-  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-istrue-inverse, #{$ds-advanced-color-boolean-istrue-inverse});
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-istrue-inverse, #{$ds-advanced-color-boolean-istrue-inverse});
+  --ds-auro-radio-btn-inset-color: var(--ds-advanced-color-boolean-indicator-inverse, #{v.$ds-advanced-color-boolean-indicator-inverse});
+  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-istrue-inverse, #{v.$ds-advanced-color-boolean-istrue-inverse});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-istrue-inverse, #{v.$ds-advanced-color-boolean-istrue-inverse});
 }
 
 :host([onDark][error]) {
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-error-inverse, #{$ds-advanced-color-boolean-error-inverse});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-boolean-error-inverse, #{v.$ds-advanced-color-boolean-error-inverse});
 }
 
 :host([onDark][checked][error]) {
-  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-error-inverse, #{$ds-advanced-color-boolean-error-inverse});
+  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-boolean-error-inverse, #{v.$ds-advanced-color-boolean-error-inverse});
 }
 
 :host([onDark][disabled]) {
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{$ds-advanced-color-state-background-inverse-disabled});
-  --ds-auro-radio-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
+  --ds-auro-radio-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 }
 
 :host([onDark][checked][disabled]) {
-  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-state-background-inverse-disabled, #{$ds-advanced-color-state-background-inverse-disabled});
+  --ds-auro-radio-btn-fill-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
 }
 
 :host([onDark].focus-visible) {
-  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
+  --ds-auro-radio-btn-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
 }

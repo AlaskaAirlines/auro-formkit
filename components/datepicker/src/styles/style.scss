@@ -3,11 +3,11 @@
 
 /* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before */
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
 :host([layout="classic"]) {
   [auro-input] {
@@ -56,7 +56,7 @@
 
     [auro-input] {
       &:first-of-type {
-        margin-right: var(--ds-size-150, $ds-size-150);
+        margin-right: var(--ds-size-150, vac.$ds-size-150);
         --ds-auro-input-border-color: transparent;
         --ds-auro-input-container-color: transparent;
       }
@@ -104,11 +104,11 @@
 
       [auro-input] {
         &:first-of-type {
-          margin-right: var(--ds-size-150, $ds-size-150);
+          margin-right: var(--ds-size-150, vac.$ds-size-150);
         }
 
         &:nth-child(2) {
-          margin-left: var(--ds-size-150, $ds-size-150);
+          margin-left: var(--ds-size-150, vac.$ds-size-150);
 
           &::part(accentIcon) {
             display: none;
@@ -126,7 +126,7 @@
           &:before {
             position: absolute;
             top: 13px;
-            left: calc(var(--ds-size-150, $ds-size-150) * -1);
+            left: calc(var(--ds-size-150, vac.$ds-size-150) * -1);
             display: block;
             width: 1px;
             height: 2rem;
@@ -152,14 +152,14 @@
       }
     }
 
-    @include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+    @include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
       ::part(popover) {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        margin-bottom: var(--ds-size-200, $ds-size-200);
+        margin-bottom: var(--ds-size-200, vac.$ds-size-200);
         transform: unset !important;
       }
 

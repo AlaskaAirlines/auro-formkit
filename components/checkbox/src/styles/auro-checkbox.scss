@@ -19,16 +19,16 @@
    declaration-empty-line-before */
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
-@import "@aurodesignsystem/webcorestylesheets/src/core";
-@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use "@aurodesignsystem/webcorestylesheets/src/breakpoints" as vb;
+@use "@aurodesignsystem/webcorestylesheets/src/core";
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
 // container styles - defines the look of the outer custom component
 :host {
   display: block;
-  --cbxLocation: var(--ds-size-50, #{$ds-size-50});
+  --cbxLocation: var(--ds-size-50, #{vac.$ds-size-50});
 }
 
 fieldset {
@@ -37,7 +37,7 @@ fieldset {
 
 .displayFlex {
   slot {
-    @include auro_grid-breakpoint--sm {
+    @include vb.auro_grid-breakpoint--sm {
       display: flex;
     }
   }
@@ -45,9 +45,9 @@ fieldset {
 
 .cbxContainer {
   position: relative;
-  padding-left: var(--ds-size-100, $ds-size-100);
-  padding-right: var(--ds-size-100, $ds-size-100);
-  line-height: var(--ds-size-400, $ds-size-400);
+  padding-left: var(--ds-size-100, #{vac.$ds-size-100});
+  padding-right: var(--ds-size-100, #{vac.$ds-size-100});
+  line-height: var(--ds-size-400, #{vac.$ds-size-400});
 }
 
 .cbx--input {
@@ -61,7 +61,7 @@ fieldset {
 }
 
 .label {
-  margin-left: var(--ds-size-300, $ds-size-300);
+  margin-left: var(--ds-size-300, #{vac.$ds-size-300});
   display: block;
 
   &:hover {
@@ -76,15 +76,15 @@ fieldset {
     position: absolute;
     content: '';
 
-    top: var(--ds-size-200, $ds-size-200); // half of `.cbxContainer`'s line-height
+    top: var(--ds-size-200, #{vac.$ds-size-200}); // half of `.cbxContainer`'s line-height
     left: var(--cbxLocation);
-    width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
-    height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
+    width: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-50, #{vac.$ds-size-50}));
+    height: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-50, #{vac.$ds-size-50}));
     transform: translateY(-50%);
 
     border-width: 1px;
     border-style: solid;
-    border-radius: var(--ds-border-radius, $ds-border-radius);
+    border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
     outline-style: solid;
     outline-width: 1px;
     z-index: 0;
@@ -93,8 +93,8 @@ fieldset {
 
 .svg--cbx {
   position: absolute;
-  top: var(--ds-size-25, $ds-size-25);
-  left: var(--ds-size-25, $ds-size-25);
+  top: var(--ds-size-25, #{vac.$ds-size-25});
+  left: var(--ds-size-25, #{vac.$ds-size-25});
 
   padding-top: 3px;
   padding-bottom: 3px;
