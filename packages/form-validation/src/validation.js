@@ -289,7 +289,9 @@ export default class AuroFormValidation {
       elem.validity = this.auroInputElements[0].validity;
       elem.errorMessage = this.auroInputElements[0].errorMessage;
 
-      if (elem.validity === 'valid' && this.auroInputElements.length > 1) {
+      // combobox has 2 inputs but no need to check validity on the 2nd one which is in fullscreen bib. 
+      // combobox's 2nd input will have noValidate set true.
+      if (elem.validity === 'valid' && this.auroInputElements.length > 1 && !this.auroInputElements[1].noValidate) {
         elem.validity = this.auroInputElements[1].validity;
         elem.errorMessage = this.auroInputElements[1].errorMessage;
       }
