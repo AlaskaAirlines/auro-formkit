@@ -236,19 +236,24 @@ export class AuroInput extends BaseInput {
           ${this.label}
         </slot>
       </label>
+
+      <!-- Attributes are grouped into: basic attributes, event handlers, ARIA attributes, and input-specific attributes -->
       <input
         @blur="${this.handleBlur}"
         @focusin="${this.handleFocusin}"
         @focusout="${this.handleFocusout}"
         @input="${this.handleInput}"
+        .placeholder=${this.placeholderStr}
+        .role=${this.a11yRole}
         ?activeLabel="${this.activeLabel}"
         ?disabled="${this.disabled}"
         ?required="${this.required}"
-        .placeholder=${this.placeholderStr}
+        aria-controls=${ifDefined(this.a11yControls)}
         aria-describedby="${this.uniqueId}"
+        aria-expanded=${ifDefined(this.a11yExpanded)}
         aria-invalid="${this.validity !== 'valid'}"
-        autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
         autocomplete="${ifDefined(this.autocomplete ? this.autocomplete : undefined)}"
+        autocapitalize="${ifDefined(this.autocapitalize ? this.autocapitalize : undefined)}"
         autocorrect="${ifDefined(this.autocorrect ? this.autocorrect : undefined)}"
         class="${classMap(inputOverrideClasses)}"
         id="${this.inputId}"
@@ -261,9 +266,6 @@ export class AuroInput extends BaseInput {
         pattern="${ifDefined(this.definePattern())}"
         spellcheck="${ifDefined(this.spellcheck ? this.spellcheck : undefined)}"
         type="${this.type === "password" && this.showPassword ? "text" : this.getInputType(this.type)}"
-        .role=${this.a11yRole}
-        aria-expanded=${this.a11yExpanded ? 'true' : 'false'}
-        aria-controls=${ifDefined(this.a11yControls)}
       />
       <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
         <div class="displayValueWrapper">

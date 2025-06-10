@@ -992,15 +992,14 @@ export class AuroCombobox extends AuroElement {
           }
         </div>
         <${this.dropdownTag}
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
           ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
-          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
-          .offset="${this.offset}"
-          .placement="${this.placement}"
-          simple
           disableEventShow
           fluid
           for="dropdownMenu"
@@ -1008,6 +1007,7 @@ export class AuroCombobox extends AuroElement {
           matchWidth="${ifDefined(this.matchWidth)}"
           nocheckmark
           rounded
+          simple
           shape="${this.shape}"
           size="${this.size}">
           <${this.inputTag}
@@ -1018,17 +1018,17 @@ export class AuroCombobox extends AuroElement {
             .inputmode="${this.inputmode}"
             .placeholder="${this.placeholder}"
             .type="${this.type}"
-            ?onDark="${this.onDark}"
-            ?required="${this.required}"
-            ?noValidate="${this.noValidate}"
             ?disabled="${this.disabled}"
             ?icon="${this.triggerIcon}"
+            ?noValidate="${this.noValidate}"
+            ?onDark="${this.onDark}"
+            ?required="${this.required}"
             a11yRole="combobox"
             id="${this.id}"
             layout="${this.layout}"
             setCustomValidity="${this.setCustomValidity}"
-            setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+            setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             shape="${this.shape}"
             size="${this.size}"
             slot="trigger">
@@ -1040,17 +1040,20 @@ export class AuroCombobox extends AuroElement {
             <slot></slot>
             <${this.inputTag}
               @input="${this.handleInputValueChange}"
+              .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
               .inputmode="${this.inputmode}"
               .placeholder="${this.placeholder}"
               .type="${this.type}"
-              ?required="${this.required}"
-              noValidate="true"
               ?disabled="${this.disabled}"
               ?icon="${this.triggerIcon}"
-              simple
+              ?required="${this.required}"
+              a11yRole="combobox"
+              a11yExpanded="true"
               layout="classic"
+              noValidate="true"
               shape="classic"
+              simple
               size="sm"
               slot="subheader">
             </${this.inputTag}>
