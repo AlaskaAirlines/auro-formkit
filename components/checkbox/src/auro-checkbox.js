@@ -241,7 +241,7 @@ export class AuroCheckbox extends LitElement {
    * @private
    * @returns {HTMLElement}
    */
-  getLayoutDefault() {
+  render() {
     const labelClasses = {
       'label': true,
       'label--cbx': true,
