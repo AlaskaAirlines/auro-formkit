@@ -1,6 +1,8 @@
 import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import '../src/registered.js';
 
+useAccessibleIt();
 describe('auro-input', () => {
   it('web component is successfully created in the document', async () => {
     // This test fails when attributes are put onto the component before it is attached to the DOM
@@ -33,7 +35,9 @@ describe('auro-input', () => {
 
   it('sets inputmode attribute on the input when passed as attribute or prop', async () => {
     const el = await fixture(html`
-      <auro-input></auro-input>
+      <auro-input>
+        <span slot="label">Label</span>
+      </auro-input>
     `);
 
     const inputmode = "numeric";
@@ -50,7 +54,10 @@ describe('auro-input', () => {
 
   it('allows the user to manually define inputmode for input types that set a default inputmode', async () => {
     const el = await fixture(html`
-      <auro-input type="tel" inputmode="text"></auro-input>
+      <auro-input type="tel" inputmode="text">
+        <span slot="label">Label</span>
+      </auro-input
+      >
     `);
 
     const input = el.shadowRoot.querySelector('input');
@@ -118,7 +125,7 @@ describe('auro-input', () => {
 
   it('allows email type', async () => {
     const el = await fixture(html`
-      <auro-input type="email"></auro-input>
+      <auro-input type="email"> <span slot="label">Label</span></auro-input>
     `);
 
     const input = el.shadowRoot.querySelector('input');
@@ -127,7 +134,7 @@ describe('auro-input', () => {
 
   it('allows type number', async () => {
     const el = await fixture(html`
-      <auro-input type="number"></auro-input>
+      <auro-input type="number"> <span slot="label">Label</span></auro-input>
     `);
 
     expect(el.inputMode).to.equal('numeric');
@@ -135,7 +142,7 @@ describe('auro-input', () => {
 
   it('does not allow color type', async () => {
     const el = await fixture(html`
-      <auro-input type="color"></auro-input>
+      <auro-input type="color"> <span slot="label">Label</span></auro-input>
     `);
 
     const input = el.shadowRoot.querySelector('input');
@@ -144,7 +151,7 @@ describe('auro-input', () => {
 
   it('sets name', async () => {
     const el = await fixture(html`
-      <auro-input name="test"></auro-input>
+      <auro-input name="test"> <span slot="label">Label</span></auro-input>
     `);
 
     const input = el.shadowRoot.querySelector('input');
@@ -153,7 +160,7 @@ describe('auro-input', () => {
 
   it('sets value when input event triggered', async () => {
     const el = await fixture(html`
-      <auro-input></auro-input>
+      <auro-input> <span slot="label">Label</span></auro-input>
     `);
 
     el.value = 'triggered';
@@ -162,11 +169,13 @@ describe('auro-input', () => {
 
   it('fires input event when setting the value programmatically', async () => {
     const el = await fixture(html`
-      <auro-input></auro-input>
+      <auro-input> <span slot="label">Label</span></auro-input>
     `);
 
     const listener = oneEvent(el, 'input');
-    el.value = 'test'
+    el.value = 'test';
+    await elementUpdated(el);
+
     const { result } = await listener;
 
     expect(result).to.equal(undefined);
@@ -183,7 +192,7 @@ describe('auro-input', () => {
 
   it('sets readonly attribute on HTML5 input', async () => {
     const el = await fixture(html`
-      <auro-input readonly></auro-input>
+      <auro-input readonly> <span slot="label">Label</span></auro-input>
     `);
 
     expect(el.inputElement.hasAttribute('readonly')).to.be.true;
@@ -213,7 +222,7 @@ describe('auro-input', () => {
 
   it('fires input event when validation executes', async () => {
     const el = await fixture(html`
-      <auro-input required></auro-input>
+      <auro-input required> <span slot="label">Label</span></auro-input>
     `);
 
     const listener = oneEvent(el, 'auroFormElement-validated');
@@ -223,9 +232,10 @@ describe('auro-input', () => {
     el.value = 'whatever';
     input.blur();
 
+
     const { result } = await listener;
 
-    expect(result).to.equal(undefined);
+    await expect(result).to.equal(undefined);
   });
 
   it ('validates correctly with noValidate attribute set and force = true passed to validate method', async () => {
@@ -310,7 +320,7 @@ describe('auro-input', () => {
 
   it('sets aria-invalid', async () => {
     const el = await fixture(html`
-      <auro-input required></auro-input>
+      <auro-input required> <span slot="label">Label</span></auro-input>
     `);
 
     expect(el.hasAttribute('validity')).to.be.false;
@@ -358,7 +368,9 @@ describe('auro-input', () => {
 
     for (let index = 0; index < dateFormats.length; index++) {
       const el = await fixture(html`
-        <auro-input type="date" format=${dateFormats[index]}></auro-input>
+        <auro-input type="date" format=${dateFormats[index]}>
+          <span slot="label">Label</span>
+        </auro-input>
       `);
 
       let placeholder = el.getPlaceholder();
@@ -375,7 +387,7 @@ describe('auro-input', () => {
 
   it('error attribute sets custom validity', async () => {
     const el = await fixture(html`
-      <auro-input error="Custom Error Message"></auro-input>
+      <auro-input error="Custom Error Message"><span slot="label">Label</span></auro-input>
     `)
 
     expect(el.getAttribute('validity')).to.be.equal('customError');
@@ -386,7 +398,7 @@ describe('auro-input', () => {
 
   it('updates validity when error message removed after creation', async () => {
     const el = await fixture(html`
-      <auro-input error="Custom Error Message"></auro-input>
+      <auro-input error="Custom Error Message"><span slot="label">Label</span></auro-input>
     `)
 
     expect(el.getAttribute('validity')).to.be.equal('customError');
@@ -403,8 +415,8 @@ describe('auro-input', () => {
 
   it('minlength validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input minlength="2"></auro-input>
-    `)
+      <auro-input minlength="2"><span slot="label">Label</span></auro-input>
+    `);
 
     el.value = 'a';
 
@@ -421,8 +433,8 @@ describe('auro-input', () => {
 
   it('maxlength validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input maxlength="2"></auro-input>
-    `)
+      <auro-input maxlength="2"><span slot="label">Label</span></auro-input>
+    `);
 
     el.value = 'aaa';
 
@@ -439,8 +451,8 @@ describe('auro-input', () => {
 
   it('type date validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="date"></auro-input>
-    `)
+      <auro-input type="date"><span slot="label">Label</span></auro-input>
+    `);
 
     el.value = '10/10/202';
 
@@ -457,7 +469,7 @@ describe('auro-input', () => {
 
   it('MM/YY format validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="date" format="MM/YY"></auro-input>
+      <auro-input type="date" format="MM/YY"><span slot="label">Label</span></auro-input>
     `)
 
     el.value = '10/';
@@ -475,7 +487,7 @@ describe('auro-input', () => {
 
   it('format MM/YYYY validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="date" format="MM/YYYY"></auro-input>
+      <auro-input type="date" format="MM/YYYY"><span slot="label">Label</span></auro-input>
     `)
 
     el.value = '10/';
@@ -493,7 +505,7 @@ describe('auro-input', () => {
 
   it('format YYYY/MM/DD validity checked correctly', async () => {
     const el = await fixture(html`
-      <auro-input type="date" format="YYYY/MM/DD"></auro-input>
+      <auro-input type="date" format="YYYY/MM/DD"><span slot="label">Label</span></auro-input>
     `)
 
     el.value = '20';
@@ -511,7 +523,7 @@ describe('auro-input', () => {
 
   it('type date validity checked correctly when using the max attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="date" max="03/03/2023"></auro-input>
+      <auro-input type="date" max="03/03/2023"><span slot="label">Label</span></auro-input>
     `)
 
     el.value = '03/03/2023';
@@ -529,7 +541,7 @@ describe('auro-input', () => {
 
   it('type date validity checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="date" min="03/03/2023"></auro-input>
+      <auro-input type="date" min="03/03/2023"><span slot="label">Label</span></auro-input>
     `)
 
     el.value = '03/04/2023';
@@ -547,7 +559,7 @@ describe('auro-input', () => {
 
   it('type numeric checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="number" min="10"></auro-input>
+      <auro-input type="number" min="10"><span slot="label">Label</span></auro-input>
     `)
 
     el.value = '10';
@@ -565,7 +577,7 @@ describe('auro-input', () => {
 
   it('type numeric checked correctly when using the min attribute', async () => {
     const el = await fixture(html`
-      <auro-input type="number" max="10"></auro-input>
+      <auro-input type="number" max="10"><span slot="label">Label</span></auro-input>
     `)
 
     el.value = '10';
@@ -583,7 +595,7 @@ describe('auro-input', () => {
 
   it('is accessible', async () => {
     const el = await fixture(html`
-      <auro-input cssclass="testClass" id="input-test"></auro-input>
+      <auro-input cssclass="testClass" id="input-test"><span slot="label">Label</span></auro-input>
     `);
 
     await expect(el).to.be.accessible();
@@ -597,7 +609,7 @@ describe('auro-input', () => {
 
   it('Sets spellcheck and autocapitalize values', async () => {
     const el = await fixture(html`
-      <auro-input id="checkSpellCheck" type="text" required spellcheck="false"></auro-input>
+      <auro-input id="checkSpellCheck" type="text" required spellcheck="false"><span slot="label">Label</span></auro-input>
     `);
 
     expect(el.shadowRoot.querySelector('input')).to.have.attribute('spellcheck', 'false');
@@ -607,7 +619,7 @@ describe('auro-input', () => {
 
   it('Does not set spellcheck and autocapitalize values', async () => {
     const el = await fixture(html`
-      <auro-input id="checkSpellCheck" type="text" required spellcheck="true"></auro-input>
+      <auro-input id="checkSpellCheck" type="text" required spellcheck="true"><span slot="label">Label</span></auro-input>
     `);
 
     expect(el.shadowRoot.querySelector('input')).to.have.attribute('spellcheck', 'true');
@@ -617,7 +629,7 @@ describe('auro-input', () => {
 
   it('reset method clears the value and validity state', async () => {
     const el = await fixture(html`
-      <auro-input required minlength="12" value="Auro Team"></auro-input>
+      <auro-input required minlength="12" value="Auro Team"><span slot="label">Label</span></auro-input>
     `);
 
     expect(el.getAttribute('validity')).to.be.equal('tooShort');
@@ -632,7 +644,7 @@ describe('auro-input', () => {
 
   it ('input value is formatted with passed in format and respects the format restrictions', async () => {
     const el = await fixture(html`
-      <auro-input format="47440000"></auro-input>
+      <auro-input format="47440000"><span slot="label">Label</span></auro-input>
     `);
 
     setInputValue(el, 'www');
@@ -651,7 +663,7 @@ describe('auro-input', () => {
   describe('handles phone number formatting', () => {
     it('default north american phone format', async () => {
       const el = await fixture(html`
-        <auro-input type="tel"></auro-input>
+        <auro-input type="tel"><span slot="label">Label</span></auro-input>
       `);
 
       setInputValue(el, '5091234567');
@@ -663,7 +675,7 @@ describe('auro-input', () => {
 
     it('custom phone format', async () => {
       const el = await fixture(html`
-        <auro-input type="tel" format="+52 000 000 0000"></auro-input>
+        <auro-input type="tel" format="+52 000 000 0000"><span slot="label">Label</span></auro-input>
       `);
 
       setInputValue(el, '1234567890');
@@ -677,7 +689,7 @@ describe('auro-input', () => {
   describe('handles date formatting', () => {
     it('mm/dd/yyyy', async () => {
       const el = await fixture(html`
-        <auro-input type="date" format="mm/dd/yyyy"></auro-input>
+        <auro-input type="date" format="mm/dd/yyyy"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '12312000');
@@ -687,7 +699,7 @@ describe('auro-input', () => {
     
     it('dd/mm/yyyy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="dd/mm/yyyy"></auro-input>
+        <auro-input id="format-date" type="date" format="dd/mm/yyyy"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '31122000');
@@ -697,7 +709,7 @@ describe('auro-input', () => {
     
     it('yyyy/mm/dd', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yyyy/mm/dd"></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy/mm/dd"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '20001231');
@@ -707,7 +719,7 @@ describe('auro-input', () => {
     
     it('yyyy/dd/mm', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yyyy/dd/mm"></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy/dd/mm"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '20003112');
@@ -717,7 +729,7 @@ describe('auro-input', () => {
     
     it('mm/yy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="mm/yy"></auro-input>
+        <auro-input id="format-date" type="date" format="mm/yy"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '1231');
@@ -727,7 +739,7 @@ describe('auro-input', () => {
     
     it('yy/mm', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yy/mm"></auro-input>
+        <auro-input id="format-date" type="date" format="yy/mm"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '9912');
@@ -737,7 +749,7 @@ describe('auro-input', () => {
     
     it('mm/yyyy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="mm/yyyy"></auro-input>
+        <auro-input id="format-date" type="date" format="mm/yyyy"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '122000');
@@ -747,7 +759,7 @@ describe('auro-input', () => {
     
     it('yyyy/mm', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yyyy/mm"></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy/mm"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '200012');
@@ -757,7 +769,7 @@ describe('auro-input', () => {
     
     it('yy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yy"></auro-input>
+        <auro-input id="format-date" type="date" format="yy"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '99');
@@ -767,7 +779,7 @@ describe('auro-input', () => {
     
     it('yyyy', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yyyy"></auro-input>
+        <auro-input id="format-date" type="date" format="yyyy"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '1999');
@@ -777,7 +789,7 @@ describe('auro-input', () => {
     
     it('mm', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="mm"></auro-input>
+        <auro-input id="format-date" type="date" format="mm"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '12');
@@ -787,7 +799,7 @@ describe('auro-input', () => {
     
     it('dd', async () => {
       const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="dd"></auro-input>
+        <auro-input id="format-date" type="date" format="dd"><span slot="label">Label</span></auro-input>
       `);
     
       setInputValue(el, '31');
@@ -799,11 +811,11 @@ describe('auro-input', () => {
   describe('handles i18n', () => {
     it('credit-card translation', async () => {
       const el = await fixture(html`
-        <auro-input type="credit-card" required id="input01"></auro-input>
+        <auro-input type="credit-card" required id="input01"><span slot="label">Label</span></auro-input>
       `);
 
       const eli18n = await fixture(html`
-        <auro-input type="credit-card" required lang="es" id="input01"></auro-input>
+        <auro-input type="credit-card" required lang="es" id="input01"><span slot="label">Label</span></auro-input>
       `);
 
       const eli18nContent = eli18n.shadowRoot.querySelector('[name="helptext"]').innerHTML;
