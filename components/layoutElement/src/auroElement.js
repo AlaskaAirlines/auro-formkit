@@ -35,18 +35,21 @@ export class AuroElement extends LitElement {
   }
 
   resetShapeClasses() {
+    const wrapper = this.shadowRoot.querySelector('.wrapper');
+
+    if (wrapper) {
+      wrapper.classList.forEach((className) => {
+        if (className.startsWith('shape-')) {
+          wrapper.classList.remove(className);
+        }
+      });
+
+    }
+
     if (this.shape && this.size) {
-      const wrapper = this.shadowRoot.querySelector('.wrapper');
-
-      if (wrapper) {
-        wrapper.classList.forEach((className) => {
-          if (className.startsWith('shape-')) {
-            wrapper.classList.remove(className);
-          }
-        });
-
-        wrapper.classList.add(`shape-${this.shape.toLowerCase()}-${this.size.toLowerCase()}`);
-      }
+      wrapper.classList.add(`shape-${this.shape.toLowerCase()}-${this.size.toLowerCase()}`);
+    } else {
+      wrapper.classList.add('shape-none');
     }
   }
 
