@@ -1,9 +1,12 @@
 /* eslint-disable max-lines, jsdoc/require-jsdoc, no-return-await, no-undef */
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
-import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
+
+useAccessibleIt();
 
 async function defaultFixture() {
   return await fixture(html`
@@ -286,6 +289,7 @@ describe('auro-select keyboard interaction', () => {
   it('selects the first option starting with pressed key', async () => {
     const el = await fixture(html`
       <auro-select>
+        <span slot="label">Name</span>
         <auro-menu>
           <auro-menuoption value="apple">Apple</auro-menuoption>
           <auro-menuoption value="banana">Banana</auro-menuoption>
@@ -312,6 +316,7 @@ describe('auro-select keyboard interaction', () => {
   it('cycles through options with the same starting letter', async () => {
     const el = await fixture(html`
       <auro-select>
+        <span slot="label">Name</span>
         <auro-menu>
           <auro-menuoption value="apple">Apple</auro-menuoption>
           <auro-menuoption value="apricot">Apricot</auro-menuoption>
@@ -340,6 +345,7 @@ describe('auro-select keyboard interaction', () => {
   it('does nothing if there is no matching value for pressed key', async () => {
     const el = await fixture(html`
       <auro-select>
+        <span slot="label">Name</span>
         <auro-menu>
           <auro-menuoption value="apple">Apple</auro-menuoption>
           <auro-menuoption value="banana">Banana</auro-menuoption>
@@ -366,6 +372,7 @@ describe('auro-select keyboard interaction', () => {
   it('loops through available values if the same key is pressed repeatedly', async () => {
     const el = await fixture(html`
       <auro-select>
+        <span slot="label">Name</span>
         <auro-menu>
           <auro-menuoption value="apple">Apple</auro-menuoption>
           <auro-menuoption value="apricot">Apricot</auro-menuoption>
