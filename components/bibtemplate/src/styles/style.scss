@@ -29,6 +29,7 @@
   width: 100%;
 
   ::slotted([auro-input]) {
+    box-sizing: border-box;
     padding: 0 var(--ds-size-200, #{vac.$ds-size-200});
   }
 }

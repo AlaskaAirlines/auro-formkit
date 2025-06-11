@@ -25,6 +25,7 @@ $xs: 24px;
     min-height: getCalculatedSize($size, $simpleBorderSize);
     max-height: getCalculatedSize($size, $simpleBorderSize);
     background-color: unset;
+    box-shadow: none; // only here to support classic shape temporarily
   }
 }
 

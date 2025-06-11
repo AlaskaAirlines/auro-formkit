@@ -127,7 +127,6 @@ export default class BaseInput extends AuroElement {
        */
       a11yRole: {
         type: String,
-        attribute: true,
         reflect: true
       },
 
@@ -136,7 +135,6 @@ export default class BaseInput extends AuroElement {
        */
       a11yExpanded: {
         type: Boolean,
-        attribute: true,
         reflect: true
       },
 
@@ -145,7 +143,6 @@ export default class BaseInput extends AuroElement {
        */
       a11yControls: {
         type: String,
-        attribute: true,
         reflect: true
       },
 
@@ -161,7 +158,8 @@ export default class BaseInput extends AuroElement {
        * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters].
        */
       autocapitalize: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -176,7 +174,8 @@ export default class BaseInput extends AuroElement {
        * When set to `off`, stops iOS from auto-correcting words when typed into a text box.
        */
       autocorrect: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -221,7 +220,6 @@ export default class BaseInput extends AuroElement {
       /** Exposes inputmode attribute for input.  */
       inputmode: {
         type: String,
-        attribute: true,
         reflect: true
       },
 
@@ -229,7 +227,8 @@ export default class BaseInput extends AuroElement {
        * Defines the language of an element.
        */
       lang: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -243,7 +242,8 @@ export default class BaseInput extends AuroElement {
        * The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
        */
       maxLength: {
-        type: Number
+        type: Number,
+        reflect: true
       },
 
       /**
@@ -257,14 +257,16 @@ export default class BaseInput extends AuroElement {
        * The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`.
        */
       minLength: {
-        type: Number
+        type: Number,
+        reflect: true
       },
 
       /**
        * Populates the `name` attribute on the input.
        */
       name: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -295,7 +297,8 @@ export default class BaseInput extends AuroElement {
        * Define custom placeholder text, only supported by date input formats.
        */
       placeholder: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -385,6 +388,14 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * borderless
+       */
+      simple: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * Custom help text message for email type validity.
        */
       customValidityTypeEmail: {
@@ -395,7 +406,8 @@ export default class BaseInput extends AuroElement {
        * An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
        */
       spellcheck: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -410,7 +422,8 @@ export default class BaseInput extends AuroElement {
        * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
        */
       value: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
