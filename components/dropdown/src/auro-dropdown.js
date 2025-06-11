@@ -102,7 +102,7 @@ export class AuroDropdown extends AuroElement {
     this.noToggle = false;
     this.a11yAutocomplete = 'none';
     this.labeled = true;
-    this.a11yRole = 'button';
+    this.a11yRole = 'combobox';
     this.onDark = false;
     this.showTriggerBorders = true;
     this.triggerContentFocusable = false;
@@ -868,13 +868,13 @@ export class AuroDropdown extends AuroElement {
           class="${classMap(this.commonWrapperClasses)}" part="wrapper"
           tabindex="${this.tabIndex}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
-          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+          aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable || !this.bibContent ? undefined : this.bibContent.id)}"
+          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerContentWrapper')}"
           @focusin="${this.handleFocusin}"
           @blur="${this.handleFocusOut}">
-          <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
+          <div class="triggerContentWrapper" id="triggerContentWrapper">
+            <label class="label" hasTrigger=${this.hasTriggerContent}>
               <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
             </label>
             <div class="triggerContent">
@@ -938,12 +938,12 @@ export class AuroDropdown extends AuroElement {
           tabindex="${this.tabIndex}"
           ?showBorder="${this.showTriggerBorders}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
-          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+          aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable || !this.bibContent ? undefined : this.bibContent.id)}"
+          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerContentWrapper')}"
         >
-          <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
+          <div class="triggerContentWrapper" id="triggerContentWrapper">
+            <label class="label" hasTrigger=${this.hasTriggerContent}>
               <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
             </label>
             <div class="triggerContent">
