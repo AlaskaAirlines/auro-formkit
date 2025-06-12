@@ -919,16 +919,11 @@ export default class BaseInput extends AuroElement {
     // console.warn(this.inputElement);
     // console.warn(this.getActiveElement());
 
-    if (!isFocused) {
-      if (this.placeholder) {
-        this.placeholderStr = this.placeholder;
-        // return this.placeholder;
-      } else if (this.type === 'date') {
-        this.placeholderStr = this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
-        // return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
-      }
-    } else {
-      this.placeholderStr = '';
+    // if (!isFocused) {
+    if (this.placeholder) {
+      this.placeholderStr = this.placeholder;
+    } else if (this.type === 'date') {
+      this.placeholderStr = this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
     }
 
     this.requestUpdate();
