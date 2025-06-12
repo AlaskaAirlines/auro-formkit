@@ -146,6 +146,15 @@ export class AuroMenu extends AuroElement {
       value: {
         // Allow string, string[] arrays and undefined
         type: Object
+      },
+      /**
+       * indent level for submenues
+       * @private
+       */
+      level: {
+        type: Number,
+        reflect: false,
+        attribute: false
       }
     };
   }
@@ -485,22 +494,20 @@ export class AuroMenu extends AuroElement {
    * @param {HTMLElement} menu - Root menu element.
    */
   handleNestedMenus(menu) {
-    const nestedMenus = menu.querySelectorAll('auro-menu, [auro-menu]');
+    menu.level = menu.parentElement.level >= 0 ? menu.parentElement.level + 1 : 0;
 
-    nestedMenus.forEach((nestedMenu) => {
-      // role="listbox" only allows "role=group" for children.
-      nestedMenu.setAttribute('role', 'group');
-      nestedMenu.removeAttribute("root");
-      if (!nestedMenu.hasAttribute('aria-label')) {
-        nestedMenu.setAttribute('aria-label', 'submenu');
+    if (menu.level > 0) {
+      menu.setAttribute('role', 'group');
+      menu.removeAttribute("root");
+      if (!menu.hasAttribute('aria-label')) {
+        menu.setAttribute('aria-label', 'submenu');
       }
+    }
 
-      const options = nestedMenu.querySelectorAll(':scope > auro-menuoption, :scope > [auro-menuoption]');
-      options.forEach((option) => {
-        option.innerHTML = this.nestingSpacer + option.innerHTML;
-      });
-
-      this.handleNestedMenus(nestedMenu);
+    const options = menu.querySelectorAll(':scope > auro-menuoption, :scope > [auro-menuoption]');
+    options.forEach((option) => {
+      const regex = new RegExp(this.nestingSpacer, "g");
+      option.innerHTML = this.nestingSpacer.repeat(menu.level) + option.innerHTML.replace(regex, '');
     });
   }
 
