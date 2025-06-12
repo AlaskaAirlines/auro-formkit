@@ -44,7 +44,9 @@
 | Method                        | Type                                   | Description                                      |
 |-------------------------------|----------------------------------------|--------------------------------------------------|
 | `focus`                       | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
-| `renderLayoutFromAttributes`  | `(): TemplateResult<ResultType>`       |                                                  |
+| `renderHtmlActionClear`       | `(): TemplateResult`                   |                                                  |
+| `renderHtmlIconCalendar`      | `(): TemplateResult`                   |                                                  |
+| `renderLayoutFromAttributes`  | `(): TemplateResult`                   |                                                  |
 | `renderTempInputs`            | `(): TemplateResult`                   |                                                  |
 | `reset`                       | `(): void`                             | Resets component to initial state.               |
 | `resetLayoutClasses`          | `(): void`                             |                                                  |

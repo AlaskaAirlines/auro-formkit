@@ -21,9 +21,11 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
+import shapeSizeCss from "./styles/shapeSize-css.js";
 
 // layouts
 import classicLayoutColor from "./styles/default/color-css.js";
+import emphasizedStyle from "./styles/emphasized/style-css.js";
 
 import './auro-calendar.js';
 
@@ -34,6 +36,13 @@ import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './inputVersion.js';
 import { ifDefined } from "lit/directives/if-defined.js";
 import {AuroElement} from "@aurodesignsystem/auro-layout-element";
+import i18n from "@aurodesignsystem/auro-input/src/i18n.js";
+
+import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import iconVersion from './iconVersion.js';
+import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import buttonVersion from './buttonVersion.js';
+import {classMap} from "lit/directives/class-map.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -150,6 +159,16 @@ export class AuroDatePicker extends AuroElement {
      * @private
      */
     this.dropdownTag = versioning.generateTag('auro-formkit-datepicker-dropdown', dropdownVersion, AuroDropdown);
+
+    /**
+     * @private
+     */
+    this.buttonTag = versioning.generateTag('auro-formkit-datepicker-button', buttonVersion, AuroButton);
+
+    /**
+     * @private
+     */
+    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
 
     /**
      * @private
@@ -447,8 +466,12 @@ export class AuroDatePicker extends AuroElement {
       colorCss,
       tokensCss,
 
+      // layout util
+      shapeSizeCss,
+
       // layouts
-      classicLayoutColor
+      classicLayoutColor,
+      emphasizedStyle
     ];
   }
 
@@ -714,6 +737,10 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   configureDatepicker() {
+    document.addEventListener("focus", () => {
+      console.info(document.activeElement);
+    });
+
     this.addEventListener('focusin', () => {
 
       this.touched = true;
@@ -1074,65 +1101,74 @@ export class AuroDatePicker extends AuroElement {
     this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
   }
 
+  /**
+   * @private
+   */
+  get withValue() {
+    // eslint-disable-next-line no-extra-parens
+    return (this.value && this.value.length > 0) || (this.valueEnd && this.valueEnd.length > 0);
+  }
+
+  /**
+   * @private
+   */
+  hasFocus() {
+    console.log(document.activeElement)
+    return this.contains(document.activeElement);
+    // return this.inputList ? this.inputList.some((input) => {
+    //   console.info("input.hasFocus", input.hasFocus);
+    //   return input.hasFocus
+    // }) : false;
+  }
+
   // layout render methods
   // ------------------------------------
 
   /**
-   * Base wrapper for the datepicker layout - every layout follows this same structure
-   * with minor variations in DOM structure.
-   * @param {import("lit").TemplateResult} content - The content to be rendered inside the base layout.
-   * @return {import("lit").TemplateResult}
+   * Renders the snowflake layout for the datepicker.
    * @private
+   * @return {import("lit").TemplateResult}
    */
-  _renderBaseLayout(content) {
-    return html`
-      <div
-        part="wrapper">
-        <div class="accents left">
-          calendar icon
-        </div>
-        <div class="mainContent">
-          ${content}
-        </div>
-        <div class="accents right">
-          error and/or close icon here :)
-        </div>
-      </div>
-      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
-        help text here (see combobox for example)
-      </div>
-    `;
-  }
+  renderSnowflakeLayout() {
 
-  /**
-   * Renders the emphasized layout for the datepicker.
-   * @private
-   * @return {import("lit").TemplateResult}
-   */
-  renderEmphasizedLayout() {
+    const inputWrapperClassMap = {
+      inputWrapper: true,
+
+      withValue: false,
+      hasFocus: false,
+    };
+
+    const labelClassMap = {
+      withValue: false,
+      hasFocus: false,
+    };
+
     return html`
       <div
+        class="wrapper trigger"
         part="wrapper">
         <div class="accents left">
-          calendar icon
+          ${this.renderHtmlIconCalendar()}
         </div>
         <div class="mainContent">
-          ${this.renderTempInputs()}
+          <label class="${classMap(labelClassMap)}" part="mainLabel">
+            Dates
+          </label>
+          <div class="${classMap(inputWrapperClassMap)}" part="inputWrapper">
+            ${this.renderTempInputs()}
+          </div>
         </div>
         <div class="accents right">
-          error and/or close icon here :)
+          ${this.renderHtmlActionClear()}
         </div>
-      </div>
-      <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
-        help text here (see combobox for example)
       </div>
     `;
   }
 
   renderLayoutFromAttributes() {
     switch (this.layout) {
-      case 'emphasized':
-        return this.renderEmphasizedLayout();
+      case 'snowflake':
+        return this.renderSnowflakeLayout();
       default:
         // TODO: remove when all base layouts are implemented and instead return classic
         return html`
@@ -1144,26 +1180,37 @@ export class AuroDatePicker extends AuroElement {
   renderTempInputs() {
     return html`
       <${this.inputTag}
-        id="${this.generateRandomString(12)}"
-        bordered
-        class="dateFrom"
+        ?disabled="${this.disabled}"
         ?onDark="${this.onDark}"
         ?required="${this.required}"
-        noValidate
-        type="date"
+        id="${this.generateRandomString(12)}"
         .format="${this.format}"
         .max="${this.maxDate}"
         .min="${this.minDate}"
+        .placeholder="${this.placeholder}"
+        simple
+        bordered
+        noValidate
+        class="dateFrom"
+        type="date"
+        part="input"
+        shape="box"
+        size="xl"
         setCustomValidity="${this.setCustomValidity}"
         setCustomValidityCustomError="${this.setCustomValidityCustomError}"
         setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
         setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
         setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-        ?disabled="${this.disabled}"
         inputmode="${ifDefined(this.inputmode)}"
-        part="input">
+      >
         <span slot="label"><slot name="fromLabel"></slot></span>
       </${this.inputTag}>
+
+      <!--  Divider  -->
+      ${this.range ? html`
+        <div class="inputDivider"></div>
+      ` : undefined}
+
       ${this.range ? html`
         <${this.inputTag}
           id="${this.generateRandomString(12)}"
@@ -1189,14 +1236,54 @@ export class AuroDatePicker extends AuroElement {
   }
 
   // ------------------------------------
-  // end of layout render methods
+  // end of layout render
+
+  // icons/actions
+  // ------------------------------------
+
+  renderHtmlActionClear() {
+    const clearActionClassMap = {
+      'notification': true,
+      'clear': true,
+      'util_displayHidden': (!this.value || this.value.length === 0) && (!this.valueEnd || this.valueEnd.length === 0),
+    };
+    return html`
+      <div class="${classMap(clearActionClassMap)}">
+        <${this.buttonTag}
+          @click="${this.reset}"
+          ?onDark="${this.onDark}"
+          aria-label="${i18n(this.lang, 'clearInput')}"
+          class="notificationBtn clearBtn"
+          tabindex="-1"
+          variant="flat">
+          <${this.iconTag}
+            category="interface"
+            customColor
+            name="x-lg"
+            >
+          </${this.iconTag}>
+        </${this.buttonTag}>
+      </div>
+    `;
+  }
+
+  renderHtmlIconCalendar() {
+    return html`
+      <${this.iconTag}
+        ?onDark="${this.onDark}"
+        category="interface"
+        class="accentIcon"
+        name="calendar"
+        part="accentIcon"
+        variant="${this.disabled ? 'disabled' : 'muted'}">
+      </${this.iconTag}>`;
+  }
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     // Base HTML render() handles dropdown and calendar bib
     return html`
-      <div>
-        <${this.dropdownTag}
+      <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
           ?onDark="${this.onDark}"
           ?disabled="${this.disabled}"
@@ -1214,9 +1301,8 @@ export class AuroDatePicker extends AuroElement {
           for="dropdownMenu"
           part="dropdown"
           rounded
-          simple
         >
-          <div slot="trigger" class="dpTriggerContent" part="trigger">
+          <div slot="trigger" class="dpTriggerContent" part="trigger" @click="${this.focus}">
             ${this.renderLayoutFromAttributes()}
           </div>
 
@@ -1251,7 +1337,6 @@ export class AuroDatePicker extends AuroElement {
             }
           </p>
         </${this.dropdownTag}>
-      </div>
     `;
   }
 }

@@ -45,6 +45,7 @@ $xs: 24px;
 @mixin parentBorder($size) {
   &.parentBorder {
     border: 0;
+    box-shadow: unset;
     min-height: getCalculatedSize($size, 2px);
     max-height: getCalculatedSize($size, 2px);
   }

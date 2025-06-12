@@ -136,6 +136,12 @@ export class AuroInput extends BaseInput {
     };
   }
 
+  get commonAccentClasses() {
+    return {
+      'util_displayHidden': false
+    };
+  }
+
   /**
    * Returns classmap configuration for helpText elements in each layout.
    * @private
@@ -415,13 +421,13 @@ export class AuroInput extends BaseInput {
         @click="${this.handleClick}"
         class="${classMap(classicClassMap)}"
         part="wrapper">
-        <div class="accents left">
+        <div part="accent-left" class="accents left ${classMap(this.commonAccentClasses)}">
            ${this.renderHtmlTypeIcon()}
         </div>
         <div class="mainContent">
           ${this.renderHtmlInput(true)}
         </div>
-        <div class="accents right">
+        <div part="accent-right" class="accents right ${classMap(this.commonAccentClasses)}">
           ${this.renderValidationErrorIconHtml()}
           ${this.hasValue && this.type === 'password' ? this.renderHtmlNotificationPassword() : undefined}
           ${this.hasValue ? html`
@@ -448,7 +454,7 @@ export class AuroInput extends BaseInput {
         @click="${this.handleClick}"
         class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
-        <div class="accents left">
+        <div class="accents left ${this.commonAccentClasses}">
           ${this.layout.includes('left') ? html`
             ${this.renderValidationErrorIconHtml()}
           ` : undefined}
@@ -456,7 +462,7 @@ export class AuroInput extends BaseInput {
         <div class="mainContent">
           ${this.renderHtmlInput()}
         </div>
-        <div class="accents right">
+        <div class="accents right ${this.commonAccentClasses}">
           ${this.layout.includes('right') || this.layout === "emphasized" ? html`
             ${this.renderValidationErrorIconHtml()}
           ` : undefined}

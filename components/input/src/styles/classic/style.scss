@@ -72,11 +72,6 @@
   }
 
   .accents {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
     &.left {
       padding-left: 8px;
     }

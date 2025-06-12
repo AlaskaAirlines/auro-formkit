@@ -1,1 +1,32 @@
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+
+// COMMON FOR ALL ---------------------------------------------------
+
+:host {
+  display: block;
+}
+
+.wrapper {
+  cursor: text;
+}
+
+.helpTextClasses {
+  cursor: default;
+}
+
+input {
+  background: unset;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.accents:not(.util_displayHidden) {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

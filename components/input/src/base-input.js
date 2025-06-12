@@ -28,8 +28,11 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @csspart wrapper - Use for customizing the style of the root element
  * @csspart label - Use for customizing the style of the label element
  * @csspart helpText - Use for customizing the style of the helpText element
+ * @csspart input - Use for customizing the style of the input element
  * @csspart accentIcon - Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon)
  * @csspart iconContainer - Use for customizing the style of the iconContainer (e.g. X icon for clearing input value)
+ * @csspart accent-left - Use for customizing the style of the left accent element (e.g. padding, margin)
+ * @csspart accent-right - Use for customizing the style of the right accent element (e.g. padding, margin)
  * @event input - Event fires when the value of an `auro-input` has been changed.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` value has changed.
  */
@@ -266,6 +269,15 @@ export default class BaseInput extends AuroElement {
        */
       name: {
         type: String,
+        reflect: true
+      },
+
+      /**
+       * Sets styles for nested operation - removes borders, hides help + error text, and
+       * hides accents.
+       */
+      nested: {
+        type: Boolean,
         reflect: true
       },
 
@@ -703,10 +715,10 @@ export default class BaseInput extends AuroElement {
 
   /**
    * Function to set element focus.
-   * @private
    * @return {void}
    */
   focus() {
+    console.info("BaseInput.focus() called", this);
     this.inputElement.focus();
   }
 
