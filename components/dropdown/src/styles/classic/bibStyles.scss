@@ -61,3 +61,18 @@
     box-shadow: unset;
   }
 }
+
+
+:host(:not([isfullscreen])) .container {
+  &.shape-rounded {
+    border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+  }
+
+  &.shape-box {
+    border-radius: 0px;
+  }
+
+  &[class*="shape-pill"] {
+    border-radius: var(--ds-size-300, vac.$ds-size-300);
+  }
+}

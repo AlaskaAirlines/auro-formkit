@@ -904,6 +904,7 @@ export class AuroDropdown extends AuroElement {
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
+          shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
@@ -974,6 +975,7 @@ export class AuroDropdown extends AuroElement {
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
+          shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
