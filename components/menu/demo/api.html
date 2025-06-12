@@ -52,15 +52,11 @@
   </head>
   <body class="auro-markdown">
     <header oninput="onRadioInput(event)">
-      <auro-radio-group required horizontal name="layout">
-        <span slot="legend">Layout</span>
-        <auro-radio label="classic" value="classic" checked></auro-radio>
-        <auro-radio label="emphasized" value="emphasized"></auro-radio>
-      </auro-radio-group>
       <auro-radio-group required horizontal name="shape">
         <span slot="legend">Shape</span>
-        <auro-radio label="box" value="box" checked></auro-radio>
-        <auro-radio label="rounded" value="rounded"></auro-radio>
+        <auro-radio label="box" value="box"></auro-radio>
+        <auro-radio label="rounded" value="rounded" checked></auro-radio>
+        <auro-radio label="pill" value="pill"></auro-radio>
       </auro-radio-group>
       <auro-radio-group required horizontal name="size">
         <span slot="legend">Size</span>

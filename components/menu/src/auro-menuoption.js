@@ -7,7 +7,6 @@
 import { html } from 'lit/static-html.js';
 
 import styleCss from "./styles/default/style-menuoption-css.js";
-import emphasizedStyleCss from "./styles/emphasized/style-menuoption-css.js";
 import colorCss from "./styles/default/color-menuoption-css.js";
 import tokensCss from "./styles/default/tokens-css.js";
 
@@ -35,8 +34,8 @@ export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
 
-    this.layout = "classic";
     this.size = "medium";
+    this.shape = "rounded";
 
     /**
      * Generate unique names for dependency components.
@@ -87,7 +86,6 @@ export class AuroMenuOption extends AuroElement {
   static get styles() {
     return [
       styleCss,
-      emphasizedStyleCss,
       colorCss,
       tokensCss
     ];
@@ -150,26 +148,9 @@ export class AuroMenuOption extends AuroElement {
   /**
    * Logic to determine the layout of the component.
    * @protected
-   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
    * @returns {void}
    */
-  renderLayout(ForcedLayout) {
-    const layout = ForcedLayout || this.layout;
-
-    switch (layout) {
-      case "emphasized":
-        return this.renderLayoutEmphasized();
-      default:
-        return this.renderLayoutClassic();
-    }
-  }
-
-  /**
-   * Renders the component.
-   * @private
-   * @returns {TemplateResult} - True if loading slots are present and non-empty.
-   */
-  renderLayoutClassic() {
+  renderLayout() {
     return html`
       <div class="wrapper">
         ${this.selected && !this.nocheckmark
@@ -178,16 +159,5 @@ export class AuroMenuOption extends AuroElement {
         <slot></slot>
       </div>
     `;
-  }
-
-  /**
-   * Renders the emphasized layout for the menu component.
-   * Currently, this method returns the classic layout as a placeholder for future customization.
-   * @private
-   * @returns {TemplateResult} The rendered emphasized layout template.
-   */
-  renderLayoutEmphasized() {
-    // same as classic for now
-    return this.renderLayoutClassic();
   }
 }
