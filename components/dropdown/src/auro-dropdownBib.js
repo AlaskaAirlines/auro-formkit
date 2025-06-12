@@ -7,6 +7,7 @@
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
+import { classMap } from 'lit/directives/class-map.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
@@ -39,6 +40,8 @@ export class AuroDropdownBib extends LitElement {
     this._mobileBreakpointValue = undefined;
 
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-dropdownbib');
+
+    this.shape = "rounded";
   }
 
   static get styles() {
@@ -89,6 +92,11 @@ export class AuroDropdownBib extends LitElement {
        */
       bibTemplate: {
         type: Object
+      },
+
+      shape: {
+        type: String,
+        reflect: true
       }
     };
   }
@@ -168,8 +176,13 @@ export class AuroDropdownBib extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const classes = {
+      container: true
+    };
+    classes[`shape-${this.shape}`] = true;
+
     return html`
-      <div class="container" part="bibContainer">
+      <div class="${classMap(classes)}" part="bibContainer">
         <slot></slot>
       </div>
     `;
