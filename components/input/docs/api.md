@@ -78,8 +78,11 @@ Generate unique names for dependency components.
 
 | Part            | Description                                      |
 |-----------------|--------------------------------------------------|
+| `accent-left`   | Use for customizing the style of the left accent element (e.g. padding, margin) |
+| `accent-right`  | Use for customizing the style of the right accent element (e.g. padding, margin) |
 | `accentIcon`    | Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon) |
 | `helpText`      | Use for customizing the style of the helpText element |
 | `iconContainer` | Use for customizing the style of the iconContainer (e.g. X icon for clearing input value) |
+| `input`         | Use for customizing the style of the input element |
 | `label`         | Use for customizing the style of the label element |
 | `wrapper`       | Use for customizing the style of the root element |

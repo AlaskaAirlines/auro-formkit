@@ -62,13 +62,6 @@
     transform: translateY(-50%);
   }
 
-  .accents {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-
   &.withValue {
     justify-content: flex-start;
   }

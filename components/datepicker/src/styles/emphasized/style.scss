@@ -1,15 +1,114 @@
-:host([layout*='emphasized'][shape*='pill']) {
+.accents {
+  flex-grow: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.left {
+    // TODO: update to tokens
+    padding-right: 8px;
+  }
+
+  &.right {
+    // TODO: update to tokens
+    padding-left: 8px;
+  }
+}
+
+.mainContent {
+  height: 100%;
+  max-height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+:host([layout*='snowflake']) {
   [auro-input] {
-    width: 100%;
+    flex: 1;
+
+    &::part(label),
+    &::part(accent-left),
+    &::part(accent-right) {
+      display: none;
+    }
+
+    &::part(input) {
+      padding-bottom: unset;
+    }
 
     &::part(wrapper) {
-      .accent {
-        display: none; // does this work??
+      // for layout overrides on input
+      min-height: unset;
+      max-height: unset;
+      box-shadow: unset;
+
+      .mainContent {
+        padding-bottom: unset;
       }
     }
 
     &::part(inputHelpText) {
       display: none;
     }
+  }
+
+  [auro-dropdown]::part(trigger) {
+    width: 100%;
+  }
+
+  [auro-dropdown]::slotted(div) {
+    display: none;
+  }
+
+  // for the trigger content
+
+  .dpTriggerContent {
+    width: 100%;
+  }
+
+  .wrapper {
+    height: 60px;
+    // TODO: update to tokens (token x 2 for 48px)
+    width: calc(100% - 48px);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    // TODO: update to tokens
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  // unfocused state(s)
+
+  label {
+    // TODO: update to font class
+    font-size: 18px;
+    font-weight: 450;
+    letter-spacing: 0;
+    line-height: 26px;
+
+    &.hasFocus,
+    &.hasValue {
+      font-size: 12px;
+      line-height: 16px;
+    }
+  }
+
+  .inputWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .inputDivider {
+    // TODO: add fallback for tokens
+    background-color: var(--ds-basic-color-texticon-inverse-muted);
+    height: 18px;
+    margin: 4px 12px;
+    width: 2px;
   }
 }

@@ -7,30 +7,6 @@
 
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
 
-// COMMON FOR ALL ---------------------------------------------------
-
-:host {
-  display: block;
-}
-
-.wrapper {
-  cursor: text;
-}
-
-.helpTextClasses {
-  cursor: default;
-}
-
-input {
-  background: unset;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  outline: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 // LAYOUTS ---------------------------------------------------
 
 @mixin emphasizedActiveLabel {
@@ -123,13 +99,6 @@ input {
 
   .displayValueWrapper {
     transform: translateY(-50%);
-  }
-
-  .accents {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
   }
 
   &.withValue {
