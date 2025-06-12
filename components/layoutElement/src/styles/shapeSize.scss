@@ -122,8 +122,8 @@ $xs: 24px;
 }
 
 .shape-pill-left-xl {
-  min-height: $xl;
-  max-height: $xl;
+  min-height: getCalculatedSize($xl, 2px);
+  max-height: getCalculatedSize($xl, 2px);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
@@ -133,8 +133,8 @@ $xs: 24px;
 }
 
 .shape-pill-right-xl {
-  min-height: $xl;
-  max-height: $xl;
+  min-height: getCalculatedSize($xl, 2px);
+  max-height: getCalculatedSize($xl, 2px);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
@@ -144,8 +144,8 @@ $xs: 24px;
 }
 
 .shape-pill-md {
-  min-height: $xl;
-  max-height: $xl;
+  min-height: getCalculatedSize($md, 2px);
+  max-height: getCalculatedSize($md, 2px);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
@@ -155,8 +155,8 @@ $xs: 24px;
 }
 
 .shape-pill-left-md {
-  min-height: $xl;
-  max-height: $xl;
+  min-height: getCalculatedSize($md, 2px);
+  max-height: getCalculatedSize($md, 2px);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
@@ -166,8 +166,8 @@ $xs: 24px;
 }
 
 .shape-pill-right-md {
-  min-height: $xl;
-  max-height: $xl;
+  min-height: getCalculatedSize($md, 2px);
+  max-height: getCalculatedSize($md, 2px);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
