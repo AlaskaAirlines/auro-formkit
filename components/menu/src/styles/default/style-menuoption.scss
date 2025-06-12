@@ -28,6 +28,31 @@
     &[class*="shape-rounded"] {
       border-radius: var(--ds-size-100, vac.$ds-size-100);
     }
+
+    &[class*="shape-pill"] {
+      border-radius: var(--ds-size-150, vac.$ds-size-150);
+    }
+
+    &[class*="-large"] {
+      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
+      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
+
+      padding-top: var(--ds-size-75, vac.$ds-size-75);
+      padding-bottom: var(--ds-size-75, vac.$ds-size-75);
+      padding-right: var(--ds-size-150, vac.$ds-size-150);
+      margin-bottom: var(--ds-size-50, vac.$ds-size-50);
+    }
+
+    &[class*="-xlarge"] {
+      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
+      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
+
+      padding-top: var(--ds-size-100, vac.$ds-size-100);
+      padding-bottom: var(--ds-size-100, vac.$ds-size-100);
+      padding-right: var(--ds-size-200, vac.$ds-size-200);
+      margin-bottom: var(--ds-size-100, vac.$ds-size-100);
+    }
+
   }
 
   slot {
@@ -68,6 +93,14 @@
 :host([nocheckmark]) {
   .wrapper {
     padding-left: var(--ds-size-150, vac.$ds-size-150);
+    
+    &[class*="-large"] {
+      padding-left: var(--ds-size-150, vac.$ds-size-150);
+    }
+
+    &[class*="-xlarge"] {
+    padding-left: var(--ds-size-200, vac.$ds-size-200);
+    }
   }
 }
 

@@ -6,7 +6,6 @@
 import { html } from "lit";
 
 import styleCss from "./styles/default/style-menu-css.js";
-import emphasizedStyleCss from "./styles/emphasized/style-menu-css.js";
 import colorCss from "./styles/default/color-menu-css.js";
 import tokensCss from "./styles/default/tokens-css.js";
 
@@ -50,9 +49,8 @@ export class AuroMenu extends AuroElement {
 
     // State properties (reactive)
 
-    this.layout = "classic";
-    this.shape = "box";
-    this.size = "medium";
+    this.shape = "rounded"; // box, rounded, pill
+    this.size = "medium"; // medium, large, xlarge
 
     // Value of the selected options
     this.value = undefined;
@@ -162,7 +160,6 @@ export class AuroMenu extends AuroElement {
   static get styles() {
     return [
       styleCss,
-      emphasizedStyleCss,
       colorCss,
       tokensCss
     ];
@@ -288,8 +285,7 @@ export class AuroMenu extends AuroElement {
     const propagationTargets = this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]');
     [
       'size',
-      'shape',
-      'layout'
+      'shape'
     ].forEach((prop) => {
       if (changedProperties.has(prop)) {
         propagationTargets.forEach((el) => {
@@ -753,33 +749,15 @@ export class AuroMenu extends AuroElement {
   /**
    * Logic to determine the layout of the component.
    * @protected
-   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
    * @returns {void}
    */
-  renderLayout(ForcedLayout) {
-    const layout = ForcedLayout || this.layout;
-
-    switch (layout) {
-      case "emphasized":
-        return this.renderLayoutEmphasized();
-      default:
-        return this.renderLayoutClassic();
-    }
-  }
-
-  /**
-   * Renders the component.
-   * @private
-   * @returns {TemplateResult} - True if loading slots are present and non-empty.
-   */
-  renderLayoutClassic() {
+  renderLayout() {
     if (this.loading) {
       return html`
         <div class="wrapper">
           <auro-menuoption
             disabled
             loadingplaceholder
-            .class=${this.layout}
             class="${this.hasLoadingPlaceholder ? "" : "empty"}"
           >
             <div>
@@ -796,17 +774,6 @@ export class AuroMenu extends AuroElement {
         <slot @slotchange=${this.handleSlotChange}></slot>
       </div>
     `;
-  }
-
-  /**
-   * Renders the emphasized layout for the menu component.
-   * Currently, this method returns the classic layout as a placeholder for future customization.
-   * @private
-   * @returns {TemplateResult} The rendered emphasized layout template.
-   */
-  renderLayoutEmphasized() {
-    // same as classic for now
-    return this.renderLayoutClassic();
   }
 }
 

@@ -62,4 +62,22 @@
 
 :host([root]) { 
   overflow-y: auto;
+
+  .wrapper[class*="-large"] {
+    padding: var(--ds-size-150, vac.$ds-size-150);
+  }
+
+  .wrapper[class*="-xlarge"] {
+    padding: var(--ds-size-200, vac.$ds-size-200);
+  }
+
+  .wrapper[class*="shape-rounded-medium"] {
+    padding-top: var(--ds-size-100, vac.$ds-size-100);
+    padding-bottom: var(--ds-size-100, vac.$ds-size-100);
+  }
+
+  .wrapper[class*="shape-pill-medium"] {
+    padding-top: var(--ds-size-100, vac.$ds-size-100);
+    padding-bottom: var(--ds-size-100, vac.$ds-size-100);
+  }
 }
