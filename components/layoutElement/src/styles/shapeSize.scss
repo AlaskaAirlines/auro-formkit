@@ -69,12 +69,6 @@ $xs: 24px;
   border-width: 1px;
   border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
 
-  &:focus-within,
-  &:active {
-    outline-width: 1px;
-    outline-style: solid;
-  }
-
   @include variants(60px);
 }
 
