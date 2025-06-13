@@ -8,7 +8,9 @@
   no-underscore-dangle,
   lit/binding-positions,
   lit/no-invalid-html,
-  indent
+  indent,
+  line-comment-position,
+  no-inline-comments
 */
 
 // If using litElement base class
@@ -52,6 +54,7 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @slot helpText - Defines the content of the helpText.
  * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
  * @slot valueText - Dropdown value text display.
+ * @slot displayValue - Allows custom HTML content to display the selected value when select is not focused.
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
  * @event input - Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.

@@ -71,10 +71,11 @@ Generate unique names for dependency components.
 
 ## Slots
 
-| Name       | Description                                   |
-|------------|-----------------------------------------------|
-| `helptext` | Sets the help text displayed below the input. |
-| `label`    | Sets the label text for the input.            |
+| Name           | Description                                      |
+|----------------|--------------------------------------------------|
+| `displayValue` | Allows custom HTML content to display in place of the value when the input is not focused. |
+| `helptext`     | Sets the help text displayed below the input.    |
+| `label`        | Sets the label text for the input.               |
 
 ## CSS Shadow Parts
 

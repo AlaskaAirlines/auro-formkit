@@ -372,3 +372,19 @@ The component can be in a dialog.
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
+
+#### Custom display value
+
+You can fully customize how selected values appear by using the `displayValue` slot. This slot allows you to pass in any HTML content. Only the `snowflake` and `emphasized` layouts are supported.
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/displayValueSlot.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/displayValueSlot.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
