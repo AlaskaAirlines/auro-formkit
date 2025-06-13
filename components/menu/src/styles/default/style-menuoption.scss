@@ -8,7 +8,7 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable declaration-no-important, order/properties-order */
+/* stylelint-disable declaration-no-important, order/properties-order, declaration-block-no-redundant-longhand-properties */
 
 :host {
   cursor: pointer;
@@ -33,7 +33,7 @@
       border-radius: var(--ds-size-150, vac.$ds-size-150);
     }
 
-    &[class*="-large"] {
+    &[class*="-lg"] {
       font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
       line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
 
@@ -43,7 +43,7 @@
       margin-bottom: var(--ds-size-50, vac.$ds-size-50);
     }
 
-    &[class*="-xlarge"] {
+    &[class*="-xl"] {
       font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
       line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
 
@@ -94,11 +94,11 @@
   .wrapper {
     padding-left: var(--ds-size-150, vac.$ds-size-150);
     
-    &[class*="-large"] {
+    &[class*="-lg"] {
       padding-left: var(--ds-size-150, vac.$ds-size-150);
     }
 
-    &[class*="-xlarge"] {
+    &[class*="-xl"] {
     padding-left: var(--ds-size-200, vac.$ds-size-200);
     }
   }

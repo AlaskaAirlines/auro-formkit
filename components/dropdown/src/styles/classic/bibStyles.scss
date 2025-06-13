@@ -10,7 +10,7 @@
 
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute */
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-class-pattern, selector-max-class */
 
 :host {
   position: fixed;
@@ -63,16 +63,18 @@
 }
 
 
-:host(:not([isfullscreen])) .container {
-  &.shape-rounded {
-    border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
-  }
+:host(:not([isfullscreen])) {
+  .container{
+    &.shape-rounded {
+      border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+    }
 
-  &.shape-box {
-    border-radius: 0px;
-  }
+    &.shape-box {
+      border-radius: unset;
+    }
 
-  &[class*="shape-pill"] {
-    border-radius: var(--ds-size-300, vac.$ds-size-300);
+    &[class*="shape-pill"] {
+      border-radius: var(--ds-size-300, vac.$ds-size-300);
+    }
   }
 }

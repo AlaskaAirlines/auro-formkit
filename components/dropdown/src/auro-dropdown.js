@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
+/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers, line-comment-position, no-inline-comments */
 
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';

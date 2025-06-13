@@ -63,20 +63,20 @@
 :host([root]) { 
   overflow-y: auto;
 
-  .wrapper[class*="-large"] {
+  .wrapper[class*="-lg"] {
     padding: var(--ds-size-150, vac.$ds-size-150);
   }
 
-  .wrapper[class*="-xlarge"] {
+  .wrapper[class*="-xl"] {
     padding: var(--ds-size-200, vac.$ds-size-200);
   }
 
-  .wrapper[class*="shape-rounded-medium"] {
+  .wrapper[class*="shape-rounded-md"] {
     padding-top: var(--ds-size-100, vac.$ds-size-100);
     padding-bottom: var(--ds-size-100, vac.$ds-size-100);
   }
 
-  .wrapper[class*="shape-pill-medium"] {
+  .wrapper[class*="shape-pill-md"] {
     padding-top: var(--ds-size-100, vac.$ds-size-100);
     padding-bottom: var(--ds-size-100, vac.$ds-size-100);
   }

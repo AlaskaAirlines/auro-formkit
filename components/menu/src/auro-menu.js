@@ -41,7 +41,7 @@ import {
  * @slot - Slot for insertion of menu options.
  */
 
-/* eslint-disable no-magic-numbers, max-lines, no-extra-parens */
+/* eslint-disable no-magic-numbers, max-lines, no-extra-parens, no-inline-comments, line-comment-position */
 
 export class AuroMenu extends AuroElement {
   constructor() {
@@ -50,7 +50,7 @@ export class AuroMenu extends AuroElement {
     // State properties (reactive)
 
     this.shape = "rounded"; // box, rounded, pill
-    this.size = "medium"; // medium, large, xlarge
+    this.size = "md"; // md, lg, xl
 
     // Value of the selected options
     this.value = undefined;
@@ -145,6 +145,7 @@ export class AuroMenu extends AuroElement {
         // Allow string, string[] arrays and undefined
         type: Object
       },
+
       /**
        * indent level for submenues
        * @private
@@ -502,7 +503,7 @@ export class AuroMenu extends AuroElement {
 
     const options = menu.querySelectorAll(':scope > auro-menuoption, :scope > [auro-menuoption]');
     options.forEach((option) => {
-      const regex = new RegExp(this.nestingSpacer, "g");
+      const regex = new RegExp(this.nestingSpacer, "gu");
       option.innerHTML = this.nestingSpacer.repeat(menu.level) + option.innerHTML.replace(regex, '');
     });
   }
