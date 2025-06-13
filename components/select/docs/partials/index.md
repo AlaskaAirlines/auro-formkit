@@ -15,6 +15,16 @@ This file is generated based on a template fetched from `./docs/partials/demo.md
 
 A baseline `<auro-select>` using `<auro-menu>` and `<auro-menuoption>` elements. Notice a default `Please select option` placeholder in the trigger.
 
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/basic-ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 ### Emphasized 
 
 <div class="exampleWrapper">
