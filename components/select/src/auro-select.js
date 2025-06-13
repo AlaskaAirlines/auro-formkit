@@ -532,6 +532,13 @@ export class AuroSelect extends AuroElement {
       return;
     }
 
+    // set menu's default size if there it's not specified.
+    if (!this.menu.hasAttribute('size')) {
+      this.menu.setAttribute('size', this.layout === 'classic' ? 'md' : this.size);
+    }
+
+    this.menu.setAttribute('shape', this.shape);
+
     if (this.multiSelect) {
       this.menu.multiSelect = this.multiSelect;
     }
@@ -852,6 +859,10 @@ export class AuroSelect extends AuroElement {
 
     if (changedProperties.has('error')) {
       this.validate(true);
+    }
+
+    if (changedProperties.has('shape') && this.menu) {
+      this.menu.setAttribute('shape', this.shape);
     }
   }
 
