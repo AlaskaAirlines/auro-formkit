@@ -69,11 +69,11 @@ export class AuroSelect extends AuroElement {
     const idSubstrEnd = 8;
     const idSubstrStart = 2;
 
-    this.matchWidth = true;
+    this.matchWidth = false;
 
     // Layout Config
-    this.layout = 'classic';
-    this.shape = 'classic';
+    this.layout = 'snowflake';
+    this.shape = 'snowflake';
     this.size = 'xl';
 
     // floaterConfig
@@ -83,10 +83,6 @@ export class AuroSelect extends AuroElement {
     this.autoPlacement = false;
 
     this.forceDisplayValue = false;
-
-    this.layout = 'snowflake'; // Default layout
-    this.shape = 'snowflake'; // Default shape
-    this.size = 'xl'; // Default size
 
     /**
      * @private
@@ -219,14 +215,6 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
-       */
-      flexMenuWidth: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
        * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
        * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
@@ -319,7 +307,7 @@ export class AuroSelect extends AuroElement {
        * "top" | "right" | "bottom" | "left" |
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
+       * "left-start" | "left-end".
        * @default bottom-start
        */
       placement: {
@@ -531,6 +519,13 @@ export class AuroSelect extends AuroElement {
       }, 0);
       return;
     }
+
+    // set menu's default size if there it's not specified.
+    if (!this.menu.hasAttribute('size')) {
+      this.menu.setAttribute('size', this.layout === 'classic' ? 'md' : this.size);
+    }
+
+    this.menu.setAttribute('shape', this.shape);
 
     if (this.multiSelect) {
       this.menu.multiSelect = this.multiSelect;
@@ -853,6 +848,10 @@ export class AuroSelect extends AuroElement {
     if (changedProperties.has('error')) {
       this.validate(true);
     }
+
+    if (changedProperties.has('shape') && this.menu) {
+      this.menu.setAttribute('shape', this.shape);
+    }
   }
 
   /**
@@ -1034,7 +1033,7 @@ export class AuroSelect extends AuroElement {
         <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
@@ -1114,7 +1113,7 @@ export class AuroSelect extends AuroElement {
         <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
@@ -1237,7 +1236,7 @@ export class AuroSelect extends AuroElement {
           ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"

@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
+/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers, line-comment-position, no-inline-comments */
 
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
@@ -904,6 +904,7 @@ export class AuroDropdown extends AuroElement {
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
+          shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"
@@ -925,9 +926,7 @@ export class AuroDropdown extends AuroElement {
   renderLayoutClassic() {
     // TODO: check with Doug why this was never used?
     const helpTextClasses = {
-      'helpText': true,
-      'leftIndent': false,
-      'rightIndent': false
+      'helpText': true
     };
 
     return html`
@@ -967,13 +966,13 @@ export class AuroDropdown extends AuroElement {
               </div>
             ` : undefined }
         </div>
-        <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
+        <div class="${classMap(helpTextClasses)}">
           <slot name="helpText"></slot>
-        </${this.helpTextTag}>
-        
+        </div>
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
+          shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ?common="${this.common}"

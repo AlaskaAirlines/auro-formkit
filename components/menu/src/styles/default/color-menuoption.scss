@@ -9,8 +9,11 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host {
-  background-color: var(--ds-auro-menuoption-container-color);
-  color: var(--ds-auro-menuoption-text-color);
+  .wrapper {
+    border: 1px solid var(--ds-auro-menuoption-container-border-color);
+    background-color: var(--ds-auro-menuoption-container-color);
+    color: var(--ds-auro-menuoption-text-color);
+  }
 
   svg {
     fill: var(--ds-auro-menuoption-icon-color);

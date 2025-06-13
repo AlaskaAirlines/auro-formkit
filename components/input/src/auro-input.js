@@ -136,6 +136,11 @@ export class AuroInput extends BaseInput {
     };
   }
 
+  /**
+   * Returns classmap configuration for accent elements in each layout.
+   * @private
+   * @returns {object} - Returns classmap.
+   */
   get commonAccentClasses() {
     return {
       'util_displayHidden': false
