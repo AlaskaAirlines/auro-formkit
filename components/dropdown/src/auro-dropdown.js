@@ -63,8 +63,8 @@ export class AuroDropdown extends AuroElement {
     this.errorMessage = ''; // TODO - check with Doug if there is still more to do here
 
     // Layout Config
-    this.layout = undefined;
-    this.shape = undefined;
+    this.layout = 'classic';
+    this.shape = 'classic';
     this.size = 'xl';
 
     this.parentBorder = false;
