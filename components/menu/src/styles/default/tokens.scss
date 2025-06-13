@@ -5,6 +5,7 @@
   --ds-auro-menu-loader-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
   --ds-auro-menu-loader-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-menuoption-container-color: transparent;
+  --ds-auro-menuoption-container-border-color: var(--ds-auro-menuoption-container-color);
   --ds-auro-menuoption-icon-color: transparent;
   --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
 }

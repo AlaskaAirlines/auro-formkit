@@ -258,3 +258,16 @@ The component may be restyled using the following code sample and changing the v
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../src/styles/default/tokens.scss) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/customColor.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/customColor.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
