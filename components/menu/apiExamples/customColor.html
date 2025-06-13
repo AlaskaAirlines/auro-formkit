@@ -1,0 +1,21 @@
+<style>
+  #customColorMenu auro-menuoption[selected] {
+    --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-subtle);
+    --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-default);
+  }
+  #customColorMenu auro-menuoption:hover {
+    --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted);
+  }
+  #customColorMenu auro-menuoption:focus {
+    --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand);
+  }
+
+</style>
+<auro-menu id="customColorMenu">
+  <auro-menuoption value="stops">Stops</auro-menuoption>
+  <auro-menuoption value="price">Price</auro-menuoption>
+  <auro-menuoption value="duration">Duration</auro-menuoption>
+  <auro-menuoption value="departure">Departure</auro-menuoption>
+  <auro-menuoption value="arrival">Arrival</auro-menuoption>
+</auro-menu>
+

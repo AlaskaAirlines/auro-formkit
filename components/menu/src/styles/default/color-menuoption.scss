@@ -12,6 +12,7 @@
   .wrapper {
     background-color: var(--ds-auro-menuoption-container-color);
     color: var(--ds-auro-menuoption-text-color);
+    border: 1px solid var(--ds-auro-menuoption-container-border-color);
   }
 
   svg {
