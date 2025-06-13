@@ -39,7 +39,6 @@
   .trigger {
     display: flex;
     flex-direction: row;
-
     box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-outline-color);
   }
 
@@ -55,9 +54,9 @@
     overflow: hidden;
     flex: 1;
     justify-content: start;
+    padding-left: var(--ds-size-150, vac.$ds-size-150);
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding-left: var(--ds-size-150, vac.$ds-size-150);
   }
 
 
