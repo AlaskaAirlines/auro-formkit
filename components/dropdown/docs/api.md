@@ -16,7 +16,6 @@
 | `autoPlacement`         | `autoPlacement`         |           | `boolean`                                        | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `chevron`               | `chevron`               |           | ` Boolean `                                      |                | If declared, the dropdown displays a chevron on the right. |
 | `common`                | `common`                |           | ` Boolean `                                      |                | If declared, the dropdown will be styled with the common theme. |
-| `commonLabelClasses`    |                         | readonly  | `object`                                         |                |                                                  |
 | `commonWrapperClasses`  |                         | readonly  | `{ trigger: boolean; wrapper: boolean; hasFocus: boolean \| undefined; simple: boolean \| undefined; parentBorder: boolean; }` |                |                                                  |
 | `disabled`              | `disabled`              |           | ` Boolean `                                      |                | If declared, the dropdown is not interactive.    |
 | `error`                 | `error`                 |           | ` Boolean `                                      |                | If declared in combination with not using the `simple` property or `helpText` slot content, will apply red color to both. |
