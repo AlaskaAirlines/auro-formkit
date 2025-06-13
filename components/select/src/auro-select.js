@@ -418,6 +418,19 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Returns classmap configuration for html5 input labels in all layouts.
+   * @private
+   * @returns {void}
+   */
+  get commonLabelClasses() {
+    return {
+      'is-disabled': this.disabled,
+      'withValue': this.value && this.value.length > 0,
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+    };
+  }
+
+  /**
    * Returns classmap configuration for wrapper elements in each layout.
    * @private
    * @returns {object} - Returns classmap.
@@ -1058,7 +1071,7 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label>
+                <label class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                 </label>
                 <div class="value" id="value"></div>
@@ -1138,7 +1151,7 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label>
+                <label class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                 </label>
                 <div class="value" id="value"></div>
@@ -1173,11 +1186,77 @@ export class AuroSelect extends AuroElement {
    * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
    */
   renderLayoutClassic() {
+    const placeholderClass = {
+      hidden: this.value,
+    };
+
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.isPopoverVisible,
+      'withValue': this.value && this.value.length > 0,
+      'force': this.forceDisplayValue,
+    };
+
+    const valueContainerClasses = {
+      'valueContainer': true,
+      'util_displayHiddenVisually': (this.forceDisplayValue || !(this.dropdown && this.dropdown.isPopoverVisible)) && this.hasDisplayValueContent
+    };
+
     return html`
       <div
-        class="${classMap(this.commonWrapperClasses)} thin"
+        class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
-        classic
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        </div>
+        <${this.dropdownTag}
+          ?autoPlacement="${this.autoPlacement}"
+          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          ?matchWidth="${!this.flexMenuWidth}"
+          ?noFlip="${this.noFlip}"
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          chevron
+          fluid
+          for="selectMenu"
+          layout="${this.layout}"
+          part="dropdown"
+          shape="${this.shape}"
+          size="${this.size}">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+            <div class="accents left">
+              <slot name="typeIcon"></slot>
+            </div>
+            <div class="mainContent">
+              <div class="${classMap(valueContainerClasses)}">
+                <label class="${classMap(this.commonLabelClasses)}">
+                  <slot name="label"></slot>
+                </label>
+                <div class="value" id="value"></div>
+                ${this.value ? undefined : html`
+                  <div id="placeholder" class="${classMap(placeholderClass)}">
+                    <slot name="placeholder"></slot>
+                  </div>
+                `}
+              </div>
+              <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+                <slot name="displayValue"></slot>
+              </div>
+            </div>
+            <div class="accents right"></div>
+          </div>
+          <div class="menuWrapper"></div>
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot></slot>
+          </${this.bibtemplateTag}>
+          <div slot="helpText">
+            ${this.renderHtmlHelpText()}
+          </div>
+        </${this.dropdownTag}>
+        ${this.renderNativeSelect()}
       </div>
     `;
   }

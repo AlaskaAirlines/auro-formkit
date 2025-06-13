@@ -65,28 +65,46 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding: 0 8px 0 24px; // TODO: update to use design token
 }
 
-
-.layout-emphasized,
-.layout-snowflake {
+:host([layout*='emphasized']),
+:host([layout*='snowflake']) {
   .triggerContent {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
     padding: 0 8px 0 24px; // TODO: update to use design token
   }
 }
 
-.layout-classic {
+:host([layout*='classic']) {
   .triggerContent {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    padding: 0 8px 0 24px; // TODO: update to use design token
+    padding: 0 8px 0 8px; // TODO: update to use design token
+  }
+
+  .mainContent {
+    align-items: start;
+  }
+
+  label {
+    cursor: text;
+
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0;
+    font-weight: 450;
+
+    &.withValue {
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0;
+      font-weight: 450;
+    }
+  }
+
+  .value {
+    height: auto;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0;
+    font-weight: 450;
   }
 }
 
