@@ -84,6 +84,10 @@ export class AuroSelect extends AuroElement {
 
     this.forceDisplayValue = false;
 
+    this.layout = 'classic'; // Default layout
+    this.shape = 'classic'; // Default shape
+    this.size = 'xl'; // Default size
+
     /**
      * @private
      */
