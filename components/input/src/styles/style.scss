@@ -2,6 +2,8 @@
 
 // COMMON FOR ALL ---------------------------------------------------
 
+/* stylelint-disable selector-max-class, max-nesting-depth, selector-class-pattern, scss/selector-nest-combinators */
+
 :host {
   display: block;
 }
@@ -15,18 +17,27 @@
 }
 
 input {
-  background: unset;
+  overflow: hidden;
   width: 100%;
   padding: 0;
   border: 0;
+  background: unset;
   outline: none;
-  overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.displayValue {
+  display: none;
+
+  &.hasContent:is(.withValue):not(.hasFocus) {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .accents:not(.util_displayHidden) {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }

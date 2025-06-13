@@ -24,6 +24,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  *
  * @slot helptext - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
+ * @slot displayValue - Allows custom HTML content to display in place of the value when the input is not focused.
  *
  * @csspart wrapper - Use for customizing the style of the root element
  * @csspart label - Use for customizing the style of the label element
@@ -718,7 +719,6 @@ export default class BaseInput extends AuroElement {
    * @return {void}
    */
   focus() {
-    console.info("BaseInput.focus() called", this);
     this.inputElement.focus();
   }
 
