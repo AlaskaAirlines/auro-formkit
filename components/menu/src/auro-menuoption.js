@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
-/* eslint-disable lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable lit/binding-positions, lit/no-invalid-html, no-inline-comments, line-comment-position */
 
 // ---------------------------------------------------------------------
 import { html } from 'lit/static-html.js';
@@ -34,8 +34,8 @@ export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
 
-    this.size = "medium";
-    this.shape = "rounded";
+    this.size = "md"; // md, lg, xl
+    this.shape = "rounded"; // box, rounded, pill
 
     /**
      * Generate unique names for dependency components.

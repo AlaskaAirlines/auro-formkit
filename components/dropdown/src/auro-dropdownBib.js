@@ -30,7 +30,7 @@ const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
  */
 
 export class AuroDropdownBib extends LitElement {
-
+// not extending AuroElement because Bib needs only `shape` prop
   constructor() {
     super();
 
@@ -179,6 +179,9 @@ export class AuroDropdownBib extends LitElement {
     const classes = {
       container: true
     };
+
+    // Since this class does not inherit from AuroElement, we apply the shape-related class within the `render` function,
+    // mimicking the class naming convention used in AuroElement.resetShapeClasses.
     classes[`shape-${this.shape}`] = true;
 
     return html`

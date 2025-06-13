@@ -583,6 +583,13 @@ export class AuroCombobox extends AuroElement {
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
 
+    // set menu's default size if there it's not specified.
+    if (!this.menu.hasAttribute('size')) {
+      this.menu.setAttribute('size', this.layout === 'classic' ? 'md' : this.size);
+    }
+
+    this.menu.setAttribute('shape', this.shape);
+
     // a racing condition on custom-combobox with custom-menu
     if (!this.menu || this.menuShadowRoot === null) {
       setTimeout(() => {
@@ -915,6 +922,10 @@ export class AuroCombobox extends AuroElement {
     if (changedProperties.has('error')) {
       this.input.setAttribute('error', this.getAttribute('error'));
       this.validate();
+    }
+
+    if (changedProperties.has('shape') && this.menu) {
+      this.menu.setAttribute('shape', this.shape);
     }
   }
 
