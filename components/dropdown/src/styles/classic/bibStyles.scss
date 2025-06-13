@@ -24,6 +24,7 @@
   overflow: auto;
   box-sizing: border-box;
   margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
+  border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
 }
 
 :host([isfullscreen]) {
@@ -65,10 +66,6 @@
 
 :host(:not([isfullscreen])) {
   .container{
-    &.shape-rounded {
-      border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
-    }
-
     &.shape-box {
       border-radius: unset;
     }
