@@ -72,12 +72,6 @@ export class AuroDropdown extends AuroElement {
     this.privateDefaults();
   }
 
-  get commonLabelClasses() {
-    return {
-      // 'withValue': this.value && this.value.length > 0
-    };
-  }
-
   get commonWrapperClasses() {
     return {
       'trigger': true,
