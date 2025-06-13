@@ -5,9 +5,10 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-lines */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
-
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import '../src/registered.js';
 
+useAccessibleIt();
 describe('auro-checkbox-group', () => {
   it('has the expected properties and validity in required state', async () => {
     const el = await fixture(html`
@@ -183,28 +184,6 @@ describe('auro-checkbox-group', () => {
       expect(checkbox.disabled).to.be.true;
       expect(checkbox.error).to.be.true;
     });
-  });
-
-  it('is accessible', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-          checked
-        ></auro-checkbox>
-
-        <auro-checkbox
-          id="washington"
-          name="states"
-          type="radio"
-          value="washington"
-        ></auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    expect(el).to.be.accessible();
   });
 
   it('updates states on children', async () => {
