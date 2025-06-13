@@ -926,9 +926,7 @@ export class AuroDropdown extends AuroElement {
   renderLayoutClassic() {
     // TODO: check with Doug why this was never used?
     const helpTextClasses = {
-      'helpText': true,
-      'leftIndent': false,
-      'rightIndent': false
+      'helpText': true
     };
 
     return html`
@@ -968,10 +966,9 @@ export class AuroDropdown extends AuroElement {
               </div>
             ` : undefined }
         </div>
-        <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
+        <div class="${classMap(helpTextClasses)}">
           <slot name="helpText"></slot>
-        </${this.helpTextTag}>
-        
+        </div>
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
