@@ -61,16 +61,6 @@
     }
   }
 
-  .displayValue {
-    position: absolute;
-    display: none;
-    inset: 0;
-
-    &.hasContent:is(.withValue):not(.hasFocus) {
-      display: block;
-    }
-  }
-
   .accents {
     &.left {
       padding-left: 8px;

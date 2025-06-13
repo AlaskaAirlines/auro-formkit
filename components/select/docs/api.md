@@ -57,6 +57,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 |---------------------------|--------------------------------------------------|
 |                           | Default slot for the menu content.               |
 | `bib.fullscreen.headline` | Defines the headline to display above menu-options |
+| `displayValue`            | Allows custom HTML content to display the selected value when select is not focused. |
 | `helpText`                | Defines the content of the helpText.             |
 | `label`                   | Defines the content of the label.                |
 | `placeholder`             | Defines the content of the placeholder to be shown when there is no value |

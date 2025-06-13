@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
 
 // If using litElement base class
 import { css } from "lit";
@@ -38,6 +38,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
+ * @slot displayValue - Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts.
  * @event auroCombobox-valueSet - Notifies that the component has a new value set.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
@@ -549,8 +550,8 @@ export class AuroCombobox extends AuroElement {
     });
 
     // setting up bibtemplate
-    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
+    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
 
     // Exposes the CSS parts from the bibtemplate for styling
     this.bibtemplate.exposeCssParts();
@@ -853,8 +854,8 @@ export class AuroCombobox extends AuroElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-combobox');
 
-    this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    this.input = this.dropdown.querySelector(this.inputTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+    this.input = this.dropdown.querySelector(this.inputTag._$litStatic$);
 
     this.configureMenu();
     this.configureInput();
@@ -1029,30 +1030,31 @@ export class AuroCombobox extends AuroElement {
           simple
           shape="${this.shape}"
           size="${this.size}">
-          <${this.inputTag}
-            @input="${this.handleInputValueChange}"
-            .a11yExpanded="${this.dropdownOpen}"
-            .a11yControls="${this.dropdownId}"
-            .autocomplete="${this.autocomplete}"
-            .inputmode="${this.inputmode}"
-            .placeholder="${this.placeholder}"
-            .type="${this.type}"
-            ?disabled="${this.disabled}"
-            ?icon="${this.triggerIcon}"
-            ?noValidate="${this.noValidate}"
-            ?onDark="${this.onDark}"
-            ?required="${this.required}"
-            a11yRole="combobox"
-            id="${this.id}"
-            layout="${this.layout}"
-            setCustomValidity="${this.setCustomValidity}"
-            setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-            setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
-            shape="${this.shape}"
-            size="${this.size}"
-            slot="trigger">
-            <slot name="label" slot="label" @slotchange="${this.handleSlotChange}"></slot>
-          </${this.inputTag}>
+            <${this.inputTag}
+              @input="${this.handleInputValueChange}"
+              .a11yExpanded="${this.dropdownOpen}"
+              .a11yControls="${this.dropdownId}"
+              .autocomplete="${this.autocomplete}"
+              .inputmode="${this.inputmode}"
+              .placeholder="${this.placeholder}"
+              .type="${this.type}"
+              ?disabled="${this.disabled}"
+              ?icon="${this.triggerIcon}"
+              ?noValidate="${this.noValidate}"
+              ?onDark="${this.onDark}"
+              ?required="${this.required}"
+              a11yRole="combobox"
+              id="${this.id}"
+              layout="${this.layout}"
+              setCustomValidity="${this.setCustomValidity}"
+              setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+              setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
+              shape="${this.shape}"
+              size="${this.size}"
+              slot="trigger">
+              <slot name="label" slot="label" @slotchange="${this.handleSlotChange}"></slot>
+              <slot name="displayValue" slot="displayValue"></slot>
+            </${this.inputTag}>
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
             <slot name="bib.fullscreen.headline" slot="header"></slot>
