@@ -15,7 +15,10 @@
   selector-class-pattern,
   scss/selector-nest-combinators,
   selector-max-class,
-  selector-max-pseudo-class
+  selector-max-pseudo-class,
+  selector-max-combinators,
+  selector-max-compound-selectors,
+  selector-no-qualifying-type
 */
 
 [auro-dropdown] {
@@ -65,28 +68,45 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding: 0 8px 0 24px; // TODO: update to use design token
 }
 
-
-.layout-emphasized,
-.layout-snowflake {
+:host([layout*='emphasized']),
+:host([layout*='snowflake']) {
   .triggerContent {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
     padding: 0 8px 0 24px; // TODO: update to use design token
   }
 }
 
-.layout-classic {
+:host([layout*='classic']) {
   .triggerContent {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    padding: 0 8px 0 24px; // TODO: update to use design token
+    padding: 0 8px; // TODO: update to use design token
+  }
+
+  .mainContent {
+    align-items: start;
+  }
+
+  label {
+    cursor: text;
+    font-size: 16px;
+    font-weight: 450;
+    letter-spacing: 0;
+    line-height: 24px;
+
+    &.withValue {
+      font-size: 12px;
+      font-weight: 450;
+      letter-spacing: 0;
+      line-height: 16px;
+    }
+  }
+
+  .value {
+    height: auto;
+    font-size: 16px;
+    font-weight: 450;
+    letter-spacing: 0;
+    line-height: 24px;
   }
 }
 

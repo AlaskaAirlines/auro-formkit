@@ -16,7 +16,6 @@
 | `autoPlacement`         | `autoPlacement`         |           | `boolean`                                        | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `chevron`               | `chevron`               |           | ` Boolean `                                      |                | If declared, the dropdown displays a chevron on the right. |
 | `common`                | `common`                |           | ` Boolean `                                      |                | If declared, the dropdown will be styled with the common theme. |
-| `commonLabelClasses`    |                         | readonly  | `object`                                         |                |                                                  |
 | `commonWrapperClasses`  |                         | readonly  | `{ trigger: boolean; wrapper: boolean; hasFocus: boolean \| undefined; simple: boolean \| undefined; parentBorder: boolean; }` |                |                                                  |
 | `disabled`              | `disabled`              |           | ` Boolean `                                      |                | If declared, the dropdown is not interactive.    |
 | `error`                 | `error`                 |           | ` Boolean `                                      |                | If declared in combination with not using the `simple` property or `helpText` slot content, will apply red color to both. |
@@ -38,7 +37,7 @@
 | `onSlotChange`          | `onSlotChange`          |           |                                                  |                |                                                  |
 | `placement`             | `placement`             |           | `string`                                         | "bottom-start" | Position where the bib should appear relative to the trigger. |
 | `rounded`               | `rounded`               |           | ` Boolean `                                      |                | If declared, will apply border-radius to trigger and default slots. |
-| `shape`                 |                         |           | `string`                                         | "rounded"      |                                                  |
+| `shape`                 |                         |           | `string`                                         | "classic"      |                                                  |
 | `simple`                | `simple`                |           | `boolean`                                        |                | If declared, applies a border around the trigger slot. |
 | `size`                  |                         |           | `string`                                         | "xl"           |                                                  |
 
