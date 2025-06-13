@@ -69,7 +69,7 @@ export class AuroSelect extends AuroElement {
     const idSubstrEnd = 8;
     const idSubstrStart = 2;
 
-    this.matchWidth = true;
+    this.matchWidth = false;
 
     // Layout Config
     this.layout = 'classic';
@@ -221,7 +221,7 @@ export class AuroSelect extends AuroElement {
       /**
        * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
        */
-      flexMenuWidth: {
+      matchWidth: {
         type: Boolean,
         reflect: true
       },
@@ -1045,7 +1045,7 @@ export class AuroSelect extends AuroElement {
         <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
@@ -1125,7 +1125,7 @@ export class AuroSelect extends AuroElement {
         <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
@@ -1248,7 +1248,7 @@ export class AuroSelect extends AuroElement {
           ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
