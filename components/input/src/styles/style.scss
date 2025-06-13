@@ -1,5 +1,7 @@
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
+/* stylelint-disable selector-class-pattern */
+
 // COMMON FOR ALL ---------------------------------------------------
 
 :host {
@@ -15,18 +17,20 @@
 }
 
 input {
-  background: unset;
+  overflow: hidden;
   width: 100%;
   padding: 0;
   border: 0;
+  background: unset;
   outline: none;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.accents:not(.util_displayHidden) {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+.accents {
+  &:not(.util_displayHidden) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
 }

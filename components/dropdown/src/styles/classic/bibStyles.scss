@@ -12,6 +12,7 @@
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute, selector-class-pattern, selector-max-class */
 
+
 :host {
   position: fixed;
   z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
@@ -19,12 +20,10 @@
   isolation: isolate;
 }
 
-.container {
-  display: inline-block;
-  overflow: auto;
-  box-sizing: border-box;
-  margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
-  border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+:host(:not([matchWidth])) {
+  .container {
+      min-width: fit-content;
+  }
 }
 
 :host([isfullscreen]) {
@@ -75,3 +74,13 @@
     }
   }
 }
+
+
+.container {
+  display: inline-block;
+  overflow: auto;
+  box-sizing: border-box;
+  border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+  margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
+}
+

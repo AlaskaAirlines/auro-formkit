@@ -549,7 +549,7 @@ export class AuroCombobox extends AuroElement {
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
+    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$); // eslint-disable-line no-underscore-dangle
 
     // Exposes the CSS parts from the bibtemplate for styling
     this.bibtemplate.exposeCssParts();
@@ -724,10 +724,11 @@ export class AuroCombobox extends AuroElement {
   /**
    * Handle changes to the input value and trigger changes that should result.
    * @private
+   * @param {Event} event - The input event triggered by the input element.
    * @returns {void}
    */
-  handleInputValueChange(e) {
-    if (e.target === this.inputInBib) {
+  handleInputValueChange(event) {
+    if (event.target === this.inputInBib) {
       this.input.value = this.inputInBib.value;
       return;
     }

@@ -147,7 +147,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * indent level for submenues
+       * Indent level for submenus.
        * @private
        */
       level: {

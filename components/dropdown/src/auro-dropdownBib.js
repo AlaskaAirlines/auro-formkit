@@ -42,6 +42,7 @@ export class AuroDropdownBib extends LitElement {
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-dropdownbib');
 
     this.shape = "rounded";
+    this.matchWidth = false;
   }
 
   static get styles() {
@@ -75,6 +76,15 @@ export class AuroDropdownBib extends LitElement {
        * If declared, will apply extra padding to bib content.
        */
       inset: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the bib width will match the trigger width.
+       * @private
+       */
+      matchWidth: {
         type: Boolean,
         reflect: true
       },

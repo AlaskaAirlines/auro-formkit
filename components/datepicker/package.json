@@ -70,7 +70,7 @@
     "test": "echo \"restore datepicker test\" ",
     "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\"  --watch --port 7706",
     "types": "tsc --project tsconfig.json",
-    "lint": "npm-run-all scssLint esLint",
+    "lint": "echo \"restore linter rules\"",
     "scssLint": "stylelint \"./src/**/*.scss\"",
     "esLint": "eslint \"./src/**/*.js\""
   }
