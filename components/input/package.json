@@ -13,14 +13,14 @@
   },
   "dependencies": {
     "@aurodesignsystem/auro-layout-element": "*",
-    "@aurodesignsystem/auro-button": "^9.4.0",
+    "@aurodesignsystem/auro-button": "^10.0.0",
     "@aurodesignsystem/auro-helptext": "*",
-    "@aurodesignsystem/auro-icon": "^8.0.3",
+    "@aurodesignsystem/auro-icon": "^8.0.4",
     "chalk": "^5.4.1",
     "imask": "^7.6.1"
   },
   "devDependencies": {
-    "@alaskaairux/icons": "^5.4.0",
+    "@alaskaairux/icons": "^5.5.0",
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
     "@auro-formkit/form-validation": "*",

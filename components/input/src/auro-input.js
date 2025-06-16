@@ -299,7 +299,8 @@ export class AuroInput extends BaseInput {
           ?onDark="${this.onDark}"
           aria-label="${i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
-          tabindex="-1"
+          shape="circle"
+          size="sm"
           variant="flat">
           <${this.iconTag}
             category="interface"
@@ -323,9 +324,10 @@ export class AuroInput extends BaseInput {
         <${this.buttonTag}
           @click="${this.handleClickShowPassword}"
           ?onDark="${this.onDark}"
-          aria-hidden="true"
           class="notificationBtn passwordBtn"
-          tabindex="-1"
+          aria-label="${this.showPassword ? i18n(this.lang, "hidePassword") : i18n(this.lang, "showPassword")}"
+          shape="circle"
+          size="sm"
           variant="flat">
           <${this.iconTag}
             ?hidden=${!this.showPassword}

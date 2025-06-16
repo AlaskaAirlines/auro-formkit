@@ -1,5 +1,8 @@
 import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import '../src/registered.js';
+
+useAccessibleIt();
 
 describe('auro-input', () => {
   it('web component is successfully created in the document', async () => {
@@ -166,7 +169,10 @@ describe('auro-input', () => {
     `);
 
     const listener = oneEvent(el, 'input');
-    el.value = 'test'
+    el.value = 'test';
+
+    await elementUpdated(el);
+
     const { result } = await listener;
 
     expect(result).to.equal(undefined);
@@ -222,6 +228,8 @@ describe('auro-input', () => {
     input.focus();
     el.value = 'whatever';
     input.blur();
+
+    await elementUpdated(el);
 
     const { result } = await listener;
 
