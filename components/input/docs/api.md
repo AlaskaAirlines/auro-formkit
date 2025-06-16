@@ -28,6 +28,7 @@ Generate unique names for dependency components.
 | `min`                             | `min`                             | `string`  | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | `minLength`                       | `minLength`                       | `number`  | "undefined" | The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`. |
 | `name`                            | `name`                            | `string`  |             | Populates the `name` attribute on the input.     |
+| `nested`                          | `nested`                          | `boolean` |             | Sets styles for nested operation - removes borders, hides help + error text, and<br />hides accents. |
 | `noValidate`                      | `noValidate`                      | `boolean` | false       | If set, disables auto-validation on blur.        |
 | `onDark`                          | `onDark`                          | `boolean` | false       | Sets onDark styles on input.                     |
 | `pattern`                         | `pattern`                         | `string`  |             | Specifies a regular expression the form control's value should match. |
@@ -56,6 +57,7 @@ Generate unique names for dependency components.
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
+| `focus`    | `(): void`                             | Function to set element focus.                   |
 | `reset`    | `(): void`                             | Resets component to initial state.               |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
