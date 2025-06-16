@@ -106,8 +106,8 @@ export class AuroRadio extends LitElement {
       },
 
       /**
+       * ID for input node.
        * @private
-       * id for input node
        */
       inputId: {
         type: String,

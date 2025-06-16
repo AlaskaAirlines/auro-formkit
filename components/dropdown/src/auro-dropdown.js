@@ -746,14 +746,13 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   handleTriggerContentSlotChange(event) {
-
     this.floater.handleTriggerTabIndex();
 
     // Get the trigger
     const trigger = this.shadowRoot.querySelector('#trigger');
 
     // Get the trigger slot
-    const triggerSlot = this.shadowRoot.querySelector('.triggerContent slot');
+    const triggerSlot = this.shadowRoot.querySelector('.triggerContentWrapper slot');
 
     // If there's a trigger slot
     if (triggerSlot) {
@@ -839,12 +838,12 @@ export class AuroDropdown extends AuroElement {
           class="${classMap(this.commonWrapperClasses)}" part="wrapper"
           tabindex="${this.tabIndex}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
           aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
           @focusin="${this.handleFocusin}"
           @blur="${this.handleFocusOut}">
-          <div class="triggerContentWrapper">
+          <div class="triggerContentWrapper" id="triggerLabel">
             <slot
               name="trigger"
               @slotchange="${this.handleTriggerContentSlotChange}"></slot>

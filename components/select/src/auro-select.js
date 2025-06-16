@@ -84,9 +84,9 @@ export class AuroSelect extends AuroElement {
 
     this.forceDisplayValue = false;
 
-    this.layout = 'classic'; // Default layout
-    this.shape = 'classic'; // Default shape
-    this.size = 'xl'; // Default size
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'xl';
 
     /**
      * @private
@@ -1054,6 +1054,7 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          a11yRole="select"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
