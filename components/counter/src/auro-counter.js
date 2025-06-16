@@ -321,14 +321,13 @@ export class AuroCounter extends LitElement {
         <div part="counterControl" aria-labelledby="counter-label" aria-describedby="counter-description" tabindex="${this.disabled ? '-1' : '0'}" role="spinbutton" aria-valuemin="${this.min}" aria-valuemax="${this.max}" aria-valuenow="${this.value}">
           <auro-counter-button
           aria-hidden="true"
-          iconOnly
-          tabindex="-1"
+          tindex="-1"
           part="controlMinus"
           @click="${() => this.decrement()}"
           ?onDark="${this.onDark}"
           ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
           >
-            <${this.iconTag} class="controlIcon" slot="icon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
+            <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
           </auro-counter-button>
 
           <div class="quantityWrapper">
@@ -337,14 +336,13 @@ export class AuroCounter extends LitElement {
 
           <auro-counter-button
           aria-hidden="true"
-          iconOnly
-          tabindex="-1"
+          tindex="-1"
           part="controlPlus"
           @click="${() => this.increment()}"
           ?onDark="${this.onDark}"
           ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
           >
-            <${this.iconTag} class="controlIcon" slot="icon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
+            <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
           </auro-counter-button>
         </div>
       </div>
