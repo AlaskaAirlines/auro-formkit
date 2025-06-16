@@ -69,8 +69,9 @@
       border-radius: unset;
     }
 
-    &[class*="shape-pill"] {
-      border-radius: var(--ds-size-300, vac.$ds-size-300);
+    &[class*="shape-pill"],
+    &[class*="shape-snowflake"] {
+      border-radius: 30px;
     }
   }
 }
