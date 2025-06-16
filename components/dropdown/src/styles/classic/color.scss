@@ -25,7 +25,6 @@
     border-color: var(--ds-auro-dropdown-trigger-border-color);
     background-color: var(--ds-auro-dropdown-trigger-container-color);
     color: var(--ds-auro-dropdown-trigger-text-color);
-    outline-color: var(--ds-auro-dropdown-trigger-outline-color);
 
     &:focus-within,
     &:active {
@@ -47,8 +46,6 @@
   --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
 
   .trigger {
-    outline: solid 1px var(--ds-auro-dropdown-trigger-border-color);
-
     &:focus-within,
     &:active {
       --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
@@ -67,7 +64,12 @@
     border-color: var(--ds-auro-dropdown-trigger-border-color);
     background-color: var(--ds-auro-dropdown-trigger-container-color);
     color: var(--ds-auro-dropdown-trigger-text-color);
-    outline-color: var(--ds-auro-dropdown-trigger-outline-color);
+
+    &:focus-within,
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+    }
   }
 }
 
@@ -83,8 +85,6 @@
   --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 
   .trigger {
-    outline: solid 1px var(--ds-auro-dropdown-trigger-border-color);
-
     &:focus-within,
     &:active {
       --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
