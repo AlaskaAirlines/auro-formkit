@@ -49,8 +49,8 @@ export class AuroMenu extends AuroElement {
 
     // State properties (reactive)
 
-    this.shape = "rounded"; // box, rounded, pill
-    this.size = "md"; // md, lg, xl
+    this.shape = ""; // box, rounded, pill
+    this.size = ""; // md, lg, xl
 
     // Value of the selected options
     this.value = undefined;

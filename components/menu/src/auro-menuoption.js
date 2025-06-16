@@ -34,8 +34,8 @@ export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
 
-    this.size = "md"; // md, lg, xl
-    this.shape = "rounded"; // box, rounded, pill
+    this.size = ""; // md, lg, xl
+    this.shape = ""; // box, rounded, pill
 
     /**
      * Generate unique names for dependency components.
