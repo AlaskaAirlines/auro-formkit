@@ -29,11 +29,6 @@
       border-radius: unset;
     }
 
-    &[class*="shape-box"],
-    &[class*="shape-snowflake"] {
-      border-radius: unset;
-    }
-
     &[class*="shape-pill"] {
       border-radius: 30px;
     }

@@ -529,6 +529,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   configureDropdown() {
+    this.dropdown.a11yRole = "combobox";
 
     // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
     this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
