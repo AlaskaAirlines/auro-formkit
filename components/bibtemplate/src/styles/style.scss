@@ -41,10 +41,6 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
-
-  [auro-icon] {
-    --ds-auro-icon-size: var(--ds-size-500, #{vac.$ds-size-500});
-  }
 }
 
 #bodyContainer {

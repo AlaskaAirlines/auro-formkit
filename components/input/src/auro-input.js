@@ -301,10 +301,9 @@ export class AuroInput extends BaseInput {
           class="notificationBtn clearBtn"
           shape="circle"
           size="sm"
-          variant="flat">
+          variant="ghost">
           <${this.iconTag}
             category="interface"
-            customColor
             name="x-lg"
             >
           </${this.iconTag}>
@@ -328,17 +327,15 @@ export class AuroInput extends BaseInput {
           aria-label="${this.showPassword ? i18n(this.lang, "hidePassword") : i18n(this.lang, "showPassword")}"
           shape="circle"
           size="sm"
-          variant="flat">
+          variant="ghost">
           <${this.iconTag}
             ?hidden=${!this.showPassword}
             category="interface"
-            customColor
             name="hide-password-stroke">
           </${this.iconTag}>
           <${this.iconTag}
             ?hidden=${this.showPassword}
             category="interface"
-            customColor
             name="view-password-stroke">
           </${this.iconTag}>
         </${this.buttonTag}>
