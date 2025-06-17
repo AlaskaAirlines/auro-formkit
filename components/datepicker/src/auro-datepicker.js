@@ -35,6 +35,10 @@ import dropdownVersion from './dropdownVersion.js';
 
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './inputVersion.js';
+
+import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
+import helpTextVersion from "@aurodesignsystem/auro-select/src/helptextVersion.js";
+
 import { ifDefined } from "lit/directives/if-defined.js";
 import {AuroElement} from "@aurodesignsystem/auro-layout-element";
 import i18n from "@aurodesignsystem/auro-input/src/i18n.js";
@@ -175,6 +179,11 @@ export class AuroDatePicker extends AuroElement {
      * @private
      */
     this.inputTag = versioning.generateTag('auro-formkit-datepicker-input', inputVersion, AuroInput);
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
 
     /**
      * @private
@@ -718,6 +727,8 @@ export class AuroDatePicker extends AuroElement {
       });
 
       input.addEventListener('auroFormElement-validated', (evt) => {
+        console.log(evt.detail.validity);
+
         if (evt.detail.validity === 'customError') {
           this.validity = evt.detail.validity;
           this.errorMessage = evt.detail.message;
@@ -1371,6 +1382,32 @@ export class AuroDatePicker extends AuroElement {
       </${this.iconTag}>`;
   }
 
+  /**
+   * Returns HTML for the help text and error message.
+   * @private
+   * @returns {html} - Returns HTML for the help text and error message.
+   */
+  renderHtmlHelpText() {
+    return html`
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+      ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helptext"></slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+      : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+    }
+    `;
+  }
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     const helpTextClassMap = {
@@ -1421,17 +1458,9 @@ export class AuroDatePicker extends AuroElement {
               ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
             </auro-formkit-calendar>
           </div>
-          <p slot="helpText" part="helpTextSpan" class="${classMap(helpTextClassMap)}">
-            <!-- Help text and error message template -->
-            ${!this.validity || this.validity === undefined || this.validity === 'valid'
-              ? html`
-                <slot name="helpText"></slot>
-              ` : html`
-                <span role="alert" aria-live="assertive" part="helpText">
-                  ${this.errorMessage}
-                </span>`
-            }
-          </p>
+          <div slot="helpText" part="helpTextSpan">
+            ${this.renderHtmlHelpText()}
+          </div>
         </${this.dropdownTag}>
     `;
   }
