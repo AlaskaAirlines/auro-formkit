@@ -529,6 +529,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   configureDropdown() {
+    this.dropdown.a11yRole = "combobox";
 
     // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
     this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
@@ -549,7 +550,7 @@ export class AuroCombobox extends AuroElement {
 
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
+    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$); // eslint-disable-line no-underscore-dangle
 
     // Exposes the CSS parts from the bibtemplate for styling
     this.bibtemplate.exposeCssParts();
@@ -582,6 +583,15 @@ export class AuroCombobox extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+
+    // set menu's default size if there it's not specified.
+    if (!this.menu.getAttribute('size')) {
+      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+    }
+
+    if (!this.getAttribute('shape')) {
+      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+    }
 
     // a racing condition on custom-combobox with custom-menu
     if (!this.menu || this.menuShadowRoot === null) {
@@ -717,10 +727,11 @@ export class AuroCombobox extends AuroElement {
   /**
    * Handle changes to the input value and trigger changes that should result.
    * @private
+   * @param {Event} event - The input event triggered by the input element.
    * @returns {void}
    */
-  handleInputValueChange(e) {
-    if (e.target === this.inputInBib) {
+  handleInputValueChange(event) {
+    if (event.target === this.inputInBib) {
       this.input.value = this.inputInBib.value;
       return;
     }
@@ -915,6 +926,14 @@ export class AuroCombobox extends AuroElement {
     if (changedProperties.has('error')) {
       this.input.setAttribute('error', this.getAttribute('error'));
       this.validate();
+    }
+
+    if (changedProperties.has('shape') && this.menu) {
+      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+    }
+
+    if (changedProperties.has('size') && this.menu) {
+      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
     }
   }
 

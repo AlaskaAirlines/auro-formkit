@@ -10,26 +10,21 @@
 
 @use '@aurodesignsystem/webcorestylesheets/src/core';
 
-/* stylelint-disable declaration-no-important, order/properties-order, selector-max-attribute, selector-no-qualifying-type, scss/selector-nest-combinators */
+/* stylelint-disable declaration-no-important, order/properties-order, selector-max-attribute, selector-max-combinators, selector-max-compound-selectors, selector-no-qualifying-type, scss/selector-nest-combinators, max-nesting-depth */
 
 // container styles - defines the look of the outer custom component
 :host {
-  display: inline-block;
-  width: 100%;
-
-  margin: 0;
-  padding: 0;
-
+  display: block;
   vertical-align: middle;
 
-  ::slotted(auro-menuoption),
-  ::slotted([auro-menuoption]),
-  auro-menuoption[loadingplaceholder] {
-    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + 24px + var(--ds-size-100, vac.$ds-size-100));
-  }
+  .wrapper {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
 
-  ::slotted([selected]) {
-    padding-left: 0;
+    margin: 0;
+    padding: 0;
+
   }
 
   // Styles are set to `important` to ensure they over-ride any styles
@@ -46,33 +41,33 @@
     border-top-width: 1px !important;
     border-top-style: solid !important;
   }
-}
 
-:host([nocheckmark]) {
-  ::slotted(auro-menuoption),
-  auro-menuoption[loadingplaceholder] {
-    padding-left: var(--ds-size-200, vac.$ds-size-200);
-  }
-}
+  [loadingplaceholder] {
+    &.empty {
+      opacity: 0;
+      position: absolute;
+    }
 
-:host([root]) {
-  overflow-y: auto;
-}
+    slot[name="loadingIcon"] {
+      vertical-align: middle;
+      line-height: 1;
+      display: inline-block;
 
-[loadingplaceholder] {
-  &.empty {
-    opacity: 0;
-    position: absolute;
-  }
-
-  slot[name="loadingIcon"]{
-    vertical-align: middle;
-    line-height: 1;
-    display: inline-block;
-
-    &::slotted(*) {
-      margin-right: var(--ds-size-150, vac.$ds-size-150);
+      &::slotted(*) {
+        margin-right: var(--ds-size-150, vac.$ds-size-150);
+      }
     }
   }
 }
 
+:host([root]) { 
+  overflow-y: auto;
+
+  .wrapper[class*="-lg"] {
+    padding: var(--ds-size-150, vac.$ds-size-150);
+  }
+
+  .wrapper[class*="-xl"] {
+    padding: var(--ds-size-200, vac.$ds-size-200);
+  }
+}

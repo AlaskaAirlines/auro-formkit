@@ -1,18 +1,19 @@
 // Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
-/* eslint-disable lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable lit/binding-positions, lit/no-invalid-html, no-inline-comments, line-comment-position */
 
 // ---------------------------------------------------------------------
-import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
 
-import styleCss from "./styles/style-menuoption-css.js";
-import colorCss from "./styles/color-menuoption-css.js";
-import tokensCss from "./styles/tokens-css.js";
+import styleCss from "./styles/default/style-menuoption-css.js";
+import colorCss from "./styles/default/color-menuoption-css.js";
+import tokensCss from "./styles/default/tokens-css.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
+
+import { AuroElement } from "../../layoutElement/src/auroElement.js";
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
@@ -29,9 +30,12 @@ import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
  * @slot - Specifies text for an option, but is not the value.
  */
-export class AuroMenuOption extends LitElement {
+export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
+
+    this.size = ""; // md, lg, xl
+    this.shape = ""; // box, rounded, pill
 
     /**
      * Generate unique names for dependency components.
@@ -56,6 +60,7 @@ export class AuroMenuOption extends LitElement {
 
   static get properties() {
     return {
+      ...super.properties,
       nocheckmark: {
         type: Boolean,
         reflect: true
@@ -117,6 +122,8 @@ export class AuroMenuOption extends LitElement {
 
   // observer for selected property changes
   updated(changedProperties) {
+    super.updated(changedProperties);
+
     if (changedProperties.has('selected')) {
       this.setAttribute('aria-selected', this.selected.toString());
     }
@@ -138,10 +145,19 @@ export class AuroMenuOption extends LitElement {
     return html`<${this.iconTag} customColor customSvg slot="icon">${svg}</${this.iconTag}>`;
   }
 
-  render() {
+  /**
+   * Logic to determine the layout of the component.
+   * @protected
+   * @returns {void}
+   */
+  renderLayout() {
     return html`
-      ${this.selected && !this.nocheckmark ? this.generateIconHtml(checkmarkIcon.svg) : undefined}
-      <slot></slot>
+      <div class="wrapper">
+        ${this.selected && !this.nocheckmark
+          ? this.generateIconHtml(checkmarkIcon.svg)
+          : undefined}
+        <slot></slot>
+      </div>
     `;
   }
 }

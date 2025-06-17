@@ -69,11 +69,11 @@ export class AuroSelect extends AuroElement {
     const idSubstrEnd = 8;
     const idSubstrStart = 2;
 
-    this.matchWidth = true;
+    this.matchWidth = false;
 
     // Layout Config
-    this.layout = 'classic';
-    this.shape = 'classic';
+    this.layout = 'snowflake';
+    this.shape = 'snowflake';
     this.size = 'xl';
 
     // floaterConfig
@@ -84,9 +84,9 @@ export class AuroSelect extends AuroElement {
 
     this.forceDisplayValue = false;
 
-    this.layout = 'snowflake'; // Default layout
-    this.shape = 'snowflake'; // Default shape
-    this.size = 'xl'; // Default size
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'xl';
 
     /**
      * @private
@@ -219,14 +219,6 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If set, makes dropdown width match the size of the content, rather than the width of the trigger.
-       */
-      flexMenuWidth: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
        * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
        * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
@@ -319,7 +311,7 @@ export class AuroSelect extends AuroElement {
        * "top" | "right" | "bottom" | "left" |
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
+       * "left-start" | "left-end".
        * @default bottom-start
        */
       placement: {
@@ -430,6 +422,19 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Returns classmap configuration for html5 input labels in all layouts.
+   * @private
+   * @returns {void}
+   */
+  get commonLabelClasses() {
+    return {
+      'is-disabled': this.disabled,
+      'withValue': this.value && this.value.length > 0,
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+    };
+  }
+
+  /**
    * Returns classmap configuration for wrapper elements in each layout.
    * @private
    * @returns {object} - Returns classmap.
@@ -530,6 +535,15 @@ export class AuroSelect extends AuroElement {
         this.configureMenu();
       }, 0);
       return;
+    }
+
+    // set menu's default size if there it's not specified.
+    if (!this.menu.getAttribute('size')) {
+      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+    }
+
+    if (!this.getAttribute('shape')) {
+      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
     }
 
     if (this.multiSelect) {
@@ -853,6 +867,14 @@ export class AuroSelect extends AuroElement {
     if (changedProperties.has('error')) {
       this.validate(true);
     }
+
+    if (changedProperties.has('shape') && this.menu) {
+      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+    }
+
+    if (changedProperties.has('size') && this.menu) {
+      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+    }
   }
 
   /**
@@ -1032,9 +1054,10 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          a11yRole="select"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
@@ -1053,7 +1076,7 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label>
+                <label class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                 </label>
                 <div class="value" id="value"></div>
@@ -1114,7 +1137,7 @@ export class AuroSelect extends AuroElement {
         <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
@@ -1133,7 +1156,7 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label>
+                <label class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                 </label>
                 <div class="value" id="value"></div>
@@ -1168,11 +1191,77 @@ export class AuroSelect extends AuroElement {
    * @returns {import("lit").TemplateResult} - Returns HTML for the classic layout.
    */
   renderLayoutClassic() {
+    const placeholderClass = {
+      hidden: this.value,
+    };
+
+    const displayValueClasses = {
+      'displayValue': true,
+      'hasContent': this.hasDisplayValueContent,
+      'hasFocus': this.isPopoverVisible,
+      'withValue': this.value && this.value.length > 0,
+      'force': this.forceDisplayValue,
+    };
+
+    const valueContainerClasses = {
+      'valueContainer': true,
+      'util_displayHiddenVisually': (this.forceDisplayValue || !(this.dropdown && this.dropdown.isPopoverVisible)) && this.hasDisplayValueContent
+    };
+
     return html`
       <div
-        class="${classMap(this.commonWrapperClasses)} thin"
+        class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
-        classic
+        <div id="slotHolder" aria-hidden="true">
+          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
+        </div>
+        <${this.dropdownTag}
+          ?autoPlacement="${this.autoPlacement}"
+          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+          ?matchWidth="${!this.flexMenuWidth}"
+          ?noFlip="${this.noFlip}"
+          ?onDark="${this.onDark}"
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          chevron
+          fluid
+          for="selectMenu"
+          layout="${this.layout}"
+          part="dropdown"
+          shape="${this.shape}"
+          size="${this.size}">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+            <div class="accents left">
+              <slot name="typeIcon"></slot>
+            </div>
+            <div class="mainContent">
+              <div class="${classMap(valueContainerClasses)}">
+                <label class="${classMap(this.commonLabelClasses)}">
+                  <slot name="label"></slot>
+                </label>
+                <div class="value" id="value"></div>
+                ${this.value ? undefined : html`
+                  <div id="placeholder" class="${classMap(placeholderClass)}">
+                    <slot name="placeholder"></slot>
+                  </div>
+                `}
+              </div>
+              <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
+                <slot name="displayValue"></slot>
+              </div>
+            </div>
+            <div class="accents right"></div>
+          </div>
+          <div class="menuWrapper"></div>
+          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot></slot>
+          </${this.bibtemplateTag}>
+          <div slot="helpText">
+            ${this.renderHtmlHelpText()}
+          </div>
+        </${this.dropdownTag}>
+        ${this.renderNativeSelect()}
       </div>
     `;
   }
@@ -1237,7 +1326,7 @@ export class AuroSelect extends AuroElement {
           ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${!this.flexMenuWidth}"
+          ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"

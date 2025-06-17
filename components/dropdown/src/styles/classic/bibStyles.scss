@@ -10,7 +10,8 @@
 
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute */
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-class-pattern, selector-max-class */
+
 
 :host {
   position: fixed;
@@ -19,11 +20,10 @@
   isolation: isolate;
 }
 
-.container {
-  display: inline-block;
-  overflow: auto;
-  box-sizing: border-box;
-  margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
+:host(:not([matchWidth])) {
+  .container {
+      min-width: fit-content;
+  }
 }
 
 :host([isfullscreen]) {
@@ -61,3 +61,27 @@
     box-shadow: unset;
   }
 }
+
+
+:host(:not([isfullscreen])) {
+  .container{
+    &.shape-box {
+      border-radius: unset;
+    }
+
+    &[class*="shape-pill"],
+    &[class*="shape-snowflake"] {
+      border-radius: 30px;
+    }
+  }
+}
+
+
+.container {
+  display: inline-block;
+  overflow: auto;
+  box-sizing: border-box;
+  border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+  margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
+}
+
