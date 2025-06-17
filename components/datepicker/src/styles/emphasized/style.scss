@@ -12,6 +12,7 @@
   &.right {
     // TODO: update to tokens
     padding-left: 8px;
+    width: 24px;
   }
 }
 
@@ -25,9 +26,43 @@
   align-items: center;
 }
 
+.inputSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.inputSection:not(:is(.disabled, .hasFocus, .hasValue)) {
+  .inputDivider {
+    display: none;
+  }
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &:first-of-type {
+    justify-content: flex-end;
+  }
+
+  &:last-of-type {
+    justify-content: flex-start;
+  }
+}
+
+:host([disabled]) {
+  .inputSection {
+    display: none;
+  }
+}
+
 :host([layout*='snowflake']) {
   [auro-input] {
     flex: 1;
+
+    text-align: center;
 
     &::part(label),
     &::part(accent-left),
@@ -37,6 +72,15 @@
 
     &::part(input) {
       padding-bottom: unset;
+      text-align: center;
+
+      font-size: 18px;
+      line-height: 26px;
+      transition: unset; // default transition makes input "slide" in
+    }
+
+    &::part(input)::placeholder {
+      color: var(--ds-basic-color-texticon-inverse-muted);
     }
 
     &::part(wrapper) {
@@ -90,18 +134,13 @@
     font-weight: 450;
     letter-spacing: 0;
     line-height: 26px;
+    color: var(--ds-basic-color-texticon-inverse-muted);
 
     &.hasFocus,
     &.hasValue {
       font-size: 12px;
       line-height: 16px;
     }
-  }
-
-  .inputWrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
   }
 
   .inputDivider {

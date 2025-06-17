@@ -1,0 +1,11 @@
+:host([layout="snowflake"]) {
+  &[disabled] {
+    .mainContent label ::slotted(*) {
+      color: var(--ds-auro-icon-color);
+    }
+  }
+
+  .error {
+    color: var(--ds-advanced-color-state-error-inverse, #f9a4a8)
+  }
+}
