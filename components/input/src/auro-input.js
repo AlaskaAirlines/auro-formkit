@@ -71,6 +71,20 @@ export class AuroInput extends BaseInput {
     this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
   }
 
+  static get properties() {
+    return {
+      ...super.properties,
+
+      /**
+       * @type {boolean}
+       */
+      hideInputVisually: {
+        type: Boolean,
+        reflect: true,
+      }
+    };
+  }
+
   static get styles() {
     return [
       css`${classicStyleCss}`,
@@ -105,8 +119,13 @@ export class AuroInput extends BaseInput {
    * @returns {object} - Returns classmap.
    */
   get commonInputClasses() {
+    console.log(`hideInputVisually: ${JSON.stringify(this.hideInputVisually)}`);
     return {
-      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+      'util_displayHiddenVisually': this.hideInputVisually !== undefined
+        ? this.hideInputVisually
+        // eslint-disable-next-line no-warning-comments
+        // TODO: refactor this to use a less brittle/forced solution.
+        : this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
     };
   }
 
@@ -118,7 +137,10 @@ export class AuroInput extends BaseInput {
   get legacyInputClasses() {
     return {
       ...this.commonInputClasses,
-      'util_displayHiddenVisually': !this.hasFocus && !this.value
+      'util_displayHiddenVisually':
+        this.hideInputVisually !== undefined
+          ? this.hideInputVisually
+          : !this.hasFocus && !this.value
     };
   }
 
