@@ -103,6 +103,11 @@
     width: 100%;
   }
 
+  // designs call for no border when not active, focused, or in an error state
+  [auro-dropdown]:not(:is([error], .hasFocus))::part(wrapper) {
+    --ds-auro-dropdown-trigger-border-color: transparent;
+  }
+
   // for the trigger content
 
   .dpTriggerContent {

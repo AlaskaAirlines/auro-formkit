@@ -6,8 +6,8 @@
 /* eslint-disable max-lines, no-magic-numbers, complexity, newline-per-chained-call, no-underscore-dangle, lit/binding-positions,
    lit/no-invalid-html, no-unused-expressions */
 
-// If using litElement base class
 import { html } from 'lit/static-html.js';
+import {classMap} from "lit/directives/class-map.js";
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 
@@ -25,8 +25,8 @@ import shapeSizeCss from "./styles/shapeSize-css.js";
 
 // layouts
 import classicLayoutColor from "./styles/default/color-css.js";
-import snowflakeStyle from "./styles/emphasized/style-css.js";
-import snowflakeColors from "./styles/emphasized/color-css.js";
+import snowflakeStyle from "./styles/snowflake/style-css.js";
+import snowflakeColors from "./styles/snowflake/color-css.js";
 
 import './auro-calendar.js';
 
@@ -45,9 +45,10 @@ import i18n from "@aurodesignsystem/auro-input/src/i18n.js";
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
+
 import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
 import buttonVersion from './buttonVersion.js';
-import {classMap} from "lit/directives/class-map.js";
+
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -1410,8 +1411,8 @@ export class AuroDatePicker extends AuroElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
-    const helpTextClassMap = {
-      error: this.hasError
+    const dropdownElementClassMap = {
+      hasFocus: this.hasFocus
     };
 
     // Base HTML render() handles dropdown and calendar bib
@@ -1429,13 +1430,14 @@ export class AuroDatePicker extends AuroElement {
           .shape="${this.shape}"
           .size="${this.size}"
           bordered
+          class="${classMap(dropdownElementClassMap)}"
           disableEventShow
           fluid
           for="dropdownMenu"
           part="dropdown"
           rounded
         >
-          <div slot="trigger" class="dpTriggerContent" part="trigger" @click="${this.focus}">
+          <div slot="trigger" class="dpTriggerContent" part="trigger">
             ${this.renderLayoutFromAttributes()}
           </div>
 
