@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@aurodesignsystem/auro-layout-element": "*",
-    "@aurodesignsystem/auro-button": "^10.0.0",
+    "@aurodesignsystem/auro-button": "^11.0.0",
     "@aurodesignsystem/auro-helptext": "*",
     "@aurodesignsystem/auro-icon": "^8.0.4",
     "chalk": "^5.4.1",
