@@ -58,7 +58,6 @@
     white-space: nowrap;
   }
 
-
   /* stylelint-disable selector-id-pattern */
   #showStateIcon {
     display: flex;
@@ -79,6 +78,12 @@
     }
   }
   /* stylelint-enable selector-id-pattern */
+}
+
+:host([layout*='classic']:not([simple])) {
+  .triggerContentWrapper {
+    padding-left: var(--ds-size-150, vac.$ds-size-150);
+  }
 }
 
 :host([layout*='classic'][matchwidth]) {
