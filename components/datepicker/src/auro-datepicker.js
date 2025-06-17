@@ -727,8 +727,6 @@ export class AuroDatePicker extends AuroElement {
       });
 
       input.addEventListener('auroFormElement-validated', (evt) => {
-        console.log(evt.detail.validity);
-
         if (evt.detail.validity === 'customError') {
           this.validity = evt.detail.validity;
           this.errorMessage = evt.detail.message;
