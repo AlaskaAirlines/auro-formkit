@@ -15,6 +15,7 @@
     "@alaskaairux/icons": "^5.3.0",
     "@auro-formkit/form-validation": "*",
     "@aurodesignsystem/auro-bibtemplate": "*",
+    "@aurodesignsystem/auro-button": "^10.0.0",
     "@aurodesignsystem/auro-dropdown": "*",
     "@aurodesignsystem/auro-input": "*",
     "@aurodesignsystem/auro-popover": "^5.0.2",
