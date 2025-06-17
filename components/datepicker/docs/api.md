@@ -13,6 +13,8 @@
 | `error`                           | `error`                           |           | `string`   |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `format`                          | `format`                          |           | `string`   | "mm/dd/yyyy"                                     | Specifies the date format. The default is `mm/dd/yyyy`. |
 | `fullscreenBreakpoint`            | `fullscreenBreakpoint`            |           | `string`   | "sm"                                             | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
+| `hasError`                        |                                   | readonly  | `boolean`  |                                                  |                                                  |
+| `hasFocus`                        | `hasFocus`                        |           | `boolean`  |                                                  |                                                  |
 | `inputmode`                       | `inputmode`                       |           | `string`   |                                                  | Exposes inputmode attribute for input.           |
 | `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`  | false                                            | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
 | `layout`                          |                                   |           | `string`   | "classic"                                        |                                                  |
@@ -23,6 +25,8 @@
 | `noValidate`                      | `noValidate`                      |           | `boolean`  | false                                            | If set, disables auto-validation on blur.        |
 | `offset`                          | `offset`                          |           | `number`   | "0"                                              | Gap between the trigger element and bib.         |
 | `onDark`                          | `onDark`                          |           | `boolean`  | false                                            | If declared, onDark styles will be applied to the trigger. |
+| `placeholder`                     | `placeholder`                     |           | `string`   |                                                  | Placeholder text to display in the input(s) when no value is set. |
+| `placeholderEndDate`              | `placeholderEndDate`              |           | `string`   |                                                  | Optional placeholder text to display in the second input when using date range.<br />By default, datepicker will use `placeholder` for both inputs if placeholder is<br />specified, but placeholderendDate is not. |
 | `placement`                       | `placement`                       |           | `string`   | "bottom-start"                                   | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `range`                           | `range`                           |           | `boolean`  | false                                            | If set, turns on date range functionality in auro-calendar. |
 | `required`                        | `required`                        |           | `boolean`  | false                                            | Populates the `required` attribute on the input. Used for client-side validation. |
@@ -46,11 +50,15 @@
 | `focus`                       | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
 | `renderHtmlActionClear`       | `(): TemplateResult`                   |                                                  |
 | `renderHtmlIconCalendar`      | `(): TemplateResult`                   |                                                  |
+| `renderHtmlIconError`         | `(): TemplateResult`                   |                                                  |
 | `renderLayoutFromAttributes`  | `(): TemplateResult`                   |                                                  |
 | `renderTempInputs`            | `(): TemplateResult`                   |                                                  |
 | `reset`                       | `(): void`                             | Resets component to initial state.               |
 | `resetLayoutClasses`          | `(): void`                             |                                                  |
 | `resetShapeClasses`           | `(): void`                             |                                                  |
+| `resetValues`                 | `(): void`                             | Resets values without resetting validation.      |
+| `setHasFocus`                 | `(): void`                             |                                                  |
+| `setHasValue`                 | `(): void`                             |                                                  |
 | `updateComponentArchitecture` | `(): void`                             |                                                  |
 | `validate`                    | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
