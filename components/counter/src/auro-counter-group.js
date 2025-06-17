@@ -8,7 +8,8 @@
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 
-import styleCss from "./styles/counter-group-css.js";
+import tokens from "./styles/tokens-css.js";
+import counterGroupStyles from "./styles/counter-group-css.js";
 
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
 import AuroFormValidation from "@auro-formkit/form-validation";
@@ -20,7 +21,12 @@ import dropdownVersion from "./dropdownVersion.js";
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';
 
+import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
+import helptextVersion from './helptextVersion.js';
+
 import './auro-counter-wrapper.js';
+import { AuroElement } from "../../layoutElement/src/auroElement.js";
+import { classMap } from "lit/directives/class-map.js";
 
 /**
  * Auro Counter Group is a group of counter components.
@@ -37,7 +43,7 @@ import './auro-counter-wrapper.js';
  * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
  * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
  */
-export class AuroCounterGroup extends LitElement {
+export class AuroCounterGroup extends AuroElement {
   constructor() {
     super();
 
@@ -48,11 +54,14 @@ export class AuroCounterGroup extends LitElement {
     this.validity = undefined;
     this.value = undefined;
 
+    this.matchWidth = false;
     this.isDropdown = false;
     this.fullscreenBreakpoint = 'sm';
     this.largeFullscreenHeadline = false;
     this.autoPlacement = false;
     this.noFlip = false;
+
+    this.placement = 'bottom-start';
 
     /**
      * @private
@@ -93,10 +102,20 @@ export class AuroCounterGroup extends LitElement {
      * @type {string}
      */
     this.bibtemplateTag = versioning.generateTag('auro-formkit-counter-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+
+    /**
+     * Dynamically generated helptext tag.
+     * @private
+     * @type {string}
+     */
+    this.helpTextTag = versioning.generateTag("auro-formkit-counter-helptext", helptextVersion, AuroHelpText);
   }
 
   static get styles() {
-    return [styleCss];
+    return [
+      tokens,
+      counterGroupStyles,
+    ];
   }
 
   static get properties() {
@@ -129,6 +148,15 @@ export class AuroCounterGroup extends LitElement {
        */
       isDropdown: {
         type: Boolean
+      },
+
+      /**
+       * If declared, the dropdown will expand to the width of its parent container.
+       * Otherwise, the dropdown width will be determined by its content.
+       */
+      matchWidth: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -218,6 +246,16 @@ export class AuroCounterGroup extends LitElement {
       value: {
         type: Object,
       },
+
+      /**
+       * The current text in the valueText slot.
+       * @private
+       */
+      valueText: {
+        type: String,
+        reflect: false,
+        attribute: false
+      }
     };
   }
 
@@ -318,13 +356,8 @@ export class AuroCounterGroup extends LitElement {
     });
 
     const counterWrapper = this.shadowRoot.querySelector('auro-counter-wrapper');
-    this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
-
-    this.counters.forEach((counter) => {
-      counterWrapper.append(counter);
-    });
-
-    this.counters = counterWrapper.querySelectorAll("auro-counter, [auro-counter]");
+    const counterSlot = counterWrapper.querySelector('slot');
+    this.counters = counterSlot.assignedElements();
 
     if (this.keydownHandler) {
       counterWrapper.removeEventListener('keydown', this.keydownHandler);
@@ -405,6 +438,10 @@ export class AuroCounterGroup extends LitElement {
    * @private
    */
   updateValue() {
+    if (!this.counters) {
+      return;
+    }
+    
     this.value = Array.from(this.counters).reduce((acc, counter, index) => {
       const name = counter.hasAttribute('name') ? counter.getAttribute('name') : `counter-${index}`;
       acc[name] = this.safeNumberConversion(counter.value);
@@ -419,6 +456,16 @@ export class AuroCounterGroup extends LitElement {
     this.counters.forEach((counter) => {
       this.manageDisabled(counter);
     });
+  }
+
+  updateValueText() {
+    const valueTextSlot = this.shadowRoot.querySelector('slot[name="valueText"]');
+    if (valueTextSlot) {
+      const assignedNodes = valueTextSlot.assignedNodes({ flatten: true });
+      this.valueText = assignedNodes.map((node) => node.textContent).join(', ');
+    } else {
+      this.valueText = '';
+    }
   }
 
   /**
@@ -451,6 +498,12 @@ export class AuroCounterGroup extends LitElement {
     }
   }
 
+  firstUpdated() {
+    super.firstUpdated();
+    this.updateValue();
+    this.updateValueText();
+  }
+
   /**
    * Registers the custom element with the browser.
    * @param {string} [name="auro-counter-group"] - Custom element name to register.
@@ -461,35 +514,129 @@ export class AuroCounterGroup extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroCounterGroup);
   }
 
-  // function that renders the HTML and CSS into the scope of the component
-  render() {
+  renderCounterDropdown() {
     return html`
-    ${this.isDropdown
-      ? html`<${this.dropdownTag} common chevron
-        .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
-        .placement="${this.placement}"
-        .offset="${this.offset}"
-        ?onDark="${this.onDark}"
+      <${this.dropdownTag} 
+        chevron common fluid
+        part="dropdown"
         ?autoPlacement="${this.autoPlacement}"
-        ?noFlip="${this.noFlip}">
-        <div slot="trigger"><slot name="valueText">
-          ${this.counters && Array.from(this.counters).map((counter, index) => `${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
-        </slot></div>
-        <div slot="label"><slot name="label"></slot></div>
-        <div slot="helpText"><slot name="helpText"></slot></div>
-
-        <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
-          <auro-counter-wrapper isInDropdown>
-          </auro-counter-wrapper>
-        </${this.bibtemplateTag}>
+        ?error="${this.validity !== undefined && this.validity !== 'valid'}"
+        ?matchWidth="${this.matchWidth}"
+        ?noFlip="${this.noFlip}"
+        ?onDark="${this.onDark}"
+        .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+        .offset="${this.offset}"
+        .placement="${this.placement}"
+        layout="${this.layout}"
+        .shape="${this.shape}"
+        .size="${this.size}"
+        .ondark="${this.onDark}"
+      >
+        ${this.renderTriggerContent()}
+        ${this.renderHelpText()}
+        ${this.renderBibTemplate()}
       </${this.dropdownTag}>
-      <slot @slotchange=${() => this.configureDropdownCounters()}></slot>
+      ${this.renderFullscreenSlots()}
+    `;
+  }
+
+  renderTriggerContent() {
+
+    const labelClasses = {
+      filled: this.valueText?.length
+    };
+
+    return html`
+      <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+        <div class="accents left">
+          <slot name="typeIcon"></slot>
+        </div>
+        <div class="mainContent">
+          <label class="${classMap(labelClasses)}">
+            <slot name="label"></slot>
+          </label>
+          <slot name="valueText" @slotChange="${this.updateValueText}">
+            ${this.counters && Array.from(this.counters).map((counter, index) => html`${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
+          </slot>
+        </div>
+        <div class="accents right"></div>
+      </div>
+    `;
+  };
+
+  renderHelpText() {
+    return html`
+      <div slot="helpText">
+        <${this.helpTextTag} ?onDark="${this.onDark}">
+          <p id="${this.uniqueId}" part="helpText">
+            <slot name="helpText"></slot>
+          </p>
+        </${this.helpTextTag}>
+      </div>
+    `
+  }
+
+  renderBibTemplate() {
+    return html`
+      <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
+        ${this.renderCounterGroup(true)}
+      </${this.bibtemplateTag}>
+    `;
+  }
+
+  renderFullscreenSlots() {
+    return html`
       <div id="slotHolder">
         <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         <slot name="bib.fullscreen.footer" @slotchange="${this.handleSlotChange}"></slot>
       </div>
-      `
-      : html`<auro-counter-wrapper><slot @slotchange=${() => this.configureCounters()}></slot></auro-counter-wrapper>`
+    `;
+  }
+
+  renderCounterGroup(isInDropdown = this.isDropdown) {
+    return html`
+      <auro-counter-wrapper ?isInDropdown="${isInDropdown}">
+        <div class="counters">
+          <slot @slotchange=${() => this.isDropdown ? this.configureDropdownCounters() : this.configureCounters()}></slot>
+        </div>
+      </auro-counter-wrapper>
+    `;
+  }
+
+  renderLayoutClassic() {
+    this.shape = "classic";
+    this.layout = "classic";
+    
+    return html`
+    ${this.isDropdown
+      ? this.renderCounterDropdown()
+      : this.renderCounterGroup()
     }`;
+  }
+
+  renderLayoutSnowflake() {
+    this.shape = "snowflake";
+    this.layout = "snowflake";
+    this.size = "lg";
+
+    // TODO: Ask how we want to handle unsupported layout combinations
+    if (!this.isDropdown) return html`<div>Snowflake layout only supports dropdowns at this time.</div>`;
+    
+    return this.renderCounterDropdown();
+  }
+
+  // function that renders the HTML and CSS into the scope of the component
+  renderLayout(ForcedLayout) {
+    const layout = ForcedLayout || this.layout;
+
+    switch (layout) {
+
+      case 'snowflake':
+        return this.renderLayoutSnowflake();
+      case 'classic':
+        return this.renderLayoutClassic();
+      default:
+        return this.renderLayoutClassic();
+    }
   }
 }

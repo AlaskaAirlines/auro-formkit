@@ -43,6 +43,8 @@
 | `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `string`  | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `isDropdown`              | `isDropdown`              | `boolean` | false          | Indicates if the counter group is displayed as a dropdown. |
 | `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean` | false          | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
+| `layout`                  |                           | `string`  |                |                                                  |
+| `matchWidth`              | `matchWidth`              | `boolean` | false          | If declared, the dropdown will expand to the width of its parent container.<br />Otherwise, the dropdown width will be determined by its content. |
 | `max`                     | `max`                     | `number`  | "undefined"    | The maximum value allowed for the whole group of counters. |
 | `min`                     | `min`                     | `number`  | "undefined"    | The minimum value allowed for the whole group of counters. |
 | `noFlip`                  | `noFlip`                  | `boolean` | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
@@ -55,9 +57,19 @@
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method                  | Type                                       | Description                                      |
+|-------------------------|--------------------------------------------|--------------------------------------------------|
+| `renderBibTemplate`     | `(): TemplateResult`                       |                                                  |
+| `renderCounterDropdown` | `(): TemplateResult`                       |                                                  |
+| `renderCounterGroup`    | `(isInDropdown?: boolean): TemplateResult` |                                                  |
+| `renderFullscreenSlots` | `(): TemplateResult`                       |                                                  |
+| `renderHelpText`        | `(): TemplateResult`                       |                                                  |
+| `renderLayout`          | `(ForcedLayout: any): TemplateResult`      |                                                  |
+| `renderLayoutClassic`   | `(): TemplateResult`                       |                                                  |
+| `renderLayoutSnowflake` | `(): TemplateResult`                       |                                                  |
+| `renderTriggerContent`  | `(): TemplateResult`                       |                                                  |
+| `updateValueText`       | `(): void`                                 |                                                  |
+| `validate`              | `(force?: boolean \| undefined): void`     | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
