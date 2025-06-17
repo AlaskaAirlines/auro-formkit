@@ -12,7 +12,7 @@
 
 ### Snowflake layout
 
-#### Normal
+#### Normal (do not use, not design approved! here for testing purposes)
 <div class="exampleWrapper" style="width: 306px">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
