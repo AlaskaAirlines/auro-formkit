@@ -8,6 +8,10 @@
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
 :host(:not([layout="classic"])) {
+  .triggerContent {
+    padding: 0 8px 0 24px; // TODO: update to use design token
+  }
+
   [auro-dropdown] {
     --ds-auro-dropdown-trigger-border-color: var(--ds-auro-counter-trigger-border-color);
     --ds-auro-dropdown-trigger-background-color: var(--ds-auro-counter-trigger-background-color);
@@ -16,18 +20,16 @@
 }
 
 :host {
-
   .triggerContent {
     display: flex;
     width: 100%;
     align-items: center;
     justify-content: center;
-    padding: 0 8px 0 24px; // TODO: update to use design token
+    
 
     .mainContent {
-
-      width: 100%;
       display: flex;
+      width: 100%;
       flex-direction: column;
       align-items: flex-start;
       justify-content: center;
@@ -37,16 +39,15 @@
         line-height: 20px;
     
         &.filled {
-    
           font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
         }
       }
     
       slot[name="valueText"] {
         font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
-        white-space: nowrap;
         overflow-x: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
