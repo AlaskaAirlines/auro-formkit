@@ -303,6 +303,7 @@ export class AuroInput extends BaseInput {
           size="sm"
           variant="ghost">
           <${this.iconTag}
+            ?customColor="${this.onDark}"
             category="interface"
             name="x-lg"
             >
@@ -329,11 +330,13 @@ export class AuroInput extends BaseInput {
           size="sm"
           variant="ghost">
           <${this.iconTag}
+            ?customColor="${this.onDark}"
             ?hidden=${!this.showPassword}
             category="interface"
             name="hide-password-stroke">
           </${this.iconTag}>
           <${this.iconTag}
+            ?customColor="${this.onDark}"
             ?hidden=${this.showPassword}
             category="interface"
             name="view-password-stroke">
