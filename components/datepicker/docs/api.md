@@ -51,8 +51,8 @@
 | `renderHtmlActionClear`       | `(): TemplateResult`                   |                                                  |
 | `renderHtmlIconCalendar`      | `(): TemplateResult`                   |                                                  |
 | `renderHtmlIconError`         | `(): TemplateResult`                   |                                                  |
+| `renderHtmlInputs`            | `(): TemplateResult`                   |                                                  |
 | `renderLayoutFromAttributes`  | `(): TemplateResult`                   |                                                  |
-| `renderTempInputs`            | `(): TemplateResult`                   |                                                  |
 | `reset`                       | `(): void`                             | Resets component to initial state.               |
 | `resetLayoutClasses`          | `(): void`                             |                                                  |
 | `resetShapeClasses`           | `(): void`                             |                                                  |

@@ -1217,7 +1217,7 @@ export class AuroDatePicker extends AuroElement {
             <slot name="label"></slot>
           </label>
           <div class="${classMap(inputSectionClassMap)}" part="inputSection">
-            ${this.renderTempInputs()}
+            ${this.renderHtmlInputs()}
           </div>
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
@@ -1242,17 +1242,18 @@ export class AuroDatePicker extends AuroElement {
     }
   }
 
-  renderTempInputs() {
+  renderHtmlInputs() {
     return html`
       <div class="inputContainer">
         <${this.inputTag}
           ?disabled="${this.disabled}"
           ?onDark="${this.onDark}"
           ?required="${this.required}"
-          id="${this.generateRandomString(12)}"
           .format="${this.format}"
+          .hideInputVisually="${!this.hasValue && !this.hasFocus}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
+          id="${this.generateRandomString(12)}"
           placeholder="MM/DD"
           simple
           bordered
@@ -1284,6 +1285,7 @@ export class AuroDatePicker extends AuroElement {
             ?onDark="${this.onDark}"
             ?required="${this.required}"
             .format="${this.format}"
+            .hideInputVisually="${!this.hasValue && !this.hasFocus}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
