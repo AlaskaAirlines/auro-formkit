@@ -29,10 +29,6 @@
       border-radius: unset;
     }
 
-    &[class*="shape-rounded"] {
-      border-radius: var(--ds-size-100, vac.$ds-size-100);
-    }
-
     &[class*="shape-pill"] {
       border-radius: 30px;
     }

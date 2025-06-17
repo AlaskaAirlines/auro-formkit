@@ -29,7 +29,6 @@ import tokensCss from "./styles/tokens-css.js";
 import classicColorCss from "./styles/classic/color-css.js";
 import classicLayoutCss from "./styles/classic/style-css.js";
 
-
 import styleEmphasizedCss from "./styles/emphasized/style-css.js";
 import styleSnowflakeCss from "./styles/snowflake/style-css.js";
 
@@ -65,17 +64,12 @@ export class AuroDropdown extends AuroElement {
 
     // Layout Config
     this.layout = 'classic';
-    this.shape = 'rounded';
+    this.shape = 'classic';
     this.size = 'xl';
+
     this.parentBorder = false;
 
     this.privateDefaults();
-  }
-
-  get commonLabelClasses() {
-    return {
-      // 'withValue': this.value && this.value.length > 0
-    };
   }
 
   get commonWrapperClasses() {
@@ -752,14 +746,13 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   handleTriggerContentSlotChange(event) {
-
     this.floater.handleTriggerTabIndex();
 
     // Get the trigger
     const trigger = this.shadowRoot.querySelector('#trigger');
 
     // Get the trigger slot
-    const triggerSlot = this.shadowRoot.querySelector('.triggerContent slot');
+    const triggerSlot = this.shadowRoot.querySelector('.triggerContentWrapper slot');
 
     // If there's a trigger slot
     if (triggerSlot) {
@@ -832,29 +825,6 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * @private
-   * @method handleLabelSlotChange
-   * @param {event} event - The event object representing the slot change.
-   * @description Handles the slot change event for the label slot.
-   */
-  handleLabelSlotChange (event) {
-
-    // Get the nodes from the event
-    const nodes = event.target.assignedNodes();
-
-    // Guard clause for no nodes
-    if (!nodes) {
-      return;
-    }
-
-    // Convert the nodes to a measurable array so we can get the length
-    const nodesArr = Array.from(nodes);
-
-    // If the nodes array has a length, the dropdown is labeled
-    this.labeled = nodesArr.length > 0;
-  }
-
-  /**
    * Returns HTML for the common portion of the layouts.
    * @private
    * @param {Object} helpTextClasses - Classes to apply to the help text container.
@@ -868,22 +838,17 @@ export class AuroDropdown extends AuroElement {
           class="${classMap(this.commonWrapperClasses)}" part="wrapper"
           tabindex="${this.tabIndex}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
           aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
           @focusin="${this.handleFocusin}"
           @blur="${this.handleFocusOut}">
-          <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
-              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
-            </label>
-            <div class="triggerContent">
-              <slot
-                name="trigger"
-                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
-            </div>
+          <div class="triggerContentWrapper" id="triggerLabel">
+            <slot
+              name="trigger"
+              @slotchange="${this.handleTriggerContentSlotChange}"></slot>
           </div>
-          ${this.chevron || this.common ? html`
+          ${this.chevron ? html`
               <div
                 id="showStateIcon"
                 class="chevron"
@@ -930,60 +895,7 @@ export class AuroDropdown extends AuroElement {
     };
 
     return html`
-      <div>
-        <div
-          id="trigger"
-          class="trigger"
-          part="trigger"
-          tabindex="${this.tabIndex}"
-          ?showBorder="${this.showTriggerBorders}"
-          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
-          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
-        >
-          <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
-              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
-            </label>
-            <div class="triggerContent">
-              <slot
-                name="trigger"
-                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
-            </div>
-          </div>
-          ${this.chevron || this.common ? html`
-              <div
-                id="showStateIcon"
-                part="chevron">
-                <${this.iconTag}
-                  category="interface"
-                  name="chevron-down"
-                  ?onDark="${this.onDark}"
-                  variant="${this.disabled ? 'disabled' : 'muted'}">
-                  >
-                </${this.iconTag}>
-              </div>
-            ` : undefined }
-        </div>
-        <div class="${classMap(helpTextClasses)}">
-          <slot name="helpText"></slot>
-        </div>
-        <div id="bibSizer" part="size"></div>
-        <${this.dropdownBibTag}
-          id="bib"
-          shape="${this.shape}"
-          ?data-show="${this.isPopoverVisible}"
-          ?isfullscreen="${this.isBibFullscreen}"
-          ?common="${this.common}"
-          ?rounded="${this.common || this.rounded}"
-          ?inset="${this.common || this.inset}"
-        >
-          <div class="slotContent">
-            <slot @slotchange="${this.handleDefaultSlot}"></slot>
-          </div>
-        </${this.dropdownBibTag}>
-      </div>
+      ${this.renderBasicHtml(helpTextClasses)}
     `;
   }
 

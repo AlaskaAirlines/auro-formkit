@@ -16,7 +16,6 @@ $xs: 24px;
 
 // SHAPES ---------------------------------------------------
 
-
 @mixin simple($size) {
   $simpleBorderSize: 0px;
 
@@ -28,8 +27,6 @@ $xs: 24px;
     box-shadow: none; // only here to support classic shape temporarily
   }
 }
-
-// shape thin for 1px border
 
 @mixin thin($size) {
   $thinBorderSize: 1px;
