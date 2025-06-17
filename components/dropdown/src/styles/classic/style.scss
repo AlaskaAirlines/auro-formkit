@@ -58,6 +58,12 @@
     white-space: nowrap;
   }
 
+  &:not([simple]) {
+
+    .triggerContentWrapper {
+      padding-left: var(--ds-size-150, vac.$ds-size-150);
+    }
+  }
 
   /* stylelint-disable selector-id-pattern */
   #showStateIcon {
