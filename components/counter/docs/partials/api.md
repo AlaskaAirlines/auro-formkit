@@ -45,7 +45,7 @@
 #### Group Properties
 All available counter-group properties:
 
-<div class="exampleWrapper">
+<div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/api-group-properties.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>

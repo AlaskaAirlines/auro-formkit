@@ -1,6 +1,19 @@
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-
 :host {
+  
+}
+:host(:not([ondark])) {
+
+  /* Snowflake Dropdown Tokens */
+  --ds-auro-counter-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-counter-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+  --ds-auro-counter-placeholder-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-counter-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-counter-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+  --ds-auro-counter-outline-color: transparent;
+
+  /* Classic Tokens */
   --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background, #{v.$ds-advanced-color-button-tertiary-background});
   --ds-auro-counter-control-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
   --ds-auro-counter-description-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
@@ -8,4 +21,25 @@
   --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   --ds-auro-counter-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
+}
+
+:host([ondark]) {
+
+  /* Snowflake Dropdown Tokens */
+  --ds-auro-counter-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-counter-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-counter-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-counter-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-counter-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+  --ds-auro-counter-outline-color: transparent;
+
+  /* Classic Tokens */
+  --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-inverse, #{v.$ds-advanced-color-button-tertiary-background-inverse});
+  --ds-auro-counter-control-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+  --ds-auro-counter-description-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+  --ds-auro-counter-icon-color: var(--ds-advanced-color-button-tertiary-text-inverse, #{v.$ds-advanced-color-button-tertiary-text-inverse});
+  --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-counter-divider-color: var(--ds-basic-color-border-divider-inverse, #{v.$ds-basic-color-border-divider-inverse});
 }
