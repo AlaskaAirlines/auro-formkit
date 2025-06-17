@@ -9,7 +9,7 @@
   "license": "Apache-2.0",
   "private": true,
   "dependencies": {
-    "@aurodesignsystem/auro-button": "^10.0.0",
+    "@aurodesignsystem/auro-button": "^11.0.0",
     "@aurodesignsystem/auro-header": "^4.0.1",
     "@aurodesignsystem/auro-icon": "^8.0.4",
     "chalk": "^5.4.1",
