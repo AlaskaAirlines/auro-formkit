@@ -10,6 +10,7 @@ import { LitElement } from "lit";
 
 import tokens from "./styles/tokens-css.js";
 import counterGroupStyles from "./styles/counter-group-css.js";
+import shapeSizeCss from "./styles/shapeSize-css.js";
 
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
 import AuroFormValidation from "@auro-formkit/form-validation";
@@ -115,6 +116,7 @@ export class AuroCounterGroup extends AuroElement {
     return [
       tokens,
       counterGroupStyles,
+      shapeSizeCss
     ];
   }
 
@@ -458,6 +460,10 @@ export class AuroCounterGroup extends AuroElement {
     });
   }
 
+  /**
+   * Updates the value text in the dropdown trigger based on the counters in the counter group.
+   * @private
+   */
   updateValueText() {
     const valueTextSlot = this.shadowRoot.querySelector('slot[name="valueText"]');
     if (valueTextSlot) {
@@ -514,6 +520,10 @@ export class AuroCounterGroup extends AuroElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroCounterGroup);
   }
 
+  /**
+   * Render the dropdown structure for the counter group.
+   * @private
+   */
   renderCounterDropdown() {
     return html`
       <${this.dropdownTag} 
@@ -527,20 +537,24 @@ export class AuroCounterGroup extends AuroElement {
         .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
         .offset="${this.offset}"
         .placement="${this.placement}"
-        layout="${this.layout}"
+        .layout="${this.layout}"
         .shape="${this.shape}"
         .size="${this.size}"
         .ondark="${this.onDark}"
       >
-        ${this.renderTriggerContent()}
-        ${this.renderHelpText()}
+        ${this.renderDropdownTrigger()}
         ${this.renderBibTemplate()}
+        ${this.renderHelpText()}
       </${this.dropdownTag}>
       ${this.renderFullscreenSlots()}
     `;
   }
 
-  renderTriggerContent() {
+  /**
+   * Render the dropdown trigger for the dropdown.
+   * @private
+   */
+  renderDropdownTrigger() {
 
     const labelClasses = {
       filled: this.valueText?.length
@@ -564,6 +578,10 @@ export class AuroCounterGroup extends AuroElement {
     `;
   };
 
+  /**
+   * Render the help text for the counter group.
+   * @private
+   */
   renderHelpText() {
     return html`
       <div slot="helpText">
@@ -576,6 +594,10 @@ export class AuroCounterGroup extends AuroElement {
     `
   }
 
+  /**
+   * Render the dropdown bib template for the dropdown.
+   * @private
+   */
   renderBibTemplate() {
     return html`
       <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
@@ -584,6 +606,10 @@ export class AuroCounterGroup extends AuroElement {
     `;
   }
 
+  /**
+   * Render the fullscreen bib slots for the dropdown.
+   * @private
+   */
   renderFullscreenSlots() {
     return html`
       <div id="slotHolder">
@@ -593,6 +619,10 @@ export class AuroCounterGroup extends AuroElement {
     `;
   }
 
+  /**
+   * Render the counter group container
+   * @private
+   */
   renderCounterGroup(isInDropdown = this.isDropdown) {
     return html`
       <auro-counter-wrapper ?isInDropdown="${isInDropdown}">
@@ -603,9 +633,14 @@ export class AuroCounterGroup extends AuroElement {
     `;
   }
 
+  /**
+   * Render the classic layout
+   * @private
+   */
   renderLayoutClassic() {
     this.shape = "classic";
     this.layout = "classic";
+    this.size = "xl";
     
     return html`
     ${this.isDropdown
@@ -614,6 +649,10 @@ export class AuroCounterGroup extends AuroElement {
     }`;
   }
 
+  /**
+   * Render the snowflake layout
+   * @private
+   */
   renderLayoutSnowflake() {
     this.shape = "snowflake";
     this.layout = "snowflake";
@@ -625,8 +664,11 @@ export class AuroCounterGroup extends AuroElement {
     return this.renderCounterDropdown();
   }
 
-  // function that renders the HTML and CSS into the scope of the component
-  renderLayout(ForcedLayout) {
+  /**
+   * Renders the component by layout type
+   * @private
+   */
+  renderLayout(ForcedLayout) { // AuroElement > this.renderLayout("snowflake")
     const layout = ForcedLayout || this.layout;
 
     switch (layout) {

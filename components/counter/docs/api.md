@@ -57,19 +57,9 @@
 
 ## Methods
 
-| Method                  | Type                                       | Description                                      |
-|-------------------------|--------------------------------------------|--------------------------------------------------|
-| `renderBibTemplate`     | `(): TemplateResult`                       |                                                  |
-| `renderCounterDropdown` | `(): TemplateResult`                       |                                                  |
-| `renderCounterGroup`    | `(isInDropdown?: boolean): TemplateResult` |                                                  |
-| `renderFullscreenSlots` | `(): TemplateResult`                       |                                                  |
-| `renderHelpText`        | `(): TemplateResult`                       |                                                  |
-| `renderLayout`          | `(ForcedLayout: any): TemplateResult`      |                                                  |
-| `renderLayoutClassic`   | `(): TemplateResult`                       |                                                  |
-| `renderLayoutSnowflake` | `(): TemplateResult`                       |                                                  |
-| `renderTriggerContent`  | `(): TemplateResult`                       |                                                  |
-| `updateValueText`       | `(): void`                                 |                                                  |
-| `validate`              | `(force?: boolean \| undefined): void`     | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method     | Type                                   | Description                                      |
+|------------|----------------------------------------|--------------------------------------------------|
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
