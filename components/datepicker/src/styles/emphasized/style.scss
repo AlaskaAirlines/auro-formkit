@@ -52,11 +52,11 @@
   }
 }
 
-:host([disabled]) {
-  .inputSection {
-    display: none;
-  }
-}
+//:host([disabled]) {
+//  .inputSection {
+//    display: none;
+//  }
+//}
 
 :host([layout*='snowflake']) {
   [auro-input] {
@@ -101,10 +101,6 @@
 
   [auro-dropdown]::part(trigger) {
     width: 100%;
-  }
-
-  [auro-dropdown]::slotted(div) {
-    display: none;
   }
 
   // for the trigger content
