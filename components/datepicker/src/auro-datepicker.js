@@ -1338,12 +1338,14 @@ export class AuroDatePicker extends AuroElement {
           ?onDark="${this.onDark}"
           aria-label="${i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
-          tabindex="-1"
-          variant="flat">
+          shape="circle"
+          size="sm"
+          variant="ghost">
           <${this.iconTag}
+            ?customColor="${this.onDark}"
             category="interface"
-            customColor
             name="x-lg"
+            slot="icon"
             >
           </${this.iconTag}>
         </${this.buttonTag}>
