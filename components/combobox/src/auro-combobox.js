@@ -325,7 +325,7 @@ export class AuroCombobox extends AuroElement {
        * @type {string}
        */
       value: {
-        type: Object
+        type: String
       },
 
       /* eslint-disable jsdoc/require-description-complete-sentence */
