@@ -359,7 +359,7 @@ export class AuroCounterGroup extends AuroElement {
 
     const counterWrapper = this.shadowRoot.querySelector('auro-counter-wrapper');
     const counterSlot = counterWrapper.querySelector('slot');
-    this.counters = counterSlot.assignedElements();
+    this.counters = counterSlot.assignedElements().filter(el => el.tagName.toLowerCase() === 'auro-counter' || el.hasAttribute('auro-counter'));
 
     if (this.keydownHandler) {
       counterWrapper.removeEventListener('keydown', this.keydownHandler);

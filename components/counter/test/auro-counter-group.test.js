@@ -228,8 +228,10 @@ describe('auro-counter-group: rendering logic', () => {
 
     await elementUpdated(el);
 
-    const labelSlot = el.shadowRoot.querySelector('div[slot="label"] slot[name="label"]');
-    expect(labelSlot.assignedNodes()[0].textContent.trim()).to.equal('Counter Group Label');
+    const labelSlot = el.shadowRoot.querySelector('slot[name="label"]');
+    const labelSpan = labelSlot.assignedNodes()[0];
+    expect(labelSpan.tagName).to.equal('SPAN');
+    expect(labelSpan.textContent.trim()).to.equal('Counter Group Label');
   });
 
   it('renders the correct help text in the dropdown helpText slot', async () => {
