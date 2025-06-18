@@ -1,3 +1,5 @@
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
 .accents {
   flex-grow: 0;
   display: flex;
@@ -5,14 +7,12 @@
   justify-content: center;
 
   &.left {
-    // TODO: update to tokens
-    padding-right: 8px;
+    padding-right: var(--ds-size-100, vac.$ds-size-100);
   }
 
   &.right {
-    // TODO: update to tokens
-    padding-left: 8px;
-    width: 24px;
+    padding-left: var(--ds-size-100, vac.$ds-size-100);
+    width: var(--ds-size-300, vac.$ds-size-300);;
   }
 }
 
@@ -42,6 +42,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 100%;
 
   &:first-of-type {
     justify-content: flex-end;
@@ -52,11 +53,11 @@
   }
 }
 
-//:host([disabled]) {
-//  .inputSection {
-//    display: none;
-//  }
-//}
+:host([disabled]) {
+  .inputSection {
+    display: none;
+  }
+}
 
 :host([layout*='snowflake']) {
   [auro-input] {
@@ -74,13 +75,9 @@
       padding-bottom: unset;
       text-align: center;
 
-      font-size: 18px;
-      line-height: 26px;
+      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
+      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
       transition: unset; // default transition makes input "slide" in
-    }
-
-    &::part(input)::placeholder {
-      color: var(--ds-basic-color-texticon-inverse-muted);
     }
 
     &::part(wrapper) {
@@ -101,11 +98,6 @@
 
   [auro-dropdown]::part(trigger) {
     width: 100%;
-  }
-
-  // designs call for no border when not active, focused, or in an error state
-  [auro-dropdown]:not(:is([error], .hasFocus))::part(wrapper) {
-    --ds-auro-dropdown-trigger-border-color: transparent;
   }
 
   // for the trigger content
@@ -130,12 +122,10 @@
   // unfocused state(s)
 
   label {
-    // TODO: update to font class
-    font-size: 18px;
+    font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
+    line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
     font-weight: 450;
     letter-spacing: 0;
-    line-height: 26px;
-    color: var(--ds-basic-color-texticon-inverse-muted);
 
     &.hasFocus,
     &.hasValue {
@@ -146,7 +136,6 @@
 
   .inputDivider {
     // TODO: add fallback for tokens
-    background-color: var(--ds-basic-color-texticon-inverse-muted);
     height: 18px;
     margin: 4px 12px;
     width: 2px;

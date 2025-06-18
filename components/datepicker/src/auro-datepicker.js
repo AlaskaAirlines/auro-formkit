@@ -854,6 +854,9 @@ export class AuroDatePicker extends AuroElement {
     const convertedDate = this.convertWcTimeToDate(time);
     const newDate = this.util.toCustomFormat(convertedDate, this.format);
 
+    console.log(newDate);
+    console.log(this.util.validDateStr(newDate, this.format));
+
     if (this.util.validDateStr(newDate, this.format)) {
       if (this.inputList.length > 1) {
         if (!this.value || !this.util.validDateStr(this.value, this.format)) {
