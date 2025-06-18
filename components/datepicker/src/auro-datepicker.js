@@ -126,8 +126,6 @@ export class AuroDatePicker extends AuroElement {
       'December'
     ];
 
-    this.monthFirst = true;
-
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -185,11 +183,6 @@ export class AuroDatePicker extends AuroElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
-
-    /**
-     * @private
-     */
-    this.monthFirst = undefined;
 
     // Layout Config
     this.layout = 'classic';
@@ -1428,6 +1421,7 @@ export class AuroDatePicker extends AuroElement {
           ?noFlip="${this.noFlip}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .layout="${this.layout}"
+          .matchWidth="${false}"
           .offset="${this.offset}"
           .placement="${this.placement}"
           .shape="${this.shape}"
