@@ -299,11 +299,12 @@ export class AuroInput extends BaseInput {
           ?onDark="${this.onDark}"
           aria-label="${i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
-          tabindex="-1"
-          variant="flat">
+          shape="circle"
+          size="sm"
+          variant="ghost">
           <${this.iconTag}
+            ?customColor="${this.onDark}"
             category="interface"
-            customColor
             name="x-lg"
             >
           </${this.iconTag}>
@@ -323,20 +324,21 @@ export class AuroInput extends BaseInput {
         <${this.buttonTag}
           @click="${this.handleClickShowPassword}"
           ?onDark="${this.onDark}"
-          aria-hidden="true"
           class="notificationBtn passwordBtn"
-          tabindex="-1"
-          variant="flat">
+          aria-label="${this.showPassword ? i18n(this.lang, "hidePassword") : i18n(this.lang, "showPassword")}"
+          shape="circle"
+          size="sm"
+          variant="ghost">
           <${this.iconTag}
+            ?customColor="${this.onDark}"
             ?hidden=${!this.showPassword}
             category="interface"
-            customColor
             name="hide-password-stroke">
           </${this.iconTag}>
           <${this.iconTag}
+            ?customColor="${this.onDark}"
             ?hidden=${this.showPassword}
             category="interface"
-            customColor
             name="view-password-stroke">
           </${this.iconTag}>
         </${this.buttonTag}>

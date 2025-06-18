@@ -1,4 +1,4 @@
-// stylelint-disable selector-max-class
+// stylelint-disable selector-max-class, selector-class-pattern
 
 // Import Auro Sass variables
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
@@ -33,7 +33,7 @@ slot {
   }
 }
 
-.auroButton {
+.auro-button {
   position: relative;
   display: inline-flex;
   overflow: visible;
