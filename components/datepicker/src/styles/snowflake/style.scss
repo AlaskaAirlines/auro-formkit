@@ -129,8 +129,8 @@
 
     &.hasFocus,
     &.hasValue {
-      font-size: 12px;
-      line-height: 16px;
+      font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
+      line-height: var(--ds-text-body-height-xs, vac.$ds-text-body-height-xs);
     }
   }
 
