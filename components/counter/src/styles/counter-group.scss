@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity, selector-max-class, selector-no-qualifying-type */
 // Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
 // See LICENSE in the project root for license information.
 
@@ -19,48 +20,47 @@
   }
 }
 
-:host {
-  .triggerContent {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    
+.triggerContent {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
 
-    .mainContent {
-      display: flex;
-      width: 100%;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-    
-      label {
-        font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
-        line-height: 20px;
-    
-        &.filled {
-          font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
-        }
-      }
-    
-      slot[name="valueText"] {
-        font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
+.mainContent {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+label {
+  font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
+  line-height: 20px;
+
+  &.filled {
+    font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
   }
+}
 
-  .counters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ds-size-300, vac.$ds-size-300);
+slot {
+  &[name="valueText"] {
+    font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 
-    ::slotted(auro-counter:not(:first-of-type)) {
-      padding-top: var(--ds-size-300, vac.$ds-size-300);
-      border-top-width: 1px;
-      border-top-style: solid;
-    }
+.counters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-300, vac.$ds-size-300);
+
+  ::slotted(auro-counter:not(:first-of-type)) {
+    padding-top: var(--ds-size-300, vac.$ds-size-300);
+    border-top-width: 1px;
+    border-top-style: solid;
   }
 }
