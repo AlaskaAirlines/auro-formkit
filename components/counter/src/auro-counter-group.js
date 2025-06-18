@@ -1,4 +1,4 @@
-/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, prefer-destructuring, no-underscore-dangle */
+/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, prefer-destructuring, no-underscore-dangle, arrow-parens, no-confusing-arrow, curly */
 
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -443,7 +443,7 @@ export class AuroCounterGroup extends AuroElement {
     if (!this.counters) {
       return;
     }
-    
+
     this.value = Array.from(this.counters).reduce((acc, counter, index) => {
       const name = counter.hasAttribute('name') ? counter.getAttribute('name') : `counter-${index}`;
       acc[name] = this.safeNumberConversion(counter.value);
@@ -522,6 +522,7 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Render the dropdown structure for the counter group.
+   * @returns {TemplateResult} The dropdown template.
    * @private
    */
   renderCounterDropdown() {
@@ -552,12 +553,13 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Render the dropdown trigger for the dropdown.
+   * @returns {TemplateResult} The dropdown trigger template.
    * @private
    */
   renderDropdownTrigger() {
 
     const labelClasses = {
-      filled: this.valueText?.length
+      filled: typeof this.valueText === 'string' && this.valueText.length
     };
 
     return html`
@@ -580,6 +582,7 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Render the help text for the counter group.
+   * @returns {TemplateResult} The help text template.
    * @private
    */
   renderHelpText() {
@@ -591,11 +594,12 @@ export class AuroCounterGroup extends AuroElement {
           </p>
         </${this.helpTextTag}>
       </div>
-    `
+    `;
   }
 
   /**
    * Render the dropdown bib template for the dropdown.
+   * @returns {TemplateResult} The bib template.
    * @private
    */
   renderBibTemplate() {
@@ -608,6 +612,7 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Render the fullscreen bib slots for the dropdown.
+   * @returns {TemplateResult} The fullscreen slots template.
    * @private
    */
   renderFullscreenSlots() {
@@ -620,7 +625,9 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the counter group container
+   * Render the counter group container.
+   * @param {boolean} isInDropdown - Whether the counter group is inside a dropdown.
+   * @returns {TemplateResult} The counter group template.
    * @private
    */
   renderCounterGroup(isInDropdown = this.isDropdown) {
@@ -634,14 +641,15 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the classic layout
+   * Render the classic layout.
+   * @returns {TemplateResult} The classic layout template.
    * @private
    */
   renderLayoutClassic() {
-    this.shape = "classic";
-    this.layout = "classic";
-    this.size = "xl";
-    
+    this.shape = this.shape || "classic";
+    this.layout = this.layout || "classic";
+    this.size = this.size || "xl";
+
     return html`
     ${this.isDropdown
       ? this.renderCounterDropdown()
@@ -650,25 +658,29 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Render the snowflake layout
+   * Render the snowflake layout.
+   * @returns {TemplateResult} The snowflake layout template.
    * @private
    */
   renderLayoutSnowflake() {
-    this.shape = "snowflake";
-    this.layout = "snowflake";
-    this.size = "lg";
+    this.layout = this.layout || "snowflake";
+    this.shape = this.shape || "snowflake";
+    this.size = this.size || "lg";
 
-    // TODO: Ask how we want to handle unsupported layout combinations
-    if (!this.isDropdown) return html`<div>Snowflake layout only supports dropdowns at this time.</div>`;
-    
-    return this.renderCounterDropdown();
+    return html`
+    ${this.isDropdown
+      ? this.renderCounterDropdown()
+      : this.renderCounterGroup()
+    }`;
   }
 
   /**
-   * Renders the component by layout type
+   * Renders the component by layout type.
+   * @param {string} [ForcedLayout] - Optionally force a specific layout for rendering.
+   * @returns {TemplateResult} The layout template.
    * @private
    */
-  renderLayout(ForcedLayout) { // AuroElement > this.renderLayout("snowflake")
+  renderLayout(ForcedLayout) {
     const layout = ForcedLayout || this.layout;
 
     switch (layout) {
