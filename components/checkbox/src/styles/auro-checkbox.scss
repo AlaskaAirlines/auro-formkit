@@ -70,11 +70,14 @@ fieldset {
 }
 
 // No tokens available for values used here
-.label--cbx {
+.inputContainer {
+  position: relative;
   &:after {
     -webkit-tap-highlight-color: transparent;
-    position: absolute;
+    display: block;
     content: '';
+    align-items: center;
+    justify-content: center;
 
     top: var(--ds-size-200, #{vac.$ds-size-200}); // half of `.cbxContainer`'s line-height
     left: var(--cbxLocation);
@@ -100,4 +103,5 @@ fieldset {
   padding-bottom: 3px;
 
   z-index: 1;
+  pointer-events: none;
 }
