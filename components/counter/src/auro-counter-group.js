@@ -43,6 +43,7 @@ import { classMap } from "lit/directives/class-map.js";
  * @slot label - Dropdown label content. Only used when `isDropdown` is true.
  * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
  * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
+ * @property {'classic'|'snowflake'} layout - Determines the layout style of the counter group when it is a dropdown. Options are 'classic' or 'snowflake'. Default is 'classic'.
  */
 export class AuroCounterGroup extends AuroElement {
   constructor() {
