@@ -6,6 +6,7 @@
 // ---------------------------------------------------------------------
 
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 // LAYOUTS ---------------------------------------------------
 
@@ -32,22 +33,22 @@
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='right'])) {
   .leftIndent {
-    margin-left: 24px;
-    width: calc(100% - 24px);
+    margin-left: var(--ds-size-150, #{vac.$ds-size-150});
+    width: calc(100% - var(--ds-size-150, #{vac.$ds-size-150}));
   }
 }
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='left'])) {
   .rightIndent {
-    margin-right: 24px;
-    width: calc(100% - 24px);
+    margin-right: var(--ds-size-150, #{vac.$ds-size-150});
+    width: calc(100% - var(--ds-size-150, #{vac.$ds-size-150}));
   }
 }
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='left']):not([layout*='right'])) {
   .rightIndent {
-    margin-right: 24px;
-    width: calc(100% - 48px);
+    margin-right: var(--ds-size-150, #{vac.$ds-size-150});
+    width: calc(100% - var(--ds-size-300, #{vac.$ds-size-300}));
   }
 }
 
@@ -128,31 +129,31 @@
 .layout-emphasized-right {
   .accents {
     &.left {
-      padding-left: 24px;
+      padding-left: var(--ds-size-150, #{vac.$ds-size-150});
     }
 
     &.right {
-      padding-right: 24px;
+      padding-right: var(--ds-size-150, #{vac.$ds-size-150});
     }
   }
 }
 
 .layout-emphasized-left {
   .alertNotification {
-    margin-right: 8px;
+    margin-right: var(--ds-size-50, #{vac.$ds-size-50});
   }
 
   .clear {
-    margin-left: 8px;
+    margin-left: var(--ds-size-50, #{vac.$ds-size-50});
   }
 }
 
 .layout-emphasized-right {
   .alertNotification {
-    margin-left: 8px;
+    margin-left: var(--ds-size-50, #{vac.$ds-size-50});
   }
 
   .clear {
-    margin-right: 8px;
+    margin-right: var(--ds-size-50, #{vac.$ds-size-50});
   }
 }

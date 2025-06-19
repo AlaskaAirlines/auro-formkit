@@ -6,16 +6,17 @@
 // ---------------------------------------------------------------------
 
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/CSSCustomProperties--alaska' as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host([layout*='snowflake']) {
   .leftIndent {
-    margin-left: 24px;
-    width: calc(100% - 48px);
+    margin-left: var(--ds-size-150, #{vac.$ds-size-150});
+    width: calc(100% - var(--ds-size-300, #{vac.$ds-size-300}));
   }
 
   .rightIndent {
-    margin-right: 24px;
-    width: calc(100% - 48px);
+    margin-right: var(--ds-size-150, #{vac.$ds-size-150});
+    width: calc(100% - var(--ds-size-300, #{vac.$ds-size-300}));
   }
 }
 
@@ -83,14 +84,14 @@
 
 .layout-snowflake {
   .accents {
-    width: 24px;
+    width: var(--ds-size-150, #{vac.$ds-size-150});
 
     &.left {
-      padding-left: 24px;
+      padding-left: var(--ds-size-150, #{vac.$ds-size-150});
     }
 
     &.right {
-      padding-right: 24px;
+      padding-right: var(--ds-size-150, #{vac.$ds-size-150});
     }
   }
 }
