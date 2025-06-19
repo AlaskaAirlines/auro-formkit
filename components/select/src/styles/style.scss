@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------
 
 // Import Auro tokens
-// @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
@@ -55,7 +55,7 @@
 }
 
 ::slotted([slot="typeIcon"]) {
-  margin-right: 8px; // TODO: update to use design token
+  margin-right: var(--ds-size-50, vac.$ds-size-50);
 }
 
 .displayValue {
@@ -80,7 +80,7 @@
 :host([layout*='emphasized']),
 :host([layout*='snowflake']) {
   .triggerContent {
-    padding: 0 8px 0 24px; // TODO: update to use design token
+    padding: 0 var(--ds-size-50, vac.$ds-size-50) 0 var(--ds-size-150, vac.$ds-size-150);
   }
 }
 
@@ -108,7 +108,7 @@
 
 :host([layout*='classic']) {
   .triggerContent {
-    padding: 0 8px; // TODO: update to use design token
+    padding: 0 var(--ds-size-50, vac.$ds-size-50);
   }
 
   .mainContent {
