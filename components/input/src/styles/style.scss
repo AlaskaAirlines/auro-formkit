@@ -1,8 +1,8 @@
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
-/* stylelint-disable selector-class-pattern */
-
 // COMMON FOR ALL ---------------------------------------------------
+
+/* stylelint-disable selector-max-class, max-nesting-depth, selector-class-pattern, scss/selector-nest-combinators */
 
 :host {
   display: block;
@@ -24,6 +24,15 @@ input {
   background: unset;
   outline: none;
   text-overflow: ellipsis;
+}
+
+.displayValue {
+  display: none;
+
+  &.hasContent:is(.withValue):not(.hasFocus) {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .accents {
