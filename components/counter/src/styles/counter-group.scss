@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity, selector-max-class, selector-no-qualifying-type */
 // Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
 // See LICENSE in the project root for license information.
 
@@ -7,27 +8,59 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
+:host(:not([layout="classic"])) {
+  .triggerContent {
+    padding: 0 8px 0 24px; // TODO: update to use design token
+  }
 
-:host {
-  position: relative;
-  display: block;
-}
-
-[slot="trigger"], ::slotted([slot="valueText"]) {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-[auro-dropdown] {
-  display: block;
-
-  &::part(trigger) {
-    max-height: var(--ds-size-300, #{vac.$ds-size-300});
+  [auro-dropdown] {
+    --ds-auro-dropdown-trigger-border-color: var(--ds-auro-counter-trigger-border-color);
+    --ds-auro-dropdown-trigger-background-color: var(--ds-auro-counter-trigger-background-color);
+    --ds-auro-dropdown-trigger-container-color: var(--ds-auro-counter-trigger-background-color);
   }
 }
 
-#slotHolder{
-  display: none;
+.triggerContent {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainContent {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+label {
+  font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
+  line-height: 20px;
+
+  &.filled {
+    font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
+  }
+}
+
+slot {
+  &[name="valueText"] {
+    font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.counters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-300, vac.$ds-size-300);
+
+  ::slotted(auro-counter:not(:first-of-type)) {
+    padding-top: var(--ds-size-300, vac.$ds-size-300);
+    border-top-width: 1px;
+    border-top-style: solid;
+  }
 }
