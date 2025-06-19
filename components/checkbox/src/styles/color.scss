@@ -11,7 +11,7 @@
 :host(:not([checked])) {
   .cbxContainer {
     &:hover {
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-hover, #{$ds-advanced-color-boolean-isfalse-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-hover, #{v.$ds-advanced-color-boolean-isfalse-hover});
     }
   }
 }
@@ -130,7 +130,7 @@
 
   .inputContainer {
     &:hover {
-      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-inverse-hover, #{$ds-advanced-color-boolean-isfalse-inverse-hover});
+      --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-inverse-hover, #{v.$ds-advanced-color-boolean-isfalse-inverse-hover});
     }
   }
 }
