@@ -94,7 +94,7 @@ Counter groups allow you to manage multiple related counters together. This is u
 
 The dropdown mode provides a more compact interface, ideal for forms where space is limited. It collapses the counters into a dropdown that expands when clicked.
 
-When using a dropdown, an additional layout, "snowflake", is available for use:
+When using a dropdown, an additional layout, `snowflake`, is available for use:
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-basic.html) -->
