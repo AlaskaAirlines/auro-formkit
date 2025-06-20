@@ -311,23 +311,19 @@ While content is loading, the menu can either remain empty or display a loading 
 </auro-accordion>
 
 
-### valueText <a name="valueText"></a>
+### displayValue <a name="displayValue"></a>
 
-The label for selected option can be customized using `valueText` slot.
-This slot can be manipulated on the `input` event which delivers the new value and selected `auro-menuoption` element in the `detail` object.
+The label for selected option can be customized using `displayValue` slot under `<menuoption>.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/valueText.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/displayValue.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueText.js) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueText.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/displayValue.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
