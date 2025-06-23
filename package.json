@@ -52,7 +52,7 @@
     "deploy-demo": "npm run build && sh ./deploy-components.sh"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-library": "^5.0.2",
+    "@aurodesignsystem/auro-library": "^5.1.0",
     "@lit/reactive-element": "^2.1.0",
     "lit": "^3.2.1"
   },
