@@ -29,8 +29,6 @@ import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
 import { classMap } from "lit/directives/class-map.js";
 
-import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/index.mjs";
-
 /**
  * Auro Counter Group is a group of counter components.
  *
@@ -86,11 +84,6 @@ export class AuroCounterGroup extends AuroElement {
      * @private
      */
     this.validation = new AuroFormValidation();
-
-    // Bind callback methods since we can't use arrow functions in class properties
-
-    /** @private */
-    this.handleDropdownToggle = this.handleDropdownToggle.bind(this);
 
     /**
      * Generate unique names for dependency components.
@@ -305,52 +298,6 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
-   * Performs state updates that should happen when the dropdown is toggled.
-   * @returns {void}
-   * @private
-   */
-  handleDropdownToggle() {
-
-    // Check if the dropdown is open
-    const dropdownIsOpen = this.dropdown.isPopoverVisible;
-
-    // Adds and removes the focus trap based on the dropdown state
-    this.updateFocusTrap(dropdownIsOpen);
-
-    // Tasks to perform if the dropdown is closed
-    if (!dropdownIsOpen) {
-
-      // Shift focus to the dropdown trigger
-      this.dropdown.trigger.focus();
-    }
-  }
-
-  /**
-   * Updates the focus trap based on whether the dropdown is open or closed.
-   * If the dropdown is open, it creates a new focus trap and focuses the first element
-   * If the dropdown is closed, it disconnects the focus trap if it exists to prevent memory leaks and disable focus trapping.
-   * @param {boolean} dropdownIsOpen - Indicates whether the dropdown is currently open.
-   * @returns {void}
-   * @private
-   */
-  updateFocusTrap(dropdownIsOpen) {
-
-    // If the dropdown is open, create a focus trap and focus the first element
-    if (dropdownIsOpen) {
-      this.dropdownFocusTrap = new FocusTrap(this.dropdown.bibContent);
-      this.dropdownFocusTrap.focusFirstElement();
-      return;
-    }
-
-    // Guard Clause: Ensure there is a focus trap currently active before continuing
-    if (!this.dropdownFocusTrap) return;
-
-    // If the dropdown is not open, disconnect the focus trap if it exists
-    this.dropdownFocusTrap.disconnect();
-    this.dropdownFocusTrap = undefined;
-  }
-
-  /**
    * Configures the dropdown counters by selecting all `auro-counter` elements,
    * appending them to the `auro-counter-wrapper` element within the shadow DOM,
    * and setting up keyboard navigation and input event listeners.
@@ -359,8 +306,6 @@ export class AuroCounterGroup extends AuroElement {
   configureDropdownCounters() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
     this.dropdown.requestUpdate();
-
-    this.dropdown.addEventListener("auroDropdown-toggled", this.handleDropdownToggle);
 
     const counterWrapper = this.shadowRoot.querySelector('auro-counter-wrapper');
     const counterSlot = counterWrapper.querySelector('slot');
@@ -505,13 +450,6 @@ export class AuroCounterGroup extends AuroElement {
     super.firstUpdated();
     this.updateValue();
     this.updateValueText();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-
-    // Remove the event listener for dropdown toggling
-    this.removeEventListener("auroDropdown-toggled", this.handleDropdownToggle);
   }
 
   /**
