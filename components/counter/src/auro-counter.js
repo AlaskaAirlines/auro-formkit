@@ -278,6 +278,18 @@ export class AuroCounter extends LitElement {
 
   firstUpdated() {
     this.initValue();
+    this.setTagAttribute("auro-counter");
+  }
+
+  /**
+   * Sets an attribute that matches the default tag name if the tag name is not the default.
+   * @param {string} tagName - The tag name to set as an attribute.
+   * @private
+   */
+  setTagAttribute(tagName) {
+    if (this.tagName.toLowerCase() !== tagName) {
+      this.setAttribute(tagName, true);
+    }
   }
 
   /**
@@ -318,14 +330,24 @@ export class AuroCounter extends LitElement {
           <label id="counter-label" class="label"><slot @slotchange="${this.onDefaultSlotChange}" ></slot></label>
           <slot id="counter-description" name="description"></slot>
         </div>
-        <div part="counterControl" aria-labelledby="counter-label" aria-describedby="counter-description" tabindex="${this.disabled ? '-1' : '0'}" role="spinbutton" aria-valuemin="${this.min}" aria-valuemax="${this.max}" aria-valuenow="${this.value}">
+        <div 
+          part="counterControl" 
+          aria-labelledby="counter-label" 
+          aria-describedby="counter-description" 
+          tabindex="${this.disabled ? '-1' : '0'}" 
+          role="spinbutton" 
+          aria-valuemin="${this.min}" 
+          aria-valuemax="${this.max}" 
+          aria-valuenow="${this.value}"
+          aria-valuetext="${this.value !== undefined ? this.value : this.min}"
+        >
           <auro-counter-button
-          aria-hidden="true"
-          tindex="-1"
-          part="controlMinus"
-          @click="${() => this.decrement()}"
-          ?onDark="${this.onDark}"
-          ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
+            aria-hidden="true"
+            .tabindex="${'-1'}"
+            part="controlMinus"
+            @click="${() => this.decrement()}"
+            ?onDark="${this.onDark}"
+            ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
           >
             <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
           </auro-counter-button>
@@ -335,12 +357,12 @@ export class AuroCounter extends LitElement {
           </div>
 
           <auro-counter-button
-          aria-hidden="true"
-          tindex="-1"
-          part="controlPlus"
-          @click="${() => this.increment()}"
-          ?onDark="${this.onDark}"
-          ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
+            aria-hidden="true"
+            .tabindex="${'-1'}"
+            part="controlPlus"
+            @click="${() => this.increment()}"
+            ?onDark="${this.onDark}"
+            ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
           >
             <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
           </auro-counter-button>

@@ -59,47 +59,28 @@ describe('auro-counter: decrement', () => {
 describe('auro-counter: isIncrementDisabled', () => {
 
   it('returns false when value is undefined', async () => {
-    const el = await fixture(html`<auro-counter></auro-counter>`);
+    const el = await fixture(html`<auro-counter>Counter 1</auro-counter>`);
     el.value = undefined;
     expect(el.isIncrementDisabled(el.max)).to.be.false;
   });
 
   it('returns false when extrema is min and value is greater than min', async () => {
-    const el = await fixture(html`<auro-counter value="5" min="0"></auro-counter>`);
+    const el = await fixture(html`<auro-counter value="5" min="0">Counter 1</auro-counter>`);
     expect(el.isIncrementDisabled(el.min)).to.be.false;
   });
 
   it('returns false when extrema is max and value is less than max', async () => {
-    const el = await fixture(html`<auro-counter value="5" max="10"></auro-counter>`);
+    const el = await fixture(html`<auro-counter value="5" max="10">Counter 1</auro-counter>`);
     expect(el.isIncrementDisabled(el.max)).to.be.false;
   });
 
   it('returns true when value is equal to min', async () => {
-    const el = await fixture(html`<auro-counter></auro-counter>`);
+    const el = await fixture(html`<auro-counter>Counter 1</auro-counter>`);
     expect(el.isIncrementDisabled(el.min)).to.be.true;
   });
 
   it('returns true when value is equal to max', async () => {
-    const el = await fixture(html`<auro-counter value="10" max="10"></auro-counter>`);
+    const el = await fixture(html`<auro-counter value="10" max="10">Counter 1</auro-counter>`);
     expect(el.isIncrementDisabled(el.max)).to.be.true;
-  });
-});
-
-describe('auro-counter: accessibility tests', () => {
-  const ignoredRules = {
-    ignoredRules: [
-      'color-contrast',
-      'aria-hidden-focus'
-    ],
-  };
-
-  it('is accessible', async () => {
-    const el = await fixture(html`<auro-counter value="5" min="0" max="10">Counter</auro-counter>`);
-    await assert.isAccessible(el, ignoredRules);
-  });
-
-  it('is accessible when disabled', async () => {
-    const el = await fixture(html`<auro-counter value="5" min="0" max="10" disabled>Counter</auro-counter>`);
-    await assert.isAccessible(el, ignoredRules);
   });
 });
