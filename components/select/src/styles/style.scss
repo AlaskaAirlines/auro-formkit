@@ -12,6 +12,10 @@
 
 /* stylelint-disable selector-class-pattern */
 
+[slot='label'] {
+  white-space: nowrap;
+}
+
 [slot='trigger'] {
   width: 100%;
   padding: 0;
