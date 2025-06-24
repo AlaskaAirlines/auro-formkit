@@ -45,6 +45,9 @@ fieldset {
 
 .cbxContainer {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: var(--ds-size-100, #{vac.$ds-size-100});
   padding-left: var(--ds-size-100, #{vac.$ds-size-100});
   padding-right: var(--ds-size-100, #{vac.$ds-size-100});
   line-height: var(--ds-size-400, #{vac.$ds-size-400});
@@ -61,7 +64,6 @@ fieldset {
 }
 
 .label {
-  margin-left: var(--ds-size-300, #{vac.$ds-size-300});
   display: block;
 
   &:hover {
@@ -79,11 +81,9 @@ fieldset {
     align-items: center;
     justify-content: center;
 
-    top: var(--ds-size-200, #{vac.$ds-size-200}); // half of `.cbxContainer`'s line-height
-    left: var(--cbxLocation);
+    margin-top: var(--cbxLocation);
     width: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-50, #{vac.$ds-size-50}));
     height: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-50, #{vac.$ds-size-50}));
-    transform: translateY(-50%);
 
     border-width: 1px;
     border-style: solid;
@@ -96,9 +96,6 @@ fieldset {
 
 .svg--cbx {
   position: absolute;
-  top: var(--ds-size-25, #{vac.$ds-size-25});
-  left: var(--ds-size-25, #{vac.$ds-size-25});
-
   padding-top: 3px;
   padding-bottom: 3px;
 
