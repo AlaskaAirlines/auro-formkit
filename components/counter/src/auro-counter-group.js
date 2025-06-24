@@ -131,6 +131,8 @@ export class AuroCounterGroup extends AuroElement {
   static get properties() {
     return {
 
+      ...super.properties,
+
       /**
        * If declared, bib's position will be automatically calculated where to appear.
        * @default false
