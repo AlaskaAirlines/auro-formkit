@@ -461,6 +461,21 @@ export class AuroSelect extends AuroElement {
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.isPopoverVisible = this.dropdown.isPopoverVisible;
+
+      if (this.dropdown.isPopoverVisible) {
+        // wait til the bib gets fully rendered
+        setTimeout(() => {
+          if (this.dropdown.isBibFullscreen) {
+            // trigger holds the focus since menu is not a focusable element.
+            this.dropdown.trigger.focus();
+
+            // default focus indicator on the first menu option
+            if (this.menu.index < 0) {
+              this.menu.navigateOptions('down');
+            }
+          }
+        });
+      }
     });
 
     // setting up bibtemplate
@@ -611,46 +626,55 @@ export class AuroSelect extends AuroElement {
   configureSelect() {
 
     this.addEventListener('keydown', (evt) => {
-      if (evt.key === 'ArrowUp') {
-        evt.preventDefault();
-
-        this.dropdown.show();
-
-        if (this.dropdown.isPopoverVisible) {
-          this.menu.navigateOptions('up');
-        }
-
-        return;
-      }
-
-      if (evt.key === 'ArrowDown') {
-        evt.preventDefault();
-
-        this.dropdown.show();
-
-        if (this.dropdown.isPopoverVisible) {
-          this.menu.navigateOptions('down');
-        }
-
-        return;
-      }
-
-      if (evt.key === 'Enter') {
-        if (!this.dropdown.isPopoverVisible) {
+      if (this.shadowRoot.activeElement === this.dropdown) {
+        if (evt.key === 'ArrowUp') {
           evt.preventDefault();
-          this.menu.makeSelection();
+
+          this.dropdown.show();
+
+          if (this.dropdown.isPopoverVisible) {
+            this.menu.navigateOptions('up');
+          }
+
+          return;
         }
 
-        return;
+        if (evt.key === 'ArrowDown') {
+          evt.preventDefault();
+
+          this.dropdown.show();
+
+          if (this.dropdown.isPopoverVisible) {
+            this.menu.navigateOptions('down');
+          }
+
+          return;
+        }
+
+        if (evt.key === 'Enter') {
+          if (!this.dropdown.isPopoverVisible) {
+            evt.preventDefault();
+            this.menu.makeSelection();
+          }
+
+          return;
+        }
       }
 
-      if (evt.key === 'Tab') {
+      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
         if (this.dropdown.isBibFullscreen) {
           evt.preventDefault();
+
+          if (this.shadowRoot.activeElement === this.dropdown) {
+            // when trigger has the focus, move focus to the close button
+            this.dropdown.focus();
+          } else {
+            // when close button has the focus, move focus back to the trigger
+            this.dropdown.trigger.focus();
+          }
         } else {
           this.dropdown.hide();
         }
-
         return;
       }
 
