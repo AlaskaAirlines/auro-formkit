@@ -857,10 +857,10 @@ export class AuroCombobox extends AuroElement {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
     this.input = this.dropdown.querySelector(this.inputTag._$litStatic$);
 
-    this.configureMenu();
     this.configureInput();
     this.configureDropdown();
     this.configureCombobox();
+    this.configureMenu();
 
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {

@@ -10,7 +10,9 @@
   lit/no-invalid-html,
   indent,
   line-comment-position,
-  no-inline-comments
+  no-inline-comments,
+  no-lonely-if,
+  curly
 */
 
 // If using litElement base class
@@ -819,8 +821,23 @@ export class AuroSelect extends AuroElement {
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
       this.value = this.multiSelect ? arrayConverter(this.getAttribute('value')) : this.getAttribute('value');
-      this.menu.value = this.value;
+      if (this.menu) {
+        this.menu.value = this.value;
+      }
     }
+  }
+
+  /**
+   * Update the menu value. With checks for menu existence. Awaits value update.
+   * @param {string} value - The value to set in the menu.
+   * @returns void
+   * @private
+   */
+  async updateMenuValue(value) {
+    if (!this.menu) return;
+
+    this.menu.value = value;
+    await this.menu.updateComplete;
   }
 
   async updated(changedProperties) {
@@ -832,14 +849,13 @@ export class AuroSelect extends AuroElement {
       if (this.value) {
         this.value = this.multiSelect ? arrayConverter(this.value) : this.value;
 
-        this.menu.value = this.value;
+        await this.updateMenuValue(this.value);
 
-        // Wait for menu to finish updating its value
-        await this.menu.updateComplete;
-
-        this.optionSelected = this.menu.optionSelected;
+        if (this.menu) {
+          this.optionSelected = this.menu.optionSelected;
+        }
       } else {
-        this.menu.value = undefined;
+        await this.updateMenuValue(undefined);
       }
 
       this._updateNativeSelect();

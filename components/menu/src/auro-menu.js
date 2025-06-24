@@ -187,6 +187,7 @@ export class AuroMenu extends AuroElement {
     this.addEventListener('mousedown', this.handleMouseSelect);
     this.addEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.addEventListener('slotchange', this.handleSlotChange);
+    this.setTagAttribute("auro-menu");
   }
 
   disconnectedCallback() {
@@ -203,6 +204,17 @@ export class AuroMenu extends AuroElement {
 
     this.loadingSlots = this.querySelectorAll("[slot='loadingText'], [slot='loadingIcon']");
     this.initializeMenu();
+  }
+
+  /**
+   * Sets an attribute that matches the default tag name if the tag name is not the default.
+   * @param {string} tagName - The tag name to set as an attribute.
+   * @private
+   */
+  setTagAttribute(tagName) {
+    if (this.tagName.toLowerCase() !== tagName) {
+      this.setAttribute(tagName, true);
+    }
   }
 
   updated(changedProperties) {
