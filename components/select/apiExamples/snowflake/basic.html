@@ -1,5 +1,5 @@
 <div style="display: flex; flex-direction: row; gap: 10px;">
-  <auro-select layout="snowflake" shape="snowflake" value="flights" forceDisplayValue style="display:inline-block;">
+  <auro-select placeholder="placeholder text" layout="snowflake" shape="snowflake" forceDisplayValue style="display:inline-block;">
     <span slot="label">Select Example</span>
     <auro-menu nocheckmark>
       <auro-menuoption value="flights">
@@ -51,8 +51,8 @@
     </auro-menu>
   </auro-select>
 
-  <auro-select layout="snowflake" shape="snowflake" value="flights" required style="display:inline-block;">
-    <span slot="label">Select Example</span>
+  <auro-select layout="snowflake" shape="snowflake" placeholder="placeholder text" required style="display:inline-block;">
+    <span slot="label">Select Example Placeholder</span>
     <span slot="helptext">no displayValue in menuoptions</span>
     <auro-menu nocheckmark>
       <auro-menuoption value="flights">

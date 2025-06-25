@@ -18,6 +18,7 @@ Generate unique names for dependency components.
 | `error`                           | `error`                           | `string`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `errorMessage`                    | `errorMessage`                    | `string`  |             | Contains the help text message for the current validity error. |
 | `format`                          | `format`                          | `string`  |             | Specifies the input mask format.                 |
+| `hideInputVisually`               | `hideInputVisually`               | `boolean` |             |                                                  |
 | `icon`                            | `icon`                            | `boolean` | false       | If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format. |
 | `id`                              | `id`                              | `string`  |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
 | `inputmode`                       | `inputmode`                       | `string`  |             | Exposes inputmode attribute for input.           |
@@ -45,7 +46,7 @@ Generate unique names for dependency components.
 | `setCustomValidityTooShort`       | `setCustomValidityTooShort`       | `string`  |             | Custom help text message to display when validity = `tooShort`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
 | `shape`                           |                                   | `string`  | "classic"   |                                                  |
-| `simple`                          | `simple`                          | `boolean` |             | borderless                                       |
+| `simple`                          | `simple`                          | `boolean` |             | Simple makes the input render without a border.  |
 | `size`                            |                                   | `string`  | "lg"        |                                                  |
 | `spellcheck`                      | `spellcheck`                      | `string`  |             | An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`. |
 | `type`                            | `type`                            | `string`  |             | Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `date`, `tel` or `text`. If given value is not allowed or set, defaults to `text`. |

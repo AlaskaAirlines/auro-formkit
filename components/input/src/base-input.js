@@ -401,7 +401,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * borderless
+       * Simple makes the input render without a border.
        */
       simple: {
         type: Boolean,
@@ -913,13 +913,6 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   getPlaceholder() {
-    const isFocused = this.inputElement === this.getActiveElement();
-
-    // console.warn('isFocused', isFocused);
-    // console.warn(this.inputElement);
-    // console.warn(this.getActiveElement());
-
-    // if (!isFocused) {
     if (this.placeholder) {
       this.placeholderStr = this.placeholder;
     } else if (this.type === 'date') {

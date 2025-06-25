@@ -5,7 +5,6 @@
 // Support for fallback values
 
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 /* stylelint-disable
   no-descending-specificity,
@@ -82,7 +81,7 @@
 
 /* onDark + error */
 :host([layout*='classic'][onDark][error]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
 
   .trigger {
     &:focus-within,

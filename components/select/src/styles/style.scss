@@ -4,12 +4,9 @@
 // ---------------------------------------------------------------------
 
 // Import Auro tokens
+// @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
-@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
-
-// @import '@aurodesignsystem/webcorestylesheets/src/core';
-// @import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
 /* stylelint-disable
   selector-class-pattern,
@@ -119,7 +116,7 @@
 
 :host([ondark]:is([validity]:not([validity='valid']))) {
   [auro-dropdown] {
-    --ds-auro-select-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+    --ds-auro-select-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
     --ds-auro-dropdown-helptext-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   }
 }

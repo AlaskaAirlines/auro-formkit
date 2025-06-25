@@ -95,7 +95,7 @@
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
   --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
-  --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+  --ds-auro-input-error-icon-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
 
   .wrapper {
     &:focus-within {
@@ -109,7 +109,7 @@
 :host([class='layoutDefault'][onDark][validity]:not([validity='valid'])[bordered]),
 :host(:not([layout])[onDark][validity]:not([validity='valid'])[bordered]) {
   .wrapper {
-    --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+    --ds-auro-input-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
 
     box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
   }
