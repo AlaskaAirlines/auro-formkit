@@ -393,10 +393,10 @@ export class AuroCheckboxGroup extends LitElement {
 
     return html`
       <fieldset class="${classMap(groupClasses)}">
-        ${this.required
-          ? html`<legend><slot name="legend"></slot></legend>`
-          : html`<legend><slot name="legend"></slot> (optional)</legend>`
-        }
+        <legend>
+          <slot name="legend"></slot>
+          ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
+        </legend>
         <slot @slotchange=${this.handleItems}></slot>
       </fieldset>
 
