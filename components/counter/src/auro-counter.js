@@ -21,6 +21,8 @@ import minusIcon from '@alaskaairux/icons/dist/icons/interface/minus-lg.mjs';
 import tokensCss from "./styles/tokens-css.js";
 import colorCss from "./styles/color-css.js";
 import styleCss from "./styles/style-css.js";
+import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
+import helptextVersion from "./helptextVersion.js";
 
 /**
  * Auro Counter is a customizable counter component for user interface interactions.
@@ -64,6 +66,11 @@ export class AuroCounter extends LitElement {
      * @type {string}
      */
     this.iconTag = versioning.generateTag("auro-formkit-counter-icon", iconVersion, AuroIcon);
+
+    /**
+     * @private
+     */
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helptextVersion, AuroHelpText);
 
     /**
      * @private
@@ -123,6 +130,15 @@ export class AuroCounter extends LitElement {
        */
       disableMin: {
         type: Boolean,
+      },
+
+      /**
+       * Error state and message.
+       * True if set, value is the error message.
+       */
+      error: {
+        type: String,
+        reflect: false,
       },
 
       /**
@@ -323,50 +339,79 @@ export class AuroCounter extends LitElement {
     }
   }
 
+  /**
+   * Returns HTML for the help text and error message.
+   * @private
+   * @returns {html} - Returns HTML for the help text and error message.
+   */
+  renderHelpText() {
+    return html`
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helptext"></slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+        : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+      }
+    `;
+  }
+
   render() {
     return html`
-      <div class="counter">
-        <div class="content" >
-          <label id="counter-label" class="label"><slot @slotchange="${this.onDefaultSlotChange}" ></slot></label>
-          <slot id="counter-description" name="description"></slot>
-        </div>
-        <div 
-          part="counterControl" 
-          aria-labelledby="counter-label" 
-          aria-describedby="counter-description" 
-          tabindex="${this.disabled ? '-1' : '0'}" 
-          role="spinbutton" 
-          aria-valuemin="${this.min}" 
-          aria-valuemax="${this.max}" 
-          aria-valuenow="${this.value}"
-          aria-valuetext="${this.value !== undefined ? this.value : this.min}"
-        >
-          <auro-counter-button
-            aria-hidden="true"
-            .tabindex="${'-1'}"
-            part="controlMinus"
-            @click="${() => this.decrement()}"
-            ?onDark="${this.onDark}"
-            ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
-          >
-            <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
-          </auro-counter-button>
-
-          <div class="quantityWrapper">
-            <div class="quantity">${this.value !== undefined ? this.value : this.min}</div>
+      <div class="counterWrapper">
+        <div class="counter">
+          <div class="content" >
+            <label id="counter-label" class="label"><slot @slotchange="${this.onDefaultSlotChange}" ></slot></label>
+            <slot id="counter-description" name="description"></slot>
           </div>
-
-          <auro-counter-button
-            aria-hidden="true"
-            .tabindex="${'-1'}"
-            part="controlPlus"
-            @click="${() => this.increment()}"
-            ?onDark="${this.onDark}"
-            ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
+          <div 
+            part="counterControl" 
+            aria-labelledby="counter-label" 
+            aria-describedby="counter-description" 
+            tabindex="${this.disabled ? '-1' : '0'}" 
+            role="spinbutton" 
+            aria-valuemin="${this.min}" 
+            aria-valuemax="${this.max}" 
+            aria-valuenow="${this.value}"
+            aria-valuetext="${this.value !== undefined ? this.value : this.min}"
           >
-            <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
-          </auro-counter-button>
+            <auro-counter-button
+              aria-hidden="true"
+              .tabindex="${'-1'}"
+              part="controlMinus"
+              @click="${() => this.decrement()}"
+              ?onDark="${this.onDark}"
+              ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
+            >
+              <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
+            </auro-counter-button>
+
+            <div class="quantityWrapper">
+              <div class="quantity">${this.value !== undefined ? this.value : this.min}</div>
+            </div>
+
+            <auro-counter-button
+              aria-hidden="true"
+              .tabindex="${'-1'}"
+              part="controlPlus"
+              @click="${() => this.increment()}"
+              ?onDark="${this.onDark}"
+              ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
+            >
+              <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
+            </auro-counter-button>
+          </div>
         </div>
+       ${this.renderHelpText()}
       </div>
     `;
   }
