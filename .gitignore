@@ -24,3 +24,6 @@ coverage/
 
 ## Turbo repo
 .turbo
+
+## ignore all files/folders in generated demo-collection
+demo-collection/**/*.**
