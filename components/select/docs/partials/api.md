@@ -92,6 +92,24 @@ When the validity check fails the validityState, equals `valueMissing`. The erro
 
 </auro-accordion>
 
+### Custom optional label <a name="optionalLabel"></a>
+
+The `<auro-select>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optionalLabel.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optionalLabel.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 #### error <a name="error"></a>
 
 Use the `error` boolean attribute to toggle the error UI.
