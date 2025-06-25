@@ -53,6 +53,7 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @slot - Default slot for the menu content.
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
+ * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
  * @slot helpText - Defines the content of the helpText.
  * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
  * @slot valueText - Dropdown value text display.
@@ -1097,6 +1098,7 @@ export class AuroSelect extends AuroElement {
               <div class="${classMap(valueContainerClasses)}">
                 <label class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
+                  ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
                 <div class="value" id="value"></div>
                 ${this.value ? undefined : html`
@@ -1177,6 +1179,7 @@ export class AuroSelect extends AuroElement {
               <div class="${classMap(valueContainerClasses)}">
                 <label class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
+                  ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
                 <div class="value" id="value"></div>
                 ${this.value ? undefined : html`
@@ -1258,6 +1261,7 @@ export class AuroSelect extends AuroElement {
               <div class="${classMap(valueContainerClasses)}">
                 <label class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
+                  ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
                 <div class="value" id="value"></div>
                 ${this.value ? undefined : html`
@@ -1372,6 +1376,7 @@ export class AuroSelect extends AuroElement {
             <slot></slot>
           </${this.bibtemplateTag}>
           <slot name="label" slot="label"></slot>
+          ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
           <p slot="helpText">
             ${!this.validity || this.validity === undefined || this.validity === 'valid'
               ? html`

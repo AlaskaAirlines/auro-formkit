@@ -60,6 +60,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `displayValue`            | Allows custom HTML content to display the selected value when select is not focused. |
 | `helpText`                | Defines the content of the helpText.             |
 | `label`                   | Defines the content of the label.                |
+| `optionalLabel`           | Allows for the optional label to be overridden.  |
 | `placeholder`             | Defines the content of the placeholder to be shown when there is no value |
 | `valueText`               | Dropdown value text display.                     |
 
