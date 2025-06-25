@@ -167,6 +167,24 @@ Populates the `required` attribute on the input. Used for client-side validation
 
 </auro-accordion>
 
+### Custom optional label <a name="optionalLabel"></a>
+
+The `<auro-combobox>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optionalLabel.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optionalLabel.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 #### value
 
 Use the `value` attribute to programmatically set the value of the combobox.

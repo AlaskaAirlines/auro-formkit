@@ -35,6 +35,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot - Default slot for the menu content.
+ * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
@@ -990,6 +991,9 @@ export class AuroCombobox extends AuroElement {
         // It's because the bib is/will be separated from dropdown to body.
         this.transportAssignedNodes(event.target, this.inputInBib, "label");
         break;
+      case 'optionalLabel':
+        this.transportAssignedNodes(event.target, this.inputInBib, "optionalLabel");
+        break;
       case 'bib.fullscreen.headline':
         this.transportAssignedNodes(event.target, this.bibtemplate, 'header');
         break;
@@ -1061,6 +1065,7 @@ export class AuroCombobox extends AuroElement {
               size="${this.size}"
               slot="trigger">
               <slot name="label" slot="label" @slotchange="${this.handleSlotChange}"></slot>
+              <slot name="optionalLabel" slot="optionalLabel" @slotchange="${this.handleSlotChange}"> (optional)</slot>
               <slot name="displayValue" slot="displayValue"></slot>
             </${this.inputTag}>
 
