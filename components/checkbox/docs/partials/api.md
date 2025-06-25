@@ -123,6 +123,23 @@ When present, the `required` attribute specifies that at least one or more `<aur
 
 </auro-accordion>
 
+### Custom optional label <a name="optionalLabel"></a>
+
+The `<auro-checkbox-group>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optionalLabel.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optionalLabel.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Functional Examples
 
 #### Reset State

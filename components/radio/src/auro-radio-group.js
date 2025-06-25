@@ -464,10 +464,10 @@ export class AuroRadioGroup extends LitElement {
 
     return html`
       <fieldset class="${classMap(groupClasses)}" part="radio-group">
-        ${this.required
-        ? html`<legend><slot name="legend"></slot></legend>`
-        : html`<legend><slot name="legend"></slot> <slot name="optionalLabel">(optional)</slot></legend>`
-      }
+        <legend>
+          <slot name="legend"></slot>
+          ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
+        </legend>
         <slot @slotchange=${this.handleSlotChange}></slot>
       </fieldset>
 
