@@ -17,7 +17,7 @@
   }
 
   .error {
-    color: var(--ds-advanced-color-state-error-inverse, v.$ds-advanced-color-state-error-inverse);
+    color: var(--ds-basic-color-status-error-subtle, v.$ds-basic-color-status-error-subtle);
   }
 
   [auro-input] {

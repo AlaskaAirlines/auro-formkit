@@ -60,7 +60,7 @@
 
 :host([ondark]:is([validity]:not([validity='valid']))) {
   .wrapper {
-    --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+    --ds-auro-input-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
   }
 }
 

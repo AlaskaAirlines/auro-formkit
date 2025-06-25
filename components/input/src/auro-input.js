@@ -119,7 +119,6 @@ export class AuroInput extends BaseInput {
    * @returns {object} - Returns classmap.
    */
   get commonInputClasses() {
-    console.log(`hideInputVisually: ${JSON.stringify(this.hideInputVisually)}`);
     return {
       'util_displayHiddenVisually': this.hideInputVisually !== undefined
         ? this.hideInputVisually
