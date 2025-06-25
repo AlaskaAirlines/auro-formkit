@@ -5,6 +5,7 @@
 | Property   | Attribute  | Type      | Default     | Description                                      |
 |------------|------------|-----------|-------------|--------------------------------------------------|
 | `disabled` | `disabled` | `boolean` | false       | Indicates if the counter is disabled.            |
+| `error`    | `error`    | `string`  |             | Error state and message.<br />True if set, value is the error message. |
 | `max`      | `max`      | `number`  | 9           | The maximum value for the counter.               |
 | `min`      | `min`      | `number`  | 0           | The minimum value for the counter.               |
 | `onDark`   | `onDark`   | `boolean` | false       | If declared, the counter will be rendered with onDark styles. |
