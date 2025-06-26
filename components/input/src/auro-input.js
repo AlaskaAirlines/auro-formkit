@@ -267,7 +267,7 @@ export class AuroInput extends BaseInput {
         <slot name="label">
           ${this.label}
         </slot>
-        ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
+        ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
       </label>
 
       <!-- Attributes are grouped into: basic attributes, event handlers, ARIA attributes, and input-specific attributes -->

@@ -35,7 +35,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot - Default slot for the menu content.
- * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
+ * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
