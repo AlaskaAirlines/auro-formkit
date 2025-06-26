@@ -64,3 +64,13 @@
   }
 }
 
+// disabled state
+:host(:not([ondark])[disabled]) {
+  --ds-auro-input-border-color: var(--ds-advanced-color-button-primary-border-disabled, #{v.$ds-advanced-color-button-primary-border-disabled});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+}
+
+:host([ondark][disabled]) {
+  --ds-auro-input-border-color: var(--ds-advanced-color-button-primary-border-inverse-disabled, #{v.$ds-advanced-color-button-primary-border-inverse-disabled});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+}

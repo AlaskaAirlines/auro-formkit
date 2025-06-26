@@ -22,7 +22,6 @@
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-
 ### Emphasized
 
 <div class="exampleWrapper--ondark">
