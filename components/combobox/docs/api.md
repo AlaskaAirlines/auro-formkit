@@ -57,3 +57,4 @@
 | `displayValue`            | Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts. |
 | `helpText`                | Defines the content of the helpText.             |
 | `label`                   | Defines the content of the label.                |
+| `optionalLabel`           | Allows overriding the optional display text "(optional)", which appears next to the label. |

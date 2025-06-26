@@ -33,11 +33,11 @@
 
 ## Slots
 
-| Name            | Description                                     |
-|-----------------|-------------------------------------------------|
-| `helpText`      | Allows for the helper text to be overridden.    |
-| `legend`        | Allows for the legend to be overridden.         |
-| `optionalLabel` | Allows for the optional label to be overridden. |
+| Name            | Description                                      |
+|-----------------|--------------------------------------------------|
+| `helpText`      | Allows for the helper text to be overridden.     |
+| `legend`        | Allows for the legend to be overridden.          |
+| `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
 
 ## CSS Shadow Parts
 

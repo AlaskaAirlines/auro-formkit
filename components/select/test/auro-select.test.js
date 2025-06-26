@@ -106,6 +106,7 @@ describe('auro-select', () => {
 
   it('should sync value changes from native select to component', async () => {
     const element = await defaultFixture();
+    element.setAttribute('required', '');
     const nativeSelect = element.shadowRoot.querySelector('.nativeSelectWrapper select');
     nativeSelect.value = 'Apples';
     nativeSelect.dispatchEvent(new Event('change'));

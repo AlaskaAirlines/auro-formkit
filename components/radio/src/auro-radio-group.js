@@ -39,7 +39,7 @@ import helpTextVersion from './helptextVersion.js';
  * @attr {Object} optionSelected - Specifies the current selected radio button.
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
- * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
+ * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
  * @event auroFormElement-validated - Notifies that the element has been validated.
  * @event input - Notifies every time the value prop of the element is changed.
@@ -464,10 +464,10 @@ export class AuroRadioGroup extends LitElement {
 
     return html`
       <fieldset class="${classMap(groupClasses)}" part="radio-group">
-        ${this.required
-        ? html`<legend><slot name="legend"></slot></legend>`
-        : html`<legend><slot name="legend"></slot> <slot name="optionalLabel">(optional)</slot></legend>`
-      }
+        <legend>
+          <slot name="legend"></slot>
+          ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
+        </legend>
         <slot @slotchange=${this.handleSlotChange}></slot>
       </fieldset>
 

@@ -24,6 +24,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  *
  * @slot helptext - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
+ * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot displayValue - Allows custom HTML content to display in place of the value when the input is not focused.
  *
  * @csspart wrapper - Use for customizing the style of the root element
