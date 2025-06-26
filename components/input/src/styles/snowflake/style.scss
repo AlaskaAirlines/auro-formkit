@@ -95,6 +95,6 @@
   }
 }
 
-.helpTextWrapper {
+:host([layout*='snowflake']) .helpTextWrapper {
   text-align: center;
 }
