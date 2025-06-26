@@ -77,7 +77,7 @@ Generate unique names for dependency components.
 | `displayValue`  | Allows custom HTML content to display in place of the value when the input is not focused. |
 | `helptext`      | Sets the help text displayed below the input.    |
 | `label`         | Sets the label text for the input.               |
-| `optionalLabel` | Allows for the optional label to be overridden.  |
+| `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
 
 ## CSS Shadow Parts
 

@@ -25,7 +25,7 @@ import helpTextVersion from './helptextVersion.js';
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
  *
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
- * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
+ * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  */
@@ -395,7 +395,7 @@ export class AuroCheckboxGroup extends LitElement {
       <fieldset class="${classMap(groupClasses)}">
         <legend>
           <slot name="legend"></slot>
-          ${this.required ? '' : html`<slot name="optionalLabel"> (optional)</slot>`}
+          ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
         </legend>
         <slot @slotchange=${this.handleItems}></slot>
       </fieldset>
