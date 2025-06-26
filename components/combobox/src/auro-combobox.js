@@ -330,7 +330,6 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Value selected for the dropdown menu.
-       * @type {string}
        */
       value: {
         type: String
@@ -380,6 +379,10 @@ export class AuroCombobox extends AuroElement {
     ];
   }
 
+  /**
+   * Checks if the element is valid.
+   * @returns {boolean} - Returns true if the element is valid, false otherwise.
+   */
   isValid() {
     let valid = true;
 
@@ -403,87 +406,95 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Processes hidden state of all menu options and determines if there are any available options not hidden.
+   * Updates the filter for the available options based on the input value.
+   * @private
+   */
+  updateFilter() {
+
+    // Reset available options if noFilter is set to false after being true.
+    if (this.noFilter) {
+      this.availableOptions = [...this.options];
+      return;
+    }
+
+    this.noMatchOption = undefined;
+
+    this.options.forEach((option) => {
+      let matchString = option.textContent.toLowerCase();
+
+      if (option.hasAttribute('nomatch')) {
+        this.noMatchOption = option;
+      }
+
+      if (option.hasAttribute('persistent')) {
+        this.availableOptions.push(option);
+      }
+
+      if (option.hasAttribute('suggest')) {
+        matchString = `${matchString} ${option.getAttribute('suggest')}`.toLowerCase();
+      }
+
+      // only count options that match the typed input value AND are not currently selected AND are not static
+      if (this.input.value && matchString.includes(this.input.value.toLowerCase()) && !option.hasAttribute('static')) {
+        option.removeAttribute('hidden');
+        this.availableOptions.push(option);
+      } else if (!option.hasAttribute('persistent')) {
+        // Hide all other non-persistent options
+        option.setAttribute('hidden', '');
+      }
+    });
+
+    if (this.availableOptions.length === 0) {
+      if (this.noMatchOption) {
+        this.noMatchOption.removeAttribute('hidden');
+      } else {
+        this.hideBib();
+      }
+    } else if (this.noMatchOption) {
+      this.noMatchOption.setAttribute('hidden', '');
+    }
+  }
+
+  /**
+   * Syncs the values and states of this component, the input, and the menu, including this.optionSelected and this.menu.optionSelected.
    * @private
    * @returns {void}
    */
-  handleMenuOptions() {
-    // Reset menu matchword UI
+  async syncValuesAndStates() {
+
+    // Sync values
+    this.menu.value = this.value;
+    this.menu.matchWord = this.value;
+    this.input.value = this.value;
+
+    // Wait a lifecycle for child components to update
+    await Promise.all([this.menu.updateComplete]);
+  }
+
+  /**
+   * Resets the menu matchWord to true.
+   * @private
+   */
+  resetMenuMatchword() {
     this.menu.updateItemsState(new Map([
       [
         'matchWord',
         true
       ]
     ]));
+  };
 
+  /**
+   * Processes hidden state of all menu options and determines if there are any available options not hidden.
+   * @private
+   * @returns {void}
+   */
+  handleMenuOptions() {
+
+    this.resetMenuMatchword();
     this.generateOptionsArray();
     this.availableOptions = [];
-
-    if (this.menu.optionSelected) {
-      // Get first option since combobox is single-select
-      const selected = this.menu.optionSelected;
-
-      if (!this.optionSelected || this.optionSelected !== selected) {
-        this.optionSelected = selected;
-      }
-
-      if (!this.value || this.value !== selected.value) {
-        this.value = selected.value;
-
-        this.menu.value = this.value;
-      }
-
-      if (this.input.value !== selected.textContent) {
-        this.input.value = selected.textContent;
-      }
-
-      if (this.menu.matchWord !== this.input.value) {
-        this.menu.matchWord = this.input.value;
-      }
-
-      this.classList.add('combobox-filled');
-    }
-
-    if (this.noFilter) {
-      this.availableOptions = [...this.options];
-    } else {
-      this.noMatchOption = undefined;
-
-      this.options.forEach((option) => {
-        let matchString = option.textContent.toLowerCase();
-
-        if (option.hasAttribute('nomatch')) {
-          this.noMatchOption = option;
-        }
-
-        if (option.hasAttribute('persistent')) {
-          this.availableOptions.push(option);
-        }
-
-        if (option.hasAttribute('suggest')) {
-          matchString = `${matchString} ${option.getAttribute('suggest')}`.toLowerCase();
-        }
-
-        // only count options that match the typed input value AND are not currently selected AND are not static
-        if (this.input.value && matchString.includes(this.input.value.toLowerCase()) && !option.hasAttribute('static')) {
-          option.removeAttribute('hidden');
-          this.availableOptions.push(option);
-        } else if (!option.hasAttribute('persistent')) {
-          // Hide all other non-persistent options
-          option.setAttribute('hidden', '');
-        }
-      });
-
-      if (this.availableOptions.length === 0) {
-        if (this.noMatchOption) {
-          this.noMatchOption.removeAttribute('hidden');
-        } else {
-          this.hideBib();
-        }
-      } else if (this.noMatchOption) {
-        this.noMatchOption.setAttribute('hidden', '');
-      }
-    }
+    this.updateFilter();
   }
 
   /**
@@ -641,8 +652,6 @@ export class AuroCombobox extends AuroElement {
           this.menu.matchWord = this.input.value;
         }
 
-        this.classList.add('combobox-filled');
-
         // update the hidden state of options based on newly selected value
         this.handleMenuOptions();
 
@@ -783,9 +792,6 @@ export class AuroCombobox extends AuroElement {
     // Hide menu if value is empty, otherwise show if there are available suggestions
     if (this.input.value && this.input.value.length === 0) {
       this.hideBib();
-      this.classList.remove('combobox-filled');
-    } else if (!this.dropdown.isPopoverVisible && this.availableOptions) {
-      this.classList.add('combobox-filled');
     }
 
     // Force dropdown bib to hide if input value has no matching suggestions
@@ -843,7 +849,6 @@ export class AuroCombobox extends AuroElement {
    * @private
    * @returns {void}
    */
-
   performUpdate() {
     super.performUpdate();
 
@@ -902,30 +907,18 @@ export class AuroCombobox extends AuroElement {
     this.validation.validate(this, force);
   }
 
-  updated(changedProperties) {
+  async updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
-    if (changedProperties.has('value')) {
+    if (changedProperties.has('value') && this.value !== changedProperties.get('value')) {
+
+      // Sync the input, menu, and optionSelected states
+      await this.syncValuesAndStates();
+
       if (this.value) {
-        if (this.optionSelected && this.optionSelected.value === this.value) {
-          // If value updates and the previously selected option already matches the new value
-          // just update the input value to use the textContent of the optionSelected
-          this.input.value = this.optionSelected.textContent;
-        } else {
-          // Otherwise just enter the value into the input
-          this.optionSelected = undefined;
-
-          const inputValue = this.value;
-          this.input.value = inputValue;
-
-          // Update the menu value and matchWord
-          this.menu.matchWord = inputValue;
-          this.handleMenuOptions();
-
-          // If the value got set programmatically make sure we hide the bib
-          // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
-          if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
-            this.hideBib();
-          }
+        // If the value got set programmatically make sure we hide the bib
+        // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
+        if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
+          this.hideBib();
         }
       } else {
         this.reset();
