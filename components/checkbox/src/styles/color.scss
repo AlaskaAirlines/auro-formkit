@@ -47,6 +47,7 @@
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-istrue, #{v.$ds-advanced-color-boolean-istrue});
   --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue, #{v.$ds-advanced-color-boolean-istrue});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-istrue-hover, #{v.$ds-advanced-color-boolean-istrue-hover});
@@ -58,6 +59,7 @@
 :host([checked]:focus-within) {
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
@@ -70,6 +72,7 @@
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
   --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
@@ -81,6 +84,7 @@
 :host([disabled][checked]) {
   --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-disabled, #{v.$ds-advanced-color-state-background-disabled});
@@ -101,6 +105,7 @@
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error, #{v.$ds-advanced-color-boolean-error});
   --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error, #{v.$ds-advanced-color-boolean-error});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-hover, #{v.$ds-advanced-color-boolean-error-hover});
@@ -112,6 +117,7 @@
 :host([error][checked]:focus-within) {
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
@@ -127,6 +133,7 @@
   --ds-auro-checkbox-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
   --ds-auro-checkbox-container-color: transparent;
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-inverse-hover, #{v.$ds-advanced-color-boolean-isfalse-inverse-hover});
@@ -135,6 +142,7 @@
 }
 
 :host([onDark]:not([checked])) {
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-isfalse-inverse-hover, #{v.$ds-advanced-color-boolean-isfalse-inverse-hover});
@@ -151,6 +159,7 @@
   --ds-auro-checkbox-checkmark-color: var(--ds-advanced-color-boolean-indicator-inverse, #{v.$ds-advanced-color-boolean-indicator-inverse});
   --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-istrue-inverse, #{v.$ds-advanced-color-boolean-istrue-inverse});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: transparent;
@@ -162,6 +171,7 @@
 :host([onDark][checked]:focus-within) {
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
@@ -174,6 +184,7 @@
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
   --ds-auro-checkbox-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
@@ -185,6 +196,7 @@
 :host([onDark][disabled][checked]) {
   --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-container-color: var(--ds-advanced-color-state-background-inverse-disabled, #{v.$ds-advanced-color-state-background-inverse-disabled});
@@ -205,6 +217,7 @@
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse, #{v.$ds-advanced-color-boolean-error-inverse});
   --ds-auro-checkbox-container-color: var(--ds-advanced-color-boolean-error-inverse, #{v.$ds-advanced-color-boolean-error-inverse});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-boolean-error-inverse-hover, #{v.$ds-advanced-color-boolean-error-inverse-hover});
@@ -216,6 +229,7 @@
 :host([onDark][error][checked]:focus-within) {
   --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
 
+  .cbxContainer,
   .inputContainer {
     &:hover {
       --ds-auro-checkbox-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
