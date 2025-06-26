@@ -177,6 +177,14 @@ export class AuroCombobox extends AuroElement {
         reflect: true
       },
 
+      /**
+       * Specifies the input mask format.
+       */
+      format: {
+        type: String,
+        reflect: true
+      },
+
       /** Exposes inputmode attribute for input.  */
       inputmode: {
         type: String,
@@ -1063,6 +1071,7 @@ export class AuroCombobox extends AuroElement {
               @input="${this.handleInputValueChange}"
               .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
+              .format="${this.format}"
               .inputmode="${this.inputmode}"
               .placeholder="${this.placeholder}"
               .type="${this.type}"
