@@ -9,6 +9,7 @@
 | `checkmark`                     | `checkmark`                     | `boolean`     |                | When attribute is present auro-menu will apply checkmarks to selected options. |
 | `disabled`                      | `disabled`                      | `boolean`     |                | If set, disables the combobox.                   |
 | `error`                         | `error`                         | `string`      |                | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| `format`                        | `format`                        | `string`      |                | Specifies the input mask format.                 |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`      | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `inputmode`                     | `inputmode`                     | `string`      |                | Exposes inputmode attribute for input.           |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`     |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600 |
