@@ -221,8 +221,10 @@ export class AuroCheckbox extends LitElement {
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
     this.addEventListener('click', () => {
-      this.checked = !this.checked;
-      this.handleFocusin();
+      if (!this.disabled) {
+        this.checked = !this.checked;
+        this.handleFocusin();
+      }
     });
 
     this.addEventListener('focusin', () => {
