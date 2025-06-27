@@ -28,7 +28,6 @@
 
 
     label {
-      padding-top: 4px;
       cursor: text;
       font-size: var(--ds-text-body-size-xs);
       line-height: 20px;
@@ -67,7 +66,8 @@
       padding-right: 8px;
     }
 
-    > * {
+    [auro-icon],
+    auro-icon {
       margin-right: 8px;
     }
   }
