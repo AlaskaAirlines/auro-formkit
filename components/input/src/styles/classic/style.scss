@@ -58,18 +58,7 @@
   }
 
   .accents {
-    &.left {
-      padding-left: 8px;
-    }
-
-    &.right {
-      padding-right: 8px;
-    }
-
-    [auro-icon],
-    auro-icon {
-      margin-right: 8px;
-    }
+    padding: 0 8px;
   }
 
   &.withValue {

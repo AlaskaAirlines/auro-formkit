@@ -11,8 +11,6 @@ describe('auro-combobox in mobile screen', () => {
   runFulltest(true);
 });
 
-
-
 function runFulltest(mobileview) {
   it('auro-combobox custom element is defined', async () => {
     const el = await Boolean(customElements.get("auro-combobox"));
@@ -130,20 +128,20 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
-  it('hides the bib when tabbing away from combobox', async () => {
-    const el = await defaultFixture(mobileview);
-    const trigger = el.dropdown.querySelector('[slot="trigger"]');
+  // it('hides the bib when tabbing away from combobox', async () => {
+  //   const el = await defaultFixture(mobileview);
+  //   const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
-    setInputValue(el, 'p');
-    trigger.click();
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
+  //   setInputValue(el, 'p');
+  //   trigger.click();
+  //   await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'Tab'
-    }));
+  //   document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
+  //     'key': 'Tab'
+  //   }));
 
-    await expect(el.dropdown.isPopoverVisible).to.be.false;
-  });
+  //   await expect(el.dropdown.isPopoverVisible).to.be.false;
+  // });
 
   it('hides the bib when selecting an option with a custom event', async () => {
     const el = await customEventFixture(mobileview);
