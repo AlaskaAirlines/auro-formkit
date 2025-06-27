@@ -60,7 +60,6 @@
 | `name`     | `name`     | `string`  |         |                                                  |
 | `onDark`   | `onDark`   | `Boolean` | false   | If set to true, the component will render with a dark theme. |
 | `required` | `required` | `Boolean` | false   | Defines element as required.                     |
-| `tabIndex` | `tabIndex` | `number`  | -1      |                                                  |
 | `value`    | `value`    | `string`  |         |                                                  |
 
 ## Methods

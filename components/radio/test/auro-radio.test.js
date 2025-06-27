@@ -159,7 +159,7 @@ describe('auro-radio', () => {
 
     await elementUpdated(el);
 
-    await expect(el.optionSelected).to.equal(radioOne);
+    await expect(radioButtons.indexOf(el.optionSelected)).to.equal(0);
     await expect(el.value).to.equal('yes');
   });
 });
