@@ -22,7 +22,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
  * @attr id
  *
- * @slot helptext - Sets the help text displayed below the input.
+ * @slot helpText - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot displayValue - Allows custom HTML content to display in place of the value when the input is not focused.
@@ -493,7 +493,7 @@ export default class BaseInput extends AuroElement {
   }
 
   firstUpdated() {
-    // clicking anywhere in the main wrapper will focus the input. Clicking the helptext or label will not focus the input.
+    // clicking anywhere in the main wrapper will focus the input. Clicking the helpText or label will not focus the input.
     this.wrapperElement = this.shadowRoot.querySelector('.wrapper');
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');

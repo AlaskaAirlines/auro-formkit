@@ -113,7 +113,7 @@ export class AuroCounterGroup extends AuroElement {
     this.bibtemplateTag = versioning.generateTag('auro-formkit-counter-bibtemplate', bibTemplateVersion, AuroBibtemplate);
 
     /**
-     * Dynamically generated helptext tag.
+     * Dynamically generated helpText tag.
      * @private
      * @type {string}
      */

@@ -297,7 +297,7 @@ describe('auro-input', () => {
     const el = await fixture(html`
         <auro-input id="validation1" required validateOnInput pattern="[a-zA-Z-.']+( +[a-zA-Z-.']+)+" setCustomValidity="Full name requires two or more names with at least one space.">
           <span slot="label">Full Name</span>
-          <span slot="helptext">Please enter your full name as it appears on the card.</span>
+          <span slot="helpText">Please enter your full name as it appears on the card.</span>
         </auro-input>
     `);
     const input = el.shadowRoot.querySelector('input');
@@ -822,8 +822,8 @@ describe('auro-input', () => {
         <auro-input type="credit-card" required lang="es" id="input01"></auro-input>
       `);
 
-      const eli18nContent = eli18n.shadowRoot.querySelector('[name="helptext"]').innerHTML;
-      const content = el.shadowRoot.querySelector('[name="helptext"]').innerHTML;
+      const eli18nContent = eli18n.shadowRoot.querySelector('[name="helpText"]').innerHTML;
+      const content = el.shadowRoot.querySelector('[name="helpText"]').innerHTML;
 
       expect(content).to.not.contain(`Por favor`);
       expect(eli18nContent).to.contain(`Por favor`);
