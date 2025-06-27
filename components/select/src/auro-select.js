@@ -626,7 +626,8 @@ export class AuroSelect extends AuroElement {
   configureSelect() {
 
     this.addEventListener('keydown', (evt) => {
-      if (this.shadowRoot.activeElement === this.dropdown) {
+      // when the focus is on trigger not on close button
+      if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
         if (evt.key === 'ArrowUp') {
           evt.preventDefault();
 
@@ -665,8 +666,10 @@ export class AuroSelect extends AuroElement {
         if (this.dropdown.isBibFullscreen) {
           evt.preventDefault();
 
-          if (this.shadowRoot.activeElement === this.dropdown) {
-            // when trigger has the focus, move focus to the close button
+            // when the focus is on trigger not on close button
+          if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
+            // `dropdown.focus` will move focus to the first focusable element in bib when it's open,
+            // when bib it not open, it will focus onto trigger.
             this.dropdown.focus();
           } else {
             // when close button has the focus, move focus back to the trigger

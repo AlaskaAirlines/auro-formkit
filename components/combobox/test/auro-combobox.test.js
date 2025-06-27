@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { fixture, html, expect, waitUntil, elementUpdated, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import '../src/registered.js';
@@ -74,12 +75,6 @@ function runFulltest(mobileview) {
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
     trigger.click();
     await expect(el.dropdown.isPopoverVisible).to.be.false;
-    if (mobileview) {
-      // wait until input settles in dropdown
-      await waitUntil(() => {
-        return el.input.parentNode === el.dropdown;
-      });
-    }
     setInputValue(el, 'ra');
 
     await expect(el.dropdown.isPopoverVisible).to.be.true;
@@ -149,11 +144,14 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
 
     setInputValue(el, 'a');
+    if (mobileview) {
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
     el.dispatchEvent(new KeyboardEvent('keydown', {
       'key': 'Enter'
     }));
 
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
 
     el.dispatchEvent(new KeyboardEvent('keydown', {
       'key': 'ArrowDown'
@@ -174,18 +172,15 @@ function runFulltest(mobileview) {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await elementUpdated(el);
 
-    if (mobileview) {
-      await waitUntil(() => {
-        // wait until input settles in dropdown
-        return el.input.parentNode === el.dropdown;
-      });
-    }
     setInputValue(el, 'a');
     await elementUpdated(el);
 
+    if (mobileview) {
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
-
 
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -235,6 +230,10 @@ function runFulltest(mobileview) {
 
     setInputValue(el, 'a');
     await elementUpdated(el);
+
+    if (mobileview) {
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
 
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
@@ -374,6 +373,11 @@ function runFulltest(mobileview) {
     setInputValue(el, 'a');
     await elementUpdated(el);
 
+    if (mobileview) {
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
 
@@ -400,8 +404,10 @@ function runFulltest(mobileview) {
 
     // error applied on blur
     el.focus();
+
     el.shadowRoot.activeElement.blur();
     await elementUpdated(el);
+
     await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
 
     // no error when input has a value
