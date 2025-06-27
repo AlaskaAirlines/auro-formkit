@@ -562,7 +562,11 @@ export class AuroCombobox extends AuroElement {
       this.dropdownOpen = ev.detail.expanded;
 
       // wait a frame in case the bib gets hide immediately after showing because there is no value
-      setTimeout(this.setInputFocus, 0);
+      setTimeout(() => {
+        if (document.activeElement === this) {
+          this.setInputFocus();
+        }
+      }, 0);
     });
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
