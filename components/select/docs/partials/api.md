@@ -214,7 +214,7 @@ Use the `label` slot to give your users contextual information about their selec
 
 #### helpText <a name="helpText"></a>
 
-Use the `helptext` slot to provide additional information back to your user about their selection option(s).
+Use the `helpText` slot to provide additional information back to your user about their selection option(s).
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/helpText.html) -->

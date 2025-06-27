@@ -419,7 +419,7 @@ export class AuroInput extends BaseInput {
         ? html`
           <${this.helpTextTag} ?onDark="${this.onDark}">
             <p id="${this.uniqueId}" part="helpText">
-              <slot name="helptext">${this.getHelpText()}</slot>
+              <slot name="helpText">${this.getHelpText()}</slot>
             </p>
           </${this.helpTextTag}>
         `
