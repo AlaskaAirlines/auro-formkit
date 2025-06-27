@@ -82,7 +82,10 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-input bordered shape="rounded" size="lg"></auro-input>
+<auro-input>
+  <span slot="label">Label</span>
+  <span slot="helpText">Help Text</span>
+</auro-input>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
