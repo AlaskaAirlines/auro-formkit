@@ -712,9 +712,18 @@ export class AuroCombobox extends AuroElement {
     /**
      * Validate every time we remove focus from the datepicker.
      */
-    this.addEventListener('focusout', () => {
+    this.addEventListener('focusout', (event) => {
+      if (event.relatedTarget === event.target) {
+        // if the focus is moved within combobox, do nothing.
+        return;
+      }
       if (document.activeElement !== this) {
         this.validate();
+        if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          this.focus();
+        }
       }
     });
 
@@ -890,7 +899,9 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   focus() {
-    this.input.focus();
+    if (document.activeElement !== this) {
+      this.setInputFocus();
+    }
   }
 
   /**

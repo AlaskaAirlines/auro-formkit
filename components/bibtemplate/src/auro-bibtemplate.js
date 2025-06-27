@@ -87,30 +87,6 @@ export class AuroBibtemplate extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroBibtemplate);
   }
 
-  /**
-   * Prevents scrolling of the body when touching empty areas of the component.
-   * @param {Event} event - The touchmove event.
-   * @returns {void}
-   */
-  preventBodyScroll(event) {
-    if (event.target === this) {
-      event.preventDefault();
-    }
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-
-    this.preventBodyScroll = this.preventBodyScroll.bind(this);
-    this.addEventListener('touchmove', this.preventBodyScroll, { passive: false });
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-
-    this.removeEventListener('touchmove', this.preventBodyScroll, { passive: false });
-  }
-
   onCloseButtonClick() {
     this.dispatchEvent(new Event("close-click", { bubbles: true,
       composed: true }));

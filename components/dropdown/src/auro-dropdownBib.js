@@ -169,6 +169,17 @@ export class AuroDropdownBib extends LitElement {
         }
       }
     });
+
+    this.preventBodyScroll = this.preventBodyScroll.bind(this);
+    this.addEventListener('touchmove', this.preventBodyScroll, { passive: false });
+    this.addEventListener('touchstart', this.preventBodyScroll, { passive: false });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    this.removeEventListener('touchmove', this.preventBodyScroll, { passive: false });
+    this.removeEventListener('touchstart', this.preventBodyScroll, { passive: false });
   }
 
   firstUpdated(changedProperties) {
@@ -182,6 +193,19 @@ export class AuroDropdownBib extends LitElement {
         element: this
       }
     }));
+  }
+
+  /**
+   * Prevents scrolling of the body when touching empty areas of the component.
+   * @param {Event} event - The touchmove event.
+   * @returns {void}
+   */
+  preventBodyScroll(event) {
+    // when touchmove/touchstart on empty space
+    if (event.target === this) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 
   // function that renders the HTML and CSS into  the scope of the component

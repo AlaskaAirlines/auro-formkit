@@ -539,6 +539,9 @@ export class AuroDropdown extends AuroElement {
     }
 
     this.bibContent = this.floater.element.bib;
+    this.bibContent.setAttribute('role', 'dialog');
+    this.bibContent.setAttribute('aria-modal', 'true');
+    this.bibContent.setAttribute('aria-labelledby', 'triggerLabel');
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
