@@ -71,20 +71,6 @@ export class AuroInput extends BaseInput {
     this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
   }
 
-  static get properties() {
-    return {
-      ...super.properties,
-
-      /**
-       * @type {boolean}
-       */
-      hideInputVisually: {
-        type: Boolean,
-        reflect: true,
-      }
-    };
-  }
-
   static get styles() {
     return [
       css`${classicStyleCss}`,
@@ -120,11 +106,7 @@ export class AuroInput extends BaseInput {
    */
   get commonInputClasses() {
     return {
-      'util_displayHiddenVisually': this.hideInputVisually !== undefined
-        ? this.hideInputVisually
-        // eslint-disable-next-line no-warning-comments
-        // TODO: refactor this to use a less brittle/forced solution.
-        : this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
     };
   }
 
@@ -135,11 +117,7 @@ export class AuroInput extends BaseInput {
    */
   get legacyInputClasses() {
     return {
-      ...this.commonInputClasses,
-      'util_displayHiddenVisually':
-        this.hideInputVisually !== undefined
-          ? this.hideInputVisually
-          : !this.hasFocus && !this.value
+      ...this.commonInputClasses
     };
   }
 
@@ -212,7 +190,12 @@ export class AuroInput extends BaseInput {
    * @returns {void}
    */
   checkDisplayValueSlotChange() {
-    const nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
+    let nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
+
+    // Handle when DisplayValue is multi-level slot content (e.g. combobox passing displayValue to input)
+    if (nodes[0].tagName === 'SLOT') {
+      nodes = nodes[0].assignedNodes();
+    }
 
     let hasContent = false;
 
