@@ -17,13 +17,17 @@
 }
 
 input {
-  overflow: hidden;
+  // !important to override user agent styles that are also !important.
+  /* stylelint-disable declaration-no-important */
+  overflow: clip !important;
   width: 100%;
   padding: 0;
   border: 0;
   background: unset;
   outline: none;
+  overflow-clip-margin: 0 !important;
   text-overflow: ellipsis;
+  /* stylelint-enable declaration-no-important */
 }
 
 .displayValue {
