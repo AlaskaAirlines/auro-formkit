@@ -294,15 +294,6 @@ export class AuroRadioGroup extends LitElement {
     if (this.items.length === 0) {
       this.handleItems();
     }
-
-    // handle tab index
-    this.items.forEach((item) => {
-      item.tabIndex = -1;
-    });
-
-    if (!this.disabled) {
-      this.items[this.index].tabIndex = 0;
-    }
   }
 
   /**
@@ -346,10 +337,7 @@ export class AuroRadioGroup extends LitElement {
       const nextEnabledIndex = this.items.findIndex((item) => !item.hasAttribute('disabled'));
 
       this.index = index >= 0 ? index : nextEnabledIndex;
-
-      if (this.index >= 0) {
-        this.items[this.index].tabIndex = 0;
-      }
+      this.items[this.index].setAttribute('tabindex', 0);
     }
   }
 
@@ -363,20 +351,10 @@ export class AuroRadioGroup extends LitElement {
     this.index = this.items.indexOf(event.target);
 
     this.items.forEach((item) => {
-      if (item === event.target) {
-        item.tabIndex = 0;
-        if (event.target.value) {
-          this.value = event.target.value;
-        }
-      } else {
-        const sdInput = item.shadowRoot.querySelector('input');
-
-        sdInput.checked = false;
-        item.checked = false;
-        item.tabIndex = -1;
-      }
+      item.checked = item === event.target;
     });
 
+    this.value = event.target.value;
     this.optionSelected = event.target;
 
     this.validation.validate(this);
@@ -389,7 +367,7 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   selectItem(index) {
-    const sdItem = this.items[index].shadowRoot.querySelector('input');
+    const sdItem = this.items[index];
 
     sdItem.click();
     sdItem.focus();
@@ -408,17 +386,18 @@ export class AuroRadioGroup extends LitElement {
 
     for (currIndex; currIndex < this.items.length; moveDirection === "Down" ? currIndex += 1 : currIndex -= 1) {
       currIndex = currIndex === -1 ? this.items.length - 1 : currIndex;
-      const sdItem = this.items[currIndex].shadowRoot.querySelector('input');
-
-      if (this.disabled || this.items.every((item) => item.disabled === true)) {
-        sdItem.focus();
-        break;
-      }
-      if (!sdItem.disabled) {
-        sdItem.click();
-        sdItem.focus();
-        this.index = currIndex;
-        break;
+      const sdItem = this.items[currIndex];
+      if (sdItem) {
+        if (this.disabled || this.items.every((item) => item.disabled === true)) {
+          sdItem.focus();
+          break;
+        }
+        if (!sdItem.disabled) {
+          sdItem.click();
+          sdItem.focus();
+          this.index = currIndex;
+          break;
+        }
       }
     }
   }
@@ -463,7 +442,7 @@ export class AuroRadioGroup extends LitElement {
     };
 
     return html`
-      <fieldset class="${classMap(groupClasses)}" part="radio-group">
+      <fieldset class="${classMap(groupClasses)}" part="radio-group" role="radiogroup">
         <legend>
           <slot name="legend"></slot>
           ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
