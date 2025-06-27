@@ -195,7 +195,7 @@ export class AuroRadioGroup extends LitElement {
 
     this.optionSelected = event.target;
 
-    this.validation.validate(this);
+    this.validation.validate(this, this.optionSelected !== undefined);
   }
 
   /**
