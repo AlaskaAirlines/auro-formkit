@@ -821,12 +821,11 @@ export class AuroCombobox extends AuroElement {
       }
 
       if (evt.key === 'Tab') {
-        this.hideBib();
-
-        if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-          // if bib is open in fullscreen, just close the bib and do not move the focus to the next focasable element
-          evt.preventDefault();
-        }
+        setTimeout(() => {
+          if (document.activeElement !== this) {
+            this.hideBib();
+          }
+        }, 0);
       }
 
       /**
