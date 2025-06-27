@@ -8,7 +8,7 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable declaration-no-important, order/properties-order, declaration-block-no-redundant-longhand-properties */
+/* stylelint-disable max-nesting-depth, declaration-no-important, order/properties-order, declaration-block-no-redundant-longhand-properties */
 
 :host {
   cursor: pointer;
@@ -40,7 +40,10 @@
       padding-top: var(--ds-size-75, vac.$ds-size-75);
       padding-bottom: var(--ds-size-75, vac.$ds-size-75);
       padding-right: var(--ds-size-150, vac.$ds-size-150);
-      margin-bottom: var(--ds-size-50, vac.$ds-size-50);
+
+      &:not(:last-child) {
+        margin-bottom: var(--ds-size-50, vac.$ds-size-50);
+      }
     }
 
     &[class*="-xl"] {
@@ -50,7 +53,10 @@
       padding-top: var(--ds-size-100, vac.$ds-size-100);
       padding-bottom: var(--ds-size-100, vac.$ds-size-100);
       padding-right: var(--ds-size-200, vac.$ds-size-200);
-      margin-bottom: var(--ds-size-100, vac.$ds-size-100);
+
+      &:not(:last-child) {
+        margin-bottom: var(--ds-size-100, vac.$ds-size-100);
+      }
     }
 
   }
