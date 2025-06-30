@@ -32,7 +32,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `shape`                         |                                 | `string`                          | "snowflake"    |                                                  |
 | `size`                          |                                 | `string`                          | "xl"           |                                                  |
 | `validity`                      | `validity`                      | `string`                          |                | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `String\|Array<String>`           |                | Value selected for the component. Default type is `String`, changing to `Array<String>` when `multiSelect` is true. |
+| `value`                         | `value`                         | `string`                          |                | Value selected for the component.                |
 
 ## Methods
 
@@ -47,7 +47,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 |-----------------------------|--------------------------------------------------|--------------------------------------------------|
 | `auroFormElement-validated` |                                                  | Notifies that the `validity` and `errorMessage` values have changed. |
 | `auroSelect-valueSet`       | `CustomEvent<any>`                               | Notifies that the component has a new value set. |
-| `input`                     | `CustomEvent<{ optionSelected: any; value: any; }>` | Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object. |
+| `input`                     | `CustomEvent<{ optionSelected: any; value: string \| string[]; }>` | Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object. |
 
 ## Slots
 

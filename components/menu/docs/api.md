@@ -17,7 +17,7 @@ The auro-menu element provides users a way to select from a list of options.
 | `optionSelected`        | `optionSelected` | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
 | `shape`                 |                  | `string`                          | ""          |                                                  |
 | `size`                  |                  | `string`                          | ""          |                                                  |
-| `value`                 | `value`          | `String\|Array<string>`           | "undefined" | Value selected for the menu, type `string` by default. In multi-select mode, `value` is an array of strings. |
+| `value`                 | `value`          | `string`                          | "undefined" | Value selected for the component.                |
 
 ## Methods
 

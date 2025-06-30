@@ -36,10 +36,6 @@ import bibTemplateVersion from './bibtemplateVersion.js';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import helpTextVersion from './helptextVersion.js';
 
-import {
-  arrayConverter
-} from '@aurodesignsystem/auro-menu';
-
 import styleCss from "./styles/style-css.js";
 import { ifDefined } from "lit-html/directives/if-defined.js";
 
@@ -375,11 +371,12 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Value selected for the component. Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
-       * @type {String|Array<String>}
+       * Value selected for the component.
        */
       value: {
-        type: Object
+        type: String,
+        reflect: true,
+        attribute: 'value'
       },
 
       /**
@@ -429,6 +426,25 @@ export class AuroSelect extends AuroElement {
       css`${tokensCss}`,
       css`${styleCss}`,
     ];
+  }
+
+  /**
+   * Formatted value based on `multiSelect` state.
+   * Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
+   * @private
+   * @returns {String|Array<String>}
+   */
+  get formattedValue() {
+    if (this.multiSelect) {
+      if (!this.value) {
+        return undefined;
+      }
+      if (this.value.startsWith("[")) {
+        return JSON.parse(this.value);
+      }
+      return [this.value];
+    }
+    return this.value;
   }
 
   /**
@@ -849,14 +865,6 @@ export class AuroSelect extends AuroElement {
     this.configureDropdown();
     this.configureMenu();
     this.configureSelect();
-
-    // Set the initial value in auro-menu if defined
-    if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      this.value = this.multiSelect ? arrayConverter(this.getAttribute('value')) : this.getAttribute('value');
-      if (this.menu) {
-        this.menu.value = this.value;
-      }
-    }
   }
 
   /**
@@ -868,19 +876,18 @@ export class AuroSelect extends AuroElement {
   async updateMenuValue(value) {
     if (!this.menu) return;
 
+    this.menu.setAttribute('value', value);
     this.menu.value = value;
     await this.menu.updateComplete;
   }
 
   async updated(changedProperties) {
-    if (changedProperties.has('multiSelect')) {
+    if (changedProperties.has('multiSelect') && !changedProperties.has('value')) {
       this.clearSelection();
     }
 
     if (changedProperties.has('value')) {
       if (this.value) {
-        this.value = this.multiSelect ? arrayConverter(this.value) : this.value;
-
         await this.updateMenuValue(this.value);
 
         if (this.menu) {
@@ -906,7 +913,7 @@ export class AuroSelect extends AuroElement {
         composed: true,
         detail: {
           optionSelected: this.optionSelected,
-          value: this.value
+          value: this.formattedValue
         }
       }));
     }
@@ -965,13 +972,13 @@ export class AuroSelect extends AuroElement {
     const selectedValue = selectedOption.value;
 
     if (this.multiSelect) {
-      const currentArray = Array.isArray(this.value) ? this.value : [];
+      const currentArray = this.formattedValue;
 
       if (!currentArray.includes(selectedValue)) {
-        this.value = [
+        this.value = JSON.stringify([
           ...currentArray,
           selectedValue
-        ];
+        ]);
       }
     } else {
       const currentValue = this.value;
@@ -994,7 +1001,7 @@ export class AuroSelect extends AuroElement {
     }
 
     if (this.multiSelect) {
-      nativeSelect.value = this.value ? this.value[0] : '';
+      nativeSelect.value = this.multiSelect ? this.multiSelect[0] : '';
     } else {
       nativeSelect.value = this.value || '';
     }
