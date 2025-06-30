@@ -35,14 +35,14 @@
     }
   }
 
-  .trigger {
+  .wrapper {
     display: flex;
     flex-direction: row;
     box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-outline-color);
   }
 
   @media (hover: hover) {
-    .trigger {
+    .wrapper {
       &:hover {
         cursor: pointer;
       }

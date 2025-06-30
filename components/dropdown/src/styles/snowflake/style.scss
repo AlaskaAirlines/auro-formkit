@@ -19,14 +19,11 @@
   display: block;
 }
 
+
 .wrapper {
   display: flex;
-  flex-direction: row;
-}
-
-.trigger {
-  display: flex;
   flex: 1;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   outline: none;

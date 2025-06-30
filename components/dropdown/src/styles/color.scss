@@ -2,45 +2,61 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern */
+/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern, no-descending-specificity */
 
 // Support for fallback values
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
 
-:host {
+:host(:not([ondark])) {
   .wrapper {
     border-color: var(--ds-auro-dropdown-trigger-border-color);
     background-color: var(--ds-auro-dropdown-trigger-background-color);
     color: var(--ds-auro-dropdown-trigger-text-color);
-  }
-}
 
-:host(:not([ondark])) {
-  .wrapper {
-    &:focus,
-    &:focus-within {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+    &:focus-within,
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
     }
   }
 }
 
-:host([ondark]) {
-  .wrapper {
-    &:focus,
-    &:focus-within {
-      --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
-    }
-  }
+/* Disabled state */
+:host(:not([onDark])[disabled]) {
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
 }
 
-:host([error]:not([ondark])) {
+:host(:not([ondark])[error]) {
   --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
 }
 
-:host([error][ondark]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
+/* onDark */
+:host([onDark]) {
+  .label {
+    color: var(--ds-auro-dropdown-label-text-color);
+  }
+
+  .wrapper {
+    border-color: var(--ds-auro-dropdown-trigger-border-color);
+    background-color: var(--ds-auro-dropdown-trigger-background-color);
+    color: var(--ds-auro-dropdown-trigger-text-color);
+
+    &:focus-within,
+    &:active {
+      --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+      --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+    }
+  }
 }
 
-.helpText {
-  color: var(--ds-auro-dropdown-helptext-text-color);
+:host([onDark][disabled]) {
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{v.$ds-advanced-color-shared-background-inverse-disabled});
+}
+
+:host([ondark][error]) {
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
 }
