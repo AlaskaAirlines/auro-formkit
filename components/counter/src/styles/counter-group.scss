@@ -16,6 +16,14 @@
   }
 }
 
+:host([layout="snowflake"]) {
+  [auro-dropdown] {
+    .mainContent {
+      align-items: center;
+    }
+  }
+}
+
 .triggerContent {
   display: flex;
   width: 100%;
