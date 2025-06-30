@@ -12,12 +12,6 @@
   .triggerContent {
     padding: 0 8px 0 24px; // TODO: update to use design token
   }
-
-  [auro-dropdown] {
-    --ds-auro-dropdown-trigger-border-color: var(--ds-auro-counter-trigger-border-color);
-    --ds-auro-dropdown-trigger-background-color: var(--ds-auro-counter-trigger-background-color);
-    --ds-auro-dropdown-trigger-container-color: var(--ds-auro-counter-trigger-background-color);
-  }
 }
 
 .triggerContent {
