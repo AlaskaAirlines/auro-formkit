@@ -142,7 +142,7 @@ export class AuroBibtemplate extends LitElement {
       <div id="bibTemplate" part="bibtemplate">
       ${this.isFullscreen ? html`
         <div id="headerContainer">
-          <${this.buttonTag} id="closeButton" variant="ghost" shape="circle" size="sm" @click="${this.onCloseButtonClick}">
+          <${this.buttonTag} id="closeButton" aria-label="Close" variant="ghost" shape="circle" size="sm" @click="${this.onCloseButtonClick}">
             <${this.iconTag} category="interface" name="x-lg"></${this.iconTag}>
           </${this.buttonTag}>
           <${this.headerTag} display="${this.large ? 'display' : '600'}" level="3" size="none" id="header" no-margin-block>
