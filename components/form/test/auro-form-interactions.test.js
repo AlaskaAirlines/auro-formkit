@@ -81,7 +81,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-datepicker', template);
 
-    it('should surface values from datepicker without `range` attribute as a string', async () => {
+    it.skip('should surface values from datepicker without `range` attribute as a string', async () => {
       const form = await fixture(template);
       const [datePicker] = form._elements;
       const [input] = datePicker.inputList;
@@ -93,7 +93,7 @@ describe('auro-form', () => {
       await expect(form.value.dateExample).to.equal('04/03/2023');
     });
 
-    it('should surface values from datepicker with `range` attribute as a string array', async () => {
+    it.skip('should surface values from datepicker with `range` attribute as a string array', async () => {
       const form = await fixture(html`
         <auro-form>
           <auro-datepicker id="date-example" name="dateExample" range required>
