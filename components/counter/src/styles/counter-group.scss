@@ -4,7 +4,7 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-class-pattern, selector-max-combinators, selector-max-compound-selectors */
 
 // Support for fallback values
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
