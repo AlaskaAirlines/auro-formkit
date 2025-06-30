@@ -25,12 +25,9 @@ A baseline `<auro-select>` using `<auro-menu>` and `<auro-menuoption>` elements.
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-### Emphasized 
+### Emphasized
 
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
+Only supported for onDark usage.
 
 <div class="exampleWrapper--ondark" aria-hidden>
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic-ondark.html) -->
@@ -39,10 +36,7 @@ A baseline `<auro-select>` using `<auro-menu>` and `<auro-menuoption>` elements.
 
 ### Snowflake 
 
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
+Only supported for onDark usage.
 
 <div class="exampleWrapper--ondark" aria-hidden>
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic-ondark.html) -->
