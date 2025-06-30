@@ -461,6 +461,21 @@ export class AuroSelect extends AuroElement {
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.isPopoverVisible = this.dropdown.isPopoverVisible;
+
+      if (this.dropdown.isPopoverVisible) {
+        // wait til the bib gets fully rendered
+        setTimeout(() => {
+          if (this.dropdown.isBibFullscreen) {
+            // trigger holds the focus since menu is not a focusable element.
+            this.dropdown.trigger.focus();
+
+            // default focus indicator on the first menu option
+            if (this.menu.index < 0) {
+              this.menu.navigateOptions('down');
+            }
+          }
+        });
+      }
     });
 
     // setting up bibtemplate
@@ -611,46 +626,58 @@ export class AuroSelect extends AuroElement {
   configureSelect() {
 
     this.addEventListener('keydown', (evt) => {
-      if (evt.key === 'ArrowUp') {
-        evt.preventDefault();
-
-        this.dropdown.show();
-
-        if (this.dropdown.isPopoverVisible) {
-          this.menu.navigateOptions('up');
-        }
-
-        return;
-      }
-
-      if (evt.key === 'ArrowDown') {
-        evt.preventDefault();
-
-        this.dropdown.show();
-
-        if (this.dropdown.isPopoverVisible) {
-          this.menu.navigateOptions('down');
-        }
-
-        return;
-      }
-
-      if (evt.key === 'Enter') {
-        if (!this.dropdown.isPopoverVisible) {
+      // when the focus is on trigger not on close button
+      if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
+        if (evt.key === 'ArrowUp') {
           evt.preventDefault();
-          this.menu.makeSelection();
+
+          this.dropdown.show();
+
+          if (this.dropdown.isPopoverVisible) {
+            this.menu.navigateOptions('up');
+          }
+
+          return;
         }
 
-        return;
+        if (evt.key === 'ArrowDown') {
+          evt.preventDefault();
+
+          this.dropdown.show();
+
+          if (this.dropdown.isPopoverVisible) {
+            this.menu.navigateOptions('down');
+          }
+
+          return;
+        }
+
+        if (evt.key === 'Enter') {
+          if (!this.dropdown.isPopoverVisible) {
+            evt.preventDefault();
+            this.menu.makeSelection();
+          }
+
+          return;
+        }
       }
 
-      if (evt.key === 'Tab') {
+      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
         if (this.dropdown.isBibFullscreen) {
           evt.preventDefault();
+
+            // when the focus is on trigger not on close button
+          if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
+            // `dropdown.focus` will move focus to the first focusable element in bib when it's open,
+            // when bib it not open, it will focus onto trigger.
+            this.dropdown.focus();
+          } else {
+            // when close button has the focus, move focus back to the trigger
+            this.dropdown.trigger.focus();
+          }
         } else {
           this.dropdown.hide();
         }
-
         return;
       }
 
