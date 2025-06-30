@@ -51,15 +51,9 @@ fieldset {
   padding-left: var(--ds-size-100, #{vac.$ds-size-100});
   padding-right: var(--ds-size-100, #{vac.$ds-size-100});
   line-height: var(--ds-size-400, #{vac.$ds-size-400});
-}
 
-.cbx--input {
-  &:disabled {
-    & + label {
-      &:hover {
-        cursor: auto;
-      }
-    }
+  &:hover {
+    cursor: pointer;
   }
 }
 
@@ -68,6 +62,13 @@ fieldset {
 
   &:hover {
     cursor: pointer;
+  }
+}
+
+:host([disabled]) {
+  .cbxContainer {
+    pointer-events: none;
+    cursor: default;
   }
 }
 
