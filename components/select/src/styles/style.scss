@@ -15,7 +15,9 @@
   selector-max-pseudo-class,
   selector-max-combinators,
   selector-max-compound-selectors,
-  selector-no-qualifying-type
+  selector-no-qualifying-type,
+  max-nesting-depth,
+  no-descending-specificity
 */
 
 [auro-dropdown] {
@@ -71,6 +73,28 @@
 :host([layout*='snowflake']) {
   .triggerContent {
     padding: 0 8px 0 24px; // TODO: update to use design token
+  }
+}
+
+:host([layout*='snowflake']) {
+  [auro-dropdown] {
+    label {
+      &.withValue {
+        font-size: var(--ds-text-body-size-xs);
+        line-height: 20px;
+      }
+    }
+  }
+}
+
+:host([layout*='emphasized']) {
+  [auro-dropdown] {
+    label {
+      &.withValue {
+        font-size: var(--ds-text-body-size-xs);
+        line-height: 20px;
+      }
+    }
   }
 }
 
