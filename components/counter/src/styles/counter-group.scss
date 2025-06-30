@@ -4,6 +4,8 @@
 
 // ---------------------------------------------------------------------
 
+/* stylelint-disable selector-class-pattern */
+
 // Support for fallback values
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
@@ -35,6 +37,22 @@ label {
 
   &.filled {
     font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
+  }
+}
+
+.accents {
+  ::slotted([slot="typeIcon"]) {
+    margin-right: 8px;
+  }
+
+  ::slotted(*) {
+    &:not(.util_displayHidden) {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
   }
 }
 
