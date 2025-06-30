@@ -257,7 +257,7 @@ export class AuroCheckbox extends LitElement {
     };
 
     return html`
-      <div class="cbxContainer" part="checkbox">
+      <div class="cbxContainer body-default" part="checkbox">
         <div class="inputContainer">
           <input
             class="util_displayHiddenVisually cbx--input"
