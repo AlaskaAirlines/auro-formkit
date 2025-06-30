@@ -17,13 +17,21 @@
   selector-max-compound-selectors,
   selector-no-qualifying-type,
   max-nesting-depth,
-  no-descending-specificity
+  no-descending-specificity,
+  no-duplicate-selectors
 */
 
 [auro-dropdown] {
   --ds-auro-dropdown-trigger-border-color: var(--ds-auro-select-border-color);
   --ds-auro-dropdown-trigger-background-color: var(--ds-auro-select-background-color);
   --ds-auro-dropdown-trigger-container-color: var(--ds-auro-select-background-color);
+}
+
+:host([layout*='emphasized']),
+:host([layout*='snowflake']) {
+  [auro-dropdown] {
+    --ds-auro-select-border-color: transparent;
+  }
 }
 
 .mainContent {
