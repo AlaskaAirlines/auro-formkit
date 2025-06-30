@@ -993,6 +993,11 @@ export class AuroSelect extends AuroElement {
     }
   }
 
+  /**
+   * Returns HTML for the hidden a11y screen reader content.
+   * @private
+   * @returns {html} - Returns HTML for the hidden a11y screen reader content.
+   */
   renderAriaHtml() {
     return html`
       <div aria-live="polite" class="util_displayHiddenVisually">
@@ -1013,6 +1018,11 @@ export class AuroSelect extends AuroElement {
     `;
   }
 
+  /**
+   * Returns HTML for the hidden HTML5 select.
+   * @private
+   * @returns {html} - Returns HTML for the hidden HTML5 select.
+   */
   renderNativeSelect() {
     return html`
       <div class="nativeSelectWrapper util_displayHidden">
@@ -1342,104 +1352,4 @@ export class AuroSelect extends AuroElement {
 
   // When using auroElement, use the following attribute and function when hiding content from screen readers.
   // aria-hidden="${this.hideAudible(this.hiddenAudible)}"
-
-  // function that renders the HTML and CSS into  the scope of the component
-  renderBACKUP() {
-    const placeholderClass = {
-      hidden: this.value,
-    };
-
-    return html`
-      <div class="outerWrapper">
-        <div aria-live="polite" class="util_displayHiddenVisually">
-          ${this.optionActive && this.options.length > 0
-            ? html`
-              ${`${this.optionActive.innerText}, option ${this.options.indexOf(this.optionActive) + 1} of ${this.options.length}`}
-            `
-            : undefined
-          };
-
-          ${this.optionSelected && this.options.length > 0
-            ? html`
-            ${`${this.optionSelected.innerText} selected`}
-            `
-            : undefined
-          };
-        </div>
-        <div id="slotHolder" aria-hidden="true">
-          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
-        </div>
-        <${this.dropdownTag}
-          ?autoPlacement="${this.autoPlacement}"
-          ?disabled="${this.disabled}"
-          ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          ?matchWidth="${this.matchWidth}"
-          ?noFlip="${this.noFlip}"
-          ?onDark="${this.onDark}"
-          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
-          .offset="${this.offset}"
-          .placement="${this.placement}"
-          chevron
-          fluid
-          for="selectMenu"
-          layout="${this.layout}"
-          part="dropdown"
-          shape="${this.shape}"
-          size="${this.size}">
-          <span slot="trigger" aria-haspopup="true" id="triggerFocus">
-            <span id="placeholder"
-              class="${classMap(placeholderClass)}"
-              ?aria-hidden="${this.optionSelected && this.optionSelected.length ? 'true' : false}"
-              >
-              <slot name="placeholder"></slot>
-            </span>
-            <slot name="valueText" id="valueText"></slot>
-          </span>
-
-          <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
-            <slot></slot>
-          </${this.bibtemplateTag}>
-          <slot name="label" slot="label"></slot>
-          ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
-          <p slot="helpText">
-            ${!this.validity || this.validity === undefined || this.validity === 'valid'
-              ? html`
-                <span id="${this.uniqueId}" part="helpText">
-                  <slot name="helpText"></slot>
-                </span>`
-              : html`
-                <span id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-                  ${this.errorMessage}
-                </span>`
-            }
-          </p>
-        </${this.dropdownTag}>
-        <div class="nativeSelectWrapper">
-          <select 
-            tabindex="-1"
-            id="${`native-select-${this.id || this.uniqueId}`}"
-            name="${this.name || ''}"
-            ?disabled="${this.disabled}"
-            ?required="${this.required}"
-            aria-hidden="true"
-            autocomplete="${ifDefined(this.autocomplete)}"
-            @change="${this._handleNativeSelectChange}">
-            <option value="" ?selected="${!this.value}"></option>
-            ${this.options.map((option) => {
-              const optionValue = option.value || option.textContent;
-              return html`
-                <option 
-                  value="${optionValue}" 
-                  ?selected="${this.value === optionValue}">
-                  ${option.textContent}
-                </option>
-              `;
-            })}
-          </select>
-        </div>
-        <!-- Help text and error message template -->
-        ${this.renderHtmlHelpText()}
-      </div>
-    `;
-  }
 }

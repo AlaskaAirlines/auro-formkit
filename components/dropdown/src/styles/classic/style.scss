@@ -79,18 +79,8 @@
   /* stylelint-enable selector-id-pattern */
 }
 
-:host([layout*='classic']:not([simple])) {
-  .triggerContentWrapper {
-    padding-left: var(--ds-size-150, vac.$ds-size-150);
-  }
-}
-
-:host([layout*='classic'][matchwidth]) {
+:host([matchwidth]) {
   #bibSizer {
     width: 100%;
   }
-}
-
-:host([layout*='classic'][disabled]) {
-  pointer-events: none;
 }
