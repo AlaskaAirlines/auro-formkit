@@ -221,9 +221,12 @@ export class AuroCheckbox extends LitElement {
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
     this.addEventListener('click', (evt) => {
-      if (!this.disabled) {
+      // Only prevent default for real user events, not tests or programmatic calls
+      if (evt.isTrusted) {
         evt.preventDefault();
+      }
 
+      if (!this.disabled) {
         this.checked = !this.checked;
         this.handleFocusin();
       }
