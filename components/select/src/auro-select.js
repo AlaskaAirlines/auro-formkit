@@ -9,9 +9,6 @@
   lit/binding-positions,
   lit/no-invalid-html,
   indent,
-  line-comment-position,
-  no-inline-comments,
-  no-lonely-if,
   curly
 */
 
@@ -858,7 +855,7 @@ export class AuroSelect extends AuroElement {
   /**
    * Update the menu value. With checks for menu existence. Awaits value update.
    * @param {string} value - The value to set in the menu.
-   * @returns void
+   * @returns {void}
    * @private
    */
   async updateMenuValue(value) {
