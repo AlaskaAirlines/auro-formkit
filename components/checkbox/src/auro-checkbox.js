@@ -220,8 +220,10 @@ export class AuroCheckbox extends LitElement {
 
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
-    this.addEventListener('click', () => {
+    this.addEventListener('click', (evt) => {
       if (!this.disabled) {
+        evt.preventDefault();
+
         this.checked = !this.checked;
         this.handleFocusin();
       }
@@ -257,7 +259,7 @@ export class AuroCheckbox extends LitElement {
           <input
             class="util_displayHiddenVisually cbx--input"
             part="checkbox-input"
-            @change=${this.handleChange}
+            @change="${this.handleChange}"
             @input="${this.handleInput}"
             ?disabled="${this.disabled}"
             .checked="${this.checked}"
