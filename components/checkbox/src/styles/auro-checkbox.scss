@@ -24,6 +24,7 @@
 @use "@aurodesignsystem/webcorestylesheets/src/breakpoints" as vb;
 @use "@aurodesignsystem/webcorestylesheets/src/core";
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 
 // container styles - defines the look of the outer custom component
 :host {
@@ -50,7 +51,6 @@ fieldset {
   gap: var(--ds-size-100, #{vac.$ds-size-100});
   padding-left: var(--ds-size-100, #{vac.$ds-size-100});
   padding-right: var(--ds-size-100, #{vac.$ds-size-100});
-  line-height: var(--ds-size-400, #{vac.$ds-size-400});
 
   &:hover {
     cursor: pointer;
@@ -59,6 +59,7 @@ fieldset {
 
 .label {
   display: block;
+  padding-top: var(--ds-size-50, #{vac.$ds-size-50});
 
   &:hover {
     cursor: pointer;
