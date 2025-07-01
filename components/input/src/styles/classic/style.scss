@@ -10,7 +10,8 @@
   scss/selector-nest-combinators,
   selector-max-compound-selectors,
   selector-max-combinators,
-  selector-no-qualifying-type
+  selector-no-qualifying-type,
+  max-nesting-depth
 */
 
 .layout-classic {
@@ -58,7 +59,23 @@
   }
 
   .accents {
-    padding: 0 8px;
+    .typeIcon {
+      > * {
+        margin-left: 8px;
+      }
+    }
+
+    &.left {
+      padding-right: 8px;
+    }
+
+    &.right {
+      padding-left: 8px;
+
+      .notification {
+        margin-right: 8px;
+      }
+    }
   }
 
   &.withValue {
