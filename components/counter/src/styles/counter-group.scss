@@ -4,7 +4,7 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable selector-class-pattern, selector-max-combinators, selector-max-compound-selectors */
+/* stylelint-disable selector-class-pattern, selector-max-combinators, selector-max-compound-selectors, selector-max-attribute */
 
 // Support for fallback values
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
@@ -82,5 +82,17 @@ slot {
     padding-top: var(--ds-size-300, vac.$ds-size-300);
     border-top-width: 1px;
     border-top-style: solid;
+  }
+}
+
+[auro-helptext] {
+  [part="helpText"] {
+    display: flex;
+    flex-direction: column;
+
+    // Individual error messages if they exist in a <p> tag
+    > p {
+      margin-block: 0;
+    }
   }
 }
