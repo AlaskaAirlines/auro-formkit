@@ -3,7 +3,13 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable lit-a11y/click-events-have-key-events, lit/binding-positions, lit/no-invalid-html, max-lines */
+/* eslint-disable
+  lit-a11y/click-events-have-key-events,
+  lit/binding-positions,
+  lit/no-invalid-html,
+  max-lines,
+  no-extra-parens
+  */
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
 
@@ -106,7 +112,7 @@ export class AuroInput extends BaseInput {
    */
   get commonInputClasses() {
     return {
-      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+      'util_displayHiddenVisually': (this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === '')),
     };
   }
 
