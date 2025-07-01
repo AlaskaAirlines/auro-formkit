@@ -452,11 +452,11 @@ export class AuroRadioGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} large ?onDark="${this.onDark}" part="helpText">
+          <${this.helpTextTag} ?onDark="${this.onDark}" part="helpText">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} large ?onDark="${this.onDark}" role="alert" error aria-live="assertive" part="helpText">
+          <${this.helpTextTag} ?onDark="${this.onDark}" role="alert" error aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

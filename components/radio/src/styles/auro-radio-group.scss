@@ -34,3 +34,7 @@ fieldset {
 legend {
   margin-bottom: var(--ds-size-150, vac.$ds-size-150);
 }
+
+[auro-helptext] {
+  margin-top: var(--ds-size-150, 0.75rem);
+}
