@@ -41,6 +41,7 @@
 | Property                  | Attribute                 | Type                     | Default        | Description                                      |
 |---------------------------|---------------------------|--------------------------|----------------|--------------------------------------------------|
 | `autoPlacement`           | `autoPlacement`           | `boolean`                | "false"        | If declared, bib's position will be automatically calculated where to appear. |
+| `error`                   | `error`                   | `string`                 |                | The current error message to display when the component is invalid. |
 | `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `string`                 | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `isDropdown`              | `isDropdown`              | `boolean`                | false          | Indicates if the counter group is displayed as a dropdown. |
 | `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean`                | false          | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |

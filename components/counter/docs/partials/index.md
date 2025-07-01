@@ -91,7 +91,7 @@ Help text is supported with counters, and can be added by targetting the `helpte
 
 ### Counter with Custom Error
 
-A custom error can be set on the counter by adding the `error` attribute the desired message.
+A custom error can be set on the counter by adding the `error` attribute with the desired message.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-error.html) -->
