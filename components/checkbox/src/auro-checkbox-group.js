@@ -402,11 +402,11 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} large part="helpText" ?onDark="${this.onDark}">
+          <${this.helpTextTag} part="helpText" ?onDark="${this.onDark}">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} error large ?onDark="${this.onDark}" role="alert" aria-live="assertive" part="helpText">
+          <${this.helpTextTag} error ?onDark="${this.onDark}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

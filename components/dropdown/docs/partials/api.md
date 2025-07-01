@@ -343,7 +343,7 @@ Content defined in the `label` slot will be rendered left aligned inside the tri
 
 #### helpText
 
-Content defined in the `helpText` slot will be rendered left aligned below the trigger.
+Content defined in the `helpText` slot will be rendered left aligned below the trigger. This slot requires the `auro-helptext` component be used as slot content for the helptext to render with the same styles as other form elements.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/helpText.html) -->
