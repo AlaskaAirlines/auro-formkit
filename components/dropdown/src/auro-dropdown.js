@@ -28,7 +28,6 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
-
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
@@ -49,10 +48,8 @@ import { ifDefined } from "lit/directives/if-defined.js";
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
-/**
- * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
+/*
  * @slot - Default slot for the popover content.
- * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
  * @csspart trigger - The trigger content container.
@@ -71,18 +68,22 @@ export class AuroDropdown extends AuroElement {
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
-    this.errorMessage = ''; // TODO - check with Doug if there is still more to do here
+    this.errorMessage = undefined; // TODO - check with Doug if there is still more to do here
 
     // Layout Config
-    this.layout = 'classic';
-    this.shape = 'classic';
-    this.size = 'xl';
+    this.layout = undefined;
+    this.shape = undefined;
+    this.size = undefined;
 
     this.parentBorder = false;
 
     this.privateDefaults();
   }
 
+  /**
+   * @private
+   * @returns {object} Class definition for the wrapper element.
+   */
   get commonWrapperClasses() {
     return {
       'trigger': true,
@@ -102,12 +103,8 @@ export class AuroDropdown extends AuroElement {
     this.disabled = false;
     this.disableFocusTrap = false;
     this.error = false;
-    this.inset = false;
-    this.rounded = false;
     this.tabIndex = 0;
     this.noToggle = false;
-    this.a11yAutocomplete = 'none';
-    this.labeled = true;
     this.a11yRole = 'button';
     this.onDark = false;
     this.showTriggerBorders = true;
@@ -229,6 +226,15 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
+       * If declared, the dropdown will only show by calling the API .show() public method.
+       * @default false
+       */
+      disableEventShow: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If declared, applies a border around the trigger slot.
        */
       simple: {
@@ -246,14 +252,6 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the dropdown will be styled with the common theme.
-       */
-      common: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
        * If declared, the dropdown is not interactive.
        */
       disabled: {
@@ -262,7 +260,7 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declare, the focus trap inside of bib will be turned off.
+       * If declared, the focus trap inside of bib will be turned off.
        */
       disableFocusTrap: {
         type: Boolean,
@@ -310,22 +308,6 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Makes the trigger to be full width of its parent container.
-       */
-      fluid: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, will apply padding around trigger slot content.
-       */
-      inset: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
        * If true, the dropdown bib is displayed.
        */
       isPopoverVisible: {
@@ -365,15 +347,6 @@ export class AuroDropdown extends AuroElement {
        */
       fullscreenBreakpoint: {
         type: String,
-        reflect: true
-      },
-
-      /**
-       * Defines if there is a label preset.
-       * @private
-       */
-      labeled: {
-        type: Boolean,
         reflect: true
       },
 
@@ -437,6 +410,9 @@ export class AuroDropdown extends AuroElement {
         reflect: true
       },
 
+      /**
+       *  If declared, and a function is set, that function will execute when the slot content is updated.
+       */
       onSlotChange: {
         type: Function,
         reflect: false
@@ -448,14 +424,6 @@ export class AuroDropdown extends AuroElement {
        */
       placement: {
         type: String,
-        reflect: true
-      },
-
-      /**
-       * If declared, will apply border-radius to trigger and default slots.
-       */
-      rounded: {
-        type: Boolean,
         reflect: true
       },
 
@@ -473,14 +441,6 @@ export class AuroDropdown extends AuroElement {
         type: String || undefined,
         attribute: false,
         reflect: false
-      },
-
-      /**
-       * The value for the aria-autocomplete attribute of the trigger element.
-       */
-      a11yAutocomplete: {
-        type: String,
-        attribute: false,
       }
     };
   }
@@ -930,10 +890,7 @@ export class AuroDropdown extends AuroElement {
           id="bib"
           shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
-          ?isfullscreen="${this.isBibFullscreen}"
-          ?common="${this.common}"
-          ?rounded="${this.common || this.rounded}"
-          ?inset="${this.common || this.inset}">
+          ?isfullscreen="${this.isBibFullscreen}">
           <div class="slotContent">
             <slot @slotchange="${this.handleDefaultSlot}"></slot>
           </div>
