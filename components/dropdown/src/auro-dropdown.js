@@ -487,8 +487,8 @@ export class AuroDropdown extends AuroElement {
 
   static get styles() {
     return [
-      colorCss,
       tokensCss,
+      colorCss,
 
       // default layout
       classicColorCss,
