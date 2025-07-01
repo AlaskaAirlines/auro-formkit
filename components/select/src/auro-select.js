@@ -52,7 +52,6 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @slot label - Defines the content of the label.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot helpText - Defines the content of the helpText.
- * @slot placeholder - Defines the content of the placeholder to be shown when there is no value
  * @slot valueText - Dropdown value text display.
  * @slot displayValue - Allows custom HTML content to display the selected value when select is not focused.
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
@@ -323,6 +322,14 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
+       * Define custom placeholder text.
+       */
+      placeholder: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * Populates the `required` attribute on the element. Used for client-side validation.
        */
       required: {
@@ -432,7 +439,7 @@ export class AuroSelect extends AuroElement {
   get commonLabelClasses() {
     return {
       'is-disabled': this.disabled,
-      'withValue': this.value && this.value.length > 0,
+      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
       'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
     };
   }
@@ -1069,7 +1076,7 @@ export class AuroSelect extends AuroElement {
         : html`
           <${this.helpTextTag} error ?onDark="${this.onDark}">
             <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
-              ERROR MESSAGE ${this.errorMessage}
+              ${this.errorMessage}
             </p>
           </${this.helpTextTag}>
         `
@@ -1084,14 +1091,14 @@ export class AuroSelect extends AuroElement {
    */
   renderLayoutEmphasized() {
     const placeholderClass = {
-      hidden: this.value,
+      'util_displayHidden': this.value
     };
 
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.value && this.value.length > 0,
+      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
       'force': this.forceDisplayValue,
     };
 
@@ -1135,11 +1142,9 @@ export class AuroSelect extends AuroElement {
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
                 <div class="value" id="value"></div>
-                ${this.value ? undefined : html`
-                  <div id="placeholder" class="${classMap(placeholderClass)}">
-                    <slot name="placeholder"></slot>
-                  </div>
-                `}
+                <div id="placeholder" class="${classMap(placeholderClass)}">
+                  ${this.placeholder}
+                </div>
               </div>
               <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
                 <slot name="displayValue"></slot>
@@ -1166,14 +1171,14 @@ export class AuroSelect extends AuroElement {
    */
   renderLayoutSnowflake() {
     const placeholderClass = {
-      hidden: this.value,
+      'util_displayHidden': this.value
     };
 
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.value && this.value.length > 0,
+      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
       'force': this.forceDisplayValue,
     };
 
@@ -1216,11 +1221,9 @@ export class AuroSelect extends AuroElement {
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
                 <div class="value" id="value"></div>
-                ${this.value ? undefined : html`
-                  <div id="placeholder" class="${classMap(placeholderClass)}">
-                    <slot name="placeholder"></slot>
-                  </div>
-                `}
+                <div id="placeholder" class="${classMap(placeholderClass)}">
+                  ${this.placeholder}
+                </div>
               </div>
               <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
                 <slot name="displayValue"></slot>
@@ -1248,14 +1251,14 @@ export class AuroSelect extends AuroElement {
    */
   renderLayoutClassic() {
     const placeholderClass = {
-      hidden: this.value,
+      'util_displayHidden': this.value
     };
 
     const displayValueClasses = {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.value && this.value.length > 0,
+      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
       'force': this.forceDisplayValue,
     };
 
@@ -1298,11 +1301,9 @@ export class AuroSelect extends AuroElement {
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
                 <div class="value" id="value"></div>
-                ${this.value ? undefined : html`
-                  <div id="placeholder" class="${classMap(placeholderClass)}">
-                    <slot name="placeholder"></slot>
-                  </div>
-                `}
+                <div id="placeholder" class="${classMap(placeholderClass)}">
+                  ${this.placeholder}
+                </div>
               </div>
               <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
                 <slot name="displayValue"></slot>

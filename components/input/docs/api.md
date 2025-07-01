@@ -32,7 +32,7 @@ Generate unique names for dependency components.
 | `noValidate`                      | `noValidate`                      | `boolean` | false       | If set, disables auto-validation on blur.        |
 | `onDark`                          | `onDark`                          | `boolean` | false       | Sets onDark styles on input.                     |
 | `pattern`                         | `pattern`                         | `string`  |             | Specifies a regular expression the form control's value should match. |
-| `placeholder`                     | `placeholder`                     | `string`  |             | Define custom placeholder text, only supported by date input formats. |
+| `placeholder`                     | `placeholder`                     | `string`  |             | Define custom placeholder text.                  |
 | `readonly`                        | `readonly`                        | `boolean` |             | Makes the input read-only, but can be set programmatically. |
 | `required`                        | `required`                        | `boolean` | false       | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`               | `setCustomValidity`               | `string`  |             | Sets a custom help text message to display for all validityStates. |
