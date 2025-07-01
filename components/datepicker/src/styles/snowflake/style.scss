@@ -30,6 +30,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  width: 100%; // from designs
+  max-width: 250px; // not from designs, given to add breathing room to inputs
+  margin: 0 auto;
 }
 
 .inputSection:not(:is(.disabled, .hasFocus, .hasValue)) {
