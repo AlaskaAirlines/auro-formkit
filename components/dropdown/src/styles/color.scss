@@ -7,6 +7,10 @@
 // Support for fallback values
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
 
+:host(:not([layout*='classic'])) {
+  --ds-auro-dropdown-trigger-border-color: transparent;
+}
+
 :host(:not([ondark])) {
   .wrapper {
     border-color: var(--ds-auro-dropdown-trigger-border-color);
