@@ -168,7 +168,7 @@
   }
 }
 
-:host(:not([layout*=classic])[disabled][ondark]) {
+:host(:not([layout*="classic"])[disabled][ondark]) {
   [auro-dropdown] {
     --ds-auro-select-border-color: transparent;
   }
