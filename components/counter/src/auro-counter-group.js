@@ -1,4 +1,16 @@
-/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, prefer-destructuring, no-underscore-dangle, arrow-parens, no-confusing-arrow, curly, no-unused-expressions */
+/*
+  eslint-disable
+  lit/no-invalid-html,
+  lit/binding-positions,
+  max-lines,
+  no-underscore-dangle,
+  arrow-parens,
+  no-confusing-arrow,
+  curly,
+  dot-location,
+  no-inline-comments,
+  line-comment-position,
+*/
 
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -28,6 +40,9 @@ import helptextVersion from './helptextVersion.js';
 import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
 import { classMap } from "lit/directives/class-map.js";
+
+import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import iconVersion from "./iconVersion.js";
 
 /**
  * Auro Counter Group is a group of counter components.
@@ -85,6 +100,12 @@ export class AuroCounterGroup extends AuroElement {
      */
     this.validation = new AuroFormValidation();
 
+    /** @private */
+    this.updateValue = this.updateValue.bind(this);
+
+    /** @private */
+    this.updateValidity = this.updateValidity.bind(this);
+
     /**
      * Generate unique names for dependency components.
      * @private
@@ -111,6 +132,11 @@ export class AuroCounterGroup extends AuroElement {
      * @type {string}
      */
     this.helpTextTag = versioning.generateTag("auro-formkit-counter-helptext", helptextVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
   }
 
   static get styles() {
@@ -133,6 +159,25 @@ export class AuroCounterGroup extends AuroElement {
       autoPlacement: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * The current error message to display when the component is invalid.
+       */
+      error: {
+        type: String,
+        reflect: false
+      },
+
+      /**
+       * The current error message to display when the component is invalid.
+       * This is set by validation and is not available to consumers.
+       * @private
+       */
+      errorMessage: {
+        type: String,
+        reflect: false,
+        attribute: false
       },
 
       /**
@@ -293,7 +338,103 @@ export class AuroCounterGroup extends AuroElement {
     this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
     this.counters.forEach((counter) => {
       counter.onDark = this.onDark;
-      counter.addEventListener("input", () => this.updateValue());
+      counter.addEventListener("input", this.updateValue);
+      counter.addEventListener("auroFormElement-validated", this.updateValidity);
+    });
+  }
+
+  /**
+   * Renders help text error messages.
+   * @param {Array<string>} messages - The error messages to render.
+   * @returns {TemplateResult[]} - The rendered error messages rendered in a TemplateResult.
+   * @private
+   */
+  renderHelpTextErrors(messages) {
+
+    // Return empty template if no messages are provided
+    if (!messages || messages.length === 0) return html``;
+
+    // Return messages as a TemplateResult
+    return messages.map((message, index) => html`
+      ${message}
+      ${index < messages.length - 1
+        ? html`<br>`
+        : ''
+      }
+    `);
+  }
+
+  /**
+   * Gets and returns an array of counters in an invalid state.
+   * @returns {Array<HTMLElement>} - Returns an array of invalid counters.
+   * @param {NodeList} counters - The NodeList of counter elements to check.
+   * @private
+   */
+  getInvalidCounters(counters) {
+    return Array.from(counters).filter(counter => counter.validity && counter.validity !== 'valid');
+  }
+
+  /**
+   * Gets all valid error messages from errored counters.
+   * @param {NodeList} invalidCounters - The NodeList of counter elements to check.
+   * @returns {Array<string>} - Returns an array of error messages from invalid counters.
+   * @private
+   */
+  getErrorMessages(invalidCounters) {
+    return invalidCounters
+      .map(counter => counter.errorMessage)
+      .filter(message => message && message.length > 0);
+  };
+
+  /**
+   * Updates the validity of the counter group based on the validity of its counters.
+   * This method checks all counters within the group, determines if any are invalid, and updates the group's validity state and error message accordingly.
+   * If any counter is invalid, it generates a combined error message from all invalid counters.
+   * @returns {void}
+   * @private
+   */
+  updateValidity () {
+
+    // We don't need to do anything if there are no counters
+    if (!this.counters) return;
+
+    // Wait for initial validation to complete before updating validity and error message
+    // This is necessary because we need the initial validation to know when to reset the validity and error message
+    setTimeout(() => {
+
+      // Get any invalid counters
+      const invalidCounters = this.getInvalidCounters(this.counters);
+
+      // Determine if we are in an invalid state based on the presence of invalid counters
+      const isInvalid = invalidCounters.length > 0;
+
+      // If we are in an invalid state
+      if (isInvalid) {
+
+        // Generate the error messages
+        const errorMessages = this.getErrorMessages(invalidCounters);
+
+        const errorMessage = isInvalid ? this.renderHelpTextErrors(errorMessages) : this.errorMessage;
+
+        // Set the validity and error message
+        // This needs to allow for the initial validation to come through
+        this.validity =
+          invalidCounters[0].validity || // The first invalid counter's validity
+          this.validity || // incoming validity from validation
+          undefined; // fallback
+
+        this.errorMessage =
+          errorMessage || // our message
+          this.errorMessage || // incoming message from validation
+          undefined; // fallback
+      }
+
+      if (!isInvalid && this.validity !== 'valid') {
+
+        // If there are no invalid counters, reset validity and error message
+        this.validity = 'valid';
+        this.errorMessage = undefined;
+      }
     });
   }
 
@@ -312,7 +453,8 @@ export class AuroCounterGroup extends AuroElement {
     this.counters = counterSlot.assignedElements().filter(el => el.tagName.toLowerCase() === 'auro-counter' || el.hasAttribute('auro-counter'));
 
     this.counters.forEach((counter) => {
-      counter.addEventListener("input", () => this.updateValue());
+      counter.addEventListener("input", this.updateValue);
+      counter.addEventListener("auroFormElement-validated", this.updateValidity);
     });
 
     if (this.isDropdown) {
@@ -463,6 +605,57 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
+   * Returns HTML for the help text and error message.
+   * @private
+   * @returns {html} - Returns HTML for the help text and error message.
+   */
+  renderHelpText() {
+    return !this.validity || this.validity === undefined || this.validity === 'valid'
+      ? html`
+        <div slot="helpText">
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helpText"></slot>
+            </p>
+          </${this.helpTextTag}>
+        </div>
+      `
+      : html`
+        <div slot="helpText">
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText" role="alert" aria-live="assertive">
+              ${this.error || this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        </div>
+      `;
+  }
+
+  /**
+   * Returns HTML for the validation error icon.
+   * @private
+   * @returns {html} - Returns HTML for the validation error icon.
+   */
+  renderValidationErrorIcon() {
+
+    // Don't render in valid state
+    if (!this.validity || this.validity === 'valid') return undefined;
+
+    return html`
+      ${this.validity && this.validity !== 'valid' ? html`
+        <div class="notification alertNotification">
+          <${this.iconTag}
+            category="alert"
+            name="error-stroke"
+            variant="statusError"
+            ?ondark="${this.onDark}">
+          </${this.iconTag}>
+        </div>
+      ` : undefined}
+    `;
+  }
+
+  /**
    * Render the dropdown structure for the counter group.
    * @returns {TemplateResult} The dropdown template.
    * @private
@@ -518,27 +711,12 @@ export class AuroCounterGroup extends AuroElement {
             ${this.counters && Array.from(this.counters).map((counter, index) => html`${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
           </slot>
         </div>
-        <div class="accents right"></div>
+        <div class="accents right">
+          ${this.renderValidationErrorIcon()}
+        </div>
       </div>
     `;
   };
-
-  /**
-   * Render the help text for the counter group.
-   * @returns {TemplateResult} The help text template.
-   * @private
-   */
-  renderHelpText() {
-    return html`
-      <div slot="helpText">
-        <${this.helpTextTag} ?onDark="${this.onDark}">
-          <p id="${this.uniqueId}" part="helpText">
-            <slot name="helpText"></slot>
-          </p>
-        </${this.helpTextTag}>
-      </div>
-    `;
-  }
 
   /**
    * Render the dropdown bib template for the dropdown.
