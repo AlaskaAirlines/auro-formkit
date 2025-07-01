@@ -277,10 +277,10 @@ export default class AuroFormValidation {
       if (!hasValue && elem.required && elem.touched) {
         elem.validity = 'valueMissing';
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
-      } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
+      } else if (hasValue && this.runtimeUtils.elementMatch(elem, 'auro-input')) {
         this.validateType(elem);
         this.validateElementAttributes(elem);
-      } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
+      } else if (hasValue && (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group'))) {
         this.validateElementAttributes(elem);
       }
     }
