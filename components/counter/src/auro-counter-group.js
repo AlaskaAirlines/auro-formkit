@@ -1,4 +1,11 @@
-/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, prefer-destructuring, no-underscore-dangle, arrow-parens, no-confusing-arrow, curly, no-unused-expressions */
+/* eslint-disable
+  lit/no-invalid-html,
+  lit/binding-positions,
+  max-lines,
+  no-underscore-dangle,
+  arrow-parens,
+  no-confusing-arrow
+  */
 
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -222,7 +229,7 @@ export class AuroCounterGroup extends AuroElement {
        * "top" | "right" | "bottom" | "left" |
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
+       * "left-start" | "left-end".
        * @default bottom-start
        */
       placement: {

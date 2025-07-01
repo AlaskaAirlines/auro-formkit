@@ -50,7 +50,7 @@
 | `noFlip`                  | `noFlip`                  | `boolean`                | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `offset`                  | `offset`                  | `number`                 | "0"            | Gap between the trigger element and bib.         |
 | `onDark`                  | `onDark`                  | `boolean`                | false          | If declared, counters and dropdown will be rendered with onDark styles. |
-| `placement`               | `placement`               | `string`                 | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
+| `placement`               | `placement`               | `string`                 | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end". |
 | `total`                   | `total`                   | `number`                 | "undefined"    | The total value of the counters.                 |
 | `validity`                | `validity`                | `string`                 | "undefined"    | Reflects the validity state.                     |
 | `value`                   | `value`                   | `object`                 | "undefined"    | The current individual values of the nested counters. |
