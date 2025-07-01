@@ -70,19 +70,19 @@ export default class AuroFormValidation {
           {
             check: (e) => e.value?.length > 0 && e.value?.length < e.minLength,
             validity: 'tooShort',
-            message: e => e.setCustomValidityTooShort || e.setCustomValidity || ''
+            message: e => e.getAttribute('setCustomValidityTooShort') || e.setCustomValidity || ''
           },
           {
             check: (e) => e.value?.length > e.maxLength,
             validity: 'tooLong',
-            message: e => e.setCustomValidityTooLong || e.setCustomValidity || ''
+            message: e => e.getAttribute('setCustomValidityTooLong') || e.setCustomValidity || ''
           }
         ],
         pattern: [
           {
             check: (e) => e.pattern && !new RegExp(`^${e.pattern}$`, 'u').test(e.value),
             validity: 'patternMismatch',
-            message: e => e.setCustomValidityPatternMismatch || e.setCustomValidity || ''
+            message: e => e.getAttribute('setCustomValidityPatternMismatch') || e.setCustomValidity || ''
           }
         ]
       },
