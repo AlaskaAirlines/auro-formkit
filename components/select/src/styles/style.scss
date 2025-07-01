@@ -158,7 +158,18 @@
 }
 
 :host([disabled]) {
-  * {
-    user-select: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+:host([disabled]:not([ondark])) {
+  [auro-dropdown] {
+    --ds-auro-select-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
+  }
+}
+
+:host(:not([layout*=classic])[disabled][ondark]) {
+  [auro-dropdown] {
+    --ds-auro-select-border-color: transparent;
   }
 }

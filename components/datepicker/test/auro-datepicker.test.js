@@ -596,7 +596,7 @@ describe('auro-datepicker', () => {
     await expect(input.getAttribute('setCustomValidityValueMissing')).to.be.equal('The value is missing!');
   });
 
-  // BUG IN ERROR MESSAGE CODE (Next two tests)
+  // TODO BUG IN ERROR MESSAGE CODE (Next two tests)
   it('dateFrom error message shown when dateTo is also invalid', async () => {
     const el = await fixture(html`
       <auro-datepicker range required minDate="04/15/2023" value="04/20/2023" setCustomValidityRangeUnderflow="Before min date"></auro-datepicker>

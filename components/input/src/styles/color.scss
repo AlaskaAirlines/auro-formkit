@@ -66,7 +66,7 @@
 
 // disabled state
 :host(:not([ondark])[disabled]) {
-  --ds-auro-input-border-color: var(--ds-advanced-color-button-primary-border-disabled, #{v.$ds-advanced-color-button-primary-border-disabled});
+  --ds-auro-input-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
   --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 

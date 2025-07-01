@@ -308,7 +308,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Define custom placeholder text, only supported by date input formats.
+       * Define custom placeholder text.
        */
       placeholder: {
         type: String,

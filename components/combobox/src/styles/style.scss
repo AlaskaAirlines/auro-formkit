@@ -3,7 +3,7 @@
 
 /* stylelint-disable max-nesting-depth */
 
-@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
 :host {
   display: block;

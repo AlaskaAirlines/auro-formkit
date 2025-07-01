@@ -23,6 +23,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `offset`                        | `offset`                        | `number`                          | "0"            | Gap between the trigger element and bib.         |
 | `onDark`                        | `onDark`                        | `boolean`                         |                | If declared, onDark styles will be applied to the trigger. |
 | `optionSelected`                | `optionSelected`                | `HTMLElement\|Array<HTMLElement>` |                | Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true. |
+| `placeholder`                   | `placeholder`                   | `string`                          |                | Define custom placeholder text.                  |
 | `placement`                     | `placement`                     | `string`                          | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end". |
 | `required`                      | `required`                      | `boolean`                         |                | Populates the `required` attribute on the element. Used for client-side validation. |
 | `setCustomValidity`             | `setCustomValidity`             | `string`                          |                | Sets a custom help text message to display for all validityStates. |
@@ -58,7 +59,6 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `helpText`                | Defines the content of the helpText.             |
 | `label`                   | Defines the content of the label.                |
 | `optionalLabel`           | Allows overriding the optional display text "(optional)", which appears next to the label. |
-| `placeholder`             | Defines the content of the placeholder to be shown when there is no value |
 | `valueText`               | Dropdown value text display.                     |
 
 ## CSS Shadow Parts
