@@ -881,6 +881,17 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Handle enter/space keydown on the reset button.
+   * @param {KeyboardEvent} event - The keydown event.
+   */
+  handleKeydownReset(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.resetValues();
+      this.setHasFocus();
+    }
+  }
+
+  /**
    * Resets values without resetting validation.
    */
   resetValues() {
@@ -1330,6 +1341,7 @@ export class AuroDatePicker extends AuroElement {
       <div class="${classMap(clearActionClassMap)}">
         <${this.buttonTag}
           @click="${this.resetValues}"
+          @keydown="${this.handleKeydownReset}"
           ?onDark="${this.onDark}"
           aria-label="${i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"

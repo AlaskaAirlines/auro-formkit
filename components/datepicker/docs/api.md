@@ -48,6 +48,7 @@
 | Method                        | Type                                   | Description                                      |
 |-------------------------------|----------------------------------------|--------------------------------------------------|
 | `focus`                       | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
+| `handleKeydownReset`          | `(event: KeyboardEvent): void`         | Handle enter/space keydown on the reset button.<br /><br />**event**: The keydown event. |
 | `renderHtmlActionClear`       | `(): TemplateResult`                   |                                                  |
 | `renderHtmlIconCalendar`      | `(): TemplateResult`                   |                                                  |
 | `renderHtmlIconError`         | `(): TemplateResult`                   |                                                  |
