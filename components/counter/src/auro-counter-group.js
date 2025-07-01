@@ -478,7 +478,7 @@ export class AuroCounterGroup extends AuroElement {
     return html`
       <${this.dropdownTag} 
         noHideOnThisFocusLoss
-        chevron common fluid
+        chevron
         part="dropdown"
         ?autoPlacement="${this.autoPlacement}"
         ?error="${this.validity !== undefined && this.validity !== 'valid'}"

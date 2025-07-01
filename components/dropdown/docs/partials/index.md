@@ -25,9 +25,9 @@ To meet our accessibility requirement, all uses of `auro-dropdown` should have a
 
 Not including one of the above options will result in your UI being non-compliant with Alaska's accessibility policies.
 
-## Classic Layouts
+## Layouts
 
-This first common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `aria-label` attribute is used to define a string value that labels an interactive element.
+### Classic
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/basic.html) -->
@@ -55,116 +55,36 @@ This first common example uses the default `auro-dropdown` element with the attr
 
 </auro-accordion>
 
+### Emphasized
 
-## Emphasized Layouts
+Only supports `ondark`.
 
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-## Snowflake Layouts
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Snowflake
+
+Only supports `ondark`.
 
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-## Common use with auro-label
-
-This first common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `aria-label` attribute is used to define a string value that labels an interactive element.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/common.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommon.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/common.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommon.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-
-## Common use using the label content slot
-
-This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the `slot` content container to define a string value that labels the interactive element.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonSlot.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommonSlot.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonSlot.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkCommonSlot.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-## Common use with popover content wider than the trigger
-
-This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally the trigger is full width of the containing element and the popover content is set to a width wider than the trigger.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/widerPopover.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/widerPopover.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-## Common use with popover width matching the trigger
-
-This common example uses the default `auro-dropdown` element with the attributes of `bordered` `rounded` `inset` `toggle` and `chevron`. Additionally  `matchWidth` attribute is used to make the popover match the width of the trigger.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/commonMatchWidth.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/commonMatchWidth.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-## Common use with its width matching the trigger
-
-To make the dropdown to be just big as the trigger's content, style the `auro-dropdown` width `display: inline-block`.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inline.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inline.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -196,6 +116,5 @@ The dropdown can be opened with the following actions:
 The dropdown can be closed with the following actions:
 
 1. Clicking anywhere in the view outside of the dropdown.
-1. Clicking on the trigger when the `toggle` attribute is used.
 1. Using the `esc` key.
 1. Programmatically via another control in the UI calling the `hide()` method (see api).
