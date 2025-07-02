@@ -605,9 +605,9 @@ export default class BaseInput extends AuroElement {
         if (!this.shadowRoot.contains(this.getActiveElement())) {
           this.validation.validate(this);
         }
-
-        this.notifyValueChanged();
       }
+
+      this.notifyValueChanged();
     }
 
     if (changedProperties.has('error')) {
