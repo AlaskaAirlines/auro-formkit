@@ -4,6 +4,7 @@
 
 import { LitElement } from "lit";
 import { html } from "lit/static-html.js";
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import "./auro-counter-button.js";
 
@@ -375,14 +376,15 @@ export class AuroCounter extends LitElement {
           </div>
           <div 
             part="counterControl" 
-            aria-labelledby="counter-label" 
             aria-describedby="counter-description" 
-            tabindex="${this.disabled ? '-1' : '0'}" 
-            role="spinbutton" 
-            aria-valuemin="${this.min}" 
+            aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}" 
+            aria-labelledby="counter-label" 
             aria-valuemax="${this.max}" 
+            aria-valuemin="${this.min}" 
             aria-valuenow="${this.value}"
             aria-valuetext="${this.value !== undefined ? this.value : this.min}"
+            role="spinbutton" 
+            tabindex="${this.disabled ? '-1' : '0'}" 
           >
             <auro-counter-button
               aria-hidden="true"
