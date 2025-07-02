@@ -4,39 +4,49 @@
 # This script copies Auro FormKit component demos to a new directory structure.
 # It iterates through a list of components, finding their demo directories
 # and copying each one to a new location with names matching the components.
+# With the --zip flag, it will also create a zip archive of the demo folder and delete the original.
 
 # Steps:
 # 1. Defines a list of components to copy
 # 2. Creates a target directory if it doesn't exist
 # 3. For each component, copies its demo directory if it exists
 # 4. Prints a summary of all copied component folders at the end
+# 5. If --zip flag is provided, creates a zip archive and deletes the original folder
 
-# Requirements:
-# - Components must follow the expected directory structure
+# Usage:
+# ./local-demo.sh        # Creates the demo folder
+# ./local-demo.sh --zip  # Creates the demo folder, zips it, and deletes the original
+
+# Check for --zip flag
+zip_flag=false
+for arg in "$@"; do
+  if [ "$arg" = "--zip" ]; then
+    zip_flag=true
+  fi
+done
 
 # Simple array of component names
 components="checkbox combobox counter datepicker dropdown form input menu radio select"
 
 # Directory patterns
 demo_dir="components/%s/demo"
-target_dir="demo-collection"
+target_dir="auro-formkit-demo"
 
 # Create target directory if it doesn't exist
 mkdir -p "$target_dir"
 
-# Generate package.json for demo-collection
+# Generate package.json for auro-formkit-demo
 echo "Generating package.json file..."
 cat > "$target_dir/package.json" << EOF
 {
-  "name": "demo-collection",
+  "name": "auro-formkit-demo",
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "http-server ./ -o"
   },
-  "author": "",
+  "author": "Auro",
   "license": "ISC",
-  "description": "",
+  "description": "Auro FormKit component demo",
   "devDependencies": {
     "http-server": "^14.1.1"
   }
@@ -138,3 +148,80 @@ cat >> "$target_dir/index.html" << EOF
 EOF
 
 echo "✓ Generated index.html with quick links to all components"
+
+# Generate a README.md file with installation and usage instructions
+echo "Generating README.md file..."
+cat > "$target_dir/README.md" << EOF
+# Auro FormKit Demo
+
+This folder contains a collection of demos for all Auro FormKit components. It provides a quick way to explore and review component documentation in a local environment.
+
+## Installation
+
+To install the necessary dependencies, run:
+
+\`\`\`bash
+npm install
+\`\`\`
+
+## Usage
+
+To start the local server and view the demos:
+
+\`\`\`bash
+npm start
+\`\`\`
+
+This will open a browser window with the demo collection index. From there, you can navigate to individual component demos.
+
+## Available Components
+
+The following components are included in this demo collection:
+EOF
+
+# Add each available component to the README
+for component in $components; do
+    dst_dir="$target_dir/$component"
+    if [ -d "$dst_dir" ]; then
+        echo "- \`$component\`" >> "$target_dir/README.md"
+    fi
+done
+
+# Add footer to README
+cat >> "$target_dir/README.md" << EOF
+
+## Development
+
+This demo collection was generated using the \`local-demo.sh\` script from the Auro FormKit repository. If you want to regenerate or update the demos, please refer to the main repository.
+EOF
+
+echo "✓ Generated README.md with installation and usage instructions"
+
+# If --zip flag is provided, create a zip archive and delete the original folder
+if [ "$zip_flag" = true ]; then
+    echo ""
+    echo "Creating zip archive..."
+    zip_file="${target_dir}.zip"
+    
+    # Check if zip command is available
+    if command -v zip >/dev/null 2>&1; then
+        # Create zip archive
+        zip -r "$zip_file" "$target_dir"
+        
+        if [ $? -eq 0 ]; then
+            echo "✓ Created zip archive: $zip_file"
+            
+            # Delete the original folder
+            rm -rf "$target_dir"
+            echo "✓ Deleted original folder: $target_dir"
+            echo ""
+            echo "Done! You can find the zipped demo at: $zip_file"
+        else
+            echo "✗ Failed to create zip archive"
+        fi
+    else
+        echo "✗ The 'zip' command is not installed. Please install it to use the --zip option."
+        echo "  On macOS: brew install zip"
+        echo "  On Linux: sudo apt-get install zip (Ubuntu/Debian) or sudo yum install zip (CentOS/RHEL)"
+    fi
+fi
