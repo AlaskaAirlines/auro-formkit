@@ -28,7 +28,6 @@ import {
  * @attr {boolean} nocheckmark - When true, selected option will not show the checkmark.
  * @attr {boolean} loading - When true, displays a loading state using the loadingIcon and loadingText slots if provided.
  * @attr {boolean} multiselect - When true, the selected option can be multiple options.
- * @attr {String|Array<string>} value - Value selected for the menu, type `string` by default. In multi-select mode, `value` is an array of strings.
  * @prop {boolean} hasLoadingPlaceholder - Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state.
  * @event {CustomEvent<Element>} auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
@@ -141,9 +140,14 @@ export class AuroMenu extends AuroElement {
         reflect: true,
         attribute: 'multiselect'
       },
+
+      /**
+       * Value selected for the component.
+       */
       value: {
-        // Allow string, string[] arrays and undefined
-        type: Object
+        type: String,
+        reflect: true,
+        attribute: 'value'
       },
 
       /**
@@ -176,6 +180,25 @@ export class AuroMenu extends AuroElement {
    */
   static register(name = "auro-menu") {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroMenu);
+  }
+
+  /**
+   * Formatted value based on `multiSelect` state.
+   * Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
+   * @private
+   * @returns {String|Array<String>}
+   */
+  get formattedValue() {
+    if (this.multiSelect) {
+      if (!this.value) {
+        return undefined;
+      }
+      if (this.value.startsWith("[")) {
+        return JSON.parse(this.value);
+      }
+      return [this.value];
+    }
+    return this.value;
   }
 
   // Lifecycle Methods
@@ -220,7 +243,7 @@ export class AuroMenu extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    if (changedProperties.has('multiSelect')) {
+    if (changedProperties.has('multiSelect') && !changedProperties.has("value")) {
       // Reset selection if multiSelect mode changes
       this.clearSelection();
     }
@@ -234,7 +257,7 @@ export class AuroMenu extends AuroElement {
       } else {
         if (this.multiSelect) {
           // In multiselect mode, this.value should be an array of strings
-          const valueArray = Array.isArray(this.value) ? this.value : [this.value];
+          const valueArray = this.formattedValue;
           const matchingOptions = this.items.filter((item) => valueArray.includes(item.value));
 
           this.optionSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
@@ -401,14 +424,14 @@ export class AuroMenu extends AuroElement {
    */
   handleSelectState(option) {
     if (this.multiSelect) {
-      const currentValue = this.value || [];
+      const currentValue = this.formattedValue || [];
       const currentSelected = this.optionSelected || [];
 
       if (!currentValue.includes(option.value)) {
-        this.value = [
+        this.value = JSON.stringify([
           ...currentValue,
           option.value
-        ];
+        ]);
       }
       if (!currentSelected.includes(option)) {
         this.optionSelected = [
@@ -431,13 +454,15 @@ export class AuroMenu extends AuroElement {
    * @param {HTMLElement} option - The menuoption to be deselected.
    */
   handleDeselectState(option) {
-    if (this.multiSelect && Array.isArray(this.value)) {
+    if (this.multiSelect) {
       // Remove this option from array
-      this.value = this.value.filter((val) => val !== option.value);
+      const newFormattedValue = (this.formattedValue || []).filter((val) => val !== option.value);
 
       // If array is empty after removal, set back to undefined
-      if (this.value.length === 0) {
+      if (newFormattedValue && newFormattedValue.length === 0) {
         this.value = undefined;
+      } else {
+        this.value = JSON.stringify(newFormattedValue);
       }
 
       this.optionSelected = this.optionSelected.filter((val) => val !== option);

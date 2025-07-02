@@ -136,7 +136,7 @@ describe("auro-dropdown", () => {
 
   it("auro-dropdown fires event - auroDropdown-triggerClick", async () => {
     const el = await fixture(html`
-      <auro-dropdown disableEventShow>
+      <auro-dropdown>
         <span slot="label"> label text </span>
         <div slot="trigger">Trigger</div>
       </auro-dropdown>
@@ -150,6 +150,22 @@ describe("auro-dropdown", () => {
     const { result } = await listener;
 
     expect(result).to.equal(undefined);
+  });
+
+  it("auro-dropdown shows only with `show()` with disableEventShow", async () => {
+    const el = await fixture(html`
+      <auro-dropdown disableEventShow>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    const trigger = el.shadowRoot.querySelector("#trigger");
+    trigger.click();
+    await expectPopoverHidden(el);
+
+    el.show();
+    await expectPopoverShown(el);
   });
 
   it("auro-dropdown fires event - auroDropdown-toggled", async () => {

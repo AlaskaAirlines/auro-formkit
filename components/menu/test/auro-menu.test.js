@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable no-magic-numbers */
 import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
 import '../src/registered.js';
 import { arrayConverter } from '../src/auro-menu-utils.js';
@@ -290,8 +292,8 @@ describe('multiSelect', () => {
     await elementUpdated(menuEl);
     
     // Verify both options are selected
-    expect(menuEl.value).to.deep.equal(['option1', 'option2']);
-    expect(Array.isArray(menuEl.value)).to.be.true;
+    const jsonValue = JSON.parse(menuEl.value);
+    expect(jsonValue).to.eql(['option1', 'option2']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.true;
     expect(options[2].hasAttribute('selected')).to.be.false;
@@ -321,7 +323,8 @@ describe('multiSelect', () => {
     await elementUpdated(menuEl);
     
     // Verify initial selections
-    expect(menuEl.value).to.deep.equal(['option1', 'option2', 'option3']);
+    
+    expect(JSON.parse(menuEl.value)).to.eql(['option1', 'option2', 'option3']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.true;
     expect(options[2].hasAttribute('selected')).to.be.true;
@@ -332,7 +335,7 @@ describe('multiSelect', () => {
     await elementUpdated(menuEl);
     
     // Verify state after deselection
-    expect(menuEl.value).to.deep.equal(['option1', 'option3']);
+    expect(JSON.parse(menuEl.value)).to.eql(['option1', 'option3']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.false;
     expect(options[2].hasAttribute('selected')).to.be.true;
@@ -350,7 +353,7 @@ describe('multiSelect', () => {
     await elementUpdated(menuEl);
     
     // Verify value is undefined when no options are selected
-    expect(menuEl.value).to.equal(undefined);
+    expect(menuEl.value).to.be.undefined;
     options.forEach(option => {
       expect(option.hasAttribute('selected')).to.be.false;
       expect(option.getAttribute('aria-selected')).to.equal('false');
@@ -563,7 +566,8 @@ describe('multiSelect', () => {
     await elementUpdated(menuEl);
   
     // Verify only second option remains selected
-    expect(menuEl.value).to.deep.equal(['option2']);
+    const jsonValue = JSON.parse(menuEl.value);
+    expect(jsonValue).to.eql(['option2']);
     expect(options[0].hasAttribute('selected')).to.be.false;
     expect(options[1].hasAttribute('selected')).to.be.true;
   });
@@ -611,7 +615,8 @@ describe('multiSelect', () => {
     await elementUpdated(menuEl);
   
     // Verify aria-selected states
-    expect(menuEl.value).to.deep.equal(['option1', 'option3']);
+    const jsonValue = JSON.parse(menuEl.value);
+    expect(jsonValue).to.eql(['option1', 'option3']);
     expect(options[0].getAttribute('aria-selected')).to.equal('true');
     expect(options[1].getAttribute('aria-selected')).to.equal('false');
     expect(options[2].getAttribute('aria-selected')).to.equal('true');
@@ -632,7 +637,7 @@ describe('multiSelect', () => {
     await elementUpdated(menuEl);
 
     // Verify initial selections
-    expect(Array.isArray(menuEl.value)).to.be.true;
+    expect(menuEl.value.indexOf('[')).to.be.equal(0);
     expect(menuEl.value).to.include('option1');
     expect(menuEl.value).to.include('option3');
     expect(menuEl.value).to.not.include('option2');
@@ -681,7 +686,7 @@ describe('value states', () => {
     await elementUpdated(menu);
 
     // Verify selection results in array
-    expect(menu.value).to.deep.equal('option 1');
+    expect(menu.value).to.eql('option 1');
     
     // Try to deselect by clicking again
     menu.dispatchEvent(new KeyboardEvent('keydown', {
@@ -692,7 +697,7 @@ describe('value states', () => {
     await elementUpdated(menu);
     
     // Selection should persist
-    expect(menu.value).to.deep.equal('option 1');
+    expect(menu.value).to.eql('option 1');
   });
 
   // Verify reset() returns to undefined
@@ -720,7 +725,7 @@ describe('value states', () => {
     await elementUpdated(menu);
     
     // Verify selection
-    expect(menu.value).to.deep.equal('option 1');
+    expect(menu.value).to.eql('option 1');
     
     // Reset
     menu.reset();
@@ -755,7 +760,7 @@ describe('value states', () => {
     await elementUpdated(menu);
   
     // Verify array after selection
-    expect(menu.value).to.deep.equal('option 1');
+    expect(menu.value).to.eql('option 1');
     
     // Try to deselect - should have no effect
     menu.dispatchEvent(new KeyboardEvent('keydown', {
@@ -766,7 +771,7 @@ describe('value states', () => {
     await elementUpdated(menu);
   
     // Selection should persist
-    expect(menu.value).to.deep.equal('option 1');
+    expect(menu.value).to.eql('option 1');
   
     // Reset
     menu.reset();
@@ -800,8 +805,9 @@ describe('value states', () => {
     await elementUpdated(menu);
 
     // After selection, should be array
-    expect(Array.isArray(menu.value)).to.be.true;
-    expect(menu.value).to.deep.equal(['option1']);
+    expect(menu.value.indexOf('[')).to.be.equal(0);
+    const jsonValue = JSON.parse(menu.value);
+    expect(jsonValue).to.eql(['option1']);
     
     // Deselect
     menu.dispatchEvent(new KeyboardEvent('keydown', {
@@ -839,8 +845,8 @@ describe('multiSelect initial state', () => {
     await elementUpdated(menuEl);
     
     // Verify array is initialized correctly
-    expect(Array.isArray(menuEl.value)).to.be.true;
-    expect(menuEl.value).to.deep.equal(['option1']);
+    const jsonValue = JSON.parse(menuEl.value);
+    expect(jsonValue).to.eql(['option1']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[0].getAttribute('aria-selected')).to.equal('true');
     
@@ -883,8 +889,8 @@ describe('multiSelect initial state', () => {
     await elementUpdated(menuEl);
     
     // Verify value is now an array
-    expect(Array.isArray(menuEl.value)).to.be.true;
-    expect(menuEl.value.length).to.equal(1);
+    const jsonValue = JSON.parse(menuEl.value);
+    expect(jsonValue.length).to.equal(1);
   });
 });
 
@@ -907,7 +913,7 @@ describe('arrayConverter', () => {
     it('should handle actual arrays', () => {
       const input = [1, 2, 3];
       const result = arrayConverter(input);
-      expect(result).to.deep.equal([1, 2, 3]);
+      expect(result).to.eql([1, 2, 3]);
     });
 
     it('should handle undefined', () => {
@@ -918,7 +924,7 @@ describe('arrayConverter', () => {
     it('should parse valid JSON array strings', () => {
       const input = '[1,2,3]';
       const result = arrayConverter(input);
-      expect(result).to.deep.equal([1, 2, 3]);
+      expect(result).to.eql([1, 2, 3]);
     });
   });
 
