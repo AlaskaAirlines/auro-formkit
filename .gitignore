@@ -25,5 +25,6 @@ coverage/
 ## Turbo repo
 .turbo
 
-## ignore all files/folders in generated demo-collection
-demo-collection/**/*.**
+## ignore all files/folders in generated auro-formkit-demo
+auro-formkit-demo/**/*.**
+auro-formkit-demo.zip
