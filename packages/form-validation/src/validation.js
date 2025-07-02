@@ -22,7 +22,6 @@ export default class AuroFormValidation {
   reset(elem) {
     elem.validity = undefined;
     elem.value = undefined;
-    elem.touched = false;
 
     // Resets the second value of the datepicker in range state
     if (elem.valueEnd) {
