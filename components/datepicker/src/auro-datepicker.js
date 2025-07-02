@@ -1275,7 +1275,7 @@ export class AuroDatePicker extends AuroElement {
           .max="${this.maxDate}"
           .min="${this.minDate}"
           id="${this.generateRandomString(12)}"
-          placeholder="MM/DD"
+          .placeholder="${this.placeholder}"
           simple
           bordered
           noValidate
