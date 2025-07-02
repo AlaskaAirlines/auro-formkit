@@ -881,6 +881,18 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Handle enter/space keydown on the reset button.
+   * @private
+   * @param {KeyboardEvent} event - The keydown event.
+   */
+  handleKeydownReset(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.resetValues();
+      this.setHasFocus();
+    }
+  }
+
+  /**
    * Resets values without resetting validation.
    */
   resetValues() {
@@ -1249,6 +1261,10 @@ export class AuroDatePicker extends AuroElement {
   }
 
   renderHtmlInputs() {
+    const inputClasses = {
+      "util_displayHiddenVisually": !this.hasValue && !this.hasFocus
+    };
+
     return html`
       <div class="inputContainer">
         <${this.inputTag}
@@ -1256,7 +1272,6 @@ export class AuroDatePicker extends AuroElement {
           ?onDark="${this.onDark}"
           ?required="${this.required}"
           .format="${this.format}"
-          .hideInputVisually="${!this.hasValue && !this.hasFocus}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
           id="${this.generateRandomString(12)}"
@@ -1264,7 +1279,7 @@ export class AuroDatePicker extends AuroElement {
           simple
           bordered
           noValidate
-          class="dateFrom withValue"
+          class="dateFrom ${classMap(inputClasses)}"
           type="date"
           part="input"
           shape="box"
@@ -1291,13 +1306,12 @@ export class AuroDatePicker extends AuroElement {
             ?onDark="${this.onDark}"
             ?required="${this.required}"
             .format="${this.format}"
-            .hideInputVisually="${!this.hasValue && !this.hasFocus}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
             id="${this.generateRandomString(12)}"
             bordered
-            class="dateTo"
+            class="dateTo ${classMap(inputClasses)}"
             noValidate
             type="date"
             setCustomValidity="${this.setCustomValidity}"
@@ -1330,6 +1344,7 @@ export class AuroDatePicker extends AuroElement {
       <div class="${classMap(clearActionClassMap)}">
         <${this.buttonTag}
           @click="${this.resetValues}"
+          @keydown="${this.handleKeydownReset}"
           ?onDark="${this.onDark}"
           aria-label="${i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"

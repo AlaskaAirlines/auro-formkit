@@ -46,7 +46,7 @@
 
   // Container queries
 
-  /* This value is per design but relates to 
+  /* This value is per design but relates to
     https://github.com/AlaskaAirlines/AuroDesignTokens/issues/206
   */
   // :host(:not([stacked])) {
@@ -152,24 +152,24 @@
       }
     }
 
-    @include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
-      ::part(popover) {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        margin-bottom: var(--ds-size-200, vac.$ds-size-200);
-        transform: unset !important;
-      }
-
-      .calendarWrapper {
-        display: flex;
-        height: 100dvh;
-        flex-direction: row;
-        justify-content: center;
-      }
-    }
   }
+  }
+}
+@include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
+  ::part(popover) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin-bottom: var(--ds-size-200, vac.$ds-size-200);
+    transform: unset !important;
+  }
+
+  .calendarWrapper {
+    display: flex;
+    height: 100dvh;
+    flex-direction: row;
+    justify-content: center;
   }
 }
