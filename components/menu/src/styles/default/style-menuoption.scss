@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     padding-right: var(--ds-size-200, vac.$ds-size-200);    
-    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + 24px + var(--ds-size-100, vac.$ds-size-100));
+    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-100, vac.$ds-size-100));
     padding-top: var(--ds-size-50, vac.$ds-size-50);
     padding-bottom: var(--ds-size-50, vac.$ds-size-50);
 
@@ -86,7 +86,7 @@
 
 :host([loadingplaceholder]) {
   .wrapper {
-    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + 24px + var(--ds-size-100, vac.$ds-size-100));
+    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-100, vac.$ds-size-100));
   }
 }
 
