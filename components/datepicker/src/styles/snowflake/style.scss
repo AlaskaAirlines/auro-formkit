@@ -98,6 +98,12 @@
     &::part(inputHelpText) {
       display: none;
     }
+
+    &::part(displayValue) {
+      justify-content: center;
+      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
+      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
+    }
   }
 
   [auro-dropdown]::part(trigger) {

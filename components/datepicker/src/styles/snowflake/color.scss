@@ -20,10 +20,12 @@
     color: var(--ds-basic-color-status-error-subtle, v.$ds-basic-color-status-error-subtle);
   }
 
-  [auro-input] {
-    &::part(input)::placeholder {
-      color: var(--ds-basic-color-texticon-inverse-muted, v.$ds-basic-color-texticon-inverse-muted);
-    }
+  [auro-input]::part(input)::placeholder {
+    color: var(--ds-basic-color-texticon-inverse-muted, v.$ds-basic-color-texticon-inverse-muted);
+  }
+
+  [auro-input]::part(displayValue) {
+    background-color: inherit;
   }
 
   // designs call for no border when not active, focused, or in an error state
