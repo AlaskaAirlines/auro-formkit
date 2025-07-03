@@ -925,7 +925,6 @@ export class AuroDatePicker extends AuroElement {
     }
 
     this.hasFocus = true;
-    this.dropdown.show();
 
     // shadowroot active element is null if we focus the datepicker itself
     if (this.shadowRoot.activeElement === null) {
@@ -1249,6 +1248,9 @@ export class AuroDatePicker extends AuroElement {
     `;
   }
 
+  /**
+   * @private
+   */
   renderLayoutFromAttributes() {
     switch (this.layout) {
       case 'snowflake':
@@ -1259,6 +1261,43 @@ export class AuroDatePicker extends AuroElement {
           <p>Please implement layout "${this.layout}" for datepicker</p>
         `;
     }
+  }
+
+  // eslint-disable-next-line no-warning-comments
+  // TODO: move this to date utility when time allows :(
+  /**
+   * Simple formatter that ONLY WORKS FOR US DATES.
+   * Returns formatted date like Apr 21 or Dec 25.
+   * @param date
+   * @return {string}
+   */
+  formatShortDate(date) {
+    // should render like Apr 21
+    const options = {
+      month: 'short',
+      day: '2-digit'
+    };
+
+    return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
+  }
+
+  /**
+   * Format and render the provided date value.
+   * @private
+   * @param dateValue
+   * @return {TemplateResult}
+   */
+  renderDisplayTextDate(dateValue) {
+    return html`
+        <div>
+          <div class="displayValueText">
+            ${dateValue && this.util.validDateStr(dateValue, this.format)
+              ? this.formatShortDate(dateValue)
+              : undefined
+            }
+          </div>
+        </div>
+    `;
   }
 
   renderHtmlInputs() {
@@ -1292,6 +1331,9 @@ export class AuroDatePicker extends AuroElement {
           setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
           inputmode="${ifDefined(this.inputmode)}"
         >
+          <span slot="displayValue">
+            ${this.renderDisplayTextDate(this.value)}
+          </span>
           <span slot="label"><slot name="fromLabel"></slot></span>
         </${this.inputTag}>
       </div>
@@ -1322,6 +1364,9 @@ export class AuroDatePicker extends AuroElement {
             setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
             ?disabled="${this.disabled}"
             part="input">
+            <span slot="displayValue">
+              ${this.renderDisplayTextDate(this.valueEnd)}
+            </span>
             <span slot="label"><slot name="toLabel"></slot></span>
           </${this.inputTag}>
         </div>
