@@ -732,9 +732,9 @@ export default class BaseInput extends AuroElement {
     this.inputElement.value = "";
     this.value = "";
     this.labelElement.classList.remove('inputElement-label--sticky');
+    this.notifyValueChanged();
     this.focus();
     this.validation.validate(this);
-    this.notifyValueChanged();
   }
 
   /**
@@ -829,11 +829,18 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Resets component to initial state, including resetting the touched state and validity.
    * @returns {void}
    */
   reset() {
     this.validation.reset(this);
+  }
+
+  /**
+   * Clears the input value
+   */
+  clear() {
+    this.value = undefined;
   }
 
   /**

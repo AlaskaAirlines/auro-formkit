@@ -690,7 +690,7 @@ export class AuroCombobox extends AuroElement {
     });
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {
-      this.reset();
+      this.clear();
     });
   }
 
@@ -710,7 +710,7 @@ export class AuroCombobox extends AuroElement {
     });
 
     /**
-     * Validate every time we remove focus from the datepicker.
+     * Validate every time we remove focus from the combo box.
      */
     this.addEventListener('focusout', () => {
       if (document.activeElement !== this) {
@@ -914,8 +914,17 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   reset() {
-    this.input.reset();
+    this.input.clear();
     this.validation.reset(this);
+    this.menu.value = undefined;
+  }
+
+  /**
+   * Clears the current value of the combobox.
+   * @returns {void}
+   */
+  clear() {
+    this.input.clear();
     this.menu.value = undefined;
   }
 
@@ -941,7 +950,7 @@ export class AuroCombobox extends AuroElement {
           this.hideBib();
         }
       } else {
-        this.reset();
+        this.clear();
       }
     }
 
