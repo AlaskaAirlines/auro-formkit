@@ -907,7 +907,7 @@ export class AuroDatePicker extends AuroElement {
    */
   resetValues() {
     this.inputList.forEach((input) => {
-      input.reset();
+      input.clear();
     });
   }
 
@@ -917,8 +917,15 @@ export class AuroDatePicker extends AuroElement {
    */
   reset() {
     this.resetValues();
-
     this.validation.reset(this);
+  }
+
+  /**
+   * Clears the current value(s) of the datepicker.
+   * @returns {void}
+   */
+  clear() {
+    this.resetValues();
   }
 
   /**
