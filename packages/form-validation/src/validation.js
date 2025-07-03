@@ -22,6 +22,7 @@ export default class AuroFormValidation {
   reset(elem) {
     elem.validity = undefined;
     elem.value = undefined;
+    elem.touched = false;
 
     // Resets the second value of the datepicker in range state
     if (elem.valueEnd) {
@@ -228,13 +229,24 @@ export default class AuroFormValidation {
     this.getInputElements(elem);
     this.getAuroInputs(elem);
 
-    // Validate only if noValidate is not true and the input does not have focus
+    // Check if validation should run
     let validationShouldRun =
+
+      // If the validation was forced
       force ||
-      (!elem.contains(document.activeElement) &&
-        (elem.touched ||
-          (!elem.touched && typeof elem.value !== "undefined"))) ||
-      elem.validateOnInput;
+
+      // If the validation should run on input
+      elem.validateOnInput ||
+
+      // State-based checks
+      (
+        // Element is not currently focused
+        !elem.contains(document.activeElement) && // native input is not focused directly
+        !document.activeElement.shadowRoot?.contains(elem) && // native input is not focused in the shadow DOM of another component
+
+        // And element has been touched or is untouched but has a value
+        ( elem.touched || (!elem.touched && typeof elem.value !== "undefined") )
+      );
 
     if (elem.hasAttribute('error')) {
       elem.validity = 'customError';

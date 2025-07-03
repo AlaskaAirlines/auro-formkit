@@ -57,8 +57,9 @@ Generate unique names for dependency components.
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
+| `clear`    | `(): void`                             | Clears the input value                           |
 | `focus`    | `(): void`                             | Function to set element focus.                   |
-| `reset`    | `(): void`                             | Resets component to initial state.               |
+| `reset`    | `(): void`                             | Resets component to initial state, including resetting the touched state and validity. |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
