@@ -925,6 +925,7 @@ export class AuroDatePicker extends AuroElement {
     }
 
     this.hasFocus = true;
+    this.dropdown.show();
 
     // shadowroot active element is null if we focus the datepicker itself
     if (this.shadowRoot.activeElement === null) {
