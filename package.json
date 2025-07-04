@@ -53,7 +53,7 @@
     "local-demo": "npm run build && sh ./local-demo.sh --zip"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-library": "^5.2.3",
+    "@aurodesignsystem/auro-library": "^5.3.0",
     "@lit/reactive-element": "^2.1.0",
     "lit": "^3.2.1"
   },
