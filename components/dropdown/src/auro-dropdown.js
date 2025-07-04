@@ -515,6 +515,11 @@ export class AuroDropdown extends AuroElement {
     }
   }
 
+  /**
+   * Handles the custom event `auroDropdown-toggled` to update the visibility of the dropdown bib.
+   * @private
+   * @param {CustomEvent} event - The custom event that contains the dropdown toggle information.
+   */
   handleDropdownToggle(event) {
     this.updateFocusTrap();
     this.isPopoverVisible = event.detail.expanded;
