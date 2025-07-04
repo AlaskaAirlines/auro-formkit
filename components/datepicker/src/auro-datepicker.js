@@ -48,6 +48,7 @@ import iconVersion from './iconVersion.js';
 
 import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
 import buttonVersion from './buttonVersion.js';
+import { LitElement } from 'lit';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -188,6 +189,15 @@ export class AuroDatePicker extends AuroElement {
     this.layout = 'classic';
     this.shape = 'classic';
     this.size = 'lg';
+
+    /**
+     * @private
+     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
+     */
+    this.constructor.shadowRootOptions = {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
   }
 
   // This function is to define props used within the scope of this component
@@ -925,6 +935,7 @@ export class AuroDatePicker extends AuroElement {
     }
 
     this.hasFocus = true;
+    this.dropdown.show();
 
     // shadowroot active element is null if we focus the datepicker itself
     if (this.shadowRoot.activeElement === null) {

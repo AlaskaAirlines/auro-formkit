@@ -48,13 +48,11 @@
 | Method                        | Type                                   | Description                                      |
 |-------------------------------|----------------------------------------|--------------------------------------------------|
 | `focus`                       | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
-| `formatShortDate`             | `(date: any): string`                  |                                                  |
-| `renderDisplayTextDate`       | `(dateValue: any): TemplateResult`     |                                                  |
+| `formatShortDate`             | `(date: any): string`                  | Simple formatter that ONLY WORKS FOR US DATES.<br />Returns formatted date like Apr 21 or Dec 25.<br /><br />**date**: undefined |
 | `renderHtmlActionClear`       | `(): TemplateResult`                   |                                                  |
 | `renderHtmlIconCalendar`      | `(): TemplateResult`                   |                                                  |
 | `renderHtmlIconError`         | `(): TemplateResult`                   |                                                  |
 | `renderHtmlInputs`            | `(): TemplateResult`                   |                                                  |
-| `renderLayoutFromAttributes`  | `(): TemplateResult`                   |                                                  |
 | `reset`                       | `(): void`                             | Resets component to initial state.               |
 | `resetLayoutClasses`          | `(): void`                             |                                                  |
 | `resetShapeClasses`           | `(): void`                             |                                                  |

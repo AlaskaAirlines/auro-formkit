@@ -77,6 +77,9 @@ export class AuroDropdown extends AuroElement {
 
     this.parentBorder = false;
 
+    /** @private */
+    this.handleDropdownToggle = this.handleDropdownToggle.bind(this);
+
     this.privateDefaults();
   }
 
@@ -510,12 +513,14 @@ export class AuroDropdown extends AuroElement {
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
     }
+  }
 
-    if (changedProperties.has('isPopoverVisible')) {
-      this.updateFocusTrap();
-      if (!this.isPopoverVisible && this.hasFocus) {
-        this.trigger.focus();
-      }
+  handleDropdownToggle(event) {
+    this.updateFocusTrap();
+    this.isPopoverVisible = event.detail.expanded;
+    const eventType = event.detail.eventType || "unknown";
+    if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown") {
+      this.trigger.focus();
     }
   }
 
@@ -523,6 +528,7 @@ export class AuroDropdown extends AuroElement {
 
     // Configure the floater to, this will generate the ID for the bib
     this.floater.configure(this, 'auroDropdown');
+    this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
