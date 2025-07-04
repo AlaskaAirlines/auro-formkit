@@ -1279,7 +1279,8 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Simple formatter that ONLY WORKS FOR US DATES.
    * Returns formatted date like Apr 21 or Dec 25.
-   * @param date
+   * @private
+   * @param {string} date - Date format should be in a format Date constructor accepts, like '2023-04-21' or '2023/04/21'.
    * @return {string}
    */
   formatShortDate(date) {
