@@ -32,12 +32,13 @@
 
 ## Methods
 
-| Method           | Type       | Description                                      |
-|------------------|------------|--------------------------------------------------|
-| `exposeCssParts` | `(): void` | Exposes CSS parts for styling from parent components. |
-| `focus`          | `(): void` | When bib is open, focus on the first element inside of bib.<br />If not, trigger element will get focus. |
-| `hide`           | `(): void` | Public method to hide the dropdown.              |
-| `show`           | `(): void` | Public method to show the dropdown.              |
+| Method                 | Type                 | Description                                      |
+|------------------------|----------------------|--------------------------------------------------|
+| `exposeCssParts`       | `(): void`           | Exposes CSS parts for styling from parent components. |
+| `focus`                | `(): void`           | When bib is open, focus on the first element inside of bib.<br />If not, trigger element will get focus. |
+| `handleDropdownToggle` | `(event: any): void` |                                                  |
+| `hide`                 | `(): void`           | Public method to hide the dropdown.              |
+| `show`                 | `(): void`           | Public method to show the dropdown.              |
 
 ## Events
 
