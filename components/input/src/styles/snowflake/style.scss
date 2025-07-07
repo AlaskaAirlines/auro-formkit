@@ -29,6 +29,9 @@
   label {
     font-size: var(--ds-text-body-size-xs);
     line-height: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   input {
@@ -44,15 +47,12 @@
     justify-content: center;
     align-items: center;
     flex: 1;
+    overflow: hidden;
   }
 
   .displayValue {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
     display: none;
+    width: 100%;
 
     &.hasContent:is(.withValue):not(.hasFocus) {
       display: block;
