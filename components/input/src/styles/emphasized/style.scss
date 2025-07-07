@@ -33,21 +33,21 @@
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='right'])) {
   .leftIndent {
-    margin-left: var(--ds-size-150, vac.$ds-size-150);
-    width: calc(100% - var(--ds-size-150, vac.$ds-size-150));
+    margin-left: var(--ds-size-300, vac.$ds-size-300);
+    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
   }
 }
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='left'])) {
   .rightIndent {
-    margin-right: var(--ds-size-150, vac.$ds-size-150);
-    width: calc(100% - var(--ds-size-150, vac.$ds-size-150));
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
+    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
   }
 }
 
 :host([layout*='emphasized'][shape*='pill']:not([layout*='left']):not([layout*='right'])) {
   .rightIndent {
-    margin-right: var(--ds-size-150, vac.$ds-size-150);
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
     width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
   }
 }
@@ -129,31 +129,32 @@
 .layout-emphasized-right {
   .accents {
     &.left {
-      padding-left: var(--ds-size-150, vac.$ds-size-150);
+      padding-left: var(--ds-size-300, vac.$ds-size-300);
     }
 
     &.right {
-      padding-right: var(--ds-size-150, vac.$ds-size-150);
+      padding-right: var(--ds-size-300, vac.$ds-size-300);
     }
   }
 }
 
 .layout-emphasized-left {
   .alertNotification {
-    margin-right: var(--ds-size-50, vac.$ds-size-50);
+    margin-right: var(--ds-size-100, vac.$ds-size-100);
   }
 
   .clear {
-    margin-left: var(--ds-size-50, vac.$ds-size-50);
+    margin-left: var(--ds-size-100, vac.$ds-size-100);
   }
 }
 
+.layout-emphasized,
 .layout-emphasized-right {
   .alertNotification {
-    margin-left: var(--ds-size-50, vac.$ds-size-50);
+    margin-left: var(--ds-size-100, vac.$ds-size-100);
   }
 
   .clear {
-    margin-right: var(--ds-size-50, vac.$ds-size-50);
+    margin-right: var(--ds-size-100, vac.$ds-size-100);
   }
 }
