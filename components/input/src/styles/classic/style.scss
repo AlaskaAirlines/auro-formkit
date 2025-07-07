@@ -63,19 +63,19 @@
   .accents {
     .typeIcon {
       > * {
-        margin-left: var(--ds-size-50, vac.$ds-size-50);
+        margin-left: var(--ds-size-100, vac.$ds-size-100);
       }
     }
 
     &.left {
-      padding-right: var(--ds-size-50, vac.$ds-size-50);
+      padding-right: var(--ds-size-100, vac.$ds-size-100);
     }
 
     &.right {
-      padding-left: var(--ds-size-50, vac.$ds-size-50);
+      padding-left: var(--ds-size-100, vac.$ds-size-100);
 
       .notification {
-        margin-right: var(--ds-size-50, vac.$ds-size-50);
+        margin-right: var(--ds-size-100, vac.$ds-size-100);
       }
     }
   }

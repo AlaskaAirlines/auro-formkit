@@ -55,7 +55,7 @@
 }
 
 ::slotted([slot="typeIcon"]) {
-  margin-right: var(--ds-size-50, vac.$ds-size-50);
+  margin-right: var(--ds-size-100, vac.$ds-size-100);
 }
 
 .displayValue {
@@ -80,7 +80,7 @@
 :host([layout*='emphasized']),
 :host([layout*='snowflake']) {
   .triggerContent {
-    padding: 0 var(--ds-size-50, vac.$ds-size-50) 0 var(--ds-size-150, vac.$ds-size-150);
+    padding: 0 var(--ds-size-100, vac.$ds-size-100) 0 var(--ds-size-300, vac.$ds-size-300);
   }
 }
 
@@ -108,7 +108,7 @@
 
 :host([layout*='classic']) {
   .triggerContent {
-    padding: 0 var(--ds-size-50, vac.$ds-size-50);
+    padding: 0 var(--ds-size-100, vac.$ds-size-100);
   }
 
   .mainContent {
