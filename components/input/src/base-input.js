@@ -837,7 +837,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Clears the input value
+   * Clears the input value.
    */
   clear() {
     this.value = undefined;

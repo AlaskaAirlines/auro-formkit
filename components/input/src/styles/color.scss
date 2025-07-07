@@ -36,9 +36,6 @@
     }
   }
 
-  .displayValue {
-    background-color: var(--ds-auro-input-background-color);
-  }
 }
 
 :host(:not([ondark])) {

@@ -24,6 +24,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .inputSection {
@@ -136,6 +137,9 @@
     line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
     font-weight: 450;
     letter-spacing: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 
     &.hasFocus,
     &.hasValue {
