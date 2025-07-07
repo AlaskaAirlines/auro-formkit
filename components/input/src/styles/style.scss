@@ -27,6 +27,13 @@ input {
   outline: none;
   overflow-clip-margin: 0 !important;
   text-overflow: ellipsis;
+  
+  &::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  }
+
   /* stylelint-enable declaration-no-important */
 }
 
