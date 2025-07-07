@@ -142,17 +142,6 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Returns classmap configuration for accent elements in each layout.
-   * @private
-   * @returns {object} - Returns classmap.
-   */
-  get commonAccentClasses() {
-    return {
-      'util_displayHidden': false
-    };
-  }
-
-  /**
    * Returns classmap configuration for helpText elements in each layout.
    * @private
    * @returns {object} - Returns classmap.
@@ -439,13 +428,13 @@ export class AuroInput extends BaseInput {
         @click="${this.handleClick}"
         class="${classMap(classicClassMap)}"
         part="wrapper">
-        <div part="accent-left" class="accents left ${classMap(this.commonAccentClasses)}">
+        <div part="accent-left" class="accents left">
            ${this.renderHtmlTypeIcon()}
         </div>
         <div class="mainContent">
           ${this.renderHtmlInput(true)}
         </div>
-        <div part="accent-right" class="accents right ${classMap(this.commonAccentClasses)}">
+        <div part="accent-right" class="accents right">
           ${this.renderValidationErrorIconHtml()}
           ${this.hasValue && this.type === 'password' ? this.renderHtmlNotificationPassword() : undefined}
           ${this.hasValue ? html`
@@ -472,7 +461,7 @@ export class AuroInput extends BaseInput {
         @click="${this.handleClick}"
         class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
-        <div class="accents left ${this.commonAccentClasses}">
+        <div class="accents left">
           ${this.layout.includes('left') ? html`
             ${this.renderValidationErrorIconHtml()}
           ` : undefined}
@@ -480,7 +469,7 @@ export class AuroInput extends BaseInput {
         <div class="mainContent">
           ${this.renderHtmlInput()}
         </div>
-        <div class="accents right ${this.commonAccentClasses}">
+        <div class="accents right">
           ${this.layout.includes('right') || this.layout === "emphasized" ? html`
             ${this.renderValidationErrorIconHtml()}
           ` : undefined}
