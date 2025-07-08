@@ -19,6 +19,7 @@ import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
 import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.mjs';
+import { classMap } from 'lit/directives/class-map.js';
 
 /**
  * The auro-menu element provides users a way to define a menu option.
@@ -34,8 +35,8 @@ export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
 
-    this.size = ""; // md, lg, xl
-    this.shape = ""; // box, rounded, pill
+    this.size = undefined; // md, lg, xl
+    this.shape = undefined; // box, rounded, pill
 
     /**
      * Generate unique names for dependency components.
@@ -151,8 +152,22 @@ export class AuroMenuOption extends AuroElement {
    * @returns {void}
    */
   renderLayout() {
+
+    const fontClassMap = {
+      xs: 'body-default',
+      sm: 'body-default',
+      md: 'body-default',
+      lg: 'body-lg',
+      xl: 'body-lg'
+    };
+
+    const classes = classMap({
+      wrapper: true,
+      [this.size ? fontClassMap[this.size] : 'body-default']: true,
+    });
+
     return html`
-      <div class="wrapper">
+      <div class="${classes}">
         ${this.selected && !this.nocheckmark
           ? this.generateIconHtml(checkmarkIcon.svg)
           : undefined}

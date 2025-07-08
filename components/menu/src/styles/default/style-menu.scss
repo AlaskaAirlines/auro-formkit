@@ -50,7 +50,6 @@
 
     slot[name="loadingIcon"] {
       vertical-align: middle;
-      line-height: 1;
       display: inline-block;
 
       &::slotted(*) {
