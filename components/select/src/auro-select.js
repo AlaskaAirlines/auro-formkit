@@ -44,6 +44,7 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
  *
  * @slot - Default slot for the menu content.
+ * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
@@ -1221,6 +1222,7 @@ export class AuroSelect extends AuroElement {
           </div>
           <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
           </${this.bibtemplateTag}>
           <div slot="helpText">
@@ -1298,6 +1300,7 @@ export class AuroSelect extends AuroElement {
           </div>
           <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
           </${this.bibtemplateTag}>
           <div slot="helpText">
@@ -1381,6 +1384,7 @@ export class AuroSelect extends AuroElement {
           </div>
           <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+            <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
           </${this.bibtemplateTag}>
           <div slot="helpText">

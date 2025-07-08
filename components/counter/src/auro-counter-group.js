@@ -53,6 +53,7 @@ import iconVersion from "./iconVersion.js";
  * @element auro-counter-group
  * @extends LitElement
  * @slot default - Slot for counter elements.
+ * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline -  Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required.
  * @slot bib.fullscreen.footer -  Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true.
  * @slot label - Dropdown label content. Only used when `isDropdown` is true.
@@ -740,6 +741,7 @@ export class AuroCounterGroup extends AuroElement {
   renderBibTemplate() {
     return html`
       <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
+        <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
         ${this.renderCounterGroup(true)}
       </${this.bibtemplateTag}>
     `;

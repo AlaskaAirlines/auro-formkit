@@ -69,12 +69,15 @@ Generate unique names for dependency components.
 
 ## Slots
 
-| Name            | Description                                      |
-|-----------------|--------------------------------------------------|
-| `displayValue`  | Allows custom HTML content to display in place of the value when the input is not focused. |
-| `helpText`      | Sets the help text displayed below the input.    |
-| `label`         | Sets the label text for the input.               |
-| `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
+| Name                      | Description                                      |
+|---------------------------|--------------------------------------------------|
+| `ariaLabel.clear`         | Sets aria-label on clear button for screenreader to read |
+| `ariaLabel.password.hide` | Sets aria-label on password button to toggle off showing password |
+| `ariaLabel.password.show` | Sets aria-label on password button to toggle on showing password |
+| `displayValue`            | Allows custom HTML content to display in place of the value when the input is not focused. |
+| `helpText`                | Sets the help text displayed below the input.    |
+| `label`                   | Sets the label text for the input.               |
+| `optionalLabel`           | Allows overriding the optional display text "(optional)", which appears next to the label. |
 
 ## CSS Shadow Parts
 

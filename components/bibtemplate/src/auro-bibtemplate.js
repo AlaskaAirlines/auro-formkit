@@ -146,8 +146,9 @@ export class AuroBibtemplate extends LitElement {
             <${this.headerTag} class="header" display="${this.large ? 'display' : '600'}" level="3" size="none" id="header" no-margin-block>
               <slot name="header"></slot>
             </${this.headerTag}>
-            <${this.buttonTag} id="closeButton" aria-label="Close" variant="ghost" shape="circle" size="sm" @click="${this.onCloseButtonClick}">
-              <${this.iconTag} category="interface" name="x-lg"></${this.iconTag}>
+            <${this.buttonTag} id="closeButton" variant="ghost" shape="circle" size="sm" @click="${this.onCloseButtonClick}">
+              <span><slot name="ariaLabel.close">Close</slot></span>
+              <${this.iconTag} aria-hidden="true" category="interface" name="x-lg"></${this.iconTag}>
             </${this.buttonTag}>
           </div>
           <span class="subheader">
