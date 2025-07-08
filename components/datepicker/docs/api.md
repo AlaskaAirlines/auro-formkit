@@ -48,18 +48,12 @@
 | Method                        | Type                                   | Description                                      |
 |-------------------------------|----------------------------------------|--------------------------------------------------|
 | `clear`                       | `(): void`                             | Clears the current value(s) of the datepicker.   |
-| `focus`                       | `(focusInput: string): void`           | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
+| `focus`                       | `(focusInput?: string): void`          | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
 | `hideBib`                     | `(): void`                             | Hides the dropdown bib if its open.              |
-| `renderHtmlActionClear`       | `(): TemplateResult`                   |                                                  |
-| `renderHtmlIconCalendar`      | `(): TemplateResult`                   |                                                  |
-| `renderHtmlIconError`         | `(): TemplateResult`                   |                                                  |
-| `renderHtmlInputs`            | `(): TemplateResult`                   |                                                  |
 | `reset`                       | `(): void`                             | Resets component to initial state.               |
 | `resetLayoutClasses`          | `(): void`                             |                                                  |
 | `resetShapeClasses`           | `(): void`                             |                                                  |
 | `resetValues`                 | `(): void`                             | Resets values without resetting validation.      |
-| `setHasFocus`                 | `(): void`                             |                                                  |
-| `setHasValue`                 | `(): void`                             |                                                  |
 | `showBib`                     | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `updateComponentArchitecture` | `(): void`                             |                                                  |
 | `validate`                    | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
