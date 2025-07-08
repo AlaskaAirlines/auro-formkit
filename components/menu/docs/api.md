@@ -15,8 +15,8 @@ The auro-menu element provides users a way to select from a list of options.
 | `noCheckmark`           | `nocheckmark`    | `boolean`                         | false       | When true, selected option will not show the checkmark. |
 | `optionActive`          | `optionactive`   | `object`                          | "undefined" | Specifies the current active menuOption.         |
 | `optionSelected`        | `optionSelected` | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `shape`                 |                  | `string`                          | ""          |                                                  |
-| `size`                  |                  | `string`                          | ""          |                                                  |
+| `shape`                 |                  |                                   | "undefined" |                                                  |
+| `size`                  |                  |                                   | "undefined" |                                                  |
 | `value`                 | `value`          | `string`                          | "undefined" | Value selected for the component.                |
 
 ## Methods
@@ -57,16 +57,16 @@ The auro-menu element provides users a way to define a menu option.
 
 ## Properties
 
-| Property      | Attribute     | Type      | Default | Description                                      |
-|---------------|---------------|-----------|---------|--------------------------------------------------|
-| `disabled`    | `disabled`    | `Boolean` | false   | When true specifies that the menuoption is disabled. |
-| `iconTag`     |               | `string`  |         |                                                  |
-| `layout`      |               | `string`  |         |                                                  |
-| `nocheckmark` | `nocheckmark` | `boolean` | false   |                                                  |
-| `selected`    | `selected`    | `Boolean` | false   | Specifies that an option is selected.            |
-| `shape`       |               | `string`  | ""      |                                                  |
-| `size`        |               | `string`  | ""      |                                                  |
-| `value`       | `value`       | `String`  |         | Specifies the value to be sent to a server.      |
+| Property      | Attribute     | Type      | Default     | Description                                      |
+|---------------|---------------|-----------|-------------|--------------------------------------------------|
+| `disabled`    | `disabled`    | `Boolean` | false       | When true specifies that the menuoption is disabled. |
+| `iconTag`     |               | `string`  |             |                                                  |
+| `layout`      |               | `string`  |             |                                                  |
+| `nocheckmark` | `nocheckmark` | `boolean` | false       |                                                  |
+| `selected`    | `selected`    | `Boolean` | false       | Specifies that an option is selected.            |
+| `shape`       |               |           | "undefined" |                                                  |
+| `size`        |               |           | "undefined" |                                                  |
+| `value`       | `value`       | `String`  |             | Specifies the value to be sent to a server.      |
 
 ## Events
 
