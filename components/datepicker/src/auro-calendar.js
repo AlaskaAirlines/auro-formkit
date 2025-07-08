@@ -337,6 +337,7 @@ export class AuroCalendar extends RangeDatepicker {
       ?large="${this.largeFullscreenHeadline}"
       ?isFullscreen="${this.isFullscreen}"
       @close-click="${this.utilCal.requestDismiss}">
+      <span slot="ariaLabel.close">${this.slots["ariaLabel.bib.close"]}</span>
 
       <span slot="header">${this.slots["bib.fullscreen.headline"]}</span>
 

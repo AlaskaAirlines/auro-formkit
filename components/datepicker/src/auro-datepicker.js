@@ -55,6 +55,7 @@ import { LitElement } from 'lit';
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot helpText - Defines the content of the helpText.
+ * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
  * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
@@ -1633,6 +1634,7 @@ export class AuroDatePicker extends AuroElement {
         .monthNames="${this.monthNames}"
         part="calendar"
       >
+        <slot name="ariaLabel.bib.close" slot="ariaLabel.close" @slotchange="${this.handleSlotToSlot}">Close</slot>
         <slot slot="bib.fullscreen.headline" name="bib.fullscreen.headline" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>

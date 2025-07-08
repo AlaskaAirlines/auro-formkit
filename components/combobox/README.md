@@ -84,6 +84,8 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
   <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Name</span>
   <auro-menu>

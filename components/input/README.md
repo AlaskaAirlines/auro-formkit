@@ -83,6 +83,7 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <auro-input>
+  <span slot="ariaLabel.clear">Clear All</span>
   <span slot="label">Label</span>
   <span slot="helpText">Help Text</span>
 </auro-input>
