@@ -49,7 +49,7 @@ export class AuroBibtemplate extends LitElement {
     /**
      * @private
      */
-    this.buttonTag = versioning.generateTag('auro-formkit-input-button', buttonVersion, AuroButton);
+    this.buttonTag = versioning.generateTag('auro-formkit-bibtemplate-button', buttonVersion, AuroButton);
   }
 
   static get styles() {
