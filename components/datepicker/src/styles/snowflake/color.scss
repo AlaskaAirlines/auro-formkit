@@ -2,34 +2,8 @@
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 :host([layout="snowflake"]) {
-  &[disabled] {
-    .mainContent label ::slotted(*) {
-      color: var(--ds-auro-icon-color);
-    }
-  }
-
-  label {
-    color: var(--ds-basic-color-texticon-inverse-muted, v.$ds-basic-color-texticon-inverse-muted);
-  }
-
-  .inputDivider {
-    background-color: var(--ds-basic-color-texticon-inverse-muted, v.$ds-basic-color-texticon-inverse-muted);
-  }
-
-  .error {
-    color: var(--ds-basic-color-status-error-subtle, v.$ds-basic-color-status-error-subtle);
-  }
-
-  [auro-input]::part(input)::placeholder {
-    color: var(--ds-basic-color-texticon-inverse-muted, v.$ds-basic-color-texticon-inverse-muted);
-  }
-
-  [auro-input]::part(displayValue) {
-    background-color: inherit;
-  }
-
   // designs call for no border when not active, focused, or in an error state
-  [auro-dropdown]:not(:is([error], .hasFocus))::part(wrapper) {
+  [auro-dropdown]:not(:is([error], .hasFocus)) {
     --ds-auro-dropdown-trigger-border-color: transparent;
   }
 }
