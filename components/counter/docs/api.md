@@ -75,6 +75,7 @@
 
 | Name                      | Description                                      |
 |---------------------------|--------------------------------------------------|
+| `ariaLabel.bib.close`     | Sets aria-label on close button in fullscreen bib |
 | `bib.fullscreen.footer`   | Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true. |
 | `bib.fullscreen.headline` | Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required. |
 | `default`                 | Slot for counter elements.                       |

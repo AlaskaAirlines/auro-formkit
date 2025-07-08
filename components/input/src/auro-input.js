@@ -31,7 +31,6 @@ import { html } from 'lit/static-html.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import i18n from './i18n.js';
 import BaseInput from './base-input.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -363,12 +362,13 @@ export class AuroInput extends BaseInput {
         <${this.buttonTag}
           @click="${this.handleClickClear}"
           ?onDark="${this.onDark}"
-          aria-label="${i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
           shape="circle"
           size="sm"
           variant="ghost">
+          <span><slot name="ariaLabel.clear">Clear Input</slot></span>
           <${this.iconTag}
+            aria-hidden="true"
             ?customColor="${this.onDark}"
             category="interface"
             name="x-lg"
@@ -391,18 +391,23 @@ export class AuroInput extends BaseInput {
           @click="${this.handleClickShowPassword}"
           ?onDark="${this.onDark}"
           class="notificationBtn passwordBtn"
-          aria-label="${this.showPassword ? i18n(this.lang, "hidePassword") : i18n(this.lang, "showPassword")}"
           shape="circle"
           size="sm"
           variant="ghost">
+            <span>
+            ${this.showPassword ? html`<slot name="ariaLabel.password.hide">Hide Password</slot>`
+              : html`<slot name="ariaLabel.password.show">Show Password</slot>`}
+            </span>
           <${this.iconTag}
             ?customColor="${this.onDark}"
+            aria-hidden="true"
             ?hidden=${!this.showPassword}
             category="interface"
             name="hide-password-stroke">
           </${this.iconTag}>
           <${this.iconTag}
             ?customColor="${this.onDark}"
+            aria-hidden="true"
             ?hidden=${this.showPassword}
             category="interface"
             name="view-password-stroke">

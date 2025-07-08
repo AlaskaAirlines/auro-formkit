@@ -22,6 +22,9 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
  * @attr id
  *
+ * @slot ariaLabel.clear - Sets aria-label on clear button for screenreader to read
+ * @slot ariaLabel.password.show - Sets aria-label on password button to toggle on showing password
+ * @slot ariaLabel.password.hide - Sets aria-label on password button to toggle off showing password
  * @slot helpText - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
@@ -449,8 +452,7 @@ export default class BaseInput extends AuroElement {
        * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
        */
       value: {
-        type: String,
-        reflect: true
+        type: String
       },
 
       /**

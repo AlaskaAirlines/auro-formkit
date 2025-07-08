@@ -36,6 +36,8 @@ import {ifDefined} from "lit/directives/if-defined.js";
 /**
  * @slot - Default slot for the menu content.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
+ * @slot ariaLabel.input.clear - Sets aria-label on clear button
+ * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
@@ -855,9 +857,7 @@ export class AuroCombobox extends AuroElement {
         if (this.dropdown.isBibFullscreen) {
 
           // when focus is on the input, move focus back to close button with Tab key
-          if (document.activeElement.shadowRoot.activeElement === this.inputInBib &&
-            this.inputInBib.shadowRoot.activeElement.tagName !== 'INPUT' &&
-            !evt.shiftKey) {
+          if (document.activeElement.shadowRoot.activeElement === this.inputInBib) {
             evt.preventDefault();
             this.dropdown.focus();
           }
@@ -1036,13 +1036,13 @@ export class AuroCombobox extends AuroElement {
 
         this.handleMenuOptions();
         break;
+
+      // Programmatically inject as the slot cannot be carried over to bibtemplate.
+      // It's because the bib is/will be separated from dropdown to body.
       case 'label':
-        // Programmatically inject as the slot cannot be carried over to bibtemplate.
-        // It's because the bib is/will be separated from dropdown to body.
-        this.transportAssignedNodes(event.target, this.inputInBib, "label");
-        break;
+      case 'ariaLabel.input.clear':
       case 'optionalLabel':
-        this.transportAssignedNodes(event.target, this.inputInBib, "optionalLabel");
+        this.transportAssignedNodes(event.target, this.inputInBib, event.target.name);
         break;
       case 'bib.fullscreen.headline':
         this.transportAssignedNodes(event.target, this.bibtemplate, 'header');
@@ -1114,6 +1114,7 @@ export class AuroCombobox extends AuroElement {
               shape="${this.shape}"
               size="${this.size}"
               slot="trigger">
+              <slot name="ariaLabel.input.clear" slot="ariaLabel.clear" @slotchange="${this.handleSlotChange}"></slot>
               <slot name="label" slot="label" @slotchange="${this.handleSlotChange}"></slot>
               <slot name="optionalLabel" slot="optionalLabel" @slotchange="${this.handleSlotChange}"> (optional)</slot>
               <slot name="displayValue" slot="displayValue"></slot>
@@ -1121,6 +1122,7 @@ export class AuroCombobox extends AuroElement {
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
             <slot name="bib.fullscreen.headline" slot="header"></slot>
+            <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
             <${this.inputTag}
               id="inputInBib"
