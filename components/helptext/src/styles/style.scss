@@ -7,6 +7,8 @@
 
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
+@use "@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css";
+
 :host {
   position: relative;
   display: block;
@@ -14,19 +16,6 @@
 
 .helptext-wrapper {
   display: none;
-  font-size: 12px; // var(--ds-basic-text-body-xs-font-size, v.$ds-basic-text-body-xs-font-size);
-  font-weight: 450; // var(--ds-basic-text-body-xs-font-weight, v.$ds-basic-text-body-xs-font-weight);
-  letter-spacing: 0; // var(--ds-basic-text-body-xs-letter-spacing, v.$ds-basic-text-body-xs-letter-spacing);
-  line-height: 16px; // var(--ds-basic-text-body-xs-line-height, v.$ds-basic-text-body-xs-line-height);
-}
-
-:host([large]) {
-  .helptext-wrapper {
-    font-size: 16px; // var(--ds-basic-text-body-default-font-size, v.$ds-basic-text-body-default-font-size);
-    font-weight: 450; // var(--ds-basic-text-body-default-font-weight, v.$ds-basic-text-body-default-font-weight);
-    letter-spacing: 0; // var(--ds-basic-text-body-default-letter-spacing, v.$ds-basic-text-body-default-letter-spacing);
-    line-height: 24px; // var(--ds-basic-text-body-default-line-height, v.$ds-basic-text-body-default-line-height);
-  }
 }
 
 .helptext-wrapper[visible] {

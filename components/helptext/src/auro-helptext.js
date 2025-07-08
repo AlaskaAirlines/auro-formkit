@@ -13,8 +13,6 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 /**
  * Displays help text or error messages within form elements - Internal Use Only.
- *
- * @attr { Boolean } large - If declared, make font-size to 1rem(16px).
  */
 export class AuroHelpText extends LitElement {
 
@@ -130,7 +128,7 @@ export class AuroHelpText extends LitElement {
   // function that renders the HTML and CSS into  the scope of the component
   render() {
     return html`
-      <div class="helptext-wrapper" ?visible="${this.hasTextContent}">
+      <div class="helptext-wrapper body-xs" ?visible="${this.hasTextContent}">
           <slot @slotchange=${this.handleSlotChange}></slot>
       </div>
     `;

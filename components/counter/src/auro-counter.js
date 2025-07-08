@@ -351,7 +351,7 @@ export class AuroCounter extends LitElement {
         ? html`
           <${this.helpTextTag} ?onDark="${this.onDark}">
             <p id="${this.uniqueId}" part="helpText">
-              <slot name="helptext"></slot>
+              <slot name="helpText"></slot>
             </p>
           </${this.helpTextTag}>
         `

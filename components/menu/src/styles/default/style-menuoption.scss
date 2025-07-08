@@ -34,9 +34,6 @@
     }
 
     &[class*="-lg"] {
-      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
-      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
-
       padding-top: var(--ds-size-75, vac.$ds-size-75);
       padding-bottom: var(--ds-size-75, vac.$ds-size-75);
       padding-right: var(--ds-size-150, vac.$ds-size-150);
@@ -47,9 +44,6 @@
     }
 
     &[class*="-xl"] {
-      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
-      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
-
       padding-top: var(--ds-size-100, vac.$ds-size-100);
       padding-bottom: var(--ds-size-100, vac.$ds-size-100);
       padding-right: var(--ds-size-200, vac.$ds-size-200);
@@ -77,10 +71,6 @@
   ::slotted(.nestingSpacer) {
     display: inline-block;
     width: var(--ds-size-300, vac.$ds-size-300);
-  }
-
-  ::slotted(strong) {
-    font-weight: 700;
   }
 }
 

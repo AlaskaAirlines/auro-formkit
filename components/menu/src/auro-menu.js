@@ -48,8 +48,8 @@ export class AuroMenu extends AuroElement {
 
     // State properties (reactive)
 
-    this.shape = ""; // box, rounded, pill
-    this.size = ""; // md, lg, xl
+    this.shape = undefined; // box, rounded, pill
+    this.size = undefined; // md, lg, xl
 
     // Value of the selected options
     this.value = undefined;
@@ -799,7 +799,7 @@ export class AuroMenu extends AuroElement {
             class="${this.hasLoadingPlaceholder ? "" : "empty"}"
           >
             <div>
-              <slot name="loadingIcon"></slot>
+              <slot name="loadingIcon" class="body-xs"></slot>
               <slot name="loadingText"></slot>
             </div>
           </auro-menuoption>
