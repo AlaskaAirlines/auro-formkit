@@ -779,6 +779,26 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Hides the dropdown bib if its open.
+   * @returns {void}
+   */
+  hideBib() {
+    if (this.dropdown && this.dropdown.isPopoverVisible) {
+      this.dropdown.hide();
+    }
+  }
+
+  /**
+   * Shows the dropdown bib if there are options to show.
+   * @returns {void}
+   */
+  showBib() {
+    if (this.dropdown && !this.dropdown.isPopoverVisible) {
+      this.dropdown.show();
+    }
+  }
+
+  /**
    * Function to support @focusin event.
    * @private
    * @return {void}
@@ -941,16 +961,6 @@ export class AuroSelect extends AuroElement {
    */
   reset() {
     this.validation.reset(this);
-  }
-
-  /**
-   * Hide dropdownbib.
-   * @private
-   */
-  hideBib() {
-    if (this.dropdown) {
-      this.dropdown.hide();
-    }
   }
 
   /**

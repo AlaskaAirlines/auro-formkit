@@ -45,7 +45,7 @@
 |-----------------------------|--------------------------------------|--------------------------------------------------|
 | `auroDropdown-idAdded`      | `Object<key  : 'id', value: string>` |                                                  |
 | `auroDropdown-toggled`      |                                      | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` |                                      | Notifies that the trigger has been clicked.      |
+| `auroDropdown-triggerClick` | `CustomEvent<any>`                   | Notifies that the trigger has been clicked.      |
 
 ## Slots
 

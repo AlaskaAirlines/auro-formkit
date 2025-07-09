@@ -513,7 +513,6 @@ export class AuroCombobox extends AuroElement {
 
   /**
    * Hides the dropdown bib if its open.
-   * @private
    * @returns {void}
    */
   hideBib() {
@@ -524,7 +523,6 @@ export class AuroCombobox extends AuroElement {
 
   /**
    * Shows the dropdown bib if there are options to show.
-   * @private
    * @returns {void}
    */
   showBib() {
