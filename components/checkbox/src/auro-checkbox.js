@@ -169,6 +169,13 @@ export class AuroCheckbox extends LitElement {
   handleInput(event) {
     this.checked = event.target.checked;
 
+    this.dispatchEvent(new CustomEvent('input', {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+    }));
+
+    // Old event we need to deprecate
     this.dispatchEvent(new CustomEvent('auroCheckbox-input', {
       bubbles: true,
       cancelable: false,
