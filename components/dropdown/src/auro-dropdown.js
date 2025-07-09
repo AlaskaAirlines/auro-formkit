@@ -551,6 +551,13 @@ export class AuroDropdown extends AuroElement {
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
+
+    this.trigger.addEventListener('click', () => {
+      this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', {
+        bubbles: true,
+        composed: true
+      }));
+    });
   }
 
   /**
