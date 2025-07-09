@@ -9,6 +9,12 @@
   display: block;
 }
 
+:host {
+  [auro-input] {
+    --ds-auro-input-background-color: transparent;
+  }
+}
+
 :host([layout*='classic']) {
   [auro-input] {
     width: 100%;
