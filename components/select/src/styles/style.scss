@@ -27,10 +27,18 @@
   --ds-auro-dropdown-trigger-container-color: var(--ds-auro-select-background-color);
 }
 
+:host {
+  display: inline-block;
+}
+
 :host([layout*='emphasized']),
 :host([layout*='snowflake']) {
   [auro-dropdown] {
     --ds-auro-select-border-color: transparent;
+  }
+
+  .mainContent {
+    text-align: center;
   }
 }
 
