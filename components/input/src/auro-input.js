@@ -118,7 +118,7 @@ export class AuroInput extends BaseInput {
   getLabelFontClass() {
     const isHidden = this.inputHidden;
 
-    if (this.layout === 'emphasized') {
+    if (this.layout.startsWith('emphasized')) {
       return isHidden ? 'accent-xl' : 'body-sm';
     }
 
@@ -138,7 +138,7 @@ export class AuroInput extends BaseInput {
   getInputFontClass() {
     const isHidden = this.inputHidden;
 
-    if (this.layout === 'emphasized') {
+    if (this.layout.startsWith('emphasized')) {
       return isHidden ? 'body-sm' : 'accent-xl';
     }
 
