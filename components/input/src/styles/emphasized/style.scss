@@ -134,23 +134,3 @@
   }
 }
 
-.layout-emphasized-left {
-  .alertNotification {
-    margin-right: var(--ds-size-100, vac.$ds-size-100);
-  }
-
-  .clear {
-    margin-left: var(--ds-size-100, vac.$ds-size-100);
-  }
-}
-
-.layout-emphasized,
-.layout-emphasized-right {
-  .alertNotification {
-    margin-left: var(--ds-size-100, vac.$ds-size-100);
-  }
-
-  .clear {
-    margin-right: var(--ds-size-100, vac.$ds-size-100);
-  }
-}

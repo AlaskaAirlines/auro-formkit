@@ -76,10 +76,7 @@
 
     &.right {
       padding-left: var(--ds-size-100, vac.$ds-size-100);
-
-      .notification {
-        margin-right: var(--ds-size-100, vac.$ds-size-100);
-      }
+      margin-right: var(--ds-size-100, vac.$ds-size-100);
     }
   }
 
