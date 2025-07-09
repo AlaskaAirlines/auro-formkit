@@ -38,7 +38,9 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
+| `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
 | `reset`    | `(): void`                             | Resets component to initial state.               |
+| `showBib`  | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events

@@ -433,6 +433,26 @@ export class AuroCounterGroup extends AuroElement {
   }
 
   /**
+   * Hides the dropdown bib if its open.
+   * @returns {void}
+   */
+  hideBib() {
+    if (this.dropdown && this.dropdown.isPopoverVisible) {
+      this.dropdown.hide();
+    }
+  }
+
+  /**
+   * Shows the dropdown bib if there are options to show.
+   * @returns {void}
+   */
+  showBib() {
+    if (this.dropdown && !this.dropdown.isPopoverVisible) {
+      this.dropdown.show();
+    }
+  }
+
+  /**
    * Configures the dropdown counters by selecting all `auro-counter` elements,
    * appending them to the `auro-counter-wrapper` element within the shadow DOM,
    * and setting up keyboard navigation and input event listeners.

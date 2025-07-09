@@ -61,6 +61,8 @@
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
+| `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
+| `showBib`  | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events

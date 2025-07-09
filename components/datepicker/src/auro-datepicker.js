@@ -813,6 +813,26 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Hides the dropdown bib if its open.
+   * @returns {void}
+   */
+  hideBib() {
+    if (this.dropdown && this.dropdown.isPopoverVisible) {
+      this.dropdown.hide();
+    }
+  }
+
+  /**
+   * Shows the dropdown bib if there are options to show.
+   * @returns {void}
+   */
+  showBib() {
+    if (this.dropdown && !this.dropdown.isPopoverVisible) {
+      this.dropdown.show();
+    }
+  }
+
+  /**
    * Sets the readonly attribute on the inputs based on the window width.
    * @private
    * @returns {void}
