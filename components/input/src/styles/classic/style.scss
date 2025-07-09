@@ -15,6 +15,7 @@
 */
 
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 
 .layout-classic {
   display: flex;
@@ -33,7 +34,6 @@
     label {
       overflow: hidden;
       cursor: text;
-      font-size: var(--ds-text-body-size-xs);
       line-height: 20px;
       text-overflow: ellipsis;
       transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -42,7 +42,6 @@
 
     input {
       height: auto;
-      font-size: var(--ds-basic-text-body-default-font-size, 16px);
       line-height: var(--ds-basic-text-body-default-line-height, 24px);
       transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
     }
@@ -51,7 +50,6 @@
   .mainContent:has(input.util_displayHiddenVisually) {
     label {
       padding-top: 0;
-      font-size: var(--ds-text-body-size-default, 1rem);
       justify-self: flex-start;
       line-height: var(--ds-text-body-size-default);
     }
