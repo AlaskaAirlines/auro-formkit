@@ -57,6 +57,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @slot trigger - Defines the content of the trigger.
  * @csspart trigger - The trigger content container.
  * @csspart chevron - The collapsed/expanded state icon container.
+ * @csspart size - The size of the dropdown bib. (height, width, maxHeight, maxWidth only)
  * @csspart helpText - The helpText content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
