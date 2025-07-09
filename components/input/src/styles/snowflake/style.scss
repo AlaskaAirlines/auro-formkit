@@ -11,12 +11,10 @@
 :host([layout*='snowflake']) {
   .leftIndent {
     margin-left: var(--ds-size-300, vac.$ds-size-300);
-    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
   }
 
   .rightIndent {
     margin-right: var(--ds-size-300, vac.$ds-size-300);
-    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
   }
 }
 
@@ -27,8 +25,6 @@
   justify-content: center;
 
   label {
-    font-size: var(--ds-text-body-size-xs);
-    line-height: 20px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -36,8 +32,6 @@
 
   input {
     text-align: center;
-    font-size: 18px;
-    line-height: 26px;
   }
 
   .mainContent {

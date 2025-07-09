@@ -8,8 +8,7 @@
   lit/binding-positions,
   lit/no-invalid-html,
   max-lines,
-  no-extra-parens,
-  curly
+  no-extra-parens
   */
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
@@ -99,7 +98,7 @@ export class AuroInput extends BaseInput {
    * @private
    */
   get inputHidden() {
-    return (this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === ''));
+    return (this.hasDisplayValueContent && !this.hasFocus && this.hasValue) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === ''));
   }
 
   /**
@@ -108,17 +107,48 @@ export class AuroInput extends BaseInput {
    * @private
    */
   get labelHidden() {
-    return this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0;
+    return this.hasDisplayValueContent && !this.hasFocus && this.hasValue;
   }
 
   /**
-   * The font class to use for the label based on the input state.
-   * @returns {string} - Returns the font class for the label.
+   * Returns the label font class based on layout and visibility state.
    * @private
+   * @returns {string} - The font class for the label.
    */
-  get labelFontClass() {
-    if (this.inputHidden) return 'body-default';
-    return 'body-xs';
+  getLabelFontClass() {
+    const isHidden = this.inputHidden;
+
+    if (this.layout === 'emphasized') {
+      return isHidden ? 'accent-xl' : 'body-sm';
+    }
+
+    if (this.layout === 'snowflake') {
+      return isHidden ? 'body-lg' : 'body-xs';
+    }
+
+    // classic layout (default)
+    return isHidden ? 'body-default' : 'body-xs';
+  }
+
+  /**
+   * Returns the input font class based on layout and visibility state.
+   * @private
+   * @returns {string} - The font class for the input.
+   */
+  getInputFontClass() {
+    const isHidden = this.inputHidden;
+
+    if (this.layout === 'emphasized') {
+      return isHidden ? 'body-sm' : 'accent-xl';
+    }
+
+    if (this.layout === 'snowflake') {
+      // same for both hidden and visible
+      return 'body-lg';
+    }
+
+    // classic layout (default) - same for both hidden and visible
+    return 'body-default';
   }
 
   /**
@@ -129,9 +159,9 @@ export class AuroInput extends BaseInput {
   get commonLabelClasses() {
     return {
       'is-disabled': this.disabled,
-      'withValue': this.value && this.value.length > 0,
+      'withValue': this.hasValue,
       'util_displayHiddenVisually': this.labelHidden,
-      [this.labelFontClass]: true,
+      [this.getLabelFontClass()]: true,
     };
   }
 
@@ -143,7 +173,7 @@ export class AuroInput extends BaseInput {
   get commonInputClasses() {
     return {
       'util_displayHiddenVisually': this.inputHidden,
-      'body-default': true
+      [this.getInputFontClass()]: true,
     };
   }
 
@@ -167,7 +197,7 @@ export class AuroInput extends BaseInput {
     return {
       'wrapper': true,
       'simple': this.simple,
-      'withValue': this.value && this.value.length > 0,
+      'withValue': this.hasValue,
       'hasFocus': this.hasFocus
     };
   }
@@ -263,7 +293,7 @@ export class AuroInput extends BaseInput {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.hasFocus,
-      'withValue': this.value && this.value.length > 0,
+      'withValue': this.hasValue,
     };
 
     // Remove this when the classic layout is sunset.
