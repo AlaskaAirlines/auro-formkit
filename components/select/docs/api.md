@@ -63,6 +63,9 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ## CSS Shadow Parts
 
-| Part       | Description                 |
-|------------|-----------------------------|
-| `helpText` | Apply CSS to the help text. |
+| Part              | Description                                      |
+|-------------------|--------------------------------------------------|
+| `dropdownChevron` | Apply CSS to the collapsed/expanded state icon container. |
+| `dropdownSize`    | Apply size styles to the dropdown bib. (height, width, maxHeight, maxWidth only) |
+| `dropdownTrigger` | Apply CSS to the trigger content container.      |
+| `helpText`        | Apply CSS to the help text.                      |

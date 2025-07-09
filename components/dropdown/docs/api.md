@@ -57,9 +57,10 @@
 
 ## CSS Shadow Parts
 
-| Part       | Description                                  |
-|------------|----------------------------------------------|
-| `chevron`  | The collapsed/expanded state icon container. |
-| `helpText` | The helpText content container.              |
-| `popover`  | The bib content container.                   |
-| `trigger`  | The trigger content container.               |
+| Part       | Description                                      |
+|------------|--------------------------------------------------|
+| `chevron`  | The collapsed/expanded state icon container.     |
+| `helpText` | The helpText content container.                  |
+| `popover`  | The bib content container.                       |
+| `size`     | The size of the dropdown bib. (height, width, maxHeight, maxWidth only) |
+| `trigger`  | The trigger content container.                   |
