@@ -452,7 +452,8 @@ export class AuroSelect extends AuroElement {
     const obj = {
       'is-disabled': this.disabled,
       'withValue': false,
-      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0,
+      [this.labelFontClass]: true
     };
 
     if (this.placeholder) {
