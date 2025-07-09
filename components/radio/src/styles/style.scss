@@ -15,11 +15,13 @@
    selector-max-compound-selectors,
    scss/selector-no-redundant-nesting-selector,
    no-descending-specificity,
-   rule-empty-line-before */
+   rule-empty-line-before,
+   declaration-block-no-redundant-longhand-properties */
 
 // Import Auro tokens
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 @use '@aurodesignsystem/webcorestylesheets/src/core';
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
@@ -63,8 +65,8 @@
 
   padding-right: var(--ds-size-100, vac.$ds-size-100);
   padding-left: var(--ds-size-100, vac.$ds-size-100);
-
-  line-height: var(--ds-size-400, vac.$ds-size-400);
+  padding-top: var(--ds-size-50, vac.$ds-size-50);
+  padding-bottom: var(--ds-size-75, vac.$ds-size-75);
 }
 
 .label {
@@ -79,12 +81,11 @@
   &:after {
     position: absolute;
     z-index: 1;
-    top: var(--ds-size-200, vac.$ds-size-200); // half of `.rdoGroup`'s line-height
+    top: var(--ds-size-50, vac.$ds-size-50);
     left: var(--ds-size-50, vac.$ds-size-50);
 
     width: calc(var(--ds-size-200, vac.$ds-size-200) + var(--ds-size-50, vac.$ds-size-50));
     height: calc(var(--ds-size-200, vac.$ds-size-200) + var(--ds-size-50, vac.$ds-size-50));
-    transform: translateY(-50%);
 
     content: '';
 

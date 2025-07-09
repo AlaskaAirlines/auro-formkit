@@ -278,7 +278,7 @@ export class AuroRadio extends LitElement {
     };
 
     return html`
-      <div class="ods-inputGroup rdoGroup" part="radio">
+      <div class="ods-inputGroup rdoGroup body-default" part="radio">
         <input
           class="util_displayHidden ods-inputOption rdo--input"
           part="radio-input"
