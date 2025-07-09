@@ -455,9 +455,29 @@ export class AuroSelect extends AuroElement {
   get commonLabelClasses() {
     return {
       'is-disabled': this.disabled,
-      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
-      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+      'withValue': this.hasValue,
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0,
+      [this.labelFontClass]: true
     };
+  }
+
+  /**
+   * Returns the font class for the label based on state.
+   * @returns {string} - Returns the font class for the label.
+   * @private
+   */
+  get labelFontClass() {
+    if (this.hasValue) return 'body-xs';
+    return 'body-default';
+  }
+
+  /**
+   * Whether or not the component has a value.
+   * @returns {boolean} - Returns true if the component has a value or placeholder.
+   * @private
+   */
+  get hasValue() {
+    return this.placeholder || (this.value && this.value.length > 0); // eslint-disable-line no-extra-parens
   }
 
   /**
@@ -1282,6 +1302,11 @@ export class AuroSelect extends AuroElement {
       'util_displayHiddenVisually': (this.forceDisplayValue || !(this.dropdown && this.dropdown.isPopoverVisible)) && this.hasDisplayValueContent
     };
 
+    const valueClasses = {
+      'value': true,
+      'body-default': true
+    };
+
     return html`
       <div
         class="${classMap(this.commonWrapperClasses)}"
@@ -1314,7 +1339,7 @@ export class AuroSelect extends AuroElement {
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
-                <div class="value" id="value"></div>
+                <div class="${classMap(valueClasses)}" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
                 </div>
