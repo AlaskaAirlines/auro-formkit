@@ -69,6 +69,7 @@ Custom element for the purpose of allowing users to select one or more options o
 | `auroCheckbox-focusin`  | `CustomEvent<any>` |
 | `auroCheckbox-focusout` | `CustomEvent<any>` |
 | `auroCheckbox-input`    | `CustomEvent<any>` |
+| `input`                 | `CustomEvent<any>` |
 
 ## CSS Shadow Parts
 
