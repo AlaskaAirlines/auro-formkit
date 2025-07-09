@@ -53,6 +53,10 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
  * @event input - Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
+ *
+ * @csspart dropdownTrigger - Apply CSS to the trigger content container.
+ * @csspart dropdownChevron - Apply CSS to the collapsed/expanded state icon container.
+ * @csspart dropdownSize - Apply size styles to the dropdown bib. (height, width, maxHeight, maxWidth only)
  * @csspart helpText - Apply CSS to the help text.
  */
 
