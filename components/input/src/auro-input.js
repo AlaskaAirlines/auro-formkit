@@ -8,7 +8,8 @@
   lit/binding-positions,
   lit/no-invalid-html,
   max-lines,
-  no-extra-parens
+  no-extra-parens,
+  curly
   */
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
@@ -93,6 +94,34 @@ export class AuroInput extends BaseInput {
   }
 
   /**
+   * Whether the input is being hidden currently based on state.
+   * @returns {boolean} - Returns true if the input is hidden.
+   * @private
+   */
+  get inputHidden() {
+    return (this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === ''));
+  }
+
+  /**
+   * Whether the label is being hidden currently based on state.
+   * @returns {boolean} - Returns true if the label is hidden.
+   * @private
+   */
+  get labelHidden() {
+    return this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0;
+  }
+
+  /**
+   * The font class to use for the label based on the input state.
+   * @returns {string} - Returns the font class for the label.
+   * @private
+   */
+  get labelFontClass() {
+    if (this.inputHidden) return 'body-default';
+    return 'body-xs';
+  }
+
+  /**
    * Returns classmap configuration for html5 input labels in all layouts.
    * @private
    * @returns {void}
@@ -101,7 +130,8 @@ export class AuroInput extends BaseInput {
     return {
       'is-disabled': this.disabled,
       'withValue': this.value && this.value.length > 0,
-      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
+      'util_displayHiddenVisually': this.labelHidden,
+      [this.labelFontClass]: true,
     };
   }
 
@@ -112,7 +142,8 @@ export class AuroInput extends BaseInput {
    */
   get commonInputClasses() {
     return {
-      'util_displayHiddenVisually': (this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === '')),
+      'util_displayHiddenVisually': this.inputHidden,
+      'body-default': true
     };
   }
 
