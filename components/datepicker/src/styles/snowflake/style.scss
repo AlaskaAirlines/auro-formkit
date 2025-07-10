@@ -3,7 +3,6 @@
 :host([layout*='snowflake']) {
   [auro-input] {
     flex: 1;
-
     text-align: center;
 
     &::part(label),
@@ -16,8 +15,6 @@
       padding-bottom: unset;
       text-align: center;
 
-      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
-      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
       transition: unset; // default transition makes input "slide" in
     }
 
@@ -38,8 +35,6 @@
 
     &::part(displayValue) {
       justify-content: center;
-      font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
-      line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
     }
   }
 
@@ -69,19 +64,9 @@
   // unfocused state(s)
 
   label {
-    font-size: var(--ds-text-body-size-lg, vac.$ds-text-body-size-lg);
-    line-height: var(--ds-text-body-height-lg, vac.$ds-text-body-height-lg);
-    font-weight: 450;
-    letter-spacing: 0;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-
-    &.hasFocus,
-    &.hasValue {
-      font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
-      line-height: var(--ds-text-body-height-xs, vac.$ds-text-body-height-xs);
-    }
   }
 
   .inputDivider {
