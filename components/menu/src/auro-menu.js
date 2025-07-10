@@ -5,6 +5,7 @@
 
 import { html } from "lit";
 
+import shapeSizeCss from "./styles/shapeSize-css.js";
 import styleCss from "./styles/default/style-menu-css.js";
 import colorCss from "./styles/default/color-menu-css.js";
 import tokensCss from "./styles/default/tokens-css.js";
@@ -16,6 +17,7 @@ import {
   isOptionInteractive,
   dispatchMenuEvent
 } from './auro-menu-utils.js';
+import { classMap } from "lit/directives/class-map.js";
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -48,8 +50,15 @@ export class AuroMenu extends AuroElement {
 
     // State properties (reactive)
 
-    this.shape = undefined; // box, rounded, pill
-    this.size = undefined; // md, lg, xl
+    /**
+     * @private
+     */
+    this.shape = "box";
+
+    /**
+     * @private
+     */
+    this.size = "sm";
 
     // Value of the selected options
     this.value = undefined;
@@ -164,6 +173,7 @@ export class AuroMenu extends AuroElement {
 
   static get styles() {
     return [
+      shapeSizeCss,
       styleCss,
       colorCss,
       tokensCss
@@ -784,6 +794,13 @@ export class AuroMenu extends AuroElement {
     return this.loadingSlots && this.loadingSlots.length > 0;
   }
 
+  get wrapperClasses() {
+    return classMap({
+      'menuWrapper': true,
+      [this.size]: true,
+    });
+  }
+
   /**
    * Logic to determine the layout of the component.
    * @protected
@@ -792,14 +809,14 @@ export class AuroMenu extends AuroElement {
   renderLayout() {
     if (this.loading) {
       return html`
-        <div class="wrapper">
+        <div class="${this.wrapperClasses}">
           <auro-menuoption
             disabled
             loadingplaceholder
             class="${this.hasLoadingPlaceholder ? "" : "empty"}"
           >
             <div>
-              <slot name="loadingIcon" class="body-xs"></slot>
+              <slot name="loadingIcon" class="body-lg"></slot>
               <slot name="loadingText"></slot>
             </div>
           </auro-menuoption>
@@ -808,7 +825,7 @@ export class AuroMenu extends AuroElement {
     }
 
     return html`
-      <div class="wrapper">
+      <div class="${this.wrapperClasses}">
         <slot @slotchange=${this.handleSlotChange}></slot>
       </div>
     `;

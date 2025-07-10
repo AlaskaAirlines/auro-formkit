@@ -6,6 +6,7 @@
 // ---------------------------------------------------------------------
 import { html } from 'lit/static-html.js';
 
+import shapeSizeCss from "./styles/shapeSize-css.js";
 import styleCss from "./styles/default/style-menuoption-css.js";
 import colorCss from "./styles/default/color-menuoption-css.js";
 import tokensCss from "./styles/default/tokens-css.js";
@@ -35,8 +36,15 @@ export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
 
-    this.size = undefined; // md, lg, xl
-    this.shape = undefined; // box, rounded, pill
+    /**
+     * @private
+     */
+    this.shape = "box";
+
+    /**
+     * @private
+     */
+    this.size = "sm";
 
     /**
      * Generate unique names for dependency components.
@@ -86,6 +94,7 @@ export class AuroMenuOption extends AuroElement {
 
   static get styles() {
     return [
+      shapeSizeCss,
       styleCss,
       colorCss,
       tokensCss
@@ -143,7 +152,7 @@ export class AuroMenuOption extends AuroElement {
 
     svg.setAttribute('slot', 'svg');
 
-    return html`<${this.iconTag} customColor customSvg slot="icon">${svg}</${this.iconTag}>`;
+    return html`<${this.iconTag} customColor customSvg>${svg}</${this.iconTag}>`;
   }
 
   /**
@@ -154,7 +163,7 @@ export class AuroMenuOption extends AuroElement {
   renderLayout() {
 
     const fontClassMap = {
-      xs: 'body-default',
+      xs: 'body-sm',
       sm: 'body-default',
       md: 'body-default',
       lg: 'body-lg',
@@ -162,8 +171,8 @@ export class AuroMenuOption extends AuroElement {
     };
 
     const classes = classMap({
-      wrapper: true,
-      [this.size ? fontClassMap[this.size] : 'body-default']: true,
+      'wrapper': true,
+      [this.size ? fontClassMap[this.size] : 'body-sm']: true,
     });
 
     return html`
