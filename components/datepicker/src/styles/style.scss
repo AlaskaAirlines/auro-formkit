@@ -23,6 +23,12 @@
   &.right {
     width: var(--ds-size-400, vac.$ds-size-400);
   }
+
+  .notification:not(.util_displayHidden) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .mainContent {
