@@ -5,8 +5,9 @@
 
 /* stylelint-disable declaration-empty-line-before */
 
-@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables' as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
 
 /* stylelint-disable max-nesting-depth, declaration-no-important, order/properties-order, declaration-block-no-redundant-longhand-properties */
 
@@ -15,43 +16,15 @@
   user-select: none;
 
   .wrapper {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
-    padding-right: var(--ds-size-200, vac.$ds-size-200);    
-    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-300, vac.$ds-size-300) + var(--ds-size-100, vac.$ds-size-100));
+    padding-right: var(--ds-size-150, vac.$ds-size-150);
+    padding-left: calc(var(--ds-size-100, vac.$ds-size-100) + var(--ds-size-300, vac.$ds-size-300) + var(--ds-size-100, vac.$ds-size-100));
     padding-top: var(--ds-size-50, vac.$ds-size-50);
     padding-bottom: var(--ds-size-50, vac.$ds-size-50);
 
     -webkit-tap-highlight-color: transparent;
-
-    &[class*="shape-box"],
-    &[class*="shape-snowflake"] {
-      border-radius: unset;
-    }
-
-    &[class*="shape-pill"] {
-      border-radius: 30px;
-    }
-
-    &[class*="-lg"] {
-      padding-top: var(--ds-size-75, vac.$ds-size-75);
-      padding-bottom: var(--ds-size-75, vac.$ds-size-75);
-      padding-right: var(--ds-size-150, vac.$ds-size-150);
-
-      &:not(:last-child) {
-        margin-bottom: var(--ds-size-50, vac.$ds-size-50);
-      }
-    }
-
-    &[class*="-xl"] {
-      padding-top: var(--ds-size-100, vac.$ds-size-100);
-      padding-bottom: var(--ds-size-100, vac.$ds-size-100);
-      padding-right: var(--ds-size-200, vac.$ds-size-200);
-
-      &:not(:last-child) {
-        margin-bottom: var(--ds-size-100, vac.$ds-size-100);
-      }
-    }
 
   }
 
@@ -64,7 +37,7 @@
 
   [auro-icon] {
     --ds-auro-icon-size: var(--ds-size-300, #{vac.$ds-size-300});
-    margin-right: var(--ds-size-150, vac.$ds-size-150);
+    margin-right: var(--ds-size-100, vac.$ds-size-100);
     margin-left: var(--ds-size-100, vac.$ds-size-100);
   }
 
@@ -76,7 +49,7 @@
 
 :host([loadingplaceholder]) {
   .wrapper {
-    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-300, vac.$ds-size-300) + var(--ds-size-100, vac.$ds-size-100));
+    padding-left: calc(var(--ds-size-100, vac.$ds-size-100) + var(--ds-size-300, vac.$ds-size-300) + var(--ds-size-100, vac.$ds-size-100));
   }
 }
 

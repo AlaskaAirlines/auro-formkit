@@ -44,13 +44,13 @@ export class AuroElement extends LitElement {
         }
       });
 
+      if (this.shape && this.size) {
+        wrapper.classList.add(`shape-${this.shape.toLowerCase()}-${this.size.toLowerCase()}`);
+      } else {
+        wrapper.classList.add('shape-none');
+      }
     }
 
-    if (this.shape && this.size) {
-      wrapper.classList.add(`shape-${this.shape.toLowerCase()}-${this.size.toLowerCase()}`);
-    } else {
-      wrapper.classList.add('shape-none');
-    }
   }
 
   resetLayoutClasses() {

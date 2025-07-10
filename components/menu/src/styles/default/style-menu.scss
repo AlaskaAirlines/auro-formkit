@@ -3,12 +3,12 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable declaration-empty-line-before */
+/* stylelint-disable declaration-empty-line-before, selector-max-class */
 
 // Import Auro tokens
-@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
-
+@use '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables' as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/core';
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
 
 /* stylelint-disable declaration-no-important, order/properties-order, selector-max-attribute, selector-max-combinators, selector-max-compound-selectors, selector-no-qualifying-type, scss/selector-nest-combinators, max-nesting-depth */
 
@@ -16,15 +16,15 @@
 :host {
   display: block;
   vertical-align: middle;
+  line-height: 0; // prevents page from jumping when menu options are selected at the end of the list.
 
-  .wrapper {
+  .menuWrapper {
     box-sizing: border-box;
     display: inline-block;
     width: 100%;
 
     margin: 0;
     padding: 0;
-
   }
 
   // Styles are set to `important` to ensure they over-ride any styles
@@ -62,11 +62,13 @@
 :host([root]) { 
   overflow-y: auto;
 
-  .wrapper[class*="-lg"] {
-    padding: var(--ds-size-150, vac.$ds-size-150);
-  }
+  .menuWrapper {
+    &.lg {
+      padding: var(--ds-size-150, vac.$ds-size-150);
+    }
 
-  .wrapper[class*="-xl"] {
-    padding: var(--ds-size-200, vac.$ds-size-200);
+    &.xl {
+      padding: var(--ds-size-200, vac.$ds-size-200);
+    }
   }
 }

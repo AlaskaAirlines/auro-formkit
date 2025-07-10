@@ -97,6 +97,46 @@ $xs: 24px;
   @include variants($xl);
 }
 
+.shape-box-lg {
+  min-height: getCalculatedSize($lg, $defaultBorderSize);
+  max-height: getCalculatedSize($lg, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($lg);
+}
+
+.shape-box-md {
+  min-height: getCalculatedSize($md, $defaultBorderSize);
+  max-height: getCalculatedSize($md, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($md);
+}
+
+.shape-box-sm {
+  min-height: getCalculatedSize($sm, $defaultBorderSize);
+  max-height: getCalculatedSize($sm, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($sm);
+}
+
+.shape-box-xs {
+  min-height: getCalculatedSize($xs, $defaultBorderSize);
+  max-height: getCalculatedSize($xs, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($xs);
+}
+
 .shape-rounded-lg {
   min-height: $lg;
   max-height: $lg;
