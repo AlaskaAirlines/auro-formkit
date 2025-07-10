@@ -790,15 +790,18 @@ export class AuroDatePicker extends AuroElement {
       this.hasFocus = true;
     });
 
-    this.addEventListener('focusout', (evt) => {
+    this.addEventListener('focusout', () => {
       this.hasFocus = false;
-      if (!this.noValidate && !evt.detail.expanded && this.touched) {
-        if (!this.contains(document.activeElement)) {
-          this.validation.validate(this.inputList[0]);
 
-          if (this.inputList[1] && this.inputList[1].touched) {
-            this.validation.validate(this.inputList[1]);
-          }
+      if (this.noValidate) {
+        return;
+      }
+
+      if (!this.contains(document.activeElement)) {
+        this.validation.validate(this.inputList[0]);
+
+        if (this.inputList[1]) {
+          this.validation.validate(this.inputList[1]);
         }
       }
     });
@@ -1050,8 +1053,8 @@ export class AuroDatePicker extends AuroElement {
         this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
       }
 
-      this.validate();
       this.setHasValue();
+      this.validate();
     }
 
     if (changedProperties.has('valueEnd') && this.inputList[1]) {
