@@ -186,6 +186,9 @@ export class AuroDatePicker extends AuroElement {
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
 
+    /** @private */
+    this.handleClick = this.handleClick.bind(this);
+
     // Layout Config
     this.layout = 'classic';
     this.shape = 'classic';
@@ -585,9 +588,9 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   focus(focusInput = '') {
+    this.hasFocus = true;
     this.range && focusInput === 'endDate' ? this.inputList[1].focus() : this.inputList[0].focus();
   }
-
 
   /**
    * Converts valid time number to format used by wc-date-range API.
@@ -1210,6 +1213,39 @@ export class AuroDatePicker extends AuroElement {
     this.calendar.injectSlot(event.target.name, slot.cloneNode(true));
   }
 
+  /**
+   * Handles click events on the datepicker.
+   * @param {PointerEvent} event - The pointer event object.
+   * @private
+   * @returns {void}
+   */
+  handleClick(event) {
+
+    // Get the initial target of the click event
+    const [initTarget] = event.composedPath();
+
+    // Determine if the current layout requires special handling
+    const layoutRequiresHandling = ['snowflake'].includes(this.layout);
+
+    // Determine if the target is an input element
+    const targetIsInput = initTarget.tagName === 'INPUT';
+
+    if (layoutRequiresHandling && !targetIsInput) {
+
+      // Focus the first input
+      this.inputList[0].focus();
+    }
+  }
+
+  /**
+   * Set up click handling for the datepicker.
+   * @private
+   * @returns {void}
+   */
+  configureClickHandler() {
+    this.addEventListener('click', this.handleClick);
+  }
+
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-datepicker');
@@ -1218,6 +1254,7 @@ export class AuroDatePicker extends AuroElement {
     this.configureInput();
     this.configureCalendar();
     this.configureDatepicker();
+    this.configureClickHandler();
 
     window.addEventListener('resize', () => {
       this.handleReadOnly();
@@ -1228,11 +1265,6 @@ export class AuroDatePicker extends AuroElement {
     super.connectedCallback();
 
     this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
-
-    // setup focus/blur event listeners
-    this.addEventListener('focus', () => {
-      this.focus();
-    }, true);
   }
 
   // layout render methods
@@ -1277,9 +1309,9 @@ export class AuroDatePicker extends AuroElement {
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
           ${this.hasError
-            ? this.renderHtmlIconError()
-            : this.renderHtmlActionClear()
-          }
+        ? this.renderHtmlIconError()
+        : this.renderHtmlActionClear()
+      }
         </div>
       </div>
     `;
@@ -1324,9 +1356,9 @@ export class AuroDatePicker extends AuroElement {
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
           ${this.hasError
-            ? this.renderHtmlIconError()
-            : this.renderHtmlActionClear()
-          }
+        ? this.renderHtmlIconError()
+        : this.renderHtmlActionClear()
+      }
         </div>
       </div>
     `;
@@ -1376,9 +1408,9 @@ export class AuroDatePicker extends AuroElement {
         <div>
           <div class="displayValueText">
             ${dateValue && this.util.validDateStr(dateValue, this.format)
-              ? this.formatShortDate(dateValue)
-              : undefined
-            }
+        ? this.formatShortDate(dateValue)
+        : undefined
+      }
           </div>
         </div>
     `;
@@ -1420,13 +1452,13 @@ export class AuroDatePicker extends AuroElement {
           inputmode="${ifDefined(this.inputmode)}"
         >
           ${this.layout !== "classic"
-            ? html`
+        ? html`
               <span slot="displayValue">
                 ${this.renderDisplayTextDate(this.value)}
               </span>
             `
-            : undefined
-          }
+        : undefined
+      }
           <span slot="label"><slot name="fromLabel"></slot></span>
         </${this.inputTag}>
       </div>
@@ -1457,13 +1489,13 @@ export class AuroDatePicker extends AuroElement {
             ?disabled="${this.disabled}"
             part="input">
             ${this.layout !== "classic"
-              ? html`
+          ? html`
               <span slot="displayValue">
                 ${this.renderDisplayTextDate(this.valueEnd)}
               </span>
             `
-              : undefined
-            }
+          : undefined
+        }
             <span slot="label"><slot name="toLabel"></slot></span>
           </${this.inputTag}>
         </div>
@@ -1503,7 +1535,6 @@ export class AuroDatePicker extends AuroElement {
             ?customColor="${this.onDark}"
             category="interface"
             name="x-lg"
-            slot="icon"
             >
           </${this.iconTag}>
         </${this.buttonTag}>
@@ -1560,21 +1591,21 @@ export class AuroDatePicker extends AuroElement {
   renderHtmlHelpText() {
     return html`
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
-      ? html`
+        ? html`
           <${this.helpTextTag} ?onDark="${this.onDark}">
             <p id="${this.uniqueId}" part="helpText">
               <slot name="helpText"></slot>
             </p>
           </${this.helpTextTag}>
         `
-      : html`
+        : html`
           <${this.helpTextTag} error ?onDark="${this.onDark}">
             <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
               ${this.errorMessage}
             </p>
           </${this.helpTextTag}>
         `
-    }
+      }
     `;
   }
 

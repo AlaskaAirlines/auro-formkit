@@ -22,6 +22,7 @@ import { LitElement } from "lit";
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
 import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/index.mjs";
+import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -47,6 +48,7 @@ import helpTextVersion from './helptextVersion.js';
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
+
 
 /*
  * @slot - Default slot for the popover content.
@@ -633,64 +635,6 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Determines if the element or any children are focusable.
-   * @private
-   * @param {HTMLElement} element - Element to check.
-   * @returns {Boolean} - True if the element or any children are focusable.
-   */
-  containsFocusableElement(element) {
-    this.showTriggerBorders = true;
-
-    const nodes = [
-      element,
-      ...element.children
-    ];
-
-    const focusableElements = [
-      'a',
-      'auro-hyperlink',
-      'button',
-      'auro-button',
-      'input',
-      'auro-input',
-    ];
-
-    const focusableElementsThatNeedBorders = ['auro-input'];
-
-    const result = nodes.some((node) => {
-      const tagName = node.tagName.toLowerCase();
-
-      if (node.tabIndex > -1) {
-        return true;
-      }
-
-      if (focusableElements.includes(tagName)) {
-        if ((tagName === 'a' || tagName === 'auro-hyperlink' || node.hasAttribute('auro-hyperlink')) && node.hasAttribute('href')) {
-          return true;
-        }
-        if (!node.hasAttribute('disabled')) {
-          return true;
-        }
-      }
-
-      if (focusableElements.some((focusableElement) => focusableElement.startsWith('auro-') && (focusableElement === tagName || node.hasAttribute(focusableElement)))) {
-        return true;
-      }
-
-      return false;
-    });
-
-    if (result) {
-      this.showTriggerBorders = !nodes.some((node) => {
-        const tagName = node.tagName.toLowerCase();
-        return focusableElements.includes(tagName) && !focusableElementsThatNeedBorders.includes(tagName);
-      });
-    }
-
-    return result;
-  }
-
-  /**
    * Creates and dispatches a duplicate focus event on the trigger element.
    * @private
    * @param {Event} event - The original focus event.
@@ -801,7 +745,7 @@ export class AuroDropdown extends AuroElement {
       if (triggerContentNodes) {
 
         // See if any of them are focusable elements
-        this.triggerContentFocusable = triggerContentNodes.some((node) => this.containsFocusableElement(node));
+        this.triggerContentFocusable = triggerContentNodes.some((node) => getFocusableElements(node).length > 0);
 
         // If any of them are focusable elements
         if (this.triggerContentFocusable) {
@@ -873,7 +817,7 @@ export class AuroDropdown extends AuroElement {
         <div
           id="trigger"
           class="${classMap(this.commonWrapperClasses)}" part="wrapper"
-          tabindex="${this.tabIndex}"
+          tabindex="${ifDefined(this.triggerContentFocusable ? undefined : this.tabIndex)}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
           aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
           aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
