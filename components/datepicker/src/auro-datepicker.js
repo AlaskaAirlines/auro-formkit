@@ -1288,8 +1288,7 @@ export class AuroDatePicker extends AuroElement {
     };
 
     const labelClassMap = {
-      hasValue: this.hasValue,
-      hasFocus: this.hasFocus,
+      [this.hasFocus || this.hasValue ? 'body-xs' : 'body-lg']: true,
     };
 
     return html`
@@ -1334,11 +1333,6 @@ export class AuroDatePicker extends AuroElement {
       hasFocus: this.hasFocus,
     };
 
-    const labelClassMap = {
-      hasValue: this.hasValue,
-      hasFocus: this.hasFocus,
-    };
-
     return html`
       <div
         class="wrapper trigger"
@@ -1347,9 +1341,6 @@ export class AuroDatePicker extends AuroElement {
           ${this.renderHtmlIconCalendar()}
         </div>
         <div class="mainContent">
-          <label class="${classMap(labelClassMap)}" part="mainLabel">
-            <slot name="label"></slot>
-          </label>
           <div class="${classMap(inputSectionClassMap)}" part="inputSection">
             ${this.renderHtmlInputs()}
           </div>
@@ -1404,9 +1395,14 @@ export class AuroDatePicker extends AuroElement {
    * @returns {import('lit').TemplateResult}
    */
   renderDisplayTextDate(dateValue) {
+    const displayTextClasses = {
+      'displayValueText': true,
+      'body-lg': true
+    };
+
     return html`
         <div>
-          <div class="displayValueText">
+          <div class="${classMap(displayTextClasses)}">
             ${dateValue && this.util.validDateStr(dateValue, this.format)
         ? this.formatShortDate(dateValue)
         : undefined
@@ -1436,20 +1432,21 @@ export class AuroDatePicker extends AuroElement {
           .format="${this.format}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
-          id="${this.generateRandomString(12)}"
           .placeholder="${this.placeholder}"
           .size="${this.size}"
           .shape="${this.shape}"
-          noValidate
           class="dateFrom ${classMap(inputClasses)}"
-          type="date"
+          id="${this.generateRandomString(12)}"
+          inputmode="${ifDefined(this.inputmode)}"
+          layout="classic"
+          noValidate
           part="input"
           setCustomValidity="${this.setCustomValidity}"
           setCustomValidityCustomError="${this.setCustomValidityCustomError}"
           setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
           setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
           setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-          inputmode="${ifDefined(this.inputmode)}"
+          type="date"
         >
           ${this.layout !== "classic"
         ? html`
@@ -1471,23 +1468,27 @@ export class AuroDatePicker extends AuroElement {
       ${this.range ? html`
         <div class="inputContainer">
           <${this.inputTag}
+            ?disabled="${this.disabled}"
             ?onDark="${this.onDark}"
             ?required="${this.required}"
             .format="${this.format}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
-            id="${this.generateRandomString(12)}"
+            .size="${this.size}"
+            .shape="${this.shape}"
             class="dateTo ${classMap(inputClasses)}"
+            id="${this.generateRandomString(12)}"
+            layout="classic"
             noValidate
-            type="date"
+            part="input"
             setCustomValidity="${this.setCustomValidity}"
             setCustomValidityCustomError="${this.setCustomValidityCustomError}"
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
             setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-            ?disabled="${this.disabled}"
-            part="input">
+            type="date"
+          >
             ${this.layout !== "classic"
           ? html`
               <span slot="displayValue">

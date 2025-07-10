@@ -147,6 +147,11 @@ export class AuroInput extends BaseInput {
       return 'body-lg';
     }
 
+    // edge case for enabling visual overrides in datepicker
+    if (this.layout === 'classic' && this.shape === 'snowflake') {
+      return 'body-lg';
+    }
+
     // classic layout (default) - same for both hidden and visible
     return 'body-default';
   }
