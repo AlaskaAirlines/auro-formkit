@@ -78,9 +78,3 @@
   }
   /* stylelint-enable selector-id-pattern */
 }
-
-:host([matchwidth]) {
-  #bibSizer {
-    width: 100%;
-  }
-}

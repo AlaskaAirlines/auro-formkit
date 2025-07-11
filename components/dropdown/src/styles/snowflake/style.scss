@@ -13,33 +13,6 @@
 
 /* stylelint-disable no-descending-specificity, selector-max-attribute, selector-max-class, selector-class-pattern */
 
-// COMMON FOR ALL --------------------------------------------
-
-:host {
-  display: block;
-}
-
-
-.wrapper {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  outline: none;
-}
-
-.triggerContentWrapper {
-  display: flex;
-  overflow: hidden;
-  width: 100%;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 // LAYOUTS ---------------------------------------------------
 
 :host([layout*='snowflake']) {
