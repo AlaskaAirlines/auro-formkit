@@ -344,6 +344,8 @@ export class AuroCalendarCell extends LitElement {
   render() {
     const buttonClasses = {
       'day': true,
+      'body-default': true,
+      'body-lg--breakpoint-sm': true,
       'currentDate': this.currentDate,
       'selected': this.selected,
       'inRange': this.hovered && this.isInRange(this.day, this.dateFrom, this.dateTo),
@@ -369,7 +371,7 @@ export class AuroCalendarCell extends LitElement {
           tabindex="-1">
           <div class="buttonWrapper">
             <div class="currentDayMarker">${(_b = this.day) === null || _b === void 0 ? void 0 : _b.title}</div>
-            <div class="dateSlot" part="dateSlot">
+            <div class="dateSlot body-2xs" part="dateSlot">
               <slot name="date_${this.dateStr}"></slot>
             </div>
           </div>
