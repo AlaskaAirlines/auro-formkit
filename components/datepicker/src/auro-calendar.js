@@ -342,7 +342,7 @@ export class AuroCalendar extends RangeDatepicker {
 
       <div slot="subheader" class="mobileHeader">
         <div class="headerDateFrom">
-          <span class="mobileDateLabel">${this.slots["bib.fullscreen.dateLabel"]}</span>
+          <span class="mobileDateLabel body-xs">${this.slots["bib.fullscreen.dateLabel"]}</span>
           <slot name="bib.fullscreen.fromStr"></slot>
         </div>
         <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>

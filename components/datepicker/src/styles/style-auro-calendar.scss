@@ -6,6 +6,8 @@
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
+
 /* stylelint-disable color-function-notation, at-rule-empty-line-before, order/properties-order, declaration-empty-line-before, declaration-block-no-duplicate-properties */
 
 :host {
@@ -84,10 +86,8 @@
 }
 
 .mobileDateLabel {
-  font-size: 12px; // var(--ds-basic-text-body-xs-font-size, v.$ds-basic-text-body-xs-font-size);
-  font-weight: 450; // var(--ds-basic-text-body-xs-font-weight, v.$ds-basic-text-body-xs-font-weight);
-  letter-spacing: 0; // var(--ds-basic-text-body-xs-letter-spacing, v.$ds-basic-text-body-xs-letter-spacing);
-  line-height: 16px; // var(--ds-basic-text-body-xs-line-height, v.$ds-basic-text-body-xs-line-height);
+  // padding to make up for body-xs line height
+  padding: var(--ds-size-25, vac.$ds-size-25) 0;
 }
 
 .headerDateTo {

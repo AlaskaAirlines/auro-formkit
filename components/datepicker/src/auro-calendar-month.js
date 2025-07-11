@@ -118,12 +118,12 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
   /* eslint-disable */
   render() {
     var _a, _b;
-    
+
     return html `
       <div>
         <div class="header">
           ${this.renderPrevButton()}
-          <div class="headerTitle">
+          <div class="headerTitle heading-xs">
             ${this.monthFirst ? html`
               <div>${this.computeCurrentMonthName(this.month)}</div>
               <div>${this.renderYear()}</div>
