@@ -24,6 +24,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.
+ *
+ * @event {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
+ * @event {InputEvent} input - Notifies when when checked value is changed by user's interface.
  */
 
 // build the component class
@@ -169,12 +172,6 @@ export class AuroCheckbox extends LitElement {
   handleInput(event) {
     this.checked = event.target.checked;
 
-    this.dispatchEvent(new CustomEvent('input', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    }));
-
     // Old event we need to deprecate
     this.dispatchEvent(new CustomEvent('auroCheckbox-input', {
       bubbles: true,
@@ -234,7 +231,7 @@ export class AuroCheckbox extends LitElement {
       }
 
       if (!this.disabled) {
-        this.checked = !this.checked;
+        this.shadowRoot.querySelector('input').click();
         this.handleFocusin();
       }
     });
@@ -272,7 +269,7 @@ export class AuroCheckbox extends LitElement {
             @change="${this.handleChange}"
             @input="${this.handleInput}"
             ?disabled="${this.disabled}"
-            .checked="${this.checked}"
+            ?checked="${this.checked}"
             id="${this.inputId}"
             name="${ifDefined(this.name)}"
             type="checkbox"
