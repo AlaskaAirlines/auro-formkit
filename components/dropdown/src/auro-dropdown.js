@@ -510,6 +510,14 @@ export class AuroDropdown extends AuroElement {
       this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
     }
 
+    if (changedProperties.has('isBibFullscreen')) {
+      if (this.isBibFullscreen) {
+        this.bib.style.removeProperty('contain');
+      } else {
+        this.bib.style.setProperty('contain', 'layout');
+      }
+    }
+
     // when trigger's content is changed without any attribute or node change,
     // `requestUpdate` needs to be called to update hasTriggerContent
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
