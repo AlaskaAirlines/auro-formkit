@@ -36,6 +36,8 @@ import shapeSizeCss from "./styles/shapeSize-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
+import styleCss from "./styles/style-css.js";
+
 // default layout
 import classicColorCss from "./styles/classic/color-css.js";
 import classicLayoutCss from "./styles/classic/style-css.js";
@@ -316,7 +318,9 @@ export class AuroDropdown extends AuroElement {
        * If true, the dropdown bib is displayed.
        */
       isPopoverVisible: {
-        type: Boolean
+        type: Boolean,
+        reflect: true,
+        attribute: 'open'
       },
 
       /**
@@ -452,6 +456,7 @@ export class AuroDropdown extends AuroElement {
 
   static get styles() {
     return [
+      styleCss,
       tokensCss,
       colorCss,
 

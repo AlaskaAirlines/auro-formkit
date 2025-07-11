@@ -1,0 +1,36 @@
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+:host {
+  display: block;
+  position: relative;
+}
+
+:host([open]) {
+  z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
+}
+
+.wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.triggerContentWrapper {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host([matchwidth]) {
+  #bibSizer {
+    width: 100%;
+  }
+}
