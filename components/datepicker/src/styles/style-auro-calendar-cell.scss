@@ -8,30 +8,12 @@
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css' as *;
+// not directly used in this file, but needs to be imported here
+// for JS classMap application(s). TODO: consider moving this to a shared import for js files?
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
 
 /* stylelint-disable selector-max-class, order/properties-order, declaration-empty-line-before, scss/selector-nest-combinators,
    selector-pseudo-element-colon-notation, max-nesting-depth, at-rule-empty-line-before, no-descending-specificity, declaration-no-important */
-
-// =~   DATEPICKER TEXT CLASSES   ~=
-@include vb.auro_grid-breakpoint--sm {
-  .body-lg--breakpoint-sm {
-    font-family:var(--wcss-body-family, "AS Circular", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
-    font-weight: var(--wcss-body-weight, 450);
-    letter-spacing: var(--wcss-body-letter-spacing, 0);
-    font-size: var(--wcss-body-lg-font-size, 1.125rem);
-    line-height: var(--wcss-body-lg-line-height, 1.63);
-  }
-
-  .body-xs--breakpoint-sm {
-    font-family:var(--wcss-body-family, "AS Circular", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
-    font-weight: var(--wcss-body-weight, 450);
-    letter-spacing: var(--wcss-body-letter-spacing, 0);
-    font-size: var(--wcss-body-xs-font-size, 0.75rem);
-    line-height: var(--wcss-body-xs-line-height, 1);
-  }
-}
-// =~ END DATEPICKER TEXT CLASSES ~=
 
 
 @mixin in-range-pseudo-elem {
