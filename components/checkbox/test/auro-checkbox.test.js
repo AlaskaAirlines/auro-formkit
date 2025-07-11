@@ -121,11 +121,11 @@ describe('auro-checkbox-group', () => {
     alaskaCheckboxInput.click();
     alaskaCheckboxInput.dispatchEvent(new Event('input'));
     await alaskaCheckbox.updateComplete;
-    expect(alaskaCheckboxInput.checked).to.be.true;
+    expect(alaskaCheckboxInput.hasAttribute('checked')).to.be.true;
 
     alaskaCheckbox.checked = false;
     await alaskaCheckbox.updateComplete;
-    expect(alaskaCheckboxInput.checked, 'the shadow input was not unchecked').to.be.false;
+    expect(alaskaCheckboxInput.hasAttribute('checked'), 'the shadow input was not unchecked').to.be.false;
   });
 
   it('can select multiple checkboxes', async () => {

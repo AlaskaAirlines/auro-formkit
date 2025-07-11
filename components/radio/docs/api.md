@@ -74,7 +74,9 @@
 |----------------------|--------------------|--------------------------------------------------|
 | `auroRadio-blur`     | `CustomEvent<any>` | Notifies that the component has lost focus.      |
 | `auroRadio-selected` | `CustomEvent<any>` | Notifies that the component has been marked as checked/selected. |
+| `change`             | `CustomEvent<any>` | (Deprecated) Notifies when checked value is changed. |
 | `focusSelected`      | `CustomEvent<any>` | Notifies that the component has gained focus.    |
+| `input`              | `InputEvent`       | Notifies when when checked value is changed by user's interface. |
 | `resetRadio`         | `CustomEvent<any>` | Notifies that the component has reset the checked/selected state. |
 | `toggleSelected`     | `CustomEvent<any>` | Notifies that the component has toggled the checked/selected state. |
 
