@@ -2,13 +2,37 @@
 // // See LICENSE in the project root for license information.
 
 // // ---------------------------------------------------------------------
+@use "sass:meta";
 
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css' as *;
+
 /* stylelint-disable selector-max-class, order/properties-order, declaration-empty-line-before, scss/selector-nest-combinators,
    selector-pseudo-element-colon-notation, max-nesting-depth, at-rule-empty-line-before, no-descending-specificity, declaration-no-important */
+
+// =~   DATEPICKER TEXT CLASSES   ~=
+@include vb.auro_grid-breakpoint--sm {
+  .body-lg--breakpoint-sm {
+    font-family:var(--wcss-body-family, "AS Circular", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    font-weight: var(--wcss-body-weight, 450);
+    letter-spacing: var(--wcss-body-letter-spacing, 0);
+    font-size: var(--wcss-body-lg-font-size, 1.125rem);
+    line-height: var(--wcss-body-lg-line-height, 1.63);
+  }
+
+  .body-xs--breakpoint-sm {
+    font-family:var(--wcss-body-family, "AS Circular", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    font-weight: var(--wcss-body-weight, 450);
+    letter-spacing: var(--wcss-body-letter-spacing, 0);
+    font-size: var(--wcss-body-xs-font-size, 0.75rem);
+    line-height: var(--wcss-body-xs-line-height, 1);
+  }
+}
+// =~ END DATEPICKER TEXT CLASSES ~=
+
 
 @mixin in-range-pseudo-elem {
   position: absolute;
@@ -44,11 +68,6 @@
   border-radius: var(--ds-size-300, vac.$ds-size-300);
 
   cursor: pointer;
-
-  font-size: 16px; // var(--ds-basic-text-body-default-font-size, v.$ds-basic-text-body-default-font-size); /* This must be declared here because the browser clients unset it in the user agent style sheet */
-  font-weight: 450; // var(--ds-basic-text-body-default-font-weight, v.$ds-basic-text-body-default-font-weight); /* This must be declared here because the browser clients unset it in the user agent style sheet */
-  letter-spacing: 0; // var(--ds-basic-text-body-default-letter-spacing, v.$ds-basic-text-body-default-letter-spacing); /* This must be declared here because the browser clients unset it in the user agent style sheet */
-  line-height: 24px; // var(--ds-basic-text-body-default-line-height, v.$ds-basic-text-body-default-line-height); /* This must be declared here because the browser clients unset it in the user agent style sheet */
 
   user-select: none;
 
@@ -95,11 +114,6 @@
 .dateSlot {
   display: flex;
   flex-direction: column;
-
-  font-size: 10px; // var(--ds-basic-text-body-xxs-font-size, v.$ds-basic-text-body-xxs-font-size);
-  font-weight: 450; // var(--ds-basic-text-body-xxs-font-weight, v.$ds-basic-text-body-xxs-font-weight);
-  letter-spacing: 0; // var(--ds-basic-text-body-xxs-letter-spacing, v.$ds-basic-text-body-xxs-letter-spacing);
-  line-height: 14px; // var(--ds-basic-text-body-xxs-line-height, v.$ds-basic-text-body-xxs-line-height);
 }
 
 ::slotted([slot^="date_"]) {
@@ -107,9 +121,8 @@
   top: 80%;
   left: 50%;
 
-  width: 80%;
+  width: 100%;
 
-  overflow: hidden;
   white-space: nowrap;
 
   transform: translate(-50%, -50%);
@@ -140,20 +153,8 @@
     width: var(--ds-size-600, vac.$ds-size-600);
     height: var(--ds-size-800, vac.$ds-size-800);
 
-    font-size: 18px; // var(--ds-basic-text-body-lg-font-size, v.$ds-basic-text-body-lg-font-size);
-    font-weight: 450; // var(--ds-basic-text-body-lg-font-weight, v.$ds-basic-text-body-lg-font-weight);
-    letter-spacing: 0; // var(--ds-basic-text-body-lg-letter-spacing, v.$ds-basic-text-body-lg-letter-spacing);
-    line-height: 26px; // var(--ds-basic-text-body-lg-line-height, v.$ds-basic-text-body-lg-line-height);
-
     &:hover {
       cursor: pointer;
     }
-  }
-
-  .dateSlot {
-    font-size: 12px; // var(--ds-basic-text-body-xs-font-size, v.$ds-basic-text-body-xs-font-size);
-    font-weight: 450; // var(--ds-basic-text-body-xs-font-weight, v.$ds-basic-text-body-xs-font-weight);
-    letter-spacing: 0; // var(--ds-basic-text-body-xs-letter-spacing, v.$ds-basic-text-body-xs-letter-spacing);
-    line-height: 16px; // var(--ds-basic-text-body-xs-line-height, v.$ds-basic-text-body-xs-line-height);
   }
 }

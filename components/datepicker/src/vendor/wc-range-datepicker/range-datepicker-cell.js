@@ -43,7 +43,7 @@ class RangeDatepickerCell extends LitElement {
       @click="${this.handleTap}"
       @mouseover="${this.handleHover}"
       @focus="${this.handleHover}"
-      class="day ${this.isCurrentDate ? 'currentDate' : ''} ${this.isSelected(this.selected)} ${this.isHovered(this.hovered)} ${this.isEnabled(this.day, this.min, this.max, this.disabledDays)}"
+      class="day body-default body-lg--breakpoint-sm ${this.isCurrentDate ? 'currentDate' : ''} ${this.isSelected(this.selected)} ${this.isHovered(this.hovered)} ${this.isEnabled(this.day, this.min, this.max, this.disabledDays)}"
       ?disabled="${this.disabled}"
       title="${this.getTitle((_a = this.day) === null || _a === void 0 ? void 0 : _a.date)}">
       <div class="currentDayMarker">${(_b = this.day) === null || _b === void 0 ? void 0 : _b.title}</div>
@@ -185,6 +185,7 @@ RangeDatepickerCell.styles = css`
 
     width: 80%;
     height: 80%;
+    // TODO: talk to design about this
     font-weight: var(--wc-current-day-font-weight, bold);
     border-radius: 50%;
     background-color: var(--wc-current-day-color);
