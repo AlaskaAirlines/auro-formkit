@@ -709,7 +709,7 @@ export class AuroCounterGroup extends AuroElement {
   renderDropdownTrigger() {
 
     const labelClasses = {
-      filled: typeof this.valueText === 'string' && this.valueText.length
+      [typeof this.valueText === 'string' && this.valueText.length ? 'body-xs' : 'body-default']: true
     };
 
     return html`
@@ -721,7 +721,7 @@ export class AuroCounterGroup extends AuroElement {
           <label class="${classMap(labelClasses)}">
             <slot name="label"></slot>
           </label>
-          <slot name="valueText" @slotChange="${this.updateValueText}">
+          <slot name="valueText" @slotChange="${this.updateValueText}" class="body-default">
             ${this.counters && Array.from(this.counters).map((counter, index) => html`${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
           </slot>
         </div>

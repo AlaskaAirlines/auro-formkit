@@ -10,6 +10,9 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
+// Import type classes
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
+
 :host(:not([layout="classic"])) {
   .triggerContent {
     padding: 0 var(--ds-size-100, vac.$ds-size-100) 0 var(--ds-size-300, vac.$ds-size-300);
@@ -47,12 +50,7 @@
 }
 
 label {
-  font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
-  line-height: 20px;
-
-  &.filled {
-    font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
-  }
+  margin-block: 0.25rem;
 }
 
 .accents {
@@ -73,7 +71,6 @@ label {
 
 slot {
   &[name="valueText"] {
-    font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

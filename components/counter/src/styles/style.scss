@@ -4,9 +4,11 @@
 // ---------------------------------------------------------------------
 
 // Support for fallback values
-// @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+// Import type classes
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 
 .counter {
   display: flex;
@@ -23,10 +25,6 @@
 [name="description"] {
   &::slotted(*) {
     display: block;
-    font-size: 12px; // var(--ds-basic-text-body-xs-font-size, v.$ds-basic-text-body-xs-font-size);
-    font-weight: 450; // var(--ds-basic-text-body-xs-font-weight, v.$ds-basic-text-body-xs-font-weight);
-    letter-spacing: 0; // var(--ds-basic-text-body-xs-letter-spacing, v.$ds-basic-text-body-xs-letter-spacing);
-    line-height: 16px; // var(--ds-basic-text-body-xs-line-height, v.$ds-basic-text-body-xs-line-height);
   }
 }
 
@@ -35,11 +33,11 @@
   height: calc(var(--ds-size-25, vac.$ds-size-25) + var(--ds-size-400, vac.$ds-size-400));
   align-content: center;
   cursor: default;
-  font-size: 12px; // var(--ds-basic-text-body-xs-font-size, v.$ds-basic-text-body-xs-font-size);
-  font-weight: 450; // var(--ds-basic-text-body-xs-font-weight, v.$ds-basic-text-body-xs-font-weight);
-  letter-spacing: 0; // var(--ds-basic-text-body-xs-letter-spacing, v.$ds-basic-text-body-xs-letter-spacing);
-  line-height: 16px; // var(--ds-basic-text-body-xs-line-height, v.$ds-basic-text-body-xs-line-height);
   text-align: center;
+}
+
+.quantity {
+  margin-top: 0.25rem;
 }
 
 :host{
@@ -48,7 +46,6 @@
   &::part(counterControl) {
     display: flex;
     border-radius: var(--ds-size-500, vac.$ds-size-500);
-    line-height: 0;
 
     // prevent double-tap zoom on iOS (included in button for enabled state behaving differently)
     touch-action: manipulation;
