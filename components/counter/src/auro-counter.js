@@ -371,8 +371,10 @@ export class AuroCounter extends LitElement {
       <div class="counterWrapper">
         <div class="counter">
           <div class="content" >
-            <label id="counter-label" class="label"><slot @slotchange="${this.onDefaultSlotChange}" ></slot></label>
-            <slot id="counter-description" name="description"></slot>
+            <label id="counter-label" class="label">
+              <slot @slotchange="${this.onDefaultSlotChange}"></slot>
+            </label>
+            <slot id="counter-description" name="description" class="body-xs"></slot>
           </div>
           <div 
             part="counterControl" 
@@ -397,7 +399,7 @@ export class AuroCounter extends LitElement {
               <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
             </auro-counter-button>
 
-            <div class="quantityWrapper">
+            <div class="quantityWrapper body-lg">
               <div class="quantity">${this.value !== undefined ? this.value : this.min}</div>
             </div>
 
