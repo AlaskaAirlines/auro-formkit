@@ -42,7 +42,7 @@ import { classMap } from "lit/directives/class-map.js";
  * @slot - Slot for insertion of menu options.
  */
 
-/* eslint-disable no-magic-numbers, max-lines, no-extra-parens, no-inline-comments, line-comment-position */
+/* eslint-disable no-magic-numbers, max-lines, no-extra-parens */
 
 export class AuroMenu extends AuroElement {
   constructor() {
@@ -794,6 +794,11 @@ export class AuroMenu extends AuroElement {
     return this.loadingSlots && this.loadingSlots.length > 0;
   }
 
+  /**
+   * Getter for wrapper classes based on size.
+   * @returns {Object} - Class map for the wrapper element.
+   * @private
+   */
   get wrapperClasses() {
     return classMap({
       'menuWrapper': true,
