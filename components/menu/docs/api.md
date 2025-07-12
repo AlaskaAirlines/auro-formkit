@@ -4,19 +4,18 @@ The auro-menu element provides users a way to select from a list of options.
 
 ## Properties
 
-| Property                | Attribute        | Modifiers | Type                                        | Default     | Description                                      |
-|-------------------------|------------------|-----------|---------------------------------------------|-------------|--------------------------------------------------|
-| `disabled`              | `disabled`       |           | `boolean`                                   |             | When true, the entire menu and all options are disabled; |
-| `hasLoadingPlaceholder` |                  |           | `boolean`                                   |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
-| `layout`                |                  |           | `string`                                    |             |                                                  |
-| `loading`               | `loading`        |           | `boolean`                                   | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
-| `matchWord`             | `matchword`      |           | `string`                                    | "undefined" | Specifies a string used to highlight matched string parts in options. |
-| `multiSelect`           | `multiselect`    |           | `boolean`                                   | false       | When true, the selected option can be multiple options. |
-| `noCheckmark`           | `nocheckmark`    |           | `boolean`                                   | false       | When true, selected option will not show the checkmark. |
-| `optionActive`          | `optionactive`   |           | `object`                                    | "undefined" | Specifies the current active menuOption.         |
-| `optionSelected`        | `optionSelected` |           | `HTMLElement\|Array<HTMLElement>`           | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `value`                 | `value`          |           | `string`                                    | "undefined" | Value selected for the component.                |
-| `wrapperClasses`        |                  | readonly  | `DirectiveResult<typeof ClassMapDirective>` |             |                                                  |
+| Property                | Attribute        | Type                              | Default     | Description                                      |
+|-------------------------|------------------|-----------------------------------|-------------|--------------------------------------------------|
+| `disabled`              | `disabled`       | `boolean`                         |             | When true, the entire menu and all options are disabled; |
+| `hasLoadingPlaceholder` |                  | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| `layout`                |                  | `string`                          |             |                                                  |
+| `loading`               | `loading`        | `boolean`                         | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
+| `matchWord`             | `matchword`      | `string`                          | "undefined" | Specifies a string used to highlight matched string parts in options. |
+| `multiSelect`           | `multiselect`    | `boolean`                         | false       | When true, the selected option can be multiple options. |
+| `noCheckmark`           | `nocheckmark`    | `boolean`                         | false       | When true, selected option will not show the checkmark. |
+| `optionActive`          | `optionactive`   | `object`                          | "undefined" | Specifies the current active menuOption.         |
+| `optionSelected`        | `optionSelected` | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
+| `value`                 | `value`          | `string`                          | "undefined" | Value selected for the component.                |
 
 ## Methods
 
