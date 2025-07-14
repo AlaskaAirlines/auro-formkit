@@ -12,7 +12,7 @@
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
   "dependencies": {
-    "@alaskaairux/icons": "^5.5.0",
+    "@alaskaairux/icons": "^5.6.0",
     "@aurodesignsystem/auro-bibtemplate": "*",
     "@aurodesignsystem/auro-button": "^11.3.0",
     "@aurodesignsystem/auro-dropdown": "*",

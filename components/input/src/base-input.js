@@ -88,6 +88,10 @@ export default class BaseInput extends AuroElement {
     this.label = 'Input label is undefined';
     this.placeholderStr = '';
 
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'lg';
+
     this.allowedInputTypes = [
       "text",
       "number",
