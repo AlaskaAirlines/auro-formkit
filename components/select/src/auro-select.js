@@ -449,12 +449,22 @@ export class AuroSelect extends AuroElement {
    * @returns {void}
    */
   get commonLabelClasses() {
-    return {
+    const obj = {
       'is-disabled': this.disabled,
-      'withValue': this.hasValue,
-      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0,
-      [this.labelFontClass]: true
+      'withValue': false,
+      'util_displayHiddenVisually': this.hasDisplayValueContent && !this.hasFocus && this.value && this.value.length > 0
     };
+
+    if (this.placeholder) {
+      obj.withValue = true;
+    } else if (this.optionSelected) {
+      if (Array.isArray(this.optionSelected)) {
+        obj.withValue = this.optionSelected.length > 0;
+      } else {
+        obj.withValue = true;
+      }
+    }
+    return obj;
   }
 
   /**
@@ -912,7 +922,11 @@ export class AuroSelect extends AuroElement {
     if (!this.menu) return;
 
     this.menu.setAttribute('value', value);
-    this.menu.value = value;
+    if (value) {
+      this.menu.value = value;
+    } else {
+      this.menu.reset();
+    }
     await this.menu.updateComplete;
   }
 
@@ -1130,7 +1144,7 @@ export class AuroSelect extends AuroElement {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
+      'withValue': this.commonLabelClasses.widthValue,
       'force': this.forceDisplayValue,
     };
 
@@ -1208,7 +1222,7 @@ export class AuroSelect extends AuroElement {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
+      'withValue': this.commonLabelClasses.widthValue,
       'force': this.forceDisplayValue,
     };
 
@@ -1286,7 +1300,7 @@ export class AuroSelect extends AuroElement {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.placeholder || (this.value && this.value.length > 0), // eslint-disable-line no-extra-parens
+      'withValue': this.commonLabelClasses.widthValue,
       'force': this.forceDisplayValue,
     };
 
