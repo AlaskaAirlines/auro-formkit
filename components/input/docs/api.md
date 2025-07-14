@@ -22,7 +22,7 @@ Generate unique names for dependency components.
 | `id`                              | `id`                              | `string`  |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
 | `inputmode`                       | `inputmode`                       | `string`  |             | Exposes inputmode attribute for input.           |
 | `lang`                            | `lang`                            | `string`  |             | Defines the language of an element.              |
-| `layout`                          |                                   | `string`  | "classic"   |                                                  |
+| `layout`                          |                                   | `string`  |             |                                                  |
 | `max`                             | `max`                             | `string`  | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | `maxLength`                       | `maxLength`                       | `number`  | "undefined" | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
 | `min`                             | `min`                             | `string`  | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
@@ -44,9 +44,7 @@ Generate unique names for dependency components.
 | `setCustomValidityTooLong`        | `setCustomValidityTooLong`        | `string`  |             | Custom help text message to display when validity = `tooLong`. |
 | `setCustomValidityTooShort`       | `setCustomValidityTooShort`       | `string`  |             | Custom help text message to display when validity = `tooShort`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
-| `shape`                           |                                   | `string`  | "classic"   |                                                  |
 | `simple`                          | `simple`                          | `boolean` |             | Simple makes the input render without a border.  |
-| `size`                            |                                   | `string`  | "lg"        |                                                  |
 | `spellcheck`                      | `spellcheck`                      | `string`  |             | An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`. |
 | `type`                            | `type`                            | `string`  |             | Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `date`, `tel` or `text`. If given value is not allowed or set, defaults to `text`. |
 | `validateOnInput`                 | `validateOnInput`                 | `boolean` |             | Sets validation mode to re-eval with each input. |

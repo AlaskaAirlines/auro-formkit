@@ -28,6 +28,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    padding-block: var(--ds-size-50, vac.$ds-size-50);
   }
 
   input {

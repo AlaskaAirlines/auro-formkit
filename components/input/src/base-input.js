@@ -55,10 +55,6 @@ export default class BaseInput extends AuroElement {
     this.onDark = false;
     this.required = false;
     this.setCustomValidityForType = undefined;
-
-    this.layout = 'classic';
-    this.shape = 'classic';
-    this.size = 'lg';
   }
 
   /**
@@ -76,6 +72,10 @@ export default class BaseInput extends AuroElement {
     this.hasValue = false;
     this.label = 'Input label is undefined';
     this.placeholderStr = '';
+
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'lg';
 
     this.allowedInputTypes = [
       "text",

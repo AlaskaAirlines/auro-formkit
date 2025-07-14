@@ -24,15 +24,9 @@
     pointer-events: none;
   }
 
-  .label {
-    font-size: var(--ds-text-body-size-xs, vac.$ds-text-body-size-xs);
-    line-height: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
+  label {
     transition: font-size .3s cubic-bezier(.215, .61, .355, 1);
     white-space: normal;
-
-    &[hasTrigger='false'] {
-      font-size: var(--ds-text-body-size-default, vac.$ds-text-body-size-default);
-    }
   }
 
   .wrapper {
@@ -67,7 +61,6 @@
 
     [auro-icon] {
       height: var(--ds-size-300, vac.$ds-size-300);
-      line-height: var(--ds-size-300, vac.$ds-size-300);
     }
 
     &[data-expanded='true'] {

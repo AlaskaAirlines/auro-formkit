@@ -94,26 +94,6 @@
   }
 }
 
-:host([layout*='snowflake']) {
-  [auro-dropdown] {
-    label {
-      &.withValue {
-        line-height: 20px;
-      }
-    }
-  }
-}
-
-:host([layout*='emphasized']) {
-  [auro-dropdown] {
-    label {
-      &.withValue {
-        line-height: 20px;
-      }
-    }
-  }
-}
-
 :host([layout*='classic']) {
   .triggerContent {
     padding: 0 var(--ds-size-100, vac.$ds-size-100);
@@ -126,24 +106,12 @@
   label {
     overflow: hidden;
     cursor: text;
-    font-weight: 450;
-    letter-spacing: 0;
-    line-height: 24px;
     text-overflow: ellipsis;
     white-space: nowrap;
-
-    &.withValue {
-      font-weight: 450;
-      letter-spacing: 0;
-      line-height: 16px;
-    }
   }
 
   .value {
     height: auto;
-    font-weight: 450;
-    letter-spacing: 0;
-    line-height: 24px;
   }
 }
 
