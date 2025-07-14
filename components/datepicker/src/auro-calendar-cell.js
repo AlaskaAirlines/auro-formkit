@@ -344,7 +344,7 @@ export class AuroCalendarCell extends LitElement {
   render() {
     const buttonClasses = {
       'day': true,
-      'body-default': true,
+      'body-lg': true,
       'currentDate': this.currentDate,
       'selected': this.selected,
       'inRange': this.hovered && this.isInRange(this.day, this.dateFrom, this.dateTo),
