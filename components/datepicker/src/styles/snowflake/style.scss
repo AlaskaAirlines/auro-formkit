@@ -23,6 +23,7 @@
       min-height: unset;
       max-height: unset;
       box-shadow: unset;
+      border-radius: unset;
 
       .mainContent {
         padding-bottom: unset;
@@ -38,10 +39,6 @@
     }
   }
 
-  [auro-dropdown]::part(trigger) {
-    width: 100%;
-  }
-
   // for the trigger content
 
   .dpTriggerContent {
@@ -49,31 +46,33 @@
   }
 
   .wrapper {
-    height: 60px;
-    // TODO: update to tokens (token x 2 for 48px)
-    width: calc(100% - 48px);
+    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 
-    // TODO: update to tokens
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-inline: var(--ds-size-300, vac.$ds-size-300);
   }
 
-  // unfocused state(s)
-
-  label {
+  .mainLabel {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    // designs want 16px height, fill the space and center text
+    display: flex;
+    align-items: center;
+  }
+
+  .mainLabel:is(.hasFocus, .hasValue) {
+    padding-block-start: var(--ds-size-75, vac.$ds-size-75);
   }
 
   .inputDivider {
-    // TODO: add fallback for tokens
-    height: 18px;
-    margin: 4px 12px;
-    width: 2px;
+    // 18px - size-200 + size-25
+    height: calc(var(--ds-size-200, vac.$ds-size-200) + var(--ds-size-25, vac.$ds-size-25));
+    margin: var(--ds-size-50, vac.$ds-size-50) var(--ds-size-150, vac.$ds-size-150);
+    width: var(--ds-size-25, vac.$ds-size-25);
   }
 
   .inputSection:not(:is(.disabled, .hasFocus, .hasValue)) {
