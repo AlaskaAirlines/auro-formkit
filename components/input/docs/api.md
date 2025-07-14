@@ -22,7 +22,6 @@ Generate unique names for dependency components.
 | `id`                              | `id`                              | `string`  |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
 | `inputmode`                       | `inputmode`                       | `string`  |             | Exposes inputmode attribute for input.           |
 | `lang`                            | `lang`                            | `string`  |             | Defines the language of an element.              |
-| `layout`                          |                                   | `string`  |             |                                                  |
 | `max`                             | `max`                             | `string`  | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | `maxLength`                       | `maxLength`                       | `number`  | "undefined" | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
 | `min`                             | `min`                             | `string`  | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
