@@ -69,11 +69,6 @@ export class AuroSelect extends AuroElement {
 
     this.matchWidth = false;
 
-    // Layout Config
-    this.layout = 'snowflake';
-    this.shape = 'snowflake';
-    this.size = 'xl';
-
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -81,10 +76,6 @@ export class AuroSelect extends AuroElement {
     this.autoPlacement = false;
 
     this.forceDisplayValue = false;
-
-    this.layout = 'classic';
-    this.shape = 'classic';
-    this.size = 'xl';
 
     /**
      * @private
@@ -151,6 +142,11 @@ export class AuroSelect extends AuroElement {
     this.fullscreenBreakpoint = 'sm';
     this.onDark = false;
     this.isPopoverVisible = false;
+
+    // Layout Config
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'lg';
   }
 
   // This function is to define props used within the scope of this component
@@ -462,13 +458,23 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns the font class for the label based on state.
-   * @returns {string} - Returns the font class for the label.
+   * Returns the label font class based on layout and selection state.
    * @private
+   * @returns {string} - The font class for the label.
    */
   get labelFontClass() {
-    if (this.hasValue) return 'body-xs';
-    return 'body-default';
+    const isSelected = this.hasValue;
+
+    if (this.layout.startsWith('emphasized')) {
+      return isSelected ? 'body-sm' : 'accent-xl';
+    }
+
+    if (this.layout === 'snowflake') {
+      return isSelected ? 'body-xs' : 'body-lg';
+    }
+
+    // classic layout (default)
+    return isSelected ? 'body-xs' : 'body-default';
   }
 
   /**
@@ -478,17 +484,6 @@ export class AuroSelect extends AuroElement {
    */
   get hasValue() {
     return this.placeholder || (this.value && this.value.length > 0); // eslint-disable-line no-extra-parens
-  }
-
-  /**
-   * Returns classmap configuration for wrapper elements in each layout.
-   * @private
-   * @returns {object} - Returns classmap.
-   */
-  get commonWrapperClasses() {
-    return {
-      'wrapper': true
-    };
   }
 
   /**
@@ -644,7 +639,7 @@ export class AuroSelect extends AuroElement {
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {
       this.optionSelected = this.menu.optionSelected;
-      this.validation.validate(this);
+      this.validate(this);
     });
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
@@ -728,7 +723,7 @@ export class AuroSelect extends AuroElement {
     this.addEventListener('focusin', this.handleFocusin);
 
     this.addEventListener('blur', () => {
-      this.validation.validate(this);
+      this.validate();
       this.hasFocus = false;
     });
   }
@@ -938,7 +933,7 @@ export class AuroSelect extends AuroElement {
       }
 
       this._updateNativeSelect();
-      this.validation.validate(this);
+      this.validate();
 
       // LEGACY EVENT
       this.dispatchEvent(new CustomEvent('auroSelect-valueSet', {
@@ -1146,7 +1141,6 @@ export class AuroSelect extends AuroElement {
 
     return html`
       <div
-        class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
         <div id="slotHolder" aria-hidden="true">
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
@@ -1225,7 +1219,6 @@ export class AuroSelect extends AuroElement {
 
     return html`
       <div
-        class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
         <div id="slotHolder" aria-hidden="true">
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
@@ -1309,7 +1302,6 @@ export class AuroSelect extends AuroElement {
 
     return html`
       <div
-        class="${classMap(this.commonWrapperClasses)}"
         part="wrapper">
         <div id="slotHolder" aria-hidden="true">
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>

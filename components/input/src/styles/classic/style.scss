@@ -33,7 +33,7 @@
     label {
       overflow: hidden;
       cursor: text;
-      line-height: 20px;
+      padding-block: var(--ds-size-50, vac.$ds-size-50);
       text-overflow: ellipsis;
       transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
       white-space: nowrap;
@@ -41,22 +41,18 @@
 
     input {
       height: auto;
-      line-height: var(--ds-basic-text-body-default-line-height, 24px);
       transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
     }
   }
 
   .mainContent:has(input.util_displayHiddenVisually) {
     label {
-      padding-top: 0;
       justify-self: flex-start;
-      line-height: var(--ds-text-body-size-default);
     }
 
     input {
       height: 0;
       padding-bottom: 0;
-      line-height: 0;
     }
   }
 
@@ -84,9 +80,5 @@
   // FOCUS STATE
   &:focus-within {
     justify-content: flex-start;
-
-    .alertNotification {
-      display: none;
-    }
   }
 }

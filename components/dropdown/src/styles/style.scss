@@ -1,8 +1,8 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host {
-  display: block;
   position: relative;
+  display: block;
 }
 
 :host([open]) {
@@ -11,6 +11,7 @@
 
 .wrapper {
   display: flex;
+  box-sizing: border-box;
   flex: 1;
   flex-direction: row;
   align-items: center;
