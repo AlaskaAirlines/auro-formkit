@@ -1288,6 +1288,10 @@ export class AuroDatePicker extends AuroElement {
     };
 
     const labelClassMap = {
+      mainLabel: true,
+
+      hasValue: this.hasValue,
+      hasFocus: this.hasFocus,
       [this.hasFocus || this.hasValue ? 'body-xs' : 'body-lg']: true,
     };
 
