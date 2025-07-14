@@ -92,8 +92,19 @@ export class AuroCombobox extends AuroElement {
     this.errorMessage = null;
 
     // Layout Config
+    /**
+     * @private
+     */
     this.layout = 'classic';
+
+    /**
+     * @private
+     */
     this.shape = 'classic';
+
+    /**
+     * @private
+     */
     this.size = 'xl';
 
     // floaterConfig
@@ -1056,7 +1067,7 @@ export class AuroCombobox extends AuroElement {
           matchWidth="${ifDefined(this.matchWidth)}"
           nocheckmark
           rounded
-          simple
+          ?simple="${this.layout !== 'classic'}"
           shape="${this.shape}"
           size="${this.size}">
             <${this.inputTag}

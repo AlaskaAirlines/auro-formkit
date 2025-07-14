@@ -9,7 +9,8 @@
 
   // focus state
   &:focus-within {
-    --ds-auro-input-outline-color: var(--ds-auro-input-border-color);
+    --ds-auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+    --ds-auro-input-outline-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
   }
 }
 
@@ -39,8 +40,8 @@
 
   .layout-classic {
     &:focus-within {
-      --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
-      --ds-auro-input-outline-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+      --ds-auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+      --ds-auro-input-outline-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
     }
   }
 }
@@ -51,8 +52,8 @@
 
   .layout-classic {
     &:focus-within {
-      --ds-auro-input-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
-      --ds-auro-input-outline-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
+      --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+      --ds-auro-input-outline-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
     }
   }
 }

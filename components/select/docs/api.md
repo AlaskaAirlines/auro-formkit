@@ -13,7 +13,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `forceDisplayValue`             | `forceDisplayValue`             | `boolean`                         | false          | If declared, the label and value will be visually hidden and the displayValue will render 100% of the time. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`                          | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`                         |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
-| `layout`                        |                                 | `string`                          | "snowflake"    |                                                  |
+| `layout`                        |                                 | `string`                          |                |                                                  |
 | `matchWidth`                    | `matchWidth`                    | `boolean`                         | false          | If declared, the popover and trigger will be set to the same width. |
 | `multiSelect`                   | `multiselect`                   | `boolean`                         |                | Sets multi-select mode, allowing multiple options to be selected at once. |
 | `name`                          | `name`                          | `string`                          |                | The name for the select element.                 |
@@ -29,8 +29,6 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `setCustomValidity`             | `setCustomValidity`             | `string`                          |                | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                          |                | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                          |                | Custom help text message to display when validity = `valueMissing`. |
-| `shape`                         |                                 | `string`                          | "snowflake"    |                                                  |
-| `size`                          |                                 | `string`                          | "xl"           |                                                  |
 | `validity`                      | `validity`                      | `string`                          |                | Specifies the `validityState` this element is in. |
 | `value`                         | `value`                         | `string`                          |                | Value selected for the component.                |
 

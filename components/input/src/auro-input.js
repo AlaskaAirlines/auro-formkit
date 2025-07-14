@@ -115,7 +115,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {string} - The font class for the label.
    */
-  getLabelFontClass() {
+  get labelFontClass() {
     const isHidden = this.inputHidden;
 
     if (this.layout.startsWith('emphasized')) {
@@ -135,7 +135,7 @@ export class AuroInput extends BaseInput {
    * @private
    * @returns {string} - The font class for the input.
    */
-  getInputFontClass() {
+  get inputFontClass() {
     const isHidden = this.inputHidden;
 
     if (this.layout.startsWith('emphasized')) {
@@ -161,7 +161,7 @@ export class AuroInput extends BaseInput {
       'is-disabled': this.disabled,
       'withValue': this.hasValue,
       'util_displayHiddenVisually': this.labelHidden,
-      [this.getLabelFontClass()]: true,
+      [this.labelFontClass]: true,
     };
   }
 
@@ -173,7 +173,7 @@ export class AuroInput extends BaseInput {
   get commonInputClasses() {
     return {
       'util_displayHiddenVisually': this.inputHidden,
-      [this.getInputFontClass()]: true,
+      [this.inputFontClass]: true,
     };
   }
 
