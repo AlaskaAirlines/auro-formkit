@@ -22,6 +22,12 @@
     }
   }
 
+  [auro-dropdown] {
+    &::part(wrapper) {
+      border: 0;
+    }
+  }
+
   #slotHolder{
     display: none;
   }
