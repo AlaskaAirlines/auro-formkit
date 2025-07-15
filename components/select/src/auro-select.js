@@ -509,6 +509,7 @@ export class AuroSelect extends AuroElement {
       this.isPopoverVisible = this.dropdown.isPopoverVisible;
 
       if (this.dropdown.isPopoverVisible) {
+        this.updateMenuShapeSize();
         // wait til the bib gets fully rendered
         setTimeout(() => {
           if (this.dropdown.isBibFullscreen) {
@@ -522,6 +523,10 @@ export class AuroSelect extends AuroElement {
           }
         });
       }
+    });
+
+    this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
+      this.updateMenuShapeSize();
     });
 
     // setting up bibtemplate
@@ -589,6 +594,30 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Update menu to default for fullscreen bib, otherwise to this.size and this.shape.
+   * @private
+   */
+  updateMenuShapeSize() {
+    if (!this.menu) {
+      return;
+    }
+
+    if (this.dropdown && this.dropdown.isBibFullscreen) {
+      this.menu.setAttribute('size', 'md');
+      this.menu.setAttribute('shape', 'box');
+    } else {
+      // set menu's default size if there it's not specified.
+      if (!this.menu.getAttribute('size')) {
+        this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+      }
+
+      if (!this.getAttribute('shape')) {
+        this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+      }
+    }
+  }
+
+  /**
    * Binds all behavior needed to the menu after rendering.
    * @private
    * @returns {void}
@@ -604,14 +633,7 @@ export class AuroSelect extends AuroElement {
       return;
     }
 
-    // set menu's default size if there it's not specified.
-    if (!this.menu.getAttribute('size')) {
-      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
-    }
-
-    if (!this.getAttribute('shape')) {
-      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
-    }
+    this.updateMenuShapeSize();
 
     if (this.multiSelect) {
       this.menu.multiSelect = this.multiSelect;
