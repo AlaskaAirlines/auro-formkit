@@ -16,10 +16,14 @@
 
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-.layout-classic {
-  display: flex;
-  flex-direction: row;
-  box-shadow: inset 0 0 0 1px var(--ds-auro-input-outline-color);
+
+:host([layout*='classic']) {
+  .wrapper {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row;
+    box-shadow: inset 0 0 0 1px var(--ds-auro-input-outline-color);
+  }  
 
   .mainContent {
     position: relative;

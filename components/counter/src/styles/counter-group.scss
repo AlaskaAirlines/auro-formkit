@@ -21,7 +21,7 @@
 
 :host([layout="classic"]) {
   .triggerContent {
-    padding: 0 0 0 var(--ds-size-100, 0.5rem);
+    padding: 0 0 0 var(--ds-size-100, vac.$ds-size-100);
   }
 }
 
@@ -50,12 +50,12 @@
 }
 
 label {
-  margin-block: 0.25rem;
+  padding-block: var(--ds-size-25, vac.$ds-size-25);
 }
 
 .accents {
   ::slotted([slot="typeIcon"]) {
-    margin-right: 8px;
+    margin-right: var(--ds-size-100, vac.$ds-size-100);
   }
 
   ::slotted(*) {
@@ -64,7 +64,7 @@ label {
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: var(--ds-size-100, vac.$ds-size-100);
     }
   }
 }
