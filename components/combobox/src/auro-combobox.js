@@ -1067,7 +1067,7 @@ export class AuroCombobox extends AuroElement {
           matchWidth="${ifDefined(this.matchWidth)}"
           nocheckmark
           rounded
-          ?simple="${this.layout !== 'classic'}"
+          simple
           shape="${this.shape}"
           size="${this.size}">
             <${this.inputTag}
