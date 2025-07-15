@@ -63,13 +63,14 @@ $xs: 24px;
 .shape-classic-md,
 .shape-classic-sm,
 .shape-classic-xs {
-  min-height: 58px;
-  max-height: 58px;
+  $borderSize: 1px;
+  min-height: getCalculatedSize(58px, $borderSize);
+  max-height: getCalculatedSize(58px, $borderSize);
   border-style: solid;
-  border-width: 1px;
+  border-width: $borderSize;
   border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
 
-  @include variants(60px);
+  @include variants(58px);
 }
 
 .shape-snowflake-xl,
@@ -77,8 +78,8 @@ $xs: 24px;
 .shape-snowflake-md,
 .shape-snowflake-sm,
 .shape-snowflake-xs {
-  min-height: $lg;
-  max-height: $lg;
+  min-height: getCalculatedSize(60px, $defaultBorderSize);
+  max-height: getCalculatedSize(60px, $defaultBorderSize);
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
