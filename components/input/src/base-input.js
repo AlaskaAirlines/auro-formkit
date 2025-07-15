@@ -70,6 +70,8 @@ export default class BaseInput extends AuroElement {
      * @private
      */
     this.size = 'lg';
+
+    this.privateDefaults();
   }
 
   /**
@@ -87,10 +89,6 @@ export default class BaseInput extends AuroElement {
     this.hasValue = false;
     this.label = 'Input label is undefined';
     this.placeholderStr = '';
-
-    this.layout = 'classic';
-    this.shape = 'classic';
-    this.size = 'lg';
 
     this.allowedInputTypes = [
       "text",
@@ -496,8 +494,6 @@ export default class BaseInput extends AuroElement {
 
   connectedCallback() {
     super.connectedCallback();
-
-    this.privateDefaults();
 
     notifyOnLangChange(this);
   }
