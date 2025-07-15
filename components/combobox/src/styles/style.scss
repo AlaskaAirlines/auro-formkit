@@ -11,6 +11,12 @@
   [auro-input] {
     --ds-auro-input-background-color: transparent;
   }
+
+  #inputInBib {
+    &::part(accent-left) {
+      display: none;
+    }
+  }
 }
 
 :host([layout*='classic']) {
