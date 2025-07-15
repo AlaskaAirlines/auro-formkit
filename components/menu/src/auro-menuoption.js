@@ -39,12 +39,12 @@ export class AuroMenuOption extends AuroElement {
     /**
      * @private
      */
-    this.shape = "box";
+    this.shape = undefined;
 
     /**
      * @private
      */
-    this.size = "sm";
+    this.size = undefined;
 
     /**
      * Generate unique names for dependency components.
@@ -116,6 +116,13 @@ export class AuroMenuOption extends AuroElement {
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
+
+    if (!this.hasAttribute('size')) {
+      this.size = this.parentElement.getAttribute('size') || 'sm';
+    }
+    if (!this.hasAttribute('shape')) {
+      this.shape = this.parentElement.getAttribute('shape') || 'box';
+    }
 
     this.setAttribute('role', 'option');
     this.setAttribute('aria-selected', 'false');
