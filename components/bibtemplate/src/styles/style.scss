@@ -11,36 +11,31 @@
 #headerContainer {
   display: flex;
   flex-direction: column;
-}
-
-#header {
-  display: flex;
-  width: 100%;
-  min-height: var(--ds-size-1000, #{vac.$ds-size-1000});
-  box-sizing: border-box;
-  align-items: end;
+  padding: var(--ds-size-200, #{vac.$ds-size-200});
   padding-top: var(--ds-size-400, #{vac.$ds-size-400});
-  padding-right: var(--ds-size-700, #{vac.$ds-size-700});
-  padding-left: var(--ds-size-200, #{vac.$ds-size-200});
-  pointer-events: none;
-}
+  padding-bottom: 0;
 
-#subheader {
-  width: 100%;
+  .titleRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--ds-size-100, #{vac.$ds-size-100});
+  }
 
-  ::slotted([auro-input]) {
-    box-sizing: border-box;
-    padding: 0 var(--ds-size-200, #{vac.$ds-size-200});
+  .header {
+    max-width: calc(100vw - var(--ds-size-900, #{vac.$ds-size-900}));
+    padding-top: var(--ds-size-200, #{vac.$ds-size-200});
+  }
+
+  .subheader {
+    width: 100%;
   }
 }
 
-#closeButton{
-  position: absolute;
-  top: var(--ds-size-400, #{vac.$ds-size-400});
-  right: var(--ds-size-200, #{vac.$ds-size-200});
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
+#closeButton {
+  [auro-icon] {
+    --ds-auro-icon-size: var(--ds-size-500, #{vac.$ds-size-500});
+  }
 }
 
 #bodyContainer {

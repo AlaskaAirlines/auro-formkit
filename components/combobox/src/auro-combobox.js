@@ -569,6 +569,7 @@ export class AuroCombobox extends AuroElement {
     // Listen for the dropdown to be shown or hidden
     this.dropdown.addEventListener("auroDropdown-toggled", (ev) => {
       this.dropdownOpen = ev.detail.expanded;
+      this.updateMenuShapeSize();
 
       // wait a frame in case the bib gets hide immediately after showing because there is no value
       setTimeout(() => {
@@ -595,7 +596,11 @@ export class AuroCombobox extends AuroElement {
     this.setInputFocus = this.setInputFocus.bind(this);
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
-      setTimeout(this.setInputFocus, 0);
+      this.updateMenuShapeSize();
+
+      setTimeout(() => {
+        this.setInputFocus();
+      }, 0);
     });
   }
 
@@ -611,6 +616,30 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Update menu to default for fullscreen bib, otherwise to this.size and this.shape.
+   * @private
+   */
+  updateMenuShapeSize() {
+    if (!this.menu) {
+      return;
+    }
+
+    if (this.dropdown && this.dropdown.isBibFullscreen) {
+      this.menu.setAttribute('size', 'md');
+      this.menu.setAttribute('shape', 'box');
+    } else {
+      // set menu's default size if there it's not specified.
+      if (!this.menu.getAttribute('size')) {
+        this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+      }
+
+      if (!this.getAttribute('shape')) {
+        this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+      }
+    }
+  }
+
+  /**
    * Binds all behavior needed to the menu after rendering.
    * @private
    * @returns {void}
@@ -618,14 +647,7 @@ export class AuroCombobox extends AuroElement {
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
 
-    // set menu's default size if there it's not specified.
-    if (!this.menu.getAttribute('size')) {
-      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
-    }
-
-    if (!this.getAttribute('shape')) {
-      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
-    }
+    this.updateMenuShapeSize();
 
     // a racing condition on custom-combobox with custom-menu
     if (!this.menu || this.menuShadowRoot === null) {
@@ -1101,6 +1123,7 @@ export class AuroCombobox extends AuroElement {
             <slot name="bib.fullscreen.headline" slot="header"></slot>
             <slot></slot>
             <${this.inputTag}
+              id="inputInBib"
               @input="${this.handleInputValueChange}"
               .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
