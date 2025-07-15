@@ -17,14 +17,13 @@
   [auro-input] {
     width: 100%;
 
+    &::part(wrapper) {
+      border-width: 0;
+      box-shadow: none;
+    }
+
     &::part(helpText) {
       display: none;
-    }
-  }
-
-  [auro-dropdown] {
-    &::part(wrapper) {
-      border: 0;
     }
   }
 
