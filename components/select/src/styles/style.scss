@@ -138,6 +138,10 @@ label {
   display: none;
 }
 
+:host([fluid]) {
+  width: 100%;
+}
+
 :host([disabled]) {
   pointer-events: none;
   user-select: none;

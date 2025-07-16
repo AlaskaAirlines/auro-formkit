@@ -189,6 +189,14 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
+       * When attribute is present, element will be 100% width of container element.
+       */
+      fluid: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * @private
        */
       isPopoverVisible: {
