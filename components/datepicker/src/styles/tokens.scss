@@ -3,6 +3,9 @@
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
 :host(:not([ondark])) {
+
+  --ds-auro-datepicker-label-text-color: red; // var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+
   // datepicker
   --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
   --ds-auro-datepicker-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
@@ -26,9 +29,9 @@
 }
 
 :host([ondark]) {
-  --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-texticon-inverse-muted, v.$ds-basic-color-texticon-inverse-muted);
-  --ds-auro-datepicker-error-icon-color: var(--ds-basic-color-status-error-subtle, v.$ds-basic-color-status-error-subtle);
-  --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-inverse-muted, v.$ds-basic-color-texticon-inverse-muted);
+  --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-datepicker-error-icon-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
+  --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
 
   // calendar
   --ds-auro-calendar-mobile-header-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
