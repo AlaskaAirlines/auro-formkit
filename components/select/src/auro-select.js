@@ -454,7 +454,7 @@ export class AuroSelect extends AuroElement {
   /**
    * Returns classmap configuration for html5 input labels in all layouts.
    * @private
-   * @returns {void}
+   * @returns {Record<string, boolean>}
    */
   get commonLabelClasses() {
     const obj = {
@@ -1110,7 +1110,7 @@ export class AuroSelect extends AuroElement {
   renderNativeSelect() {
     return html`
       <div class="nativeSelectWrapper util_displayHidden">
-        <select 
+        <select
           tabindex="-1"
           id="${`native-select-${this.id || this.uniqueId}`}"
           name="${this.name || ''}"
@@ -1123,8 +1123,8 @@ export class AuroSelect extends AuroElement {
           ${this.options.map((option) => {
             const optionValue = option.value || option.textContent;
             return html`
-              <option 
-                value="${optionValue}" 
+              <option
+                value="${optionValue}"
                 ?selected="${this.value === optionValue}">
                 ${option.textContent}
               </option>
@@ -1175,7 +1175,7 @@ export class AuroSelect extends AuroElement {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.commonLabelClasses.widthValue,
+      'withValue': this.commonLabelClasses.withValue,
       'force': this.forceDisplayValue,
     };
 
@@ -1253,7 +1253,7 @@ export class AuroSelect extends AuroElement {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.commonLabelClasses.widthValue,
+      'withValue': this.commonLabelClasses.withValue,
       'force': this.forceDisplayValue,
     };
 
@@ -1331,7 +1331,7 @@ export class AuroSelect extends AuroElement {
       'displayValue': true,
       'hasContent': this.hasDisplayValueContent,
       'hasFocus': this.isPopoverVisible,
-      'withValue': this.commonLabelClasses.widthValue,
+      'withValue': this.commonLabelClasses.withValue,
       'force': this.forceDisplayValue,
     };
 
