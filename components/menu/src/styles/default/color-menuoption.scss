@@ -9,9 +9,9 @@
 
 :host {
   .wrapper {
-    border: 1px solid var(--ds-auro-menuoption-container-border-color);
     background-color: var(--ds-auro-menuoption-container-color);
     color: var(--ds-auro-menuoption-text-color);
+    outline: 1px solid var(--ds-auro-menuoption-container-border-color);
   }
 
   svg {
