@@ -115,6 +115,11 @@
   }
 }
 
+label {
+  color: var(--ds-auro-select-label-text-color);
+}
+
+
 :host(:is([validity]:not([validity='valid']))) {
   [auro-dropdown] {
     --ds-auro-select-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
