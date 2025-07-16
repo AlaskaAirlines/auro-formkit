@@ -389,7 +389,7 @@ export class AuroCounter extends LitElement {
             tabindex="${this.disabled ? '-1' : '0'}" 
           >
             <auro-counter-button
-              aria-hidden="true"
+              aria-label="-"
               .tabindex="${'-1'}"
               part="controlMinus"
               @click="${() => this.decrement()}"
@@ -404,7 +404,7 @@ export class AuroCounter extends LitElement {
             </div>
 
             <auro-counter-button
-              aria-hidden="true"
+              aria-label="+"
               .tabindex="${'-1'}"
               part="controlPlus"
               @click="${() => this.increment()}"
