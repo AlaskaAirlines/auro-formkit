@@ -13,7 +13,15 @@
   }
 
   #inputInBib {
+    &::part(wrapper) {
+      box-shadow: none;
+    }
+
     &::part(accent-left) {
+      display: none;
+    }
+
+    &::part(accent-right) {
       display: none;
     }
   }
