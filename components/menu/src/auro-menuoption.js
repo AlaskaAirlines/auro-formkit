@@ -6,7 +6,6 @@
 // ---------------------------------------------------------------------
 import { html } from 'lit/static-html.js';
 
-import shapeSizeCss from "./styles/shapeSize-css.js";
 import styleCss from "./styles/default/style-menuoption-css.js";
 import colorCss from "./styles/default/color-menuoption-css.js";
 import tokensCss from "./styles/default/tokens-css.js";
@@ -94,7 +93,6 @@ export class AuroMenuOption extends AuroElement {
 
   static get styles() {
     return [
-      shapeSizeCss,
       styleCss,
       colorCss,
       tokensCss
