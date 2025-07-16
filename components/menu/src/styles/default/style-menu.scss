@@ -20,7 +20,8 @@
 
   .menuWrapper {
     box-sizing: border-box;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     width: 100%;
 
     margin: 0;
@@ -65,10 +66,12 @@
   .menuWrapper {
     &.lg {
       padding: var(--ds-size-150, vac.$ds-size-150);
+      gap: var(--ds-size-50, vac.$ds-size-50);
     }
 
     &.xl {
       padding: var(--ds-size-200, vac.$ds-size-200);
+      gap: var(--ds-size-100, vac.$ds-size-100);
     }
   }
 }

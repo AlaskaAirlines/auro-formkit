@@ -43,7 +43,6 @@
       padding-top: var(--ds-size-75, vac.$ds-size-75);
       padding-bottom: var(--ds-size-75, vac.$ds-size-75);
       padding-right: var(--ds-size-150, vac.$ds-size-150);
-      margin-bottom: var(--ds-size-50, vac.$ds-size-50);
       line-height: 26px;
     }
 
@@ -51,7 +50,6 @@
       padding-top: var(--ds-size-100, vac.$ds-size-100);
       padding-bottom: var(--ds-size-100, vac.$ds-size-100);
       padding-right: var(--ds-size-200, vac.$ds-size-200);
-      margin-bottom: var(--ds-size-100, vac.$ds-size-100);
       line-height: 26px;
     }
 
@@ -73,12 +71,6 @@
   ::slotted(.nestingSpacer) {
     display: inline-block;
     width: var(--ds-size-300, vac.$ds-size-300);
-  }
-}
-
-:host(:last-child) {
-  .wrapper {
-    margin-bottom: unset;
   }
 }
 
