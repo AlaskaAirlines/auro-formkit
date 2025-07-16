@@ -50,7 +50,8 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky",
     "deploy-demo": "npm run build && sh ./deploy-components.sh",
-    "local-demo": "npm run build && sh ./local-demo.sh --zip"
+    "local-demo": "npm run build && sh ./local-demo.sh --zip",
+    "svelte-dev": "cd packages/svelte-test && npm run svelte-dev"
   },
   "dependencies": {
     "@aurodesignsystem/auro-library": "^5.3.1",

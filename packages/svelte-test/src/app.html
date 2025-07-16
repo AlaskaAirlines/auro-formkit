@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- Tailwind CSS -->
+    	<script src="https://cdn.tailwindcss.com"></script>
+
+		<!-- Legacy reference is still needed to support auro-select's use of legacy token values at this time -->
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
+
+		<!-- Design Token Alaska Theme -->
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css"/>
+		
+		<!-- Webcore Stylesheet Alaska Theme -->
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
+		
+
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover" style="background-color: var(--ds-color-background);">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+
+	<script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/dist/auro-button__bundled.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-icon@latest/dist/auro-icon__bundled.js" type="module"></script>
+</html>
