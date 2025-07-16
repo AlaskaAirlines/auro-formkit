@@ -159,7 +159,7 @@ export class AuroInput extends BaseInput {
   /**
    * Returns classmap configuration for html5 input labels in all layouts.
    * @private
-   * @returns {void}
+   * @returns {Record<string, boolean>}
    */
   get commonLabelClasses() {
     return {
@@ -173,7 +173,7 @@ export class AuroInput extends BaseInput {
   /**
    * Returns classmap configuration for html5 inputs in all layouts.
    * @private
-   * @returns {object} - Returns classmap.
+   * @returns {Record<string, boolean>} - Returns classmap.
    */
   get commonInputClasses() {
     return {
