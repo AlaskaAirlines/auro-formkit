@@ -184,7 +184,7 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Returns a collection of elements that will reset the form
+   * Returns a collection of elements that will reset the form.
    * @returns {HTMLButtonElement[]}
    */
   get resetElements() {

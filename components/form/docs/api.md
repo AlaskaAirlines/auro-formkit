@@ -17,7 +17,7 @@ The auro-form element provides users a way to ... (it would be great if you fill
 | `isInitialState`           | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
 | `mutationEventListener`    |           |                                                  |         |                                                  |
 | `reset`                    |           |                                                  |         |                                                  |
-| `resetElements`            | readonly  | `HTMLButtonElement[]`                            |         | Returns a collection of elements that will reset the form |
+| `resetElements`            | readonly  | `HTMLButtonElement[]`                            |         | Returns a collection of elements that will reset the form. |
 | `sharedInputListener`      |           |                                                  |         |                                                  |
 | `sharedValidationListener` |           |                                                  |         |                                                  |
 | `submit`                   |           |                                                  |         |                                                  |

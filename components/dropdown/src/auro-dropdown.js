@@ -9,7 +9,6 @@
   lit/no-invalid-html,
   lit/binding-positions,
   template-curly-spacing,
-  no-magic-numbers,
   line-comment-position,
   no-inline-comments,
   no-warning-comments
