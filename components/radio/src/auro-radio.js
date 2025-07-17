@@ -287,7 +287,7 @@ export class AuroRadio extends LitElement {
           @input="${this.handleInput}"
           @change="${this.handleChange}"
           ?disabled="${this.disabled}"
-          ?checked="${this.checked}"
+          .checked="${this.checked}"
           id="${this.inputId}"
           name="${ifDefined(this.name)}"
           type="radio"
