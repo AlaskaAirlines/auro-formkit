@@ -21,7 +21,8 @@
   },
   "workspaces": [
     "components/*",
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "files": [
     "packages/build-tools/src/postinstall.mjs",

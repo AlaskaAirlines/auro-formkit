@@ -10,8 +10,15 @@
 		"svelte-prepare": "svelte-kit sync || echo ''"
 	},
 	"dependencies": {
-    	"@aurodesignsystem/auro-select": "*",
-    	"@aurodesignsystem/auro-menu": "*"
+		"@aurodesignsystem/auro-form": "*",
+		"@aurodesignsystem/auro-input": "*",
+		"@aurodesignsystem/auro-menu": "*",
+		"@aurodesignsystem/auro-select": "*",
+		"@aurodesignsystem/auro-button": "*",
+		"@aurodesignsystem/auro-hyperlink": "*",
+    "@aurodesignsystem-dev/auro-formkit": "^0.0.0-pr624.99",
+		"@tailwindcss/vite": "^4.1.11",
+		"tailwindcss": "^4.1.11"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^6.0.0",

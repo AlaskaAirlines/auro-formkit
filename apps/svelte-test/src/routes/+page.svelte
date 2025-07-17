@@ -47,7 +47,7 @@ onMount(() => {
 				</auro-menuoption>
 			</auro-menu>
 		</auro-select>
-        <auro-select-dev required ondark={true} value="flights">
+    <auro-select-dev required ondark={true} value="flights">
 			<span slot="bib.fullscreen.headline">Bib Headline</span>
 			<span slot="label">Select label</span>
 			<span slot="helptext">helptext content</span>
