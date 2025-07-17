@@ -165,6 +165,35 @@ describe('auro-radio', () => {
 });
 
 describe('auro-radio-group', () => {
+  it('ensures radio buttons can be selected, unselected, and reselected', async () => {
+    const el = await fixture(html`
+      <auro-radio-group name="group">
+        <span slot="legend">Form label goes here</span>
+        <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes">T</auro-radio>
+        <auro-radio id="radio2" label="No" name="radioDemo" value="no">N</auro-radio>
+        <auro-radio id="radio3" label="Maybe" name="radioDemo" value="maybe">?</auro-radio>
+      </auro-radio-group>
+    `);
+
+    const radioOne = el.querySelector('#radio1');
+    const radioTwo = el.querySelector('#radio2');
+
+    radioOne.shadowRoot.querySelector('input').click();
+    await elementUpdated(el);
+    await expect(radioOne.hasAttribute('checked')).to.be.true;
+
+    radioTwo.shadowRoot.querySelector('input').click();
+    await elementUpdated(el);
+    await expect(radioOne.hasAttribute('checked')).to.be.false;
+    await expect(radioTwo.hasAttribute('checked')).to.be.true;
+
+    radioOne.shadowRoot.querySelector('input').click();
+    await elementUpdated(el);
+    await expect(radioOne.hasAttribute('checked')).to.be.true;
+    await expect(radioTwo.hasAttribute('checked')).to.be.false;
+  });
+
+
   it('emits an input event when value changes', async () => {
     const el = await fixture(html`
       <auro-radio-group name="group">
