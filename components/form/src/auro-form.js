@@ -293,6 +293,13 @@ export class AuroForm extends LitElement {
    */
   _addElementToState(element) {
     const targetName = element.getAttribute('name');
+
+    if (!targetName) {
+      // eslint-disable-next-line no-console
+      console.warn('auro-form: element found without required `name` attribute -> ', element);
+      return;
+    }
+
     if (this.formState[targetName]) {
       return;
     }
@@ -465,6 +472,13 @@ export class AuroForm extends LitElement {
     this.requestUpdate('formState');
   }
 
+  /**
+   * Attaches event listeners to all form elements.
+   * NOTE: we explicitly attach to scraped elements so consumers can
+   * use auro elements that aren't picked up by the form (for visual purposes).
+   * @returns {void}
+   * @private
+   */
   _attachEventListeners() {
     this.queryAuroElements().forEach((element) => {
       // remove any existing event listeners (in case of re-initialization)
