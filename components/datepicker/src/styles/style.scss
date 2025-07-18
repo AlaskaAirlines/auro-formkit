@@ -71,6 +71,11 @@
   width: 100%;
 }
 
+.wrapper:not(:focus-within):not(:hover) { // stylelint-disable selector-not-notation
+  .notification.clear {
+    display: none;
+  }
+}
 
 @include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
   ::part(popover) {
