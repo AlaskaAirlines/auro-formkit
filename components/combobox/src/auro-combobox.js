@@ -475,13 +475,17 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   async syncValuesAndStates() {
-
-    // Sync values
     this.menu.value = this.value;
     this.menu.matchWord = this.input.value;
 
     // Wait a lifecycle for child components to update
     await Promise.all([this.menu.updateComplete]);
+
+    if (this.menu.optionSelected && this.menu.optionSelected.textContent.length > 0) {
+      this.input.value = this.menu.optionSelected.textContent;
+    } else {
+      this.input.value = this.value;
+    }
   }
 
   /**
@@ -968,9 +972,6 @@ export class AuroCombobox extends AuroElement {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value') && this.value !== changedProperties.get('value')) {
 
-      // Sync the input, menu, and optionSelected states
-      await this.syncValuesAndStates();
-
       if (this.value) {
         // If the value got set programmatically make sure we hide the bib
         // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
@@ -980,6 +981,9 @@ export class AuroCombobox extends AuroElement {
       } else {
         this.clear();
       }
+
+      // Sync the input, menu, and optionSelected states
+      await this.syncValuesAndStates();
     }
 
     if (changedProperties.has('error')) {
