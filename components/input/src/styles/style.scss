@@ -58,6 +58,13 @@ input {
   }
 }
 
+.wrapper:not(:focus-within):not(:hover) { // stylelint-disable selector-not-notation
+  .notificationBtn.passwordBtn,
+  .notification.clear {
+    display: none;
+  }
+}
+
 .notification {
   display: flex;
   align-items: center;
