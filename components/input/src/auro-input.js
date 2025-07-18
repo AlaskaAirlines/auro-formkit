@@ -92,12 +92,25 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Whether the input is being hidden currently based on state.
-   * @returns {boolean} - Returns true if the input is hidden.
+   * Determines if the HTML input element should be visually hidden.
+   * Returns true when display value content exists without focus and has a value,
+   * or when the input has no value, is not focused, and has no placeholder text.
+   * @returns {boolean} - True if the input should be visually hidden, false otherwise.
    * @private
-   */
+  */
   get inputHidden() {
     return (this.hasDisplayValueContent && !this.hasFocus && this.hasValue) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === ''));
+  }
+
+  /**
+   * Determines if the input should display in a state with no focus or value indication.
+   * Returns true when the input has display content without focus and has a value,
+   * or when the input has no value and is not focused.
+   * @returns {boolean} - True if the input should show no focus or value state, false otherwise.
+   * @private
+   */
+  get noFocusOrValue() {
+    return (this.hasDisplayValueContent && !this.hasFocus && this.hasValue) || ((!this.value || this.value.length === 0) && !this.hasFocus);
   }
 
   /**
@@ -118,7 +131,7 @@ export class AuroInput extends BaseInput {
     const isHidden = this.inputHidden;
 
     if (this.layout.startsWith('emphasized')) {
-      return isHidden ? 'accent-xl' : 'body-sm';
+      return this.noFocusOrValue ? 'accent-xl' : 'body-sm';
     }
 
     if (this.layout === 'snowflake') {
@@ -135,10 +148,8 @@ export class AuroInput extends BaseInput {
    * @returns {string} - The font class for the input.
    */
   get inputFontClass() {
-    const isHidden = this.inputHidden;
-
     if (this.layout.startsWith('emphasized')) {
-      return isHidden ? 'body-sm' : 'accent-xl';
+      return this.noFocusOrValue ? 'body-sm' : 'accent-xl';
     }
 
     if (this.layout === 'snowflake') {
