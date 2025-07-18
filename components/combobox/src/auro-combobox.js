@@ -478,8 +478,7 @@ export class AuroCombobox extends AuroElement {
 
     // Sync values
     this.menu.value = this.value;
-    this.menu.matchWord = this.value;
-    this.input.value = this.value;
+    this.menu.matchWord = this.input.value;
 
     // Wait a lifecycle for child components to update
     await Promise.all([this.menu.updateComplete]);
