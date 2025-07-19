@@ -20,11 +20,7 @@ The following sections are editable by making changes to the following files:
 # Popover
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-The `<auro-menu>` element provides a list of options for a user to select from.
-
-A list of options is created within the `<slot>` of the `<auro-menu>` element by using the `<auro-menuoption>` element to define options. Use a standard `<hr>` element to create dividers within the list of options.
-
-The `<auro-menu>` element is designed for contextual menus, e.g. a dropdown menus. They are not intended to be used for navigation menus which have a different semantic meaning. The `<auro-menu>` element does not support hide/show functionality within its scope. This functionality will be managed by a wrapping element such as a drop-down menu composite element.
+Need popover info
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -87,13 +83,26 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-menu>
-  <auro-menuoption value="stops">Stops</auro-menuoption>
-  <auro-menuoption value="price">Price</auro-menuoption>
-  <auro-menuoption value="duration">Duration</auro-menuoption>
-  <auro-menuoption value="departure">Departure</auro-menuoption>
-  <auro-menuoption value="arrival">Arrival</auro-menuoption>
-</auro-menu>
+<!-- dialog example -->
+<auro-popover behavior="dialog">
+  <auro-button slot="trigger">Open Dialog</auro-button>
+  <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
+</auro-popover>
+<!-- dropdown example -->
+<auro-popover behavior="dropdown">
+  <auro-button slot="trigger">Open Dropdown</auro-button>
+  <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
+</auro-popover>
+<!-- input example -->
+<auro-popover behavior="input">
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+    <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+  </auro-menu>
+</auro-popover>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -123,9 +132,9 @@ For the most up to date information on [UI development browser support](https://
 ## auro-popover use cases
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-menu>` element should be used in situations where users may:
+The `<auro-popover>` element should be used in situations where users may:
 
-* A user needs to select one option from a list of options.
+* It pops yo
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit development
