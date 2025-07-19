@@ -95,6 +95,7 @@ This configuration enables proper module resolution for the component's TypeScri
 </auro-popover>
 <!-- input example -->
 <auro-popover behavior="input">
+  <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
     <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>

@@ -55,10 +55,18 @@ export class AuroPopover extends LitElement {
 
     /** Creates refs for elements in the template @returns {void} @private */
     _createElementRefs() {
-      this._buttonRef = createRef();
+
+      // A reference to the popover element itself
       this._popoverRef = createRef();
-      this._triggerSlotRef = createRef();
+
+      // The internal button that wraps the trigger slot (dialog and dropdown behaviors)
+      this._buttonRef = createRef();
+
+      // A reference to the positioning target element, this wraps the trigger slot for exact positioning
       this._positioningTargetRef = createRef();
+
+      // A reference to the trigger slot element
+      this._triggerSlotRef = createRef();
     }
 
     /**
@@ -343,7 +351,6 @@ export class AuroPopover extends LitElement {
      */
     _renderPopover() {
       return html`
-        <p>${this.type} popover</p>
         <div 
           ${ref(this._popoverRef)}
           popover="auto"
