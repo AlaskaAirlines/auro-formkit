@@ -1,0 +1,60 @@
+{
+  "name": "@poc/auro-popover",
+  "version": "0.0.0",
+  "description": "auro-popover HTML custom element",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@auro-formkit/build-tools": "*",
+    "@auro-formkit/config": "*",
+    "@auro-formkit/typescript": "*",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "chalk": "^5.4.1",
+    "rollup": "^4.39.0",
+    "rollup-plugin-serve": "^3.0.0",
+    "wc-sass-render": "^1.4.0",
+    "web-component-analyzer": "^2.0.0"
+  },
+  "overrides": {
+    "wc-sass-render": {
+      "sass": "$sass"
+    }
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "*-css.js",
+      "*.css"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "run-s sass bundler types build:docs",
+    "sass": "run-s build:sass postCss:component sass:render",
+    "build:version": "node ./scripts/version.mjs",
+    "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
+    "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "bundler": "rollup -c node:@auro-formkit/config/rollup",
+    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component popover",
+    "clean": "rm -rf dist build",
+    "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
+    "dev:closed": "concurrently \"npm run build:watch\" \"npm run serve:closed\"",
+    "serve": "web-dev-server --open",
+    "serve:closed": "web-dev-server",
+    "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
+    "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7711",
+    "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --watch --port 7711",
+    "types": "tsc --project tsconfig.json",
+    "lint": "npm-run-all scssLint esLint",
+    "scssLint": "stylelint \"./src/**/*.scss\"",
+    "esLint": "eslint \"./src/**/*.js\""
+  }
+}
