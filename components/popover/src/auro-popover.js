@@ -5,13 +5,15 @@ import { PopoverPositioner } from "@auro-formkit/utils";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
+import { StringBoolean } from "./StringBoolean.converter";
 
 const _DEFAULTS = {
   type: "manual",
   behavior: "dialog",
+  showOnHover: false,
+  showOnFocus: true,
   offset: 0,
   placement: "bottom-start",
-  showOnHover: false,
   shown: false
 };
 
@@ -31,13 +33,13 @@ export class AuroPopover extends LitElement {
 
 
   /** CONSTRUCTOR **/
-  constructor() {
-    super();
-    
-    this._setDefaults(_DEFAULTS);
-    this._createInternalTags();
-    this._createElementRefs();
-  }
+      constructor() {
+        super();
+        
+        this._setDefaults(_DEFAULTS);
+        this._createInternalTags();
+        this._createElementRefs();
+      }
 
 
   /** INIT METHODS **/
@@ -89,7 +91,7 @@ export class AuroPopover extends LitElement {
         /** @type {string} The type of floater, e.g., "manual", "auto", or "hint" */
         type: { type: String, reflect: false },
 
-        /** @type {string} The behavior of the popover, "dialog", "dropdown", or "input" */
+        /** @type {string} The behavior of the popover, "dialog", "dropdown", "tooltip", or "input" */
         behavior: { type: String, reflect: false },
 
         /** @type {number} The offset distance of the floater */
@@ -101,11 +103,17 @@ export class AuroPopover extends LitElement {
         /** @type {boolean} Whether the floater should show on hover */
         showOnHover: { type: Boolean, reflect: false },
 
+        /** @type {boolean} Whether the floater should open on focus (input behavior only) */
+        showOnFocus: { type: String, reflect: false, converter: StringBoolean },
+
         /** @type {boolean} Whether the floater is shown or not */
         shown: { type: Boolean, reflect: true },
 
         /** @type {boolean} Whether the floater is open or not */
-        _open: { type: Boolean, reflect: false, state: true }
+        _open: { type: Boolean, reflect: false, state: true },
+
+        /** @type {number} The minimum number of characters the user must type before the popover is shown */
+        minInputLength: { type: Number, reflect: false }
       };
     }
 
@@ -135,11 +143,16 @@ export class AuroPopover extends LitElement {
       // Position the popover if it is not already positioned
       if (this._shouldPositionPopover) this._positionPopover();
 
-      // Set shown to true to trigger visibility
-      if (!this.popover.matches(':popover-open')) { this.popover.showPopover() }
+      
+      // Wait for a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
+      setTimeout(() => {
 
-      // Wait a lifecycle for positioning to take effect, then set shown to true to trigger visibility
-      setTimeout(() => this.shown = true, 0);
+        // Set shown to true to trigger visibility
+        if (!this.popover.matches(':popover-open')) { this.popover.showPopover() }
+
+        // The popover is positioned and ready, so we can set shown to true
+        this.shown = true;
+      })
     }
 
     /**
@@ -152,11 +165,15 @@ export class AuroPopover extends LitElement {
       // Stop positioning the popover
       this._cancelPositionPopover();
 
-      // Hide the popover if it is currently open
-      if (this.popover.matches(':popover-open')) { this.popover.hidePopover() }
+      // Wait a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
+      setTimeout(() => {
 
-      // Update shown to hide the popover via styles
-      this.shown = false;
+        // Hide the popover if it is currently open
+        if (this.popover.matches(':popover-open')) { this.popover.hidePopover() }
+  
+        // Update shown to hide the popover via styles
+        this.shown = false;
+      })
     }
 
 
@@ -164,14 +181,18 @@ export class AuroPopover extends LitElement {
   // Attachments to the component lifecycle, such as connectedCallback, updated, etc.
 
     updated(changedProperties) {
+
+      // Make sure we adjust the popover visibility based on external changes from the browser
       if (changedProperties.has('_open')) this._open ? this.show() : this.hide();
-      if (changedProperties.has('behavior')) {
-        if (this.behavior === 'input') {
-          this.type = "manual";
-          this._bindToInput();
-        }
-      }
+
+      // If the behavior changes, adjust the popover accordingly
+      if (changedProperties.has('behavior')) this._adjustForBehavior(this.behavior);
     };
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      this._resetBindings();
+    }
 
 
   /** PRIVATE GETTERS **/
@@ -183,7 +204,7 @@ export class AuroPopover extends LitElement {
      * @private
      */
     get _shouldPositionPopover() {
-      return ["dropdown", "hint", "input"].includes(this.behavior);
+      return ["dropdown", "tooltip", "input"].includes(this.behavior);
     }
 
     /**
@@ -192,10 +213,11 @@ export class AuroPopover extends LitElement {
      * @returns {object}
      */
     get _dropdownOptions() {
-      return Object.assign(_POSITIONER_DEFAULTS, {
+      return {
+        ..._POSITIONER_DEFAULTS,
         placement: this.placement,
         offset: this.offset,
-      });
+      };
     }
 
     /**
@@ -221,18 +243,54 @@ export class AuroPopover extends LitElement {
     get _inputInTriggerSlot() {
 
       const nodes = this._triggerSlot.assignedNodes({ flatten: true });
-      if (nodes.length > 0) {
-        const input = nodes.find(node => node.tagName && node.tagName.toLowerCase().match('input'));
-        if (input) return input;
-        else throw new Error(_NO_INPUT_ERROR);
-      } else {
-        throw new Error(_NO_INPUT_ERROR);
-      }
+      const input = nodes.find(node => node.tagName && node.tagName.toLowerCase().match('input'));
+
+      return input ?? undefined;
     }
 
 
   /** PRIVATE METHODS **/
   // Private methods that are used internally within the component only
+
+  /**
+   * Resets the bindings for the popover, detaching any event listeners or positioners
+   * This is called when the component is disconnected or when the behavior changes
+   * @returns {void}
+   * @private
+   */
+    _resetBindings() {
+      this._detachInput();
+      this._detachHoverFromPositioningTarget();
+      this._cancelPositionPopover();
+    }
+
+    /**
+     * Makes adjustments based on a specific behavior type
+     * @returns {void}
+     * @private
+     */
+    _adjustForBehavior(behavior) {
+      this._resetBindings();
+      switch (behavior) {
+        case 'input':
+          this.type = 'manual';
+          this._bindToInput();
+          break;
+        case 'dialog':
+          this.type = 'auto';
+          break;
+        case 'dropdown':
+          this.type = 'auto';
+          break;
+        case 'tooltip':
+          this.type = 'hint';
+          this.showOnHover = true;
+          this._bindHoverToPositioningTarget();
+          break;
+        default:
+          console.warn(`AuroPopover: Unknown behavior type "${behavior}"`);
+      }
+    }
 
     /**
      * Begins positioning the popover using the PopoverPositioner class
@@ -261,19 +319,114 @@ export class AuroPopover extends LitElement {
       }
     }
 
+    /**
+     * Binds the input element in the trigger slot to the popover's input behavior
+     * @returns {void}
+     * @private
+     */
     _bindToInput() {
       const input = this._inputInTriggerSlot;
       if (input) {
-        input.addEventListener('focus', () => {console.log("input focused"); this.show()});
-        input.addEventListener('mouseup', () => {console.log("input mouseup"); this.show()});
-        input.addEventListener('blur', () => {console.log("input blurred"); this.hide()});
-        input.addEventListener('keydown', () => {console.log("input changed"); this.show()});
+        
+        // If you add an event listener here, you must also remove it in _detachInput
+
+        // Focus handling. Mouseup is required to not blur the input
+        input.addEventListener('focus', this._handleInputFocus);
+
+        // Input change handling.
+        input.addEventListener('input', this._handleInputChange);
+
+        // Blur handling.
+        input.addEventListener('blur', this._handleInputBlur);
+      } else {
+        throw new Error(_NO_INPUT_ERROR);
       }
+    }
+
+    /**
+     * Detaches the input element from the popover's input behavior
+     * @returns {void}
+     * @private
+     */
+    _detachInput() {
+      const input = this._inputInTriggerSlot;
+      if (input) {
+        input.removeEventListener('focus', this._handleInputFocus);
+        input.removeEventListener('input', this._handleInputChange);
+        input.removeEventListener('blur', this._handleInputBlur);
+      }
+    }
+
+    /**
+     * Binds hover events to the positioning target element
+     * This is used for behaviors like tooltip where the popover should show on hover
+     * @returns {void}
+     * @private
+     */
+    _bindHoverToPositioningTarget() {
+      this.addEventListener('mouseover', this._handleOnHover);
+      this.addEventListener('mouseout', this._handleOnHoverLeave);
+    }
+
+    /**
+     * Detaches hover events from the positioning target element
+     * @returns {void}
+     * @private
+     */
+    _detachHoverFromPositioningTarget() {
+      this.removeEventListener('mouseover', this._handleOnHover);
+      this.removeEventListener('mouseout', this._handleOnHoverLeave);
     }
 
 
   /** EVENT HANDLERS **/
   // These methods handle events triggered by user interactions or other component changes
+
+  /**
+   * Checks if the input passes the value check based on the minimum input length
+   * @param {HTMLElement} input 
+   * @returns {boolean}
+   * @private
+   */
+    _inputPassesValueCheck = input => {
+      // Check the input value against the minimum length
+      const { value } = input;
+      return value && value.length >= this.minInputLength || !this.minInputLength || this.minInputLength <= 0;
+    }
+
+    /**
+     * Handles input changes, showing or hiding the popover based on the input value
+     * @param {Event} event 
+     * @returns {void}
+     * @private
+     */
+    _handleInputChange = event => {
+      const input = event.target;
+      this._inputPassesValueCheck(input) ? this.show() : this.hide();
+    }
+
+    /**
+     * Handles input focus events, showing the popover if all conditions are met
+     * @param {Event} event 
+     * @returns {void}
+     * @private
+     */
+    _handleInputFocus = event => {
+      const input = event.target;
+      if (
+        // If the input has a minimum length and the value is valid and we should show on focus
+        this._inputPassesValueCheck(input) && this.showOnFocus
+      ) this.show();
+    }
+
+    /**
+     * Handles input blur events, hiding the popover
+     * @returns {void}
+     * @private
+     */
+    _handleInputBlur = () => {
+      this.hide();
+    }
 
     /** 
      * Handles changes to the trigger slot, adjusting the type if necessary
@@ -298,6 +451,20 @@ export class AuroPopover extends LitElement {
      * @private
      * */
     _handlePopoverToggle(event) { this._open = event.newState === 'open' }
+
+    /**
+     * Handles hover events on the trigger element, showing the popover if showOnHover is true
+     * @returns {void}
+     * @private
+     */
+    _handleOnHover = () => { if (this.showOnHover) this.show() }
+
+    /**
+     * Handles hover leave events on the trigger element, hiding the popover if showOnHover is true
+     * @returns {void}
+     * @private
+     */
+    _handleOnHoverLeave = () => { if (this.showOnHover) this.hide() }
 
 
   /** RENDER METHODS **/
@@ -353,7 +520,7 @@ export class AuroPopover extends LitElement {
       return html`
         <div 
           ${ref(this._popoverRef)}
-          popover="auto"
+          popover="${this.type}"
           id="popover"
           role="dialog"
           aria-label="${this.title}"
