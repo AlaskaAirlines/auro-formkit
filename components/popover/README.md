@@ -93,8 +93,24 @@ This configuration enables proper module resolution for the component's TypeScri
   <auro-button slot="trigger">Open Dropdown</auro-button>
   <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
 </auro-popover>
-<!-- input example -->
+<!-- tooltip (hover) example -->
+<auro-popover behavior="tooltip" placement="bottom">
+  <auro-button slot="trigger">Hover For Tooltip</auro-button>
+  <p>I am a tooltip popover. I open when the trigger is hovered.</p>
+</auro-popover>
+<!-- default input example -->
 <auro-popover behavior="input">
+  <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+    <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+  </auro-menu>
+</auro-popover>
+<!-- input popover with minInputLength -->
+<auro-popover behavior="input" minInputLength="3">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
