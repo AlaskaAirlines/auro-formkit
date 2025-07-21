@@ -1,7 +1,9 @@
 /* eslint-disable */
 import { html, LitElement } from "lit";
 import { createRef, ref } from 'lit/directives/ref.js';
+
 import { PopoverPositioner } from "@auro-formkit/utils";
+import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/FocusTrap.mjs";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -159,6 +161,8 @@ export class AuroPopover extends LitElement {
       // Position the popover if it is not already positioned
       if (this._shouldPositionPopover) this._positionPopover();
 
+      // Focus the popover to ensure accessibility
+      this.popover.focus();
       
       // Wait for a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
       setTimeout(() => {
@@ -168,6 +172,9 @@ export class AuroPopover extends LitElement {
 
         // The popover is positioned and ready, so we can set shown to true
         this.shown = true;
+
+        // Attach the focus trap to the popover if necessary
+        this._attachFocusTrap(); // Attach focus trap to the popover
       })
     }
 
@@ -189,6 +196,9 @@ export class AuroPopover extends LitElement {
   
         // Update shown to hide the popover via styles
         this.shown = false;
+
+        const focusEl = this._triggerElInSlot || this.button
+        focusEl.focus(); // Focus the trigger element to ensure accessibility
       })
     }
 
@@ -264,6 +274,13 @@ export class AuroPopover extends LitElement {
       return input ?? undefined;
     }
 
+    /**
+     * Checks if a focus trap should be attached based on the behavior
+     * @returns {boolean}
+     * @private
+     */
+    get _shouldAttachFocusTrap() { return !['input', 'tooltip'].includes(this.behavior) };
+
 
   /** PRIVATE METHODS **/
   // Private methods that are used internally within the component only
@@ -278,6 +295,7 @@ export class AuroPopover extends LitElement {
       this._detachInput();
       this._detachHoverFromPositioningTarget();
       this._cancelPositionPopover();
+      this._detachFocusTrap();
     }
 
     /**
@@ -305,6 +323,30 @@ export class AuroPopover extends LitElement {
           break;
         default:
           console.warn(`AuroPopover: Unknown behavior type "${behavior}"`);
+      }
+    }
+
+    /**
+     * Attaches a focus trap to the popover if necessary
+     * @returns {void}
+     * @private
+     */
+    _attachFocusTrap() {
+      if (this._shouldAttachFocusTrap) {
+        this._focusTrap = new FocusTrap(this.popover);
+        this._focusTrap.focusFirstElement();
+      }
+    }
+
+    /**
+     * Detaches the existing focus trap if it exists
+     * @returns {void}
+     * @private
+     */
+    _detachFocusTrap() {
+      if (this._focusTrap) {
+        this._focusTrap.disconnect();
+        this._focusTrap = null;
       }
     }
 
@@ -542,6 +584,7 @@ export class AuroPopover extends LitElement {
             part="trigger"
             type="button"
             popovertarget="popover"
+            tabindex="-1"
           >
             ${this._renderTriggerSlot()}
           </button>
@@ -562,6 +605,7 @@ export class AuroPopover extends LitElement {
           aria-label="${this.title}"
           class="auro-popover"
           @beforetoggle=${this._handlePopoverToggle.bind(this)}
+          tabindex="-1"
         >
           <slot><span>No, this is Patrick.</span></slot>
         </div>
