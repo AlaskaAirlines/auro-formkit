@@ -6,17 +6,17 @@ The auro-popover element provides users a way to display additional information 
 
 | Property         | Attribute        | Modifiers | Type                | Description                                      |
 |------------------|------------------|-----------|---------------------|--------------------------------------------------|
-| `behavior`       | `behavior`       |           | `string`            |                                                  |
+| `behavior`       | `behavior`       |           | `string`            | The behavior of the popover, "dialog", "dropdown", "tooltip", or "input" |
 | `button`         |                  | readonly  | `HTMLButtonElement` | A reference to the popover component's internal button element (trigger) |
-| `minInputLength` | `minInputLength` |           | `number`            |                                                  |
-| `offset`         | `offset`         |           | `number`            |                                                  |
-| `placement`      | `placement`      |           | `string`            |                                                  |
+| `minInputLength` | `minInputLength` |           | `number`            | The minimum number of characters the user must type before the popover is shown |
+| `offset`         | `offset`         |           | `number`            | The offset distance of the floater               |
+| `placement`      | `placement`      |           | `string`            | The position of the floater, e.g., "bottom-start", "top-end" etc. |
 | `popover`        |                  | readonly  | `HTMLElement`       | A reference to the popover component's internal popover element |
-| `showOnFocus`    | `showOnFocus`    |           | `boolean`           |                                                  |
-| `showOnHover`    | `showOnHover`    |           | `boolean`           |                                                  |
-| `shown`          | `shown`          |           | `boolean`           |                                                  |
-| `title`          | `title`          |           | `string`            |                                                  |
-| `type`           | `type`           |           | `string`            |                                                  |
+| `showOnFocus`    | `showOnFocus`    |           | `string`            | Whether the floater should open on focus (input behavior only) |
+| `showOnHover`    | `showOnHover`    |           | `boolean`           | Whether the floater should show on hover         |
+| `shown`          | `shown`          |           | `boolean`           | Whether the floater is shown or not              |
+| `title`          | `title`          |           | `string`            | The title of the floater - REQUIRED FOR A11Y     |
+| `type`           | `type`           |           | `string`            | The type of floater, e.g., "manual", "auto", or "hint" |
 
 ## Methods
 
