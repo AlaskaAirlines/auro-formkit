@@ -802,11 +802,8 @@ export class AuroDatePicker extends AuroElement {
       }
 
       if (!this.contains(document.activeElement)) {
-        this.validation.validate(this.inputList[0]);
-
-        if (this.inputList[1]) {
-          this.validation.validate(this.inputList[1]);
-        }
+        this.validate();
+        this.dropdown.hide();
       }
     });
 
@@ -941,7 +938,7 @@ export class AuroDatePicker extends AuroElement {
    */
   resetValues() {
     this.inputList.forEach((input) => {
-      input.clear();
+      input.reset();
     });
   }
 
@@ -967,6 +964,11 @@ export class AuroDatePicker extends AuroElement {
    * @param {boolean} [force=false] - Whether to force validation.
    */
   validate(force = false) {
+    this.inputList[0].validate(force);
+    if (this.range) {
+      this.inputList[1].validate(force);
+    }
+
     this.validation.validate(this, force);
   }
 
