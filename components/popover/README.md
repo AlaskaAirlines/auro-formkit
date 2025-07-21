@@ -83,22 +83,31 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<!-- dialog example -->
+<p>existing support example</p>
+<auro-button onclick="document.querySelector('auro-popover[behavior=dialog]').show()">Click Me For Dialog</auro-button>
+<auro-popover behavior="dialog">
+  <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
+</auro-popover>
+<p>&nbsp;</p>
+<p>dialog example</p>
 <auro-popover behavior="dialog">
   <auro-button slot="trigger">Open Dialog</auro-button>
   <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
 </auro-popover>
-<!-- dropdown example -->
+<p>&nbsp;</p>
+<p>dropdown example</p>
 <auro-popover behavior="dropdown">
   <auro-button slot="trigger">Open Dropdown</auro-button>
   <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
 </auro-popover>
-<!-- tooltip (hover) example -->
+<p>&nbsp;</p>
+<p>tooltip (hover) example</p>
 <auro-popover behavior="tooltip" placement="bottom">
   <auro-button slot="trigger">Hover For Tooltip</auro-button>
   <p>I am a tooltip popover. I open when the trigger is hovered.</p>
 </auro-popover>
-<!-- default input example -->
+<p>&nbsp;</p>
+<p>default input example</p>
 <auro-popover behavior="input">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
@@ -109,8 +118,21 @@ This configuration enables proper module resolution for the component's TypeScri
     <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
   </auro-menu>
 </auro-popover>
-<!-- input popover with minInputLength -->
+<p>&nbsp;</p>
+<p>input popover with minInputLength</p>
 <auro-popover behavior="input" minInputLength="3">
+  <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+    <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+  </auro-menu>
+</auro-popover>
+<p>&nbsp;</p>
+<p>input popover with showOnFocus=false</p>
+<auro-popover behavior="input" minInputLength="3" showOnFocus="false">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
