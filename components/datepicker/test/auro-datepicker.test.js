@@ -117,7 +117,9 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
     await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    el.blur();
+    setTimeout(() => {
+      el.blur();
+    }, 0);
 
     await oneEvent(el, 'auroDatePicker-toggled');
     await expect(el.dropdown.isPopoverVisible).to.be.false;
@@ -1017,7 +1019,7 @@ describe('auro-datepicker with format', () => {
     await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
   });
 
-  it('respects maxDate setting on second input', async () => {
+  it('respects maxDate setting on second input with yyyy/mm/dd format', async () => {
     const el = await fixture(html`
       <auro-datepicker range format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
     `);
