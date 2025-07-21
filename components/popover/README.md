@@ -84,26 +84,29 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <p>existing support example</p>
-<auro-button onclick="document.querySelector('auro-popover[behavior=dialog]').show()">Click Me For Dialog</auro-button>
+<button type="button" onclick="document.querySelector('auro-popover[behavior=dialog]').show()">Click Me For Dialog</button>
 <auro-popover behavior="dialog">
   <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
 </auro-popover>
 <p>&nbsp;</p>
 <p>dialog example</p>
 <auro-popover behavior="dialog">
-  <auro-button slot="trigger">Open Dialog</auro-button>
+  <button type="button" slot="trigger">Open Dialog</button>
   <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
 </auro-popover>
 <p>&nbsp;</p>
 <p>dropdown example</p>
 <auro-popover behavior="dropdown">
-  <auro-button slot="trigger">Open Dropdown</auro-button>
+  <button type="button" slot="trigger">Open Dropdown</button>
   <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
+  <input type="text" placeholder="I am an input inside a dropdown popover" />
+  <textarea placeholder="I am a textarea inside a dropdown popover"></textarea>
+  <button type="button" onclick="document.querySelector('auro-popover[behavior=dropdown]').hide()">Close Dropdown</button>
 </auro-popover>
 <p>&nbsp;</p>
 <p>tooltip (hover) example</p>
 <auro-popover behavior="tooltip" placement="bottom">
-  <auro-button slot="trigger">Hover For Tooltip</auro-button>
+  <button type="button" slot="trigger">Hover For Tooltip</button>
   <p>I am a tooltip popover. I open when the trigger is hovered.</p>
 </auro-popover>
 <p>&nbsp;</p>
