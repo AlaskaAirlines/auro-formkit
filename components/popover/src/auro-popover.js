@@ -7,6 +7,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import { StringBoolean } from "./StringBoolean.converter";
 
+import styles from './styles/style-css.js';
+
 const _DEFAULTS = {
   type: "manual",
   behavior: "dialog",
@@ -23,6 +25,8 @@ const _POSITIONER_DEFAULTS = {
 };
 
 const _NO_INPUT_ERROR = "\nAuroPopover: The input behavior requires an input element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-input slot='trigger'></auro-input>\n</auro-popover>\n";
+const _MULTIPLE_TRIGGER_ELEMENTS_ERROR = "\nAuroPopover: The input behavior requires a single trigger element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n\nPassing more than one element may lead to undesireable behavior.\n";
+const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroPopover: The trigger slot should not contain text nodes.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n";
 
 export class AuroPopover extends LitElement {
 
@@ -33,13 +37,13 @@ export class AuroPopover extends LitElement {
 
 
   /** CONSTRUCTOR **/
-      constructor() {
-        super();
-        
-        this._setDefaults(_DEFAULTS);
-        this._createInternalTags();
-        this._createElementRefs();
-      }
+    constructor() {
+      super();
+      
+      this._setDefaults(_DEFAULTS);
+      this._createInternalTags();
+      this._createElementRefs();
+    }
 
 
   /** INIT METHODS **/
@@ -109,16 +113,28 @@ export class AuroPopover extends LitElement {
         /** @type {boolean} Whether the floater is shown or not */
         shown: { type: Boolean, reflect: true },
 
-        /** @type {boolean} Whether the floater is open or not */
-        _open: { type: Boolean, reflect: false, state: true },
-
         /** @type {number} The minimum number of characters the user must type before the popover is shown */
-        minInputLength: { type: Number, reflect: false }
+        minInputLength: { type: Number, reflect: false },
+
+         /** @type {boolean} @private Whether the floater is open or not */
+        _open: { type: Boolean, reflect: false, state: true },
       };
     }
 
+    static get styles() {
+      return [styles];
+    }
+
+    /**
+     * A reference to the popover component's internal button element (trigger)
+     * @returns {HTMLButtonElement} The button element that wraps the trigger slot
+     */
     get button() { return this._buttonRef.value }
 
+    /**
+     * A reference to the popover component's internal popover element
+     * @returns {HTMLElement} The popover element that contains the content
+     */
     get popover() { return this._popoverRef.value }
 
   
@@ -252,12 +268,12 @@ export class AuroPopover extends LitElement {
   /** PRIVATE METHODS **/
   // Private methods that are used internally within the component only
 
-  /**
-   * Resets the bindings for the popover, detaching any event listeners or positioners
-   * This is called when the component is disconnected or when the behavior changes
-   * @returns {void}
-   * @private
-   */
+    /**
+     * Resets the bindings for the popover, detaching any event listeners or positioners
+     * This is called when the component is disconnected or when the behavior changes
+     * @returns {void}
+     * @private
+     */
     _resetBindings() {
       this._detachInput();
       this._detachHoverFromPositioningTarget();
@@ -356,6 +372,23 @@ export class AuroPopover extends LitElement {
         input.removeEventListener('blur', this._handleInputBlur);
       }
     }
+    
+    get _triggerElInSlot() {
+
+      // Get the assigned nodes from the trigger slot
+      const nodes = this._triggerSlot.assignedNodes({ flatten: true });
+
+      // Warn the user if they pass more than one element to the trigger slot
+      if (nodes.length > 1) console.warn(_MULTIPLE_TRIGGER_ELEMENTS_ERROR);
+
+      const el = nodes.find(node => node.tagName); // Match any non-text node
+
+      // If the user passes at least one element to the trigger slot but it doesn't pass our check, warn them
+      if (nodes.length && !el) console.warn(_TEXT_NODE_IN_TRIGGER_SLOT_ERROR);
+
+      // Return the first element that matches the tagName check, or undefined if no element is found
+      return el ?? undefined;
+    }
 
     /**
      * Binds hover events to the positioning target element
@@ -364,8 +397,11 @@ export class AuroPopover extends LitElement {
      * @private
      */
     _bindHoverToPositioningTarget() {
-      this.addEventListener('mouseover', this._handleOnHover);
-      this.addEventListener('mouseout', this._handleOnHoverLeave);
+      const el = this._triggerElInSlot;
+      if (el) {
+        el.addEventListener('mouseover', this._handleOnHover);
+        el.addEventListener('mouseout', this._handleOnHoverLeave);
+      }
     }
 
     /**
@@ -382,12 +418,12 @@ export class AuroPopover extends LitElement {
   /** EVENT HANDLERS **/
   // These methods handle events triggered by user interactions or other component changes
 
-  /**
-   * Checks if the input passes the value check based on the minimum input length
-   * @param {HTMLElement} input 
-   * @returns {boolean}
-   * @private
-   */
+    /**
+     * Checks if the input passes the value check based on the minimum input length
+     * @param {HTMLElement} input 
+     * @returns {boolean}
+     * @private
+     */
     _inputPassesValueCheck = input => {
       // Check the input value against the minimum length
       const { value } = input;
