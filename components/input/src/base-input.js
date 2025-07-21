@@ -846,6 +846,7 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   reset() {
+    this.value = undefined;
     this.validation.reset(this);
   }
 
