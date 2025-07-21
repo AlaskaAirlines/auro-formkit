@@ -96,7 +96,7 @@ This configuration enables proper module resolution for the component's TypeScri
 </auro-popover>
 <p>&nbsp;</p>
 <p>dropdown example</p>
-<auro-popover behavior="dropdown">
+<auro-popover behavior="dropdown" floatingUiConfig='{"placement": "top", "useFlip": false, "useAutoPlacement": false, "useHide": false}'>
   <button type="button" slot="trigger">Open Dropdown</button>
   <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
   <input type="text" placeholder="I am an input inside a dropdown popover" />

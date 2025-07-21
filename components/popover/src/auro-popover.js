@@ -23,7 +23,12 @@ const _DEFAULTS = {
 
 const _POSITIONER_DEFAULTS = {
   offset: 0,
-  placement: 'bottom-start'
+  placement: 'bottom-start',
+  useHide: true,
+  useFlip: true,
+  useAutoPlacement: false,
+  strategy: 'absolute',
+  inline: false,
 };
 
 const _NO_INPUT_ERROR = "\nAuroPopover: The input behavior requires an input element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-input slot='trigger'></auro-input>\n</auro-popover>\n";
@@ -108,12 +113,12 @@ export class AuroPopover extends LitElement {
 
         /** Whether the floater is open or not */
         _open: { type: Boolean, reflect: false, state: true },
+
+        floatingUiConfig: { type: Object, reflect: false }
       };
     }
 
-    static get styles() {
-      return [styles];
-    }
+    static get styles() { return [styles] };
 
     /**
      * A reference to the popover component's internal button element (trigger)
@@ -231,6 +236,7 @@ export class AuroPopover extends LitElement {
         ..._POSITIONER_DEFAULTS,
         placement: this.placement,
         offset: this.offset,
+        ...this.floatingUiConfig ?? {},
       };
     }
 

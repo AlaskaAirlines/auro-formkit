@@ -1,20 +1,26 @@
 /* eslint-disable curly, lines-around-comment, no-magic-numbers, id-length */
-import { autoUpdate, computePosition, offset, autoPlacement, flip, hide } from '@floating-ui/dom';
+import { autoUpdate, computePosition, offset, autoPlacement, flip, hide, arrow, inline } from '@floating-ui/dom';
 
 export class PopoverPositioner {
+
   /**
    * @param {HTMLElement} referenceEl - The reference element (trigger)
    * @param {HTMLElement} floatingEl - The floating element (dropdown)
    * @param {Object} options - Configuration options
+   *  @param {string} [options.placement='bottom-start'] - Positioning placement of the floating element
+   *  @param {number} [options.offset=0] - Distance in pixels from the reference element
+   *  @param {boolean} [options.autoStart=true] - Whether to start auto-updating the position immediately
+   *  @param {HTMLElement} [options.arrowEl=null] - Optional arrow element to position (e.g., <div class="arrow"></div>)
+   *  @param {boolean} [options.useAutoPlacement=true] - Whether to use auto placement to find optimal position
+   *  @param {boolean} [options.useFlip=true] - Whether to flip the floating element if it doesn't fit
+   *  @param {boolean} [options.useHide=true] - Whether to hide the floating element if it doesn't fit
+   *  @param {string} [options.strategy='absolute'] - Positioning strategy ('absolute' or 'fixed')
+   *  @param {boolean} [options.inline=false] - Whether to position inline (needed for hyperlinks and inline elements)
    */
   constructor(referenceEl, floatingEl, options = {}) {
     this.referenceEl = referenceEl;
     this.floatingEl = floatingEl;
-    this.options = {
-      placement: options.placement || 'bottom-start',
-      offsetDistance: options.offsetDistance || 8,
-      ...options
-    };
+    this.options = options;
     this.setFloaterStyles();
     if (this.options.autoStart !== false) this.start();
     this.cleanup = null;
@@ -35,19 +41,22 @@ export class PopoverPositioner {
   updatePosition() {
     if (!this.referenceEl || !this.floatingEl) return;
 
-    const middleware = [
-      offset(this.options.offset),
-      flip(),
-      hide()
-    ];
+    const middleware = [].concat(
+      this.options.offset && this.options.offset !== 0 ? offset(this.options.offset) : [],
+      this.options.arrowEl ? arrow({ element: this.options.arrowEl }) : [],
+      this.options.useFlip ? flip() : [],
+      this.options.useAutoPlacement ? autoPlacement() : [],
+      this.options.useHide ? hide() : [],
+      this.options.inline ? inline() : []
+    );
 
     computePosition(this.referenceEl, this.floatingEl, {
-      strategy: 'absolute',
-      ...this.options,
+      strategy: this.options.strategy || 'absolute',
+      placement: this.options.placement || 'bottom-start',
       middleware
     }).then(({ x, y, middlewareData }) => {
       Object.assign(this.floatingEl.style, {
-        visibility: middlewareData.hide.referenceHidden
+        visibility: middlewareData.hide?.referenceHidden
           ? 'hidden'
           : 'visible',
         left: `${x}px`,
