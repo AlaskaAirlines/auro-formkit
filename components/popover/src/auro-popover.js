@@ -37,29 +37,17 @@ export class AuroPopover extends LitElement {
 
     static register(name = "auro-popover") { AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroPopover) }
 
-
   /** CONSTRUCTOR **/
     constructor() {
       super();
       
       this._setDefaults(_DEFAULTS);
-      this._createInternalTags();
       this._createElementRefs();
     }
 
 
   /** INIT METHODS **/
   // These methods are called from the constructor when the component is initialized
-
-    /** Creates internal tags for internal use (like button or icon) @returns {void} @private */
-    _createInternalTags() {
-
-      // Create a versioning instance to manage the versioning of the component
-      const versioning = new AuroDependencyVersioning();
-
-      // Define the input tag
-      // this._inputTag = versioning.generateTag('auro-popover-input', inputVersion, AuroInput);
-    };
 
     /** Creates refs for elements in the template @returns {void} @private */
     _createElementRefs() {
@@ -91,34 +79,34 @@ export class AuroPopover extends LitElement {
 
     static get properties() {
       return {
-        /** @type {string} The title of the floater - REQUIRED FOR A11Y */
+        /** The title of the floater - REQUIRED FOR A11Y */
         title: { type: String, reflect: false },
 
-        /** @type {string} The type of floater, e.g., "manual", "auto", or "hint" */
+        /** The type of floater, e.g., "manual", "auto", or "hint" */
         type: { type: String, reflect: false },
 
-        /** @type {string} The behavior of the popover, "dialog", "dropdown", "tooltip", or "input" */
+        /** The behavior of the popover, "dialog", "dropdown", "tooltip", or "input" */
         behavior: { type: String, reflect: false },
 
-        /** @type {number} The offset distance of the floater */
+        /** The offset distance of the floater */
         offset: { type: Number, reflect: false },
 
-        /** @type {string} The position of the floater, e.g., "bottom-start", "top-end" etc. */
+        /** The position of the floater, e.g., "bottom-start", "top-end" etc. */
         placement: { type: String, reflect: false },
 
-        /** @type {boolean} Whether the floater should show on hover */
+        /** Whether the floater should show on hover */
         showOnHover: { type: Boolean, reflect: false },
 
-        /** @type {boolean} Whether the floater should open on focus (input behavior only) */
+        /** Whether the floater should open on focus (input behavior only) */
         showOnFocus: { type: String, reflect: false, converter: StringBoolean },
 
-        /** @type {boolean} Whether the floater is shown or not */
+        /** Whether the floater is shown or not */
         shown: { type: Boolean, reflect: true },
 
-        /** @type {number} The minimum number of characters the user must type before the popover is shown */
+        /** The minimum number of characters the user must type before the popover is shown */
         minInputLength: { type: Number, reflect: false },
 
-         /** @type {boolean} @private Whether the floater is open or not */
+        /** Whether the floater is open or not */
         _open: { type: Boolean, reflect: false, state: true },
       };
     }
