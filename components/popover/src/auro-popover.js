@@ -87,7 +87,7 @@ export class AuroPopover extends LitElement {
 
 
   /** PROPERTIES AND PUBLIC GETTERS **/
-  // Publically accessible properties and getters for the component
+  // Publicly accessible properties and getters for the component
 
     static get properties() {
       return {
