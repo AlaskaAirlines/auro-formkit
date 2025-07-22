@@ -27,8 +27,8 @@ The auro-popover element provides users a way to display additional information 
 
 ## Events
 
-| Event                 | Type                                             |
-|-----------------------|--------------------------------------------------|
-| `auro-popover-change` | `CustomEvent<{ popover: this; newState: string; }>` |
-| `auro-popover-hidden` | `CustomEvent<{ popover: this; newState: string; }>` |
-| `auro-popover-shown`  | `CustomEvent<{ popover: this; newState: string; }>` |
+| Event                 | Type                                             | Description                                      |
+|-----------------------|--------------------------------------------------|--------------------------------------------------|
+| `auro-popover-change` | `CustomEvent<{ target: this; newState: any; }>`  | Fired when the popover's visibility state changes. Event detail contains {target: AuroPopover, newState: string} where newState is either "shown" or "hidden". |
+| `auro-popover-hidden` | `CustomEvent<{ target: this; newState: string; }>` | Fired when the popover is hidden. Event detail contains {target: AuroPopover, newState: "hidden"}. |
+| `auro-popover-shown`  | `CustomEvent<{ target: this; newState: string; }>` | Fired when the popover is shown. Event detail contains {target: AuroPopover, newState: "shown"}. |
