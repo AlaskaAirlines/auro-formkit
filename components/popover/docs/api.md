@@ -24,3 +24,11 @@ The auro-popover element provides users a way to display additional information 
 | Method   | Type       | Description                            |
 |----------|------------|----------------------------------------|
 | `toggle` | `(): void` | Toggles the visibility of the floater. |
+
+## Events
+
+| Event                 | Type                                             |
+|-----------------------|--------------------------------------------------|
+| `auro-popover-change` | `CustomEvent<{ popover: this; newState: string; }>` |
+| `auro-popover-hidden` | `CustomEvent<{ popover: this; newState: string; }>` |
+| `auro-popover-shown`  | `CustomEvent<{ popover: this; newState: string; }>` |

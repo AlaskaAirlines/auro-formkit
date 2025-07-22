@@ -151,11 +151,14 @@ export class AuroPopover extends LitElement {
      */
     show() {
 
+       // If already open, do nothing
+      if (this.popover.matches("popover-open")) return;
+
       // Position the popover if it is not already positioned
       if (this._shouldPositionPopover) this._positionPopover();
 
       // Focus the popover to ensure accessibility
-      this.popover.focus();
+      if (this._shouldAdjustFocus) this.popover.focus();
       
       // Wait for a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
       setTimeout(() => {
@@ -168,6 +171,9 @@ export class AuroPopover extends LitElement {
 
         // Attach the focus trap to the popover if necessary
         this._attachFocusTrap(); // Attach focus trap to the popover
+
+        // Dispatch relevant events
+        this._dispatchOpenEvent();
       })
     }
 
@@ -177,6 +183,9 @@ export class AuroPopover extends LitElement {
      * @private
      */
     hide() {
+
+      // Don't try to hide the popover if it is not open
+      if (!this.popover.matches(':popover-open')) return;
 
       // Stop positioning the popover
       this._cancelPositionPopover();
@@ -190,8 +199,14 @@ export class AuroPopover extends LitElement {
         // Update shown to hide the popover via styles
         this.shown = false;
 
-        const focusEl = this._triggerElInSlot || this.button
-        focusEl.focus(); // Focus the trigger element to ensure accessibility
+        // Focus the trigger element to ensure accessibility
+        if (this._shouldAdjustFocus) {
+          const focusEl = this._triggerElInSlot || this.button
+          focusEl.focus();
+        }
+
+        // Dispatch relevant events
+        this._dispatchCloseEvent();
       })
     }
 
@@ -224,6 +239,15 @@ export class AuroPopover extends LitElement {
      */
     get _shouldPositionPopover() {
       return ["dropdown", "tooltip", "input"].includes(this.behavior);
+    }
+
+    /**
+     * Checks if the popover should adjust focus based on its behavior
+     * @returns {boolean}
+     * @private
+     */
+    get _shouldAdjustFocus() {
+      return !['input', 'tooltip'].includes(this.behavior);
     }
 
     /**
@@ -451,8 +475,60 @@ export class AuroPopover extends LitElement {
     }
 
 
-  /** EVENT HANDLERS **/
+  /** EVENT HANDLERS AND DISPATCHERS **/
   // These methods handle events triggered by user interactions or other component changes
+
+    /**
+     * Dispatches an event indicating the popover has been shown.
+     * Notifies listeners that the popover is now visible and emits a change event.
+     * @fires auro-popover-shown
+     * @returns {void}
+     * @private
+     */
+    _dispatchOpenEvent() {
+
+      this.dispatchEvent(new CustomEvent('auro-popover-shown', {
+        detail: { popover: this, newState: "shown" },
+        bubbles: true,
+        composed: true
+      }));
+
+      this._dispatchChangeEvent({shown: true});
+    }
+
+    /**
+     * Dispatches an event indicating the popover has been hidden.
+     * Notifies listeners that the popover is now hidden and emits a change event.
+     * @fires auro-popover-hidden
+     * @returns {void}
+     * @private
+     */
+    _dispatchCloseEvent() {
+      this.dispatchEvent(new CustomEvent('auro-popover-hidden', {
+        detail: { popover: this, newState: "hidden" },
+        bubbles: true,
+        composed: true
+      }));
+
+      this._dispatchChangeEvent({shown: false});
+    }
+
+    
+    /**
+     * Dispatches an event indicating the popover's visibility state has changed.
+     * Notifies listeners when the popover transitions between shown and hidden states.
+     * @fires auro-popover-change
+     * @param {Object} param0 - An object containing the shown state.
+     * @returns {void}
+     * @private
+     */
+    _dispatchChangeEvent({shown}) {
+      this.dispatchEvent(new CustomEvent('auro-popover-change', {
+        detail: { popover: this, newState: shown ? "shown" : "hidden" },
+        bubbles: true,
+        composed: true
+      }));
+    }
 
     /**
      * Checks if the input passes the value check based on the minimum input length
