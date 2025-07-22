@@ -928,7 +928,7 @@ export class AuroDatePicker extends AuroElement {
    */
   handleKeydownReset(event) {
     if (event.key === 'Enter' || event.key === ' ') {
-      this.resetValues();
+      this.resetInputs();
       this.focus();
     }
   }
@@ -936,7 +936,7 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Resets values without resetting validation.
    */
-  resetValues() {
+  resetInputs() {
     this.inputList.forEach((input) => {
       input.reset();
     });
@@ -947,7 +947,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   reset() {
-    this.resetValues();
+    this.resetInputs();
     this.validation.reset(this);
   }
 
@@ -956,7 +956,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   clear() {
-    this.resetValues();
+    this.resetInputs();
   }
 
   /**
@@ -1541,7 +1541,7 @@ export class AuroDatePicker extends AuroElement {
     return html`
       <div class="${classMap(clearActionClassMap)}">
         <${this.buttonTag}
-          @click="${this.resetValues}"
+          @click="${this.resetInputs}"
           @keydown="${this.handleKeydownReset}"
           ?onDark="${this.onDark}"
           aria-label="${i18n(this.lang, 'clearInput')}"
