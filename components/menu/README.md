@@ -17,7 +17,7 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Popover
+# Menu
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
 The `<auro-menu>` element provides a list of options for a user to select from.
@@ -51,20 +51,20 @@ $ npm i @aurodesignsystem/auro-formkit
 For automatic registration, simply import the component:
 
 ```javascript
-// Registers <auro-popover> automatically
-import '@aurodesignsystem/auro-formkit/auro-popover';
+// Registers <auro-menu> automatically
+import '@aurodesignsystem/auro-formkit/auro-menu';
 ```
 
 #### Custom Registration
 
-To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our static `AuroPopover.register('custom-popover')` method on the component class and pass in a unique name.
+To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our static `AuroMenu.register('custom-menu')` method on the component class and pass in a unique name.
 
 ```javascript
 // Import the class only
-import { AuroPopover } from '@aurodesignsystem/auro-formkit/auro-popover/class';
+import { AuroMenu } from '@aurodesignsystem/auro-formkit/auro-menu/class';
 
 // Register with a custom name if desired
-AuroPopover.register('custom-popover');
+AuroMenu.register('custom-menu');
 ```
 
 #### TypeScript Module Resolution
@@ -110,7 +110,7 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-popover/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-menu/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -120,7 +120,7 @@ For the most up to date information on [UI development browser support](https://
 
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## auro-popover use cases
+## auro-menu use cases
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
 The `<auro-menu>` element should be used in situations where users may:
