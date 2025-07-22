@@ -13,12 +13,12 @@ import styles from './styles/style-css.js';
 
 const _DEFAULTS = {
   type: "manual",
-  behavior: "dialog",
+  behavior: "dropdown",
   showOnHover: false,
   showOnFocus: true,
   offset: 0,
   placement: "bottom-start",
-  shown: false
+  shown: false,
 };
 
 const _POSITIONER_DEFAULTS = {
@@ -35,6 +35,13 @@ const _NO_INPUT_ERROR = "\nAuroPopover: The input behavior requires an input ele
 const _MULTIPLE_TRIGGER_ELEMENTS_ERROR = "\nAuroPopover: The input behavior requires a single trigger element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n\nPassing more than one element may lead to undesireable behavior.\n";
 const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroPopover: The trigger slot should not contain text nodes.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n";
 
+/**
+ * AuroPopover is a web component that provides a customizable popover element.
+ * It supports various behaviors such as dialog, dropdown, tooltip, and input.
+ * @fires auro-popover-shown - Fired when the popover is shown. Event detail contains {target: AuroPopover, newState: "shown"}.
+ * @fires auro-popover-hidden - Fired when the popover is hidden. Event detail contains {target: AuroPopover, newState: "hidden"}.
+ * @fires auro-popover-change - Fired when the popover's visibility state changes. Event detail contains {target: AuroPopover, newState: string} where newState is either "shown" or "hidden".
+ */
 export class AuroPopover extends LitElement {
 
   /** STATIC METHODS **/
@@ -114,6 +121,9 @@ export class AuroPopover extends LitElement {
         /** Whether the floater is open or not */
         _open: { type: Boolean, reflect: false, state: true },
 
+        /** Whether the trigger slot contains any elements */
+        _hasTriggerContent: { type: Boolean, reflect: false, state: true },
+
         floatingUiConfig: { type: Object, reflect: false }
       };
     }
@@ -152,10 +162,10 @@ export class AuroPopover extends LitElement {
     show() {
 
        // If already open, do nothing
-      if (this.popover.matches("popover-open")) return;
+      if (this.popover.matches(":popover-open")) return;
 
       // Position the popover if it is not already positioned
-      if (this._shouldPositionPopover) this._positionPopover();
+      if (this._shouldPositionPopover) this._attachPopoverPositioner();
 
       // Focus the popover to ensure accessibility
       if (this._shouldAdjustFocus) this.popover.focus();
@@ -163,7 +173,7 @@ export class AuroPopover extends LitElement {
       // Wait for a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
       setTimeout(() => {
 
-        // Set shown to true to trigger visibility
+        // Show the popover if it isn't already open
         if (!this.popover.matches(':popover-open')) { this.popover.showPopover() }
 
         // The popover is positioned and ready, so we can set shown to true
@@ -173,7 +183,7 @@ export class AuroPopover extends LitElement {
         this._attachFocusTrap(); // Attach focus trap to the popover
 
         // Dispatch relevant events
-        this._dispatchOpenEvent();
+        this._dispatchShowEvent();
       })
     }
 
@@ -188,7 +198,7 @@ export class AuroPopover extends LitElement {
       if (!this.popover.matches(':popover-open')) return;
 
       // Stop positioning the popover
-      this._cancelPositionPopover();
+      this._detachPopoverPositioner();
 
       // Wait a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
       setTimeout(() => {
@@ -201,12 +211,12 @@ export class AuroPopover extends LitElement {
 
         // Focus the trigger element to ensure accessibility
         if (this._shouldAdjustFocus) {
-          const focusEl = this._triggerElInSlot || this.button
-          focusEl.focus();
+          const focusEl = this._triggerElInSlot || this.button;
+          focusEl?.focus();
         }
 
         // Dispatch relevant events
-        this._dispatchCloseEvent();
+        this._dispatchHideEvent();
       })
     }
 
@@ -220,7 +230,8 @@ export class AuroPopover extends LitElement {
       if (changedProperties.has('_open')) this._open ? this.show() : this.hide();
 
       // If the behavior changes, adjust the popover accordingly
-      if (changedProperties.has('behavior')) this._adjustForBehavior(this.behavior);
+      if (['behavior', '_hasTriggerContent'].some(prop => changedProperties.has(prop))) 
+          this._adjustForBehavior(this.behavior);
     };
 
     disconnectedCallback() {
@@ -292,6 +303,23 @@ export class AuroPopover extends LitElement {
       return input ?? undefined;
     }
 
+    get _triggerElInSlot() {
+
+      // Get the assigned nodes from the trigger slot
+      const nodes = this._triggerSlot.assignedNodes({ flatten: true });
+
+      // Warn the user if they pass more than one element to the trigger slot
+      if (nodes.length > 1) console.warn(_MULTIPLE_TRIGGER_ELEMENTS_ERROR);
+
+      const el = nodes.find(node => node.tagName); // Match any non-text node
+
+      // If the user passes at least one element to the trigger slot but it doesn't pass our check, warn them
+      if (nodes.length && !el) console.warn(_TEXT_NODE_IN_TRIGGER_SLOT_ERROR);
+
+      // Return the first element that matches the tagName check, or undefined if no element is found
+      return el ?? undefined;
+    }
+
     /**
      * Checks if a focus trap should be attached based on the behavior
      * @returns {boolean}
@@ -312,7 +340,7 @@ export class AuroPopover extends LitElement {
     _resetBindings() {
       this._detachInput();
       this._detachHoverFromPositioningTarget();
-      this._cancelPositionPopover();
+      this._detachPopoverPositioner();
       this._detachFocusTrap();
     }
 
@@ -329,10 +357,10 @@ export class AuroPopover extends LitElement {
           this._bindToInput();
           break;
         case 'dialog':
-          this.type = 'auto';
+          this.type = this._hasTriggerContent ? 'auto' : 'manual';
           break;
         case 'dropdown':
-          this.type = 'auto';
+          this.type = this._hasTriggerContent ? 'auto' : 'manual';
           break;
         case 'tooltip':
           this.type = 'hint';
@@ -373,7 +401,7 @@ export class AuroPopover extends LitElement {
      * @returns {void}
      * @private
      */
-    _positionPopover() {
+    _attachPopoverPositioner() {
       if (this._positioningTarget && this.popover) {
         this._positioner = new PopoverPositioner(
           this._positioningTarget,
@@ -388,7 +416,7 @@ export class AuroPopover extends LitElement {
      * @returns {void}
      * @private
      */
-    _cancelPositionPopover() {
+    _detachPopoverPositioner() {
       if (this._positioner) {
         this._positioner.disconnect();
         this._positioner = null;
@@ -432,23 +460,6 @@ export class AuroPopover extends LitElement {
         input.removeEventListener('blur', this._handleInputBlur);
       }
     }
-    
-    get _triggerElInSlot() {
-
-      // Get the assigned nodes from the trigger slot
-      const nodes = this._triggerSlot.assignedNodes({ flatten: true });
-
-      // Warn the user if they pass more than one element to the trigger slot
-      if (nodes.length > 1) console.warn(_MULTIPLE_TRIGGER_ELEMENTS_ERROR);
-
-      const el = nodes.find(node => node.tagName); // Match any non-text node
-
-      // If the user passes at least one element to the trigger slot but it doesn't pass our check, warn them
-      if (nodes.length && !el) console.warn(_TEXT_NODE_IN_TRIGGER_SLOT_ERROR);
-
-      // Return the first element that matches the tagName check, or undefined if no element is found
-      return el ?? undefined;
-    }
 
     /**
      * Binds hover events to the positioning target element
@@ -485,15 +496,15 @@ export class AuroPopover extends LitElement {
      * @returns {void}
      * @private
      */
-    _dispatchOpenEvent() {
+    _dispatchShowEvent() {
 
       this.dispatchEvent(new CustomEvent('auro-popover-shown', {
-        detail: { popover: this, newState: "shown" },
+        detail: { target: this, newState: "shown" },
         bubbles: true,
         composed: true
       }));
 
-      this._dispatchChangeEvent({shown: true});
+      this._dispatchChangeEvent({state: "shown"});
     }
 
     /**
@@ -503,14 +514,14 @@ export class AuroPopover extends LitElement {
      * @returns {void}
      * @private
      */
-    _dispatchCloseEvent() {
+    _dispatchHideEvent() {
       this.dispatchEvent(new CustomEvent('auro-popover-hidden', {
-        detail: { popover: this, newState: "hidden" },
+        detail: { target: this, newState: "hidden" },
         bubbles: true,
         composed: true
       }));
 
-      this._dispatchChangeEvent({shown: false});
+      this._dispatchChangeEvent({state: "hidden"});
     }
 
     
@@ -522,9 +533,9 @@ export class AuroPopover extends LitElement {
      * @returns {void}
      * @private
      */
-    _dispatchChangeEvent({shown}) {
+    _dispatchChangeEvent({state}) {
       this.dispatchEvent(new CustomEvent('auro-popover-change', {
-        detail: { popover: this, newState: shown ? "shown" : "hidden" },
+        detail: { target: this, newState: state },
         bubbles: true,
         composed: true
       }));
@@ -583,14 +594,11 @@ export class AuroPopover extends LitElement {
      * */
     _handleTriggerSlotChange() {
 
-      // Don't try to adjust the type if the behavior is input
-      if (this.behavior === 'input') return;
-
       // Get assigned nodes from the trigger slot
       const nodes = this._triggerSlot.assignedNodes({ flatten: true });
 
       // Force auto state if the user passes something to the trigger slot
-      if (nodes.length > 0) this.type = 'auto';
+      this._hasTriggerContent = !!(nodes.length > 0);
     }
 
     /** Runs when the popover is toggled by the browser 
@@ -667,6 +675,9 @@ export class AuroPopover extends LitElement {
      */
     _renderPopover() {
       return html`
+        <span><-- ${this.type} popover</span>
+        <br>
+        <span>Trigger slot content: ${this._hasTriggerContent ? 'Yes' : 'No'}</span>
         <div 
           ${ref(this._popoverRef)}
           popover="${this.type}"
