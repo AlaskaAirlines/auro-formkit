@@ -47,8 +47,8 @@
 }
 
 :host([layout*="classic"][ondark]:is([validity]:not([validity='valid']))) {
-  --ds-auro-input-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
-  --ds-auro-input-outline-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
+  --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+  --ds-auro-input-outline-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 
   .layout-classic {
     &:focus-within {

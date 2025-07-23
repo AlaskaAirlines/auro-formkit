@@ -129,7 +129,7 @@ label {
 
 :host([ondark]:is([validity]:not([validity='valid']))) {
   [auro-dropdown] {
-    --ds-auro-select-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
+    --ds-auro-select-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
     --ds-auro-dropdown-helptext-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   }
 }

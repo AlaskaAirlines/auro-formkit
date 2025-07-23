@@ -27,7 +27,7 @@
 
 :host([ondark]) {
   --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
-  --ds-auro-datepicker-error-icon-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
+  --ds-auro-datepicker-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
   --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
 
   // calendar
