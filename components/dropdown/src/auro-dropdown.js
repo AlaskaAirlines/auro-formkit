@@ -556,6 +556,7 @@ export class AuroDropdown extends AuroElement {
    * @private
    */
   handleDropdownToggle() {
+    console.log(`AuroDropdown: handleDropdownToggle called with isPopoverVisible: ${this._floater.shown}`);
     this.isPopoverVisible = this._floater.shown;
     this._calculateIsBibFullscreen();
   }
@@ -565,13 +566,14 @@ export class AuroDropdown extends AuroElement {
     const breakpoint = styles.getPropertyValue(`--ds-grid-breakpoint-${this.fullscreenBreakpoint}`).trim();
     const smallerThanBreakpoint = window.matchMedia(`(max-width: ${breakpoint})`).matches;
     this.isBibFullscreen = smallerThanBreakpoint;
+    console.log(`AuroDropdown: _calculateIsBibFullscreen called with isBibFullscreen: ${this.isBibFullscreen}, fullscreenBreakpoint: ${this.fullscreenBreakpoint}, smallerThanBreakpoint: ${smallerThanBreakpoint}`);
   }
 
   firstUpdated() {
 
     // Configure the floater to, this will generate the ID for the bib
     // this.floater.configure(this, 'auroDropdown');
-    this.addEventListener('auro-floater-beforechange', this.handleDropdownToggle);
+    this.addEventListener('auro-floater-change', this.handleDropdownToggle);
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
