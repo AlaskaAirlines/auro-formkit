@@ -29,6 +29,6 @@ The auro-floater element provides users a way to display additional information 
 
 | Event                 | Type                                             | Description                                      |
 |-----------------------|--------------------------------------------------|--------------------------------------------------|
-| `auro-popover-change` | `CustomEvent<{ target: this; newState: any; }>`  | Fired when the popover's visibility state changes. Event detail contains {target: AuroPopover, newState: string} where newState is either "shown" or "hidden". |
-| `auro-popover-hidden` | `CustomEvent<{ target: this; newState: string; }>` | Fired when the popover is hidden. Event detail contains {target: AuroPopover, newState: "hidden"}. |
-| `auro-popover-shown`  | `CustomEvent<{ target: this; newState: string; }>` | Fired when the popover is shown. Event detail contains {target: AuroPopover, newState: "shown"}. |
+| `auro-floater-change` | `CustomEvent<{ target: this; newState: any; }>`  | Fired when the floater's visibility state changes. Event detail contains {target: AuroFloater, newState: string} where newState is either "shown" or "hidden". |
+| `auro-floater-hidden` | `CustomEvent<{ target: this; newState: string; }>` | Fired when the floater is hidden. Event detail contains {target: AuroFloater, newState: "hidden"}. |
+| `auro-floater-shown`  | `CustomEvent<{ target: this; newState: string; }>` | Fired when the floater is shown. Event detail contains {target: AuroFloater, newState: "shown"}. |
