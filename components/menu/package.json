@@ -12,8 +12,8 @@
     "url": "https://github.com/AlaskaAirlines/auro-menu"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-icon": "^8.1.0",
-    "lit": "^3.2.1"
+    "@aurodesignsystem/auro-icon": "^8.1.1",
+    "lit": "^3.3.1"
   },
   "devDependencies": {
     "@alaskaairux/icons": "^5.6.0",
@@ -22,7 +22,7 @@
     "@auro-formkit/typescript": "*",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "chalk": "^5.4.1",
-    "rollup": "^4.39.0",
+    "rollup": "^4.45.1",
     "rollup-plugin-serve": "^3.0.0",
     "wc-sass-render": "^1.4.0",
     "web-component-analyzer": "^2.0.0"

@@ -9,8 +9,7 @@
 
 :host {
   .wrapper {
-    background-color: var(--ds-auro-menuoption-container-color);
-    box-shadow: inset 0 0 0 1px var(--ds-auro-menuoption-container-border-color);
+    background-color: var(--ds-auro-menuoption-container-color, transparent);
     color: var(--ds-auro-menuoption-text-color);
   }
 
@@ -20,22 +19,58 @@
 }
 
 :host([disabled]) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
   --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
 :host(:hover),
 :host(.active) {
-  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-neutral-subtle, #{v.$ds-basic-color-surface-neutral-subtle});
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+}
+
+:host(:focus) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  
+  .wrapper {
+    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+  }
 }
 
 :host([selected]) {
-  --ds-auro-menuoption-container-color: var(--ds-advanced-color-state-selected, #{v.$ds-advanced-color-state-selected});
-  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
-  --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-subtle, #{v.$ds-basic-color-surface-accent1-subtle});
+  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+}
 
-  &:host(:hover),
-  &:host(.active) {
-    --ds-auro-menuoption-container-color: var(--ds-advanced-color-state-selected-hover, #{v.$ds-advanced-color-state-selected-hover});
+:host([selected]:hover),
+:host([selected].active) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+}
+
+:host([selected]:focus) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-subtle, #{v.$ds-basic-color-surface-accent1-subtle});
+  
+  .wrapper {
+    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+  }
+}
+
+:host(:focus:hover),
+:host(:focus.active) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+  
+  .wrapper {
+    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+  }
+}
+
+:host([selected]:focus:hover),
+:host([selected]:focus.active) {
+  --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+  
+  .wrapper {
+    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
   }
 }
 
