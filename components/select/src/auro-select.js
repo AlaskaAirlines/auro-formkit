@@ -1114,7 +1114,7 @@ export class AuroSelect extends AuroElement {
    */
   renderNativeSelect() {
     return html`
-      <div class="nativeSelectWrapper util_displayHidden">
+      <div class="nativeSelectWrapper util_displayHiddenVisually">
         <select
           tabindex="-1"
           id="${`native-select-${this.id || this.uniqueId}`}"
