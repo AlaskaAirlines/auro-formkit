@@ -653,7 +653,6 @@ export class AuroSelect extends AuroElement {
     }
 
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
-    this.menu.setAttribute('aria-hidden', 'true');
 
     this.generateOptionsArray();
 
@@ -707,8 +706,19 @@ export class AuroSelect extends AuroElement {
   configureSelect() {
 
     this.addEventListener('keydown', (evt) => {
+
+      // When the focus is on the select element
+      if (document.activeElement === this) {
+
+        // Prevent scroll on space
+        if (evt.code === "Space") {
+          evt.preventDefault();
+          this.dropdown.toggle();
+        }
+      }
+
       // when the focus is on trigger not on close button
-      if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
+      if (this.dropdown.isPopoverVisible) {
         if (evt.key === 'ArrowUp') {
           evt.preventDefault();
 
@@ -734,10 +744,8 @@ export class AuroSelect extends AuroElement {
         }
 
         if (evt.key === 'Enter') {
-          if (!this.dropdown.isPopoverVisible) {
-            evt.preventDefault();
-            this.menu.makeSelection();
-          }
+          evt.preventDefault();
+          this.menu.makeSelection();
 
           return;
         }

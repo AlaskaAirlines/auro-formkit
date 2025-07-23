@@ -206,6 +206,14 @@ export class AuroDropdown extends AuroElement {
   // }
 
   /**
+   * Public method to toggle the dropdown.
+   * @returns {void}
+   */
+  toggle() {
+    this._floater.toggle();
+  }
+
+  /**
    * Public method to hide the dropdown.
    * @returns {void}
    */
