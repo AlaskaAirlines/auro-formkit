@@ -537,24 +537,18 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Handles the custom event `auroDropdown-toggled` to update the visibility of the dropdown bib.
+   * Toggles the state of the popover visibility to the legacy isPopoverVisible property.
    * @private
-   * @param {CustomEvent} event - The custom event that contains the dropdown toggle information.
    */
-  handleDropdownToggle(event) {
-    this.updateFocusTrap();
-    this.isPopoverVisible = event.detail.expanded;
-    const eventType = event.detail.eventType || "unknown";
-    if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown") {
-      this.trigger.focus();
-    }
+  handleDropdownToggle() {
+    this.isPopoverVisible = this._floater.shown;
   }
 
   firstUpdated() {
 
     // Configure the floater to, this will generate the ID for the bib
     // this.floater.configure(this, 'auroDropdown');
-    // this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
+    this.addEventListener('auro-floater-change', this.handleDropdownToggle);
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
@@ -834,7 +828,7 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
-      <${this.floaterTag} ${ref(this._floaterRef)}>
+      <${this.floaterTag} ${ref(this._floaterRef)} offset="4">
         <div
           slot="trigger"
           id="trigger"

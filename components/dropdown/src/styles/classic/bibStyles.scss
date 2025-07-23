@@ -67,12 +67,10 @@
   }
 }
 
-
 .container {
-  display: inline-block;
   overflow: auto;
-  box-sizing: border-box;
-  border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
-  margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
-}
+  max-height: 90vh;
 
+  box-shadow: var(--ds-auro-dropdownbib-boxshadow-color);
+  border-radius: var(--ds-border-radius);
+}
