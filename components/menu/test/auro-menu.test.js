@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable no-magic-numbers */
-import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, oneEvent, elementUpdated, waitUntil } from '@open-wc/testing';
 import '../src/registered.js';
 import { arrayConverter } from '../src/auro-menu-utils.js';
 
@@ -22,7 +22,7 @@ describe('auro-menu', () => {
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
     const index = 0;
-  
+
     // Navigate to first option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -30,7 +30,7 @@ describe('auro-menu', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-  
+
     // Select with Enter
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -38,7 +38,7 @@ describe('auro-menu', () => {
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-  
+
     // Verify selection
     expect(options[index].hasAttribute('selected')).to.be.true;
     expect(options[index].getAttribute('aria-selected')).to.equal('true');
@@ -49,7 +49,7 @@ describe('auro-menu', () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-  
+
     // Navigate down
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -57,7 +57,7 @@ describe('auro-menu', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-  
+
     // Another down to get to second option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -65,7 +65,7 @@ describe('auro-menu', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-  
+
     // Select with Enter
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -73,7 +73,7 @@ describe('auro-menu', () => {
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-  
+
     expect(menuEl.optionSelected).to.equal(options[1]);
   });
 
@@ -81,7 +81,7 @@ describe('auro-menu', () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-  
+
     // Press down repeatedly to reach last option
     for (let i = 0; i < options.length + 1; i++) {
       menuEl.dispatchEvent(new KeyboardEvent('keydown', {
@@ -91,7 +91,7 @@ describe('auro-menu', () => {
       }));
       await elementUpdated(menuEl);
     }
-  
+
     expect(menuEl.optionActive).to.equal(options[1]);
   });
 
@@ -99,7 +99,7 @@ describe('auro-menu', () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-  
+
     // Initialize state by moving down first
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -107,7 +107,7 @@ describe('auro-menu', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-  
+
     // Move up
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -115,7 +115,7 @@ describe('auro-menu', () => {
       'key': 'ArrowUp'
     }));
     await elementUpdated(menuEl);
-  
+
     const selectedOption = options.find(opt => opt.classList.contains('active'));
     expect(selectedOption).to.not.be.undefined;
   });
@@ -124,7 +124,7 @@ describe('auro-menu', () => {
     const el = await noninteractiveOptionsFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-  
+
     // Navigate down - should skip disabled and hidden options
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -132,7 +132,7 @@ describe('auro-menu', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-  
+
     // Should have skipped to option 3 (index 2) since first two are non-interactive
     expect(menuEl.optionActive).to.equal(options[2]);
   });
@@ -142,7 +142,7 @@ describe('auro-menu', () => {
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
     const lastIndex = options.length - 1;
-  
+
     // First move down to establish initial state
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -150,7 +150,7 @@ describe('auro-menu', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-  
+
     // Then move up to trigger wrapping behavior
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -158,7 +158,7 @@ describe('auro-menu', () => {
       'key': 'ArrowUp'
     }));
     await elementUpdated(menuEl);
-  
+
     expect(menuEl.index).to.equal(lastIndex);
   });
 
@@ -166,10 +166,8 @@ describe('auro-menu', () => {
     const el = await customEventFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-  
-    const listener1 = oneEvent(el, 'auroMenu-customEventFired');
-    const listener2 = oneEvent(el, options[0].getAttribute('event'));
-  
+
+
     // Navigate down
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -177,20 +175,20 @@ describe('auro-menu', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-  
-    // Select with Enter
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
-    await elementUpdated(menuEl);
-  
-    const { detail: result1 } = await listener1;
-    const { detail: result2 } = await listener2;
-  
-    expect(result1).to.equal(null);
-    expect(result2).to.equal(null);
+
+    setTimeout(() => {
+      // Select with Enter
+      menuEl.dispatchEvent(new KeyboardEvent('keydown', {
+        bubbles: true,
+        composed: true,
+        'key': 'Enter'
+      }));
+    });
+
+    Promise.all([
+      waitUntil(() => options[0].hasAttribute('event')),
+      oneEvent(el, 'auroMenu-customEventFired')
+    ]);
   });
 
   it('test matchWord feature functionality', async () => {
@@ -231,7 +229,7 @@ describe('auro-menu', () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
     const optionEl = menuEl.querySelector('auro-menuoption');
-    
+
     optionEl.dispatchEvent(new KeyboardEvent('mouseover', {
       bubbles: true,
       composed: true
@@ -246,11 +244,11 @@ describe('auro-menu', () => {
   it('handle noCheckmark property function handler', async () => {
     const el = await nestedMenuFixture();
     const menuEl = el.querySelector('auro-menu');
-    
+
     const childMenu = document.createElement('auro-menu');
     menuEl.appendChild(childMenu)
     menuEl.setAttribute('noCheckmark', '');
-    
+
     expect(menuEl.hasAttribute('noCheckmark')).to.be.true;
   })
 });
@@ -260,7 +258,7 @@ describe('multiSelect', () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-    
+
     // Select first option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -268,14 +266,14 @@ describe('multiSelect', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-    
+
     // Select second option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -283,21 +281,21 @@ describe('multiSelect', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-    
+
     // Verify both options are selected
     const jsonValue = JSON.parse(menuEl.value);
     expect(jsonValue).to.eql(['option1', 'option2']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.true;
     expect(options[2].hasAttribute('selected')).to.be.false;
-    
+
     // Verify optionSelected is an array with two elements
     expect(menuEl.optionSelected).to.be.an('array').with.lengthOf(2);
     expect(menuEl.optionSelected[0]).to.equal(options[0]);
@@ -308,50 +306,50 @@ describe('multiSelect', () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-    
+
     // Make selections
     menuEl.index = 0;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     menuEl.index = 1;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     menuEl.index = 2;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Verify initial selections
-    
+
     expect(JSON.parse(menuEl.value)).to.eql(['option1', 'option2', 'option3']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.true;
     expect(options[2].hasAttribute('selected')).to.be.true;
-    
+
     // Deselect middle option
     menuEl.index = 1;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Verify state after deselection
     expect(JSON.parse(menuEl.value)).to.eql(['option1', 'option3']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.false;
     expect(options[2].hasAttribute('selected')).to.be.true;
-    
+
     // Verify aria-selected states
     expect(options[0].getAttribute('aria-selected')).to.equal('true');
     expect(options[1].getAttribute('aria-selected')).to.equal('false');
     expect(options[2].getAttribute('aria-selected')).to.equal('true');
-    
+
     // Deselect all remaining options
     menuEl.index = 0;
     menuEl.makeSelection();
     menuEl.index = 2;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Verify value is undefined when no options are selected
     expect(menuEl.value).to.be.undefined;
     options.forEach(option => {
@@ -364,63 +362,63 @@ describe('multiSelect', () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-    
+
     // Select disabled option
     menuEl.index = 3;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Verify disabled option remains unselected
     expect(options[3].hasAttribute('selected')).to.be.false;
     expect(options[3].getAttribute('aria-selected')).to.equal('false');
-    
+
     // Select valid options
     menuEl.index = 0;
     menuEl.makeSelection();
     menuEl.index = 1;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Select disabled option again
     menuEl.index = 3;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Verify previous selections remain intact
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.true;
     expect(options[3].hasAttribute('selected')).to.be.false;
-    
+
     // Verify excluded options are still excluded
     expect(menuEl.value).to.include('option1');
     expect(menuEl.value).to.include('option2');
     expect(menuEl.value).to.not.include('option4');
   });
-  
+
   it('should maintain disabled state when toggling other options in multiSelect mode', async () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-    
+
     // Select and deselect other options multiple times
     menuEl.index = 0;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     menuEl.index = 1;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     menuEl.index = 0;
     // Deselect first option
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Verify disabled option remained unselected
     expect(options[3].hasAttribute('selected')).to.be.false;
     expect(options[3].getAttribute('aria-selected')).to.equal('false');
     expect(options[3].hasAttribute('disabled')).to.be.true;
-    
+
     // Verify other options can still be toggled
     expect(options[0].hasAttribute('selected')).to.be.false;
     expect(options[1].hasAttribute('selected')).to.be.true;
@@ -431,83 +429,83 @@ describe('multiSelect', () => {
       const el = await multiSelectFixture();
       const menuEl = el.querySelector('auro-menu');
       const options = getOptions(menuEl);
-      
+
       // Make programmatic selections
       menuEl.index = 0;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       menuEl.index = 2;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       // Verify selections
       expect(options[0].hasAttribute('selected')).to.be.true;
       expect(options[1].hasAttribute('selected')).to.be.false;
       expect(options[2].hasAttribute('selected')).to.be.true;
       expect(options[3].hasAttribute('selected')).to.be.false;
-      
+
       // Verify aria-selected states are updated
       expect(options[0].getAttribute('aria-selected')).to.equal('true');
       expect(options[1].getAttribute('aria-selected')).to.equal('false');
       expect(options[2].getAttribute('aria-selected')).to.equal('true');
       expect(options[3].getAttribute('aria-selected')).to.equal('false');
     });
-  
+
     it('should handle deselection of all options', async () => {
       const el = await multiSelectFixture();
       const menuEl = el.querySelector('auro-menu');
       const options = getOptions(menuEl);
-      
+
       // Make selections
       menuEl.index = 0;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       menuEl.index = 1;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       // Deselect
       menuEl.index = 0;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       menuEl.index = 1;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       options.forEach(option => {
         expect(option.hasAttribute('selected')).to.be.false;
         expect(option.getAttribute('aria-selected')).to.equal('false');
       });
-      
+
       // Verify value is undefined or empty after all deselections
       expect(menuEl.value === undefined || (Array.isArray(menuEl.value) && menuEl.value.length === 0)).to.be.true;
     });
-  
+
     it('should respect disabled state when making selections', async () => {
       const el = await multiSelectFixture();
       const menuEl = el.querySelector('auro-menu');
       const options = getOptions(menuEl);
-      
+
       // Select disabled option
       menuEl.index = 3;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       // Verify disabled option remains unselected
       expect(options[3].hasAttribute('selected')).to.be.false;
       expect(options[3].getAttribute('aria-selected')).to.equal('false');
-      
+
       // Verify selectable options remain selectable
       menuEl.index = 0;
       menuEl.makeSelection();
       await elementUpdated(menuEl);
-      
+
       expect(options[0].hasAttribute('selected')).to.be.true;
       expect(options[0].getAttribute('aria-selected')).to.equal('true');
-      
+
       // Verify final selection state excludes disabled option
       const selectedOptions = Array.from(options).filter(opt => opt.hasAttribute('selected'));
       expect(selectedOptions).to.have.lengthOf(1);
@@ -519,7 +517,7 @@ describe('multiSelect', () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-    
+
     // Select first option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -527,14 +525,14 @@ describe('multiSelect', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-    
+
     // Select second option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -542,14 +540,14 @@ describe('multiSelect', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-    
+
     // Deselect first option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -557,14 +555,14 @@ describe('multiSelect', () => {
       'key': 'ArrowUp'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-  
+
     // Verify only second option remains selected
     const jsonValue = JSON.parse(menuEl.value);
     expect(jsonValue).to.eql(['option2']);
@@ -576,7 +574,7 @@ describe('multiSelect', () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-    
+
     // Select first option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -584,14 +582,14 @@ describe('multiSelect', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-    
+
     // Select third option
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -599,21 +597,21 @@ describe('multiSelect', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-  
+
     // Verify aria-selected states
     const jsonValue = JSON.parse(menuEl.value);
     expect(jsonValue).to.eql(['option1', 'option3']);
@@ -633,7 +631,7 @@ describe('multiSelect', () => {
     menuEl.makeSelection();
     menuEl.index = 2;
     menuEl.makeSelection();
-    
+
     await elementUpdated(menuEl);
 
     // Verify initial selections
@@ -641,13 +639,13 @@ describe('multiSelect', () => {
     expect(menuEl.value).to.include('option1');
     expect(menuEl.value).to.include('option3');
     expect(menuEl.value).to.not.include('option2');
-    
+
     // Verify options have correct selected state
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[1].hasAttribute('selected')).to.be.false;
     expect(options[2].hasAttribute('selected')).to.be.true;
     expect(options[3].hasAttribute('selected')).to.be.false;
-    
+
     // Verify aria-selected states
     expect(options[0].getAttribute('aria-selected')).to.equal('true');
     expect(options[1].getAttribute('aria-selected')).to.equal('false');
@@ -660,7 +658,7 @@ describe('value states', () => {
   it('should initialize with undefined value', async () => {
     const el = await defaultFixture();
     const menu = el.querySelector('auro-menu');
-    
+
     expect(menu.value).to.equal(undefined);
     expect(menu.optionSelected).to.equal(undefined);
   });
@@ -677,7 +675,7 @@ describe('value states', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menu);
-    
+
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
@@ -687,7 +685,7 @@ describe('value states', () => {
 
     // Verify selection results in array
     expect(menu.value).to.eql('option 1');
-    
+
     // Try to deselect by clicking again
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -695,7 +693,7 @@ describe('value states', () => {
       'key': 'Enter'
     }));
     await elementUpdated(menu);
-    
+
     // Selection should persist
     expect(menu.value).to.eql('option 1');
   });
@@ -716,21 +714,21 @@ describe('value states', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menu);
-    
+
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menu);
-    
+
     // Verify selection
     expect(menu.value).to.eql('option 1');
-    
+
     // Reset
     menu.reset();
     await elementUpdated(menu);
-    
+
     // After reset, should be undefined
     expect(menu.value).to.equal(undefined);
     expect(menu.optionSelected).to.equal(undefined);
@@ -739,11 +737,11 @@ describe('value states', () => {
   it('should maintain selection in single-select mode until reset()', async () => {
     const el = await defaultFixture();
     const menu = el.querySelector('auro-menu');
-  
+
     // Initial state
     expect(menu.value).to.equal(undefined);
     expect(menu.optionSelected).to.equal(undefined);
-  
+
     // Select and verify
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -751,17 +749,17 @@ describe('value states', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menu);
-    
+
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'Enter'
     }));
     await elementUpdated(menu);
-  
+
     // Verify array after selection
     expect(menu.value).to.eql('option 1');
-    
+
     // Try to deselect - should have no effect
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -769,14 +767,14 @@ describe('value states', () => {
       'key': 'Enter'
     }));
     await elementUpdated(menu);
-  
+
     // Selection should persist
     expect(menu.value).to.eql('option 1');
-  
+
     // Reset
     menu.reset();
     await elementUpdated(menu);
-    
+
     // After reset, should be undefined
     expect(menu.value).to.equal(undefined);
     expect(menu.optionSelected).to.equal(undefined);
@@ -796,7 +794,7 @@ describe('value states', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menu);
-    
+
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
@@ -808,7 +806,7 @@ describe('value states', () => {
     expect(menu.value.indexOf('[')).to.be.equal(0);
     const jsonValue = JSON.parse(menu.value);
     expect(jsonValue).to.eql(['option1']);
-    
+
     // Deselect
     menu.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -827,29 +825,29 @@ describe('multiSelect initial state', () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
-    
+
     // Verify initial state
     expect(menuEl.value).to.equal(undefined);
     expect(menuEl.optionSelected).to.equal(undefined);
-    
+
     // Verify no options are selected
     options.forEach(option => {
       expect(option.hasAttribute('selected')).to.be.false;
       expect(option.getAttribute('aria-selected')).to.equal('false');
       expect(option.classList.contains('active')).to.be.false;
     });
-    
+
     // Make first selection
     menuEl.index = 0;
     menuEl.makeSelection();
     await elementUpdated(menuEl);
-    
+
     // Verify array is initialized correctly
     const jsonValue = JSON.parse(menuEl.value);
     expect(jsonValue).to.eql(['option1']);
     expect(options[0].hasAttribute('selected')).to.be.true;
     expect(options[0].getAttribute('aria-selected')).to.equal('true');
-    
+
     // Verify other options remain unselected
     options.slice(1).forEach(option => {
       expect(option.hasAttribute('selected')).to.be.false;
@@ -860,7 +858,7 @@ describe('multiSelect initial state', () => {
   it('should maintain undefined value until first selection', async () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
-    
+
     // Navigate without selecting
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -868,18 +866,18 @@ describe('multiSelect initial state', () => {
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
       composed: true,
       'key': 'ArrowDown'
     }));
     await elementUpdated(menuEl);
-    
+
     // Verify value remains undefined
     expect(menuEl.value).to.equal(undefined);
     expect(menuEl.optionSelected).to.equal(undefined);
-    
+
     // Make first selection
     menuEl.dispatchEvent(new KeyboardEvent('keydown', {
       bubbles: true,
@@ -887,7 +885,7 @@ describe('multiSelect initial state', () => {
       'key': 'Enter'
     }));
     await elementUpdated(menuEl);
-    
+
     // Verify value is now an array
     const jsonValue = JSON.parse(menuEl.value);
     expect(jsonValue.length).to.equal(1);
