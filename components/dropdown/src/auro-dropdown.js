@@ -187,10 +187,17 @@ export class AuroDropdown extends AuroElement {
 
     // A reference to the floater element itself
     this._floaterRef = createRef();
+
+    // A reference to the bib element inside of the floater
+    this._bibRef = createRef();
   }
 
   get _floater() {
     return this._floaterRef.value;
+  }
+
+  get _bib() {
+    return this._bibRef.value;
   }
 
   /**
@@ -550,13 +557,21 @@ export class AuroDropdown extends AuroElement {
    */
   handleDropdownToggle() {
     this.isPopoverVisible = this._floater.shown;
+    this._calculateIsBibFullscreen();
+  }
+
+  _calculateIsBibFullscreen() {
+    const styles = getComputedStyle(document.documentElement);
+    const breakpoint = styles.getPropertyValue(`--ds-grid-breakpoint-${this.fullscreenBreakpoint}`).trim();
+    const smallerThanBreakpoint = window.matchMedia(`(max-width: ${breakpoint})`).matches;
+    this.isBibFullscreen = smallerThanBreakpoint;
   }
 
   firstUpdated() {
 
     // Configure the floater to, this will generate the ID for the bib
     // this.floater.configure(this, 'auroDropdown');
-    this.addEventListener('auro-floater-change', this.handleDropdownToggle);
+    this.addEventListener('auro-floater-beforechange', this.handleDropdownToggle);
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
@@ -836,7 +851,11 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
-      <${this.floaterTag} ${ref(this._floaterRef)} offset="4">
+      <${this.floaterTag} 
+        ${ref(this._floaterRef)}
+        behavior="${this.isBibFullscreen ? 'dialog-fullscreen' : 'dropdown'}"
+        offset="4"
+      >
         <div
           slot="trigger"
           id="trigger"
@@ -864,6 +883,7 @@ export class AuroDropdown extends AuroElement {
             ` : undefined}
         </div>
         <${this.dropdownBibTag}
+          ${ref(this._bibRef)}
           id="bib"
           shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
