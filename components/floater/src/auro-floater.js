@@ -40,6 +40,7 @@ const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroFloater: The trigger slot should
  * @fires auro-floater-shown - Fired when the floater is shown. Event detail contains {target: AuroFloater, newState: "shown"}.
  * @fires auro-floater-hidden - Fired when the floater is hidden. Event detail contains {target: AuroFloater, newState: "hidden"}.
  * @fires auro-floater-change - Fired when the floater's visibility state changes. Event detail contains {target: AuroFloater, newState: string} where newState is either "shown" or "hidden".
+ * @fires auro-floater-beforechange - Fired when the floater's visibility state changes. Event detail contains {target: AuroFloater, newState: string} where newState is either "shown" or "hidden".
  */
 export class AuroFloater extends LitElement {
 
@@ -97,8 +98,8 @@ export class AuroFloater extends LitElement {
         /** The type of floater, e.g., "manual", "auto", or "hint" */
         type: { type: String, reflect: false },
 
-        /** The behavior of the popover, "dialog", "dropdown", "tooltip", or "input" */
-        behavior: { type: String, reflect: false },
+        /** The behavior of the popover, "dialog", "dialog-fullscreen", "dropdown", "tooltip", or "input" */
+        behavior: { type: String, reflect: true },
 
         /** The offset distance of the floater */
         offset: { type: Number, reflect: false },
@@ -254,6 +255,7 @@ export class AuroFloater extends LitElement {
      * @private
      */
     get _shouldPositionPopover() {
+      console.log(this.behavior);
       return ["dropdown", "tooltip", "input"].includes(this.behavior);
     }
 
@@ -347,6 +349,20 @@ export class AuroFloater extends LitElement {
       this._detachHoverFromPositioningTarget();
       this._detachPopoverPositioner();
       this._detachFocusTrap();
+      this._resetPositionStyles();
+    }
+
+    /**
+     * Resets the position styles for the popover
+     * This is in case the popover was originally assigned a behavior that required positioning
+     * @returns {void}
+     * @private
+     */
+     _resetPositionStyles() {
+      this.popover.style.margin = null;
+      this.popover.style.position = null;
+      this.popover.style.top = null;
+      this.popover.style.left = null;
     }
 
     /**
@@ -362,6 +378,7 @@ export class AuroFloater extends LitElement {
           this._bindToInput();
           break;
         case 'dialog':
+        case 'dialog-fullscreen':
           this.type = this._hasTriggerContent ? 'auto' : 'manual';
           break;
         case 'dropdown':
@@ -532,15 +549,31 @@ export class AuroFloater extends LitElement {
     
     /**
      * Dispatches an event indicating the popover's visibility state has changed.
-     * Notifies listeners when the popover transitions between shown and hidden states.
+     * Notifies listeners after the popover transitions between shown and hidden states.
      * @fires auro-floater-change
-     * @param {Object} param0 - An object containing the shown state.
+     * @param {Object} param - An object containing the shown state.
      * @returns {void}
      * @private
      */
     _dispatchChangeEvent({state}) {
       this.dispatchEvent(new CustomEvent('auro-floater-change', {
         detail: { target: this, newState: state },
+        bubbles: true,
+        composed: true
+      }));
+    }
+
+    /**
+     * Dispatches an event indicating the popover's visibility state is about to be changed.
+     * Notifies listeners before the popover transitions between shown and hidden states.
+     * @fires auro-floater-change
+     * @param {Object} param - An object containing the shown state.
+     * @returns {void}
+     * @private
+     */
+    _dispatchBeforeChangeEvent() {
+      this.dispatchEvent(new CustomEvent('auro-floater-beforechange', {
+        detail: { target: this, newState: this._open ? 'closed' : 'open' },
         bubbles: true,
         composed: true
       }));
@@ -611,7 +644,10 @@ export class AuroFloater extends LitElement {
      * @returns {void}
      * @private
      * */
-    _handlePopoverToggle(event) { this._open = event.newState === 'open' }
+    _handlePopoverToggle(event) { 
+      this._dispatchBeforeChangeEvent(event);
+      this._open = event.newState === 'open';
+    }
 
     /**
      * Handles hover events on the trigger element, showing the popover if showOnHover is true
