@@ -1,6 +1,6 @@
-# auro-popover
+# auro-floater
 
-The auro-popover element provides users a way to display additional information on demand.
+The auro-floater element provides users a way to display additional information on demand.
 
 ## Properties
 

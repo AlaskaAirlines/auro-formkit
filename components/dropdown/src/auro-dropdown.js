@@ -5,13 +5,6 @@
 
 /*
   eslint-disable
-  max-lines,
-  lit/no-invalid-html,
-  lit/binding-positions,
-  template-curly-spacing,
-  line-comment-position,
-  no-inline-comments,
-  no-warning-comments
   */
 
 import { html } from "lit/static-html.js";
@@ -20,7 +13,6 @@ import { LitElement } from "lit";
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
 import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/index.mjs";
 import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
@@ -32,8 +24,8 @@ import iconVersion from './iconVersion.js';
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
-import { AuroPopover } from "@poc/auro-popover";
-import popoverVersion from './popoverVersion.js';
+import { AuroFloater } from "@poc/auro-floater";
+import floaterVersion from './floaterVersion.js';
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
 import colorCss from "./styles/color-css.js";
@@ -177,7 +169,7 @@ export class AuroDropdown extends AuroElement {
     /**
      * @private
      */
-    this.popoverTag = versioning.generateTag("auro-formkit-counter-popover", popoverVersion, AuroPopover);
+    this.floaterTag = versioning.generateTag("auro-formkit-dropdown-floater", floaterVersion, AuroFloater);
 
     /**
      * @private
@@ -193,9 +185,12 @@ export class AuroDropdown extends AuroElement {
   /** Creates refs for elements in the template @returns {void} @private */
   _createElementRefs() {
 
-    // A reference to the popover element itself
-    this._popoverRef = createRef();
+    // A reference to the floater element itself
+    this._floaterRef = createRef();
+  }
 
+  get _floater() {
+    return this._floaterRef.value;
   }
 
   /**
@@ -215,7 +210,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   hide() {
-    this._popoverRef.hide();
+    this._floater.hide();
   }
 
   /**
@@ -223,7 +218,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   show() {
-    this._popoverRef.show();
+    this._floater.show();
   }
 
   /**
@@ -510,7 +505,7 @@ export class AuroDropdown extends AuroElement {
    * @private
    * @returns {string}
    */
-  get focusableEntityQuery () {
+  get focusableEntityQuery() {
     return 'auro-input, [auro-input], auro-button, [auro-button], button, input';
   }
 
@@ -530,9 +525,9 @@ export class AuroDropdown extends AuroElement {
 
     // Note: `disabled` is not a breakpoint (it is not a screen size),
     // so it looks like we never consume this - however, dropdownBib handles this in the setter as "undefined"
-    if (changedProperties.has('fullscreenBreakpoint')) {
-      this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
-    }
+    // if (changedProperties.has('fullscreenBreakpoint')) {
+    //   this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
+    // }
 
     // when trigger's content is changed without any attribute or node change,
     // `requestUpdate` needs to be called to update hasTriggerContent
@@ -569,23 +564,23 @@ export class AuroDropdown extends AuroElement {
     // this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
 
     // Set the bib ID locally if the user hasn't provided a focusable trigger
-    if (!this.triggerContentFocusable) {
-      this.dropdownId = this.floater.element.id;
-    }
+    // if (!this.triggerContentFocusable) {
+    //   this.dropdownId = this.floater.element.id;
+    // }
 
-    this.bibContent = this.floater.element.bib;
+    // this.bibContent = this.floater.element.bib;
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
 
-    this.trigger.addEventListener('click', () => {
-      console.log(`Trigger clicked: ${this.trigger.textContent}`);
+    // this.trigger.addEventListener('click', () => {
+    //   console.log(`Trigger clicked: ${this.trigger.textContent}`);
 
-      this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', {
-        bubbles: true,
-        composed: true
-      }));
-    });
+    //   this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', {
+    //     bubbles: true,
+    //     composed: true
+    //   }));
+    // });
   }
 
   /**
@@ -839,13 +834,13 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
-      <${this.popoverTag} ${ref(this._popoverRef)}>
-        <button
+      <${this.floaterTag} ${ref(this._floaterRef)}>
+        <div
           slot="trigger"
-
           id="trigger"
-          class="${classMap(this.commonWrapperClasses)}" part="wrapper"          
-          >
+          part="wrapper"          
+          class="${classMap(this.commonWrapperClasses)}"
+        >
           <div class="triggerContentWrapper" id="triggerLabel">
             <slot
               name="trigger"
@@ -864,12 +859,8 @@ export class AuroDropdown extends AuroElement {
                   >
                 </${this.iconTag}>
               </div>
-            ` : undefined }
-          </button>
-        <!-- <div class="${classMap(helpTextClasses)}">
-          <slot name="helpText"></slot>
-        </div> -->
-        <!-- <div id="bibSizer" part="size"></div> -->
+            ` : undefined}
+        </div>
         <${this.dropdownBibTag}
           id="bib"
           shape="${this.shape}"
@@ -879,6 +870,9 @@ export class AuroDropdown extends AuroElement {
             <slot @slotchange="${this.handleDefaultSlot}"></slot>
           </div>
         </${this.dropdownBibTag}>
+      </${this.floaterTag}>
+      <div class="${classMap(helpTextClasses)}">
+        <slot name="helpText"></slot>
       </div>
     `;
   }

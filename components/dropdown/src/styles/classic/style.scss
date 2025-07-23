@@ -29,6 +29,12 @@
     white-space: normal;
   }
 
+  auro-floater::part(popover),
+  [auro-floater]::part(popover) {
+    box-shadow: var(--ds-auro-dropdownbib-boxshadow-color);
+    border-radius: var(--ds-border-radius);
+  }
+
   .wrapper {
     display: flex;
     flex-direction: row;
