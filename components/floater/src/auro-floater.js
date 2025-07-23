@@ -42,12 +42,12 @@ const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroPopover: The trigger slot should
  * @fires auro-popover-hidden - Fired when the popover is hidden. Event detail contains {target: AuroPopover, newState: "hidden"}.
  * @fires auro-popover-change - Fired when the popover's visibility state changes. Event detail contains {target: AuroPopover, newState: string} where newState is either "shown" or "hidden".
  */
-export class AuroPopover extends LitElement {
+export class AuroFloater extends LitElement {
 
   /** STATIC METHODS **/
   // Utility methods that can be used without instantiating the class
 
-    static register(name = "auro-popover") { AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroPopover) }
+    static register(name = "auro-floater") { AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroFloater) }
 
   /** CONSTRUCTOR **/
     constructor() {
@@ -55,6 +55,7 @@ export class AuroPopover extends LitElement {
       
       this._setDefaults(_DEFAULTS);
       this._createElementRefs();
+      this.setAttribute("auro-floater", "");
     }
 
 
@@ -633,13 +634,13 @@ export class AuroPopover extends LitElement {
      */
     _renderTriggerSlot() {
       return html`
-        <div ${ref(this._positioningTargetRef)}>
+        <span ${ref(this._positioningTargetRef)}>
           <slot 
             name="trigger"
             ${ref(this._triggerSlotRef)}
             @slotchange="${() => this._handleTriggerSlotChange()}"
           ></slot>
-        </div>
+        </span>
       `;
     }
 
@@ -658,8 +659,8 @@ export class AuroPopover extends LitElement {
         return html`
           <button
             ${ref(this._buttonRef)}
+            part="popover-trigger"
             class="popover-trigger"
-            part="trigger"
             type="button"
             popovertarget="popover"
             tabindex="-1"
@@ -675,10 +676,8 @@ export class AuroPopover extends LitElement {
      */
     _renderPopover() {
       return html`
-        <span><-- ${this.type} popover</span>
-        <br>
-        <span>Trigger slot content: ${this._hasTriggerContent ? 'Yes' : 'No'}</span>
         <div 
+          part="popover"
           ${ref(this._popoverRef)}
           popover="${this.type}"
           id="popover"

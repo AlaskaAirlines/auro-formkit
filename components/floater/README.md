@@ -17,7 +17,7 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Popover
+# Floater
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
 Need popover info
@@ -47,20 +47,20 @@ $ npm i @aurodesignsystem/auro-formkit
 For automatic registration, simply import the component:
 
 ```javascript
-// Registers <auro-popover> automatically
-import '@aurodesignsystem/auro-formkit/auro-popover';
+// Registers <auro-floater> automatically
+import '@aurodesignsystem/auro-formkit/auro-floater';
 ```
 
 #### Custom Registration
 
-To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our static `AuroPopover.register('custom-popover')` method on the component class and pass in a unique name.
+To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our static `AuroFloater.register('custom-floater')` method on the component class and pass in a unique name.
 
 ```javascript
 // Import the class only
-import { AuroPopover } from '@aurodesignsystem/auro-formkit/auro-popover/class';
+import { AuroFloater } from '@aurodesignsystem/auro-formkit/auro-floater/class';
 
 // Register with a custom name if desired
-AuroPopover.register('custom-popover');
+AuroFloater.register('custom-floater');
 ```
 
 #### TypeScript Module Resolution
@@ -96,7 +96,7 @@ This configuration enables proper module resolution for the component's TypeScri
 </auro-popover>
 <p>&nbsp;</p>
 <p>dropdown example</p>
-<auro-popover behavior="dropdown" floatingUiConfig='{"placement": "top", "useFlip": false, "useAutoPlacement": false, "useHide": false}'>
+<auro-popover behavior="dropdown">
   <button type="button" slot="trigger">Open Dropdown</button>
   <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
   <input type="text" placeholder="I am an input inside a dropdown popover" />
@@ -161,7 +161,7 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-popover/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-floater/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -171,7 +171,7 @@ For the most up to date information on [UI development browser support](https://
 
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## auro-popover use cases
+## auro-floater use cases
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
 The `<auro-popover>` element should be used in situations where users may:
