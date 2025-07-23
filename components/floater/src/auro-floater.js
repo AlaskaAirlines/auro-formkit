@@ -40,7 +40,6 @@ const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroFloater: The trigger slot should
  * @fires auro-floater-shown - Fired when the floater is shown. Event detail contains {target: AuroFloater, newState: "shown"}.
  * @fires auro-floater-hidden - Fired when the floater is hidden. Event detail contains {target: AuroFloater, newState: "hidden"}.
  * @fires auro-floater-change - Fired when the floater's visibility state changes. Event detail contains {target: AuroFloater, newState: string} where newState is either "shown" or "hidden".
- * @fires auro-floater-beforechange - Fired when the floater's visibility state changes. Event detail contains {target: AuroFloater, newState: string} where newState is either "shown" or "hidden".
  */
 export class AuroFloater extends LitElement {
 
@@ -255,7 +254,6 @@ export class AuroFloater extends LitElement {
      * @private
      */
     get _shouldPositionPopover() {
-      console.log(this.behavior);
       return ["dropdown", "tooltip", "input"].includes(this.behavior);
     }
 
@@ -332,7 +330,10 @@ export class AuroFloater extends LitElement {
      * @returns {boolean}
      * @private
      */
-    get _shouldAttachFocusTrap() { return !['input', 'tooltip'].includes(this.behavior) };
+    get _shouldAttachFocusTrap() { 
+      console.log(`AuroFloater: _shouldAttachFocusTrap called with behavior "${this.behavior}"`);
+      return !['input', 'tooltip'].includes(this.behavior)
+    };
 
 
   /** PRIVATE METHODS **/
@@ -549,31 +550,16 @@ export class AuroFloater extends LitElement {
     
     /**
      * Dispatches an event indicating the popover's visibility state has changed.
-     * Notifies listeners after the popover transitions between shown and hidden states.
+     * Notifies listeners when the popover transitions between shown and hidden states.
      * @fires auro-floater-change
-     * @param {Object} param - An object containing the shown state.
+     * @param {Object} param0 - An object containing the shown state.
      * @returns {void}
      * @private
      */
     _dispatchChangeEvent({state}) {
+      console.log(`AuroFloater: _dispatchChangeEvent called with state "${state}"`);
       this.dispatchEvent(new CustomEvent('auro-floater-change', {
         detail: { target: this, newState: state },
-        bubbles: true,
-        composed: true
-      }));
-    }
-
-    /**
-     * Dispatches an event indicating the popover's visibility state is about to be changed.
-     * Notifies listeners before the popover transitions between shown and hidden states.
-     * @fires auro-floater-change
-     * @param {Object} param - An object containing the shown state.
-     * @returns {void}
-     * @private
-     */
-    _dispatchBeforeChangeEvent() {
-      this.dispatchEvent(new CustomEvent('auro-floater-beforechange', {
-        detail: { target: this, newState: this._open ? 'closed' : 'open' },
         bubbles: true,
         composed: true
       }));
@@ -644,10 +630,7 @@ export class AuroFloater extends LitElement {
      * @returns {void}
      * @private
      * */
-    _handlePopoverToggle(event) { 
-      this._dispatchBeforeChangeEvent(event);
-      this._open = event.newState === 'open';
-    }
+    _handlePopoverToggle(event) { this._open = event.newState === 'open' }
 
     /**
      * Handles hover events on the trigger element, showing the popover if showOnHover is true
