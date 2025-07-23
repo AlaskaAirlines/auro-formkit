@@ -573,7 +573,7 @@ export class AuroDropdown extends AuroElement {
 
     // Configure the floater to, this will generate the ID for the bib
     // this.floater.configure(this, 'auroDropdown');
-    this.addEventListener('auro-floater-change', this.handleDropdownToggle);
+    this.addEventListener('auro-floater-beforechange', this.handleDropdownToggle);
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
