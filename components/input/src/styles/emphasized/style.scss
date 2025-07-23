@@ -65,6 +65,7 @@
   }
 
   input {
+    transition: all 1ms linear; // force repaint after 0.01s due to iOS safari rendering issue
     text-align: center;
   }
 
