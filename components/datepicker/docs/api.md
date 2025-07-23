@@ -51,9 +51,9 @@
 | `focus`                       | `(focusInput?: string): void`          | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
 | `hideBib`                     | `(): void`                             | Hides the dropdown bib if its open.              |
 | `reset`                       | `(): void`                             | Resets component to initial state.               |
+| `resetInputs`                 | `(): void`                             | Resets values without resetting validation.      |
 | `resetLayoutClasses`          | `(): void`                             |                                                  |
 | `resetShapeClasses`           | `(): void`                             |                                                  |
-| `resetValues`                 | `(): void`                             | Resets values without resetting validation.      |
 | `showBib`                     | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `updateComponentArchitecture` | `(): void`                             |                                                  |
 | `validate`                    | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |

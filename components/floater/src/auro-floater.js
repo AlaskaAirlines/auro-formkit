@@ -6,7 +6,6 @@ import { PopoverPositioner } from "@auro-formkit/utils";
 import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/FocusTrap.mjs";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import { StringBoolean } from "./StringBoolean.converter";
 
 import styles from './styles/style-css.js';
@@ -31,16 +30,16 @@ const _POSITIONER_DEFAULTS = {
   inline: false,
 };
 
-const _NO_INPUT_ERROR = "\nAuroPopover: The input behavior requires an input element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-input slot='trigger'></auro-input>\n</auro-popover>\n";
-const _MULTIPLE_TRIGGER_ELEMENTS_ERROR = "\nAuroPopover: The input behavior requires a single trigger element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n\nPassing more than one element may lead to undesireable behavior.\n";
-const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroPopover: The trigger slot should not contain text nodes.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n";
+const _NO_INPUT_ERROR = "\nAuroFloater: The input behavior requires an input element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-input slot='trigger'></auro-input>\n</auro-popover>\n";
+const _MULTIPLE_TRIGGER_ELEMENTS_ERROR = "\nAuroFloater: The input behavior requires a single trigger element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n\nPassing more than one element may lead to undesireable behavior.\n";
+const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroFloater: The trigger slot should not contain text nodes.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n";
 
 /**
- * AuroPopover is a web component that provides a customizable popover element.
+ * AuroFloater is a web component that provides a customizable popover element.
  * It supports various behaviors such as dialog, dropdown, tooltip, and input.
- * @fires auro-popover-shown - Fired when the popover is shown. Event detail contains {target: AuroPopover, newState: "shown"}.
- * @fires auro-popover-hidden - Fired when the popover is hidden. Event detail contains {target: AuroPopover, newState: "hidden"}.
- * @fires auro-popover-change - Fired when the popover's visibility state changes. Event detail contains {target: AuroPopover, newState: string} where newState is either "shown" or "hidden".
+ * @fires auro-floater-shown - Fired when the floater is shown. Event detail contains {target: AuroFloater, newState: "shown"}.
+ * @fires auro-floater-hidden - Fired when the floater is hidden. Event detail contains {target: AuroFloater, newState: "hidden"}.
+ * @fires auro-floater-change - Fired when the floater's visibility state changes. Event detail contains {target: AuroFloater, newState: string} where newState is either "shown" or "hidden".
  */
 export class AuroFloater extends LitElement {
 
@@ -55,7 +54,7 @@ export class AuroFloater extends LitElement {
       
       this._setDefaults(_DEFAULTS);
       this._createElementRefs();
-      this.setAttribute("auro-floater", "");
+      this._runtimeUtils = new AuroLibraryRuntimeUtils();
     }
 
 
@@ -225,6 +224,11 @@ export class AuroFloater extends LitElement {
   /** LIFECYCLE METHODS **/
   // Attachments to the component lifecycle, such as connectedCallback, updated, etc.
 
+    connectedCallback() {
+      super.connectedCallback();
+      this._runtimeUtils.handleComponentTagRename(this, 'auro-floater');
+    }
+
     updated(changedProperties) {
 
       // Make sure we adjust the popover visibility based on external changes from the browser
@@ -369,7 +373,7 @@ export class AuroFloater extends LitElement {
           this._bindHoverToPositioningTarget();
           break;
         default:
-          console.warn(`AuroPopover: Unknown behavior type "${behavior}"`);
+          console.warn(`AuroFloater: Unknown behavior type "${behavior}"`);
       }
     }
 
@@ -493,13 +497,13 @@ export class AuroFloater extends LitElement {
     /**
      * Dispatches an event indicating the popover has been shown.
      * Notifies listeners that the popover is now visible and emits a change event.
-     * @fires auro-popover-shown
+     * @fires auro-floater-shown
      * @returns {void}
      * @private
      */
     _dispatchShowEvent() {
 
-      this.dispatchEvent(new CustomEvent('auro-popover-shown', {
+      this.dispatchEvent(new CustomEvent('auro-floater-shown', {
         detail: { target: this, newState: "shown" },
         bubbles: true,
         composed: true
@@ -511,12 +515,12 @@ export class AuroFloater extends LitElement {
     /**
      * Dispatches an event indicating the popover has been hidden.
      * Notifies listeners that the popover is now hidden and emits a change event.
-     * @fires auro-popover-hidden
+     * @fires auro-floater-hidden
      * @returns {void}
      * @private
      */
     _dispatchHideEvent() {
-      this.dispatchEvent(new CustomEvent('auro-popover-hidden', {
+      this.dispatchEvent(new CustomEvent('auro-floater-hidden', {
         detail: { target: this, newState: "hidden" },
         bubbles: true,
         composed: true
@@ -529,13 +533,13 @@ export class AuroFloater extends LitElement {
     /**
      * Dispatches an event indicating the popover's visibility state has changed.
      * Notifies listeners when the popover transitions between shown and hidden states.
-     * @fires auro-popover-change
+     * @fires auro-floater-change
      * @param {Object} param0 - An object containing the shown state.
      * @returns {void}
      * @private
      */
     _dispatchChangeEvent({state}) {
-      this.dispatchEvent(new CustomEvent('auro-popover-change', {
+      this.dispatchEvent(new CustomEvent('auro-floater-change', {
         detail: { target: this, newState: state },
         bubbles: true,
         composed: true
@@ -683,11 +687,10 @@ export class AuroFloater extends LitElement {
           id="popover"
           role="dialog"
           aria-label="${this.title}"
-          class="auro-popover"
           @beforetoggle=${this._handlePopoverToggle.bind(this)}
           tabindex="-1"
         >
-          <slot><span>No, this is Patrick.</span></slot>
+          <slot></slot>
         </div>
       `;
     }
