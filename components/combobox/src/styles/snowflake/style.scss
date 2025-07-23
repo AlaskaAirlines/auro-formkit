@@ -6,4 +6,8 @@
       display: none;
     }
   }
+
+  &::part(helpText) {
+    text-align: center;
+  }
 }
