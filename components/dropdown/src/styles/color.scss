@@ -62,5 +62,5 @@
 }
 
 :host([ondark][error]) {
-  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error-subtle, #{v.$ds-basic-color-status-error-subtle});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 }
