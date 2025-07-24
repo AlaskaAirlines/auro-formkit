@@ -158,6 +158,7 @@ export class AuroFloater extends LitElement {
     }
 
     _shouldPosition () {
+      console.log(`Checking if should position: ${this.behavior}`);
       return ["dropdown", "tooltip", "input"].includes(this.behavior);
     }
 
@@ -168,12 +169,13 @@ export class AuroFloater extends LitElement {
      */
     show() {
 
-      // If already open, do nothing
-      if (this.popover.matches(":popover-open")) return;
-
       // Position the popover if behavior requires it
       if (this._shouldPosition()) {
         this._attachPopoverPositioner();
+
+      // Otherwise, reset the positioning styles
+      } else {
+        this._resetPositionStyles();
       }
 
       // Focus the popover to ensure accessibility
@@ -188,11 +190,11 @@ export class AuroFloater extends LitElement {
           this.popover.showPopover() 
         }
 
-        // The popover is positioned and ready, so we can set shown to true
-        this.shown = true;
-
         // Attach the focus trap to the popover if necessary
         this._attachFocusTrap(); // Attach focus trap to the popover
+
+        // The popover is positioned and ready, so we can set shown to true
+        this.shown = true;
 
         // Dispatch relevant events
         this._dispatchShowEvent();
@@ -351,6 +353,8 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _manageBehavior(newBehavior = this.behavior, force = false) {
+
+      console.log(`Managing behavior: ${newBehavior}`);
       
       // Set the new behavior state
       this._currentBehaviorState = newBehavior;
@@ -602,6 +606,7 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _dispatchBeforeChangeEvent({state}) {
+      console.log(`auro-floater-beforechange: ${state}`);
       this.dispatchEvent(new CustomEvent('auro-floater-beforechange', {
         detail: { target: this, newState: state },
         bubbles: true,
@@ -675,8 +680,10 @@ export class AuroFloater extends LitElement {
      * @private
      * */
     _handlePopoverToggle(event) {
-      this._open = event.newState === 'open';
-      this._dispatchBeforeChangeEvent({ state: this._open ? "shown" : "hidden" });
+      this._dispatchBeforeChangeEvent({ state: this._open ? "hidden" : "shown" });
+
+      // Wait a cycle for event listeners to make adjustments for beforechange event
+      setTimeout(() => this._open = event.newState === 'open');
     }
 
     /**
