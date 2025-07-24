@@ -211,7 +211,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   toggle() {
-    this._floater.toggle();
+    this._floater?.toggle();
   }
 
   /**
@@ -219,7 +219,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   hide() {
-    this._floater.hide();
+    this._floater?.hide();
   }
 
   /**
@@ -367,6 +367,15 @@ export class AuroDropdown extends AuroElement {
        */
       hasTriggerContent: {
         type: Boolean
+      },
+
+      /**
+       * A reference to the input in the trigger element if it exists
+       * @private
+       */
+      _inputInTrigger: {
+        type: Object,
+        state: true
       },
 
       /**
@@ -562,7 +571,7 @@ export class AuroDropdown extends AuroElement {
     const breakpoint = styles.getPropertyValue(`--ds-grid-breakpoint-${this.fullscreenBreakpoint}`).trim();
     const smallerThanBreakpoint = window.matchMedia(`(max-width: ${breakpoint})`).matches;
     this.isBibFullscreen = smallerThanBreakpoint;
-    console.log(`_calculateIsBibFullscreen: ${this.isBibFullscreen}`);
+    this.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
   }
 
   firstUpdated() {
@@ -781,6 +790,11 @@ export class AuroDropdown extends AuroElement {
         // If any of them are focusable elements
         if (this.triggerContentFocusable) {
 
+          // Check if any of the focusable elements are input elements
+          this._inputInTrigger = triggerContentNodes.find((node) => {
+            return node.tagName && node.tagName.toLowerCase().match('input') ? node : false;
+          });
+
           // Assume the consumer will be providing their own a11y in whatever they passed in
           this.clearTriggerA11yAttributes(trigger);
 
@@ -836,6 +850,15 @@ export class AuroDropdown extends AuroElement {
     }
   }
 
+  get _currentBehavior() {
+
+    // Handle input
+    if (this._inputInTrigger) return this.isBibFullscreen ? 'input-fullscreen' : 'input-dropdown';
+
+    // Fallback to the default behaviors
+    return this.isBibFullscreen ? 'dialog-fullscreen' : 'dropdown'
+  }
+
   /**
    * Returns HTML for the common portion of the layouts.
    * @private
@@ -844,11 +867,12 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
-      ${this.isBibFullscreen ? 'dialog-fullscreen' : 'dropdown'}
       <${this.floaterTag} 
         ${ref(this._floaterRef)}
-        behavior="${this.isBibFullscreen ? 'dialog-fullscreen' : 'dropdown'}"
-        offset="4"
+        .behavior="${this._currentBehavior}"
+        .input="${this._inputInTrigger}"
+        .minInputLength="${1}"
+        .offset="${4}"
       >
         <div
           slot="trigger"
@@ -859,7 +883,8 @@ export class AuroDropdown extends AuroElement {
           <div class="triggerContentWrapper" id="triggerLabel">
             <slot
               name="trigger"
-              @slotchange="${this.handleTriggerContentSlotChange}"></slot>
+              @slotchange="${this.handleTriggerContentSlotChange}">
+            </slot>
           </div>
           ${this.chevron ? html`
               <div

@@ -688,13 +688,13 @@ export class AuroSelect extends AuroElement {
     });
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
-      if (evt.detail) {
-        evt.detail.scrollIntoView({
-          alignToTop: false,
-          block: "nearest",
-          behavior: "smooth"
-        });
-      }
+      // if (evt.detail) {
+      //   evt.detail.scrollIntoView({
+      //     alignToTop: false,
+      //     block: "nearest",
+      //     behavior: "smooth"
+      //   });
+      // }
     });
   }
 
