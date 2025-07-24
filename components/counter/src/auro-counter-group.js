@@ -722,9 +722,11 @@ export class AuroCounterGroup extends AuroElement {
           <label class="${classMap(labelClasses)}">
             <slot name="label"></slot>
           </label>
-          <slot name="valueText" @slotChange="${this.updateValueText}" class="body-default">
-            ${this.counters && Array.from(this.counters).map((counter, index) => html`${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
-          </slot>
+          <div class="value">
+            <slot name="valueText" @slotChange="${this.updateValueText}" class="body-default">
+              ${this.counters && Array.from(this.counters).map((counter, index) => html`${counter.value} ${counter.defaultSlot}${index !== this.counters.length - 1 ? ', ' : ''}`)}
+            </slot>
+          </div>
         </div>
         <div class="accents right">
           ${this.renderValidationErrorIcon()}

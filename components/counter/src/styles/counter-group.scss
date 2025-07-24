@@ -66,6 +66,13 @@ label {
   padding-block: var(--ds-size-25, vac.$ds-size-25);
 }
 
+.value {
+  width: 100%;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .accents {
   ::slotted([slot="typeIcon"]) {
     margin-right: var(--ds-size-100, vac.$ds-size-100);
