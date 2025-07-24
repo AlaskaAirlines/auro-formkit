@@ -6,6 +6,11 @@
   overflow: visible;
 }
 
+:host(:not([shown])) [popover] {
+  opacity: 0;
+  pointer-events: none;
+}
+
 [popovertarget] {
   margin: 0;
   width: 100%;

@@ -83,31 +83,7 @@ export class AuroDropdown extends AuroElement {
     this.privateDefaults();
 
     this._createElementRefs();
-    window.addEventListener('resize', this._handleResize);
   }
-
-  /**
-   * Debounce a function call.
-   * @param {Function} fn - The function to debounce.
-   * @param {number} delay - The debounce delay in milliseconds.
-   * @returns {Function} The debounced function.
-   * @private
-   */
-  debounce(fn, delay) {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        fn.apply(this, args);
-      }, delay);
-    };
-  }
-
-  /**
-   * Handle the window resize event.
-   * @private
-   */
-  _handleResize = this.debounce(this._calculateIsBibFullscreen, 100);
 
   /**
    * @private
@@ -577,11 +553,16 @@ export class AuroDropdown extends AuroElement {
     this.isPopoverVisible = this._floater.shown;
   }
 
+  _handleBeforeDropdownToggle() {
+    this._calculateIsBibFullscreen();
+  }
+
   _calculateIsBibFullscreen() {
     const styles = getComputedStyle(document.documentElement);
     const breakpoint = styles.getPropertyValue(`--ds-grid-breakpoint-${this.fullscreenBreakpoint}`).trim();
     const smallerThanBreakpoint = window.matchMedia(`(max-width: ${breakpoint})`).matches;
     this.isBibFullscreen = smallerThanBreakpoint;
+    console.log(`_calculateIsBibFullscreen: ${this.isBibFullscreen}`);
   }
 
   firstUpdated() {
@@ -589,6 +570,7 @@ export class AuroDropdown extends AuroElement {
     // Configure the floater to, this will generate the ID for the bib
     // this.floater.configure(this, 'auroDropdown');
     this.addEventListener('auro-floater-change', this._handleDropdownToggle);
+    this.addEventListener('auro-floater-beforechange', this._handleBeforeDropdownToggle);
 
     // Initial measuring of if we should be fullscreen
     this._calculateIsBibFullscreen();
@@ -862,6 +844,7 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
+      ${this.isBibFullscreen ? 'dialog-fullscreen' : 'dropdown'}
       <${this.floaterTag} 
         ${ref(this._floaterRef)}
         behavior="${this.isBibFullscreen ? 'dialog-fullscreen' : 'dropdown'}"
