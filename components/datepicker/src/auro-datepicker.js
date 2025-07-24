@@ -1242,9 +1242,9 @@ export class AuroDatePicker extends AuroElement {
 
     // Determine if the target is an input element
     const targetIsInput = initTarget.tagName === 'INPUT';
+    const isFocusAlreadyOnInput = this.inputList.includes(this.shadowRoot.activeElement);
 
-    if (layoutRequiresHandling && !targetIsInput) {
-
+    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput) {
       // Focus the first input
       this.inputList[0].focus();
     }
