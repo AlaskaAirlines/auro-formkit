@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { html, LitElement } from "lit";
+import { html, LitElement, nothing } from "lit";
 import { createRef, ref } from 'lit/directives/ref.js';
 
 import { PopoverPositioner } from "@auro-formkit/utils";
@@ -29,6 +29,11 @@ const _POSITIONER_DEFAULTS = {
   strategy: 'absolute',
   inline: false,
 };
+
+const INPUT_TYPES = [ 'input', 'input-fullscreen', 'input-dropdown' ];
+const DIALOG_TYPES = [ 'dialog', 'dialog-fullscreen' ];
+const DROPDOWN_TYPES = [ 'dropdown' ];
+const TOOLTIP_TYPES = [ 'tooltip' ];
 
 const _NO_INPUT_ERROR = "\nAuroFloater: The input behavior requires an input element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-input slot='trigger'></auro-input>\n</auro-popover>\n";
 const _MULTIPLE_TRIGGER_ELEMENTS_ERROR = "\nAuroFloater: The input behavior requires a single trigger element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n\nPassing more than one element may lead to undesireable behavior.\n";
@@ -97,7 +102,7 @@ export class AuroFloater extends LitElement {
         /** The type of floater, e.g., "manual", "auto", or "hint" */
         type: { type: String, reflect: false },
 
-        /** The behavior of the popover, "dialog", "dialog-fullscreen", "dropdown", "tooltip", or "input" */
+        /** The behavior of the popover, "dialog", "dialog-fullscreen", "dropdown", "tooltip", or "input", "input-fullscreen", "input-dropdown" */
         behavior: { type: String, reflect: true },
 
         /** The offset distance of the floater */
@@ -118,6 +123,9 @@ export class AuroFloater extends LitElement {
         /** The minimum number of characters the user must type before the popover is shown */
         minInputLength: { type: Number, reflect: false },
 
+        /** A reference to the input to attach to for input behavior */
+        input: { type: Object, state: true },
+
         /** Whether the floater is open or not */
         _open: { type: Boolean, reflect: false, state: true },
 
@@ -125,9 +133,7 @@ export class AuroFloater extends LitElement {
         _hasTriggerContent: { type: Boolean, reflect: false, state: true },
 
         /** Internal state tracking the current behavior implementation */
-        _currentBehaviorState: { type: String, state: true },
-
-        floatingUiConfig: { type: Object, reflect: false }
+        _currentBehaviorState: { type: String, state: true }
       };
     }
 
@@ -157,9 +163,8 @@ export class AuroFloater extends LitElement {
       this._open ? this.hide() : this.show();
     }
 
-    _shouldPosition () {
-      console.log(`Checking if should position: ${this.behavior}`);
-      return ["dropdown", "tooltip", "input"].includes(this.behavior);
+    get _shouldPosition () {
+      return ["dropdown", "tooltip", "input", "input-dropdown"].includes(this.behavior);
     }
 
     /**
@@ -167,38 +172,32 @@ export class AuroFloater extends LitElement {
      * @returns {void}
      * @private
      */
-    show() {
+    show({internal = false} = {}) {
+
+      console.log("layover show");
+
+      // Show the popover if it this wasn't called internally by the beforetoggle event listener
+      if (!internal) this.popover.showPopover();
 
       // Position the popover if behavior requires it
-      if (this._shouldPosition()) {
-        this._attachPopoverPositioner();
+      if (this._shouldPosition) { this._attachPopoverPositioner();
 
       // Otherwise, reset the positioning styles
-      } else {
-        this._resetPositionStyles();
-      }
+      } else { this._detachPopoverPositioner() }
 
       // Focus the popover to ensure accessibility
       if (this._shouldAdjustFocus) {
         this.popover.focus();
       }
-      
-      // Wait for a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
-      setTimeout(() => {
-        // Show the popover if it isn't already open
-        if (!this.popover.matches(':popover-open')) { 
-          this.popover.showPopover() 
-        }
 
-        // Attach the focus trap to the popover if necessary
-        this._attachFocusTrap(); // Attach focus trap to the popover
+      // Attach the focus trap to the popover if necessary
+      this._attachFocusTrap(); // Attach focus trap to the popover
 
-        // The popover is positioned and ready, so we can set shown to true
-        this.shown = true;
+      // The popover is positioned and ready, so we can set shown to true
+      this.shown = true;
 
-        // Dispatch relevant events
-        this._dispatchShowEvent();
-      });
+      // Dispatch relevant events
+      this._dispatchShowEvent();
     }
 
     /**
@@ -206,32 +205,27 @@ export class AuroFloater extends LitElement {
      * @returns {void}
      * @private
      */
-    hide() {
+    hide({internal = false} = {}) {
 
-      // Don't try to hide the popover if it is not open
-      if (!this.popover.matches(':popover-open')) return;
+      console.log("layover hide");
 
       // Stop positioning the popover
       this._detachPopoverPositioner();
 
-      // Wait a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
-      setTimeout(() => {
+      // Hide the popover if it is currently open
+      if (!internal) this.popover.hidePopover();
 
-        // Hide the popover if it is currently open
-        if (this.popover.matches(':popover-open')) { this.popover.hidePopover() }
-  
-        // Update shown to hide the popover via styles
-        this.shown = false;
+      // Update shown to hide the popover via styles
+      this.shown = false;
 
-        // Focus the trigger element to ensure accessibility
-        if (this._shouldAdjustFocus) {
-          const focusEl = this._triggerElInSlot || this.button;
-          focusEl?.focus();
-        }
+      // Focus the trigger element to ensure accessibility
+      if (this._shouldAdjustFocus) {
+        const focusEl = this._triggerElInSlot || this.button;
+        focusEl?.focus();
+      }
 
-        // Dispatch relevant events
-        this._dispatchHideEvent();
-      })
+      // Dispatch relevant events
+      this._dispatchHideEvent();
     }
 
 
@@ -245,11 +239,15 @@ export class AuroFloater extends LitElement {
 
     updated(changedProperties) {
 
-      // Make sure we adjust the popover visibility based on external changes from the browser
-      if (changedProperties.has('_open')) this._open ? this.show() : this.hide();
+      // Infer input behavior if the input element changes
+      if (['input'].some(prop => changedProperties.has(prop))) {
+
+        // Change to base input functionality if the user didn't already set it
+        if (!!this.input && !this.behavior.match("input")) this.behavior = "input"; 
+      }
 
       // If the behavior changes or trigger content changes, manage behavior transition
-      if (changedProperties.has('behavior') || changedProperties.has('_hasTriggerContent')) {
+      if (['behavior', '_hasTriggerContent', 'input'].some(prop => changedProperties.has(prop))) {
         this._manageBehavior(this.behavior);
       }
     };
@@ -269,7 +267,7 @@ export class AuroFloater extends LitElement {
      * @private
      */
     get _shouldAdjustFocus() {
-      return !['input', 'tooltip'].includes(this.behavior);
+      return ![...INPUT_TYPES, ...TOOLTIP_TYPES].includes(this.behavior);
     }
 
     /**
@@ -301,19 +299,8 @@ export class AuroFloater extends LitElement {
     get _positioningTarget() { return this._positioningTargetRef.value }
 
     /**
-     * Gets the input element in the trigger slot if it exists
-     * @throws {Error} If no input element is found in the trigger slot
-     * @returns {void}
-     * @private
+     * Gets the trigger element in the slot
      */
-    get _inputInTriggerSlot() {
-
-      const nodes = this._triggerSlot.assignedNodes({ flatten: true });
-      const input = nodes.find(node => node.tagName && node.tagName.toLowerCase().match('input'));
-
-      return input ?? undefined;
-    }
-
     get _triggerElInSlot() {
 
       // Get the assigned nodes from the trigger slot
@@ -336,10 +323,17 @@ export class AuroFloater extends LitElement {
      * @returns {boolean}
      * @private
      */
-    get _shouldAttachFocusTrap() { 
-      return !['input', 'tooltip'].includes(this.behavior)
+    get _shouldAttachFocusTrap() {
+      return ![...INPUT_TYPES, ...TOOLTIP_TYPES].includes(this.behavior);
     };
 
+  _calcType(behavior) {
+    if (INPUT_TYPES.includes(behavior)) return "manual";
+    if (DIALOG_TYPES.includes(behavior)) return this._hasTriggerContent ? "auto" : "manual";
+    if (DROPDOWN_TYPES.includes(behavior)) return this._hasTriggerContent ? "auto" : "manual";
+    if (TOOLTIP_TYPES.includes(behavior)) return "hint";
+    return "manual"; // Default fallback
+  }
 
   /** PRIVATE METHODS **/
   // Private methods that are used internally within the component only
@@ -347,6 +341,7 @@ export class AuroFloater extends LitElement {
     /**
      * Centralized method to manage behavior transitions and state
      * Called whenever behavior changes or when component needs reconfiguration
+     * Note that some of these calls are reinforced in the show and hide methods
      * @param {string} newBehavior - The behavior to transition to
      * @param {boolean} force - Whether to force reconfiguration even if behavior hasn't changed
      * @returns {void}
@@ -354,30 +349,24 @@ export class AuroFloater extends LitElement {
      */
     _manageBehavior(newBehavior = this.behavior, force = false) {
 
-      console.log(`Managing behavior: ${newBehavior}`);
-      
       // Set the new behavior state
       this._currentBehaviorState = newBehavior;
 
       // First, clean up any existing behavior
       this._cleanupCurrentBehavior();
-      
+
+      // Set the type based on the new behavior
+      this.type = this._calcType(newBehavior);
+
       // Configure the new behavior
       switch(newBehavior) {
         case 'input':
-          this.type = 'manual';
+        case 'input-dropdown':
+        case 'input-fullscreen':
           this._bindToInput();
           break;
           
-        case 'dialog':
-        case 'dialog-fullscreen':
-          this._resetPositionStyles();
-          this.type = this._hasTriggerContent ? 'auto' : 'manual';
-          break;
-          
         case 'dropdown':
-          this.type = this._hasTriggerContent ? 'auto' : 'manual';
-          this._resetPositionStyles();
           
           // Only set up positioning if we're already shown
           if (this.shown) this._attachPopoverPositioner()
@@ -385,12 +374,15 @@ export class AuroFloater extends LitElement {
           
         case 'tooltip':
           // Configure tooltip behavior
-          this.type = 'hint';
           this.showOnHover = true;
           this._bindHoverToPositioningTarget();
           
           // Only set up positioning if we're already shown
           if (this.shown) this._attachPopoverPositioner();
+          break;
+
+        case 'dialog':
+        case 'dialog-fullscreen':
           break;
           
         default:
@@ -473,6 +465,7 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _detachPopoverPositioner() {
+      this._resetPositionStyles();
       if (this._positioner) {
         this._positioner.disconnect();
         this._positioner = null;
@@ -485,7 +478,8 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _bindToInput() {
-      const input = this._inputInTriggerSlot;
+      const input = this.input;
+      console.log("bind to input", input);
       if (input) {
         
         // If you add an event listener here, you must also remove it in _detachInput
@@ -499,7 +493,9 @@ export class AuroFloater extends LitElement {
         // Blur handling.
         input.addEventListener('blur', this._handleInputBlur);
       } else {
-        throw new Error(_NO_INPUT_ERROR);
+        setTimeout(() => {
+          if (!this._triggerEl) throw new Error(_NO_INPUT_ERROR);
+        }, 50);
       }
     }
 
@@ -509,7 +505,7 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _detachInput() {
-      const input = this._inputInTriggerSlot;
+      const input = this.input;
       if (input) {
         input.removeEventListener('focus', this._handleInputFocus);
         input.removeEventListener('input', this._handleInputChange);
@@ -606,7 +602,6 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _dispatchBeforeChangeEvent({state}) {
-      console.log(`auro-floater-beforechange: ${state}`);
       this.dispatchEvent(new CustomEvent('auro-floater-beforechange', {
         detail: { target: this, newState: state },
         bubbles: true,
@@ -683,7 +678,7 @@ export class AuroFloater extends LitElement {
       this._dispatchBeforeChangeEvent({ state: this._open ? "hidden" : "shown" });
 
       // Wait a cycle for event listeners to make adjustments for beforechange event
-      setTimeout(() => this._open = event.newState === 'open');
+      event.newState === 'open' ? this.show({internal: true}) : this.hide({internal: true});
     }
 
     /**

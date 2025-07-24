@@ -55,7 +55,7 @@ export class PopoverPositioner {
       placement: this.options.placement || 'bottom-start',
       middleware
     }).then(({ x, y, middlewareData }) => {
-      Object.assign(this.floatingEl.style, {
+      Object.assign(this.floatingEl?.style ?? {}, {
         visibility: middlewareData.hide?.referenceHidden
           ? 'hidden'
           : 'visible',

@@ -42,10 +42,11 @@
 
 ## Events
 
-| Event                       | Description                                      |
-|-----------------------------|--------------------------------------------------|
-| `auroDropdown-toggled`      | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | Notifies that the trigger has been clicked.      |
+| Event                          | Type               | Description                                      |
+|--------------------------------|--------------------|--------------------------------------------------|
+| `auroDropdown-strategy-change` | `CustomEvent<any>` |                                                  |
+| `auroDropdown-toggled`         |                    | Notifies that the visibility of the dropdown bib has changed. |
+| `auroDropdown-triggerClick`    |                    | Notifies that the trigger has been clicked.      |
 
 ## Slots
 
