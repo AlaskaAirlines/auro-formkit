@@ -38,7 +38,7 @@
 
 /* onDark */
 :host([onDark]) {
-  .label {
+  .label, .helpText {
     color: var(--ds-auro-dropdown-label-text-color);
   }
 
