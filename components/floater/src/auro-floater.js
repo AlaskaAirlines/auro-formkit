@@ -369,7 +369,7 @@ export class AuroFloater extends LitElement {
         case 'dropdown':
           
           // Only set up positioning if we're already shown
-          if (this.shown) this._attachPopoverPositioner()
+          if (this.shown) this._attachPopoverPositioner();
           break;
           
         case 'tooltip':
@@ -484,14 +484,16 @@ export class AuroFloater extends LitElement {
         
         // If you add an event listener here, you must also remove it in _detachInput
 
-        // Focus handling. Mouseup is required to not blur the input
-        input.addEventListener('focus', this._handleInputFocus);
-
         // Input change handling.
         input.addEventListener('input', this._handleInputChange);
 
+        // Focus handling.
+        input.addEventListener('focus', this._handleInputFocus);
+
         // Blur handling.
-        input.addEventListener('blur', this._handleInputBlur);
+        if (!(['input-fullscreen'].includes(this.behavior))) {
+          input.addEventListener('blur', this._handleInputBlur);
+        }
       } else {
         setTimeout(() => {
           if (!this._triggerEl) throw new Error(_NO_INPUT_ERROR);
