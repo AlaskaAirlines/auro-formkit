@@ -760,6 +760,9 @@ export class AuroCombobox extends AuroElement {
 
     // Handle validation messages from auroFormElement-validated event
     this.input.addEventListener('auroFormElement-validated', (evt) => {
+      // not to bubble up input's validated event.
+      evt.stopPropagation();
+
       this.errorMessage = evt.detail.message;
     });
   }
