@@ -10,6 +10,7 @@
 :host {
   .wrapper {
     background-color: var(--ds-auro-menuoption-container-color, transparent);
+    box-shadow: inset 0 0 0 1px var(--ds-auro-menuoption-container-border-color, transparent);
     color: var(--ds-auro-menuoption-text-color);
   }
 
@@ -31,10 +32,7 @@
 
 :host(:focus) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
-  
-  .wrapper {
-    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
-  }
+  --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
 }
 
 :host([selected]) {
@@ -50,27 +48,18 @@
 
 :host([selected]:focus) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-subtle, #{v.$ds-basic-color-surface-accent1-subtle});
-  
-  .wrapper {
-    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
-  }
+  --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
 }
 
 :host(:focus:hover),
 :host(:focus.active) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
-  
-  .wrapper {
-    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
-  }
+  --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
 }
 
 :host([selected]:focus:hover),
 :host([selected]:focus.active) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
-  
-  .wrapper {
-    box-shadow: inset 0 0 0 1px var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
-  }
+  --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
 }
 
