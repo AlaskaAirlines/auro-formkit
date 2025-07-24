@@ -124,6 +124,9 @@ export class AuroFloater extends LitElement {
         /** Whether the trigger slot contains any elements */
         _hasTriggerContent: { type: Boolean, reflect: false, state: true },
 
+        /** Internal state tracking the current behavior implementation */
+        _currentBehaviorState: { type: String, state: true },
+
         floatingUiConfig: { type: Object, reflect: false }
       };
     }
@@ -154,6 +157,10 @@ export class AuroFloater extends LitElement {
       this._open ? this.hide() : this.show();
     }
 
+    _shouldPosition () {
+      return ["dropdown", "tooltip", "input"].includes(this.behavior);
+    }
+
     /**
      * Shows the popover
      * @returns {void}
@@ -161,20 +168,25 @@ export class AuroFloater extends LitElement {
      */
     show() {
 
-       // If already open, do nothing
+      // If already open, do nothing
       if (this.popover.matches(":popover-open")) return;
 
-      // Position the popover if it is not already positioned
-      if (this._shouldPositionPopover) this._attachPopoverPositioner();
+      // Position the popover if behavior requires it
+      if (this._shouldPosition()) {
+        this._attachPopoverPositioner();
+      }
 
       // Focus the popover to ensure accessibility
-      if (this._shouldAdjustFocus) this.popover.focus();
+      if (this._shouldAdjustFocus) {
+        this.popover.focus();
+      }
       
       // Wait for a lifecycle since this is triggered by beforetoggle from the browser to ensure we check the state correctly
       setTimeout(() => {
-
         // Show the popover if it isn't already open
-        if (!this.popover.matches(':popover-open')) { this.popover.showPopover() }
+        if (!this.popover.matches(':popover-open')) { 
+          this.popover.showPopover() 
+        }
 
         // The popover is positioned and ready, so we can set shown to true
         this.shown = true;
@@ -184,7 +196,7 @@ export class AuroFloater extends LitElement {
 
         // Dispatch relevant events
         this._dispatchShowEvent();
-      })
+      });
     }
 
     /**
@@ -234,28 +246,20 @@ export class AuroFloater extends LitElement {
       // Make sure we adjust the popover visibility based on external changes from the browser
       if (changedProperties.has('_open')) this._open ? this.show() : this.hide();
 
-      // If the behavior changes, adjust the popover accordingly
-      if (['behavior', '_hasTriggerContent'].some(prop => changedProperties.has(prop))) 
-          this._adjustForBehavior(this.behavior);
+      // If the behavior changes or trigger content changes, manage behavior transition
+      if (changedProperties.has('behavior') || changedProperties.has('_hasTriggerContent')) {
+        this._manageBehavior(this.behavior);
+      }
     };
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      this._resetBindings();
+      this._cleanupCurrentBehavior();
     }
 
 
   /** PRIVATE GETTERS **/
   // Utility getters that return values based on internal state or properties
-
-    /**
-     * Gets whether the popover should be positioned based on its behavior
-     * @returns {boolean}
-     * @private
-     */
-    get _shouldPositionPopover() {
-      return ["dropdown", "tooltip", "input"].includes(this.behavior);
-    }
 
     /**
      * Checks if the popover should adjust focus based on its behavior
@@ -331,7 +335,6 @@ export class AuroFloater extends LitElement {
      * @private
      */
     get _shouldAttachFocusTrap() { 
-      console.log(`AuroFloater: _shouldAttachFocusTrap called with behavior "${this.behavior}"`);
       return !['input', 'tooltip'].includes(this.behavior)
     };
 
@@ -340,17 +343,72 @@ export class AuroFloater extends LitElement {
   // Private methods that are used internally within the component only
 
     /**
-     * Resets the bindings for the popover, detaching any event listeners or positioners
-     * This is called when the component is disconnected or when the behavior changes
+     * Centralized method to manage behavior transitions and state
+     * Called whenever behavior changes or when component needs reconfiguration
+     * @param {string} newBehavior - The behavior to transition to
+     * @param {boolean} force - Whether to force reconfiguration even if behavior hasn't changed
      * @returns {void}
      * @private
      */
-    _resetBindings() {
+    _manageBehavior(newBehavior = this.behavior, force = false) {
+      
+      // Set the new behavior state
+      this._currentBehaviorState = newBehavior;
+
+      // First, clean up any existing behavior
+      this._cleanupCurrentBehavior();
+      
+      // Configure the new behavior
+      switch(newBehavior) {
+        case 'input':
+          this.type = 'manual';
+          this._bindToInput();
+          break;
+          
+        case 'dialog':
+        case 'dialog-fullscreen':
+          this._resetPositionStyles();
+          this.type = this._hasTriggerContent ? 'auto' : 'manual';
+          break;
+          
+        case 'dropdown':
+          this.type = this._hasTriggerContent ? 'auto' : 'manual';
+          this._resetPositionStyles();
+          
+          // Only set up positioning if we're already shown
+          if (this.shown) this._attachPopoverPositioner()
+          break;
+          
+        case 'tooltip':
+          // Configure tooltip behavior
+          this.type = 'hint';
+          this.showOnHover = true;
+          this._bindHoverToPositioningTarget();
+          
+          // Only set up positioning if we're already shown
+          if (this.shown) this._attachPopoverPositioner();
+          break;
+          
+        default:
+          console.warn(`AuroFloater: Unknown behavior type "${newBehavior}"`);
+      }
+    }
+
+    /**
+     * Cleans up the current behavior implementation
+     * @returns {void}
+     * @private
+     */
+    _cleanupCurrentBehavior() {
+      // Detach all behavior-specific handlers
       this._detachInput();
       this._detachHoverFromPositioningTarget();
       this._detachPopoverPositioner();
-      this._detachFocusTrap();
-      this._resetPositionStyles();
+      
+      // Focus trap is specific to certain behaviors
+      if (this._focusTrap) {
+        this._detachFocusTrap();
+      }
     }
 
     /**
@@ -364,35 +422,6 @@ export class AuroFloater extends LitElement {
       this.popover.style.position = null;
       this.popover.style.top = null;
       this.popover.style.left = null;
-    }
-
-    /**
-     * Makes adjustments based on a specific behavior type
-     * @returns {void}
-     * @private
-     */
-    _adjustForBehavior(behavior) {
-      this._resetBindings();
-      switch (behavior) {
-        case 'input':
-          this.type = 'manual';
-          this._bindToInput();
-          break;
-        case 'dialog':
-        case 'dialog-fullscreen':
-          this.type = this._hasTriggerContent ? 'auto' : 'manual';
-          break;
-        case 'dropdown':
-          this.type = this._hasTriggerContent ? 'auto' : 'manual';
-          break;
-        case 'tooltip':
-          this.type = 'hint';
-          this.showOnHover = true;
-          this._bindHoverToPositioningTarget();
-          break;
-        default:
-          console.warn(`AuroFloater: Unknown behavior type "${behavior}"`);
-      }
     }
 
     /**
@@ -557,7 +586,6 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _dispatchChangeEvent({state}) {
-      console.log(`AuroFloater: _dispatchChangeEvent called with state "${state}"`);
       this.dispatchEvent(new CustomEvent('auro-floater-change', {
         detail: { target: this, newState: state },
         bubbles: true,
@@ -574,7 +602,6 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _dispatchBeforeChangeEvent({state}) {
-      console.log(`AuroFloater: _dispatchBeforeChangeEvent called with state "${state}"`);
       this.dispatchEvent(new CustomEvent('auro-floater-beforechange', {
         detail: { target: this, newState: state },
         bubbles: true,

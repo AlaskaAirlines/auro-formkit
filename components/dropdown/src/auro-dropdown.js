@@ -78,12 +78,36 @@ export class AuroDropdown extends AuroElement {
     this.parentBorder = false;
 
     /** @private */
-    this.handleDropdownToggle = this.handleDropdownToggle.bind(this);
+    this.handleDropdownToggle = this._handleDropdownToggle.bind(this);
 
     this.privateDefaults();
 
     this._createElementRefs();
+    window.addEventListener('resize', this._handleResize);
   }
+
+  /**
+   * Debounce a function call.
+   * @param {Function} fn - The function to debounce.
+   * @param {number} delay - The debounce delay in milliseconds.
+   * @returns {Function} The debounced function.
+   * @private
+   */
+  debounce(fn, delay) {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn.apply(this, args);
+      }, delay);
+    };
+  }
+
+  /**
+   * Handle the window resize event.
+   * @private
+   */
+  _handleResize = this.debounce(this._calculateIsBibFullscreen, 100);
 
   /**
    * @private
@@ -115,12 +139,6 @@ export class AuroDropdown extends AuroElement {
     this.showTriggerBorders = true;
     this.triggerContentFocusable = false;
     this.simple = false;
-
-    // floaterConfig
-    // this.placement = 'bottom-start';
-    // this.offset = 0;
-    // this.noFlip = false;
-    // this.autoPlacement = false;
 
     /**
      * @private
@@ -555,10 +573,8 @@ export class AuroDropdown extends AuroElement {
    * Toggles the state of the popover visibility to the legacy isPopoverVisible property.
    * @private
    */
-  handleDropdownToggle() {
-    console.log(`AuroDropdown: handleDropdownToggle called with isPopoverVisible: ${this._floater.shown}`);
+  _handleDropdownToggle() {
     this.isPopoverVisible = this._floater.shown;
-    this._calculateIsBibFullscreen();
   }
 
   _calculateIsBibFullscreen() {
@@ -566,14 +582,16 @@ export class AuroDropdown extends AuroElement {
     const breakpoint = styles.getPropertyValue(`--ds-grid-breakpoint-${this.fullscreenBreakpoint}`).trim();
     const smallerThanBreakpoint = window.matchMedia(`(max-width: ${breakpoint})`).matches;
     this.isBibFullscreen = smallerThanBreakpoint;
-    console.log(`AuroDropdown: _calculateIsBibFullscreen called with isBibFullscreen: ${this.isBibFullscreen}, fullscreenBreakpoint: ${this.fullscreenBreakpoint}, smallerThanBreakpoint: ${smallerThanBreakpoint}`);
   }
 
   firstUpdated() {
 
     // Configure the floater to, this will generate the ID for the bib
     // this.floater.configure(this, 'auroDropdown');
-    this.addEventListener('auro-floater-beforechange', this.handleDropdownToggle);
+    this.addEventListener('auro-floater-change', this._handleDropdownToggle);
+
+    // Initial measuring of if we should be fullscreen
+    this._calculateIsBibFullscreen();
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
@@ -591,15 +609,6 @@ export class AuroDropdown extends AuroElement {
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
-
-    // this.trigger.addEventListener('click', () => {
-    //   console.log(`Trigger clicked: ${this.trigger.textContent}`);
-
-    //   this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', {
-    //     bubbles: true,
-    //     composed: true
-    //   }));
-    // });
   }
 
   /**
