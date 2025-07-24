@@ -25,6 +25,11 @@
     width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
     margin-right: var(--ds-size-300, vac.$ds-size-300);
   }
+
+  .trigger,
+  .helpText {
+    text-align: center;
+  }
 }
 
 .layout-snowflake,

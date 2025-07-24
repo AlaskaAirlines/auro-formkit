@@ -39,6 +39,10 @@
     }
   }
 
+  &::part(helpText) {
+    text-align: center;
+  }
+
   // for the trigger content
 
   .dpTriggerContent {
