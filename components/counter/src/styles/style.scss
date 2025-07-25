@@ -42,6 +42,7 @@
 
 :host{
   position: relative;
+  text-align: left;
 
   &::part(counterControl) {
     display: flex;
