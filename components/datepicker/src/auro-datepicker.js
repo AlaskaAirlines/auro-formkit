@@ -733,6 +733,9 @@ export class AuroDatePicker extends AuroElement {
       });
 
       input.addEventListener('auroFormElement-validated', (evt) => {
+        // not to bubble up input's validated event.
+        evt.stopPropagation();
+
         if (evt.detail.validity === 'customError') {
           this.validity = evt.detail.validity;
           this.errorMessage = evt.detail.message;
@@ -1070,7 +1073,6 @@ export class AuroDatePicker extends AuroElement {
       }
 
       this.setHasValue();
-      this.validate();
     }
 
     if (changedProperties.has('valueEnd') && this.inputList[1]) {
