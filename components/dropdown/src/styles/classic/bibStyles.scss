@@ -1,0 +1,87 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// layout styles - define any layout specifications for UI that is contained WITHIN the component
+// never define layout that would cause effect on element outside the scope of this component
+
+// Support for fallback values
+
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-class-pattern, selector-max-class */
+
+
+:host {
+  position: fixed;
+  z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
+  display: none;
+  isolation: isolate;
+}
+
+:host(:not([matchWidth])) {
+  .container {
+      min-width: fit-content;
+  }
+}
+
+:host([isfullscreen]) {
+ position: fixed;
+ top: 0;
+ left: 0;
+
+ .container {
+    width: 100dvw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    border-radius: unset;
+    margin-top: 0;
+    box-shadow: unset;
+    overscroll-behavior: contain;
+ }
+}
+
+:host([data-show]) {
+  display: flex;
+}
+
+:host([common]:not([isfullscreen])),
+:host([rounded]:not([isfullscreen])) {
+  .container {
+    border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+  }
+}
+
+:host([common][isfullscreen]),
+:host([rounded][isfullscreen]) {
+  .container {
+    border-radius: unset;
+    box-shadow: unset;
+  }
+}
+
+
+:host(:not([isfullscreen])) {
+  .container{
+    &.shape-box {
+      border-radius: unset;
+    }
+
+    &[class*="shape-pill"],
+    &[class*="shape-snowflake"] {
+      border-radius: 30px;
+    }
+  }
+}
+
+
+.container {
+  display: inline-block;
+  overflow: auto;
+  box-sizing: border-box;
+  border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+  margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
+}
+

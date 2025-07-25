@@ -10,6 +10,47 @@
 
 ## Examples
 
+### Snowflake layout
+
+#### Single date
+<div class="exampleWrapper--ondark" style="width: 306px">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/ondark.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### Range
+<div class="exampleWrapper--ondark" style="width: 306px">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark-range.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark-range.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/ondark-range.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 ### Basic
 
 <div class="exampleWrapper">

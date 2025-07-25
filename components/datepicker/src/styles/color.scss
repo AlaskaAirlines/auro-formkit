@@ -3,11 +3,24 @@
 
 /* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before */
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+
+:host {
+  label {
+    color: var(--ds-auro-datepicker-label-text-color);
+  }
+
+  .inputDivider {
+    background-color: var(--ds-auro-datepicker-range-input-divider-color);
+  }
+
+  .error {
+    color: var(--ds-auro-datepicker-error-icon-color);
+  }
+}
 
 [auro-input] {
   &::part(wrapper) {
@@ -26,6 +39,15 @@
   }
 }
 
-:host([onDark]) {
-  --ds-auro-datepicker-range-input-divider-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
+// disabled state
+:host(:not([ondark])[disabled]) {
+  --ds-auro-datepicker-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
+  --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  --ds-auro-datepicker-placeholder-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+}
+
+:host([ondark][disabled]) {
+  --ds-auro-datepicker-border-color: var(--ds-advanced-color-button-primary-border-inverse-disabled, #{v.$ds-advanced-color-button-primary-border-inverse-disabled});
+  --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-datepicker-placeholder-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 }

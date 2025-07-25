@@ -84,6 +84,7 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
   <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Select Example</span>
   <auro-menu>

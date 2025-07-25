@@ -1,0 +1,39 @@
+/* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before */
+
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+
+:host([layout*='classic']) {
+  .accents {
+    display: none;
+  }
+
+  [auro-input] {
+    width: 100%;
+
+    &::part(helpText) {
+      display: none;
+    }
+
+    &::part(wrapper) {
+      border-width: 0;
+      box-shadow: none;
+    }
+  }
+
+  [auro-input].dateTo {
+    margin-left: var(--ds-size-150, 0.75rem);
+
+    &::part(accent-left) {
+      display: none;
+    }
+  }
+
+  .inputDivider {
+    width: 1px;
+    height: 2rem;
+  }
+}

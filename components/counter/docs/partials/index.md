@@ -64,6 +64,56 @@ Adding a description provides additional context to users. The description appea
 
 </auro-accordion>
 
+### Counter with Help Text
+
+Help text is supported with counters, and can be added by targetting the `helptext` slot.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-helptext.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-helptext.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/counter-helptext.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-helptext.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Counter with Custom Error
+
+A custom error can be set on the counter by adding the `error` attribute with the desired message.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-error.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark" aria-hidden>
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-error.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/counter-error.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-error.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 
 ### Basic Counter Group
 
@@ -92,7 +142,9 @@ Counter groups allow you to manage multiple related counters together. This is u
 
 ### Dropdown Counter Group
 
-The dropdown mode provides a more compact interface, ideal for forms where space is limited. It collapses the counters into a dropdown that expands when clicked:
+The dropdown mode provides a more compact interface, ideal for forms where space is limited. It collapses the counters into a dropdown that expands when clicked.
+
+When using a dropdown, an additional layout, `snowflake`, is available for use:
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-basic.html) -->
@@ -104,13 +156,29 @@ The dropdown mode provides a more compact interface, ideal for forms where space
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-snowflake.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark-dropdown-snowflake.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dropdown-basic.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
+  <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dropdown-basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDropdown.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDropdown.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-snowflake.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark-dropdown-snowflake.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

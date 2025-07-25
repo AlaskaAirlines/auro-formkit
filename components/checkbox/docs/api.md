@@ -33,11 +33,11 @@ The auro-checkbox-group element is a wrapper for auro-checkbox element.
 
 ## Slots
 
-| Name            | Description                                     |
-|-----------------|-------------------------------------------------|
-| `helpText`      | Allows for the helper text to be overridden.    |
-| `legend`        | Allows for the legend to be overridden.         |
-| `optionalLabel` | Allows for the optional label to be overridden. |
+| Name            | Description                                      |
+|-----------------|--------------------------------------------------|
+| `helpText`      | Allows for the helper text to be overridden.     |
+| `legend`        | Allows for the legend to be overridden.          |
+| `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
 
 
 # auro-checkbox
@@ -64,11 +64,13 @@ Custom element for the purpose of allowing users to select one or more options o
 
 ## Events
 
-| Event                   | Type               |
-|-------------------------|--------------------|
-| `auroCheckbox-focusin`  | `CustomEvent<any>` |
-| `auroCheckbox-focusout` | `CustomEvent<any>` |
-| `auroCheckbox-input`    | `CustomEvent<any>` |
+| Event                   | Type               | Description                                      |
+|-------------------------|--------------------|--------------------------------------------------|
+| `auroCheckbox-focusin`  | `CustomEvent<any>` |                                                  |
+| `auroCheckbox-focusout` | `CustomEvent<any>` |                                                  |
+| `auroCheckbox-input`    | `CustomEvent<any>` |                                                  |
+| `change`                | `CustomEvent<any>` | (Deprecated) Notifies when checked value is changed. |
+| `input`                 | `InputEvent`       | Notifies when when checked value is changed by user's interface. |
 
 ## CSS Shadow Parts
 

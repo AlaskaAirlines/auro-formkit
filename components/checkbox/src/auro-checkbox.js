@@ -24,6 +24,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.
+ *
+ * @event {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
+ * @event {InputEvent} input - Notifies when when checked value is changed by user's interface.
  */
 
 // build the component class
@@ -62,6 +65,7 @@ export class AuroCheckbox extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+      ...super.properties,
 
       /**
        * If set to true, the checkbox will be filled with a checkmark.
@@ -168,6 +172,7 @@ export class AuroCheckbox extends LitElement {
   handleInput(event) {
     this.checked = event.target.checked;
 
+    // Old event we need to deprecate
     this.dispatchEvent(new CustomEvent('auroCheckbox-input', {
       bubbles: true,
       cancelable: false,
@@ -219,9 +224,16 @@ export class AuroCheckbox extends LitElement {
 
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
-    this.addEventListener('click', () => {
-      this.checked = !this.checked;
-      this.handleFocusin();
+    this.addEventListener('click', (evt) => {
+      // Only prevent default for real user events, not tests or programmatic calls
+      if (evt.isTrusted) {
+        evt.preventDefault();
+      }
+
+      if (!this.disabled) {
+        this.shadowRoot.querySelector('input').click();
+        this.handleFocusin();
+      }
     });
 
     this.addEventListener('focusin', () => {
@@ -237,7 +249,10 @@ export class AuroCheckbox extends LitElement {
     });
   }
 
-  // function that renders the HTML and CSS into  the scope of the component
+  /**
+   * @private
+   * @returns {HTMLElement}
+   */
   render() {
     const labelClasses = {
       'label': true,
@@ -246,15 +261,15 @@ export class AuroCheckbox extends LitElement {
     };
 
     return html`
-      <div class="cbxContainer" part="checkbox">
+      <div class="cbxContainer body-default" part="checkbox">
         <div class="inputContainer">
           <input
             class="util_displayHiddenVisually cbx--input"
             part="checkbox-input"
-            @change=${this.handleChange}
+            @change="${this.handleChange}"
             @input="${this.handleInput}"
             ?disabled="${this.disabled}"
-            .checked="${this.checked}"
+            ?checked="${this.checked}"
             id="${this.inputId}"
             name="${ifDefined(this.name)}"
             type="checkbox"

@@ -4,15 +4,17 @@
 // ---------------------------------------------------------------------
 
 // Support for fallback values
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+// Import type classes
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 
 .counter {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  column-gap: var(--ds-size-150, $ds-size-150);
+  column-gap: var(--ds-size-150, vac.$ds-size-150);
 }
 
 .content {
@@ -23,23 +25,19 @@
 [name="description"] {
   &::slotted(*) {
     display: block;
-    font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
-    font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
-    letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
-    line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
   }
 }
 
 .quantityWrapper {
-  width: var(--ds-size-400, $ds-size-400);
-  height: calc(var(--ds-size-25, $ds-size-25) + var(--ds-size-400, $ds-size-400));
+  width: var(--ds-size-400, vac.$ds-size-400);
+  height: calc(var(--ds-size-25, vac.$ds-size-25) + var(--ds-size-400, vac.$ds-size-400));
   align-content: center;
   cursor: default;
-  font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
-  font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
-  letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
-  line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
   text-align: center;
+}
+
+.quantity {
+  margin-top: 0.25rem;
 }
 
 :host{
@@ -47,8 +45,7 @@
 
   &::part(counterControl) {
     display: flex;
-    border-radius: var(--ds-size-500, $ds-size-500);
-    line-height: 0;
+    border-radius: var(--ds-size-500, vac.$ds-size-500);
 
     // prevent double-tap zoom on iOS (included in button for enabled state behaving differently)
     touch-action: manipulation;
@@ -56,18 +53,18 @@
     &:focus-visible {
       outline-offset: 0;
       outline-style: solid;
-      outline-width: var(--ds-size-25, $ds-size-25);
+      outline-width: var(--ds-size-25, vac.$ds-size-25);
     }
   }
 
   &::part(controlMinus) {
-    --ds-auro-counter-control-border-radius: var(--ds-size-500, #{$ds-size-500}) 0 0 var(--ds-size-500, #{$ds-size-500});
-    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100});
+    --ds-auro-counter-control-border-radius: var(--ds-size-500, #{vac.$ds-size-500}) 0 0 var(--ds-size-500, #{vac.$ds-size-500});
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{vac.$ds-size-50}) var(--ds-size-50, #{vac.$ds-size-50}) var(--ds-size-50, #{vac.$ds-size-50}) var(--ds-size-100, #{vac.$ds-size-100});
   }
 
   &::part(controlPlus) {
-    --ds-auro-counter-control-border-radius: 0 var(--ds-size-500, #{$ds-size-500}) var(--ds-size-500, #{$ds-size-500}) 0;
-    --ds-auro-counter-control-padding: var(--ds-size-50, #{$ds-size-50}) var(--ds-size-100, #{$ds-size-100}) var(--ds-size-50, #{$ds-size-50}) var(--ds-size-50, #{$ds-size-50});
+    --ds-auro-counter-control-border-radius: 0 var(--ds-size-500, #{vac.$ds-size-500}) var(--ds-size-500, #{vac.$ds-size-500}) 0;
+    --ds-auro-counter-control-padding: var(--ds-size-50, #{vac.$ds-size-50}) var(--ds-size-100, #{vac.$ds-size-100}) var(--ds-size-50, #{vac.$ds-size-50}) var(--ds-size-50, #{vac.$ds-size-50});
   }
 }
 

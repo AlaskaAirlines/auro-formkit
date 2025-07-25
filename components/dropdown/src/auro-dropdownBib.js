@@ -7,11 +7,12 @@
 
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
+import { classMap } from 'lit/directives/class-map.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import styleCss from "./styles/bibStyles-css.js";
-import colorCss from "./styles/bibColors-css.js";
+import styleCss from "./styles/classic/bibStyles-css.js";
+import colorCss from "./styles/classic/bibColors-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
@@ -29,7 +30,7 @@ const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
  */
 
 export class AuroDropdownBib extends LitElement {
-
+// not extending AuroElement because Bib needs only `shape` prop
   constructor() {
     super();
 
@@ -39,6 +40,9 @@ export class AuroDropdownBib extends LitElement {
     this._mobileBreakpointValue = undefined;
 
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-dropdownbib');
+
+    this.shape = "rounded";
+    this.matchWidth = false;
   }
 
   static get styles() {
@@ -77,6 +81,15 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
+       * If declared, the bib width will match the trigger width.
+       * @private
+       */
+      matchWidth: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If declared, will apply border-radius to the bib.
        */
       rounded: {
@@ -89,6 +102,11 @@ export class AuroDropdownBib extends LitElement {
        */
       bibTemplate: {
         type: Object
+      },
+
+      shape: {
+        type: String,
+        reflect: true
       }
     };
   }
@@ -168,8 +186,16 @@ export class AuroDropdownBib extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const classes = {
+      container: true
+    };
+
+    // Since this class does not inherit from AuroElement, we apply the shape-related class within the `render` function,
+    // mimicking the class naming convention used in AuroElement.resetShapeClasses.
+    classes[`shape-${this.shape}`] = true;
+
     return html`
-      <div class="container" part="bibContainer">
+      <div class="${classMap(classes)}" part="bibContainer">
         <slot></slot>
       </div>
     `;

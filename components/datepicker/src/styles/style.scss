@@ -3,135 +3,88 @@
 
 /* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before */
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
 
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
 
-[auro-input] {
-  &::part(iconContainer) {
-    top: 0;
+.accents {
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.left {
+    padding-right: var(--ds-size-100, vac.$ds-size-100);
+  }
+
+  &.right {
+    width: var(--ds-size-400, vac.$ds-size-400);
+  }
+
+  .notification:not(.util_displayHidden) {
     display: flex;
-    height: 100%;
     align-items: center;
+    justify-content: center;
+  }
+}
+
+.mainContent {
+  height: 100%;
+  max-height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.inputSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  width: 100%;
+  margin: 0 auto;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+
+  &:first-of-type {
+    justify-content: flex-end;
   }
 
-  &::part(accentIcon) {
-    transition: all .3s cubic-bezier(.215, .61, .355, 1);
-  }
-
-  &::part(helpText) {
-    display: none;
-  }
-
-  &::part(wrapper) {
-    &:focus-within {
-      &:before {
-        border-bottom-width: 0 !important;
-        box-shadow: unset !important;
-        outline: unset !important;
-      }
-    }
-
-    --ds-auro-input-border-color: transparent;
-    --ds-auro-input-container-color: transparent;
-  }
-
-  // Horizontal ruler
-  &:not(:first-child) {
-    &::part(wrapper) {
-      /* stylelint-disable-next-line selector-pseudo-element-colon-notation */
-      &::after {
-        position: absolute;
-        left: 50%;
-        width: 95%;
-        height: 1px;
-        background-color: var(--ds-auro-datepicker-range-input-divider-color);
-        content: '';
-        transform: translateX(-50%);
-      }
-    }
+  &:last-of-type {
+    justify-content: flex-start;
   }
 }
 
 .dpTriggerContent {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+}
 
-  [auro-input] {
-    flex: 1;
+.wrapper:not(:focus-within):not(:hover) { // stylelint-disable selector-not-notation
+  .notification.clear {
+    display: none;
   }
 }
 
-// Container queries
-
-/* This value is per design but relates to 
-   https://github.com/AlaskaAirlines/AuroDesignTokens/issues/206
-*/
-:host(:not([stacked])) {
-  .dpTriggerContent {
-    flex-direction: row;
-  }
-
-  [auro-input] {
-    &:first-of-type {
-      margin-right: var(--ds-size-150, $ds-size-150);
-    }
-
-    &:nth-child(2) {
-      margin-left: var(--ds-size-150, $ds-size-150);
-
-      &::part(accentIcon) {
-        display: none;
-      }
-
-      &::part(label) {
-        left: 0;
-        width: 100%;
-      }
-
-      &::part(input) {
-        padding-left: 0;
-      }
-
-      &:before {
-        position: absolute;
-        top: 13px;
-        left: calc(var(--ds-size-150, $ds-size-150) * -1);
-        display: block;
-        width: 1px;
-        height: 2rem;
-        content: '';
-      }
-    }
-
-    // Hide horizontal ruler
-    &:not(:first-child) {
-      /* stylelint-disable-next-line selector-pseudo-element-colon-notation */
-      &::part(wrapper) {
-        &:after {
-          content: none;
-        }
-      }
-    }
-  }
-}
-
-:host(:not([stacked])[range]) {
-  [auro-input] {
-    max-width: 50%;
-  }
-}
-
-@include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+@include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
   ::part(popover) {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    margin-bottom: var(--ds-size-200, $ds-size-200);
+    margin-bottom: var(--ds-size-200, vac.$ds-size-200);
     transform: unset !important;
   }
 

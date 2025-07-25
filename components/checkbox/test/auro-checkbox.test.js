@@ -5,9 +5,10 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-lines */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
-
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import '../src/registered.js';
 
+useAccessibleIt();
 describe('auro-checkbox-group', () => {
   it('has the expected properties and validity in required state', async () => {
     const el = await fixture(html`
@@ -120,11 +121,11 @@ describe('auro-checkbox-group', () => {
     alaskaCheckboxInput.click();
     alaskaCheckboxInput.dispatchEvent(new Event('input'));
     await alaskaCheckbox.updateComplete;
-    expect(alaskaCheckboxInput.checked).to.be.true;
+    expect(alaskaCheckboxInput.hasAttribute('checked')).to.be.true;
 
     alaskaCheckbox.checked = false;
     await alaskaCheckbox.updateComplete;
-    expect(alaskaCheckboxInput.checked, 'the shadow input was not unchecked').to.be.false;
+    expect(alaskaCheckboxInput.hasAttribute('checked'), 'the shadow input was not unchecked').to.be.false;
   });
 
   it('can select multiple checkboxes', async () => {
@@ -183,28 +184,6 @@ describe('auro-checkbox-group', () => {
       expect(checkbox.disabled).to.be.true;
       expect(checkbox.error).to.be.true;
     });
-  });
-
-  it('is accessible', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-          checked
-        ></auro-checkbox>
-
-        <auro-checkbox
-          id="washington"
-          name="states"
-          type="radio"
-          value="washington"
-        ></auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    expect(el).to.be.accessible();
   });
 
   it('updates states on children', async () => {

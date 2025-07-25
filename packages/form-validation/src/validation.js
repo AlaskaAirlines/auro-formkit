@@ -70,19 +70,19 @@ export default class AuroFormValidation {
           {
             check: (e) => e.value?.length > 0 && e.value?.length < e.minLength,
             validity: 'tooShort',
-            message: e => e.setCustomValidityTooShort || e.setCustomValidity || ''
+            message: e => e.getAttribute('setCustomValidityTooShort') || e.setCustomValidity || ''
           },
           {
             check: (e) => e.value?.length > e.maxLength,
             validity: 'tooLong',
-            message: e => e.setCustomValidityTooLong || e.setCustomValidity || ''
+            message: e => e.getAttribute('setCustomValidityTooLong') || e.setCustomValidity || ''
           }
         ],
         pattern: [
           {
             check: (e) => e.pattern && !new RegExp(`^${e.pattern}$`, 'u').test(e.value),
             validity: 'patternMismatch',
-            message: e => e.setCustomValidityPatternMismatch || e.setCustomValidity || ''
+            message: e => e.getAttribute('setCustomValidityPatternMismatch') || e.setCustomValidity || ''
           }
         ]
       },
@@ -229,13 +229,24 @@ export default class AuroFormValidation {
     this.getInputElements(elem);
     this.getAuroInputs(elem);
 
-    // Validate only if noValidate is not true and the input does not have focus
+    // Check if validation should run
     let validationShouldRun =
+
+      // If the validation was forced
       force ||
-      (!elem.contains(document.activeElement) &&
-        (elem.touched ||
-          (!elem.touched && typeof elem.value !== "undefined"))) ||
-      elem.validateOnInput;
+
+      // If the validation should run on input
+      elem.validateOnInput ||
+
+      // State-based checks
+      (
+        // Element is not currently focused
+        !elem.contains(document.activeElement) && // native input is not focused directly
+        !document.activeElement.shadowRoot?.contains(elem) && // native input is not focused in the shadow DOM of another component
+
+        // And element has been touched or is untouched but has a value
+        ( elem.touched || (!elem.touched && typeof elem.value !== "undefined") )
+      );
 
     if (elem.hasAttribute('error')) {
       elem.validity = 'customError';
@@ -277,10 +288,10 @@ export default class AuroFormValidation {
       if (!hasValue && elem.required && elem.touched) {
         elem.validity = 'valueMissing';
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
-      } else if (this.runtimeUtils.elementMatch(elem, 'auro-input')) {
+      } else if (hasValue && this.runtimeUtils.elementMatch(elem, 'auro-input')) {
         this.validateType(elem);
         this.validateElementAttributes(elem);
-      } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
+      } else if (hasValue && (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group'))) {
         this.validateElementAttributes(elem);
       }
     }
@@ -289,7 +300,9 @@ export default class AuroFormValidation {
       elem.validity = this.auroInputElements[0].validity;
       elem.errorMessage = this.auroInputElements[0].errorMessage;
 
-      if (elem.validity === 'valid' && this.auroInputElements.length > 1) {
+      // multiple input in one components (datepicker)
+      // combobox has 2 inputs but no need to check validity on the 2nd one which is in fullscreen bib. 
+      if (elem.validity === 'valid' && this.auroInputElements.length > 1 && !this.runtimeUtils.elementMatch(elem, 'auro-combobox')) {
         elem.validity = this.auroInputElements[1].validity;
         elem.errorMessage = this.auroInputElements[1].errorMessage;
       }

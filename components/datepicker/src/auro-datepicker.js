@@ -6,9 +6,8 @@
 /* eslint-disable max-lines, no-magic-numbers, complexity, newline-per-chained-call, no-underscore-dangle, lit/binding-positions,
    lit/no-invalid-html, no-unused-expressions */
 
-// If using litElement base class
-import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
+import {classMap} from "lit/directives/class-map.js";
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 
@@ -22,6 +21,13 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import styleCss from "./styles/style-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
+import shapeSizeCss from "./styles/shapeSize-css.js";
+
+// layouts
+import classicLayoutStyle from "./styles/classic/style-css.js";
+import classicLayoutColor from "./styles/classic/color-css.js";
+import snowflakeStyle from "./styles/snowflake/style-css.js";
+import snowflakeColors from "./styles/snowflake/color-css.js";
 
 import './auro-calendar.js';
 
@@ -30,11 +36,26 @@ import dropdownVersion from './dropdownVersion.js';
 
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import inputVersion from './inputVersion.js';
+
+import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
+import helpTextVersion from "@aurodesignsystem/auro-select/src/helptextVersion.js";
+
 import { ifDefined } from "lit/directives/if-defined.js";
+import {AuroElement} from "@aurodesignsystem/auro-layout-element";
+import i18n from "@aurodesignsystem/auro-input/src/i18n.js";
+
+import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import iconVersion from './iconVersion.js';
+
+import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import buttonVersion from './buttonVersion.js';
+import { LitElement } from 'lit';
+
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot helpText - Defines the content of the helpText.
+ * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
  * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
@@ -56,7 +77,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
  */
 
 // build the component class
-export class AuroDatePicker extends LitElement {
+export class AuroDatePicker extends AuroElement {
   constructor() {
     super();
 
@@ -108,8 +129,6 @@ export class AuroDatePicker extends LitElement {
       'December'
     ];
 
-    this.monthFirst = true;
-
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -151,12 +170,39 @@ export class AuroDatePicker extends LitElement {
     /**
      * @private
      */
+    this.buttonTag = versioning.generateTag('auro-formkit-datepicker-button', buttonVersion, AuroButton);
+
+    /**
+     * @private
+     */
+    this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
+
+    /**
+     * @private
+     */
     this.inputTag = versioning.generateTag('auro-formkit-datepicker-input', inputVersion, AuroInput);
 
     /**
      * @private
      */
-    this.monthFirst = undefined;
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+
+    /** @private */
+    this.handleClick = this.handleClick.bind(this);
+
+    // Layout Config
+    this.layout = 'classic';
+    this.shape = 'classic';
+    this.size = 'lg';
+
+    /**
+     * @private
+     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
+     */
+    this.constructor.shadowRootOptions = {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
   }
 
   // This function is to define props used within the scope of this component
@@ -220,6 +266,19 @@ export class AuroDatePicker extends LitElement {
       error: {
         type: String,
         reflect: true
+      },
+
+      hasFocus: {
+        type: Boolean,
+        reflect: false,
+      },
+
+      /**
+       * @private
+       */
+      hasValue: {
+        type: Boolean,
+        reflect: false,
       },
 
       /**
@@ -321,6 +380,24 @@ export class AuroDatePicker extends LitElement {
        */
       onDark: {
         type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Placeholder text to display in the input(s) when no value is set.
+       */
+      placeholder: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Optional placeholder text to display in the second input when using date range.
+       * By default, datepicker will use `placeholder` for both inputs if placeholder is
+       * specified, but placeholderendDate is not.
+       */
+      placeholderEndDate: {
+        type: String,
         reflect: true
       },
 
@@ -437,7 +514,16 @@ export class AuroDatePicker extends LitElement {
     return [
       styleCss,
       colorCss,
-      tokensCss
+      tokensCss,
+
+      // layout util
+      shapeSizeCss,
+
+      // layouts
+      classicLayoutStyle,
+      classicLayoutColor,
+      snowflakeStyle,
+      snowflakeColors
     ];
   }
 
@@ -502,10 +588,10 @@ export class AuroDatePicker extends LitElement {
    * @param {String} focusInput - Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input.
    * @returns {void}
    */
-  focus(focusInput) {
+  focus(focusInput = '') {
+    this.hasFocus = true;
     this.range && focusInput === 'endDate' ? this.inputList[1].focus() : this.inputList[0].focus();
   }
-
 
   /**
    * Converts valid time number to format used by wc-date-range API.
@@ -622,7 +708,7 @@ export class AuroDatePicker extends LitElement {
    * @returns {void}
    */
   configureInput() {
-    this.triggerInput = this.dropdown.querySelector('[slot="trigger"');
+    this.triggerInput = this.dropdown.querySelector('[slot="trigger"]');
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
@@ -704,19 +790,20 @@ export class AuroDatePicker extends LitElement {
    */
   configureDatepicker() {
     this.addEventListener('focusin', () => {
-
       this.touched = true;
+      this.hasFocus = true;
     });
 
-    this.addEventListener('focusout', (evt) => {
-      if (!this.noValidate && !evt.detail.expanded && this.touched) {
-        if (!this.contains(document.activeElement)) {
-          this.validation.validate(this.inputList[0]);
+    this.addEventListener('focusout', () => {
+      this.hasFocus = false;
 
-          if (this.inputList[1] && this.inputList[1].touched) {
-            this.validation.validate(this.inputList[1]);
-          }
-        }
+      if (this.noValidate) {
+        return;
+      }
+
+      if (!this.contains(document.activeElement)) {
+        this.validate();
+        this.dropdown.hide();
       }
     });
 
@@ -726,6 +813,26 @@ export class AuroDatePicker extends LitElement {
 
     if (this.hasAttribute('valueEnd') && this.getAttribute('valueEnd').length > 0) {
       this.calendar.dateTo = new Date(this.formattedValueEnd).getTime();
+    }
+  }
+
+  /**
+   * Hides the dropdown bib if its open.
+   * @returns {void}
+   */
+  hideBib() {
+    if (this.dropdown && this.dropdown.isPopoverVisible) {
+      this.dropdown.hide();
+    }
+  }
+
+  /**
+   * Shows the dropdown bib if there are options to show.
+   * @returns {void}
+   */
+  showBib() {
+    if (this.dropdown && !this.dropdown.isPopoverVisible) {
+      this.dropdown.show();
     }
   }
 
@@ -774,23 +881,33 @@ export class AuroDatePicker extends LitElement {
     const convertedDate = this.convertWcTimeToDate(time);
     const newDate = this.util.toCustomFormat(convertedDate, this.format);
 
+    let onEndValue = false;
     if (this.util.validDateStr(newDate, this.format)) {
-      if (this.inputList.length > 1) {
-        if (!this.value || !this.util.validDateStr(this.value, this.format)) {
-          this.value = newDate;
-        } else if (!this.valueEnd || !this.util.validDateStr(this.valueEnd, this.format)) {
+      if (this.range) {
+        const isValueValid = this.value && this.util.validDateStr(this.value, this.format);
+        const isValueEndValid = this.valueEnd && this.util.validDateStr(this.valueEnd, this.format);
+
+        if (isValueValid && !isValueEndValid) {
           // verify the date is after this.value to insure we are setting a proper range
           if (new Date(this.util.toNorthAmericanFormat(newDate, this.format)) >= new Date(this.formattedValue)) {
-            this.valueEnd = newDate;
-          } else {
-            this.value = newDate;
+            onEndValue = true;
           }
-        } else {
-          this.value = newDate;
+        } else if (isValueValid && isValueEndValid) {
+          // both dateTo and dateFrom are valid, then reset datTo
           this.valueEnd = '';
+        }
+      }
+
+      if (onEndValue) {
+        this.valueEnd = newDate;
+        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
+          this.focus('startDate');
         }
       } else {
         this.value = newDate;
+        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
+          this.focus('endDate');
+        }
       }
     }
   }
@@ -805,15 +922,41 @@ export class AuroDatePicker extends LitElement {
   }
 
   /**
+   * Handle enter/space keydown on the reset button.
+   * @private
+   * @param {KeyboardEvent} event - The keydown event.
+   */
+  handleKeydownReset(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.resetInputs();
+      this.focus();
+    }
+  }
+
+  /**
+   * Resets values without resetting validation.
+   */
+  resetInputs() {
+    this.inputList.forEach((input) => {
+      input.reset();
+    });
+  }
+
+  /**
    * Resets component to initial state.
    * @returns {void}
    */
   reset() {
-    this.inputList.forEach((input) => {
-      input.reset();
-    });
-
+    this.resetInputs();
     this.validation.reset(this);
+  }
+
+  /**
+   * Clears the current value(s) of the datepicker.
+   * @returns {void}
+   */
+  clear() {
+    this.resetInputs();
   }
 
   /**
@@ -821,12 +964,46 @@ export class AuroDatePicker extends LitElement {
    * @param {boolean} [force=false] - Whether to force validation.
    */
   validate(force = false) {
+    this.inputList[0].validate(force);
+    if (this.range) {
+      this.inputList[1].validate(force);
+    }
+
     this.validation.validate(this, force);
+  }
+
+  /**
+   * Private method for interacting with the `hasValue` property.
+   * @private
+   */
+  setHasValue() {
+    if (!this.range) {
+      this.hasValue = this.value && this.value.length > 0;
+      return;
+    }
+
+    // eslint-disable-next-line no-extra-parens
+    this.hasValue = (this.value && this.value.length > 0) || (this.valueEnd && this.valueEnd.length > 0);
+  }
+
+  get hasError() {
+    return this.validity !== undefined && this.validity !== 'valid';
   }
 
   updated(changedProperties) {
     if (changedProperties.has('format')) {
       this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    }
+
+    if (changedProperties.has('disabled')) {
+      if (this.disabled) {
+        this.previousTabIndex = this.getAttribute('tabindex');
+        this.setAttribute('tabindex', '-1');
+      } else if (!this.disabled && this.previousTabIndex > -1) {
+        this.tabIndex = this.previousTabIndex;
+      } else {
+        this.removeAttribute('tabindex');
+      }
     }
 
     if (changedProperties.has('calendarFocusDate')) {
@@ -892,6 +1069,7 @@ export class AuroDatePicker extends LitElement {
         this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
       }
 
+      this.setHasValue();
       this.validate();
     }
 
@@ -929,6 +1107,7 @@ export class AuroDatePicker extends LitElement {
       }
 
       this.validate();
+      this.setHasValue();
     }
 
     if (changedProperties.has('error')) {
@@ -992,6 +1171,8 @@ export class AuroDatePicker extends LitElement {
           this.calendarFocusDate = this.minDate;
         }
       }
+
+      this.calendar.requestUpdate();
     }
 
     // This resets the datepicker when the maxDate is set to a new value that is
@@ -1023,6 +1204,8 @@ export class AuroDatePicker extends LitElement {
           }
         }
       }
+
+      this.calendar.requestUpdate();
     }
 
     if (changedProperties.has('centralDate')) {
@@ -1043,6 +1226,39 @@ export class AuroDatePicker extends LitElement {
     this.calendar.injectSlot(event.target.name, slot.cloneNode(true));
   }
 
+  /**
+   * Handles click events on the datepicker.
+   * @param {PointerEvent} event - The pointer event object.
+   * @private
+   * @returns {void}
+   */
+  handleClick(event) {
+
+    // Get the initial target of the click event
+    const [initTarget] = event.composedPath();
+
+    // Determine if the current layout requires special handling
+    const layoutRequiresHandling = ['snowflake'].includes(this.layout);
+
+    // Determine if the target is an input element
+    const targetIsInput = initTarget.tagName === 'INPUT';
+    const isFocusAlreadyOnInput = this.inputList.includes(this.shadowRoot.activeElement);
+
+    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput) {
+      // Focus the first input
+      this.inputList[0].focus();
+    }
+  }
+
+  /**
+   * Set up click handling for the datepicker.
+   * @private
+   * @returns {void}
+   */
+  configureClickHandler() {
+    this.addEventListener('click', this.handleClick);
+  }
+
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-datepicker');
@@ -1051,6 +1267,7 @@ export class AuroDatePicker extends LitElement {
     this.configureInput();
     this.configureCalendar();
     this.configureDatepicker();
+    this.configureClickHandler();
 
     window.addEventListener('resize', () => {
       this.handleReadOnly();
@@ -1063,102 +1280,419 @@ export class AuroDatePicker extends LitElement {
     this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
   }
 
+  // layout render methods
+  // ------------------------------------
+
+  /**
+   * Renders the snowflake layout for the datepicker.
+   * @private
+   * @returns {import("lit").TemplateResult}
+   */
+  renderSnowflakeLayout() {
+    const accentsClassMap = {
+      error: this.hasError
+    };
+
+    const inputSectionClassMap = {
+      inputSection: true,
+
+      hasValue: this.hasValue,
+      hasFocus: this.hasFocus,
+    };
+
+    const labelClassMap = {
+      mainLabel: true,
+
+      hasValue: this.hasValue,
+      hasFocus: this.hasFocus,
+      [this.hasFocus || this.hasValue ? 'body-xs' : 'body-lg']: true,
+    };
+
+    return html`
+      <div
+        class="wrapper trigger"
+        part="wrapper">
+        <div class="accents left">
+          ${this.renderHtmlIconCalendar()}
+        </div>
+        <div class="mainContent">
+          <label class="${classMap(labelClassMap)}" part="mainLabel">
+            <slot name="label"></slot>
+          </label>
+          <div class="${classMap(inputSectionClassMap)}" part="inputSection">
+            ${this.renderHtmlInputs()}
+          </div>
+        </div>
+        <div class="accents right ${classMap(accentsClassMap)}">
+          ${this.hasError
+        ? this.renderHtmlIconError()
+        : this.renderHtmlActionClear()
+      }
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Renders the snowflake layout for the datepicker.
+   * @private
+   * @returns {import("lit").TemplateResult}
+   */
+  renderClassicLayout() {
+    const accentsClassMap = {
+      error: this.hasError
+    };
+
+    const inputSectionClassMap = {
+      inputSection: true,
+
+      hasValue: this.hasValue,
+      hasFocus: this.hasFocus,
+    };
+
+    return html`
+      <div
+        class="wrapper trigger"
+        part="wrapper">
+        <div class="accents left">
+          ${this.renderHtmlIconCalendar()}
+        </div>
+        <div class="mainContent">
+          <div class="${classMap(inputSectionClassMap)}" part="inputSection">
+            ${this.renderHtmlInputs()}
+          </div>
+        </div>
+        <div class="accents right ${classMap(accentsClassMap)}">
+          ${this.hasError
+        ? this.renderHtmlIconError()
+        : this.renderHtmlActionClear()
+      }
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Renders the layout based on the `layout` attribute.
+   * @private
+   * @returns {import('lit').TemplateResult}
+   */
+  renderLayoutFromAttributes() {
+    switch (this.layout) {
+      case 'snowflake':
+        return this.renderSnowflakeLayout();
+      default:
+        return this.renderClassicLayout();
+    }
+  }
+
+  // eslint-disable-next-line no-warning-comments
+  // TODO: move this to date utility when time allows :(
+  /**
+   * Simple formatter that ONLY WORKS FOR US DATES.
+   * Returns formatted date like Apr 21 or Dec 25.
+   * @private
+   * @param {string} date - Date format should be in a format Date constructor accepts, like '2023-04-21' or '2023/04/21'.
+   * @returns {string}
+   */
+  formatShortDate(date) {
+    // should render like Apr 21
+    const options = {
+      month: 'short',
+      day: '2-digit'
+    };
+
+    return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
+  }
+
+  /**
+   * Format and render the provided date value.
+   * @private
+   * @param {string} dateValue - The date value to format and render.
+   * @returns {import('lit').TemplateResult}
+   */
+  renderDisplayTextDate(dateValue) {
+    const displayTextClasses = {
+      'displayValueText': true,
+      'body-lg': true
+    };
+
+    return html`
+        <div>
+          <div class="${classMap(displayTextClasses)}">
+            ${dateValue && this.util.validDateStr(dateValue, this.format)
+        ? this.formatShortDate(dateValue)
+        : undefined
+      }
+          </div>
+        </div>
+    `;
+  }
+
+  /**
+   * Renders the HTML inputs for the datepicker.
+   * @private
+   * @returns {import('lit').TemplateResult}
+   */
+  renderHtmlInputs() {
+    const inputClasses = {
+      "util_displayHiddenVisually": !this.hasValue && !this.hasFocus && this.layout !== "classic",
+      "parentBorder": this.layout === "classic"
+    };
+
+    return html`
+      <div class="inputContainer">
+        <${this.inputTag}
+          ?disabled="${this.disabled}"
+          ?onDark="${this.onDark}"
+          ?required="${this.required}"
+          .format="${this.format}"
+          .max="${this.maxDate}"
+          .min="${this.minDate}"
+          .placeholder="${this.placeholder}"
+          .size="${this.size}"
+          .shape="${this.shape}"
+          class="dateFrom ${classMap(inputClasses)}"
+          id="${this.generateRandomString(12)}"
+          inputmode="${ifDefined(this.inputmode)}"
+          layout="classic"
+          noValidate
+          part="input"
+          setCustomValidity="${this.setCustomValidity}"
+          setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+          setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
+          setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
+          setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
+          type="date"
+        >
+          ${this.layout !== "classic"
+        ? html`
+              <span slot="displayValue">
+                ${this.renderDisplayTextDate(this.value)}
+              </span>
+            `
+        : undefined
+      }
+          <span slot="label"><slot name="fromLabel"></slot></span>
+        </${this.inputTag}>
+      </div>
+
+      <!--  Divider  -->
+      ${this.range ? html`
+        <div class="inputDivider"></div>
+      ` : undefined}
+
+      ${this.range ? html`
+        <div class="inputContainer">
+          <${this.inputTag}
+            ?disabled="${this.disabled}"
+            ?onDark="${this.onDark}"
+            ?required="${this.required}"
+            .format="${this.format}"
+            .max="${this.maxDate}"
+            .min="${this.minDate}"
+            .placeholder="${this.placeholderEndDate || this.placeholder}"
+            .size="${this.size}"
+            .shape="${this.shape}"
+            class="dateTo ${classMap(inputClasses)}"
+            id="${this.generateRandomString(12)}"
+            layout="classic"
+            noValidate
+            part="input"
+            setCustomValidity="${this.setCustomValidity}"
+            setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+            setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
+            setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
+            setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
+            type="date"
+          >
+            ${this.layout !== "classic"
+          ? html`
+              <span slot="displayValue">
+                ${this.renderDisplayTextDate(this.valueEnd)}
+              </span>
+            `
+          : undefined
+        }
+            <span slot="label"><slot name="toLabel"></slot></span>
+          </${this.inputTag}>
+        </div>
+      ` : undefined}
+    `;
+  }
+
+  // ------------------------------------
+  // end of layout render
+
+  // icons/actions
+  // ------------------------------------
+
+  /**
+   * Renders the clear action button.
+   * @private
+   * @returns {import('lit').TemplateResult}
+   */
+  renderHtmlActionClear() {
+    const clearActionClassMap = {
+      'notification': true,
+      'clear': true,
+      'util_displayHidden': (!this.value || this.value.length === 0) && (!this.valueEnd || this.valueEnd.length === 0),
+    };
+    return html`
+      <div class="${classMap(clearActionClassMap)}">
+        <${this.buttonTag}
+          @click="${this.resetInputs}"
+          @keydown="${this.handleKeydownReset}"
+          ?onDark="${this.onDark}"
+          aria-label="${i18n(this.lang, 'clearInput')}"
+          class="notificationBtn clearBtn"
+          shape="circle"
+          size="sm"
+          variant="ghost">
+          <${this.iconTag}
+            ?customColor="${this.onDark}"
+            category="interface"
+            name="x-lg"
+            >
+          </${this.iconTag}>
+        </${this.buttonTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Renders the error icon.
+   * @private
+   * @returns {import('lit').TemplateResult}
+   */
+  renderHtmlIconError() {
+    const clearActionClassMap = {
+      'notification': true,
+      'error': true,
+      // 'util_displayHidden': (!this.value || this.value.length === 0) && (!this.valueEnd || this.valueEnd.length === 0),
+    };
+
+    return html`
+      <div class="${classMap(clearActionClassMap)}">
+        <${this.iconTag}
+          category="alert"
+          customColor
+          name="error-stroke"
+          >
+        </${this.iconTag}>
+      </div>
+    `;
+  }
+
+  /**
+   * Renders the calendar icon.
+   * @private
+   * @returns {import('lit').TemplateResult}
+   */
+  renderHtmlIconCalendar() {
+    return html`
+      <${this.iconTag}
+        ?onDark="${this.onDark}"
+        category="interface"
+        class="accentIcon"
+        name="calendar"
+        part="accentIcon"
+        variant="${this.disabled ? 'disabled' : 'muted'}">
+      </${this.iconTag}>`;
+  }
+
+  /**
+   * Returns HTML for the help text and error message.
+   * @private
+   * @returns {import('lit').TemplateResult} - Returns HTML for the help text and error message.
+   */
+  renderHtmlHelpText() {
+    return html`
+      ${!this.validity || this.validity === undefined || this.validity === 'valid'
+        ? html`
+          <${this.helpTextTag} ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" part="helpText">
+              <slot name="helpText"></slot>
+            </p>
+          </${this.helpTextTag}>
+        `
+        : html`
+          <${this.helpTextTag} error ?onDark="${this.onDark}">
+            <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+              ${this.errorMessage}
+            </p>
+          </${this.helpTextTag}>
+        `
+      }
+    `;
+  }
+
+  /**
+   * Separate method for rendering the calendar.
+   * @private
+   * @returns {import('lit').TemplateResult}
+   */
+  renderCalendar() {
+    return html`
+      <auro-formkit-calendar
+        ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"
+        ?noRange="${!this.range}"
+        .format="${this.format}"
+        .monthFirst="${this.monthFirst}"
+        .min="${this.convertToWcValidTime(new Date(this.formattedMinDate))}"
+        .max="${this.convertToWcValidTime(new Date(this.formattedMaxDate))}"
+        .maxDate="${this.maxDate}"
+        .minDate="${this.minDate}"
+        .monthNames="${this.monthNames}"
+        part="calendar"
+      >
+        <slot name="ariaLabel.bib.close" slot="ariaLabel.close" @slotchange="${this.handleSlotToSlot}">Close</slot>
+        <slot slot="bib.fullscreen.headline" name="bib.fullscreen.headline" @slotchange="${this.handleSlotToSlot}"></slot>
+        <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
+        <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
+        ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
+      </auro-formkit-calendar>
+    `;
+  }
+
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const dropdownElementClassMap = {
+      hasFocus: this.hasFocus
+    };
+
+    // Base HTML render() handles dropdown and calendar bib
     return html`
-      <div class="outerWrapper">
-        <${this.dropdownTag}
-          for="dropdownMenu"
-          fluid
-          bordered
-          rounded
+      <${this.dropdownTag}
+          ?autoPlacement="${this.autoPlacement}"
           ?onDark="${this.onDark}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          disableEventShow
-          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
-          .placement="${this.placement}"
-          .offset="${this.offset}"
-          ?autoPlacement="${this.autoPlacement}"
           ?noFlip="${this.noFlip}"
-          part="dropdown">
+          .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .layout="${this.layout}"
+          .matchWidth="${false}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          .shape="${this.shape}"
+          .size="${this.size}"
+          class="${classMap(dropdownElementClassMap)}"
+          disableEventShow
+          disableFocusTrap
+          for="dropdownMenu"
+          part="dropdown"
+        >
           <div slot="trigger" class="dpTriggerContent" part="trigger">
-            <${this.inputTag}
-              id="${this.generateRandomString(12)}"
-              bordered
-              class="dateFrom"
-              ?onDark="${this.onDark}"
-              ?required="${this.required}"
-              noValidate
-              type="date"
-              .format="${this.format}"
-              .max="${this.maxDate}"
-              .min="${this.minDate}"
-              setCustomValidity="${this.setCustomValidity}"
-              setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-              setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
-              setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
-              setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-              ?disabled="${this.disabled}"
-              inputmode="${ifDefined(this.inputmode)}"
-              part="input">
-              <span slot="label"><slot name="fromLabel"></slot></span>
-            </${this.inputTag}>
-            ${this.range ? html`
-              <${this.inputTag}
-                id="${this.generateRandomString(12)}"
-                bordered
-                class="dateTo"
-                ?onDark="${this.onDark}"
-                ?required="${this.required}"
-                noValidate
-                type="date"
-                .format="${this.format}"
-                .max="${this.maxDate}"
-                .min="${this.minDate}"
-                setCustomValidity="${this.setCustomValidity}"
-                setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-                setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
-                setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
-                setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-                ?disabled="${this.disabled}"
-                part="input">
-                <span slot="label"><slot name="toLabel"></slot></span>
-              </${this.inputTag}>
-            ` : undefined}
+            ${this.renderLayoutFromAttributes()}
           </div>
+
           <div class="calendarWrapper" part="calendarWrapper">
-            <auro-formkit-calendar
-              ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"
-              ?noRange="${!this.range}"
-              .format="${this.format}"
-              .monthFirst="${this.monthFirst}"
-              .min="${this.convertToWcValidTime(new Date(this.formattedMinDate))}"
-              .max="${this.convertToWcValidTime(new Date(this.formattedMaxDate))}"
-              .maxDate="${this.maxDate}"
-              .minDate="${this.minDate}"
-              .monthNames="${this.monthNames}"
-              part="calendar"
-            >
-              <slot slot="bib.fullscreen.headline" name="bib.fullscreen.headline" @slotchange="${this.handleSlotToSlot}"></slot>
-              <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-              <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
-              ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
-            </auro-formkit-calendar>
+            ${this.renderCalendar()}
           </div>
-          <p slot="helpText" part="helpTextSpan">
-            <!-- Help text and error message template -->
-            ${!this.validity || this.validity === undefined || this.validity === 'valid'
-              ? html`
-                <slot name="helpText"></slot>
-              ` : html`
-                <span role="alert" aria-live="assertive" part="helpText">
-                  ${this.errorMessage}
-                </span>`
-            }
-          </p>
+          <div slot="helpText" part="helpTextSpan">
+            ${this.renderHtmlHelpText()}
+          </div>
         </${this.dropdownTag}>
-      </div>
     `;
   }
 }

@@ -92,6 +92,24 @@ When the validity check fails the validityState, equals `valueMissing`. The erro
 
 </auro-accordion>
 
+### Custom optional label <a name="optionalLabel"></a>
+
+The `<auro-select>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optionalLabel.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optionalLabel.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 #### error <a name="error"></a>
 
 Use the `error` boolean attribute to toggle the error UI.
@@ -196,7 +214,7 @@ Use the `label` slot to give your users contextual information about their selec
 
 #### helpText <a name="helpText"></a>
 
-Use the `helptext` slot to provide additional information back to your user about their selection option(s).
+Use the `helpText` slot to provide additional information back to your user about their selection option(s).
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/helpText.html) -->
@@ -293,23 +311,19 @@ While content is loading, the menu can either remain empty or display a loading 
 </auro-accordion>
 
 
-### valueText <a name="valueText"></a>
+### displayValue <a name="displayValue"></a>
 
-The label for selected option can be customized using `valueText` slot.
-This slot can be manipulated on the `input` event which delivers the new value and selected `auro-menuoption` element in the `detail` object.
+The label for selected option can be customized using `displayValue` slot under `<menuoption>.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/valueText.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/displayValue.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueText.js) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/valueText.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/displayValue.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

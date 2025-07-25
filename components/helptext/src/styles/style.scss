@@ -5,24 +5,17 @@
 
 /* stylelint-disable scss/selector-nest-combinators, selector-class-pattern */
 
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+@use "@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css";
+
+:host {
+  position: relative;
+  display: block;
+}
 
 .helptext-wrapper {
   display: none;
-  font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
-  font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
-  letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
-  line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
-}
-
-:host([large]) {
-  .helptext-wrapper {
-    font-size: var(--ds-basic-text-body-default-font-size, $ds-basic-text-body-default-font-size);
-    font-weight :var(--ds-basic-text-body-default-font-weight, $ds-basic-text-body-default-font-weight);
-    letter-spacing: var(--ds-basic-text-body-default-letter-spacing, $ds-basic-text-body-default-letter-spacing);
-    line-height: var(--ds-basic-text-body-default-line-height, $ds-basic-text-body-default-line-height);
-  }
 }
 
 .helptext-wrapper[visible] {
@@ -30,7 +23,7 @@
 }
 
 ::slotted(*:not(:empty)) {
-  margin-top: var(--ds-size-50, $ds-size-50);
+  margin-top: var(--ds-size-50, vac.$ds-size-50);
   margin-bottom: 0;
 }
 

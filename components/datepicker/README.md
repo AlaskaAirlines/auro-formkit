@@ -83,7 +83,8 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-datepicker>
+<auro-datepicker required="">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>

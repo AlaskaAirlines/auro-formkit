@@ -112,7 +112,7 @@ Use the `disabled` attribute to disable singular `<auro-radio>` elements or the 
 
 Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
 
-A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
+A custom error message can be set using the `error` attribute, or it can be used in conjunction with the `setCustomValidityCustomError` attribute.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/error.html) -->
@@ -229,6 +229,25 @@ This example demonstrates a data drive approach to rendering `<auro-radio>` butt
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
+
+## Multiline Label
+
+Example to show text wrapping on multiline labels.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multilineGroup.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multilineGroup.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 
 ## Theme Support
 

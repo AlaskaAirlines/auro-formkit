@@ -56,6 +56,7 @@
     },
     "@aurodesignsystem/auro-checkbox#build": {
       "dependsOn": [
+        "@aurodesignsystem/auro-layout-element#build",
         "@aurodesignsystem/auro-helptext#build"
       ]
     },
@@ -80,6 +81,7 @@
     },
     "@aurodesignsystem/auro-input#build": {
       "dependsOn": [
+        "@aurodesignsystem/auro-layout-element#build",
         "@aurodesignsystem/auro-helptext#build"
       ]
     },

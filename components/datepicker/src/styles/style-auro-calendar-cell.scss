@@ -2,13 +2,19 @@
 // // See LICENSE in the project root for license information.
 
 // // ---------------------------------------------------------------------
+@use "sass:meta";
 
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+// not directly used in this file, but needs to be imported here
+// for JS classMap application(s). TODO: consider moving this to a shared import for js files?
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
 
 /* stylelint-disable selector-max-class, order/properties-order, declaration-empty-line-before, scss/selector-nest-combinators,
    selector-pseudo-element-colon-notation, max-nesting-depth, at-rule-empty-line-before, no-descending-specificity, declaration-no-important */
+
 
 @mixin in-range-pseudo-elem {
   position: absolute;
@@ -18,14 +24,14 @@
 
   display: block;
   width: calc(100vw / 7);
-  height: var(--ds-size-600, $ds-size-600);
+  height: var(--ds-size-600, vac.$ds-size-600);
 
   content: '';
   transform: translate(-50%, -50%);
 }
 
 :host {
-  @include auro_breakpoint($max: $ds-grid-breakpoint-sm) {
+  @include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
     display: flex;
     justify-content: center;
   }
@@ -34,21 +40,16 @@
 .day {
   position: relative;
 
-  width: var(--ds-size-500, $ds-size-500);
-  height: calc(var(--ds-size-700, $ds-size-700) - 2px);
+  width: var(--ds-size-500, vac.$ds-size-500);
+  height: calc(var(--ds-size-700, vac.$ds-size-700) - 2px);
 
   padding: 0;
 
   border-width: 1px;
   border-style: solid;
-  border-radius: var(--ds-size-300, $ds-size-300);
+  border-radius: var(--ds-size-300, vac.$ds-size-300);
 
   cursor: pointer;
-
-  font-size: var(--ds-basic-text-body-default-font-size, $ds-basic-text-body-default-font-size); /* This must be declared here because the browser clients unset it in the user agent style sheet */
-  font-weight: var(--ds-basic-text-body-default-font-weight, $ds-basic-text-body-default-font-weight); /* This must be declared here because the browser clients unset it in the user agent style sheet */
-  letter-spacing: var(--ds-basic-text-body-default-letter-spacing, $ds-basic-text-body-default-letter-spacing); /* This must be declared here because the browser clients unset it in the user agent style sheet */
-  line-height: var(--ds-basic-text-body-default-line-height, $ds-basic-text-body-default-line-height); /* This must be declared here because the browser clients unset it in the user agent style sheet */
 
   user-select: none;
 
@@ -59,8 +60,8 @@
   &.inRange::before {
     @include in-range-pseudo-elem;
 
-    @include auro_grid-breakpoint--sm {
-      width: var(--ds-size-600, $ds-size-600);
+    @include vb.auro_grid-breakpoint--sm {
+      width: var(--ds-size-600, vac.$ds-size-600);
     }
   }
 
@@ -72,8 +73,8 @@
 
       transform: translate(0%, -50%);
 
-      @include auro_grid-breakpoint--sm {
-        width: calc(var(--ds-size-600, $ds-size-600) / 2);
+      @include vb.auro_grid-breakpoint--sm {
+        width: calc(var(--ds-size-600, vac.$ds-size-600) / 2);
       }
     }
   }
@@ -86,8 +87,8 @@
 
     transform: translate(-100%, -50%);
 
-    @include auro_grid-breakpoint--sm {
-      width: calc(var(--ds-size-600, $ds-size-600) / 2);
+    @include vb.auro_grid-breakpoint--sm {
+      width: calc(var(--ds-size-600, vac.$ds-size-600) / 2);
     }
   }
 }
@@ -95,11 +96,6 @@
 .dateSlot {
   display: flex;
   flex-direction: column;
-
-  font-size: var(--ds-basic-text-body-xxs-font-size, $ds-basic-text-body-xxs-font-size);
-  font-weight :var(--ds-basic-text-body-xxs-font-weight, $ds-basic-text-body-xxs-font-weight);
-  letter-spacing: var(--ds-basic-text-body-xxs-letter-spacing, $ds-basic-text-body-xxs-letter-spacing);
-  line-height: var(--ds-basic-text-body-xxs-line-height, $ds-basic-text-body-xxs-line-height);
 }
 
 ::slotted([slot^="date_"]) {
@@ -107,9 +103,8 @@
   top: 80%;
   left: 50%;
 
-  width: 80%;
+  width: 100%;
 
-  overflow: hidden;
   white-space: nowrap;
 
   transform: translate(-50%, -50%);
@@ -124,10 +119,10 @@
   .buttonWrapper {
     position: relative;
     width: 100%;
-  
+
     top: 5px;
   }
-  
+
   .currentDayMarker {
     position: relative;
     padding-bottom: 5px;
@@ -135,26 +130,13 @@
   }
 }
 
-@include auro_grid-breakpoint--sm {
+@include vb.auro_grid-breakpoint--sm {
   .day {
-    width: var(--ds-size-600, $ds-size-600);
-    height: var(--ds-size-800, $ds-size-800);
-
-    font-family: var(--ds-basic-text-body-lg-font-family, $ds-basic-text-body-lg-font-family);
-    font-size: var(--ds-basic-text-body-lg-font-size, $ds-basic-text-body-lg-font-size);
-    font-weight :var(--ds-basic-text-body-lg-font-weight, $ds-basic-text-body-lg-font-weight);
-    letter-spacing: var(--ds-basic-text-body-lg-letter-spacing, $ds-basic-text-body-lg-letter-spacing);
-    line-height: var(--ds-basic-text-body-lg-line-height, $ds-basic-text-body-lg-line-height);
+    width: var(--ds-size-600, vac.$ds-size-600);
+    height: var(--ds-size-800, vac.$ds-size-800);
 
     &:hover {
       cursor: pointer;
     }
-  }
-
-  .dateSlot {
-    font-size: var(--ds-basic-text-body-xs-font-size, $ds-basic-text-body-xs-font-size);
-    font-weight :var(--ds-basic-text-body-xs-font-weight, $ds-basic-text-body-xs-font-weight);
-    letter-spacing: var(--ds-basic-text-body-xs-letter-spacing, $ds-basic-text-body-xs-letter-spacing);
-    line-height: var(--ds-basic-text-body-xs-line-height, $ds-basic-text-body-xs-line-height);
   }
 }

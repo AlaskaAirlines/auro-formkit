@@ -1,0 +1,92 @@
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+:host([layout*='snowflake']) {
+  [auro-input] {
+    flex: 1;
+    text-align: center;
+
+    &::part(label),
+    &::part(accent-left),
+    &::part(accent-right) {
+      display: none;
+    }
+
+    &::part(input) {
+      padding-bottom: unset;
+      text-align: center;
+
+      transition: unset; // default transition makes input "slide" in
+    }
+
+    &::part(wrapper) {
+      // for layout overrides on input
+      min-height: unset;
+      max-height: unset;
+      box-shadow: unset;
+      border-radius: unset;
+
+      .mainContent {
+        padding-bottom: unset;
+      }
+    }
+
+    &::part(inputHelpText) {
+      display: none;
+    }
+
+    &::part(displayValue) {
+      justify-content: center;
+    }
+  }
+
+  &::part(helpText) {
+    text-align: center;
+  }
+
+  // for the trigger content
+
+  .dpTriggerContent {
+    width: 100%;
+  }
+
+  .wrapper {
+    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding-inline: var(--ds-size-300, vac.$ds-size-300);
+  }
+
+  .mainLabel {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    // designs want 16px height, fill the space and center text
+    display: flex;
+    align-items: center;
+  }
+
+  .mainLabel:is(.hasFocus, .hasValue) {
+    padding-block-start: var(--ds-size-75, vac.$ds-size-75);
+  }
+
+  .inputDivider {
+    // 18px - size-200 + size-25
+    height: calc(var(--ds-size-200, vac.$ds-size-200) + var(--ds-size-25, vac.$ds-size-25));
+    margin: var(--ds-size-50, vac.$ds-size-50) var(--ds-size-150, vac.$ds-size-150);
+    width: var(--ds-size-25, vac.$ds-size-25);
+  }
+
+  .inputSection:not(:is(.disabled, .hasFocus, .hasValue)) {
+    .inputDivider {
+      display: none;
+    }
+  }
+}
+
+// TODO: refactor this - should not just hide _everything_
+:host([layout*='snowflake'][disabled]) {
+  pointer-events: none;
+}

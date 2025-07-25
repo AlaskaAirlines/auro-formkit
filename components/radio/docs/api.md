@@ -33,11 +33,11 @@
 
 ## Slots
 
-| Name            | Description                                     |
-|-----------------|-------------------------------------------------|
-| `helpText`      | Allows for the helper text to be overridden.    |
-| `legend`        | Allows for the legend to be overridden.         |
-| `optionalLabel` | Allows for the optional label to be overridden. |
+| Name            | Description                                      |
+|-----------------|--------------------------------------------------|
+| `helpText`      | Allows for the helper text to be overridden.     |
+| `legend`        | Allows for the legend to be overridden.          |
+| `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
 
 ## CSS Shadow Parts
 
@@ -60,7 +60,6 @@
 | `name`     | `name`     | `string`  |         |                                                  |
 | `onDark`   | `onDark`   | `Boolean` | false   | If set to true, the component will render with a dark theme. |
 | `required` | `required` | `Boolean` | false   | Defines element as required.                     |
-| `tabIndex` | `tabIndex` | `number`  | -1      |                                                  |
 | `value`    | `value`    | `string`  |         |                                                  |
 
 ## Methods
@@ -75,7 +74,9 @@
 |----------------------|--------------------|--------------------------------------------------|
 | `auroRadio-blur`     | `CustomEvent<any>` | Notifies that the component has lost focus.      |
 | `auroRadio-selected` | `CustomEvent<any>` | Notifies that the component has been marked as checked/selected. |
+| `change`             | `CustomEvent<any>` | (Deprecated) Notifies when checked value is changed. |
 | `focusSelected`      | `CustomEvent<any>` | Notifies that the component has gained focus.    |
+| `input`              | `InputEvent`       | Notifies when when checked value is changed by user's interface. |
 | `resetRadio`         | `CustomEvent<any>` | Notifies that the component has reset the checked/selected state. |
 | `toggleSelected`     | `CustomEvent<any>` | Notifies that the component has toggled the checked/selected state. |
 

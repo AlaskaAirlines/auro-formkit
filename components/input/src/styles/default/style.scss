@@ -1,0 +1,53 @@
+// TODO: this folder should be able to be removed?
+
+/* stylelint-disable */
+
+/* stylelint-disable
+  selector-max-class,
+  scss/selector-no-redundant-nesting-selector,
+  max-nesting-depth,
+  selector-max-combinators,
+  selector-max-compound-selectors,
+  no-descending-specificity,
+  at-rule-no-unknown,
+  selector-no-qualifying-type,
+  declaration-block-no-redundant-longhand-properties,
+  declaration-no-important
+*/
+
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+@use './notificationIcons';
+@use './borders';
+
+// Import Auro tokens
+@use '@aurodesignsystem/webcorestylesheets/src/core';
+
+// Support for auroElement styles
+@use '@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
+
+
+.layoutDefault,
+:host(:not([layout])) {
+
+  // container styles - defines the look of the outer custom component
+  :host {
+    position: relative;
+    display: block;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    flex: 1;
+  }
+}
