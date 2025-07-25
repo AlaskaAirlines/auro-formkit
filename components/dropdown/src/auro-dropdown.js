@@ -560,6 +560,8 @@ export class AuroDropdown extends AuroElement {
    */
   _handleDropdownToggle() {
     this.isPopoverVisible = this._floater.shown;
+
+    this.dispatchEvent(new CustomEvent('auroDropdown-toggled', { detail: { expanded: this.isPopoverVisible } }));
   }
 
   _handleBeforeDropdownToggle() {
@@ -873,6 +875,7 @@ export class AuroDropdown extends AuroElement {
         .input="${this._inputInTrigger}"
         .minInputLength="${1}"
         .offset="${4}"
+        .showOnFocus="${this._currentBehavior !== 'input-fullscreen'}"
       >
         <div
           slot="trigger"
