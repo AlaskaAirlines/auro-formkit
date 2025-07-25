@@ -68,7 +68,7 @@
     "serve:closed": "web-dev-server",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
-    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7708",
+    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7706",
     "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\"  --watch --port 7706",
     "types": "tsc --project tsconfig.json",
     "lint": "echo \"restore linter rules\"",
