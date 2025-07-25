@@ -1,4 +1,4 @@
-import { fixture, html, expect, oneEvent } from "@open-wc/testing";
+import { fixture, html, expect, oneEvent, elementUpdated } from "@open-wc/testing";
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import "../src/registered.js";
 
@@ -21,6 +21,24 @@ describe("auro-dropdown", () => {
 
     const chevronEl = el.shadowRoot.querySelector("#showStateIcon");
     expect(chevronEl).to.be.visible;
+  });
+
+  it("auro-dropdown has the chevron rotated when bib is open", async () => {
+    const el = await fixture(html`
+      <auro-dropdown chevron>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    const chevronIconEl = el.shadowRoot.querySelector("#showStateIcon [auro-icon]");
+    await expect(chevronIconEl).to.be.visible;
+
+    expect(chevronIconEl.name).to.be.equal('chevron-down');
+    el.show();
+    await elementUpdated(el);
+
+    expect(chevronIconEl.name).to.be.equal('chevron-up');
   });
 
   it("auro-dropdown with non-focusable trigger", async () => {
