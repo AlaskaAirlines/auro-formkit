@@ -29,6 +29,9 @@
 // Support for auroElement styles
 @use '@aurodesignsystem/webcorestylesheets/dist/auroElement/auroElement';
 
+:host {
+  text-align: left;
+}
 
 .layoutDefault,
 :host(:not([layout])) {
