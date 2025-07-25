@@ -705,6 +705,7 @@ export class AuroSelect extends AuroElement {
    * @returns {void}
    */
   configureSelect() {
+    this.nativeSelect = this.shadowRoot.querySelector('select');
 
     this.addEventListener('keydown', (evt) => {
       // when the focus is on trigger not on close button
@@ -1009,6 +1010,7 @@ export class AuroSelect extends AuroElement {
 
     if (changedProperties.has('error')) {
       this.validate(true);
+      this.nativeSelect.setCustomValidity(this.error || '');
     }
 
     if (changedProperties.has('shape') && this.menu) {
@@ -1070,15 +1072,14 @@ export class AuroSelect extends AuroElement {
    * @private
    */
   _updateNativeSelect() {
-    const nativeSelect = this.shadowRoot.querySelector('select');
-    if (!nativeSelect) {
+    if (!this.nativeSelect) {
       return;
     }
 
     if (this.multiSelect) {
-      nativeSelect.value = this.multiSelect ? this.multiSelect[0] : '';
+     this.nativeSelect.value = this.multiSelect ? this.multiSelect[0] : '';
     } else {
-      nativeSelect.value = this.value || '';
+      this.nativeSelect.value = this.value || '';
     }
   }
 
