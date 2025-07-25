@@ -36,6 +36,92 @@ A baseline `<auro-select>` using `<auro-menu>` and `<auro-menuoption>` elements.
 
 </auro-accordion>
 
+## Shape | Size | Layout Support
+
+The `auro-select` component supports the `shape`, `size` and `layout` feature set. The component defaults to the `classic` shape and layout.
+
+### Supported Combinations
+
+#### Classic Layout (Legacy)
+
+The `classic` layout is default for `auro-select`. No customization is needed to achieve this look.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### Emphasized Layout
+
+The `emphasized` layout only supports `ondark` use.
+
+The `emphasized` layout supports the following shapes:
+- `pill`
+- `pill-left`
+- `pill-right`
+
+The `emphasized` layout supports the following sizes:
+- `xl`
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic-ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/basic-ondark.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### Snowflake Layout
+
+The `snowflake` layout is a unique, one off layout that does not follow the normal pattern. There is only one way to use snowflake as shown in the following example.
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic-ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/basic-ondark.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+## Custom Value Display
+
+The `auro-select` supports the new formkit feature set enabling customized content displayed when a value is selected.
+
+e.g. You may have a menu option that reads "SeaTac International Airport". However, when that option is selected, you would like the value displayed in the auro-select to just be the airport code "SEA".
+
+The custom display value content is inserted using `slot="displayValue"` on each menu option. The `auro-select` component does not style or restrict the slotted content. It is the responsibility of the implementor to insure the content fits within the auro-select container and is styled appropriately.
+
+The following example demonstrates menu options with an icon and text. When selected, the auro-select renders an icon with no text.
+
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/constantDisplayValue.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/constantDisplayValue.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## placeholder
 
 Use the `placeholder` slot to inject a custom placeholder option with the select element.

@@ -337,12 +337,13 @@ export class AuroCalendar extends RangeDatepicker {
       ?large="${this.largeFullscreenHeadline}"
       ?isFullscreen="${this.isFullscreen}"
       @close-click="${this.utilCal.requestDismiss}">
+      <span slot="ariaLabel.close">${this.slots["ariaLabel.bib.close"]}</span>
 
       <span slot="header">${this.slots["bib.fullscreen.headline"]}</span>
 
       <div slot="subheader" class="mobileHeader">
         <div class="headerDateFrom">
-          <span class="mobileDateLabel">${this.slots["bib.fullscreen.dateLabel"]}</span>
+          <span class="mobileDateLabel body-xs">${this.slots["bib.fullscreen.dateLabel"]}</span>
           <slot name="bib.fullscreen.fromStr"></slot>
         </div>
         <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>

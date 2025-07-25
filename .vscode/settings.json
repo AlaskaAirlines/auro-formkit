@@ -1,6 +1,33 @@
 {
     "explorer.excludeGitIgnore": false,
     "cSpell.words": [
-        "csspart"
+        "aria-haspopup",
+        "autocorrect",
+        "bibtemplate",
+        "borderless",
+        "boxshadow",
+        "csspart",
+        "DDMM",
+        "describedby",
+        "dropdownbib",
+        "exportparts",
+        "formkit",
+        "helptext",
+        "imask",
+        "inputmode",
+        "isfullscreen",
+        "labelledby",
+        "matchwidth",
+        "matchword",
+        "maxlength",
+        "menuoption",
+        "menuoptions",
+        "MMDD",
+        "MMYY",
+        "nocheckmark",
+        "ondark",
+        "texticon",
+        "YYMM",
+        "YYYYDDMM"
     ]
 }

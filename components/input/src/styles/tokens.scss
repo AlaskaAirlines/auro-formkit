@@ -1,11 +1,27 @@
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+/* stylelint-disable custom-property-empty-line-before */
 
-:host {
-  --ds-auro-input-border-color: var(--ds-basic-color-border-bold, #{$ds-basic-color-border-bold});
-  --ds-auro-input-container-color: var(--ds-basic-color-surface-default, #{$ds-basic-color-surface-default});
-  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-muted, #{$ds-basic-color-texticon-muted});
-  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
-  --ds-auro-input-text-color: var(--ds-basic-color-texticon-default, #{$ds-basic-color-texticon-default});
-  --ds-auro-input-error-icon-color: var(--ds-basic-color-status-error, #{$ds-basic-color-status-error});
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+
+:host(:not([ondark])) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-input-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-input-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+
+  --ds-auro-input-outline-color: transparent;
+}
+
+:host([ondark]) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+
+  --ds-auro-input-outline-color: transparent;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -28,6 +29,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
  * @attr id
  *
+ * @event {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
+ * @event {InputEvent} input - Notifies when when checked value is changed by user's interface.
  * @event focusSelected - Notifies that the component has gained focus.
  * @event auroRadio-blur - Notifies that the component has lost focus.
  * @event resetRadio - Notifies that the component has reset the checked/selected state.
@@ -47,8 +50,8 @@ export class AuroRadio extends LitElement {
     this.required = false;
     this.error = false;
     this.onDark = false;
-    this.tabIndex = -1;
     this.touched = false;
+    this.role = 'radio';
 
     /**
      * @private
@@ -90,10 +93,6 @@ export class AuroRadio extends LitElement {
       label:    { type: String },
       name:     { type: String },
       value:    { type: String },
-      tabIndex: {
-        type: Number,
-        reflect: true
-      },
 
       /**
        * Whether or not the radio button has been touched by the user.
@@ -106,13 +105,22 @@ export class AuroRadio extends LitElement {
       },
 
       /**
+       * ID for input node.
        * @private
-       * id for input node
        */
       inputId: {
         type: String,
         reflect: false,
         attribute: false
+      },
+
+      /**
+       * @private
+       * not to add to api.md since changing of this can easily break a11y.
+       */
+      role: {
+        type: String,
+        reflect: true
       }
     };
   }
@@ -138,7 +146,6 @@ export class AuroRadio extends LitElement {
   handleChange(event) {
     this.checked = event.target.checked;
     const customEvent = new CustomEvent(event.type, event);
-
     this.dispatchEvent(customEvent);
   }
 
@@ -197,7 +204,27 @@ export class AuroRadio extends LitElement {
   }
 
   updated(changedProperties) {
+    if (changedProperties.has('error') || changedProperties.has('validity')) {
+      this.setAttribute('aria-invalid', this.error || this.validity !== 'valid' ? 'true' : 'false');
+    }
+
+    if (changedProperties.has('required')) {
+      this.setAttribute('aria-required', this.isRequired(this.required));
+    }
+
+    if (changedProperties.has('disabled')) {
+      if (this.disabled) {
+        this.setAttribute('aria-disabled', '');
+      } else {
+        this.removeAttribute('aria-disabled');
+      }
+    }
+
     if (changedProperties.has('checked')) {
+      this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+      // eslint-disable-next-line no-magic-numbers
+      this.setAttribute('tabindex', this.checked ? 0 : -1);
+
       this.dispatchEvent(new CustomEvent('resetRadio', {
         bubbles: true,
         composed: true
@@ -210,20 +237,6 @@ export class AuroRadio extends LitElement {
         }));
       }
     }
-  }
-
-  /**
-   * Method for handling content when it is invalid accessibility wise.
-   * @private
-   * @param {Boolean} error - The element's error attribute.
-   * @returns {void}
-   */
-  invalid(error) {
-    if (error) {
-      return 'true';
-    }
-
-    return 'false';
   }
 
   /**
@@ -244,6 +257,7 @@ export class AuroRadio extends LitElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-radio');
 
+    this.addEventListener('focus', this.handleFocus);
     this.addEventListener('blur', this.handleBlur);
 
     this.input = this.shadowRoot.querySelector('input');
@@ -266,29 +280,23 @@ export class AuroRadio extends LitElement {
     };
 
     return html`
-      <div class="ods-inputGroup rdoGroup" part="radio">
+      <div class="ods-inputGroup rdoGroup body-default" part="radio">
         <input
-          class="util_displayHiddenVisually ods-inputOption rdo--input"
+          class="util_displayHidden ods-inputOption rdo--input"
           part="radio-input"
-          @focus="${this.handleFocus}"
           @input="${this.handleInput}"
           @change="${this.handleChange}"
           ?disabled="${this.disabled}"
-          aria-invalid="${this.invalid(this.error)}"
-          aria-required="${this.isRequired(this.required)}"
           .checked="${this.checked}"
           id="${this.inputId}"
           name="${ifDefined(this.name)}"
           type="radio"
           .value="${this.value}"
+          aria-hidden="true"
           tabindex="-1"
         />
 
-        <label
-          for="${this.inputId}"
-          class="${classMap(labelClasses)}"
-          part="radio-label"
-        >
+        <label for="${this.inputId}" class="${classMap(labelClasses)}" part="radio-label">
           <slot>${this.label}</slot>
         </label>
       </div>

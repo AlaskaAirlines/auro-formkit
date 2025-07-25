@@ -8,13 +8,14 @@ The auro-menu element provides users a way to select from a list of options.
 |-------------------------|------------------|-----------------------------------|-------------|--------------------------------------------------|
 | `disabled`              | `disabled`       | `boolean`                         |             | When true, the entire menu and all options are disabled; |
 | `hasLoadingPlaceholder` |                  | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| `layout`                |                  | `string`                          |             |                                                  |
 | `loading`               | `loading`        | `boolean`                         | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
 | `matchWord`             | `matchword`      | `string`                          | "undefined" | Specifies a string used to highlight matched string parts in options. |
 | `multiSelect`           | `multiselect`    | `boolean`                         | false       | When true, the selected option can be multiple options. |
 | `noCheckmark`           | `nocheckmark`    | `boolean`                         | false       | When true, selected option will not show the checkmark. |
 | `optionActive`          | `optionactive`   | `object`                          | "undefined" | Specifies the current active menuOption.         |
 | `optionSelected`        | `optionSelected` | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `value`                 | `value`          | `String\|Array<string>`           | "undefined" | Value selected for the menu, type `string` by default. In multi-select mode, `value` is an array of strings. |
+| `value`                 | `value`          | `string`                          | "undefined" | Value selected for the component.                |
 
 ## Methods
 
@@ -58,6 +59,7 @@ The auro-menu element provides users a way to define a menu option.
 |---------------|---------------|-----------|---------|--------------------------------------------------|
 | `disabled`    | `disabled`    | `Boolean` | false   | When true specifies that the menuoption is disabled. |
 | `iconTag`     |               | `string`  |         |                                                  |
+| `layout`      |               | `string`  |         |                                                  |
 | `nocheckmark` | `nocheckmark` | `boolean` | false   |                                                  |
 | `selected`    | `selected`    | `Boolean` | false   | Specifies that an option is selected.            |
 | `value`       | `value`       | `String`  |         | Specifies the value to be sent to a server.      |

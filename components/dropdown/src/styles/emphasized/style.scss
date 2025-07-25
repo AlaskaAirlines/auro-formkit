@@ -1,0 +1,43 @@
+// Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// layout styles - define any layout specifications for UI that is contained WITHIN the component
+// never define layout that would cause effect on element outside the scope of this component
+
+// Support for fallback values
+
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-max-class, selector-class-pattern, selector-not-notation */
+
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  .chevron {
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='right'])) {
+  .leftIndent {
+    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
+    margin-left: var(--ds-size-300, vac.$ds-size-300);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left'])) {
+  .rightIndent {
+    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left']):not([layout*='right'])) {
+  .rightIndent {
+    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
+  }
+}

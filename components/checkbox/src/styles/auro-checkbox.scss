@@ -19,16 +19,17 @@
    declaration-empty-line-before */
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
-@import "@aurodesignsystem/webcorestylesheets/src/core";
-@import '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use "@aurodesignsystem/webcorestylesheets/src/breakpoints" as vb;
+@use "@aurodesignsystem/webcorestylesheets/src/core";
+@use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 
 // container styles - defines the look of the outer custom component
 :host {
   display: block;
-  margin-bottom: var(--ds-size-100, $ds-size-100);
+  --cbxLocation: var(--ds-size-50, #{vac.$ds-size-50});
 }
 
 fieldset {
@@ -37,7 +38,7 @@ fieldset {
 
 .displayFlex {
   slot {
-    @include auro_grid-breakpoint--sm {
+    @include vb.auro_grid-breakpoint--sm {
       display: flex;
     }
   }
@@ -47,34 +48,28 @@ fieldset {
   position: relative;
   display: flex;
   flex-direction: row;
-  padding-left: var(--ds-size-100, $ds-size-100);
-  padding-right: var(--ds-size-100, $ds-size-100);
-}
+  gap: var(--ds-size-100, #{vac.$ds-size-100});
+  padding-left: var(--ds-size-100, #{vac.$ds-size-100});
+  padding-right: var(--ds-size-100, #{vac.$ds-size-100});
 
-.inputContainer {
-  display: block;
-  width: 24px;
-  height: 24px;  
-  margin-right: var(--ds-size-50, $ds-size-50);
-}
-
-.cbx--input {
-  &:disabled {
-    & + label {
-      &:hover {
-        cursor: auto;
-      }
-    }
+  &:hover {
+    cursor: pointer;
   }
 }
 
 .label {
-  flex: 1;
-  display: flex;
-  pointer-events: none;
+  display: block;
+  padding-top: var(--ds-size-50, #{vac.$ds-size-50});
 
   &:hover {
     cursor: pointer;
+  }
+}
+
+:host([disabled]) {
+  .cbxContainer {
+    pointer-events: none;
+    cursor: default;
   }
 }
 
@@ -88,12 +83,13 @@ fieldset {
     align-items: center;
     justify-content: center;
 
-    width: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
-    height: calc(var(--ds-size-200, $ds-size-200) + var(--ds-size-50, $ds-size-50));
+    margin-top: var(--cbxLocation);
+    width: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-50, #{vac.$ds-size-50}));
+    height: calc(var(--ds-size-200, #{vac.$ds-size-200}) + var(--ds-size-50, #{vac.$ds-size-50}));
 
     border-width: 1px;
     border-style: solid;
-    border-radius: var(--ds-border-radius, $ds-border-radius);
+    border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
     outline-style: solid;
     outline-width: 1px;
     z-index: 0;
@@ -102,8 +98,9 @@ fieldset {
 
 .svg--cbx {
   position: absolute;
-  left: -1px;
-  top: -1px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+
   z-index: 1;
   pointer-events: none;
 }

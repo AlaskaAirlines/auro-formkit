@@ -1,0 +1,6 @@
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska";
+
+// Handles the transition animation for the input field
+@mixin transition-animation {
+  transition: all .3s cubic-bezier(.215, .61, .355, 1);
+}

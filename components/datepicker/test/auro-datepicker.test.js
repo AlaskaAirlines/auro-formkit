@@ -117,7 +117,9 @@ describe('auro-datepicker', () => {
     await elementUpdated(el);
     await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    el.blur();
+    setTimeout(() => {
+      el.blur();
+    }, 0);
 
     await oneEvent(el, 'auroDatePicker-toggled');
     await expect(el.dropdown.isPopoverVisible).to.be.false;
@@ -596,7 +598,7 @@ describe('auro-datepicker', () => {
     await expect(input.getAttribute('setCustomValidityValueMissing')).to.be.equal('The value is missing!');
   });
 
-  // BUG IN ERROR MESSAGE CODE (Next two tests)
+  // TODO BUG IN ERROR MESSAGE CODE (Next two tests)
   it('dateFrom error message shown when dateTo is also invalid', async () => {
     const el = await fixture(html`
       <auro-datepicker range required minDate="04/15/2023" value="04/20/2023" setCustomValidityRangeUnderflow="Before min date"></auro-datepicker>
@@ -1017,7 +1019,7 @@ describe('auro-datepicker with format', () => {
     await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
   });
 
-  it('respects maxDate setting on second input', async () => {
+  it('respects maxDate setting on second input with yyyy/mm/dd format', async () => {
     const el = await fixture(html`
       <auro-datepicker range format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
     `);

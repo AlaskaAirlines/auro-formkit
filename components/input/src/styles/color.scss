@@ -2,107 +2,81 @@
 
 // ---------------------------------------------------------------------
 
+/* stylelint-disable
+  scss/dollar-variable-pattern,
+  selector-class-pattern,
+  max-nesting-depth,
+  selector-max-class
+  */
+
 // Support for fallback values
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
-
-@import 'mixins';
-
-/* stylelint-disable no-descending-specificity, selector-class-pattern */
+@use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
 
 .wrapper {
-  border-color: transparent;
-}
-
-input {
-  background-color: transparent;
-  caret-color: var(--ds-auro-input-caret-color);
+  border-color: var(--ds-auro-input-border-color);
+  background-color: var(--ds-auro-input-container-color);
   color: var(--ds-auro-input-text-color);
 
-  &::placeholder {
-    color: transparent;
+  label {
+    color: var(--ds-auro-input-label-text-color);
   }
 
-  &:focus {
+  input {
+    caret-color: var(--ds-auro-input-caret-color);
+    color: var(--ds-auro-input-text-color);
+
     &::placeholder {
       color: var(--ds-auro-input-placeholder-text-color);
     }
+
+    &:focus {
+      &::placeholder {
+        color: var(--ds-auro-input-placeholder-text-color);
+      }
+    }
   }
 
-  &:disabled {
-    --ds-auro-input-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
-  }
 }
 
-label {
-  color: var(--ds-auro-input-label-text-color);
-}
-
-.alertNotification {
-  color: var(--ds-auro-input-error-icon-color);
-}
-
-:host(:not([bordered], [borderless])) {
+:host(:not([ondark])) {
   .wrapper {
-    border-bottom-color: var(--ds-auro-input-border-color);
-  }
-}
-
-:host([bordered]) {
-  .wrapper {
-    border-color: var(--ds-auro-input-border-color);
-    background-color: var(--ds-auro-input-container-color);
-
     &:focus-within {
-      --ds-auro-input-border-color: var(--ds-advanced-color-state-focused, #{$ds-advanced-color-state-focused});
-
-      box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+      --ds-auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
     }
   }
 }
 
-:host([validity]:not([validity='valid'])[bordered]) {
-  .wrapper {
-    --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{$ds-basic-color-status-error});
-
-    box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
-  }
-}
-
-:host([disabled]) {
-  --ds-auro-input-border-color: var(--ds-basic-color-border-subtle, #{$ds-basic-color-border-subtle});
-  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-disabled, #{$ds-basic-color-texticon-disabled});
-}
-
-/* onDark styles */
-
-:host([onDark][bordered]) {
-  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
-  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{$ds-basic-color-texticon-inverse-muted});
-  --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
-  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{$ds-basic-color-texticon-inverse});
-  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
-  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{$ds-advanced-color-shared-background-inverse});
-  --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
-
+:host([ondark]) {
   .wrapper {
     &:focus-within {
-      --ds-auro-input-border-color: var(--ds-advanced-color-state-focused-inverse, #{$ds-advanced-color-state-focused-inverse});
-
-      box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+      --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
     }
   }
 }
 
-:host([onDark][validity]:not([validity='valid'])[bordered]) {
+:host(:is([validity]:not([validity='valid']))) {
   .wrapper {
-    --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{$ds-advanced-color-state-error-inverse});
-
-    box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+    --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
   }
 }
 
-:host([onDark][disabled]) {
-  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{$ds-basic-color-border-inverse});
-  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{$ds-basic-color-texticon-inverse-disabled});
-  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{$ds-advanced-color-shared-background-inverse-disabled});
+:host([ondark]:is([validity]:not([validity='valid']))) {
+  .wrapper {
+    --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+  }
+}
+
+// disabled state
+:host(:not([ondark])[disabled]) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+}
+
+:host([ondark][disabled]) {
+  --ds-auro-input-border-color: var(--ds-advanced-color-button-primary-border-inverse-disabled, #{v.$ds-advanced-color-button-primary-border-inverse-disabled});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 }

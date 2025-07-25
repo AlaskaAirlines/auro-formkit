@@ -3,11 +3,11 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable max-nesting-depth, scss/selector-nest-combinators, selector-max-pseudo-class */
+/* stylelint-disable max-nesting-depth, scss/selector-nest-combinators, selector-max-pseudo-class, selector-class-pattern */
 
-@import "@aurodesignsystem/design-tokens/dist/alaska/SCSSVariables--alaska";
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
-.auroButton {
+.auro-button {
   border-color: unset;
   background-color: var(--ds-auro-counter-control-background-color);
   -webkit-tap-highlight-color: var(--ds-auro-button-tap-color);
@@ -15,19 +15,19 @@
   @media (hover: hover) {
     &:active, &:hover {
       &:not(:disabled) {
-        --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-hover, #{$ds-advanced-color-button-tertiary-background-hover});
+        --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-hover, #{v.$ds-advanced-color-button-tertiary-background-hover});
       }
     }
   }
 }
 
-:host([onDark]) .auroButton {
-  --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-inverse, #{$ds-advanced-color-button-tertiary-background-inverse});
+:host([onDark]) .auro-button {
+  --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-inverse, #{v.$ds-advanced-color-button-tertiary-background-inverse});
 
   @media (hover: hover) {
     &:active, &:hover {
       &:not(:disabled) {
-        --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-inverse-hover, #{$ds-advanced-color-button-tertiary-background-inverse-hover});
+        --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-inverse-hover, #{v.$ds-advanced-color-button-tertiary-background-inverse-hover});
       }
     }
   }

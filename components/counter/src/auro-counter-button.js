@@ -14,6 +14,13 @@ import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runt
 // build the component class
 export class AuroCounterButton extends AuroButton {
 
+  constructor() {
+    super();
+
+    this.size = "sm";
+    this.shape = "rounded";
+  }
+
   static get styles() {
     return [
       styleButtonCss,

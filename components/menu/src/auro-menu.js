@@ -3,17 +3,20 @@
 
 // ---------------------------------------------------------------------
 
-import { LitElement, html } from "lit";
+import { html } from "lit";
 
-import styleCss from "./styles/style-menu-css.js";
-import colorCss from "./styles/color-menu-css.js";
-import tokensCss from "./styles/tokens-css.js";
+import styleCss from "./styles/default/style-menu-css.js";
+import colorCss from "./styles/default/color-menu-css.js";
+import tokensCss from "./styles/default/tokens-css.js";
+
+import { AuroElement } from "../../layoutElement/src/auroElement.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import {
   isOptionInteractive,
   dispatchMenuEvent
 } from './auro-menu-utils.js';
+import { classMap } from "lit/directives/class-map.js";
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -26,7 +29,6 @@ import {
  * @attr {boolean} nocheckmark - When true, selected option will not show the checkmark.
  * @attr {boolean} loading - When true, displays a loading state using the loadingIcon and loadingText slots if provided.
  * @attr {boolean} multiselect - When true, the selected option can be multiple options.
- * @attr {String|Array<string>} value - Value selected for the menu, type `string` by default. In multi-select mode, `value` is an array of strings.
  * @prop {boolean} hasLoadingPlaceholder - Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state.
  * @event {CustomEvent<Element>} auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
@@ -41,11 +43,21 @@ import {
 
 /* eslint-disable no-magic-numbers, max-lines, no-extra-parens */
 
-export class AuroMenu extends LitElement {
+export class AuroMenu extends AuroElement {
   constructor() {
     super();
 
     // State properties (reactive)
+
+    /**
+     * @private
+     */
+    this.shape = "box";
+
+    /**
+     * @private
+     */
+    this.size = "sm";
 
     // Value of the selected options
     this.value = undefined;
@@ -105,6 +117,7 @@ export class AuroMenu extends LitElement {
 
   static get properties() {
     return {
+      ...super.properties,
       noCheckmark: {
         type: Boolean,
         reflect: true,
@@ -135,9 +148,24 @@ export class AuroMenu extends LitElement {
         reflect: true,
         attribute: 'multiselect'
       },
+
+      /**
+       * Value selected for the component.
+       */
       value: {
-        // Allow string, string[] arrays and undefined
-        type: Object
+        type: String,
+        reflect: true,
+        attribute: 'value'
+      },
+
+      /**
+       * Indent level for submenus.
+       * @private
+       */
+      level: {
+        type: Number,
+        reflect: false,
+        attribute: false
       }
     };
   }
@@ -162,6 +190,25 @@ export class AuroMenu extends LitElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroMenu);
   }
 
+  /**
+   * Formatted value based on `multiSelect` state.
+   * Default type is `String`, changing to `Array<String>` when `multiSelect` is true.
+   * @private
+   * @returns {String|Array<String>}
+   */
+  get formattedValue() {
+    if (this.multiSelect) {
+      if (!this.value) {
+        return undefined;
+      }
+      if (this.value.startsWith("[")) {
+        return JSON.parse(this.value);
+      }
+      return [this.value];
+    }
+    return this.value;
+  }
+
   // Lifecycle Methods
 
   connectedCallback() {
@@ -171,6 +218,7 @@ export class AuroMenu extends LitElement {
     this.addEventListener('mousedown', this.handleMouseSelect);
     this.addEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.addEventListener('slotchange', this.handleSlotChange);
+    this.setTagAttribute("auro-menu");
   }
 
   disconnectedCallback() {
@@ -189,13 +237,27 @@ export class AuroMenu extends LitElement {
     this.initializeMenu();
   }
 
+  /**
+   * Sets an attribute that matches the default tag name if the tag name is not the default.
+   * @param {string} tagName - The tag name to set as an attribute.
+   * @private
+   */
+  setTagAttribute(tagName) {
+    if (this.tagName.toLowerCase() !== tagName) {
+      this.setAttribute(tagName, true);
+    }
+  }
+
   updated(changedProperties) {
-    if (changedProperties.has('multiSelect')) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('multiSelect') && !changedProperties.has("value")) {
       // Reset selection if multiSelect mode changes
       this.clearSelection();
     }
 
-    if (changedProperties.has('value')) {
+
+    if (changedProperties.has("value")) {
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
         this.optionSelected = undefined;
@@ -203,7 +265,7 @@ export class AuroMenu extends LitElement {
       } else {
         if (this.multiSelect) {
           // In multiselect mode, this.value should be an array of strings
-          const valueArray = Array.isArray(this.value) ? this.value : [this.value];
+          const valueArray = this.formattedValue;
           const matchingOptions = this.items.filter((item) => valueArray.includes(item.value));
 
           this.optionSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
@@ -262,6 +324,19 @@ export class AuroMenu extends LitElement {
       // Update both menus and options
       this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]').forEach((element) => element.setAttribute('noCheckmark', ''));
     }
+
+    // Handle layout propagation to all menus and options
+    const propagationTargets = this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]');
+    [
+      'size',
+      'shape'
+    ].forEach((prop) => {
+      if (changedProperties.has(prop)) {
+        propagationTargets.forEach((el) => {
+          el.setAttribute(prop, this[prop]);
+        });
+      }
+    });
 
     // Regex for matchWord if needed
     let regexWord = null;
@@ -357,14 +432,14 @@ export class AuroMenu extends LitElement {
    */
   handleSelectState(option) {
     if (this.multiSelect) {
-      const currentValue = this.value || [];
+      const currentValue = this.formattedValue || [];
       const currentSelected = this.optionSelected || [];
 
       if (!currentValue.includes(option.value)) {
-        this.value = [
+        this.value = JSON.stringify([
           ...currentValue,
           option.value
-        ];
+        ]);
       }
       if (!currentSelected.includes(option)) {
         this.optionSelected = [
@@ -387,13 +462,15 @@ export class AuroMenu extends LitElement {
    * @param {HTMLElement} option - The menuoption to be deselected.
    */
   handleDeselectState(option) {
-    if (this.multiSelect && Array.isArray(this.value)) {
+    if (this.multiSelect) {
       // Remove this option from array
-      this.value = this.value.filter((val) => val !== option.value);
+      const newFormattedValue = (this.formattedValue || []).filter((val) => val !== option.value);
 
       // If array is empty after removal, set back to undefined
-      if (this.value.length === 0) {
+      if (newFormattedValue && newFormattedValue.length === 0) {
         this.value = undefined;
+      } else {
+        this.value = JSON.stringify(newFormattedValue);
       }
 
       this.optionSelected = this.optionSelected.filter((val) => val !== option);
@@ -459,21 +536,20 @@ export class AuroMenu extends LitElement {
    * @param {HTMLElement} menu - Root menu element.
    */
   handleNestedMenus(menu) {
-    const nestedMenus = menu.querySelectorAll('auro-menu, [auro-menu]');
+    menu.level = menu.parentElement.level >= 0 ? menu.parentElement.level + 1 : 0;
 
-    nestedMenus.forEach((nestedMenu) => {
-      // role="listbox" only allows "role=group" for children.
-      nestedMenu.setAttribute('role', 'group');
-      if (!nestedMenu.hasAttribute('aria-label')) {
-        nestedMenu.setAttribute('aria-label', 'submenu');
+    if (menu.level > 0) {
+      menu.setAttribute('role', 'group');
+      menu.removeAttribute("root");
+      if (!menu.hasAttribute('aria-label')) {
+        menu.setAttribute('aria-label', 'submenu');
       }
+    }
 
-      const options = nestedMenu.querySelectorAll(':scope > auro-menuoption, :scope > [auro-menuoption]');
-      options.forEach((option) => {
-        option.innerHTML = this.nestingSpacer + option.innerHTML;
-      });
-
-      this.handleNestedMenus(nestedMenu);
+    const options = menu.querySelectorAll(':scope > auro-menuoption, :scope > [auro-menuoption]');
+    options.forEach((option) => {
+      const regex = new RegExp(this.nestingSpacer, "gu");
+      option.innerHTML = this.nestingSpacer.repeat(menu.level) + option.innerHTML.replace(regex, '');
     });
   }
 
@@ -717,22 +793,45 @@ export class AuroMenu extends LitElement {
   }
 
   /**
-   * Renders the component.
-   * @returns {boolean} - True if loading slots are present and non-empty.
+   * Getter for wrapper classes based on size.
+   * @returns {Object} - Class map for the wrapper element.
+   * @private
    */
-  render() {
+  get wrapperClasses() {
+    return classMap({
+      'menuWrapper': true,
+      [this.size]: true,
+    });
+  }
+
+  /**
+   * Logic to determine the layout of the component.
+   * @protected
+   * @returns {void}
+   */
+  renderLayout() {
     if (this.loading) {
       return html`
-        <auro-menuoption disabled loadingplaceholder class="${this.hasLoadingPlaceholder ? '' : 'empty'}">
-          <div>
-            <slot name="loadingIcon"></slot>
-            <slot name="loadingText"></slot>
-          </div>
-        </auro-menuoption>
+        <div class="${this.wrapperClasses}">
+          <auro-menuoption
+            disabled
+            loadingplaceholder
+            class="${this.hasLoadingPlaceholder ? "" : "empty"}"
+          >
+            <div>
+              <slot name="loadingIcon" class="body-lg"></slot>
+              <slot name="loadingText"></slot>
+            </div>
+          </auro-menuoption>
+        </div>
       `;
     }
 
-    return html`<slot @slotchange=${this.handleSlotChange}></slot>`;
+    return html`
+      <div class="${this.wrapperClasses}">
+        <slot @slotchange=${this.handleSlotChange}></slot>
+      </div>
+    `;
   }
 }
 

@@ -2,13 +2,6 @@
 
 Generate unique names for dependency components.
 
-## Attributes
-
-| Attribute    | Type      | Description                    |
-|--------------|-----------|--------------------------------|
-| `bordered`   | `Boolean` | Applies bordered UI variant.   |
-| `borderless` | `Boolean` | Applies borderless UI variant. |
-
 ## Properties
 
 | Property                          | Attribute                         | Type      | Default     | Description                                      |
@@ -34,10 +27,11 @@ Generate unique names for dependency components.
 | `min`                             | `min`                             | `string`  | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | `minLength`                       | `minLength`                       | `number`  | "undefined" | The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`. |
 | `name`                            | `name`                            | `string`  |             | Populates the `name` attribute on the input.     |
+| `nested`                          | `nested`                          | `boolean` |             | Sets styles for nested operation - removes borders, hides help + error text, and<br />hides accents. |
 | `noValidate`                      | `noValidate`                      | `boolean` | false       | If set, disables auto-validation on blur.        |
 | `onDark`                          | `onDark`                          | `boolean` | false       | Sets onDark styles on input.                     |
 | `pattern`                         | `pattern`                         | `string`  |             | Specifies a regular expression the form control's value should match. |
-| `placeholder`                     | `placeholder`                     | `string`  |             | Define custom placeholder text, only supported by date input formats. |
+| `placeholder`                     | `placeholder`                     | `string`  |             | Define custom placeholder text.                  |
 | `readonly`                        | `readonly`                        | `boolean` |             | Makes the input read-only, but can be set programmatically. |
 | `required`                        | `required`                        | `boolean` | false       | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`               | `setCustomValidity`               | `string`  |             | Sets a custom help text message to display for all validityStates. |
@@ -49,6 +43,7 @@ Generate unique names for dependency components.
 | `setCustomValidityTooLong`        | `setCustomValidityTooLong`        | `string`  |             | Custom help text message to display when validity = `tooLong`. |
 | `setCustomValidityTooShort`       | `setCustomValidityTooShort`       | `string`  |             | Custom help text message to display when validity = `tooShort`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`  |             | Custom help text message to display when validity = `valueMissing`. |
+| `simple`                          | `simple`                          | `boolean` |             | Simple makes the input render without a border.  |
 | `spellcheck`                      | `spellcheck`                      | `string`  |             | An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`. |
 | `type`                            | `type`                            | `string`  |             | Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `date`, `tel` or `text`. If given value is not allowed or set, defaults to `text`. |
 | `validateOnInput`                 | `validateOnInput`                 | `boolean` |             | Sets validation mode to re-eval with each input. |
@@ -59,7 +54,9 @@ Generate unique names for dependency components.
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
-| `reset`    | `(): void`                             | Resets component to initial state.               |
+| `clear`    | `(): void`                             | Clears the input value.                          |
+| `focus`    | `(): void`                             | Function to set element focus.                   |
+| `reset`    | `(): void`                             | Resets component to initial state, including resetting the touched state and validity. |
 | `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
@@ -72,17 +69,25 @@ Generate unique names for dependency components.
 
 ## Slots
 
-| Name       | Description                                   |
-|------------|-----------------------------------------------|
-| `helptext` | Sets the help text displayed below the input. |
-| `label`    | Sets the label text for the input.            |
+| Name                      | Description                                      |
+|---------------------------|--------------------------------------------------|
+| `ariaLabel.clear`         | Sets aria-label on clear button for screenreader to read |
+| `ariaLabel.password.hide` | Sets aria-label on password button to toggle off showing password |
+| `ariaLabel.password.show` | Sets aria-label on password button to toggle on showing password |
+| `displayValue`            | Allows custom HTML content to display in place of the value when the input is not focused. |
+| `helpText`                | Sets the help text displayed below the input.    |
+| `label`                   | Sets the label text for the input.               |
+| `optionalLabel`           | Allows overriding the optional display text "(optional)", which appears next to the label. |
 
 ## CSS Shadow Parts
 
 | Part            | Description                                      |
 |-----------------|--------------------------------------------------|
+| `accent-left`   | Use for customizing the style of the left accent element (e.g. padding, margin) |
+| `accent-right`  | Use for customizing the style of the right accent element (e.g. padding, margin) |
 | `accentIcon`    | Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon) |
 | `helpText`      | Use for customizing the style of the helpText element |
 | `iconContainer` | Use for customizing the style of the iconContainer (e.g. X icon for clearing input value) |
+| `input`         | Use for customizing the style of the input element |
 | `label`         | Use for customizing the style of the label element |
 | `wrapper`       | Use for customizing the style of the root element |

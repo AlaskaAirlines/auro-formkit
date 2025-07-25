@@ -1,14 +1,17 @@
 /* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
-import { fixture, html, expect, elementUpdated, assert, nextFrame } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, assert } from '@open-wc/testing';
+import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import '../src/registered.js';
+
+useAccessibleIt();
 
 describe('auro-counter-group: configureCounters', () => {
   it('updates the counters property with all auro-counter elements', async () => {
     const el = await fixture(html`
             <auro-counter-group>
-                <auro-counter></auro-counter>
-                <auro-counter></auro-counter>
+                <auro-counter>Counter1</auro-counter>
+                <auro-counter>Counter2</auro-counter>
             </auro-counter-group>
         `);
 
@@ -20,7 +23,7 @@ describe('auro-counter-group: configureCounters', () => {
   it('does not attach listeners to non-auro-counter elements', async () => {
     const el = await fixture(html`
             <auro-counter-group>
-                <auro-counter></auro-counter>
+                <auro-counter>Counter</auro-counter>
                 <div></div>
             </auro-counter-group>
         `);
@@ -35,8 +38,8 @@ describe('auro-counter-group: updateValue', () => {
   it('updates the value property with the correct values from counters', async () => {
     const el = await fixture(html`
             <auro-counter-group>
-                <auro-counter name="counter1" value="2"></auro-counter>
-                <auro-counter name="counter2" value="3"></auro-counter>
+                <auro-counter name="counter1" value="2">Counter1</auro-counter>
+                <auro-counter name="counter2" value="3">Counter2</auro-counter>
             </auro-counter-group>
         `);
 
@@ -50,8 +53,8 @@ describe('auro-counter-group: updateValue', () => {
   it('updates the total property with the sum of counter values', async () => {
     const el = await fixture(html`
             <auro-counter-group>
-                <auro-counter value="2"></auro-counter>
-                <auro-counter value="3"></auro-counter>
+                <auro-counter value="2">Counter1</auro-counter>
+                <auro-counter value="3">Counter2</auro-counter>
             </auro-counter-group>
         `);
 
@@ -64,8 +67,8 @@ describe('auro-counter-group: updateValue', () => {
   it('disables increment button if total is at or above max', async () => {
     const el = await fixture(html`
             <auro-counter-group max="5">
-                <auro-counter value="2"></auro-counter>
-                <auro-counter value="3"></auro-counter>
+                <auro-counter value="2">Counter1</auro-counter>
+                <auro-counter value="3">Counter2</auro-counter>
             </auro-counter-group>
         `);
 
@@ -80,8 +83,8 @@ describe('auro-counter-group: updateValue', () => {
   it('disables decrement button if total is at or below min', async () => {
     const el = await fixture(html`
             <auro-counter-group min="5">
-                <auro-counter value="2"></auro-counter>
-                <auro-counter value="3"></auro-counter>
+                <auro-counter value="2">Counter1</auro-counter>
+                <auro-counter value="3">Counter2</auro-counter>
             </auro-counter-group>
         `);
 
@@ -96,8 +99,8 @@ describe('auro-counter-group: updateValue', () => {
   it('does not disable buttons if total is within min and max range', async () => {
     const el = await fixture(html`
             <auro-counter-group min="1" max="10">
-                <auro-counter value="2"></auro-counter>
-                <auro-counter value="3"></auro-counter>
+                <auro-counter value="2">Counter1</auro-counter>
+                <auro-counter value="3">Counter2</auro-counter>
             </auro-counter-group>
         `);
 
@@ -115,8 +118,8 @@ describe('auro-counter-group: configureDropdownCounters', () => {
   it('updates the counters property with all auro-counter elements within the dropdown', async () => {
     const el = await fixture(html`
         <auro-counter-group isDropdown>
-                <auro-counter></auro-counter>
-                <auro-counter></auro-counter>
+                <auro-counter>Counter1</auro-counter>
+                <auro-counter>Counter2</auro-counter>
         </auro-counter-group>
     `);
 
@@ -126,8 +129,8 @@ describe('auro-counter-group: configureDropdownCounters', () => {
   it('attaches input event listeners to all auro-counter elements within the dropdown', async () => {
     const el = await fixture(html`
         <auro-counter-group isDropdown>
-                <auro-counter></auro-counter>
-                <auro-counter></auro-counter>
+                <auro-counter>Counter1</auro-counter>
+                <auro-counter>Counter2</auro-counter>
         </auro-counter-group>
     `);
 
@@ -162,30 +165,32 @@ describe('auro-counter-group: rendering logic', () => {
     expect(el.counters.length).to.equal(0);
   });
 
-  it('handles counters with empty labels correctly', async () => {
-    const el = await fixture(html`
-          <auro-counter-group isDropdown>
-            <div slot="valueText">Value</div>
-            <auro-counter value="2"></auro-counter>
-            <auro-counter value="3"></auro-counter>
-          </auro-counter-group>
-        `);
-    await elementUpdated(el);
-    expect(el.counters.length).to.equal(2);
-  });
+  // against a11y
+  // it('handles counters with empty labels correctly', async () => {
+  //   const el = await fixture(html`
+  //         <auro-counter-group isDropdown>
+  //           <div slot="valueText">Value</div>
+  //           <auro-counter value="2"></auro-counter>
+  //           <auro-counter value="3"></auro-counter>
+  //         </auro-counter-group>
+  //       `);
+  //   await elementUpdated(el);
+  //   expect(el.counters.length).to.equal(2);
+  // });
 
-  it('handles mix of labeled and unlabeled counters correctly', async () => {
-    const el = await fixture(html`
-          <auro-counter-group isDropdown>
-            <div slot="valueText">Value</div>
-            <auro-counter value="2">Labeled</auro-counter>
-            <auro-counter value="3"></auro-counter>
-            <auro-counter value="0">Zero Value</auro-counter>
-          </auro-counter-group>
-        `);
-    await elementUpdated(el);
-    expect(el.counters.length).to.equal(3);
-  });
+  // against a11y
+  // it('handles mix of labeled and unlabeled counters correctly', async () => {
+  //   const el = await fixture(html`
+  //         <auro-counter-group isDropdown>
+  //           <div slot="valueText">Value</div>
+  //           <auro-counter value="2">Labeled</auro-counter>
+  //           <auro-counter value="3"></auro-counter>
+  //           <auro-counter value="0">Zero Value</auro-counter>
+  //         </auro-counter-group>
+  //       `);
+  //   await elementUpdated(el);
+  //   expect(el.counters.length).to.equal(3);
+  // });
 
   it('handles counters with zero values correctly', async () => {
     const el = await fixture(html`
@@ -228,8 +233,10 @@ describe('auro-counter-group: rendering logic', () => {
 
     await elementUpdated(el);
 
-    const labelSlot = el.shadowRoot.querySelector('div[slot="label"] slot[name="label"]');
-    expect(labelSlot.assignedNodes()[0].textContent.trim()).to.equal('Counter Group Label');
+    const labelSlot = el.shadowRoot.querySelector('slot[name="label"]');
+    const labelSpan = labelSlot.assignedNodes()[0];
+    expect(labelSpan.tagName).to.equal('SPAN');
+    expect(labelSpan.textContent.trim()).to.equal('Counter Group Label');
   });
 
   it('renders the correct help text in the dropdown helpText slot', async () => {
@@ -245,40 +252,6 @@ describe('auro-counter-group: rendering logic', () => {
 
     const helpTextSlot = el.shadowRoot.querySelector('div[slot="helpText"] slot[name="helpText"]');
     expect(helpTextSlot.assignedNodes()[0].textContent.trim()).to.equal('Help Text');
-  });
-
-});
-
-describe('auro-counter-group: accessibility tests', () => {
-  const ignoredRules = {
-    ignoredRules: [
-      'color-contrast',
-      'aria-hidden-focus'
-    ],
-  };
-
-  it('auro-counter-group passes accessibility test', async () => {
-    const el = await fixture(html`
-      <auro-counter-group>
-        <auro-counter value="2">Counter 1</auro-counter>
-        <auro-counter value="3">Counter 2</auro-counter>
-      </auro-counter-group>
-    `);
-
-    await assert.isAccessible(el, ignoredRules);
-  });
-
-  it('auro-counter-group with dropdown passes accessibility test', async () => {
-    const el = await fixture(html`
-      <auro-counter-group isDropdown>
-        <span slot="label">Counter Group Label</span>
-        <span slot="helpText">Help Text</span>
-        <auro-counter value="2">Counter 1</auro-counter>
-        <auro-counter value="3">Counter 2</auro-counter>
-      </auro-counter-group>
-    `);
-
-    await assert.isAccessible(el, ignoredRules);
   });
 
 });
@@ -310,49 +283,49 @@ describe('auro-counter-group: keyboard navigation', () => {
     expect(firstCounter.value).to.equal(2);
   });
 
-  it.skip('should cycle focus through interactive elements with tab', async () => {
-    const el = await fixture(html`
-      <auro-counter-group isDropdown>
-        <auro-counter value="2">Counter 1</auro-counter>
-        <auro-counter value="3">Counter 2</auro-counter>
-      </auro-counter-group>
-    `);
+  // it.skip('should cycle focus through interactive elements with tab', async () => {
+  //   const el = await fixture(html`
+  //     <auro-counter-group isDropdown>
+  //       <auro-counter value="2">Counter 1</auro-counter>
+  //       <auro-counter value="3">Counter 2</auro-counter>
+  //     </auro-counter-group>
+  //   `);
 
-    // Ensure dropdown is fully rendered
-    el.dropdown.show();
-    await elementUpdated(el);
+  //   // Ensure dropdown is fully rendered
+  //   el.dropdown.show();
+  //   await elementUpdated(el);
 
-    // Verify counters exist
-    expect(el.counters.length).to.equal(2);
+  //   // Verify counters exist
+  //   expect(el.counters.length).to.equal(2);
 
-    // Focus first counter and verify
-    const firstCounter = el.counters[0];
-    const secondCounter = el.counters[1];
-    firstCounter.focus();
-    await elementUpdated(el);
-    expect(document.activeElement).to.equal(firstCounter);
+  //   // Focus first counter and verify
+  //   const firstCounter = el.counters[0];
+  //   const secondCounter = el.counters[1];
+  //   firstCounter.focus();
+  //   await elementUpdated(el);
+  //   expect(document.activeElement).to.equal(firstCounter);
 
-    // Tab to second counter
-    const tabEvent = new KeyboardEvent('keydown', {
-      key: 'Tab',
-      bubbles: true,
-      cancelable: true
-    });
-    firstCounter.dispatchEvent(tabEvent);
-    await elementUpdated(el);
-    expect(document.activeElement).to.equal(secondCounter);
+  //   // Tab to second counter
+  //   const tabEvent = new KeyboardEvent('keydown', {
+  //     key: 'Tab',
+  //     bubbles: true,
+  //     cancelable: true
+  //   });
+  //   firstCounter.dispatchEvent(tabEvent);
+  //   await elementUpdated(el);
+  //   expect(document.activeElement).to.equal(secondCounter);
 
-    // Shift+Tab back to first counter
-    const shiftTabEvent = new KeyboardEvent('keydown', {
-      key: 'Tab',
-      shiftKey: true,
-      bubbles: true,
-      cancelable: true
-    });
-    secondCounter.dispatchEvent(shiftTabEvent);
-    await elementUpdated(el);
-    expect(document.activeElement).to.equal(firstCounter);
-  });
+  //   // Shift+Tab back to first counter
+  //   const shiftTabEvent = new KeyboardEvent('keydown', {
+  //     key: 'Tab',
+  //     shiftKey: true,
+  //     bubbles: true,
+  //     cancelable: true
+  //   });
+  //   secondCounter.dispatchEvent(shiftTabEvent);
+  //   await elementUpdated(el);
+  //   expect(document.activeElement).to.equal(firstCounter);
+  // });
 
   it('should close dropdown when pressing Escape', async () => {
     const el = await fixture(html`

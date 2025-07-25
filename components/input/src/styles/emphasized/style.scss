@@ -1,0 +1,126 @@
+/* stylelint-disable */
+
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+@use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+// LAYOUTS ---------------------------------------------------
+
+@mixin emphasizedActiveLabel {
+  label {
+    display: block;
+    width: calc(100%);
+    text-align: left;
+  }
+}
+
+@mixin emphasizedActiveInput {
+  input {
+    text-align: left;
+    width: calc(100%);
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='right'])) {
+  .leftIndent {
+    margin-left: var(--ds-size-300, vac.$ds-size-300);
+    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left'])) {
+  .rightIndent {
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
+    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
+  }
+}
+
+:host([layout*='emphasized'][shape*='pill']:not([layout*='left']):not([layout*='right'])) {
+  .rightIndent {
+    margin-right: var(--ds-size-300, vac.$ds-size-300);
+    width: calc(100% - var(--ds-size-300, vac.$ds-size-300));
+  }
+}
+
+@mixin emphasizedTransition {
+  // transition: all .2s ease-in-out;
+}
+
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  label {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  input {
+    transition: all 1ms linear; // force repaint after 0.01s due to iOS safari rendering issue
+    text-align: center;
+  }
+
+  .mainContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .displayValue {
+    display: none;
+    width: 100%;
+
+    &.hasContent:is(.withValue):not(.hasFocus) {
+      display: block;
+    }
+  }
+
+  &.withValue {
+    @include emphasizedActiveLabel;
+    @include emphasizedActiveInput;
+    justify-content: flex-start;
+  }
+
+  // HIDE BORDER WHEN NOT FOCUSED AND NOT INVALID
+  &:not(:focus-within):not(:is([validity]:not([validity='valid']))) {
+    --ds-auro-input-border-color: transparent;
+  }
+
+  &:focus-within {
+    @include emphasizedActiveLabel;
+    @include emphasizedActiveInput;
+    justify-content: flex-start;
+
+    .alertNotification {
+      display: none;
+    }
+  }
+}
+
+.layout-emphasized,
+.layout-emphasized-left,
+.layout-emphasized-right {
+  .accents {
+    &.left {
+      padding-left: var(--ds-size-300, vac.$ds-size-300);
+    }
+
+    &.right {
+      padding-right: var(--ds-size-300, vac.$ds-size-300);
+    }
+  }
+}
+

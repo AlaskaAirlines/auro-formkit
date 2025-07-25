@@ -1,0 +1,120 @@
+// Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable declaration-empty-line-before */
+
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
+
+/* stylelint-disable max-nesting-depth, declaration-no-important, order/properties-order, declaration-block-no-redundant-longhand-properties */
+
+:host {
+  cursor: pointer;
+  user-select: none;
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    padding-right: var(--ds-size-200, vac.$ds-size-200);    
+    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-300, vac.$ds-size-300) + var(--ds-size-100, vac.$ds-size-100));
+    padding-top: var(--ds-size-50, vac.$ds-size-50);
+    padding-bottom: var(--ds-size-50, vac.$ds-size-50);
+    border-radius: var(--ds-size-100, vac.$ds-size-100);
+
+    -webkit-tap-highlight-color: transparent;
+
+    &[class*="shape-box"] {
+      border-radius: unset;
+    }
+
+    &[class*="shape-snowflake"] {
+      border-radius: unset;
+      line-height: 24px;
+    }
+
+    &[class*="shape-pill"] {
+      border-radius: 30px;
+    }
+
+    &[class*="-lg"] {
+      padding-top: var(--ds-size-75, vac.$ds-size-75);
+      padding-bottom: var(--ds-size-75, vac.$ds-size-75);
+      padding-right: var(--ds-size-150, vac.$ds-size-150);
+      line-height: 26px;
+    }
+
+    &[class*="-xl"] {
+      padding-top: var(--ds-size-100, vac.$ds-size-100);
+      padding-bottom: var(--ds-size-100, vac.$ds-size-100);
+      padding-right: var(--ds-size-200, vac.$ds-size-200);
+      line-height: 26px;
+    }
+
+  }
+
+  slot {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  [auro-icon] {
+    --ds-auro-icon-size: var(--ds-size-300, #{vac.$ds-size-300});
+    margin-right: var(--ds-size-150, vac.$ds-size-150);
+    margin-left: var(--ds-size-100, vac.$ds-size-100);
+  }
+
+  ::slotted(.nestingSpacer) {
+    display: inline-block;
+    width: var(--ds-size-300, vac.$ds-size-300);
+  }
+}
+
+:host([loadingplaceholder]) {
+  .wrapper {
+    padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-300, vac.$ds-size-300) + var(--ds-size-100, vac.$ds-size-100));
+  }
+}
+
+:host([selected]) {
+  .wrapper {
+    padding-left: 0;
+  }
+}
+
+:host([nocheckmark]) {
+  .wrapper {
+    padding-left: var(--ds-size-150, vac.$ds-size-150);
+    
+    &[class*="-lg"] {
+      padding-left: var(--ds-size-150, vac.$ds-size-150);
+    }
+
+    &[class*="-xl"] {
+    padding-left: var(--ds-size-200, vac.$ds-size-200);
+    }
+  }
+}
+
+// cursor and interactivity
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([static]) {
+  pointer-events: none;
+}
+
+:host([disabled]:hover) {
+  cursor: auto;
+}
+
+:host([disabled]) {
+  user-select: none;
+  pointer-events: none;
+}

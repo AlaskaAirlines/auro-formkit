@@ -3,11 +3,12 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
 
 // If using litElement base class
-import { LitElement } from "lit";
+import { css } from "lit";
 import { html } from 'lit/static-html.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -24,23 +25,34 @@ import bibTemplateVersion from './bibtemplateVersion.js';
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
-import { ifDefined } from "lit/directives/if-defined.js";
+import styleEmphasizedCss from './styles/emphasized/style-css.js';
+import styleSnowflakeCss from './styles/snowflake/style-css.js';
+
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
+import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * @slot - Default slot for the menu content.
+ * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
+ * @slot ariaLabel.input.clear - Sets aria-label on clear button
+ * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
+ * @slot displayValue - Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts.
  * @event auroCombobox-valueSet - Notifies that the component has a new value set.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
 
 // build the component class
-export class AuroCombobox extends LitElement {
+export class AuroCombobox extends AuroElement {
 
   constructor() {
     super();
+
+    this.matchWidth = true;
 
     this.privateDefaults();
   }
@@ -78,6 +90,25 @@ export class AuroCombobox extends LitElement {
 
     this.isHiddenWhileLoading = false;
 
+    // Error message
+    this.errorMessage = null;
+
+    // Layout Config
+    /**
+     * @private
+     */
+    this.layout = 'classic';
+
+    /**
+     * @private
+     */
+    this.shape = 'classic';
+
+    /**
+     * @private
+     */
+    this.size = 'xl';
+
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -89,6 +120,7 @@ export class AuroCombobox extends LitElement {
     this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
     this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
     this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', '1.0.0', AuroHelpText);
   }
 
   // This function is to define props used within the scope of this component
@@ -132,7 +164,7 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * ID for the dropdown
+       * ID for the dropdown.
        * @private
        */
       dropdownId: {
@@ -142,7 +174,7 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
-       * Whether or not the dropdown is open
+       * Whether or not the dropdown is open.
        * @private
        */
       dropdownOpen: {
@@ -159,10 +191,26 @@ export class AuroCombobox extends LitElement {
         reflect: true
       },
 
+      /**
+       * Specifies the input mask format.
+       */
+      format: {
+        type: String,
+        reflect: true
+      },
+
       /** Exposes inputmode attribute for input.  */
       inputmode: {
         type: String,
         attribute: true,
+        reflect: true
+      },
+
+      /**
+       * If declared, the popover and trigger will be set to the same width.
+       */
+      matchWidth: {
+        type: Boolean,
         reflect: true
       },
 
@@ -217,6 +265,7 @@ export class AuroCombobox extends LitElement {
         type: Object
       },
 
+      /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
        * Position where the bib should appear relative to the trigger.
        * Accepted values:
@@ -227,6 +276,15 @@ export class AuroCombobox extends LitElement {
        * @default bottom-start
        */
       placement: {
+        type: String,
+        reflect: true
+      },
+      /* eslint-enable jsdoc/require-description-complete-sentence */
+
+      /**
+       * Define custom placeholder text, only supported by date input formats.
+       */
+      placeholder: {
         type: String,
         reflect: true
       },
@@ -286,12 +344,12 @@ export class AuroCombobox extends LitElement {
 
       /**
        * Value selected for the dropdown menu.
-       * @type {string}
        */
       value: {
-        type: Object
+        type: String
       },
 
+      /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
        * If declared, make bib.fullscreen.headline in HeadingDisplay.
        * Otherwise, Heading 600
@@ -300,6 +358,7 @@ export class AuroCombobox extends LitElement {
         type: Boolean,
         reflect: true
       },
+      /* eslint-enable jsdoc/require-description-complete-sentence */
 
       /**
        * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
@@ -315,8 +374,8 @@ export class AuroCombobox extends LitElement {
       },
 
       /**
+       * Specifies the currently active option.
        * @private
-       * specifies the currently active option
        */
       optionActive: {
         type: Object,
@@ -327,7 +386,25 @@ export class AuroCombobox extends LitElement {
   }
 
   static get styles() {
-    return [styleCss];
+    return [
+      css`${styleCss}`,
+      css`${styleEmphasizedCss}`,
+      css`${styleSnowflakeCss}`
+    ];
+  }
+
+  /**
+   * Checks if the element is valid.
+   * @returns {boolean} - Returns true if the element is valid, false otherwise.
+   */
+  isValid() {
+    let valid = true;
+
+    if (this.validity !== undefined && this.validity !== 'valid') {
+      valid = false;
+    }
+
+    return valid;
   }
 
   /**
@@ -343,87 +420,98 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
-   * Processes hidden state of all menu options and determines if there are any available options not hidden.
+   * Updates the filter for the available options based on the input value.
+   * @private
+   */
+  updateFilter() {
+
+    // Reset available options if noFilter is set to false after being true.
+    if (this.noFilter) {
+      this.availableOptions = [...this.options];
+      return;
+    }
+
+    this.noMatchOption = undefined;
+
+    this.options.forEach((option) => {
+      let matchString = option.textContent.toLowerCase();
+
+      if (option.hasAttribute('nomatch')) {
+        this.noMatchOption = option;
+      }
+
+      if (option.hasAttribute('persistent')) {
+        this.availableOptions.push(option);
+      }
+
+      if (option.hasAttribute('suggest')) {
+        matchString = `${matchString} ${option.getAttribute('suggest')}`.toLowerCase();
+      }
+
+      // only count options that match the typed input value AND are not currently selected AND are not static
+      if (this.input.value && matchString.includes(this.input.value.toLowerCase()) && !option.hasAttribute('static')) {
+        option.removeAttribute('hidden');
+        this.availableOptions.push(option);
+      } else if (!option.hasAttribute('persistent')) {
+        // Hide all other non-persistent options
+        option.setAttribute('hidden', '');
+      }
+    });
+
+    if (this.availableOptions.length === 0) {
+      if (this.noMatchOption) {
+        this.noMatchOption.removeAttribute('hidden');
+      } else {
+        this.hideBib();
+      }
+    } else if (this.noMatchOption) {
+      this.noMatchOption.setAttribute('hidden', '');
+    }
+  }
+
+  /**
+   * Syncs the values and states of this component, the input, and the menu, including this.optionSelected and this.menu.optionSelected.
    * @private
    * @returns {void}
    */
-  handleMenuOptions() {
-    // Reset menu matchword UI
+  async syncValuesAndStates() {
+    this.menu.value = this.value;
+    this.menu.matchWord = this.input.value;
+
+    // Wait a lifecycle for child components to update
+    await Promise.all([this.menu.updateComplete]);
+
+    if (this.menu.optionSelected && this.menu.optionSelected.textContent.length > 0) {
+      this.input.value = this.menu.optionSelected.textContent;
+    } else {
+      this.input.value = this.value;
+    }
+  }
+
+  /**
+   * Resets the menu matchWord to true.
+   * @private
+   */
+  resetMenuMatchword() {
     this.menu.updateItemsState(new Map([
       [
         'matchWord',
         true
       ]
     ]));
+  };
 
+  /**
+   * Processes hidden state of all menu options and determines if there are any available options not hidden.
+   * @private
+   * @returns {void}
+   */
+  handleMenuOptions() {
+
+    this.resetMenuMatchword();
     this.generateOptionsArray();
     this.availableOptions = [];
-
-    if (this.menu.optionSelected) {
-      // Get first option since combobox is single-select
-      const selected = this.menu.optionSelected;
-
-      if (!this.optionSelected || this.optionSelected !== selected) {
-        this.optionSelected = selected;
-      }
-
-      if (!this.value || this.value !== selected.value) {
-        this.value = selected.value;
-
-        this.menu.value = this.value;
-      }
-
-      if (this.input.value !== selected.textContent) {
-        this.input.value = selected.textContent;
-      }
-
-      if (this.menu.matchWord !== this.input.value) {
-        this.menu.matchWord = this.input.value;
-      }
-
-      this.classList.add('combobox-filled');
-    }
-
-    if (this.noFilter) {
-      this.availableOptions = [...this.options];
-    } else {
-      this.noMatchOption = undefined;
-
-      this.options.forEach((option) => {
-        let matchString = option.textContent.toLowerCase();
-
-        if (option.hasAttribute('nomatch')) {
-          this.noMatchOption = option;
-        }
-
-        if (option.hasAttribute('persistent')) {
-          this.availableOptions.push(option);
-        }
-
-        if (option.hasAttribute('suggest')) {
-          matchString = `${matchString} ${option.getAttribute('suggest')}`.toLowerCase();
-        }
-
-        // only count options that match the typed input value AND are not currently selected AND are not static
-        if (this.input.value && matchString.includes(this.input.value.toLowerCase()) && !option.hasAttribute('static')) {
-          option.removeAttribute('hidden');
-          this.availableOptions.push(option);
-        } else if (!option.hasAttribute('persistent')) {
-          // Hide all other non-persistent options
-          option.setAttribute('hidden', '');
-        }
-      });
-
-      if (this.availableOptions.length === 0) {
-        if (this.noMatchOption) {
-          this.noMatchOption.removeAttribute('hidden');
-        } else {
-          this.hideBib();
-        }
-      } else if (this.noMatchOption) {
-        this.noMatchOption.setAttribute('hidden', '');
-      }
-    }
+    this.updateFilter();
   }
 
   /**
@@ -441,7 +529,6 @@ export class AuroCombobox extends LitElement {
 
   /**
    * Hides the dropdown bib if its open.
-   * @private
    * @returns {void}
    */
   hideBib() {
@@ -452,7 +539,6 @@ export class AuroCombobox extends LitElement {
 
   /**
    * Shows the dropdown bib if there are options to show.
-   * @private
    * @returns {void}
    */
   showBib() {
@@ -478,6 +564,7 @@ export class AuroCombobox extends LitElement {
    * @returns {void}
    */
   configureDropdown() {
+    this.dropdown.a11yRole = "combobox";
 
     // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
     this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
@@ -487,9 +574,14 @@ export class AuroCombobox extends LitElement {
     // Listen for the dropdown to be shown or hidden
     this.dropdown.addEventListener("auroDropdown-toggled", (ev) => {
       this.dropdownOpen = ev.detail.expanded;
+      this.updateMenuShapeSize();
 
       // wait a frame in case the bib gets hide immediately after showing because there is no value
-      setTimeout(this.transportInput);
+      setTimeout(() => {
+        if (document.activeElement === this) {
+          this.setInputFocus();
+        }
+      }, 0);
     });
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
@@ -497,7 +589,8 @@ export class AuroCombobox extends LitElement {
     });
 
     // setting up bibtemplate
-    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
+    this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
 
     // Exposes the CSS parts from the bibtemplate for styling
     this.bibtemplate.exposeCssParts();
@@ -505,12 +598,50 @@ export class AuroCombobox extends LitElement {
     this.hideBib = this.hideBib.bind(this);
     this.bibtemplate.addEventListener('close-click', this.hideBib);
 
-    this.transportInput = this.transportInput.bind(this);
-
+    this.setInputFocus = this.setInputFocus.bind(this);
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
-      setTimeout(this.transportInput);
+      this.updateMenuShapeSize();
+
+      setTimeout(() => {
+        this.setInputFocus();
+      }, 0);
     });
+  }
+
+  /**
+   * @private
+   */
+  setInputFocus() {
+    if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
+      this.inputInBib.focus();
+    } else {
+      this.input.focus();
+    }
+  }
+
+  /**
+   * Update menu to default for fullscreen bib, otherwise to this.size and this.shape.
+   * @private
+   */
+  updateMenuShapeSize() {
+    if (!this.menu) {
+      return;
+    }
+
+    if (this.dropdown && this.dropdown.isBibFullscreen) {
+      this.menu.setAttribute('size', 'md');
+      this.menu.setAttribute('shape', 'box');
+    } else {
+      // set menu's default size if there it's not specified.
+      if (!this.menu.getAttribute('size')) {
+        this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+      }
+
+      if (!this.getAttribute('shape')) {
+        this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+      }
+    }
   }
 
   /**
@@ -520,6 +651,8 @@ export class AuroCombobox extends LitElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+
+    this.updateMenuShapeSize();
 
     // a racing condition on custom-combobox with custom-menu
     if (!this.menu || this.menuShadowRoot === null) {
@@ -560,8 +693,6 @@ export class AuroCombobox extends LitElement {
           this.menu.matchWord = this.input.value;
         }
 
-        this.classList.add('combobox-filled');
-
         // update the hidden state of options based on newly selected value
         this.handleMenuOptions();
 
@@ -595,7 +726,7 @@ export class AuroCombobox extends LitElement {
     });
 
     this.menu.addEventListener('auroMenu-selectValueReset', () => {
-      this.reset();
+      this.clear();
     });
   }
 
@@ -615,7 +746,7 @@ export class AuroCombobox extends LitElement {
     });
 
     /**
-     * Validate every time we remove focus from the datepicker.
+     * Validate every time we remove focus from the combo box.
      */
     this.addEventListener('focusout', () => {
       if (document.activeElement !== this) {
@@ -653,64 +784,19 @@ export class AuroCombobox extends LitElement {
   }
 
   /**
+   * Handle changes to the input value and trigger changes that should result.
    * @private
-   * When the dropdown is visible in fullscreen mode, the input is moved to the subheader slot of bibtemplate.
-   * Otherwise, it's moved back to the trigger slot.
-   * @private
+   * @param {Event} event - The input event triggered by the input element.
    * @returns {void}
    */
-  transportInput() {
-    if (!this.input) {
+  handleInputValueChange(event) {
+    if (event.target === this.inputInBib) {
+      this.input.value = this.inputInBib.value;
       return;
     }
 
-    const inputHelpText = this.input.shadowRoot.querySelector('auro-helptext, [auro-helptext');
-    const inputAlertIcon = this.input.shadowRoot.querySelector(".alertNotification");
+    this.inputInBib.value = this.input.value;
 
-    if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-
-      if (this.input.parentNode === this.dropdown) {
-        // keep the trigger size the same even after input gets removed
-        const parentSize = window.getComputedStyle(this.dropdown.trigger);
-        this.dropdown.trigger.style.height = parentSize.height;
-
-        // input will not have border on bib
-        this.input.removeAttribute('bordered');
-        this.input.setAttribute('borderless', true);
-        this.input.setAttribute('slot', 'subheader');
-
-        // set disply of helpText and alert icon programatically
-        // because ::slotted and ::part do not work together
-        inputHelpText.style.display = 'none';
-        if (inputAlertIcon) {
-          inputAlertIcon.style.display = 'none';
-        }
-
-        this.bibtemplate.prepend(this.input);
-        this.input.focus();
-      }
-    } else if (this.input.parentNode !== this.dropdown) {
-      this.input.setAttribute('bordered', true);
-      this.input.removeAttribute('borderless');
-      this.input.setAttribute('slot', 'trigger');
-
-      // reset display of helpText and alert icon to be visible
-      inputHelpText.style.display = '';
-      if (inputAlertIcon) {
-        inputAlertIcon.style.display = '';
-      }
-
-      this.dropdown.prepend(this.input);
-      this.input.focus();
-    }
-  }
-
-  /**
-   * Handle changes to the input value and trigger changes that should result.
-   * @private
-   * @returns {void}
-   */
-  handleInputValueChange() {
     this.menu.matchWord = this.input.value;
     this.optionActive = null;
 
@@ -747,9 +833,6 @@ export class AuroCombobox extends LitElement {
     // Hide menu if value is empty, otherwise show if there are available suggestions
     if (this.input.value && this.input.value.length === 0) {
       this.hideBib();
-      this.classList.remove('combobox-filled');
-    } else if (!this.dropdown.isPopoverVisible && this.availableOptions) {
-      this.classList.add('combobox-filled');
     }
 
     // Force dropdown bib to hide if input value has no matching suggestions
@@ -773,12 +856,20 @@ export class AuroCombobox extends LitElement {
         }
       }
 
-      if (evt.key === 'Tab') {
-        this.hideBib();
+      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
+        if (this.dropdown.isBibFullscreen) {
 
-        if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-          // if bib is open in fullscreen, just close the bib and do not move the focus to the next focasable element
-          evt.preventDefault();
+          // when focus is on the input, move focus back to close button with Tab key
+          if (document.activeElement.shadowRoot.activeElement === this.inputInBib) {
+            evt.preventDefault();
+            this.dropdown.focus();
+          }
+        } else {
+          setTimeout(() => {
+            if (document.activeElement !== this) {
+              this.hideBib();
+            }
+          }, 0);
         }
       }
 
@@ -792,7 +883,12 @@ export class AuroCombobox extends LitElement {
 
         if (this.dropdown.isPopoverVisible) {
           evt.preventDefault();
-          this.menu.navigateOptions(evt.key.replace('Arrow', '').toLowerCase());
+
+          // navigate on menu only when the focus is on input
+          if (!this.dropdown.isBibFullscreen || this.shadowRoot.activeElement === this.inputInBib) {
+            const direction = evt.key.replace('Arrow', '').toLowerCase();
+            this.menu.navigateOptions(direction);
+          }
         }
       }
     });
@@ -807,7 +903,6 @@ export class AuroCombobox extends LitElement {
    * @private
    * @returns {void}
    */
-
   performUpdate() {
     super.performUpdate();
 
@@ -826,13 +921,13 @@ export class AuroCombobox extends LitElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-combobox');
 
-    this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$); // eslint-disable-line no-underscore-dangle
-    this.input = this.dropdown.querySelector(this.inputTag._$litStatic$); // eslint-disable-line no-underscore-dangle
+    this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+    this.input = this.dropdown.querySelector(this.inputTag._$litStatic$);
 
-    this.configureMenu();
     this.configureInput();
     this.configureDropdown();
     this.configureCombobox();
+    this.configureMenu();
 
     // Set the initial value in auro-menu if defined
     if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
@@ -855,7 +950,14 @@ export class AuroCombobox extends LitElement {
   reset() {
     this.input.reset();
     this.validation.reset(this);
-    this.menu.value = undefined;
+  }
+
+  /**
+   * Clears the current value of the combobox.
+   * @returns {void}
+   */
+  clear() {
+    this.input.clear();
   }
 
   /**
@@ -866,39 +968,35 @@ export class AuroCombobox extends LitElement {
     this.validation.validate(this, force);
   }
 
-  updated(changedProperties) {
+  async updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
-    if (changedProperties.has('value')) {
+    if (changedProperties.has('value') && this.value !== changedProperties.get('value')) {
+
       if (this.value) {
-        if (this.optionSelected && this.optionSelected.value === this.value) {
-          // If value updates and the previously selected option already matches the new value
-          // just update the input value to use the textContent of the optionSelected
-          this.input.value = this.optionSelected.textContent;
-        } else {
-          // Otherwise just enter the value into the input
-          this.optionSelected = undefined;
-
-          const inputValue = this.value;
-          this.input.value = inputValue;
-
-          // Update the menu value and matchWord
-          this.menu.matchWord = inputValue;
-          this.handleMenuOptions();
-
-          // If the value got set programmatically make sure we hide the bib
-          // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
-          if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
-            this.hideBib();
-          }
+        // If the value got set programmatically make sure we hide the bib
+        // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
+        if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
+          this.hideBib();
         }
       } else {
-        this.reset();
+        this.clear();
       }
+
+      // Sync the input, menu, and optionSelected states
+      await this.syncValuesAndStates();
     }
 
     if (changedProperties.has('error')) {
       this.input.setAttribute('error', this.getAttribute('error'));
       this.validate();
+    }
+
+    if (changedProperties.has('shape') && this.menu) {
+      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+    }
+
+    if (changedProperties.has('size') && this.menu) {
+      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
     }
   }
 
@@ -941,10 +1039,13 @@ export class AuroCombobox extends LitElement {
 
         this.handleMenuOptions();
         break;
+
+      // Programmatically inject as the slot cannot be carried over to bibtemplate.
+      // It's because the bib is/will be separated from dropdown to body.
       case 'label':
-        // Programatically inject as the slot cannot be carried over to bibtemplate.
-        // It's because the bib is/will be seperated from dropdown to body.
-        this.transportAssignedNodes(event.target, this.input, 'label');
+      case 'ariaLabel.input.clear':
+      case 'optionalLabel':
+        this.transportAssignedNodes(event.target, this.inputInBib, event.target.name);
         break;
       case 'bib.fullscreen.headline':
         this.transportAssignedNodes(event.target, this.bibtemplate, 'header');
@@ -955,6 +1056,16 @@ export class AuroCombobox extends LitElement {
 
   // function that renders the HTML and CSS into  the scope of the component
   render() {
+    const helpTextContentClasses = {
+      'util_displayHidden': this.validity !== undefined && this.validity !== 'valid',
+      'helpTextMessage': true,
+    };
+
+    const errorTextContentClasses = {
+      'util_displayHidden': this.validity === undefined || this.validity === 'valid',
+      'errorMessage': true,
+    };
+
     return html`
       <div>
         <div aria-live="polite" class="util_displayHiddenVisually">
@@ -965,62 +1076,98 @@ export class AuroCombobox extends LitElement {
             : undefined
           }
         </div>
-        <div id="slotHolder" aria-hidden="true">
-          <slot name="label" @slotchange="${this.handleSlotChange}"></slot>
-          <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
-        </div>
         <${this.dropdownTag}
-          for="dropdownMenu"
-          ?onDark="${this.onDark}"
-          fluid
-          bordered
-          rounded
-          matchWidth
-          nocheckmark
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
+          .offset="${this.offset}"
+          .placement="${this.placement}"
+          ?autoPlacement="${this.autoPlacement}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
-          .placement="${this.placement}"
-          .offset="${this.offset}"
-          ?autoPlacement="${this.autoPlacement}"
           ?noFlip="${this.noFlip}"
-          disableEventShow>
-          <${this.inputTag}
-            .a11yRole="${"combobox"}"
-            .a11yExpanded="${this.dropdownOpen}"
-            .a11yControls="${this.dropdownId}"
-            id="${this.id || 'auro-combobox-input'}"
-            slot="trigger"
-            bordered
-            ?onDark="${this.onDark}"
-            ?required="${this.required}"
-            ?noValidate="${this.noValidate}"
-            ?disabled="${this.disabled}"
-            ?icon="${this.triggerIcon}"
-            setCustomValidity="${this.setCustomValidity}"
-            setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
-            setCustomValidityCustomError="${this.setCustomValidityCustomError}"
-            .autocomplete="${this.autocomplete}"
-            .type="${this.type}"
-            inputmode="${ifDefined(this.inputmode)}"
-            @input="${this.handleInputValueChange}">
-          </${this.inputTag}>
+          ?onDark="${this.onDark}"
+          disableEventShow
+          fluid
+          for="dropdownMenu"
+          layout="${this.layout}"
+          matchWidth="${ifDefined(this.matchWidth)}"
+          nocheckmark
+          rounded
+          simple
+          shape="${this.shape}"
+          size="${this.size}">
+            <${this.inputTag}
+              @input="${this.handleInputValueChange}"
+              .a11yExpanded="${this.dropdownOpen}"
+              .a11yControls="${this.dropdownId}"
+              .autocomplete="${this.autocomplete}"
+              .inputmode="${this.inputmode}"
+              .placeholder="${this.placeholder}"
+              .type="${this.type}"
+              ?disabled="${this.disabled}"
+              ?icon="${this.triggerIcon}"
+              ?noValidate="${this.noValidate}"
+              ?onDark="${this.onDark}"
+              ?required="${this.required}"
+              a11yRole="combobox"
+              id="${this.id}"
+              layout="${this.layout}"
+              setCustomValidity="${this.setCustomValidity}"
+              setCustomValidityCustomError="${this.setCustomValidityCustomError}"
+              setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
+              shape="${this.shape}"
+              size="${this.size}"
+              slot="trigger">
+              <slot name="ariaLabel.input.clear" slot="ariaLabel.clear" @slotchange="${this.handleSlotChange}"></slot>
+              <slot name="label" slot="label" @slotchange="${this.handleSlotChange}"></slot>
+              <slot name="optionalLabel" slot="optionalLabel" @slotchange="${this.handleSlotChange}"> (optional)</slot>
+              <slot name="displayValue" slot="displayValue"></slot>
+            </${this.inputTag}>
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
+            <slot name="bib.fullscreen.headline" slot="header"></slot>
+            <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
+            <${this.inputTag}
+              id="inputInBib"
+              @input="${this.handleInputValueChange}"
+              .a11yControls="${this.dropdownId}"
+              .autocomplete="${this.autocomplete}"
+              .format="${this.format}"
+              .inputmode="${this.inputmode}"
+              .placeholder="${this.placeholder}"
+              .type="${this.type}"
+              ?disabled="${this.disabled}"
+              ?icon="${this.triggerIcon}"
+              ?required="${this.required}"
+              a11yRole="combobox"
+              a11yExpanded="true"
+              layout="classic"
+              noValidate="true"
+              shape="classic"
+              simple
+              size="sm"
+              slot="subheader">
+            </${this.inputTag}>
           </${this.bibtemplateTag}>
 
-          <p slot="helpText">
-            <!-- Help text and error message template -->
-            ${!this.validity || this.validity === undefined || this.validity === 'valid'
+          <span slot="helpText">
+            ${!this.validity || this.validity === 'valid'
               ? html`
-                <slot name="helpText"></slot>
-              ` : html`
-                <span role="alert" aria-live="assertive" part="helpText">
-                  ${this.errorMessage}
-                </span>`
+                <${this.helpTextTag} class="${classMap(helpTextContentClasses)}" ?onDark="${this.onDark}">
+                  <p id="${this.uniqueId}" part="helpText">
+                    <slot name="helpText"></slot>
+                  </p>
+                </${this.helpTextTag}>
+              `
+              : html`
+                <${this.helpTextTag} class="${classMap(errorTextContentClasses)}" error ?onDark="${this.onDark}">
+                  <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
+                    ${this.errorMessage}
+                  </p>
+                </${this.helpTextTag}>
+              `
             }
-          </p>
+          </span>
         </${this.dropdownTag}>
       </div>
     `;

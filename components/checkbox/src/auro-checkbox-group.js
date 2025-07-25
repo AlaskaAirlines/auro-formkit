@@ -5,7 +5,7 @@
 
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
 
-import { LitElement } from "lit";
+import { LitElement } from 'lit';
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -25,7 +25,7 @@ import helpTextVersion from './helptextVersion.js';
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
  *
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
- * @slot {HTMLSlotElement} optionalLabel - Allows for the optional label to be overridden.
+ * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  */
@@ -94,6 +94,7 @@ export class AuroCheckboxGroup extends LitElement {
 
   static get properties() {
     return {
+      ...super.properties,
 
       /**
        * If set, disables the checkbox group.
@@ -326,6 +327,12 @@ export class AuroCheckboxGroup extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
+    if (changedProperties.has('layout')) {
+      this.checkboxes.forEach((el) => {
+        el.layout = this.layout;
+      });
+    }
+
     if (changedProperties.has('disabled')) {
       this.checkboxes.forEach((el) => {
         if (this.disabled) {
@@ -386,20 +393,20 @@ export class AuroCheckboxGroup extends LitElement {
 
     return html`
       <fieldset class="${classMap(groupClasses)}">
-        ${this.required
-          ? html`<legend><slot name="legend"></slot></legend>`
-          : html`<legend><slot name="legend"></slot> (optional)</legend>`
-        }
+        <legend>
+          <slot name="legend"></slot>
+          ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
+        </legend>
         <slot @slotchange=${this.handleItems}></slot>
       </fieldset>
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} large part="helpText" ?onDark="${this.onDark}">
+          <${this.helpTextTag} part="helpText" ?onDark="${this.onDark}">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} error large ?onDark="${this.onDark}" role="alert" aria-live="assertive" part="helpText">
+          <${this.helpTextTag} error ?onDark="${this.onDark}" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

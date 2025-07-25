@@ -1,0 +1,216 @@
+@use '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables' as vac;
+
+// TODO: Update all sizes to design tokens
+
+@function getCalculatedSize($size, $borderSize) {
+  @return calc(#{$size} - (2 * #{$borderSize}));
+}
+
+// SIZES
+$defaultBorderSize: 2px;
+$xl: 72px;
+$lg: 56px;
+$md: 48px;
+$sm: 36px;
+$xs: 24px;
+
+// SHAPES ---------------------------------------------------
+
+@mixin simple($size) {
+  $simpleBorderSize: 0px;
+
+  &.simple {
+    border-width: $simpleBorderSize;
+    min-height: getCalculatedSize($size, $simpleBorderSize);
+    max-height: getCalculatedSize($size, $simpleBorderSize);
+    background-color: unset;
+    box-shadow: none; // only here to support classic shape temporarily
+  }
+}
+
+@mixin thin($size) {
+  $thinBorderSize: 1px;
+
+  &.thin {
+    border-width: $thinBorderSize;
+    min-height: getCalculatedSize($size, $thinBorderSize);
+    max-height: getCalculatedSize($size, $thinBorderSize);
+    background-color: unset;
+  }
+}
+
+@mixin parentBorder($size) {
+  &.parentBorder {
+    border: 0;
+    box-shadow: unset;
+    min-height: getCalculatedSize($size, 2px);
+    max-height: getCalculatedSize($size, 2px);
+  }
+}
+
+@mixin variants($size) {
+  @include simple($size);
+  @include thin($size);
+  @include parentBorder($size);
+}
+
+.wrapper {
+  overflow: hidden;
+}
+
+.shape-classic-xl,
+.shape-classic-lg,
+.shape-classic-md,
+.shape-classic-sm,
+.shape-classic-xs {
+  $borderSize: 1px;
+  min-height: getCalculatedSize(58px, $borderSize);
+  max-height: getCalculatedSize(58px, $borderSize);
+  border-style: solid;
+  border-width: $borderSize;
+  border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
+
+  @include variants(58px);
+}
+
+.shape-snowflake-xl,
+.shape-snowflake-lg,
+.shape-snowflake-md,
+.shape-snowflake-sm,
+.shape-snowflake-xs {
+  min-height: getCalculatedSize(60px, $defaultBorderSize);
+  max-height: getCalculatedSize(60px, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: 30px;
+
+  @include variants(60px);
+}
+
+.shape-box-xl {
+  min-height: getCalculatedSize($xl, $defaultBorderSize);
+  max-height: getCalculatedSize($xl, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($xl);
+}
+
+.shape-box-lg {
+  min-height: getCalculatedSize($lg, $defaultBorderSize);
+  max-height: getCalculatedSize($lg, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($lg);
+}
+
+.shape-box-md {
+  min-height: getCalculatedSize($md, $defaultBorderSize);
+  max-height: getCalculatedSize($md, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($md);
+}
+
+.shape-box-sm {
+  min-height: getCalculatedSize($sm, $defaultBorderSize);
+  max-height: getCalculatedSize($sm, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($sm);
+}
+
+.shape-box-xs {
+  min-height: getCalculatedSize($xs, $defaultBorderSize);
+  max-height: getCalculatedSize($xs, $defaultBorderSize);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+
+  @include variants($xs);
+}
+
+.shape-rounded-lg {
+  min-height: $lg;
+  max-height: $lg;
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: 6px;
+
+  @include variants($lg);
+}
+
+.shape-pill-xl {
+  min-height: getCalculatedSize($xl, 2px);
+  max-height: getCalculatedSize($xl, 2px);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: calc($xl / 2);
+
+  @include variants($xl);
+}
+
+.shape-pill-left-xl {
+  min-height: getCalculatedSize($xl, 2px);
+  max-height: getCalculatedSize($xl, 2px);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: calc($xl / 2) 0 0 calc($xl / 2);
+
+  @include variants($xl);
+}
+
+.shape-pill-right-xl {
+  min-height: getCalculatedSize($xl, 2px);
+  max-height: getCalculatedSize($xl, 2px);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: 0 calc($xl / 2) calc($xl / 2) 0;
+
+  @include variants($xl);
+}
+
+.shape-pill-md {
+  min-height: getCalculatedSize($md, 2px);
+  max-height: getCalculatedSize($md, 2px);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: calc($xl / 2);
+
+  @include variants($md);
+}
+
+.shape-pill-left-md {
+  min-height: getCalculatedSize($md, 2px);
+  max-height: getCalculatedSize($md, 2px);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: calc($xl / 2) 0 0 calc($xl / 2);
+
+  @include variants($md);
+}
+
+.shape-pill-right-md {
+  min-height: getCalculatedSize($md, 2px);
+  max-height: getCalculatedSize($md, 2px);
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: 0 calc($xl / 2) calc($xl / 2) 0;
+
+  @include variants($md);
+}

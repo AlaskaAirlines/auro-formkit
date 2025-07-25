@@ -1,33 +1,114 @@
+/* stylelint-disable no-descending-specificity, selector-max-class, selector-no-qualifying-type */
 // Copyright (c) Alaska Air. All right reserved. Licensed under the Apache-2.0 license.
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
+/* stylelint-disable selector-class-pattern, selector-max-combinators, selector-max-compound-selectors, selector-max-attribute */
+
 // Support for fallback values
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import '@aurodesignsystem/webcorestylesheets/src/breakpoints';
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-nest-combinators */
+// Import type classes
+@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 
-:host {
-  position: relative;
-  display: block;
-}
-
-[slot="trigger"], ::slotted([slot="valueText"]) {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-[auro-dropdown] {
-  display: block;
-
-  &::part(trigger) {
-    max-height: var(--ds-size-300, $ds-size-300);
+:host(:not([layout="classic"])) {
+  .triggerContent {
+    padding: 0 var(--ds-size-100, vac.$ds-size-100) 0 var(--ds-size-300, vac.$ds-size-300);
   }
 }
 
-#slotHolder{
-  display: none;
+:host([layout="classic"]) {
+  .triggerContent {
+    padding: 0 0 0 var(--ds-size-100, vac.$ds-size-100);
+  }
+}
+
+:host([layout="snowflake"]) {
+  [auro-dropdown] {
+    .mainContent {
+      align-items: center;
+    }
+  }
+}
+
+.triggerContent {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainContent {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+slot {
+  &[name="typeIcon"] {
+    color: var(--ds-auro-counter-label-text-color);
+  }
+
+  &[name="valueText"] {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+label {
+  color: var(--ds-auro-counter-label-text-color);
+  padding-block: var(--ds-size-25, vac.$ds-size-25);
+}
+
+.value {
+  width: 100%;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accents {
+  ::slotted([slot="typeIcon"]) {
+    margin-right: var(--ds-size-100, vac.$ds-size-100);
+  }
+
+  ::slotted(*) {
+    &:not(.util_displayHidden) {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: var(--ds-size-100, vac.$ds-size-100);
+    }
+  }
+}
+
+.counters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-300, vac.$ds-size-300);
+
+  ::slotted(auro-counter:not(:first-of-type)) {
+    padding-top: var(--ds-size-300, vac.$ds-size-300);
+    border-top-width: 1px;
+    border-top-style: solid;
+  }
+}
+
+[auro-helptext] {
+  [part="helpText"] {
+    display: flex;
+    flex-direction: column;
+
+    // Individual error messages if they exist in a <p> tag
+    > p {
+      margin-block: 0;
+    }
+  }
 }

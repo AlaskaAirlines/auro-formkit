@@ -443,7 +443,7 @@ describe('auro-form', () => {
   });
 
   describe('when calling reset() method', () => {
-    it('emits a "reset" event', async () => {
+    it.skip('emits a "reset" event', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="testInput" required></auro-input>

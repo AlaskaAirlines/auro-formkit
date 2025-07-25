@@ -6,11 +6,6 @@
 /* eslint-disable max-lines, dot-location, new-cap */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-import { LitElement, css } from "lit";
-
-import styleCss from "./styles/style-css.js";
-import colorCss from "./styles/color-css.js";
-import tokensCss from "./styles/tokens-css.js";
 
 import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import { AuroInputUtilities } from "./utilities.js";
@@ -19,43 +14,67 @@ import IMask from 'imask';
 
 import AuroFormValidation from '@auro-formkit/form-validation';
 
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
+
 /**
  * Auro-input provides users a way to enter data into a text field.
- *
- * @attr {Boolean} bordered - Applies bordered UI variant.
- * @attr {Boolean} borderless - Applies borderless UI variant.
  *
  * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
  * @attr id
  *
- * @slot helptext - Sets the help text displayed below the input.
+ * @slot ariaLabel.clear - Sets aria-label on clear button for screenreader to read
+ * @slot ariaLabel.password.show - Sets aria-label on password button to toggle on showing password
+ * @slot ariaLabel.password.hide - Sets aria-label on password button to toggle off showing password
+ * @slot helpText - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
+ * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
+ * @slot displayValue - Allows custom HTML content to display in place of the value when the input is not focused.
  *
  * @csspart wrapper - Use for customizing the style of the root element
  * @csspart label - Use for customizing the style of the label element
  * @csspart helpText - Use for customizing the style of the helpText element
+ * @csspart input - Use for customizing the style of the input element
  * @csspart accentIcon - Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon)
  * @csspart iconContainer - Use for customizing the style of the iconContainer (e.g. X icon for clearing input value)
+ * @csspart accent-left - Use for customizing the style of the left accent element (e.g. padding, margin)
+ * @csspart accent-right - Use for customizing the style of the right accent element (e.g. padding, margin)
  * @event input - Event fires when the value of an `auro-input` has been changed.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` value has changed.
  */
 
-export default class BaseInput extends LitElement {
+export default class BaseInput extends AuroElement {
 
   constructor() {
     super();
 
+    this.activeLabel = false;
     this.icon = false;
     this.disabled = false;
-    this.required = false;
-    this.noValidate = false;
     this.max = undefined;
-    this.min = undefined;
     this.maxLength = undefined;
+    this.min = undefined;
     this.minLength = undefined;
+    this.noValidate = false;
     this.onDark = false;
-    this.activeLabel = false;
+    this.required = false;
     this.setCustomValidityForType = undefined;
+
+    /**
+     * @private
+     */
+    this.layout = 'classic';
+
+    /**
+     * @private
+     */
+    this.shape = 'classic';
+
+    /**
+     * @private
+     */
+    this.size = 'lg';
+
+    this.privateDefaults();
   }
 
   /**
@@ -72,6 +91,7 @@ export default class BaseInput extends LitElement {
     this.validationCCLength = undefined;
     this.hasValue = false;
     this.label = 'Input label is undefined';
+    this.placeholderStr = '';
 
     this.allowedInputTypes = [
       "text",
@@ -118,16 +138,16 @@ export default class BaseInput extends LitElement {
       .substring(idSubstrStart, idSubstrEnd);
   }
 
-  // function to define props used within the scope of this componentstatic
+  // function to define props used within the scope of this component
   static get properties() {
     return {
+      ...super.properties,
 
       /**
        * The value for the role attribute.
        */
       a11yRole: {
         type: String,
-        attribute: true,
         reflect: true
       },
 
@@ -136,7 +156,6 @@ export default class BaseInput extends LitElement {
        */
       a11yExpanded: {
         type: Boolean,
-        attribute: true,
         reflect: true
       },
 
@@ -145,7 +164,6 @@ export default class BaseInput extends LitElement {
        */
       a11yControls: {
         type: String,
-        attribute: true,
         reflect: true
       },
 
@@ -161,7 +179,8 @@ export default class BaseInput extends LitElement {
        * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters].
        */
       autocapitalize: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -176,7 +195,8 @@ export default class BaseInput extends LitElement {
        * When set to `off`, stops iOS from auto-correcting words when typed into a text box.
        */
       autocorrect: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -221,7 +241,6 @@ export default class BaseInput extends LitElement {
       /** Exposes inputmode attribute for input.  */
       inputmode: {
         type: String,
-        attribute: true,
         reflect: true
       },
 
@@ -229,7 +248,8 @@ export default class BaseInput extends LitElement {
        * Defines the language of an element.
        */
       lang: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -243,7 +263,8 @@ export default class BaseInput extends LitElement {
        * The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
        */
       maxLength: {
-        type: Number
+        type: Number,
+        reflect: true
       },
 
       /**
@@ -257,14 +278,25 @@ export default class BaseInput extends LitElement {
        * The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`.
        */
       minLength: {
-        type: Number
+        type: Number,
+        reflect: true
       },
 
       /**
        * Populates the `name` attribute on the input.
        */
       name: {
-        type: String
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Sets styles for nested operation - removes borders, hides help + error text, and
+       * hides accents.
+       */
+      nested: {
+        type: Boolean,
+        reflect: true
       },
 
       /**
@@ -292,10 +324,11 @@ export default class BaseInput extends LitElement {
       },
 
       /**
-       * Define custom placeholder text, only supported by date input formats.
+       * Define custom placeholder text.
        */
       placeholder: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -385,6 +418,14 @@ export default class BaseInput extends LitElement {
       },
 
       /**
+       * Simple makes the input render without a border.
+       */
+      simple: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * Custom help text message for email type validity.
        */
       customValidityTypeEmail: {
@@ -395,7 +436,8 @@ export default class BaseInput extends LitElement {
        * An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`.
        */
       spellcheck: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -441,8 +483,8 @@ export default class BaseInput extends LitElement {
       },
 
       /**
+       * The id for input node.
        * @private
-       * id for input node
        */
       inputId: {
         type: String,
@@ -452,19 +494,8 @@ export default class BaseInput extends LitElement {
     };
   }
 
-
-  static get styles() {
-    return [
-      css`${colorCss}`,
-      css`${styleCss}`,
-      css`${tokensCss}`
-    ];
-  }
-
   connectedCallback() {
     super.connectedCallback();
-
-    this.privateDefaults();
 
     notifyOnLangChange(this);
   }
@@ -475,14 +506,20 @@ export default class BaseInput extends LitElement {
   }
 
   firstUpdated() {
+    // clicking anywhere in the main wrapper will focus the input. Clicking the helpText or label will not focus the input.
+    this.wrapperElement = this.shadowRoot.querySelector('.wrapper');
+    this.inputElement = this.renderRoot.querySelector('input');
+    this.labelElement = this.shadowRoot.querySelector('label');
+
+    if (this.wrapperElement) {
+      this.wrapperElement.addEventListener('click', this.handleClick);
+    }
+
     // add attribute for query selectors when auro-input is registered under a custom name
     if (this.tagName.toLowerCase() !== 'auro-input') {
       this.setAttribute('auro-input', true);
     }
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
-
-    this.inputElement = this.renderRoot.querySelector('input');
-    this.labelElement = this.shadowRoot.querySelector('label');
 
     if (this.format) {
       this.format = this.format.toLowerCase();
@@ -493,6 +530,7 @@ export default class BaseInput extends LitElement {
       this.ValidityMessageOverride = this.setCustomValidity;
     }
 
+    this.getPlaceholder();
     this.setCustomHelpTextMessage();
     this.configureAutoFormatting();
   }
@@ -529,6 +567,8 @@ export default class BaseInput extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
+    super.updated(changedProperties);
+
     if (changedProperties.has('format')) {
       this.configureAutoFormatting();
     }
@@ -578,9 +618,9 @@ export default class BaseInput extends LitElement {
         if (!this.shadowRoot.contains(this.getActiveElement())) {
           this.validation.validate(this);
         }
-
-        this.notifyValueChanged();
       }
+
+      this.notifyValueChanged();
     }
 
     if (changedProperties.has('error')) {
@@ -650,15 +690,6 @@ export default class BaseInput extends LitElement {
   }
 
   /**
-   * Function to set element focus.
-   * @private
-   * @return {void}
-   */
-  focus() {
-    this.inputElement.focus();
-  }
-
-  /**
    * Required to convert SVG icons from data to HTML string.
    * @private
    * @param {string} icon HTML string for requested icon.
@@ -687,6 +718,24 @@ export default class BaseInput extends LitElement {
     this.dispatchEvent(inputEvent);
   }
 
+
+  /**
+   * Handles clicking on the auro-input anywhere outside of the HTML5 input and still moving focus in.
+   * @private
+   * @return {void}
+   */
+  handleClick() {
+    this.focus();
+  }
+
+  /**
+   * Function to set element focus.
+   * @return {void}
+   */
+  focus() {
+    this.inputElement.focus();
+  }
+
   /**
    * Handles event of clearing input content by clicking the X icon.
    * @private
@@ -696,9 +745,9 @@ export default class BaseInput extends LitElement {
     this.inputElement.value = "";
     this.value = "";
     this.labelElement.classList.remove('inputElement-label--sticky');
+    this.notifyValueChanged();
     this.focus();
     this.validation.validate(this);
-    this.notifyValueChanged();
   }
 
   /**
@@ -734,8 +783,21 @@ export default class BaseInput extends LitElement {
    * @return {void}
    */
   handleFocusin() {
+    this.hasFocus = true;
+
+    this.getPlaceholder();
 
     this.touched = true;
+  }
+
+  /**
+   * Function to support @focusout event.
+   * @private
+   * @return {void}
+   */
+  handleFocusout() {
+    this.hasFocus = false;
+    this.getPlaceholder();
   }
 
   /**
@@ -780,11 +842,19 @@ export default class BaseInput extends LitElement {
   }
 
   /**
-   * Resets component to initial state.
+   * Resets component to initial state, including resetting the touched state and validity.
    * @returns {void}
    */
   reset() {
+    this.value = undefined;
     this.validation.reset(this);
+  }
+
+  /**
+   * Clears the input value.
+   */
+  clear() {
+    this.value = undefined;
   }
 
   /**
@@ -862,16 +932,18 @@ export default class BaseInput extends LitElement {
   /**
    * Support placeholder text.
    * @private
-   * @returns {string}
+   * @returns {void}
    */
   getPlaceholder() {
     if (this.placeholder) {
-      return this.placeholder;
+      this.placeholderStr = this.placeholder;
     } else if (this.type === 'date') {
-      return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+      this.placeholderStr = this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
     }
 
-    return '';
+    this.requestUpdate();
+
+    return this.placeholderStr;
   }
 
   /**

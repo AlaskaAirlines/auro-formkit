@@ -11,13 +11,13 @@
    selector-class-pattern */
 
 // Import Auro tokens
-@import "@aurodesignsystem/design-tokens/dist/auro-classic/SCSSVariables";
-@import "@aurodesignsystem/webcorestylesheets/src/breakpoints";
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use "@aurodesignsystem/webcorestylesheets/src/breakpoints";
 
 // container styles - defines the look of the outer custom component
 :host {
   display: block;
-  padding-bottom: var(--ds-size-150, $ds-size-150);
+  padding-bottom: var(--ds-size-150, vac.$ds-size-150);
 }
 
 fieldset {
@@ -32,5 +32,9 @@ fieldset {
 }
 
 legend {
-  margin-bottom: var(--ds-size-150, $ds-size-150);
+  margin-bottom: var(--ds-size-150, vac.$ds-size-150);
+}
+
+[auro-helptext] {
+  margin-top: var(--ds-size-150, 0.75rem);
 }

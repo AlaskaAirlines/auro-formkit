@@ -375,6 +375,24 @@ When the validity check fails, the validityState equals `valueMissing`. The erro
 
 </auro-accordion>
 
+
+### Custom optional label <a name="optionalLabel"></a>
+
+The `<auro-input>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optionalLabel.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optionalLabel.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Validation on input <a name="validateOnInput"></a>
 
 Use the `validateOnInput` attribute to enable live validation on the `input` event. Recommended use is with setting a custom `pattern` and validation is required prior to a `blur` event.

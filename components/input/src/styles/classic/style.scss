@@ -1,0 +1,88 @@
+// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+/* stylelint-disable
+  selector-class-pattern,
+  selector-max-class,
+  select-max-combinators,
+  scss/selector-nest-combinators,
+  selector-max-compound-selectors,
+  selector-max-combinators,
+  selector-no-qualifying-type,
+  max-nesting-depth
+*/
+
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+
+
+:host([layout*='classic']) {
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--ds-auro-input-container-color);
+    box-shadow: inset 0 0 0 1px var(--ds-auro-input-outline-color);
+  }  
+
+  .mainContent {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    cursor: text;
+
+    label {
+      overflow: hidden;
+      cursor: text;
+      padding-block: var(--ds-size-50, vac.$ds-size-50);
+      text-overflow: ellipsis;
+      transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+      white-space: nowrap;
+    }
+
+    input {
+      height: auto;
+      transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+
+  .mainContent:has(input.util_displayHiddenVisually) {
+    label {
+      justify-self: flex-start;
+    }
+
+    input {
+      height: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .accents {
+    .typeIcon {
+      > * {
+        margin-left: var(--ds-size-100, vac.$ds-size-100);
+      }
+    }
+
+    &.left {
+      padding-right: var(--ds-size-100, vac.$ds-size-100);
+    }
+
+    &.right {
+      padding-left: var(--ds-size-100, vac.$ds-size-100);
+      margin-right: var(--ds-size-100, vac.$ds-size-100);
+    }
+  }
+
+  &.withValue {
+    justify-content: flex-start;
+  }
+
+  // FOCUS STATE
+  &:focus-within {
+    justify-content: flex-start;
+  }
+}

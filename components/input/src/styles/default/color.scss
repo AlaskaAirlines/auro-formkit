@@ -1,0 +1,123 @@
+// See LICENSE in the project root for license information.
+
+// ---------------------------------------------------------------------
+
+// Support for fallback values
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+
+// @use 'mixins' as m;
+
+/* stylelint-disable
+  no-descending-specificity,
+  selector-class-pattern,
+  max-nesting-depth,
+  selector-not-notation,
+  selector-max-class
+  */
+.layoutDefault,
+:host(:not([layout])) {
+  .wrapper {
+    border-color: var(--ds-auro-input-border-color);
+    background-color: var(--ds-auro-input-container-color);
+  }
+
+  input {
+    background-color: transparent;
+    caret-color: var(--ds-auro-input-caret-color);
+    color: var(--ds-auro-input-text-color);
+
+    &::placeholder {
+      color: transparent;
+    }
+
+    &:focus {
+      &::placeholder {
+        color: var(--ds-auro-input-placeholder-text-color);
+      }
+    }
+
+    &:disabled {
+      --ds-auro-input-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+    }
+  }
+
+  label {
+    color: var(--ds-auro-input-label-text-color);
+  }
+
+  .alertNotification {
+    color: var(--ds-auro-input-error-icon-color);
+  }
+}
+
+:host([class='layoutDefault']:not([bordered], [borderless])),
+:host(:not([layout]):not([bordered], [borderless])) {
+  .wrapper {
+    border-bottom-color: var(--ds-auro-input-border-color);
+  }
+}
+
+:host([class='layoutDefault'][bordered]),
+:host(:not([layout])[bordered]) {
+  .wrapper {
+    border-color: var(--ds-auro-input-border-color);
+    background-color: var(--ds-auro-input-container-color);
+
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+
+      box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+    }
+  }
+}
+
+:host([class='layoutDefault'][validity]:not([validity='valid'])[bordered]),
+:host(:not([layout])[validity]:not([validity='valid'])[bordered]) {
+  .wrapper {
+    --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+
+    box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+  }
+}
+
+:host([class='layoutDefault'][disabled]),
+:host(:not([layout])[disabled]) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+}
+
+/* onDark styles */
+:host([class='layoutDefault'][onDark][bordered]),
+:host(:not([layout])[onDark][bordered]) {
+  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+
+  .wrapper {
+    &:focus-within {
+      --ds-auro-input-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+
+      box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+    }
+  }
+}
+
+:host([class='layoutDefault'][onDark][validity]:not([validity='valid'])[bordered]),
+:host(:not([layout])[onDark][validity]:not([validity='valid'])[bordered]) {
+  .wrapper {
+    --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+
+    box-shadow: inset 0 0 0 1px var(--ds-auro-input-border-color);
+  }
+}
+
+:host([class='layoutDefault'][onDark][disabled]),
+:host(:not([layout])[onDark][disabled]) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{v.$ds-advanced-color-shared-background-inverse-disabled});
+}

@@ -3,45 +3,67 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, no-magic-numbers */
+/*
+  eslint-disable
+  max-lines,
+  lit/no-invalid-html,
+  lit/binding-positions,
+  template-curly-spacing,
+  line-comment-position,
+  no-inline-comments,
+  no-warning-comments
+  */
 
 import { html } from "lit/static-html.js";
+import { classMap } from 'lit/directives/class-map.js';
 import { LitElement } from "lit";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
+import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/index.mjs";
+import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
-
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
-import styleCss from "./styles/style-css.js";
+import shapeSizeCss from "./styles/shapeSize-css.js";
 import colorCss from "./styles/color-css.js";
 import tokensCss from "./styles/tokens-css.js";
+
+import styleCss from "./styles/style-css.js";
+
+// default layout
+import classicColorCss from "./styles/classic/color-css.js";
+import classicLayoutCss from "./styles/classic/style-css.js";
+
+import styleEmphasizedCss from "./styles/emphasized/style-css.js";
+import styleSnowflakeCss from "./styles/snowflake/style-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import helpTextVersion from './helptextVersion.js';
 import { ifDefined } from "lit/directives/if-defined.js";
 
-/**
- * @attr { Boolean } disableEventShow - If declared, the dropdown will only show by calling the API .show() public method.
+import { AuroElement } from '../../layoutElement/src/auroElement.js';
+
+
+/*
  * @slot - Default slot for the popover content.
- * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
  * @csspart trigger - The trigger content container.
  * @csspart chevron - The collapsed/expanded state icon container.
+ * @csspart size - The size of the dropdown bib. (height, width, maxHeight, maxWidth only)
  * @csspart helpText - The helpText content container.
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
  * @event auroDropdown-idAdded - Notifies consumers that the unique ID for the dropdown bib has been generated.
  */
-export class AuroDropdown extends LitElement {
+export class AuroDropdown extends AuroElement {
   constructor() {
     super();
 
@@ -50,7 +72,57 @@ export class AuroDropdown extends LitElement {
     this.matchWidth = false;
     this.noHideOnThisFocusLoss = false;
 
+    this.errorMessage = undefined; // TODO - check with Doug if there is still more to do here
+
+    // Layout Config
+    this.layout = undefined;
+    this.shape = undefined;
+    this.size = undefined;
+
+    this.parentBorder = false;
+
+    /** @private */
+    this.handleDropdownToggle = this.handleDropdownToggle.bind(this);
+
     this.privateDefaults();
+  }
+
+  /**
+   * @private
+   * @returns {object} Class definition for the wrapper element.
+   */
+  get commonWrapperClasses() {
+    return {
+      'trigger': true,
+      'wrapper': true,
+      'hasFocus': this.hasFocus,
+      'simple': this.simple,
+      'parentBorder': this.parentBorder
+    };
+  }
+
+  /**
+   * @private
+   * @returns {void} Internal defaults.
+   */
+  privateDefaults() {
+    this.chevron = false;
+    this.disabled = false;
+    this.disableFocusTrap = false;
+    this.error = false;
+    this.tabIndex = 0;
+    this.noToggle = false;
+    this.a11yRole = 'button';
+    this.onDark = false;
+    this.showTriggerBorders = true;
+    this.triggerContentFocusable = false;
+    this.simple = false;
+
+    // floaterConfig
+    this.placement = 'bottom-start';
+    this.offset = 0;
+    this.noFlip = false;
+    this.autoPlacement = false;
 
     /**
      * @private
@@ -60,41 +132,6 @@ export class AuroDropdown extends LitElement {
       ...LitElement.shadowRootOptions,
       delegatesFocus: true,
     };
-
-    /**
-     * @private
-     */
-    this.triggerContentFocusable = false;
-
-    /**
-     * @private
-     */
-    this.showTriggerBorders = true;
-  }
-
-  /**
-   * @private
-   * @returns {void} Internal defaults.
-   */
-  privateDefaults() {
-    this.bordered = false;
-    this.chevron = false;
-    this.disabled = false;
-    this.error = false;
-    this.inset = false;
-    this.rounded = false;
-    this.tabIndex = 0;
-    this.noToggle = false;
-    this.a11yAutocomplete = 'none';
-    this.labeled = true;
-    this.a11yRole = 'combobox';
-    this.onDark = false;
-
-    // floaterConfig
-    this.placement = 'bottom-start';
-    this.offset = 0;
-    this.noFlip = false;
-    this.autoPlacement = false;
 
     /**
      * @private
@@ -170,6 +207,18 @@ export class AuroDropdown extends LitElement {
     this.floater.showBib();
   }
 
+  /**
+   * When bib is open, focus on the first element inside of bib.
+   * If not, trigger element will get focus.
+   */
+  focus() {
+    if (this.isPopoverVisible && this.focusTrap) {
+      this.focusTrap.focusFirstElement();
+    } else {
+      this.trigger.focus();
+    }
+  }
+
   // function to define props used within the scope of this component
   static get properties() {
     return {
@@ -184,9 +233,18 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
+       * If declared, the dropdown will only show by calling the API .show() public method.
+       * @default false
+       */
+      disableEventShow: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * If declared, applies a border around the trigger slot.
        */
-      bordered: {
+      simple: {
         type: Boolean,
         reflect: true
       },
@@ -201,17 +259,17 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If declared, the dropdown will be styled with the common theme.
+       * If declared, the dropdown is not interactive.
        */
-      common: {
+      disabled: {
         type: Boolean,
         reflect: true
       },
 
       /**
-       * If declared, the dropdown is not interactive.
+       * If declared, the focus trap inside of bib will be turned off.
        */
-      disabled: {
+      disableFocusTrap: {
         type: Boolean,
         reflect: true
       },
@@ -234,11 +292,18 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * If declared in combination with `bordered` property or `helpText` slot content, will apply red color to both.
+       * If declared in combination with not using the `simple` property or `helpText` slot content, will apply red color to both.
        */
       error: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * Contains the help text message for the current validity error.
+       */
+      errorMessage: {
+        type: String
       },
 
       /**
@@ -250,26 +315,12 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * Makes the trigger to be full width of its parent container.
-       */
-      fluid: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, will apply padding around trigger slot content.
-       */
-      inset: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
        * If true, the dropdown bib is displayed.
        */
       isPopoverVisible: {
-        type: Boolean
+        type: Boolean,
+        reflect: true,
+        attribute: 'open'
       },
 
       /**
@@ -309,10 +360,10 @@ export class AuroDropdown extends LitElement {
       },
 
       /**
-       * Defines if there is a label preset.
+       * Defines if the trigger should size based on the parent element providing the border UI.
        * @private
        */
-      labeled: {
+      parentBorder: {
         type: Boolean,
         reflect: true
       },
@@ -368,6 +419,9 @@ export class AuroDropdown extends LitElement {
         reflect: true
       },
 
+      /**
+       *  If declared, and a function is set, that function will execute when the slot content is updated.
+       */
       onSlotChange: {
         type: Function,
         reflect: false
@@ -375,23 +429,10 @@ export class AuroDropdown extends LitElement {
 
       /**
        * Position where the bib should appear relative to the trigger.
-       * Accepted values:
-       * "top" | "right" | "bottom" | "left" |
-       * "bottom-start" | "top-start" | "top-end" |
-       * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
        * @default bottom-start
        */
       placement: {
         type: String,
-        reflect: true
-      },
-
-      /**
-       * If declared, will apply border-radius to trigger and default slots.
-       */
-      rounded: {
-        type: Boolean,
         reflect: true
       },
 
@@ -409,23 +450,27 @@ export class AuroDropdown extends LitElement {
         type: String || undefined,
         attribute: false,
         reflect: false
-      },
-
-      /**
-       * The value for the aria-autocomplete attribute of the trigger element.
-       */
-      a11yAutocomplete: {
-        type: String,
-        attribute: false,
       }
     };
   }
 
   static get styles() {
     return [
-      colorCss,
       styleCss,
-      tokensCss
+      tokensCss,
+      colorCss,
+
+      // default layout
+      classicColorCss,
+      classicLayoutCss,
+
+      // emphasized layout
+      styleEmphasizedCss,
+
+      // snowflake layout
+      styleSnowflakeCss,
+
+      shapeSizeCss
     ];
   }
 
@@ -461,6 +506,7 @@ export class AuroDropdown extends LitElement {
   }
 
   updated(changedProperties) {
+    super.updated(changedProperties);
     this.floater.handleUpdate(changedProperties);
 
     // Note: `disabled` is not a breakpoint (it is not a screen size),
@@ -470,17 +516,31 @@ export class AuroDropdown extends LitElement {
     }
 
     // when trigger's content is changed without any attribute or node change,
-    // `requestUpdate` needs to be called to update hasTriggerContnet
+    // `requestUpdate` needs to be called to update hasTriggerContent
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
     }
+  }
 
+  /**
+   * Handles the custom event `auroDropdown-toggled` to update the visibility of the dropdown bib.
+   * @private
+   * @param {CustomEvent} event - The custom event that contains the dropdown toggle information.
+   */
+  handleDropdownToggle(event) {
+    this.updateFocusTrap();
+    this.isPopoverVisible = event.detail.expanded;
+    const eventType = event.detail.eventType || "unknown";
+    if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown") {
+      this.trigger.focus();
+    }
   }
 
   firstUpdated() {
 
     // Configure the floater to, this will generate the ID for the bib
     this.floater.configure(this, 'auroDropdown');
+    this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
@@ -498,6 +558,13 @@ export class AuroDropdown extends LitElement {
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
+
+    this.trigger.addEventListener('click', () => {
+      this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', {
+        bubbles: true,
+        composed: true
+      }));
+    });
   }
 
   /**
@@ -534,66 +601,47 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * Determines if the element or any children are focusable.
+   * Function to support @focusin event.
    * @private
-   * @param {HTMLElement} element - Element to check.
-   * @returns {Boolean} - True if the element or any children are focusable.
+   * @return {void}
    */
-  containsFocusableElement(element) {
-    this.showTriggerBorders = true;
-
-    const nodes = [
-      element,
-      ...element.children
-    ];
-
-    const focusableElements = [
-      'a',
-      'auro-hyperlink',
-      'button',
-      'auro-button',
-      'input',
-      'auro-input',
-    ];
-
-    const focusableElementsThatNeedBorders = ['auro-input'];
-
-    const result = nodes.some((node) => {
-      const tagName = node.tagName.toLowerCase();
-
-      if (node.tabIndex > -1) {
-        return true;
-      }
-
-      if (focusableElements.includes(tagName)) {
-        if ((tagName === 'a' || tagName === 'auro-hyperlink' || node.hasAttribute('auro-hyperlink')) && node.hasAttribute('href')) {
-          return true;
-        }
-        if (!node.hasAttribute('disabled')) {
-          return true;
-        }
-      }
-
-      if (focusableElements.some((focusableElement) => focusableElement.startsWith('auro-') && (focusableElement === tagName || node.hasAttribute(focusableElement)))) {
-        return true;
-      }
-
-      return false;
-    });
-
-    if (result) {
-      this.showTriggerBorders = !nodes.some((node) => {
-        const tagName = node.tagName.toLowerCase();
-        return focusableElements.includes(tagName) && !focusableElementsThatNeedBorders.includes(tagName);
-      });
-    }
-
-    return result;
+  handleFocusin() {
+    this.hasFocus = true;
   }
 
   /**
    * @private
+   */
+  updateFocusTrap() {
+    // If the dropdown is open, create a focus trap and focus the first element
+    if (this.isPopoverVisible && !this.disableFocusTrap) {
+      this.focusTrap = new FocusTrap(this.bibContent);
+      this.focusTrap.focusFirstElement();
+      return;
+    }
+
+    // Guard Clause: Ensure there is a focus trap currently active before continuing
+    if (!this.focusTrap) {
+      return;
+    }
+
+    // If the dropdown is not open, disconnect the focus trap if it exists
+    this.focusTrap.disconnect();
+    this.focusTrap = undefined;
+  }
+
+  /**
+   * Function to support @focusout event.
+   * @private
+   * @return {void}
+   */
+  handleFocusout() {
+    this.hasFocus = false;
+  }
+
+  /**
    * Creates and dispatches a duplicate focus event on the trigger element.
+   * @private
    * @param {Event} event - The original focus event.
    */
   bindFocusEventToTrigger(event) {
@@ -606,9 +654,9 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
-   * @private
    * Sets up event listeners to deliver focus and blur events from nested Auro components within the trigger slot to trigger.
    * This ensures that focus/blur events originating from within these components are propagated to the trigger element itself.
+   * @private
    */
   setupTriggerFocusEventBinding() {
     if (!this.triggerContentSlot || this.triggerContentSlot.length === 0) {
@@ -684,14 +732,13 @@ export class AuroDropdown extends LitElement {
    * @returns {void}
    */
   handleTriggerContentSlotChange(event) {
-
     this.floater.handleTriggerTabIndex();
 
     // Get the trigger
     const trigger = this.shadowRoot.querySelector('#trigger');
 
     // Get the trigger slot
-    const triggerSlot = this.shadowRoot.querySelector('.triggerContent slot');
+    const triggerSlot = this.shadowRoot.querySelector('.triggerContentWrapper slot');
 
     // If there's a trigger slot
     if (triggerSlot) {
@@ -702,8 +749,8 @@ export class AuroDropdown extends LitElement {
       // If there are children
       if (triggerContentNodes) {
 
-        // See if any of them are focusable elemeents
-        this.triggerContentFocusable = triggerContentNodes.some((node) => this.containsFocusableElement(node));
+        // See if any of them are focusable elements
+        this.triggerContentFocusable = triggerContentNodes.some((node) => getFocusableElements(node).length > 0);
 
         // If any of them are focusable elements
         if (this.triggerContentFocusable) {
@@ -754,7 +801,6 @@ export class AuroDropdown extends LitElement {
    *
    * @private
    * @method handleDefaultSlot
-   * @param {Event} event - The event object representing the slot change.
    * @fires Function#onSlotChange - Optional callback invoked when the slot content changes.
    */
   handleDefaultSlot() {
@@ -765,56 +811,33 @@ export class AuroDropdown extends LitElement {
   }
 
   /**
+   * Returns HTML for the common portion of the layouts.
    * @private
-   * @method handleLabelSlotChange
-   * @param {event} event - The event object representing the slot change.
-   * @description Handles the slot change event for the label slot.
+   * @param {Object} helpTextClasses - Classes to apply to the help text container.
+   * @returns {html} - Returns HTML.
    */
-  handleLabelSlotChange (event) {
-
-    // Get the nodes from the event
-    const nodes = event.target.assignedNodes();
-
-    // Guard clause for no nodes
-    if (!nodes) {
-      return;
-    }
-
-    // Convert the nodes to a measurable array so we can get the length
-    const nodesArr = Array.from(nodes);
-
-    // If the nodes array has a length, the dropdown is labeled
-    this.labeled = nodesArr.length > 0;
-  }
-
-  // function that renders the HTML and CSS into  the scope of the component
-  render() {
+  renderBasicHtml(helpTextClasses) {
     return html`
       <div>
         <div
           id="trigger"
-          class="trigger"
-          part="trigger"
-          tabindex="${this.tabIndex}"
-          ?showBorder="${this.showTriggerBorders}"
+          class="${classMap(this.commonWrapperClasses)}" part="wrapper"
+          tabindex="${ifDefined(this.triggerContentFocusable ? undefined : this.tabIndex)}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
+          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
           aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
-        >
-          <div class="triggerContentWrapper">
-            <label class="label" id="triggerLabel" hasTrigger=${this.hasTriggerContent}>
-              <slot name="label" @slotchange="${this.handleLabelSlotChange}"></slot>
-            </label>
-            <div class="triggerContent">
-              <slot
-                name="trigger"
-                @slotchange="${this.handleTriggerContentSlotChange}"></slot>
-            </div>
+          @focusin="${this.handleFocusin}"
+          @blur="${this.handleFocusOut}">
+          <div class="triggerContentWrapper" id="triggerLabel">
+            <slot
+              name="trigger"
+              @slotchange="${this.handleTriggerContentSlotChange}"></slot>
           </div>
-          ${this.chevron || this.common ? html`
+          ${this.chevron ? html`
               <div
                 id="showStateIcon"
+                class="chevron"
                 part="chevron">
                 <${this.iconTag}
                   category="interface"
@@ -826,24 +849,97 @@ export class AuroDropdown extends LitElement {
               </div>
             ` : undefined }
         </div>
-        <${this.helpTextTag} part="helpText" ?onDark=${this.onDark} ?error="${this.error}">
+        <div class="${classMap(helpTextClasses)}">
           <slot name="helpText"></slot>
-        </${this.helpTextTag}>
-        
+        </div>
         <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
           id="bib"
+          shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
-          ?isfullscreen="${this.isBibFullscreen}"
-          ?common="${this.common}"
-          ?rounded="${this.common || this.rounded}"
-          ?inset="${this.common || this.inset}"
-        >
+          ?isfullscreen="${this.isBibFullscreen}">
           <div class="slotContent">
             <slot @slotchange="${this.handleDefaultSlot}"></slot>
           </div>
         </${this.dropdownBibTag}>
       </div>
     `;
+  }
+
+  /**
+   * Returns HTML for the classic layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the classic layout.
+   */
+  renderLayoutClassic() {
+    // TODO: check with Doug why this was never used?
+    const helpTextClasses = {
+      'helpText': true
+    };
+
+    return html`
+      ${this.renderBasicHtml(helpTextClasses)}
+    `;
+  }
+
+  /**
+   * Returns HTML for the snowflake layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the snowflake layout.
+   */
+  renderLayoutSnowflake() {
+    const helpTextClasses = {
+      'helpText': true,
+      'leftIndent': true,
+      'rightIndent': true
+    };
+
+    return html`
+      ${this.renderBasicHtml(helpTextClasses)}
+    `;
+  }
+
+  /**
+   * Returns HTML for the emphasized layout. Does not support type="*".
+   * @private
+   * @returns {html} - Returns HTML for the emphasized layout.
+   */
+  renderLayoutEmphasized() {
+    const helpTextClasses = {
+      'helpText': true,
+      'leftIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('right'),
+      'rightIndent': this.shape.toLowerCase().includes('pill') && !this.shape.toLowerCase().includes('left')
+    };
+
+    return html`
+      ${this.renderBasicHtml(helpTextClasses)}
+    `;
+  }
+
+  /**
+   * Logic to determine the layout of the component.
+   * @private
+   * @param {string} [ForcedLayout] - Used to force a specific layout, pass in the layout name to use.
+   * @returns {HTMLCollection} - Returns the HTML for the layout.
+   */
+  renderLayout(ForcedLayout) {
+    const layout = ForcedLayout || this.layout;
+
+    switch (layout) {
+      case 'emphasized':
+        return this.renderLayoutEmphasized();
+      case 'emphasized-left':
+        return this.renderLayoutEmphasized();
+      case 'emphasized-right':
+        return this.renderLayoutEmphasized();
+      case 'snowflake':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-left':
+        return this.renderLayoutSnowflake();
+      case 'snowflake-right':
+        return this.renderLayoutSnowflake();
+      default:
+        return this.renderLayoutClassic();
+    }
   }
 }

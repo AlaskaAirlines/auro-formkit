@@ -16,6 +16,9 @@ import tokenCss from "./styles/tokens-css.js";
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
+import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import buttonVersion from './buttonVersion.js';
+
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
 
@@ -32,8 +35,21 @@ export class AuroBibtemplate extends LitElement {
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-bibtemplate');
 
     const versioning = new AuroDependencyVersioning();
+
+    /**
+     * @private
+     */
     this.iconTag = versioning.generateTag('auro-formkit-bibtemplate-icon', iconVersion, AuroIcon);
+
+    /**
+     * @private
+     */
     this.headerTag = versioning.generateTag('auro-formkit-bibtemplate-header', headerVersion, AuroHeader);
+
+    /**
+     * @private
+     */
+    this.buttonTag = versioning.generateTag('auro-formkit-bibtemplate-button', buttonVersion, AuroButton);
   }
 
   static get styles() {
@@ -126,13 +142,16 @@ export class AuroBibtemplate extends LitElement {
       <div id="bibTemplate" part="bibtemplate">
       ${this.isFullscreen ? html`
         <div id="headerContainer">
-          <button id="closeButton" @click="${this.onCloseButtonClick}">
-            <${this.iconTag} category="interface" name="x-lg"></${this.iconTag}>
-          </button>
-          <${this.headerTag} display="${this.large ? 'display' : '600'}" level="3" size="none" id="header" no-margin-block>
-            <slot name="header"></slot>
-          </${this.headerTag}>
-          <span id="subheader">
+          <div class="titleRow">
+            <${this.headerTag} class="header" display="${this.large ? 'display' : '600'}" level="3" size="none" id="header" no-margin-block>
+              <slot name="header"></slot>
+            </${this.headerTag}>
+            <${this.buttonTag} id="closeButton" variant="ghost" shape="circle" size="sm" @click="${this.onCloseButtonClick}">
+              <span><slot name="ariaLabel.close">Close</slot></span>
+              <${this.iconTag} aria-hidden="true" category="interface" name="x-lg"></${this.iconTag}>
+            </${this.buttonTag}>
+          </div>
+          <span class="subheader">
             <slot name="subheader"></slot>
           </span>
         </div>` : null}

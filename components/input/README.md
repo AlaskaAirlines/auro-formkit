@@ -20,7 +20,7 @@ The following sections are editable by making changes to the following files:
 # Input
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-Use the `<auro-input>` custom element to create basic single-line text fields. Supports type `text`, `password`, and `email` with validation, required input, error states and a secondary `bordered` theme. Use the slots `label` and `helptext` for additional content support.
+Use the `<auro-input>` custom element to create basic single-line text fields. Supports type `text`, `password`, and `email` with validation, required input, error states and a secondary `bordered` theme. Use the slots `label` and `helpText` for additional content support.
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -82,7 +82,11 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below code snippet is automatically added from ./apiExamples/basic.html -->
 
 ```html
-<auro-input bordered></auro-input>
+<auro-input>
+  <span slot="ariaLabel.clear">Clear All</span>
+  <span slot="label">Label</span>
+  <span slot="helpText">Help Text</span>
+</auro-input>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 

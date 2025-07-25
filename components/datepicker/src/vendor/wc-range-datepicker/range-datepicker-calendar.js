@@ -117,7 +117,7 @@ export class RangeDatepickerCalendar extends LitElement {
   }
 
   renderDayOfWeek(dayOfWeek) {
-    return html`<div class="th">${dayOfWeek}</div>`;
+    return html`<div class="th body-default">${dayOfWeek}</div>`;
   }
 
   renderWeek(week) {

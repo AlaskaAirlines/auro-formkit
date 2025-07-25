@@ -1,0 +1,9 @@
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+
+:host([layout="snowflake"]) {
+  // designs call for no border when not active, focused, or in an error state
+  [auro-dropdown]:not(:is([error], .hasFocus)) {
+    --ds-auro-dropdown-trigger-border-color: transparent;
+  }
+}
