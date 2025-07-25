@@ -1300,7 +1300,7 @@ export class AuroSelect extends AuroElement {
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
-                <div class="value" id="value"></div>
+                <div class="value body-default" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
                 </div>
