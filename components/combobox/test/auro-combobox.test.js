@@ -110,18 +110,26 @@ function runFulltest(mobileview) {
 
   it('hides the bib when making a selection', async () => {
     const el = await defaultFixture(mobileview);
-    const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
-    setInputValue(el, 'p');
-    trigger.click();
-    await elementUpdated(el);
-
-    el.menu.dispatchEvent(new CustomEvent('auroMenu-selectedOption', {
-      bubbles: true,
-      composed: true
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', {
+      'key': 'Enter'
     }));
-    await elementUpdated(el);
 
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    const options = el.querySelectorAll('auro-menuoption');
+    setTimeout(() => {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    await oneEvent(el, 'auroMenu-selectedOption');
+    await expect(el.value === options[0].textContent);
+
+    await oneEvent(el, 'auroDropdown-toggled');
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
