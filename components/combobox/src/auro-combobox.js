@@ -148,6 +148,16 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
+       * Array of available options to display in the dropdown.
+       * @private
+       */
+      availableOptions: {
+        state: true,
+        type: Array,
+        reflect: false
+      },
+
+      /**
        * When attribute is present auro-menu will apply checkmarks to selected options.
        */
       checkmark: {
@@ -704,7 +714,9 @@ export class AuroCombobox extends AuroElement {
       }
 
       // dropdown bib should hide when making a selection
-      this.hideBib();
+      setTimeout(() => {
+        this.hideBib();
+      }, 0);
     });
 
     this.menu.addEventListener('auroMenu-customEventFired', () => {
@@ -736,14 +748,6 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   configureInput() {
-
-    this.addEventListener('keyup', (evt) => {
-      if (evt.key.length === 1 || evt.key === 'Backspace' || evt.key === 'Delete') {
-        if (!this.dropdown.isPopoverVisible) {
-          this.showBib();
-        }
-      }
-    });
 
     /**
      * Validate every time we remove focus from the combo box.
@@ -986,6 +990,14 @@ export class AuroCombobox extends AuroElement {
       await this.syncValuesAndStates();
     }
 
+    if (changedProperties.has('availableOptions')) {
+      if (this.availableOptions && this.availableOptions.length > 0 && document.activeElement === this) {
+        this.showBib();
+      } else {
+        this.hideBib();
+      }
+    }
+
     if (changedProperties.has('error')) {
       this.input.setAttribute('error', this.getAttribute('error'));
       this.validate();
@@ -1038,6 +1050,7 @@ export class AuroCombobox extends AuroElement {
         });
 
         this.handleMenuOptions();
+
         break;
 
       // Programmatically inject as the slot cannot be carried over to bibtemplate.

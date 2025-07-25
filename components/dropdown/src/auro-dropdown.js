@@ -841,7 +841,7 @@ export class AuroDropdown extends AuroElement {
                 part="chevron">
                 <${this.iconTag}
                   category="interface"
-                  name="chevron-down"
+                  name="${this.isPopoverVisible ? 'chevron-up' : `chevron-down`}"
                   ?onDark="${this.onDark}"
                   variant="${this.disabled ? 'disabled' : 'muted'}">
                   >

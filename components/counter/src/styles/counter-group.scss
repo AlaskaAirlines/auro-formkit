@@ -13,6 +13,10 @@
 // Import type classes
 @use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.min.css';
 
+:host {
+  text-align: left;
+}
+
 :host(:not([layout="classic"])) {
   .triggerContent {
     padding: 0 var(--ds-size-100, vac.$ds-size-100) 0 var(--ds-size-300, vac.$ds-size-300);

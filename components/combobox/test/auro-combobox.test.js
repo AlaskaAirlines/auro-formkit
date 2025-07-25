@@ -77,6 +77,8 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
     setInputValue(el, 'ra');
 
+    trigger.click();
+
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
@@ -108,18 +110,26 @@ function runFulltest(mobileview) {
 
   it('hides the bib when making a selection', async () => {
     const el = await defaultFixture(mobileview);
-    const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
-    setInputValue(el, 'p');
-    trigger.click();
-    await elementUpdated(el);
-
-    el.menu.dispatchEvent(new CustomEvent('auroMenu-selectedOption', {
-      bubbles: true,
-      composed: true
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', {
+      'key': 'Enter'
     }));
-    await elementUpdated(el);
 
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    const options = el.querySelectorAll('auro-menuoption');
+    setTimeout(() => {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    await oneEvent(el, 'auroMenu-selectedOption');
+    await expect(el.value === options[0].textContent);
+
+    await oneEvent(el, 'auroDropdown-toggled');
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
@@ -477,7 +487,7 @@ async function defaultFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -503,7 +513,7 @@ async function presetValueFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
     <auro-combobox value="Apples">
       <span slot="label">Name</span>
       <auro-menu>
@@ -529,7 +539,7 @@ async function checkmarkFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox checkmark>
     <span slot="label">Name</span>
     <auro-menu>
@@ -556,7 +566,7 @@ async function suggestFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -582,7 +592,7 @@ async function requiredFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox required>
     <span slot="label">Name</span>
     <auro-menu>
@@ -608,7 +618,7 @@ async function noMatchFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -635,7 +645,7 @@ async function persistentFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -662,7 +672,7 @@ async function customEventFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -687,7 +697,7 @@ async function noFilterFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox noFilter>
     <span slot="label">Name</span>
     <auro-menu>
@@ -707,7 +717,10 @@ function setInputValue(el, value) {
   input.focus();
   input.value = value;
   input.dispatchEvent(new InputEvent('input'));
-  auroInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+  auroInput.dispatchEvent(new InputEvent('input', {
+    bubbles: true,
+    composed: true
+  }));
   el.dispatchEvent(new KeyboardEvent('keyup', {
     key: value.slice(value.length - 1),
     repeat: false
