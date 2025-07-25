@@ -77,6 +77,8 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
     setInputValue(el, 'ra');
 
+    trigger.click();
+
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
@@ -477,7 +479,7 @@ async function defaultFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -503,7 +505,7 @@ async function presetValueFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
     <auro-combobox value="Apples">
       <span slot="label">Name</span>
       <auro-menu>
@@ -529,7 +531,7 @@ async function checkmarkFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox checkmark>
     <span slot="label">Name</span>
     <auro-menu>
@@ -556,7 +558,7 @@ async function suggestFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -582,7 +584,7 @@ async function requiredFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox required>
     <span slot="label">Name</span>
     <auro-menu>
@@ -608,7 +610,7 @@ async function noMatchFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -635,7 +637,7 @@ async function persistentFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -662,7 +664,7 @@ async function customEventFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox>
     <span slot="label">Name</span>
     <auro-menu>
@@ -687,7 +689,7 @@ async function noFilterFixture(mobileview) {
       height: 800
     });
   }
-  return await fixture(html`
+  return fixture(html`
   <auro-combobox noFilter>
     <span slot="label">Name</span>
     <auro-menu>
@@ -707,7 +709,10 @@ function setInputValue(el, value) {
   input.focus();
   input.value = value;
   input.dispatchEvent(new InputEvent('input'));
-  auroInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+  auroInput.dispatchEvent(new InputEvent('input', {
+    bubbles: true,
+    composed: true
+  }));
   el.dispatchEvent(new KeyboardEvent('keyup', {
     key: value.slice(value.length - 1),
     repeat: false
