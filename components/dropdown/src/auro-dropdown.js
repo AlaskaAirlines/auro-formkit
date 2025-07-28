@@ -19,8 +19,6 @@ import { classMap } from 'lit/directives/class-map.js';
 import { LitElement } from "lit";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
-import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/index.mjs";
 import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -108,7 +106,6 @@ export class AuroDropdown extends AuroElement {
   privateDefaults() {
     this.chevron = false;
     this.disabled = false;
-    this.disableFocusTrap = false;
     this.error = false;
     this.tabIndex = 0;
     this.noToggle = false;
@@ -205,18 +202,6 @@ export class AuroDropdown extends AuroElement {
    */
   show() {
     this.floater.showBib();
-  }
-
-  /**
-   * When bib is open, focus on the first element inside of bib.
-   * If not, trigger element will get focus.
-   */
-  focus() {
-    if (this.isPopoverVisible && this.focusTrap) {
-      this.focusTrap.focusFirstElement();
-    } else {
-      this.trigger.focus();
-    }
   }
 
   // function to define props used within the scope of this component
@@ -598,45 +583,6 @@ export class AuroDropdown extends AuroElement {
     }
 
     return inCustomSlot;
-  }
-
-  /**
-   * Function to support @focusin event.
-   * @private
-   * @return {void}
-   */
-  handleFocusin() {
-    this.hasFocus = true;
-  }
-
-  /**
-   * @private
-   */
-  updateFocusTrap() {
-    // If the dropdown is open, create a focus trap and focus the first element
-    if (this.isPopoverVisible && !this.disableFocusTrap) {
-      this.focusTrap = new FocusTrap(this.bibContent);
-      this.focusTrap.focusFirstElement();
-      return;
-    }
-
-    // Guard Clause: Ensure there is a focus trap currently active before continuing
-    if (!this.focusTrap) {
-      return;
-    }
-
-    // If the dropdown is not open, disconnect the focus trap if it exists
-    this.focusTrap.disconnect();
-    this.focusTrap = undefined;
-  }
-
-  /**
-   * Function to support @focusout event.
-   * @private
-   * @return {void}
-   */
-  handleFocusout() {
-    this.hasFocus = false;
   }
 
   /**
