@@ -16,19 +16,19 @@ const _DEFAULTS = {
   showOnHover: false,
   showOnFocus: true,
   showOnChange: true,
+  useHide: true,
+  useFlip: true,
   offset: 0,
+  useAutoPlacement: false,
   placement: "bottom-start",
+  inline: false,
   shown: false,
 };
 
 const _POSITIONER_DEFAULTS = {
   offset: 0,
   placement: 'bottom-start',
-  useHide: true,
-  useFlip: true,
-  useAutoPlacement: false,
   strategy: 'absolute',
-  inline: false,
 };
 
 const INPUT_TYPES = [ 'input', 'input-fullscreen', 'input-dropdown' ];
