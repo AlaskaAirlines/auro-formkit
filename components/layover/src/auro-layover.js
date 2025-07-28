@@ -227,6 +227,9 @@ export class AuroLayover extends LitElement {
       // Stop positioning the popover
       this._detachPopoverPositioner();
 
+      // Detach the focus trap if it exists
+      this._detachFocusTrap();
+
       // Hide the popover if it is currently open
       if (!internal) this.popover.hidePopover();
 
