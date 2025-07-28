@@ -47,6 +47,9 @@ export class AuroMenu extends AuroElement {
   constructor() {
     super();
 
+    // Make the menu unfocusable by default
+    this.setAttribute('tabindex', '-1');
+
     // State properties (reactive)
 
     /**
