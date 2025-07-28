@@ -35,17 +35,17 @@
 | Method           | Type       | Description                                      |
 |------------------|------------|--------------------------------------------------|
 | `exposeCssParts` | `(): void` | Exposes CSS parts for styling from parent components. |
-| `focus`          | `(): void` | When bib is open, focus on the first element inside of bib.<br />If not, trigger element will get focus. |
 | `hide`           | `(): void` | Public method to hide the dropdown.              |
 | `show`           | `(): void` | Public method to show the dropdown.              |
+| `toggle`         | `(): void` | Public method to toggle the dropdown.            |
 
 ## Events
 
-| Event                       | Type                                 | Description                                      |
-|-----------------------------|--------------------------------------|--------------------------------------------------|
-| `auroDropdown-idAdded`      | `Object<key  : 'id', value: string>` |                                                  |
-| `auroDropdown-toggled`      |                                      | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | `CustomEvent<any>`                   | Notifies that the trigger has been clicked.      |
+| Event                          | Type                                  | Description                                      |
+|--------------------------------|---------------------------------------|--------------------------------------------------|
+| `auroDropdown-strategy-change` | `CustomEvent<any>`                    |                                                  |
+| `auroDropdown-toggled`         | `CustomEvent<{ expanded: boolean; }>` | Notifies that the visibility of the dropdown bib has changed. |
+| `auroDropdown-triggerClick`    |                                       | Notifies that the trigger has been clicked.      |
 
 ## Slots
 
