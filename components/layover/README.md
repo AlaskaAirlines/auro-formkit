@@ -102,6 +102,12 @@ This configuration enables proper module resolution for the component's TypeScri
   <input type="text" placeholder="I am an input inside a dropdown popover" />
   <textarea placeholder="I am a textarea inside a dropdown popover"></textarea>
   <button type="button" onclick="document.querySelector('auro-layover[behavior=dropdown]').hide()">Close Dropdown</button>
+  <auro-button>Auro Button Is Here</auro-button>
+  <button type="button" onclick="document.querySelector('auro-layover[behavior=dropdown]').hide()">Close Dropdown</button>
+  <input type="text" placeholder="I am an input inside a dropdown popover" />
+  <textarea placeholder="I am a textarea inside a dropdown popover"></textarea>
+  <p>Paragraph test</p>
+  <span>Span test</span>
 </auro-layover>
 <p>&nbsp;</p>
 <p>tooltip (hover) example</p>
