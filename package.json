@@ -214,6 +214,15 @@
       "module": "./components/select/dist/index.js",
       "types": "./components/select/dist/index.d.ts",
       "default": "./components/select/dist/index.js"
+    },
+    "./auro-layover": "./components/layover/dist/registered.js",
+    "./auro-layover/readme.md": "./components/layover/README.md",
+    "./auro-layover/demo/*.md": "./components/layover/demo/*.md",
+    "./auro-layover/demo/*.js": "./components/layover/demo/*.min.js",
+    "./auro-layover/class": {
+      "module": "./components/layover/dist/index.js",
+      "types": "./components/layover/dist/index.d.ts",
+      "default": "./components/layover/dist/index.js"
     }
   }
 }
