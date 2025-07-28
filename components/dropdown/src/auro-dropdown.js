@@ -828,6 +828,7 @@ export class AuroDropdown extends AuroElement {
         .minInputLength="${1}"
         .offset="${4}"
         .showOnFocus="${this._currentBehavior !== 'input-fullscreen'}"
+        .showOnHover="${this.hoverToggle}"
       >
         <div
           slot="trigger"

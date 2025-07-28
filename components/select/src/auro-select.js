@@ -658,7 +658,6 @@ export class AuroSelect extends AuroElement {
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
-      this.hideBib();
     });
 
     this.menu.addEventListener('auroMenu-selectedOption', () => {
