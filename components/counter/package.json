@@ -16,6 +16,7 @@
     "@aurodesignsystem/auro-bibtemplate": "*",
     "@aurodesignsystem/auro-button": "^11.3.0",
     "@aurodesignsystem/auro-dropdown": "*",
+    "@aurodesignsystem/auro-icon": "^8.1.2",
     "chalk": "^5.4.1",
     "lit": "^3.2.1"
   },

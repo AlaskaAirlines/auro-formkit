@@ -15,11 +15,15 @@ export class IconUtil {
    * @returns {Element} The HTML element containing the SVG icon.
    */
   static generateSvgHtml(svgContent) {
-    const dom = new DOMParser().parseFromString(svgContent.svg, 'text/html');
-    const svg = dom.body.firstChild;
-    
-    svg.setAttribute('slot', 'svg');
+    try {
+      const dom = new DOMParser().parseFromString(svgContent.svg, 'text/html');
+      const svg = dom.body.firstChild;
+      
+      svg.setAttribute('slot', 'svg');
 
-    return html`${svg}`;
+      return html`${svg}`;
+    } catch (err) {
+      return undefined;
+    }
   }
 }
