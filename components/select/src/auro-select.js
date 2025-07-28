@@ -526,8 +526,6 @@ export class AuroSelect extends AuroElement {
         // wait til the bib gets fully rendered
         setTimeout(() => {
           if (this.dropdown.isBibFullscreen) {
-            // trigger holds the focus since menu is not a focusable element.
-            this.dropdown.trigger.focus();
 
             // default focus indicator on the first menu option
             if (this.menu.index < 0) {
@@ -653,12 +651,12 @@ export class AuroSelect extends AuroElement {
     }
 
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
-    this.menu.setAttribute('aria-hidden', 'true');
 
     this.generateOptionsArray();
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
+      this.hideBib();
     });
 
     this.menu.addEventListener('auroMenu-selectedOption', () => {
@@ -689,13 +687,13 @@ export class AuroSelect extends AuroElement {
     });
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
-      if (evt.detail) {
-        evt.detail.scrollIntoView({
-          alignToTop: false,
-          block: "nearest",
-          behavior: "smooth"
-        });
-      }
+      // if (evt.detail) {
+      //   evt.detail.scrollIntoView({
+      //     alignToTop: false,
+      //     block: "nearest",
+      //     behavior: "smooth"
+      //   });
+      // }
     });
   }
 
@@ -707,8 +705,19 @@ export class AuroSelect extends AuroElement {
   configureSelect() {
 
     this.addEventListener('keydown', (evt) => {
+
+      // When the focus is on the select element
+      if (document.activeElement === this) {
+
+        // Prevent scroll on space
+        if (evt.code === "Space") {
+          evt.preventDefault();
+          this.dropdown.toggle();
+        }
+      }
+
       // when the focus is on trigger not on close button
-      if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
+      if (this.dropdown.isPopoverVisible) {
         if (evt.key === 'ArrowUp') {
           evt.preventDefault();
 
@@ -734,32 +743,11 @@ export class AuroSelect extends AuroElement {
         }
 
         if (evt.key === 'Enter') {
-          if (!this.dropdown.isPopoverVisible) {
-            evt.preventDefault();
-            this.menu.makeSelection();
-          }
+          evt.preventDefault();
+          this.menu.makeSelection();
 
           return;
         }
-      }
-
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        if (this.dropdown.isBibFullscreen) {
-          evt.preventDefault();
-
-            // when the focus is on trigger not on close button
-          if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
-            // `dropdown.focus` will move focus to the first focusable element in bib when it's open,
-            // when bib it not open, it will focus onto trigger.
-            this.dropdown.focus();
-          } else {
-            // when close button has the focus, move focus back to the trigger
-            this.dropdown.trigger.focus();
-          }
-        } else {
-          this.dropdown.hide();
-        }
-        return;
       }
 
       // Handle all other key presses by updating the active option based on the key pressed

@@ -97,7 +97,7 @@ export class AuroInput extends BaseInput {
    * or when the input has no value, is not focused, and has no placeholder text.
    * @returns {boolean} - True if the input should be visually hidden, false otherwise.
    * @private
-  */
+   */
   get inputHidden() {
     return (this.hasDisplayValueContent && !this.hasFocus && this.hasValue) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === ''));
   }

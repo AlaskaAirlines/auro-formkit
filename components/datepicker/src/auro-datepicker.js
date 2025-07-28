@@ -802,11 +802,8 @@ export class AuroDatePicker extends AuroElement {
       }
 
       if (!this.contains(document.activeElement)) {
-        this.validation.validate(this.inputList[0]);
-
-        if (this.inputList[1]) {
-          this.validation.validate(this.inputList[1]);
-        }
+        this.validate();
+        this.dropdown.hide();
       }
     });
 
@@ -884,23 +881,33 @@ export class AuroDatePicker extends AuroElement {
     const convertedDate = this.convertWcTimeToDate(time);
     const newDate = this.util.toCustomFormat(convertedDate, this.format);
 
+    let onEndValue = false;
     if (this.util.validDateStr(newDate, this.format)) {
-      if (this.inputList.length > 1) {
-        if (!this.value || !this.util.validDateStr(this.value, this.format)) {
-          this.value = newDate;
-        } else if (!this.valueEnd || !this.util.validDateStr(this.valueEnd, this.format)) {
+      if (this.range) {
+        const isValueValid = this.value && this.util.validDateStr(this.value, this.format);
+        const isValueEndValid = this.valueEnd && this.util.validDateStr(this.valueEnd, this.format);
+
+        if (isValueValid && !isValueEndValid) {
           // verify the date is after this.value to insure we are setting a proper range
           if (new Date(this.util.toNorthAmericanFormat(newDate, this.format)) >= new Date(this.formattedValue)) {
-            this.valueEnd = newDate;
-          } else {
-            this.value = newDate;
+            onEndValue = true;
           }
-        } else {
-          this.value = newDate;
+        } else if (isValueValid && isValueEndValid) {
+          // both dateTo and dateFrom are valid, then reset datTo
           this.valueEnd = '';
+        }
+      }
+
+      if (onEndValue) {
+        this.valueEnd = newDate;
+        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
+          this.focus('startDate');
         }
       } else {
         this.value = newDate;
+        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
+          this.focus('endDate');
+        }
       }
     }
   }
@@ -921,7 +928,7 @@ export class AuroDatePicker extends AuroElement {
    */
   handleKeydownReset(event) {
     if (event.key === 'Enter' || event.key === ' ') {
-      this.resetValues();
+      this.resetInputs();
       this.focus();
     }
   }
@@ -929,9 +936,9 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Resets values without resetting validation.
    */
-  resetValues() {
+  resetInputs() {
     this.inputList.forEach((input) => {
-      input.clear();
+      input.reset();
     });
   }
 
@@ -940,7 +947,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   reset() {
-    this.resetValues();
+    this.resetInputs();
     this.validation.reset(this);
   }
 
@@ -949,7 +956,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   clear() {
-    this.resetValues();
+    this.resetInputs();
   }
 
   /**
@@ -957,6 +964,11 @@ export class AuroDatePicker extends AuroElement {
    * @param {boolean} [force=false] - Whether to force validation.
    */
   validate(force = false) {
+    this.inputList[0].validate(force);
+    if (this.range) {
+      this.inputList[1].validate(force);
+    }
+
     this.validation.validate(this, force);
   }
 
@@ -1529,7 +1541,7 @@ export class AuroDatePicker extends AuroElement {
     return html`
       <div class="${classMap(clearActionClassMap)}">
         <${this.buttonTag}
-          @click="${this.resetValues}"
+          @click="${this.resetInputs}"
           @keydown="${this.handleKeydownReset}"
           ?onDark="${this.onDark}"
           aria-label="${i18n(this.lang, 'clearInput')}"

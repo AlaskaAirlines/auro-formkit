@@ -37,7 +37,6 @@
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
 | `clear`    | `(): void`                             | Clears the current value of the combobox.        |
-| `focus`    | `(): void`                             | Focuses the combobox trigger input.              |
 | `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
 | `isValid`  | `(): boolean`                          | Checks if the element is valid.                  |
 | `reset`    | `(): void`                             | Resets component to initial state.               |
