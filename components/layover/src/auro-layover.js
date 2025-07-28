@@ -490,30 +490,58 @@ export class AuroLayover extends LitElement {
     }
 
     /**
+     * Checks for an input element in the trigger slot
+     * If no input is set, it tries to find the trigger element in the slot.
+     * If it finds a valid input element, it sets it as the input element.
+     * @returns {void}
+     * @private
+     * @throws {Error} If no input element is found after a timeout
+     */
+    _checkForInput() {
+      // If no input is set, try to find the trigger element in the slot
+      if (!this.input && this._triggerElInSlot && this._triggerElInSlot.tagName.toLowerCase().match('input')) {
+
+        // Set it as the input element if we found a valid input element
+        this.input = this._triggerElInSlot;
+      }
+
+      // If we still don't have an input element, wait a bit to see if it appears
+      if (!this.input) {
+        setTimeout(() => {
+
+          // If we still don't have an input element, throw an error
+          if (!this.input) throw new Error(_NO_INPUT_ERROR);
+
+          // Otherwise, if we have an input element, bind it to the popover
+          this._bindToInput();
+        }, 50);
+      }
+    }
+
+    /**
      * Binds the input element in the trigger slot to the popover's input behavior
      * @returns {void}
      * @private
      */
     _bindToInput() {
-      const input = this.input;
-      if (input) {
-        
+
+      // Check for an input either set explicitly or in the trigger slot
+      // It's a little confusing, but this sets this.input to the input element instead of returning it
+      this._checkForInput();
+
+      if (this.input) {
+
         // If you add an event listener here, you must also remove it in _detachInput
-
         // Input change handling.
-        input.addEventListener('input', this._handleInputChange);
-
+        this.input.addEventListener('input', this._handleInputChange);
+  
         // Focus handling.
-        input.addEventListener('focus', this._handleInputFocus);
-
+        this.input.addEventListener('focus', this._handleInputFocus);
+  
         // Blur handling.
         if (!(['input-fullscreen'].includes(this.behavior))) {
-          input.addEventListener('blur', this._handleInputBlur);
+          this.input.addEventListener('blur', this._handleInputBlur);
         }
-      } else {
-        setTimeout(() => {
-          if (!this._triggerEl) throw new Error(_NO_INPUT_ERROR);
-        }, 50);
       }
     }
 
