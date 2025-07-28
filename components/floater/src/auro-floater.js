@@ -15,6 +15,7 @@ const _DEFAULTS = {
   behavior: "dropdown",
   showOnHover: false,
   showOnFocus: true,
+  showOnChange: true,
   offset: 0,
   placement: "bottom-start",
   shown: false,
@@ -108,7 +109,7 @@ export class AuroFloater extends LitElement {
         /** The offset distance of the floater */
         offset: { type: Number, reflect: false },
 
-        /** The position of the floater, e.g., "bottom-start", "top-end" etc. */
+        /** The position of the floater, e.g., "bottom-start", "top-end" etc. (do not use with useAutoPlacement) */
         placement: { type: String, reflect: false },
 
         /** Whether the floater should show on hover */
@@ -116,6 +117,9 @@ export class AuroFloater extends LitElement {
 
         /** Whether the floater should open on focus (input behavior only) */
         showOnFocus: { type: String, reflect: false, converter: StringBoolean },
+
+        /** Whether the floater should show on change (input behavior only) */
+        showOnChange: { type: String, reflect: false, converter: StringBoolean },
 
         /** Whether the floater is shown or not */
         shown: { type: Boolean, reflect: true },
@@ -125,6 +129,21 @@ export class AuroFloater extends LitElement {
 
         /** A reference to the input to attach to for input behavior */
         input: { type: Object, state: true },
+
+        /** A reference to the arrow element (if desired) */
+        arrowEl: { type: Object, reflect: false },
+
+        /** Whether or not to use the hide behavior (hides element when trigger is not visible) */
+        useHide: { type: String, reflect: false, converter: StringBoolean },
+
+        /** Whether or not to use automatic placement for the floater (do not use with placement) */
+        useAutoPlacement: { type: String, reflect: false, converter: StringBoolean },
+
+        /** Whether or not to use the flip behavior (flips the element when it goes off-screen) */
+        useFlip: { type: String, reflect: false, converter: StringBoolean },
+
+        /** Whether or not the floater should try to align to an inline element like a hyperlink */
+        inline: { type: String, reflect: false, converter: StringBoolean },
 
         /** Whether the floater is open or not */
         _open: { type: Boolean, reflect: false, state: true },
@@ -174,8 +193,6 @@ export class AuroFloater extends LitElement {
      */
     show({internal = false} = {}) {
 
-      console.log("layover show");
-
       // Show the popover if it this wasn't called internally by the beforetoggle event listener
       if (!internal) this.popover.showPopover();
 
@@ -206,8 +223,6 @@ export class AuroFloater extends LitElement {
      * @private
      */
     hide({internal = false} = {}) {
-
-      console.log("layover hide");
 
       // Stop positioning the popover
       this._detachPopoverPositioner();
@@ -276,11 +291,10 @@ export class AuroFloater extends LitElement {
      * @returns {object}
      */
     get _dropdownOptions() {
+      const { placement, offset, inline, arrowEl, useHide, useAutoPlacement, useFlip } = this;
       return {
         ..._POSITIONER_DEFAULTS,
-        placement: this.placement,
-        offset: this.offset,
-        ...this.floatingUiConfig ?? {},
+        placement, offset, inline, arrowEl, useHide, useAutoPlacement, useFlip
       };
     }
 
@@ -324,7 +338,7 @@ export class AuroFloater extends LitElement {
      * @private
      */
     get _shouldAttachFocusTrap() {
-      return ![...INPUT_TYPES, ...TOOLTIP_TYPES].includes(this.behavior);
+      return !['input', 'input-dropdown', ...TOOLTIP_TYPES].includes(this.behavior);
     };
 
   _calcType(behavior) {
@@ -427,8 +441,11 @@ export class AuroFloater extends LitElement {
      */
     _attachFocusTrap() {
       if (this._shouldAttachFocusTrap) {
-        this._focusTrap = new FocusTrap(this.popover);
-        this._focusTrap.focusFirstElement();
+        this._focusTrap = new FocusTrap(this.popover, true);
+
+        // If the popover is shown, focus the first element
+        // Wait a cycle for the popover API to be done doing stuff before we adjust the focus
+        setTimeout(() => this._focusTrap.focusFirstElement());
       }
     }
 
@@ -479,7 +496,6 @@ export class AuroFloater extends LitElement {
      */
     _bindToInput() {
       const input = this.input;
-      console.log("bind to input", input);
       if (input) {
         
         // If you add an event listener here, you must also remove it in _detachInput
@@ -535,8 +551,11 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _detachHoverFromPositioningTarget() {
-      this.removeEventListener('mouseover', this._handleOnHover);
-      this.removeEventListener('mouseout', this._handleOnHoverLeave);
+      const el = this._triggerElInSlot;
+      if (el) {
+        el.removeEventListener('mouseover', this._handleOnHover);
+        el.removeEventListener('mouseout', this._handleOnHoverLeave);
+      }
     }
 
 
@@ -630,6 +649,8 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _handleInputChange = event => {
+      if (!this.showOnChange) return false;
+
       const input = event.target;
       this._inputPassesValueCheck(input) ? this.show() : this.hide();
     }
@@ -641,10 +662,12 @@ export class AuroFloater extends LitElement {
      * @private
      */
     _handleInputFocus = event => {
+      if (!this.showOnFocus) return false;
+
       const input = event.target;
       if (
         // If the input has a minimum length and the value is valid and we should show on focus
-        this._inputPassesValueCheck(input) && this.showOnFocus
+        this._inputPassesValueCheck(input)
       ) this.show();
     }
 

@@ -561,6 +561,9 @@ export class AuroCombobox extends AuroElement {
       this.dropdownOpen = ev.detail.expanded;
       this.updateMenuShapeSize();
 
+      // Don't show the bib if there are no options available
+      if (this.dropdownOpen && this.options.length <= 1) this.hideBib();
+
       // wait a frame in case the bib gets hide immediately after showing because there is no value
       setTimeout(() => {
         if (document.activeElement === this) {
@@ -688,7 +691,9 @@ export class AuroCombobox extends AuroElement {
       }
 
       // dropdown bib should hide when making a selection
-      this.hideBib();
+      setTimeout(() => {
+        this.hideBib();
+      })
     });
 
     this.menu.addEventListener('auroMenu-customEventFired', () => {
@@ -842,19 +847,23 @@ export class AuroCombobox extends AuroElement {
        * Prevent moving the cursor position while navigating the menu options.
        */
       if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown') {
-        if (this.availableOptions.length > 0) {
+        if (this.availableOptions.length > 0 && !this.dropdown.isPopoverVisible) {
           this.showBib();
         }
 
         if (this.dropdown.isPopoverVisible) {
           evt.preventDefault();
 
-          // navigate on menu only when the focus is on input
-          if (!this.dropdown.isBibFullscreen || this.shadowRoot.activeElement === this.inputInBib) {
+          // navigate on menu only when the dropdown is open
+          if (this.dropdown.isPopoverVisible) {
             const direction = evt.key.replace('Arrow', '').toLowerCase();
             this.menu.navigateOptions(direction);
           }
         }
+      }
+
+      if (evt.key === 'Escape') {
+        this.hideBib();
       }
     });
 

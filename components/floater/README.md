@@ -84,34 +84,39 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <p>existing support example</p>
-<button type="button" onclick="document.querySelector('auro-popover[behavior=dialog]').toggle()">Click Me For Dialog</button>
-<auro-popover behavior="dialog">
+<button type="button" onclick="document.querySelector('auro-floater[behavior=dialog]').toggle()">Click Me For Dialog</button>
+<auro-floater behavior="dialog">
   <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
-</auro-popover>
+</auro-floater>
 <p>&nbsp;</p>
 <p>dialog example</p>
-<auro-popover behavior="dialog">
+<auro-floater behavior="dialog">
   <button type="button" slot="trigger">Open Dialog</button>
   <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
-</auro-popover>
+</auro-floater>
 <p>&nbsp;</p>
 <p>dropdown example</p>
-<auro-popover behavior="dropdown">
+<auro-floater behavior="dropdown">
   <button type="button" slot="trigger">Open Dropdown</button>
   <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
   <input type="text" placeholder="I am an input inside a dropdown popover" />
+  <input type="text" />
+  <button>Bob is a button</button>
+  <x-hello-world>Hello Button In Shadow Slot</x-hello-world>
+  <input type="text" />
+  <button>Second Button Bob</button>
+  <!-- <auro-test-button auro-button onclick="document.querySelector('auro-floater[behavior=dropdown]').hide()">Close Dropdown</auro-test-button> -->
   <textarea placeholder="I am a textarea inside a dropdown popover"></textarea>
-  <button type="button" onclick="document.querySelector('auro-popover[behavior=dropdown]').hide()">Close Dropdown</button>
-</auro-popover>
+</auro-floater>
 <p>&nbsp;</p>
 <p>tooltip (hover) example</p>
-<auro-popover behavior="tooltip" placement="bottom">
+<auro-floater behavior="tooltip" placement="bottom">
   <button type="button" slot="trigger">Hover For Tooltip</button>
   <p>I am a tooltip popover. I open when the trigger is hovered.</p>
-</auro-popover>
+</auro-floater>
 <p>&nbsp;</p>
 <p>default input example</p>
-<auro-popover behavior="input">
+<auro-floater behavior="input">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -120,10 +125,10 @@ This configuration enables proper module resolution for the component's TypeScri
     <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
   </auro-menu>
-</auro-popover>
+</auro-floater>
 <p>&nbsp;</p>
 <p>input popover with minInputLength</p>
-<auro-popover behavior="input" minInputLength="3">
+<auro-floater behavior="input" minInputLength="3">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -132,10 +137,10 @@ This configuration enables proper module resolution for the component's TypeScri
     <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
   </auro-menu>
-</auro-popover>
+</auro-floater>
 <p>&nbsp;</p>
 <p>input popover with showOnFocus=false</p>
-<auro-popover behavior="input" minInputLength="3" showOnFocus="false">
+<auro-floater behavior="input" minInputLength="3" showOnFocus="false">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -144,7 +149,7 @@ This configuration enables proper module resolution for the component's TypeScri
     <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
   </auro-menu>
-</auro-popover>
+</auro-floater>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
