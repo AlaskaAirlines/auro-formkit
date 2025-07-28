@@ -1207,6 +1207,7 @@ export class AuroSelect extends AuroElement {
           .offset="${this.offset}"
           .placement="${this.placement}"
           chevron
+          fluid
           for="selectMenu"
           layout="${this.layout}"
           part="dropdown"
@@ -1285,6 +1286,7 @@ export class AuroSelect extends AuroElement {
           .offset="${this.offset}"
           .placement="${this.placement}"
           chevron
+          fluid
           for="selectMenu"
           layout="${this.layout}"
           part="dropdown"
@@ -1369,6 +1371,7 @@ export class AuroSelect extends AuroElement {
           .offset="${this.offset}"
           .placement="${this.placement}"
           chevron
+          fluid
           for="selectMenu"
           layout="${this.layout}"
           part="dropdown"

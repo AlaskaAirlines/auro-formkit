@@ -1664,6 +1664,7 @@ export class AuroDatePicker extends AuroElement {
     // Base HTML render() handles dropdown and calendar bib
     return html`
       <${this.dropdownTag}
+          fluid
           ?autoPlacement="${this.autoPlacement}"
           ?onDark="${this.onDark}"
           ?disabled="${this.disabled}"

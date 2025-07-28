@@ -1,5 +1,11 @@
 # auro-dropdown
 
+## Attributes
+
+| Attribute | Description                                      |
+|-----------|--------------------------------------------------|
+| `fluid`   | To make dropdown `block` instead of `inline-block` |
+
 ## Properties
 
 | Property                | Attribute               | Type        | Default        | Description                                      |
