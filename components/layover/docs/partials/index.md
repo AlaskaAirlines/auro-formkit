@@ -4,12 +4,12 @@ README.md is created by running `npm run build:docs`.
 This file is generated based on a template fetched from `./docs/partials/demo.md`
 -->
 
-# Popover
+# Layover
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## auro-popover use cases
+## auro-layover use cases
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -18,7 +18,7 @@ This file is generated based on a template fetched from `./docs/partials/demo.md
 
 ### Default
 
-A basic `auro-popover`.
+A basic `auro-layover`.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->

@@ -23,8 +23,8 @@ import iconVersion from './iconVersion.js';
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
-import { AuroFloater } from "@poc/auro-floater";
-import floaterVersion from './floaterVersion.js';
+import { AuroLayover } from "@poc/auro-layover";
+import layoverVersion from './layoverVersion.js';
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
 import colorCss from "./styles/color-css.js";
@@ -161,7 +161,7 @@ export class AuroDropdown extends AuroElement {
     /**
      * @private
      */
-    this.floaterTag = versioning.generateTag("auro-formkit-dropdown-floater", floaterVersion, AuroFloater);
+    this.layoverTag = versioning.generateTag("auro-formkit-dropdown-layover", layoverVersion, AuroLayover);
 
     /**
      * @private
@@ -177,15 +177,15 @@ export class AuroDropdown extends AuroElement {
   /** Creates refs for elements in the template @returns {void} @private */
   _createElementRefs() {
 
-    // A reference to the floater element itself
-    this._floaterRef = createRef();
+    // A reference to the layover element itself
+    this._layoverRef = createRef();
 
-    // A reference to the bib element inside of the floater
+    // A reference to the bib element inside of the layover
     this._bibRef = createRef();
   }
 
-  get _floater() {
-    return this._floaterRef.value;
+  get _layover() {
+    return this._layoverRef.value;
   }
 
   get _bib() {
@@ -195,7 +195,7 @@ export class AuroDropdown extends AuroElement {
   /**
    * @ignore
    */
-  // get floaterConfig() {
+  // get layoverConfig() {
   //   return {
   //     placement: this.placement,
   //     flip: !this.noFlip,
@@ -209,7 +209,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   toggle() {
-    this._floater?.toggle();
+    this._layover?.toggle();
   }
 
   /**
@@ -217,7 +217,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   hide() {
-    this._floater?.hide();
+    this._layover?.hide();
   }
 
   /**
@@ -225,7 +225,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   show() {
-    this._floater.show();
+    this._layover.show();
   }
 
   // function to define props used within the scope of this component
@@ -519,13 +519,13 @@ export class AuroDropdown extends AuroElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.floater.disconnect();
+    this.layover.disconnect();
     this.clearTriggerFocusEventBinding();
   }
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    // this.floater.handleUpdate(changedProperties);
+    // this.layover.handleUpdate(changedProperties);
 
     // Note: `disabled` is not a breakpoint (it is not a screen size),
     // so it looks like we never consume this - however, dropdownBib handles this in the setter as "undefined"
@@ -545,7 +545,7 @@ export class AuroDropdown extends AuroElement {
    * @private
    */
   _handleDropdownToggle() {
-    this.isPopoverVisible = this._floater.shown;
+    this.isPopoverVisible = this._layover.shown;
 
     this.dispatchEvent(new CustomEvent('auroDropdown-toggled', { detail: { expanded: this.isPopoverVisible } }));
   }
@@ -564,10 +564,10 @@ export class AuroDropdown extends AuroElement {
 
   firstUpdated() {
 
-    // Configure the floater to, this will generate the ID for the bib
-    // this.floater.configure(this, 'auroDropdown');
-    this.addEventListener('auro-floater-change', this._handleDropdownToggle);
-    this.addEventListener('auro-floater-beforechange', this._handleBeforeDropdownToggle);
+    // Configure the layover to, this will generate the ID for the bib
+    // this.layover.configure(this, 'auroDropdown');
+    this.addEventListener('auro-layover-change', this._handleDropdownToggle);
+    this.addEventListener('auro-layover-beforechange', this._handleBeforeDropdownToggle);
 
     // Initial measuring of if we should be fullscreen
     this._calculateIsBibFullscreen();
@@ -821,8 +821,8 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
-      <${this.floaterTag} 
-        ${ref(this._floaterRef)}
+      <${this.layoverTag} 
+        ${ref(this._layoverRef)}
         .behavior="${this._currentBehavior}"
         .input="${this._inputInTrigger}"
         .minInputLength="${1}"
@@ -866,7 +866,7 @@ export class AuroDropdown extends AuroElement {
             <slot @slotchange="${this.handleDefaultSlot}"></slot>
           </div>
         </${this.dropdownBibTag}>
-      </${this.floaterTag}>
+      </${this.layoverTag}>
       <div class="${classMap(helpTextClasses)}">
         <slot name="helpText"></slot>
       </div>

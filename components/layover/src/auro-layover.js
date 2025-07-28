@@ -36,23 +36,23 @@ const DIALOG_TYPES = [ 'dialog', 'dialog-fullscreen' ];
 const DROPDOWN_TYPES = [ 'dropdown' ];
 const TOOLTIP_TYPES = [ 'tooltip' ];
 
-const _NO_INPUT_ERROR = "\nAuroFloater: The input behavior requires an input element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-input slot='trigger'></auro-input>\n</auro-popover>\n";
-const _MULTIPLE_TRIGGER_ELEMENTS_ERROR = "\nAuroFloater: The input behavior requires a single trigger element to be passed to the trigger slot.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n\nPassing more than one element may lead to undesireable behavior.\n";
-const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroFloater: The trigger slot should not contain text nodes.\n\nExample:\n<auro-popover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-popover>\n";
+const _NO_INPUT_ERROR = "\nAuroLayover: The input behavior requires an input element to be passed to the trigger slot.\n\nExample:\n<auro-layover>\n\t<auro-input slot='trigger'></auro-input>\n</auro-layover>\n";
+const _MULTIPLE_TRIGGER_ELEMENTS_ERROR = "\nAuroLayover: The input behavior requires a single trigger element to be passed to the trigger slot.\n\nExample:\n<auro-layover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-layover>\n\nPassing more than one element may lead to undesireable behavior.\n";
+const _TEXT_NODE_IN_TRIGGER_SLOT_ERROR = "\nAuroLayover: The trigger slot should not contain text nodes.\n\nExample:\n<auro-layover>\n\t<auro-button slot='trigger'>Click me</auro-button>\n</auro-layover>\n";
 
 /**
- * AuroFloater is a web component that provides a customizable popover element.
+ * AuroLayover is a web component that provides a customizable popover element.
  * It supports various behaviors such as dialog, dropdown, tooltip, and input.
- * @fires auro-floater-shown - Fired when the floater is shown. Event detail contains {target: AuroFloater, newState: "shown"}.
- * @fires auro-floater-hidden - Fired when the floater is hidden. Event detail contains {target: AuroFloater, newState: "hidden"}.
- * @fires auro-floater-change - Fired when the floater's visibility state changes. Event detail contains {target: AuroFloater, newState: string} where newState is either "shown" or "hidden".
+ * @fires auro-layover-shown - Fired when the layover is shown. Event detail contains {target: AuroLayover, newState: "shown"}.
+ * @fires auro-layover-hidden - Fired when the layover is hidden. Event detail contains {target: AuroLayover, newState: "hidden"}.
+ * @fires auro-layover-change - Fired when the layover's visibility state changes. Event detail contains {target: AuroLayover, newState: string} where newState is either "shown" or "hidden".
  */
-export class AuroFloater extends LitElement {
+export class AuroLayover extends LitElement {
 
   /** STATIC METHODS **/
   // Utility methods that can be used without instantiating the class
 
-    static register(name = "auro-floater") { AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroFloater) }
+    static register(name = "auro-layover") { AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroLayover) }
 
   /** CONSTRUCTOR **/
     constructor() {
@@ -97,31 +97,31 @@ export class AuroFloater extends LitElement {
 
     static get properties() {
       return {
-        /** The title of the floater - REQUIRED FOR A11Y */
+        /** The title of the layover - REQUIRED FOR A11Y */
         title: { type: String, reflect: false },
 
-        /** The type of floater, e.g., "manual", "auto", or "hint" */
+        /** The type of layover, e.g., "manual", "auto", or "hint" */
         type: { type: String, reflect: false },
 
         /** The behavior of the popover, "dialog", "dialog-fullscreen", "dropdown", "tooltip", or "input", "input-fullscreen", "input-dropdown" */
         behavior: { type: String, reflect: true },
 
-        /** The offset distance of the floater */
+        /** The offset distance of the layover */
         offset: { type: Number, reflect: false },
 
-        /** The position of the floater, e.g., "bottom-start", "top-end" etc. (do not use with useAutoPlacement) */
+        /** The position of the layover, e.g., "bottom-start", "top-end" etc. (do not use with useAutoPlacement) */
         placement: { type: String, reflect: false },
 
-        /** Whether the floater should show on hover */
+        /** Whether the layover should show on hover */
         showOnHover: { type: Boolean, reflect: false },
 
-        /** Whether the floater should open on focus (input behavior only) */
+        /** Whether the layover should open on focus (input behavior only) */
         showOnFocus: { type: String, reflect: false, converter: StringBoolean },
 
-        /** Whether the floater should show on change (input behavior only) */
+        /** Whether the layover should show on change (input behavior only) */
         showOnChange: { type: String, reflect: false, converter: StringBoolean },
 
-        /** Whether the floater is shown or not */
+        /** Whether the layover is shown or not */
         shown: { type: Boolean, reflect: true },
 
         /** The minimum number of characters the user must type before the popover is shown */
@@ -136,16 +136,16 @@ export class AuroFloater extends LitElement {
         /** Whether or not to use the hide behavior (hides element when trigger is not visible) */
         useHide: { type: String, reflect: false, converter: StringBoolean },
 
-        /** Whether or not to use automatic placement for the floater (do not use with placement) */
+        /** Whether or not to use automatic placement for the layover (do not use with placement) */
         useAutoPlacement: { type: String, reflect: false, converter: StringBoolean },
 
         /** Whether or not to use the flip behavior (flips the element when it goes off-screen) */
         useFlip: { type: String, reflect: false, converter: StringBoolean },
 
-        /** Whether or not the floater should try to align to an inline element like a hyperlink */
+        /** Whether or not the layover should try to align to an inline element like a hyperlink */
         inline: { type: String, reflect: false, converter: StringBoolean },
 
-        /** Whether the floater is open or not */
+        /** Whether the layover is open or not */
         _open: { type: Boolean, reflect: false, state: true },
 
         /** Whether the trigger slot contains any elements */
@@ -175,7 +175,7 @@ export class AuroFloater extends LitElement {
   // Public methods that can be called on the component instance
 
     /**
-     * Toggles the visibility of the floater.
+     * Toggles the visibility of the layover.
      * @returns {void}
      */
     toggle() {
@@ -249,7 +249,7 @@ export class AuroFloater extends LitElement {
 
     connectedCallback() {
       super.connectedCallback();
-      this._runtimeUtils.handleComponentTagRename(this, 'auro-floater');
+      this._runtimeUtils.handleComponentTagRename(this, 'auro-layover');
     }
 
     updated(changedProperties) {
@@ -400,7 +400,7 @@ export class AuroFloater extends LitElement {
           break;
           
         default:
-          console.warn(`AuroFloater: Unknown behavior type "${newBehavior}"`);
+          console.warn(`AuroLayover: Unknown behavior type "${newBehavior}"`);
       }
     }
 
@@ -565,13 +565,13 @@ export class AuroFloater extends LitElement {
     /**
      * Dispatches an event indicating the popover has been shown.
      * Notifies listeners that the popover is now visible and emits a change event.
-     * @fires auro-floater-shown
+     * @fires auro-layover-shown
      * @returns {void}
      * @private
      */
     _dispatchShowEvent() {
 
-      this.dispatchEvent(new CustomEvent('auro-floater-shown', {
+      this.dispatchEvent(new CustomEvent('auro-layover-shown', {
         detail: { target: this, newState: "shown" },
         bubbles: true,
         composed: true
@@ -583,12 +583,12 @@ export class AuroFloater extends LitElement {
     /**
      * Dispatches an event indicating the popover has been hidden.
      * Notifies listeners that the popover is now hidden and emits a change event.
-     * @fires auro-floater-hidden
+     * @fires auro-layover-hidden
      * @returns {void}
      * @private
      */
     _dispatchHideEvent() {
-      this.dispatchEvent(new CustomEvent('auro-floater-hidden', {
+      this.dispatchEvent(new CustomEvent('auro-layover-hidden', {
         detail: { target: this, newState: "hidden" },
         bubbles: true,
         composed: true
@@ -601,13 +601,13 @@ export class AuroFloater extends LitElement {
     /**
      * Dispatches an event indicating the popover's visibility state has changed.
      * Notifies listeners when the popover transitions between shown and hidden states.
-     * @fires auro-floater-change
+     * @fires auro-layover-change
      * @param {Object} param - An object containing the shown state.
      * @returns {void}
      * @private
      */
     _dispatchChangeEvent({state}) {
-      this.dispatchEvent(new CustomEvent('auro-floater-change', {
+      this.dispatchEvent(new CustomEvent('auro-layover-change', {
         detail: { target: this, newState: state },
         bubbles: true,
         composed: true
@@ -617,13 +617,13 @@ export class AuroFloater extends LitElement {
     /**
      * Dispatches an event indicating the popover's visibility state is about to change.
      * Notifies listeners when the popover transitions between shown and hidden states.
-     * @fires auro-floater-change
+     * @fires auro-layover-change
      * @param {Object} param - An object containing the shown state.
      * @returns {void}
      * @private
      */
     _dispatchBeforeChangeEvent({state}) {
-      this.dispatchEvent(new CustomEvent('auro-floater-beforechange', {
+      this.dispatchEvent(new CustomEvent('auro-layover-beforechange', {
         detail: { target: this, newState: state },
         bubbles: true,
         composed: true

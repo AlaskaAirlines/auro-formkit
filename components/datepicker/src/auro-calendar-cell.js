@@ -10,8 +10,8 @@ import tokensCss from './styles/tokens-css.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
-import { AuroFloater } from '@poc/auro-floater/src/auro-floater.js';
-import floaterVersion from './floaterVersion.js';
+import { AuroLayover } from '@poc/auro-layover/src/auro-layover.js';
+import layoverVersion from './layoverVersion.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
@@ -43,7 +43,7 @@ export class AuroCalendarCell extends LitElement {
      * Generate unique names for dependency components.
      */
     const versioning = new AuroDependencyVersioning();
-    this.floaterTag = versioning.generateTag('auro-formkit-datepicker-floater', floaterVersion, AuroFloater);
+    this.layoverTag = versioning.generateTag('auro-formkit-datepicker-layover', layoverVersion, AuroLayover);
   }
 
   // This function is to define props used within the scope of this component
@@ -327,7 +327,7 @@ export class AuroCalendarCell extends LitElement {
       this.handleSlotContent();
     });
 
-    this.auroPopover = this.shadowRoot.querySelector(this.floaterTag._$litStatic$);
+    this.auroPopover = this.shadowRoot.querySelector(this.layoverTag._$litStatic$);
 
     this.auroPopover.boundary = calendarMonth;
   }
@@ -357,7 +357,7 @@ export class AuroCalendarCell extends LitElement {
 
     let _a, _b;
     return html`
-      <${this.floaterTag}>
+      <${this.layoverTag}>
         <slot name="popover_${this.dateStr}"></slot>
         <button
           slot="trigger"
@@ -375,7 +375,7 @@ export class AuroCalendarCell extends LitElement {
             </div>
           </div>
         </button>
-      </${this.floaterTag}>
+      </${this.layoverTag}>
     `;
   }
 }
