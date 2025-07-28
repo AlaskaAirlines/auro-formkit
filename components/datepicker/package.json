@@ -17,6 +17,7 @@
     "@aurodesignsystem/auro-bibtemplate": "*",
     "@aurodesignsystem/auro-button": "^11.3.0",
     "@aurodesignsystem/auro-dropdown": "*",
+    "@aurodesignsystem/auro-icon": "^8.1.2",
     "@aurodesignsystem/auro-input": "*",
     "@aurodesignsystem/auro-popover": "^5.1.0",
     "@material/mwc-icon-button": "^0.27.0",

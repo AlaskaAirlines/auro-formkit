@@ -12,7 +12,7 @@
     "url": "https://github.com/AlaskaAirlines/auro-menu"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-icon": "^8.1.1",
+    "@aurodesignsystem/auro-icon": "^8.1.2",
     "lit": "^3.3.1"
   },
   "devDependencies": {
