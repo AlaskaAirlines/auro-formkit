@@ -3,14 +3,14 @@
 import { expect } from '@open-wc/testing';
 import '../src/registered.js';
 
-describe('auro-popover', () => {
-  it('auro-popover custom element is defined', async () => {
-    const el = await !!customElements.get("auro-popover");
+describe('auro-layover', () => {
+  it('auro-layover custom element is defined', async () => {
+    const el = await !!customElements.get("auro-layover");
 
     await expect(el).to.be.true;
   });
 
-  it('auro-popover is accessible', async () => {
+  it('auro-layover is accessible', async () => {
     const el = await nestedMenuFixture();
 
     await expect(el).to.be.accessible();

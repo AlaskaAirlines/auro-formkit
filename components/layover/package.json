@@ -1,7 +1,7 @@
 {
-  "name": "@poc/auro-floater",
+  "name": "@poc/auro-layover",
   "version": "0.0.0",
-  "description": "auro-floater HTML custom element",
+  "description": "auro-layover HTML custom element",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -42,7 +42,7 @@
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
     "bundler": "rollup -c node:@auro-formkit/config/rollup",
-    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component floater",
+    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component layover",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "dev:closed": "concurrently \"npm run build:watch\" \"npm run serve:closed\"",

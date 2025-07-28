@@ -17,10 +17,10 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Floater
+# Layover
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-Need popover info
+Need layover info
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -47,20 +47,20 @@ $ npm i @aurodesignsystem/auro-formkit
 For automatic registration, simply import the component:
 
 ```javascript
-// Registers <auro-floater> automatically
-import '@aurodesignsystem/auro-formkit/auro-floater';
+// Registers <auro-layover> automatically
+import '@aurodesignsystem/auro-formkit/auro-layover';
 ```
 
 #### Custom Registration
 
-To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our static `AuroFloater.register('custom-floater')` method on the component class and pass in a unique name.
+To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our static `AuroLayover.register('custom-layover')` method on the component class and pass in a unique name.
 
 ```javascript
 // Import the class only
-import { AuroFloater } from '@aurodesignsystem/auro-formkit/auro-floater/class';
+import { AuroLayover } from '@aurodesignsystem/auro-formkit/auro-layover/class';
 
 // Register with a custom name if desired
-AuroFloater.register('custom-floater');
+AuroLayover.register('custom-layover');
 ```
 
 #### TypeScript Module Resolution
@@ -84,34 +84,34 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <p>existing support example</p>
-<button type="button" onclick="document.querySelector('auro-popover[behavior=dialog]').toggle()">Click Me For Dialog</button>
-<auro-popover behavior="dialog">
+<button type="button" onclick="document.querySelector('auro-layover[behavior=dialog]').toggle()">Click Me For Dialog</button>
+<auro-layover behavior="dialog">
   <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
-</auro-popover>
+</auro-layover>
 <p>&nbsp;</p>
 <p>dialog example</p>
-<auro-popover behavior="dialog">
+<auro-layover behavior="dialog">
   <button type="button" slot="trigger">Open Dialog</button>
   <p>I am a dialog popover. I should be positioned fixed over the top of the page.</p>
-</auro-popover>
+</auro-layover>
 <p>&nbsp;</p>
 <p>dropdown example</p>
-<auro-popover behavior="dropdown">
+<auro-layover behavior="dropdown">
   <button type="button" slot="trigger">Open Dropdown</button>
   <p>I am a dropdown popover. I should be positioned next to my parent element/trigger.</p>
   <input type="text" placeholder="I am an input inside a dropdown popover" />
   <textarea placeholder="I am a textarea inside a dropdown popover"></textarea>
-  <button type="button" onclick="document.querySelector('auro-popover[behavior=dropdown]').hide()">Close Dropdown</button>
-</auro-popover>
+  <button type="button" onclick="document.querySelector('auro-layover[behavior=dropdown]').hide()">Close Dropdown</button>
+</auro-layover>
 <p>&nbsp;</p>
 <p>tooltip (hover) example</p>
-<auro-popover behavior="tooltip" placement="bottom">
+<auro-layover behavior="tooltip" placement="bottom">
   <button type="button" slot="trigger">Hover For Tooltip</button>
   <p>I am a tooltip popover. I open when the trigger is hovered.</p>
-</auro-popover>
+</auro-layover>
 <p>&nbsp;</p>
 <p>default input example</p>
-<auro-popover behavior="input">
+<auro-layover behavior="input">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -120,10 +120,10 @@ This configuration enables proper module resolution for the component's TypeScri
     <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
   </auro-menu>
-</auro-popover>
+</auro-layover>
 <p>&nbsp;</p>
 <p>input popover with minInputLength</p>
-<auro-popover behavior="input" minInputLength="3">
+<auro-layover behavior="input" minInputLength="3">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -132,10 +132,10 @@ This configuration enables proper module resolution for the component's TypeScri
     <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
   </auro-menu>
-</auro-popover>
+</auro-layover>
 <p>&nbsp;</p>
 <p>input popover with showOnFocus=false</p>
-<auro-popover behavior="input" minInputLength="3" showOnFocus="false">
+<auro-layover behavior="input" minInputLength="3" showOnFocus="false">
   <auro-input slot="trigger" placeholder="Click to open input popover"></auro-input>
   <auro-menu>
     <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
@@ -144,7 +144,7 @@ This configuration enables proper module resolution for the component's TypeScri
     <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
   </auro-menu>
-</auro-popover>
+</auro-layover>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -161,7 +161,7 @@ The use of any Auro custom element has a dependency on the [Auro Design Tokens](
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-floater/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-layover/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -171,10 +171,10 @@ For the most up to date information on [UI development browser support](https://
 
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## auro-floater use cases
+## auro-layover use cases
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-popover>` element should be used in situations where users may:
+The `<auro-layover>` element should be used in situations where users may:
 
 * It pops yo
 <!-- AURO-GENERATED-CONTENT:END -->
