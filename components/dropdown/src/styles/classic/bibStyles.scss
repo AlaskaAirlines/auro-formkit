@@ -18,6 +18,13 @@
   }
 }
 
+:host([matchWidth]) {
+  .container {
+      width: 100%;
+      max-width: 100%;
+  }
+}
+
 :host([isfullscreen]) {
  top: 0;
  left: 0;

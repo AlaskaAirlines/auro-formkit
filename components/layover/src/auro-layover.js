@@ -124,6 +124,9 @@ export class AuroLayover extends LitElement {
         /** Whether the layover is shown or not */
         shown: { type: Boolean, reflect: true },
 
+        /** Whether or not the popover should match the width of the trigger */
+        matchWidth: { type: Boolean, reflect: false, converter: StringBoolean },
+
         /** The minimum number of characters the user must type before the popover is shown */
         minInputLength: { type: Number, reflect: false },
 
@@ -195,8 +198,8 @@ export class AuroLayover extends LitElement {
 
       if (!this.popover) return;
 
-      // Show the popover if it this wasn't called internally by the beforetoggle event listener
-      if (!internal) this.popover.showPopover();
+      // Match the width of the popover to the trigger element
+      this._matchPopoverToTriggerWidth();
 
       // Position the popover if behavior requires it
       if (this._shouldPosition) { this._attachPopoverPositioner();
@@ -211,6 +214,9 @@ export class AuroLayover extends LitElement {
 
       // Attach the focus trap to the popover if necessary
       this._attachFocusTrap(); // Attach focus trap to the popover
+
+      // Show the popover if it this wasn't called internally by the beforetoggle event listener
+      if (!internal) this.popover.showPopover();
 
       // The popover is positioned and ready, so we can set shown to true
       this.shown = true;
@@ -348,16 +354,39 @@ export class AuroLayover extends LitElement {
       return !['input', 'input-dropdown', ...TOOLTIP_TYPES].includes(this.behavior);
     };
 
-  _calcType(behavior) {
-    if (INPUT_TYPES.includes(behavior)) return "manual";
-    if (DIALOG_TYPES.includes(behavior)) return this._hasTriggerContent ? "auto" : "manual";
-    if (DROPDOWN_TYPES.includes(behavior)) return this._hasTriggerContent ? "auto" : "manual";
-    if (TOOLTIP_TYPES.includes(behavior)) return "hint";
-    return "manual"; // Default fallback
-  }
-
   /** PRIVATE METHODS **/
   // Private methods that are used internally within the component only
+
+  /**
+   * Matches the width of the popover to the trigger element's width or resets width style
+   * @returns {void}
+   */
+    _matchPopoverToTriggerWidth() {
+
+      // If this.matchWidth is false, make sure the width isn't being set and then exit
+      if (!this.matchWidth) {
+        this.popover.style.width = null;
+        return;
+      };
+
+      // Set the popover width to match the trigger element's width
+      const triggerEl = this._triggerElInSlot || this.button;
+      const {width} = triggerEl?.getBoundingClientRect();
+      this.popover.style.width = width ? `${width}px` : 'auto';
+    }
+
+    /**
+     * Calculates the type of the popover based on its behavior
+     * @param {string} behavior
+     * @returns {string} - The type of the popover, either "manual", "auto", or "hint"
+     */
+    _calcType(behavior) {
+      if (INPUT_TYPES.includes(behavior)) return "manual";
+      if (DIALOG_TYPES.includes(behavior)) return this._hasTriggerContent ? "auto" : "manual";
+      if (DROPDOWN_TYPES.includes(behavior)) return this._hasTriggerContent ? "auto" : "manual";
+      if (TOOLTIP_TYPES.includes(behavior)) return "hint";
+      return "manual"; // Default fallback
+    }
 
     /**
      * Centralized method to manage behavior transitions and state
@@ -396,7 +425,7 @@ export class AuroLayover extends LitElement {
         case 'tooltip':
           // Configure tooltip behavior
           this.showOnHover = true;
-          this._bindHoverToPositioningTarget();
+          this._bindHover();
           
           // Only set up positioning if we're already shown
           if (this.shown) this._attachPopoverPositioner();
@@ -419,7 +448,7 @@ export class AuroLayover extends LitElement {
     _cleanupCurrentBehavior() {
       // Detach all behavior-specific handlers
       this._detachInput();
-      this._detachHoverFromPositioningTarget();
+      this._detachHover();
       this._detachPopoverPositioner();
       
       // Focus trap is specific to certain behaviors
@@ -577,7 +606,7 @@ export class AuroLayover extends LitElement {
      * @returns {void}
      * @private
      */
-    _bindHoverToPositioningTarget() {
+    _bindHover() {
       const el = this._triggerElInSlot;
       if (el) {
         el.addEventListener('mouseover', this._handleOnHover);
@@ -590,7 +619,7 @@ export class AuroLayover extends LitElement {
      * @returns {void}
      * @private
      */
-    _detachHoverFromPositioningTarget() {
+    _detachHover() {
       const el = this._triggerElInSlot;
       if (el) {
         el.removeEventListener('mouseover', this._handleOnHover);

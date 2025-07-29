@@ -833,6 +833,7 @@ export class AuroDropdown extends AuroElement {
         .offset="${4}"
         .showOnFocus="${this._currentBehavior !== 'input-fullscreen'}"
         .showOnHover="${this.hoverToggle}"
+        .matchWidth="${this.matchWidth && !this.isBibFullscreen}"
       >
         <div
           slot="trigger"
@@ -866,6 +867,7 @@ export class AuroDropdown extends AuroElement {
           ${ref(this._bibRef)}
           id="bib"
           shape="${this.shape}"
+          ?matchWidth="${this.matchWidth && !this.isBibFullscreen}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}">
           <div class="slotContent">
