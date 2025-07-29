@@ -675,9 +675,6 @@ export class AuroCombobox extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
       this.updateMenuShapeSize();
-
-      setTimeout(() => {
-      }, 0);
     });
   }
 

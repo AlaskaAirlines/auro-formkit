@@ -193,6 +193,8 @@ export class AuroLayover extends LitElement {
      */
     show({internal = false} = {}) {
 
+      if (!this.popover) return;
+
       // Show the popover if it this wasn't called internally by the beforetoggle event listener
       if (!internal) this.popover.showPopover();
 
@@ -223,6 +225,8 @@ export class AuroLayover extends LitElement {
      * @private
      */
     hide({internal = false} = {}) {
+
+      if (!this.popover) return;
 
       // Stop positioning the popover
       this._detachPopoverPositioner();
@@ -431,6 +435,7 @@ export class AuroLayover extends LitElement {
      * @private
      */
      _resetPositionStyles() {
+      if (!this.popover) return;
       this.popover.style.margin = null;
       this.popover.style.position = null;
       this.popover.style.top = null;
@@ -447,8 +452,12 @@ export class AuroLayover extends LitElement {
         this._focusTrap = new FocusTrap(this.popover, true);
 
         // If the popover is shown, focus the first element
-        // Wait a cycle for the popover API to be done doing stuff before we adjust the focus
-        setTimeout(() => this._focusTrap.focusFirstElement());
+        // Wait a cycle for the popover API and consumers to be done doing stuff before we adjust the focus
+        setTimeout(() => {
+
+          // Make sure there's still a focus trap and then focus the first element
+          if (this._focusTrap) this._focusTrap.focusFirstElement();
+        });
       }
     }
 
