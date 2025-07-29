@@ -23,7 +23,7 @@ import iconVersion from './iconVersion.js';
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
 
-import { AuroLayover } from "@poc/auro-layover";
+import { AuroLayover } from "@aurodesignsystem/auro-layover/class";
 import layoverVersion from './layoverVersion.js';
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
