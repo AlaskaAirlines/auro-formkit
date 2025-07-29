@@ -45,7 +45,7 @@
 |--------------------------------|---------------------------------------|--------------------------------------------------|
 | `auroDropdown-strategy-change` | `CustomEvent<any>`                    |                                                  |
 | `auroDropdown-toggled`         | `CustomEvent<{ expanded: boolean; }>` | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick`    |                                       | Notifies that the trigger has been clicked.      |
+| `auroDropdown-triggerClick`    | `CustomEvent<{ event: any; }>`        | Notifies that the trigger has been clicked.      |
 
 ## Slots
 

@@ -799,6 +799,10 @@ export class AuroDropdown extends AuroElement {
     }
   }
 
+  _handleTriggerClick = (evt) => {
+    this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', { detail: { event: evt } }));
+  }
+
   get _currentBehavior() {
 
     // Handle input
@@ -830,6 +834,7 @@ export class AuroDropdown extends AuroElement {
           id="trigger"
           part="wrapper"          
           class="${classMap(this.commonWrapperClasses)}"
+          @click="${this._handleTriggerClick}"
         >
           <div class="triggerContentWrapper" id="triggerLabel">
             <slot
