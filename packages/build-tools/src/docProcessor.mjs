@@ -58,7 +58,6 @@ export const componentDependencyTree = {
   'form': ['form'],
   'input': ['input'],
   'menu': ['menu'],
-  'layover': ['layover'],
   'radio': ['radio'],
   'select': ['dropdown', 'menu', 'select'],
 }
@@ -72,7 +71,6 @@ export const componentTree = {
   'form': ['form'],
   'input': ['input'],
   'menu': ['menu', 'menu-option'],
-  'layover': ['layover'],
   'radio': ['radio', 'radio-group'],
   'select': ['select']
 }
