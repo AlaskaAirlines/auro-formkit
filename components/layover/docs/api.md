@@ -11,6 +11,7 @@ The auro-layover element provides users a way to display additional information 
 | `button`           |                    | readonly  | `HTMLButtonElement` | A reference to the popover component's internal button element (trigger) |
 | `inline`           | `inline`           |           | `string`            | Whether or not the layover should try to align to an inline element like a hyperlink |
 | `input`            | `input`            |           | `object`            | A reference to the input to attach to for input behavior |
+| `matchWidth`       | `matchWidth`       |           | `boolean`           | Whether or not the popover should match the width of the trigger |
 | `minInputLength`   | `minInputLength`   |           | `number`            | The minimum number of characters the user must type before the popover is shown |
 | `offset`           | `offset`           |           | `number`            | The offset distance of the layover               |
 | `placement`        | `placement`        |           | `string`            | The position of the layover, e.g., "bottom-start", "top-end" etc. (do not use with useAutoPlacement) |
