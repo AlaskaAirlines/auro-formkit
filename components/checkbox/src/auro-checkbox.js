@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -247,6 +248,33 @@ export class AuroCheckbox extends LitElement {
         composed: true,
       }));
     });
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    this.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  /**
+   * Handles keydown event to toggle the checkbox with Space key.
+   * @private
+   * @param {KeyboardEvent} event - The keydown event from the checkbox input.
+   * @returns {void}
+   */
+  handleKeyDown(event) {
+    if (event.key === ' ' && !this.disabled) {
+      event.preventDefault();
+
+      this.shadowRoot.querySelector('input').click();
+    }
   }
 
   /**
