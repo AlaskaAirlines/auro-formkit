@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, curly */
 
 // If using litElement base class
 import { css } from "lit";
@@ -542,7 +542,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   hideBib() {
-    this.dropdown?.hide();
+    if (this.drodown) this.dropdown.hide();
   }
 
   /**
@@ -550,7 +550,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
-    this.dropdown?.show();
+    if (this.dropdown) this.dropdown.show();
   }
 
   /**
@@ -700,7 +700,7 @@ export class AuroCombobox extends AuroElement {
       // dropdown bib should hide when making a selection
       setTimeout(() => {
         this.hideBib();
-      })
+      });
     });
 
     this.menu.addEventListener('auroMenu-customEventFired', () => {
