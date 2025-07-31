@@ -51,7 +51,7 @@
     "local-demo": "npm run build && sh ./local-demo.sh --zip"
   },
   "dependencies": {
-    "@aurodesignsystem/auro-layover": "npm:@aurodesignsystem-dev/auro-layover@0.0.0-pr1.0",
+    "@aurodesignsystem/auro-layover": "npm:@aurodesignsystem-dev/auro-layover@0.0.0-pr1.6",
     "@lit/reactive-element": "^2.1.1",
     "lit": "^3.3.1"
   },
