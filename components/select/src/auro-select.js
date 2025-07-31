@@ -687,7 +687,7 @@ export class AuroSelect extends AuroElement {
       this.validate(this);
     });
 
-    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
+    this.menu.addEventListener('auroMenu-activatedOption', () => {
       // if (evt.detail) {
       //   evt.detail.scrollIntoView({
       //     alignToTop: false,

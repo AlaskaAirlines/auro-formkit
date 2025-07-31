@@ -77,7 +77,6 @@
 .container {
   overflow: auto;
   max-height: 75vh;
-
-  box-shadow: var(--ds-auro-dropdownbib-boxshadow-color);
   border-radius: var(--ds-border-radius);
+  box-shadow: var(--ds-auro-dropdownbib-boxshadow-color);
 }

@@ -3,9 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/*
-  eslint-disable
-  */
+/* eslint-disable */
 
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
@@ -82,6 +80,8 @@ export class AuroDropdown extends AuroElement {
     this.privateDefaults();
 
     this._createElementRefs();
+
+    this._handleTriggerClick = this._handleTriggerClick.bind(this);
   }
 
   /**
@@ -209,7 +209,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   toggle() {
-    this._layover?.toggle();
+    if (this.layover) this._layover.toggle();
   }
 
   /**
@@ -217,7 +217,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   hide() {
-    this._layover?.hide();
+    if (this.layover) this._layover.hide();
   }
 
   /**
@@ -519,7 +519,7 @@ export class AuroDropdown extends AuroElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.layover.disconnect();
+    if (this.layover) this.layover.disconnect();
     this.clearTriggerFocusEventBinding();
   }
 
@@ -804,7 +804,7 @@ export class AuroDropdown extends AuroElement {
     }
   }
 
-  _handleTriggerClick = (evt) => {
+  _handleTriggerClick(evt) {
     this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', { detail: { event: evt } }));
   }
 

@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
+/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, curly */
 
 // If using litElement base class
 import { css } from "lit";
@@ -625,7 +625,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
-    this.dropdown?.show();
+    if (this.dropdown) this.dropdown.show();
   }
 
   /**
