@@ -36,3 +36,7 @@
     width: 100%;
   }
 }
+
+::part(popover-trigger) {
+  width: 100%;
+}

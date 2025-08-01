@@ -13,7 +13,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@aurodesignsystem/auro-helptext": "*",
-    "@aurodesignsystem/auro-layover": "npm:@aurodesignsystem-dev/auro-layover@0.0.0-pr1.8",
     "@aurodesignsystem/auro-icon": "^8.0.2",
     "@floating-ui/dom": "^1.6.13",
     "@popperjs/core": "^2.11.8",
