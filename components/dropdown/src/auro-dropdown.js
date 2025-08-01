@@ -629,12 +629,12 @@ export class AuroDropdown extends AuroElement {
    * @param {Event} event - The original focus event.
    */
   bindFocusEventToTrigger(event) {
-    const dupEvent = new FocusEvent(event.type, {
-      bubbles: false,
-      cancelable: false,
-      composed: true,
-    });
-    this.trigger.dispatchEvent(dupEvent);
+    // const dupEvent = new FocusEvent(event.type, {
+    //   bubbles: false,
+    //   cancelable: false,
+    //   composed: true,
+    // });
+    //this.trigger.dispatchEvent(dupEvent);
   }
 
   /**
