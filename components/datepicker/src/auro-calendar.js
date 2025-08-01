@@ -201,7 +201,7 @@ export class AuroCalendar extends RangeDatepicker {
       this.utilCalRender.setFirstRenderableMonthDate(this);
       this.utilCal.assessNavigationButtonVisibility(this);
 
-      this.isFullscreen = this.dropdown.bibContent.hasAttribute('isFullscreen');
+      this.isFullscreen = this.dropdown.isBibFullscreen;
       this.utilCalRender.determineNumCalendarsToRender(this, this.isFullscreen);
 
       // Determine which month to render first
