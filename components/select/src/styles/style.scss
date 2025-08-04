@@ -33,6 +33,10 @@
   text-align: left;
 }
 
+:host([fluid]) {
+  display: block;
+}
+
 :host([layout*='emphasized']),
 :host([layout*='snowflake']) {
   [auro-dropdown] {

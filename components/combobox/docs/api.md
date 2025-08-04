@@ -1,5 +1,11 @@
 # auro-combobox
 
+## Attributes
+
+| Attribute | Description                                      |
+|-----------|--------------------------------------------------|
+| `fluid`   | When attribute is present, element will be 100% width of container element. |
+
 ## Properties
 
 | Property                        | Attribute                       | Type          | Default        | Description                                      |
