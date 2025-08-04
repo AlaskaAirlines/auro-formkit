@@ -161,7 +161,7 @@ export class AuroDropdown extends AuroElement {
     /**
      * @private
      */
-    this.layoverTag = versioning.generateTag("auro-formkit-dropdown-layover", layoverVersion, AuroLayover);
+    this._layoverTag = versioning.generateTag("auro-formkit-dropdown-layover", layoverVersion, AuroLayover);
 
     /**
      * @private
@@ -209,7 +209,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   toggle() {
-    if (this.layover) this._layover.toggle();
+    if (this._layover) this._layover.toggle();
   }
 
   /**
@@ -217,7 +217,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   hide() {
-    if (this.layover) this._layover.hide();
+    if (this._layover) this._layover.hide();
   }
 
   /**
@@ -825,15 +825,18 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
-      <${this.layoverTag} 
+      <${this._layoverTag} 
         ${ref(this._layoverRef)}
         .behavior="${this._currentBehavior}"
         .input="${this._inputInTrigger}"
         .minInputLength="${1}"
-        .offset="${4}"
+        .offset="${this.offset || 4}"
+        .useFlip=${!this.noFlip}
+        .placement="${this.placement || 'bottom-start'}"
         .showOnFocus="${this._currentBehavior !== 'input-fullscreen'}"
         .showOnHover="${this.hoverToggle}"
         .matchWidth="${this.matchWidth && !this.isBibFullscreen}"
+        ?disabled="${this.disabled}"
       >
         <div
           slot="trigger"
@@ -874,7 +877,7 @@ export class AuroDropdown extends AuroElement {
             <slot @slotchange="${this.handleDefaultSlot}"></slot>
           </div>
         </${this.dropdownBibTag}>
-      </${this.layoverTag}>
+      </${this._layoverTag}>
       <div class="${classMap(helpTextClasses)}">
         <slot name="helpText"></slot>
       </div>
