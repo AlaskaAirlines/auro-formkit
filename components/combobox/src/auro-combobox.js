@@ -542,7 +542,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   hideBib() {
-    if (this.drodown) this.dropdown.hide();
+    if (this.dropdown) this.dropdown.hide();
   }
 
   /**
