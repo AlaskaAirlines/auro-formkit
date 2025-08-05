@@ -834,6 +834,7 @@ export class AuroDropdown extends AuroElement {
         .useFlip=${!this.noFlip}
         .placement="${this.placement || 'bottom-start'}"
         .showOnFocus="${this._currentBehavior !== 'input-fullscreen'}"
+        .hideOnNoValue="${this._currentBehavior !== 'input-fullscreen'}"
         .showOnHover="${this.hoverToggle}"
         .matchWidth="${this.matchWidth && !this.isBibFullscreen}"
         ?disabled="${this.disabled}"

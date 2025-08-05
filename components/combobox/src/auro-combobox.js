@@ -1097,7 +1097,7 @@ export class AuroCombobox extends AuroElement {
     if (changedProperties.has('availableOptions')) {
       if (this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) {
         this.showBib();
-      } else {
+      } else if (!this.dropdown.isBibFullscreen) {
         this.hideBib();
       }
     }
