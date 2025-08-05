@@ -666,7 +666,7 @@ export class AuroSelect extends AuroElement {
       // For single select, we still use arrays but only take first value
       this.value = this.menu.value;
 
-      if (this.dropdown.isPopoverVisible) {
+      if (this.dropdown.isPopoverVisible && !this.multiSelect) {
         this.dropdown.hide();
       }
     });
