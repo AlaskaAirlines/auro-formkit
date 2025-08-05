@@ -657,10 +657,6 @@ export class AuroCombobox extends AuroElement {
       }, 0);
     });
 
-    this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
-      this.showBib();
-    });
-
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
