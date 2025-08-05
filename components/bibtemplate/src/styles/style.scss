@@ -49,6 +49,7 @@
   }
 
   #bodyContainer {
+    overflow: auto;
     margin-top: var(--ds-size-100, #{vac.$ds-size-100});
   }
 }
