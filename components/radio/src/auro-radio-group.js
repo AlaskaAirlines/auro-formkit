@@ -332,12 +332,15 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   initializeIndex() {
-    if (!this.disabled) {
+    if (!this.disabled && this.items && this.items.length > 0) {
       const index = this.items.findIndex((item) => item.hasAttribute('checked') && !item.hasAttribute('disabled'));
       const nextEnabledIndex = this.items.findIndex((item) => !item.hasAttribute('disabled'));
 
       this.index = index >= 0 ? index : nextEnabledIndex;
-      this.items[this.index].setAttribute('tabindex', 0);
+
+      if (this.items[this.index]) {
+        this.items[this.index].setAttribute('tabindex', 0);
+      };
     }
   }
 

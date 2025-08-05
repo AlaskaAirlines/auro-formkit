@@ -115,8 +115,8 @@ export class AuroRadio extends LitElement {
       },
 
       /**
+       * Don't add to api.md since changing of this can easily break a11y.
        * @private
-       * not to add to api.md since changing of this can easily break a11y.
        */
       role: {
         type: String,

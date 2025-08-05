@@ -315,16 +315,16 @@ export default class AuroFormValidation {
       }
 
       this.getErrorMessage(elem);
-
-      elem.dispatchEvent(new CustomEvent('auroFormElement-validated', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          validity: elem.validity,
-          message: elem.errorMessage
-        }
-      }));
     }
+
+    elem.dispatchEvent(new CustomEvent('auroFormElement-validated', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        validity: elem.validity,
+        message: elem.errorMessage
+      }
+    }));
   }
 
   /**

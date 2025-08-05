@@ -588,7 +588,7 @@ export class AuroCombobox extends AuroElement {
 
       // wait a frame in case the bib gets hide immediately after showing because there is no value
       setTimeout(() => {
-        if (document.activeElement === this) {
+        if (this.componentHasFocus) {
           this.setInputFocus();
         }
       }, 0);
@@ -753,13 +753,16 @@ export class AuroCombobox extends AuroElement {
      * Validate every time we remove focus from the combo box.
      */
     this.addEventListener('focusout', () => {
-      if (document.activeElement !== this) {
+      if (!this.componentHasFocus) {
         this.validate();
       }
     });
 
     // Handle validation messages from auroFormElement-validated event
     this.input.addEventListener('auroFormElement-validated', (evt) => {
+      // not to bubble up input's validated event.
+      evt.stopPropagation();
+
       this.errorMessage = evt.detail.message;
     });
   }
@@ -830,7 +833,7 @@ export class AuroCombobox extends AuroElement {
     this.handleMenuOptions();
 
     // Validate only if the value was set programmatically
-    if (document.activeElement !== this) {
+    if (!this.componentHasFocus) {
       this.validate();
     }
 
@@ -870,7 +873,7 @@ export class AuroCombobox extends AuroElement {
           }
         } else {
           setTimeout(() => {
-            if (document.activeElement !== this) {
+            if (!this.componentHasFocus) {
               this.hideBib();
             }
           }, 0);
@@ -991,7 +994,7 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      if (this.availableOptions && this.availableOptions.length > 0 && document.activeElement === this) {
+      if (this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) {
         this.showBib();
       } else {
         this.hideBib();
