@@ -1,19 +1,17 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
+/* eslint-disable no-magic-numbers,array-element-newline */
 
 import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 
-import '@aurodesignsystem/auro-menu/src/registered';
-
-import '@aurodesignsystem/auro-checkbox/src/registered';
-import '@aurodesignsystem/auro-combobox/src/registered';
-import '@aurodesignsystem/auro-counter/src/registered';
-import '@aurodesignsystem/auro-datepicker/src/registered';
-import '@aurodesignsystem/auro-input/src/registered';
-import '@aurodesignsystem/auro-radio/src/registered';
-import '@aurodesignsystem/auro-select/src/registered';
+import '@aurodesignsystem/auro-menu/src/registered.js';
+import '@aurodesignsystem/auro-checkbox/src/registered.js';
+import '@aurodesignsystem/auro-combobox/src/registered.js';
+import '@aurodesignsystem/auro-counter/src/registered.js';
+import '@aurodesignsystem/auro-datepicker/src/registered.js';
+import '@aurodesignsystem/auro-input/src/registered.js';
+import '@aurodesignsystem/auro-radio/src/registered.js';
+import '@aurodesignsystem/auro-select/src/registered.js';
 
 
 const CHECKBOX_TEMPLATE = html`
@@ -114,6 +112,9 @@ const DATEPICKER_TEMPLATE = html`
 </auro-datepicker>
 `;
 
+/**
+ *
+ */
 async function getFixtureWithValueAttr(htmlTemplate, value) {
   const element = await fixture(htmlTemplate);
   if (value) {
@@ -123,6 +124,9 @@ async function getFixtureWithValueAttr(htmlTemplate, value) {
   return element;
 }
 
+/**
+ *
+ */
 async function getFixtureWithValueProp(htmlTemplate, value) {
   const element = await fixture(htmlTemplate);
   if (value) {
@@ -261,7 +265,8 @@ describe('counter', () => {
 // counter-group does not support this
 describe.skip('counter-group', () => {
   it('value attribute works ', async () => {
-    const el = await getFixtureWithValueAttr(COUNTER_GROUP_TEMPLATE, JSON.stringify({'first': 2, 'second': 4}));
+    const el = await getFixtureWithValueAttr(COUNTER_GROUP_TEMPLATE, JSON.stringify({'first': 2,
+      'second': 4}));
 
     await expect(el.children[0].value).to.eql(2);
     await expect(el.children[1].value).to.eql(4);
@@ -269,7 +274,8 @@ describe.skip('counter-group', () => {
   });
 
   it('value property works', async () => {
-    const el = await getFixtureWithValueProp(COUNTER_GROUP_TEMPLATE, {'first': 2, 'second': 4});
+    const el = await getFixtureWithValueProp(COUNTER_GROUP_TEMPLATE, {'first': 2,
+      'second': 4});
     await expect(el.children[0].value).to.eql(2);
     await expect(el.children[1].value).to.eql(4);
     await expect(el.value).to.eql(3);
