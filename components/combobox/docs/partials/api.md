@@ -33,7 +33,7 @@ This example demonstrates a data driven combobox. The data is used to populate t
 
 The menu in this example was populated from data from a country/city API. To keep the data set small, the data in the menu is based off an API call that returns all countries and cities that contain the substring "**germ**" (non case-sensitive) in their name.
 
-<div class="exampleWrapper">
+<div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dynamicMenu.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>

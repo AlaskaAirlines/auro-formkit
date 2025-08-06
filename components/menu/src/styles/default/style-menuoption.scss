@@ -74,6 +74,10 @@
   }
 }
 
+[slot="displayValue"] {
+  display: none;
+}
+
 :host([loadingplaceholder]) {
   .wrapper {
     padding-left: calc(var(--ds-size-150, vac.$ds-size-150) + var(--ds-size-300, vac.$ds-size-300) + var(--ds-size-100, vac.$ds-size-100));
