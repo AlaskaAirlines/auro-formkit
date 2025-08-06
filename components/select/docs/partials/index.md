@@ -110,7 +110,7 @@ The custom display value content is inserted using `slot="displayValue"` on each
 The following example demonstrates menu options with an icon and text. When selected, the auro-select renders an icon with no text.
 
 
-<div class="exampleWrapper--ondark">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/constantDisplayValue.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
