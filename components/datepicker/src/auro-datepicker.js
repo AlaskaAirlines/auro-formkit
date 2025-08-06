@@ -407,7 +407,7 @@ export class AuroDatePicker extends AuroElement {
        * "top" | "right" | "bottom" | "left" |
        * "bottom-start" | "top-start" | "top-end" |
        * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
+       * "left-start" | "left-end".
        * @default bottom-start
        */
       placement: {

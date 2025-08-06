@@ -7,7 +7,6 @@
 
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host {
   ::slotted([slot^="date_"]) {
