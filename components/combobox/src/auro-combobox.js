@@ -62,6 +62,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
+    this.touched = false;
     this.dropdownOpen = false;
     this.dropdownId = undefined;
     this.onDark = false;
@@ -326,6 +327,18 @@ export class AuroCombobox extends AuroElement {
        */
       setCustomValidityValueMissing: {
         type: String
+      },
+
+      /**
+       * Indicates whether the combobox is in a dirty state (has been interacted with).
+       * @type {boolean}
+       * @default false
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
       },
 
       /**
@@ -786,14 +799,6 @@ export class AuroCombobox extends AuroElement {
     this.input.addEventListener('input', () => {
       this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue} }));
     });
-
-    // Handle validation messages from auroFormElement-validated event
-    this.input.addEventListener('auroFormElement-validated', (evt) => {
-      // not to bubble up input's validated event.
-      evt.stopPropagation();
-
-      this.errorMessage = evt.detail.message;
-    });
   }
 
   /**
@@ -910,7 +915,13 @@ export class AuroCombobox extends AuroElement {
     });
 
     this.addEventListener('focusin', () => {
+      this.touched = true;
       this.focus();
+    });
+
+    this.addEventListener('auroFormElement-validated', (evt) => {
+      this.input.validity = evt.detail.validity;
+      this.input.errorMessage = evt.detail.message;
     });
   }
 
