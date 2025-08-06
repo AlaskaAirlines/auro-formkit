@@ -988,7 +988,9 @@ export class AuroCombobox extends AuroElement {
    */
   clear() {
     this.input.clear();
-    this.menu.reset();
+    if (this.menu.value || this.menu.optionSelected) {
+      this.menu.reset();
+    }
     this.optionSelected = undefined;
     this.value = undefined;
   }
@@ -1081,6 +1083,9 @@ export class AuroCombobox extends AuroElement {
   handleSlotChange(event) {
     switch (event.target.name) {
       case '':
+        if (this.value !== this.menu.value) {
+          this.menu.value = this.value;
+        }
         // Treat only generic menuoptions.
         this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
         this.options.forEach((opt) => {

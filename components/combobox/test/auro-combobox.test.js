@@ -374,7 +374,6 @@ function runFulltest(mobileview) {
 
     await elementUpdated(el);
 
-    console.log(el.optionSelected);
     await expect(el.optionSelected === undefined).to.be.true;
   });
 

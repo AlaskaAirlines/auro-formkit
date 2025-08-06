@@ -690,8 +690,10 @@ export class AuroMenu extends AuroElement {
     this.items.forEach((opt) => {
       if (this.multiSelect && this.formattedValue.includes(opt.value)) {
         this.handleSelectState(opt);
+        this.notifySelectionChange();
       } else if (opt.value === this.value) {
         this.handleSelectState(opt);
+        this.notifySelectionChange();
       }
     });
   }
