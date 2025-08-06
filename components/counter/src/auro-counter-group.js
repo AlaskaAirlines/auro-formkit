@@ -680,6 +680,7 @@ export class AuroCounterGroup extends AuroElement {
       <${this.dropdownTag} 
         noHideOnThisFocusLoss
         chevron
+        fluid
         part="dropdown"
         ?autoPlacement="${this.autoPlacement}"
         ?error="${this.validity !== undefined && this.validity !== 'valid'}"

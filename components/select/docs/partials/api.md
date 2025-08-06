@@ -228,6 +228,24 @@ Use the `helpText` slot to provide additional information back to your user abou
 
 </auro-accordion>
 
+#### fluid <a name="fluid"></a>
+
+Use `fluid` attribute to make `<auro-select>` to take the full width of its container.
+
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fluid.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/fluid.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+
 ## Functional Examples
 
 ### Reset State

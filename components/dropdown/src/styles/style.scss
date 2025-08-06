@@ -2,8 +2,16 @@
 
 :host {
   position: relative;
-  display: block;
+  display: inline-block;
   text-align: left;
+}
+
+:host([fluid]) {
+  display: block;
+
+  ::slotted([slot='trigger']) {
+    width: 100%;
+  }
 }
 
 :host([open]) {
