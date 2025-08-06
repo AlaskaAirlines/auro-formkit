@@ -37,6 +37,7 @@ import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import helpTextVersion from './helptextVersion.js';
 
 import styleCss from "./styles/style-css.js";
+import emphasizedColorCss from "./styles/emphasized/color-css.js";
 import { ifDefined } from "lit-html/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -434,6 +435,7 @@ export class AuroSelect extends AuroElement {
       css`${shapeSizeCss}`,
       css`${tokensCss}`,
       css`${styleCss}`,
+      css`${emphasizedColorCss}`
     ];
   }
 

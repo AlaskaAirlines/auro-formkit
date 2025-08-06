@@ -36,6 +36,7 @@ export class AuroElement extends LitElement {
 
   /**
    * Returns true if the element has focus.
+   * @private
    * @returns {boolean} - Returns true if the element has focus.
    */
   get componentHasFocus() {

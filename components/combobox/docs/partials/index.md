@@ -24,7 +24,7 @@
 
 ### Emphasized
 
-<div class="exampleWrapper--ondark">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
