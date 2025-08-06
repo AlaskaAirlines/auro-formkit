@@ -9,9 +9,8 @@
   display: block;
   text-align: left;
 
-  [auro-input] {
-    --ds-auro-input-background-color: transparent;
-    --ds-auro-input-container-color: transparent;
+  [auro-dropdown] {
+    --ds-auro-dropdown-trigger-background-color: transparent;
   }
 
   #inputInBib {

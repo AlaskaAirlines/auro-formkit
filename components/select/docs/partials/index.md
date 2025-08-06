@@ -71,14 +71,14 @@ The `emphasized` layout supports the following shapes:
 The `emphasized` layout supports the following sizes:
 - `xl`
 
-<div class="exampleWrapper--ondark">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic-ondark.html) -->
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/basic-ondark.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -110,7 +110,7 @@ The custom display value content is inserted using `slot="displayValue"` on each
 The following example demonstrates menu options with an icon and text. When selected, the auro-select renders an icon with no text.
 
 
-<div class="exampleWrapper--ondark">
+<div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/constantDisplayValue.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
