@@ -17,15 +17,15 @@ export function dynamicMenuExample() {
     resetMenu(initialMenu);
 
     for (let index = 0; index < data.length; index++) {
-      let country = data[index]['country'];
-      let cities = data[index]['cities'];
+      const country = data[index]['country'];
+      const cities = data[index]['cities'];
 
-      generateMenuOptionHtml(initialMenu, country, country);
+      generateMenuOptionHtml(initialMenu, country, country.substring(0, 3).toUpperCase());
 
       for (let indexB = 0; indexB < cities.length; indexB++) {
-        let subMenu = document.createElement('auro-menu');
+        const subMenu = document.createElement('auro-menu');
 
-        generateMenuOptionHtml(subMenu, cities[indexB], cities[indexB]);
+        generateMenuOptionHtml(subMenu, cities[indexB], cities[indexB].substring(0, 3).toUpperCase());
 
         initialMenu.appendChild(subMenu);
       }
@@ -34,12 +34,15 @@ export function dynamicMenuExample() {
 
   // Helper function that generates HTML for menuoptions
   function generateMenuOptionHtml(menu, label, value) {
-    let option = document.createElement('auro-menuoption');
+    const option = document.createElement('auro-menuoption');
+    const displayValue = document.createElement('div');
+    displayValue.setAttribute("slot", "displayValue");
+    displayValue.innerHTML = value;
 
     option.value = value;
     option.innerHTML = label;
-
     menu.appendChild(option);
+    option.appendChild(displayValue);
   }
 
   // Main javascript that runs all JS to create example

@@ -365,6 +365,12 @@ export class AuroMenu extends AuroElement {
       if (changedProperties.has('matchWord') && regexWord &&
           isOptionInteractive(option) && !option.hasAttribute('persistent')) {
         const nested = option.querySelectorAll('.nestingSpacer');
+
+        const displayValueEl = option.querySelector('[slot="displayValue"]');
+        if (displayValueEl) {
+          option.removeChild(displayValueEl);
+        }
+
         // Create nested spacers
         const nestingSpacerBundle = [...nested].map(() => this.nestingSpacer).join('');
 
@@ -374,6 +380,9 @@ export class AuroMenu extends AuroElement {
             regexWord,
             (match) => `<strong>${match}</strong>`
           );
+        if (displayValueEl) {
+          option.append(displayValueEl);
+        }
       }
 
       // Update disabled state
@@ -604,7 +613,7 @@ export class AuroMenu extends AuroElement {
       // In multiselect, toggle individual selections
       this.toggleOption(option);
       // In single select, only handle selection of new options
-    } else if (!this.isOptionSelected(option)) {
+    } else if (this.option !== this.optionSelected || !this.isOptionSelected(option)) {
       this.clearSelection();
       this.handleSelectState(option);
     }
@@ -635,7 +644,7 @@ export class AuroMenu extends AuroElement {
    * @param {MouseEvent} event - Event object from the browser.
    */
   handleMouseSelect(event) {
-    if (event.target === this) {
+    if (!this.rootMenu || event.target === this) {
       return;
     }
 
@@ -662,7 +671,7 @@ export class AuroMenu extends AuroElement {
    * @private
    * @param {Event} evt - slotchange Event.
    */
-  handleSlotChange(evt) {
+  handleSlotChange() {
     if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
       this.rootMenu = false;
     }
@@ -678,9 +687,10 @@ export class AuroMenu extends AuroElement {
       ]));
     }
 
-    const options = evt.target.assignedElements();
-    options.forEach((opt) => {
-      if (opt.value === this.value) {
+    this.items.forEach((opt) => {
+      if (this.multiSelect && this.formattedValue.includes(opt.value)) {
+        this.handleSelectState(opt);
+      } else if (opt.value === this.value) {
         this.handleSelectState(opt);
       }
     });

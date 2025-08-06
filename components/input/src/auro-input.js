@@ -264,7 +264,7 @@ export class AuroInput extends BaseInput {
     let nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
 
     // Handle when DisplayValue is multi-level slot content (e.g. combobox passing displayValue to input)
-    if (nodes[0].tagName === 'SLOT') {
+    if (nodes && nodes[0] && nodes[0].tagName === 'SLOT') {
       nodes = nodes[0].assignedNodes();
     }
 

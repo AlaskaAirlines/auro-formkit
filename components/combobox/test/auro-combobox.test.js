@@ -374,7 +374,8 @@ function runFulltest(mobileview) {
 
     await elementUpdated(el);
 
-    await expect(el.optionSelected).to.be.equal(undefined);
+    console.log(el.optionSelected);
+    await expect(el.optionSelected === undefined).to.be.true;
   });
 
   it('makes a selection using the keyboard', async () => {
@@ -420,13 +421,13 @@ function runFulltest(mobileview) {
 
     await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
 
-    // no error when input has a value
+    // error because no option was selected yet
     setInputValue(el, 'pp');
     el.shadowRoot.activeElement.blur();
 
     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+    await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
   });
 
   it('fires `auroFormElement-validated` event after validation', async () => {

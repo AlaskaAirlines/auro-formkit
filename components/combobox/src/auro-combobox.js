@@ -42,7 +42,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
  * @slot label - Defines the content of the label.
  * @slot helpText - Defines the content of the helpText.
  * @slot displayValue - Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts.
- * @event auroCombobox-valueSet - Notifies that the component has a new value set.
+ * @event auroCombobox-valueSet - (Deprecated) Notifies that the component has a new value set.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
 
@@ -356,7 +356,8 @@ export class AuroCombobox extends AuroElement {
        * Value selected for the dropdown menu.
        */
       value: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /* eslint-disable jsdoc/require-description-complete-sentence */
@@ -401,6 +402,17 @@ export class AuroCombobox extends AuroElement {
       css`${styleEmphasizedCss}`,
       css`${styleSnowflakeCss}`
     ];
+  }
+
+  /**
+   * Returns the current value of the input element within the combobox.
+   * @returns {string|undefined} The value of the input element, or undefined if the input is not present.
+   */
+  get inputValue() {
+    if (!this.input) {
+      return undefined;
+    }
+    return this.input.value;
   }
 
   /**
@@ -491,10 +503,31 @@ export class AuroCombobox extends AuroElement {
     // Wait a lifecycle for child components to update
     await Promise.all([this.menu.updateComplete]);
 
-    if (this.menu.optionSelected && this.menu.optionSelected.textContent.length > 0) {
-      this.input.value = this.menu.optionSelected.textContent;
-    } else {
-      this.input.value = this.value;
+    this.updateDisplayValue();
+  }
+
+  /**
+   * Update displayValue or input.value, it's called when making a selection.
+   * @private
+   */
+  updateDisplayValue() {
+    if (this.layout === 'classic') {
+      if (this.menu.optionSelected && this.menu.optionSelected.textContent.length > 0) {
+        this.input.value = this.menu.optionSelected.textContent;
+      } else {
+        this.input.value = this.value;
+      }
+    }
+    const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]');
+    if (displayValueInTrigger) {
+      displayValueInTrigger.remove();
+    }
+
+    if (this.menu.optionSelected) {
+      const displayValueEl = this.menu.optionSelected.querySelector("[slot='displayValue']");
+      if (displayValueEl) {
+        this.input.appendChild(displayValueEl.cloneNode(true));
+      }
     }
   }
 
@@ -517,8 +550,8 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleMenuOptions() {
-
     this.resetMenuMatchword();
+
     this.generateOptionsArray();
     this.availableOptions = [];
     this.updateFilter();
@@ -695,9 +728,7 @@ export class AuroCombobox extends AuroElement {
           this.menu.value = this.value;
         }
 
-        if (this.input.value !== this.optionSelected.textContent) {
-          this.input.value = this.optionSelected.textContent;
-        }
+        this.updateDisplayValue();
 
         if (this.menu.matchWord !== this.input.value) {
           this.menu.matchWord = this.input.value;
@@ -705,12 +736,6 @@ export class AuroCombobox extends AuroElement {
 
         // update the hidden state of options based on newly selected value
         this.handleMenuOptions();
-
-        this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
-          bubbles: true,
-          cancelable: false,
-          composed: true,
-        }));
       }
 
       // dropdown bib should hide when making a selection
@@ -756,6 +781,10 @@ export class AuroCombobox extends AuroElement {
       if (!this.componentHasFocus) {
         this.validate();
       }
+    });
+
+    this.input.addEventListener('input', () => {
+      this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue} }));
     });
 
     // Handle validation messages from auroFormElement-validated event
@@ -807,29 +836,9 @@ export class AuroCombobox extends AuroElement {
     this.menu.matchWord = this.input.value;
     this.optionActive = null;
 
-    let hasChange = false;
-
-    if (!this.value || this.value !== this.input.value) {
-      this.menu.value = this.input.value;
-      this.value = this.menu.value;
-      hasChange = true;
-      this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
-        bubbles: true,
-        cancelable: false,
-        composed: true,
-      }));
+    if (!this.input.value) {
+      this.clear();
     }
-
-    if (this.optionSelected && this.input.value !== this.optionSelected.textContent) {
-      this.optionSelected = undefined;
-      hasChange = true;
-    }
-
-    if (!hasChange) {
-      return;
-    }
-
-    this.menu.clearSelection();
     this.handleMenuOptions();
 
     // Validate only if the value was set programmatically
@@ -956,6 +965,9 @@ export class AuroCombobox extends AuroElement {
    */
   reset() {
     this.input.reset();
+    this.menu.reset();
+    this.optionSelected = undefined;
+    this.value = undefined;
     this.validation.reset(this);
   }
 
@@ -965,6 +977,9 @@ export class AuroCombobox extends AuroElement {
    */
   clear() {
     this.input.clear();
+    this.menu.reset();
+    this.optionSelected = undefined;
+    this.value = undefined;
   }
 
   /**
@@ -991,6 +1006,19 @@ export class AuroCombobox extends AuroElement {
 
       // Sync the input, menu, and optionSelected states
       await this.syncValuesAndStates();
+
+      // Deprecated, need to be removed.
+      this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
+        bubbles: true,
+        cancelable: false,
+        composed: true,
+      }));
+
+      this.dispatchEvent(new CustomEvent('input', {
+        bubbles: true,
+        cancelable: false,
+        composed: true,
+      }));
     }
 
     if (changedProperties.has('availableOptions')) {
@@ -1121,7 +1149,7 @@ export class AuroCombobox extends AuroElement {
               .type="${this.type}"
               ?disabled="${this.disabled}"
               ?icon="${this.triggerIcon}"
-              ?noValidate="${this.noValidate}"
+              noValidate="true"
               ?onDark="${this.onDark}"
               ?required="${this.required}"
               a11yRole="combobox"
