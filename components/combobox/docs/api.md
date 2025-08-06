@@ -6,7 +6,7 @@
 |---------------------------------|---------------------------------|-----------|-----------------------|----------------|--------------------------------------------------|
 | `autoPlacement`                 | `autoPlacement`                 |           | `boolean`             |                | If declared, bib's position will be automatically calculated where to appear. |
 | `autocomplete`                  | `autocomplete`                  |           | `string`              | "false"        | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
-| `checkmark`                     | `checkmark`                     |           | `boolean`             |                | When attribute is present auro-menu will apply checkmarks to selected options. |
+| `checkmark`                     | `checkmark`                     |           | `boolean`             |                | When attribute is present auro-menu will apply check marks to selected options. |
 | `disabled`                      | `disabled`                      |           | `boolean`             |                | If set, disables the combobox.                   |
 | `error`                         | `error`                         |           | `string`              |                | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `format`                        | `format`                        |           | `string`              |                | Specifies the input mask format.                 |
@@ -22,6 +22,7 @@
 | `offset`                        | `offset`                        |           | `number`              | "0"            | Gap between the trigger element and bib.         |
 | `onDark`                        | `onDark`                        |           | `boolean`             |                | If declared, onDark styles will be applied to the trigger. |
 | `optionSelected`                | `optionSelected`                |           | `HTMLElement`         |                | Specifies the current selected option.           |
+| `persistInput`                  | `persistInput`                  |           | `Boolean`             |                | If declared, selecting a menu option will not change the input value. By doing so,<br />the current menu filter will be preserved and the user can continue from their last<br />filter state. It is recommended to use this in combination with the `displayValue` slot. |
 | `placeholder`                   | `placeholder`                   |           | `string`              |                | Define custom placeholder text, only supported by date input formats. |
 | `placement`                     | `placement`                     |           | `string`              | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
 | `required`                      | `required`                      |           | `boolean`             |                | Populates the `required` attribute on the input. Used for client-side validation. |
@@ -51,8 +52,8 @@
 |-----------------------------|------------------------------------------------|--------------------------------------------------|
 | `auroCombobox-valueSet`     | `CustomEvent<any>`                             | (Deprecated) Notifies that the component has a new value set. |
 | `auroFormElement-validated` |                                                | Notifies that the component value(s) have been validated. |
-| `input`                     | `CustomEvent<any>`                             |                                                  |
-| `inputValue`                | `CustomEvent<{ value: string \| undefined; }>` |                                                  |
+| `input`                     | `CustomEvent<any>`                             | Notifies that the component has a new value set. |
+| `inputValue`                | `CustomEvent<{ value: string \| undefined; }>` | Notifies that the components internal HTML5 input value has changed. |
 
 ## Slots
 
