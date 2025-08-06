@@ -99,7 +99,13 @@ export class AuroInput extends BaseInput {
    * @private
    */
   get inputHidden() {
-    return (this.hasDisplayValueContent && !this.hasFocus && this.hasValue) || ((!this.value || this.value.length === 0) && !this.hasFocus && (!this.placeholder || this.placeholder === ''));
+    return (
+      this.hasDisplayValueContent && !this.hasFocus && this.hasValue) ||
+      (
+        (!this.value || this.value.length === 0) &&
+        !this.hasFocus &&
+        (!this.placeholder || this.placeholder === '')
+      );
   }
 
   /**
@@ -119,7 +125,7 @@ export class AuroInput extends BaseInput {
    * @private
    */
   get labelHidden() {
-    return this.hasDisplayValueContent && !this.hasFocus && this.hasValue;
+    return this.hasDisplayValueContent && !this.dvInputOnly && !this.hasFocus && this.hasValue;
   }
 
   /**
@@ -128,18 +134,26 @@ export class AuroInput extends BaseInput {
    * @returns {string} - The font class for the label.
    */
   get labelFontClass() {
-    const isHidden = this.inputHidden;
-
     if (this.layout.startsWith('emphasized')) {
-      return this.noFocusOrValue ? 'accent-xl' : 'body-sm';
+      let typeSize = 'body-sm';
+
+      if (this.hasDisplayValueContent) {
+        if (!this.hasValue) {
+          typeSize = 'accent-xl';
+        }
+      } else if (this.noFocusOrValue) {
+        typeSize = 'accent-xl';
+      }
+
+      return typeSize;
     }
 
     if (this.layout === 'snowflake') {
-      return isHidden ? 'body-lg' : 'body-xs';
+      return this.hasValue || this.hasFocus || this.placeholder ? 'body-xs' : 'body-lg';
     }
 
     // classic layout (default)
-    return isHidden ? 'body-default' : 'body-xs';
+    return ((!this.value || this.value.length === 0) && !this.placeholder && !this.hasFocus) ? 'body-default' : 'body-xs';
   }
 
   /**
@@ -149,7 +163,17 @@ export class AuroInput extends BaseInput {
    */
   get inputFontClass() {
     if (this.layout.startsWith('emphasized')) {
-      return this.noFocusOrValue ? 'body-sm' : 'accent-xl';
+      let typeSize = 'accent-xl';
+
+      if (this.hasDisplayValueContent) {
+        if (!this.hasValue) {
+          typeSize = 'body-sm';
+        }
+      } else if (this.noFocusOrValue) {
+        typeSize = 'body-sm';
+      }
+
+      return typeSize;
     }
 
     if (this.layout === 'snowflake') {
@@ -188,6 +212,13 @@ export class AuroInput extends BaseInput {
   get commonInputClasses() {
     return {
       'util_displayHiddenVisually': this.inputHidden,
+      [this.inputFontClass]: true,
+    };
+  }
+
+  get commonDisplayValueWrapperClasses() {
+    return {
+      'displayValueWrapper': true,
       [this.inputFontClass]: true,
     };
   }
@@ -355,7 +386,7 @@ export class AuroInput extends BaseInput {
         type="${this.type === "password" && this.showPassword ? "text" : this.getInputType(this.type)}"
       />
       <div class="${classMap(displayValueClasses)}" aria-hidden="true" part="displayValue">
-        <div class="displayValueWrapper">
+        <div class="${classMap(this.commonDisplayValueWrapperClasses)}">
           <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
         </div>
       </div>
