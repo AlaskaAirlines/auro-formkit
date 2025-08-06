@@ -11,26 +11,6 @@
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-combobox"
   },
-  "dependencies": {
-    "@alaskaairux/icons": "^5.3.0",
-    "@aurodesignsystem/auro-bibtemplate": "*",
-    "@aurodesignsystem/auro-dropdown": "*",
-    "@aurodesignsystem/auro-input": "*",
-    "@aurodesignsystem/auro-menu": "*",
-    "chalk": "^5.4.1",
-    "lit": "^3.2.1"
-  },
-  "devDependencies": {
-    "@auro-formkit/build-tools": "*",
-    "@auro-formkit/config": "*",
-    "@auro-formkit/form-validation": "*",
-    "@auro-formkit/typescript": "*",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "rollup": "^4.39.0",
-    "rollup-plugin-serve": "^3.0.0",
-    "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0"
-  },
   "nodemonConfig": {
     "ignore": [
       "*-css.js",
@@ -59,7 +39,10 @@
     "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --watch --port 7708",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
+    "lint:fix": "npm-run-all scssLint:fix esLint:fix",
     "scssLint": "stylelint \"./src/**/*.scss\"",
-    "esLint": "eslint \"./src/**/*.js\""
+    "esLint": "eslint \"./src/**/*.js\"",
+    "scssLint:fix": "stylelint \"./src/**/*.scss\" --fix",
+    "esLint:fix": "eslint \"./src/**/*.js\" --fix"
   }
 }

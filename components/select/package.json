@@ -11,28 +11,6 @@
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-select"
   },
-  "dependencies": {
-    "@aurodesignsystem/auro-dropdown": "*",
-    "@aurodesignsystem/auro-menu": "*",
-    "chalk": "^5.4.1",
-    "lit-element": "^4.1.1",
-    "lit-html": "^3.2.1"
-  },
-  "devDependencies": {
-    "@alaskaairux/icons": "^5.3.0",
-    "@auro-formkit/build-tools": "*",
-    "@auro-formkit/config": "*",
-    "@auro-formkit/form-validation": "*",
-    "@auro-formkit/typescript": "*",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "compression": "^1.8.0",
-    "rollup": "^4.39.0",
-    "rollup-plugin-serve": "^3.0.0",
-    "stylelint": "^16.18.0",
-    "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0"
-  },
   "nodemonConfig": {
     "ignore": [
       "*-css.js",
@@ -61,7 +39,10 @@
     "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --watch  --port 7700",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
+    "lint:fix": "npm-run-all scssLint:fix esLint:fix",
     "scssLint": "stylelint \"./src/**/*.scss\"",
-    "esLint": "eslint \"./src/**/*.js\""
+    "esLint": "eslint \"./src/**/*.js\"",
+    "scssLint:fix": "stylelint \"./src/**/*.scss\" --fix",
+    "esLint:fix": "eslint \"./src/**/*.js\" --fix"
   }
 }

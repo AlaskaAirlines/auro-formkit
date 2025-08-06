@@ -8,19 +8,6 @@
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
   "private": true,
-  "dependencies": {
-    "chalk": "^5.4.1",
-    "lit": "^3.2.1"
-  },
-  "devDependencies": {
-    "@auro-formkit/build-tools": "*",
-    "@auro-formkit/config": "*",
-    "@auro-formkit/typescript": "*",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "rollup": "^4.39.0",
-    "rollup-plugin-serve": "^3.0.0",
-    "wc-sass-render": "^1.4.0"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -31,6 +18,8 @@
     "clean": "rm -rf dist build",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all esLint",
-    "esLint": "eslint \"./src/**/*.js\""
+    "esLint": "eslint \"./src/**/*.js\"",
+    "lint:fix": "npm-run-all esLint:fix",
+    "esLint:fix": "eslint \"./src/**/*.js\" --fix"
   }
 }

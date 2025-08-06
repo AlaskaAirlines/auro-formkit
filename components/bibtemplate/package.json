@@ -8,13 +8,6 @@
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
   "private": true,
-  "dependencies": {
-    "@aurodesignsystem/auro-button": "^11.3.0",
-    "@aurodesignsystem/auro-header": "^4.0.2",
-    "@aurodesignsystem/auro-icon": "^8.1.2",
-    "chalk": "^5.4.1",
-    "lit": "^3.2.1"
-  },
   "devDependencies": {
     "@auro-formkit/build-tools": "*",
     "@auro-formkit/config": "*",
@@ -50,7 +43,10 @@
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
+    "lint:fix": "npm-run-all scssLint:fix esLint:fix",
     "scssLint": "stylelint \"./src/**/*.scss\"",
-    "esLint": "eslint \"./src/**/*.js\""
+    "esLint": "eslint \"./src/**/*.js\"",
+    "scssLint:fix": "stylelint \"./src/**/*.scss\" --fix",
+    "esLint:fix": "eslint \"./src/**/*.js\" --fix"
   }
 }
