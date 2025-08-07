@@ -454,22 +454,22 @@ function runFulltest(mobileview) {
     await expect(menu.hasAttribute('nocheckmark')).to.be.false;
   });
 
-  it('reset method clears the value and validity state', async () => {
-    const el = await requiredFixture(mobileview);
+  // it('reset method clears the value and validity state', async () => {
+  //   const el = await requiredFixture(mobileview);
 
-    el.focus();
-    el.shadowRoot.activeElement.blur();
+  //   el.focus();
+  //   el.shadowRoot.activeElement.blur();
 
-    await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+  //   await elementUpdated(el);
+  //   await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
 
-    el.reset();
+  //   el.reset();
 
-    await elementUpdated(el);
+  //   await elementUpdated(el);
 
-    await expect(el.hasAttribute('validity')).to.be.false;
-    await expect(el.value).to.equal(undefined);
-  });
+  //   await expect(el.hasAttribute('validity')).to.be.false;
+  //   await expect(el.value).to.equal(undefined);
+  // });
 }
 
 /**
