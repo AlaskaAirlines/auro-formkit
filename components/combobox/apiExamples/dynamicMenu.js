@@ -2,7 +2,7 @@
 // -----------------------
 import { DynamicData } from './dynamicMenuDataApi';
 
-export function dynamicMenuExample() {
+export async function dynamicMenuExample() {
   // Resets the root menu
   function resetMenu(root) {
     while (root.firstChild) {
@@ -47,9 +47,9 @@ export function dynamicMenuExample() {
 
   // Main javascript that runs all JS to create example
   const dynamicData = new DynamicData();
-  const dynamicMenuExample = document.querySelector('#dynamicMenuExample');
-  const dropdownEl = dynamicMenuExample.shadowRoot.querySelector(dynamicMenuExample.dropdownTag._$litStatic$);
-  const inputEl = dropdownEl.querySelector(dynamicMenuExample.inputTag._$litStatic$);
+  const dynamicMenuExampleEl = document.querySelector('#dynamicMenuExample');
+  const dropdownEl = dynamicMenuExampleEl.shadowRoot.querySelector(dynamicMenuExampleEl.dropdownTag._$litStatic$);
+  const inputEl = dropdownEl.querySelector(dynamicMenuExampleEl.inputTag._$litStatic$);
 
   inputEl.addEventListener('input', () => {
     let data = dynamicData.getData();
@@ -57,4 +57,11 @@ export function dynamicMenuExample() {
 
     generateHtml(data);
   });
+
+
+  if (dynamicMenuExampleEl.value && dynamicMenuExampleEl.value.length > 0 && dynamicMenuExampleEl.input.value && (!dynamicMenuExampleEl.menu.availableOptions || dynamicMenuExampleEl.menu.availableOptions.length === 0)) {
+    let data = dynamicData.getData();
+    data = dynamicData.filterData(data, inputEl.value);
+    generateHtml(data);
+  }
 }
