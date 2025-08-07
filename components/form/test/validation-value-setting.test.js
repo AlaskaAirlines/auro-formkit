@@ -178,7 +178,7 @@ describe('input', () => {
 });
 
 
-describe.only('combobox', () => {
+describe('combobox', () => {
   it('value attribute works ', async () => {
     const el = await getFixtureWithValueAttr(COMBOBOX_TEMPLATE, 'Apples');
     await expect(el.value).to.equal('Apples');
