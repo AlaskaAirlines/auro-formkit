@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
 
-import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
+import {fixture, html, expect, elementUpdated, oneEvent} from '@open-wc/testing';
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 import '../demo/registerDemoDeps.js';
@@ -179,9 +179,13 @@ describe('auro-form', () => {
       const form = await fixture(componentTemplate);
       const [combobox] = form._elements;
 
-      combobox.input.value = 'Oranges';
+      setTimeout(() => {
+        combobox.value = 'Oranges';
+      }, 0);
 
-      await elementUpdated(form);
+      // wait form form.formState to update.
+      await oneEvent(form, 'change');
+
       await expect(form.value.comboTest).to.deep.equal('Oranges');
     });
   });

@@ -8,6 +8,7 @@
 | `autocomplete`                  | `autocomplete`                  |           | `string`              | "false"        | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
 | `checkmark`                     | `checkmark`                     |           | `boolean`             |                | When attribute is present auro-menu will apply check marks to selected options. |
 | `disabled`                      | `disabled`                      |           | `boolean`             |                | If set, disables the combobox.                   |
+| `dvInputOnly`                   | `dvInputOnly`                   |           | `boolean`             |                | If defined, the display value slot content will only mask the HTML5 input element. The inputs label will not be masked. |
 | `error`                         | `error`                         |           | `string`              |                | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `format`                        | `format`                        |           | `string`              |                | Specifies the input mask format.                 |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          |           | `string`              | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
@@ -36,15 +37,16 @@
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `clear`    | `(): void`                             | Clears the current value of the combobox.        |
-| `focus`    | `(): void`                             | Focuses the combobox trigger input.              |
-| `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
-| `isValid`  | `(): boolean`                          | Checks if the element is valid.                  |
-| `reset`    | `(): void`                             | Resets component to initial state.               |
-| `showBib`  | `(): void`                             | Shows the dropdown bib if there are options to show. |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method               | Type                                   | Description                                      |
+|----------------------|----------------------------------------|--------------------------------------------------|
+| `clear`              | `(): void`                             | Clears the current value of the combobox.        |
+| `focus`              | `(): void`                             | Focuses the combobox trigger input.              |
+| `hideBib`            | `(): void`                             | Hides the dropdown bib if its open.              |
+| `isValid`            | `(): boolean`                          | Checks if the element is valid.                  |
+| `reset`              | `(): void`                             | Resets component to initial state.               |
+| `showBib`            | `(): void`                             | Shows the dropdown bib if there are options to show. |
+| `updateActiveOption` | `(index: number): void`                | Updates the active option in the menu.<br /><br />**index**: Index of the option to make active. |
+| `validate`           | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

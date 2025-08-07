@@ -258,6 +258,8 @@ export class AuroMenu extends AuroElement {
 
 
     if (changedProperties.has("value")) {
+      console.warn('menu value updated', this.value);
+      console.info('available options', this.availableOptions);
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
         this.clearSelection();
@@ -269,8 +271,11 @@ export class AuroMenu extends AuroElement {
 
           this.optionSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
         } else {
+          console.info('single-select mode, looking for value', this.value);
           // In single-select mode, this.value should be a string
           const matchingOptions = this.items.find((item) => item.value === this.value);
+
+          console.info('matchingOptions', matchingOptions);
 
           if (matchingOptions) {
             this.optionSelected = matchingOptions;
@@ -280,6 +285,8 @@ export class AuroMenu extends AuroElement {
             this.optionSelected = undefined;
             this.index = -1;
           }
+
+          console.warn('optionSelected', this.optionSelected);
         }
 
         // If no matching options were found in either mode
@@ -306,6 +313,11 @@ export class AuroMenu extends AuroElement {
 
     // Process all other UI updates
     this.updateItemsState(changedProperties);
+
+    if (changedProperties.has('optionSelected')) {
+      console.warn('updated: optionSelected', this.optionSelected);
+      this.notifySelectionChange();
+    }
   }
 
   /**
@@ -749,7 +761,6 @@ export class AuroMenu extends AuroElement {
 
   /**
    * Updates the active option state and dispatches events.
-   * @private
    * @param {number} index - Index of the option to make active.
    */
   updateActiveOption(index) {
