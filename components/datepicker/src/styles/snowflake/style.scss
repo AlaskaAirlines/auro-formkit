@@ -1,3 +1,5 @@
+/* stylelint-disable max-nesting-depth, selector-max-combinators, selector-max-compound-selectors, scss/selector-nest-combinators, selector-max-class */
+
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 :host([layout*='snowflake']) {
@@ -14,7 +16,6 @@
     &::part(input) {
       padding-bottom: unset;
       text-align: center;
-
       transition: unset; // default transition makes input "slide" in
     }
 
@@ -22,8 +23,8 @@
       // for layout overrides on input
       min-height: unset;
       max-height: unset;
-      box-shadow: unset;
       border-radius: unset;
+      box-shadow: unset;
 
       .mainContent {
         padding-bottom: unset;
@@ -50,22 +51,20 @@
   }
 
   .wrapper {
-    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
     display: flex;
+    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
     flex-direction: row;
     justify-content: space-between;
-
     padding-inline: var(--ds-size-300, vac.$ds-size-300);
   }
 
   .mainLabel {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-
     // designs want 16px height, fill the space and center text
     display: flex;
+    overflow: hidden;
     align-items: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .mainLabel:is(.hasFocus, .hasValue) {
@@ -73,10 +72,11 @@
   }
 
   .inputDivider {
+    width: var(--ds-size-25, vac.$ds-size-25);
+
     // 18px - size-200 + size-25
     height: calc(var(--ds-size-200, vac.$ds-size-200) + var(--ds-size-25, vac.$ds-size-25));
     margin: var(--ds-size-50, vac.$ds-size-50) var(--ds-size-150, vac.$ds-size-150);
-    width: var(--ds-size-25, vac.$ds-size-25);
   }
 
   .inputSection:not(:is(.disabled, .hasFocus, .hasValue)) {

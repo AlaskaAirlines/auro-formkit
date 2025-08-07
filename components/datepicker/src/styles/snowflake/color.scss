@@ -1,5 +1,4 @@
-@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
-@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+/* stylelint-disable max-nesting-depth, scss/selector-nest-combinators */
 
 :host([layout="snowflake"]) {
   // designs call for no border when not active, focused, or in an error state

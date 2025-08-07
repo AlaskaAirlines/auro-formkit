@@ -5,7 +5,6 @@
 @use "sass:meta";
 
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
-@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
 // not directly used in this file, but needs to be imported here
