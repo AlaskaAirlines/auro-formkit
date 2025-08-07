@@ -4,14 +4,7 @@ import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 
-import '@aurodesignsystem/auro-menu/src/registered.js';
-import '@aurodesignsystem/auro-checkbox/src/registered.js';
-import '@aurodesignsystem/auro-combobox/src/registered.js';
-import '@aurodesignsystem/auro-counter/src/registered.js';
-import '@aurodesignsystem/auro-datepicker/src/registered.js';
-import '@aurodesignsystem/auro-input/src/registered.js';
-import '@aurodesignsystem/auro-radio/src/registered.js';
-import '@aurodesignsystem/auro-select/src/registered.js';
+import '../demo/registerDemoDeps.js';
 
 
 const CHECKBOX_TEMPLATE = html`
@@ -185,7 +178,7 @@ describe('input', () => {
 });
 
 
-describe('combobox', () => {
+describe.only('combobox', () => {
   it('value attribute works ', async () => {
     const el = await getFixtureWithValueAttr(COMBOBOX_TEMPLATE, 'Apples');
     await expect(el.value).to.equal('Apples');
