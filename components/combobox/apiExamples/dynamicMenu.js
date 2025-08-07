@@ -5,6 +5,7 @@ import { DynamicData } from './dynamicMenuDataApi';
 export function dynamicMenuExample() {
   // Resets the root menu
   function resetMenu(root) {
+    root.setAttribute('loading', "true");
     while (root.firstChild) {
       root.removeChild(root.firstChild);
     }
@@ -30,6 +31,8 @@ export function dynamicMenuExample() {
         initialMenu.appendChild(subMenu);
       }
     };
+    initialMenu.removeAttribute('loading');
+    console.log('done loading');
   }
 
   // Helper function that generates HTML for menuoptions

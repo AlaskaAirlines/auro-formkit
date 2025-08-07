@@ -707,6 +707,7 @@ export class AuroCombobox extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+    this.menu.value = this.value;
 
     this.updateMenuShapeSize();
 
@@ -728,7 +729,7 @@ export class AuroCombobox extends AuroElement {
     }
 
     // handle the menu event for an option selection
-    this.menu.addEventListener('auroMenu-selectedOption', () => {
+    this.menu.addEventListener('auroMenu-selectedOption', (evt) => {
       if (this.menu.optionSelected) {
         const selected = this.menu.optionSelected;
 
@@ -751,10 +752,12 @@ export class AuroCombobox extends AuroElement {
         this.handleMenuOptions();
       }
 
-      // dropdown bib should hide when making a selection
-      setTimeout(() => {
-        this.hideBib();
-      }, 0);
+      if (evt.detail && evt.detail.source !== 'slotchange') {
+        // dropdown bib should hide when making a selection
+        setTimeout(() => {
+          this.hideBib();
+        }, 0);
+      }
     });
 
     this.menu.addEventListener('auroMenu-customEventFired', () => {
@@ -1005,7 +1008,7 @@ export class AuroCombobox extends AuroElement {
 
   async updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
-    if (changedProperties.has('value') && this.value !== changedProperties.get('value')) {
+    if (changedProperties.has('value')) {
 
       if (this.value) {
         // If the value got set programmatically make sure we hide the bib
@@ -1083,9 +1086,6 @@ export class AuroCombobox extends AuroElement {
   handleSlotChange(event) {
     switch (event.target.name) {
       case '':
-        if (this.value !== this.menu.value) {
-          this.menu.value = this.value;
-        }
         // Treat only generic menuoptions.
         this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
         this.options.forEach((opt) => {

@@ -258,10 +258,8 @@ export class AuroMenu extends AuroElement {
 
 
     if (changedProperties.has("value")) {
-      // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
-        this.optionSelected = undefined;
-        this.index = -1;
+        this.clearSelection();
       } else {
         if (this.multiSelect) {
           // In multiselect mode, this.value should be an array of strings
@@ -284,7 +282,7 @@ export class AuroMenu extends AuroElement {
         }
 
         // If no matching options were found in either mode
-        if (!this.optionSelected || (Array.isArray(this.optionSelected) && this.optionSelected.length === 0)) {
+        if (!this.loading && (!this.optionSelected || (Array.isArray(this.optionSelected) && this.optionSelected.length === 0))) {
           dispatchMenuEvent(this, 'auroMenu-selectValueFailure');
           this.optionSelected = undefined;
           this.index = -1;
@@ -514,6 +512,7 @@ export class AuroMenu extends AuroElement {
   clearSelection() {
     this.optionSelected = undefined;
     this.value = undefined;
+    this.index = -1;
   }
 
   /**
@@ -671,7 +670,7 @@ export class AuroMenu extends AuroElement {
    * @private
    * @param {Event} evt - slotchange Event.
    */
-  handleSlotChange() {
+  handleSlotChange(evt) {
     if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
       this.rootMenu = false;
     }
@@ -687,15 +686,17 @@ export class AuroMenu extends AuroElement {
       ]));
     }
 
-    this.items.forEach((opt) => {
-      if (this.multiSelect && this.formattedValue.includes(opt.value)) {
-        this.handleSelectState(opt);
-        this.notifySelectionChange();
-      } else if (opt.value === this.value) {
-        this.handleSelectState(opt);
-        this.notifySelectionChange();
-      }
-    });
+    if (this.value) {
+      this.items.forEach((opt) => {
+        if (this.multiSelect && this.formattedValue.includes(opt.value)) {
+          this.handleSelectState(opt);
+          this.notifySelectionChange(evt.type);
+        } else if (opt.value === this.value) {
+          this.handleSelectState(opt);
+          this.notifySelectionChange(evt.type);
+        }
+      });
+    }
   }
 
   /**
@@ -779,10 +780,11 @@ export class AuroMenu extends AuroElement {
 
   /**
    * Notifies selection change to parent components.
+   * @param {any} source - The source that triggers this event.
    * @private
    */
-  notifySelectionChange() {
-    dispatchMenuEvent(this, 'auroMenu-selectedOption');
+  notifySelectionChange(source = undefined) {
+    dispatchMenuEvent(this, 'auroMenu-selectedOption', { source });
   }
 
   /**
