@@ -515,7 +515,7 @@ export class AuroCombobox extends AuroElement {
     if (this.availableOptions.length === 0) {
       if (this.noMatchOption) {
         this.noMatchOption.removeAttribute('hidden');
-      } else {
+      } else if (!this.menu.loading || this.isHiddenWhileLoading) {
         this.hideBib();
       }
     } else if (this.noMatchOption) {
@@ -635,7 +635,6 @@ export class AuroCombobox extends AuroElement {
       this.dropdown.hide();
       return;
     }
-
     if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
       if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
         if (this.menu.hasAttribute('loading') && !this.menu.hasLoadingPlaceholder) {
@@ -848,10 +847,6 @@ export class AuroCombobox extends AuroElement {
         this.validate();
       }
     });
-
-    this.input.addEventListener('input', () => {
-      this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue} }));
-    });
   }
 
   /**
@@ -911,9 +906,13 @@ export class AuroCombobox extends AuroElement {
     }
 
     // Force dropdown bib to hide if input value has no matching suggestions
-    if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
+    if (this.menu.loading) {
+      this.showBib();
+    } else if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
       this.hideBib();
     }
+
+    this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue} }));
   }
 
   /**
@@ -1087,7 +1086,7 @@ export class AuroCombobox extends AuroElement {
       if (this.value) {
         // If the value got set programmatically make sure we hide the bib
         // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
-        if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
+        if (!this.componentHasFocus) {
           this.hideBib();
         }
       } else {
@@ -1112,7 +1111,8 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      if (this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) {
+      // eslint-disable-next-line no-extra-parens
+      if ((this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading) {
         this.showBib();
       } else {
         this.hideBib();
