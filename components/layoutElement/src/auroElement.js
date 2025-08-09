@@ -40,7 +40,7 @@ export class AuroElement extends LitElement {
    * @returns {boolean} - Returns true if the element has focus.
    */
   get componentHasFocus() {
-    return this.matches(':focus');
+    return this.matches(':focus') || this.matches(':focus-within');
   }
 
   resetShapeClasses() {

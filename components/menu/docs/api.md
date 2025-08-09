@@ -19,9 +19,10 @@ The auro-menu element provides users a way to select from a list of options.
 
 ## Methods
 
-| Method  | Type       | Description                                      |
-|---------|------------|--------------------------------------------------|
-| `reset` | `(): void` | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
+| Method               | Type                    | Description                                      |
+|----------------------|-------------------------|--------------------------------------------------|
+| `reset`              | `(): void`              | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
+| `updateActiveOption` | `(index: number): void` | Updates the active option state and dispatches events.<br /><br />**index**: Index of the option to make active. |
 
 ## Events
 

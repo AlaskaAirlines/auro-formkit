@@ -82,7 +82,8 @@ export class AuroMenuOption extends AuroElement {
         reflect: true
       },
       value: {
-        type: String
+        type: String,
+        reflect: true
       },
       tabIndex: {
         type: Number,
