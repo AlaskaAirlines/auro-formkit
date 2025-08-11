@@ -4,6 +4,7 @@
   position: relative;
   display: block;
   text-align: left;
+  transform: translateZ(0); // fixes a safari rendering issue
 }
 
 :host([open]) {
