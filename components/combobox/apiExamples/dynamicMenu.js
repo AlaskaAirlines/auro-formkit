@@ -10,9 +10,37 @@ export async function dynamicMenuExample() {
     }
   }
 
+  function swapValues() {
+    const elOne = document.querySelector('#dynamicMenuExample');
+    const elTwo = document.querySelector('#dynamicMenuExampleTwo');
+
+    const elOneValue = elOne.value;
+    const elTwoValue = elTwo.value;
+
+    const elOneInputValue = elOne.input.value;
+    const elTwoInputValue = elTwo.input.value;
+
+    elOne.reset();
+    elTwo.reset();
+
+    elOne.value = elTwoValue;
+    elTwo.value = elOneValue;
+
+
+    setTimeout(() => {
+      console.warn('timeout executed ============================');
+      elOne.typedValue = elTwoInputValue;
+      elTwo.typedValue = elOneInputValue;
+    }, 0);
+  }
+
+  document.querySelector('#dynamicMenuSwapButton').addEventListener('click', () => {
+    swapValues();
+  });
+
   // Generates HTML for menu and submenus using country & city data from an external API
-  function generateHtml(data) {
-    const initialMenu = document.querySelector('#initMenu');
+  function generateHtml(data, selector) {
+    const initialMenu = document.querySelector(selector);
 
     resetMenu(initialMenu);
 
@@ -55,13 +83,31 @@ export async function dynamicMenuExample() {
     let data = dynamicData.getData();
     data = dynamicData.filterData(data, inputEl.value);
 
-    generateHtml(data);
+    generateHtml(data, '#initMenu');
   });
 
 
   if (dynamicMenuExampleEl.value && dynamicMenuExampleEl.value.length > 0 && dynamicMenuExampleEl.input.value && (!dynamicMenuExampleEl.menu.availableOptions || dynamicMenuExampleEl.menu.availableOptions.length === 0)) {
     let data = dynamicData.getData();
     data = dynamicData.filterData(data, inputEl.value);
-    generateHtml(data);
+    generateHtml(data, '#initMenu');
+  }
+
+  const dynamicDataTwo = new DynamicData();
+  const dynamicMenuExampleElTwo = document.querySelector('#dynamicMenuExample');
+  const dropdownElTwo = dynamicMenuExampleElTwo.shadowRoot.querySelector(dynamicMenuExampleElTwo.dropdownTag._$litStatic$);
+  const inputElTwo = dropdownElTwo.querySelector(dynamicMenuExampleElTwo.inputTag._$litStatic$);
+
+  inputElTwo.addEventListener('input', () => {
+    let data = dynamicDataTwo.getData();
+    data = dynamicDataTwo.filterData(data, inputEl.value);
+
+    generateHtml(data, '#initMenuTwo');
+  });
+
+  if (dynamicMenuExampleElTwo.value && dynamicMenuExampleElTwo.value.length > 0 && dynamicMenuExampleElTwo.input.value && (!dynamicMenuExampleElTwo.menu.availableOptions || dynamicMenuExampleElTwo.menu.availableOptions.length === 0)) {
+    let data = dynamicDataTwo.getData();
+    data = dynamicDataTwo.filterData(data, inputElTwo.value);
+    generateHtml(data, '#initMenuTwo');
   }
 }
