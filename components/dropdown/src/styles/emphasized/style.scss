@@ -11,7 +11,7 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
-/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-max-class, selector-class-pattern, selector-not-notation */
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-max-class, selector-class-pattern, selector-not-notation, scss/selector-nest-combinators */
 
 .layout-emphasized,
 .layout-emphasized-left,
