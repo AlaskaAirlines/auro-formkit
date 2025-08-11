@@ -33,7 +33,7 @@
 
     &[layout*="emphasized"] {
       &::part(wrapper) {
-        --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+        --ds-auro-dropdown-trigger-background-color: transparent;
       }
     }
   }
