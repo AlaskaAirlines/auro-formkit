@@ -28,7 +28,6 @@ export async function dynamicMenuExample() {
 
 
     setTimeout(() => {
-      console.warn('timeout executed ============================');
       elOne.typedValue = elTwoInputValue;
       elTwo.typedValue = elOneInputValue;
     }, 0);
@@ -93,6 +92,7 @@ export async function dynamicMenuExample() {
     generateHtml(data, '#initMenu');
   }
 
+  // TODO: Need to refactor this to to not console a console error
   const dynamicDataTwo = new DynamicData();
   const dynamicMenuExampleElTwo = document.querySelector('#dynamicMenuExample');
   const dropdownElTwo = dynamicMenuExampleElTwo.shadowRoot.querySelector(dynamicMenuExampleElTwo.dropdownTag._$litStatic$);

@@ -11,7 +11,7 @@
     --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
 
     &:hover {
-      --ds-auro-dropdown-trigger-hover-background-color: var(--ds-advanced-color-dropdown-emphasized-background-hover, #{v.$ds-advanced-color-dropdown-emphasized-background-hover});
+      --ds-auro-dropdown-trigger-hover-background-color:  var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
     }
   }
 }
