@@ -769,8 +769,13 @@ export class AuroDropdown extends AuroElement {
     }
 
     if (event) {
-      this.triggerNode = event.target;
-      this.triggerContentSlot = event.target.assignedNodes();
+      // Wrap in a try-catch block to handle errors when trying to use assignedNodes from the NodeJS test environment.
+      try {
+        this.triggerNode = event.target;
+        this.triggerContentSlot = event.target.assignedNodes();
+      } catch (error) {
+        console.warn('auro-dropdown: Unable to access the trigger content slot.', error); // eslint-disable-line no-console
+      }
     }
 
     if (this.triggerContentSlot) {
