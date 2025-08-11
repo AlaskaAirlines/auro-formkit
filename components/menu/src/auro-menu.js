@@ -251,14 +251,7 @@ export class AuroMenu extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    console.info('---- updated ----', changedProperties);
-
     if (changedProperties.has('optionSelected')) {
-      console.warn('+++++++++++++++++++++++++++++++++');
-      console.warn('+++++++++++++++++++++++++++++++++');
-      console.warn('+++++++++++++++++++++++++++++++++');
-      console.warn('+++++++++++++++++++++++++++++++++');
-      console.warn('updated: optionSelected', this.optionSelected);
       this.notifySelectionChange();
     }
 
@@ -269,8 +262,6 @@ export class AuroMenu extends AuroElement {
 
 
     if (changedProperties.has("value")) {
-      console.warn('menu value updated', this.value);
-      console.info('available options', this.availableOptions);
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
         this.clearSelection();
@@ -282,24 +273,17 @@ export class AuroMenu extends AuroElement {
 
           this.optionSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
         } else {
-          console.info('single-select mode, looking for value', this.value);
           // In single-select mode, this.value should be a string
           const matchingOptions = this.items.find((item) => item.value === this.value);
 
-          console.info('matchingOptions', matchingOptions);
-
           if (matchingOptions) {
-            console.info('set matchingOptions to optionSelected');
             this.optionSelected = matchingOptions;
-            console.info('optionSelected', this.optionSelected);
             this.index = this.items.indexOf(matchingOptions);
           } else {
             // If no matching option found, reset selection
             this.optionSelected = undefined;
             this.index = -1;
           }
-
-          console.warn('optionSelected', this.optionSelected);
         }
 
         // If no matching options were found in either mode
@@ -801,7 +785,6 @@ export class AuroMenu extends AuroElement {
    * @private
    */
   notifySelectionChange(source = undefined) {
-    console.warn('notifySelectionChange', this.optionSelected, source);
     dispatchMenuEvent(this, 'auroMenu-selectedOption', { source });
   }
 
