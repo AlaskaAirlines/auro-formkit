@@ -3,6 +3,7 @@ node_modules/
 docTemplates/
 .cache/
 .vscode/
+.secrets
 
 ## Demo support files
 components/**/demo/*.md

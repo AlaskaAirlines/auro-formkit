@@ -1,9 +1,8 @@
 // Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
-/* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before */
+/* stylelint-disable max-nesting-depth, declaration-no-important, selector-class-pattern, declaration-empty-line-before, selector-max-class, scss/selector-nest-combinators */
 
-@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
 
@@ -11,9 +10,9 @@
 @use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
 
 .accents {
+  display: flex;
   flex-grow: 0;
   flex-shrink: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -33,30 +32,30 @@
 }
 
 .mainContent {
+  display: flex;
+  overflow: hidden;
   height: 100%;
   max-height: 100%;
-  flex-grow: 1;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex-grow: 1;
   align-items: center;
-  overflow: hidden;
+  justify-content: center;
 }
 
 .inputSection {
   display: flex;
-  flex-direction: row;
-  align-items: center;
 
   width: 100%;
+  flex-direction: row;
+  align-items: center;
   margin: 0 auto;
 }
 
 .inputContainer {
   display: flex;
+  width: 100%;
   flex-direction: row;
   align-items: center;
-  width: 100%;
 
   &:first-of-type {
     justify-content: flex-end;
