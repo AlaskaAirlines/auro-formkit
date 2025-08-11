@@ -24,7 +24,7 @@
 
 ### Emphasized
 
-<div class="exampleWrapper">
+<div class="exampleWrapper" style="background-color: aqua;">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
