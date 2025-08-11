@@ -532,11 +532,6 @@ export class AuroCombobox extends AuroElement {
     this.menu.value = this.value;
     this.menu.matchWord = this.input.value;
 
-    console.warn('syncValuesAndStates()', this.id);
-    console.info('this.value', this.value);
-    console.info('this.input.value', this.input.value);
-    console.info('this.menu.value', this.menu.value);
-
     // Wait a lifecycle for child components to update
     await Promise.all([this.menu.updateComplete]);
 
@@ -548,10 +543,8 @@ export class AuroCombobox extends AuroElement {
    * @private
    */
   updateTriggerTextDisplay() {
-    console.warn('updateTriggerTextDisplay()', this.id);
     // update the input content if persistInput is false
     if (!this.persistInput) {
-      console.info('!persistInput', this.menu.optionSelected, this.menu.optionSelected.textContent.length);
       if (this.menu.optionSelected && this.menu.optionSelected.textContent.length > 0) {
         this.input.value = this.menu.optionSelected.textContent;
       } else {
@@ -562,37 +555,14 @@ export class AuroCombobox extends AuroElement {
     // update the displayValue in the trigger if displayValue slot content is present
     const displayValueInTrigger = this.input.querySelector('[slot="displayValue"]');
 
-    console.info('Current DV Slot element', displayValueInTrigger);
-
     if (displayValueInTrigger) {
-      console.info('has DV slot content, remove that shizzz');
       displayValueInTrigger.remove();
     }
 
     if (this.menu.optionSelected) {
-      console.info('have a option to pull new DV content from', this.menu.optionSelected);
       const displayValueEl = this.menu.optionSelected.querySelector("[slot='displayValue']");
-      console.info('put that shizz here:', displayValueEl);
       if (displayValueEl) {
-        console.info('we have a home for that shizzz');
-
-
-        // this.input.appendChild(displayValueEl.cloneNode(true));
-
-        const displayValueContainer = this.input.shadowRoot.querySelector('slot[name="displayValue"]');
-        displayValueContainer.innerHTML = displayValueEl.innerHTML;
-
-        // const slotChangeEvent = new Event('slotchange', { bubbles: true });
-        // const displayValueSlot = this.shadowRoot.querySelector('slot[name="displayValue"]');
-        // if (displayValueSlot) {
-        //   displayValueSlot.dispatchEvent(slotChangeEvent);
-        // }
-
-        console.info('{}{}{}{}{}{}{}{{}{}{}{}{}');
-        console.info('{}{}{}{}{}{}{}{{}{}{}{}{}');
-        console.info('{}{}{}{}{}{}{}{{}{}{}{}{}');
-        console.info('{}{}{}{}{}{}{}{{}{}{}{}{}');
-        console.debug(this.input);
+        this.input.appendChild(displayValueEl.cloneNode(true));
       }
     }
 
@@ -618,7 +588,6 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleMenuOptions() {
-    console.warn('handleMenuOptions()');
     this.resetMenuMatchword();
 
     this.generateOptionsArray();
@@ -806,9 +775,7 @@ export class AuroCombobox extends AuroElement {
 
     // handle the menu event for an option selection
     this.menu.addEventListener('auroMenu-selectedOption', (evt) => {
-      console.warn('event auroMenu-selectedOption', evt);
       if (this.menu.optionSelected) {
-        console.info('has a menu option selected', this.menu.optionSelected);
         const selected = this.menu.optionSelected;
 
         if (!this.optionSelected || this.optionSelected !== selected) {
@@ -912,7 +879,6 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleInputValueChange(event) {
-    console.warn('handleInputValueChange', event);
     if (event.target === this.inputInBib) {
       this.input.value = this.inputInBib.value;
       return;
@@ -1070,10 +1036,6 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   reset() {
-    console.warn(`----------------------------------------------`);
-    console.warn(`----------------- RESET ${this.id}---------`);
-    console.warn(`----------------------------------------------`);
-
     this.optionSelected = undefined;
     this.value = undefined;
     this.typedValue = undefined;
@@ -1201,7 +1163,6 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleSlotChange(event) {
-    console.warn('handleSlotChange', event);
     switch (event.target.name) {
       case '':
         if (!this.menu || this.menu !== this.querySelector('auro-menu, [auro-menu]')) {
@@ -1304,7 +1265,7 @@ export class AuroCombobox extends AuroElement {
               <slot name="ariaLabel.input.clear" slot="ariaLabel.clear" @slotchange="${this.handleSlotChange}"></slot>
               <slot name="label" slot="label" @slotchange="${this.handleSlotChange}"></slot>
               <slot name="optionalLabel" slot="optionalLabel" @slotchange="${this.handleSlotChange}"> (optional)</slot>
-              <slot name="displayValue" slot="displayValue" @slotchange="${console.warn('slot change on input displayValue')}"></slot>
+              <slot name="displayValue" slot="displayValue"></slot>
             </${this.inputTag}>
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
