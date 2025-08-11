@@ -292,16 +292,12 @@ export class AuroInput extends BaseInput {
    * @returns {void}
    */
   checkDisplayValueSlotChange() {
-    console.warn('checkDisplayValueSlotChange()');
     let nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
 
-    console.info('nodes1', nodes);
     // Handle when DisplayValue is multi-level slot content (e.g. combobox passing displayValue to input)
     if (nodes && nodes[0] && nodes[0].tagName === 'SLOT') {
       nodes = nodes[0].assignedNodes();
     }
-
-    console.info('nodes[0]', nodes);
 
     let hasContent = false;
 
@@ -309,11 +305,7 @@ export class AuroInput extends BaseInput {
       hasContent = true;
     }
 
-    console.info('hasContent', hasContent);
-
     this.hasDisplayValueContent = hasContent;
-
-    console.info('hasDisplayValueContent', this.hasDisplayValueContent);
   }
 
   /**
