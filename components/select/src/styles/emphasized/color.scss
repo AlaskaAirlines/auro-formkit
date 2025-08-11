@@ -2,7 +2,7 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern, selector-max-class */
+/* stylelint-disable scss/dollar-variable-pattern, selector-class-pattern, selector-max-class, selector-max-attribute, max-nesting-depth */
 
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
@@ -12,6 +12,12 @@
 
     &:hover {
       --ds-auro-dropdown-trigger-hover-background-color:  var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+    }
+
+    &[layout*="emphasized"] {
+      &::part(wrapper) {
+        --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+      }
     }
   }
 }
