@@ -2,6 +2,9 @@
 
 // TODO: Move color styles to separate file
 
+/* stylelint-disable no-descending-specificity, selector-max-attribute, selector-max-class, selector-class-pattern, selector-not-notation, scss/selector-nest-combinators, max-nesting-depth */
+
+
 :host([layout*='emphasized'][shape*='pill']) {
   [auro-input] { // CAN I MOVE THESE INTO DROPDOWN? DROPDOWN SHOULD BE SMART ENOUGH TO HIDE THE HELP TEXT OF ANY INPUT INSIDE IT
     --ds-auro-input-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
@@ -16,6 +19,22 @@
 
     &::part(inputHelpText) {
       display: none;
+    }
+  }
+}
+
+:host([layout="emphasized"]) {
+  [auro-dropdown] {
+    --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+
+    &:hover {
+      --ds-auro-dropdown-trigger-hover-background-color:  var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+    }
+
+    &[layout*="emphasized"] {
+      &::part(wrapper) {
+        --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+      }
     }
   }
 }
