@@ -145,7 +145,7 @@ export default class BaseInput extends AuroElement {
       ...super.properties,
 
       /**
-       * If defined, the display value slot content will only mask the HTML5 input element. The inputs label will not be masked.
+       * If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked.
        */
       dvInputOnly: {
         type: Boolean,
