@@ -6,6 +6,11 @@
   [auro-input] { // CAN I MOVE THESE INTO DROPDOWN? DROPDOWN SHOULD BE SMART ENOUGH TO HIDE THE HELP TEXT OF ANY INPUT INSIDE IT
     --ds-auro-input-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
     --ds-auro-input-container-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+    
+    &:hover {
+      --ds-auro-input-background-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+      --ds-auro-input-container-color: var(--ds-advanced-color-dropdown-emphasized-background, #{v.$ds-advanced-color-dropdown-emphasized-background});
+    }
 
     width: 100%;
 
