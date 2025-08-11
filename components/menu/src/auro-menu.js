@@ -251,6 +251,10 @@ export class AuroMenu extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    if (changedProperties.has('optionSelected')) {
+      this.notifySelectionChange();
+    }
+
     if (changedProperties.has('multiSelect') && !changedProperties.has("value")) {
       // Reset selection if multiSelect mode changes
       this.clearSelection();
@@ -260,8 +264,7 @@ export class AuroMenu extends AuroElement {
     if (changedProperties.has("value")) {
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
-        this.optionSelected = undefined;
-        this.index = -1;
+        this.clearSelection();
       } else {
         if (this.multiSelect) {
           // In multiselect mode, this.value should be an array of strings
@@ -365,6 +368,12 @@ export class AuroMenu extends AuroElement {
       if (changedProperties.has('matchWord') && regexWord &&
           isOptionInteractive(option) && !option.hasAttribute('persistent')) {
         const nested = option.querySelectorAll('.nestingSpacer');
+
+        const displayValueEl = option.querySelector('[slot="displayValue"]');
+        if (displayValueEl) {
+          option.removeChild(displayValueEl);
+        }
+
         // Create nested spacers
         const nestingSpacerBundle = [...nested].map(() => this.nestingSpacer).join('');
 
@@ -374,6 +383,9 @@ export class AuroMenu extends AuroElement {
             regexWord,
             (match) => `<strong>${match}</strong>`
           );
+        if (displayValueEl) {
+          option.append(displayValueEl);
+        }
       }
 
       // Update disabled state
@@ -505,6 +517,7 @@ export class AuroMenu extends AuroElement {
   clearSelection() {
     this.optionSelected = undefined;
     this.value = undefined;
+    this.index = -1;
   }
 
   /**
@@ -604,7 +617,7 @@ export class AuroMenu extends AuroElement {
       // In multiselect, toggle individual selections
       this.toggleOption(option);
       // In single select, only handle selection of new options
-    } else if (!this.isOptionSelected(option)) {
+    } else if (this.option !== this.optionSelected || !this.isOptionSelected(option)) {
       this.clearSelection();
       this.handleSelectState(option);
     }
@@ -635,7 +648,7 @@ export class AuroMenu extends AuroElement {
    * @param {MouseEvent} event - Event object from the browser.
    */
   handleMouseSelect(event) {
-    if (event.target === this) {
+    if (!this.rootMenu || event.target === this) {
       return;
     }
 
@@ -660,8 +673,9 @@ export class AuroMenu extends AuroElement {
   /**
    * Handles slot change events.
    * @private
+   * @param {Event} evt - Event object from the browser.
    */
-  handleSlotChange() {
+  handleSlotChange(evt) {
     if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
       this.rootMenu = false;
     }
@@ -675,6 +689,15 @@ export class AuroMenu extends AuroElement {
           true
         ]
       ]));
+    }
+
+    if (this.value) {
+      this.items.forEach((opt) => {
+        if (opt.value === this.value || (this.multiSelect && this.formattedValue.includes(opt.value))) {
+          this.handleSelectState(opt);
+          this.notifySelectionChange(evt.type);
+        }
+      });
     }
   }
 
@@ -730,7 +753,6 @@ export class AuroMenu extends AuroElement {
 
   /**
    * Updates the active option state and dispatches events.
-   * @private
    * @param {number} index - Index of the option to make active.
    */
   updateActiveOption(index) {
@@ -759,10 +781,11 @@ export class AuroMenu extends AuroElement {
 
   /**
    * Notifies selection change to parent components.
+   * @param {any} source - The source that triggers this event.
    * @private
    */
-  notifySelectionChange() {
-    dispatchMenuEvent(this, 'auroMenu-selectedOption');
+  notifySelectionChange(source = undefined) {
+    dispatchMenuEvent(this, 'auroMenu-selectedOption', { source });
   }
 
   /**

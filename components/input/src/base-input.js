@@ -22,7 +22,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
  * @attr id
  *
- * @slot ariaLabel.clear - Sets aria-label on clear button for screenreader to read
+ * @slot ariaLabel.clear - Sets aria-label on clear button for screen reader to read
  * @slot ariaLabel.password.show - Sets aria-label on password button to toggle on showing password
  * @slot ariaLabel.password.hide - Sets aria-label on password button to toggle off showing password
  * @slot helpText - Sets the help text displayed below the input.
@@ -50,6 +50,7 @@ export default class BaseInput extends AuroElement {
     this.activeLabel = false;
     this.icon = false;
     this.disabled = false;
+    this.dvInputOnly = false;
     this.max = undefined;
     this.maxLength = undefined;
     this.min = undefined;
@@ -142,6 +143,14 @@ export default class BaseInput extends AuroElement {
   static get properties() {
     return {
       ...super.properties,
+
+      /**
+       * If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked.
+       */
+      dvInputOnly: {
+        type: Boolean,
+        reflect: true
+      },
 
       /**
        * The value for the role attribute.

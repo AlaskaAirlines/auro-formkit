@@ -9,11 +9,6 @@
 
     width: 100%;
 
-    &:hover {
-      --ds-auro-input-background-color: var(--ds-advanced-color-dropdown-emphasized-background-hover, #{v.$ds-advanced-color-dropdown-emphasized-background-hover});
-      --ds-auro-input-container-color: var(--ds-advanced-color-dropdown-emphasized-background-hover, #{v.$ds-advanced-color-dropdown-emphasized-background-hover});
-    }
-
     &::part(inputHelpText) {
       display: none;
     }
