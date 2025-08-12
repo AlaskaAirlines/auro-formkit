@@ -219,6 +219,8 @@ export class AuroMenu extends AuroElement {
     this.addEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.addEventListener('slotchange', this.handleSlotChange);
     this.setTagAttribute("auro-menu");
+    // Make the menu unfocusable by default
+    this.setAttribute('tabindex', '-1');
   }
 
   disconnectedCallback() {

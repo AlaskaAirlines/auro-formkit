@@ -3,24 +3,14 @@
 
 // ---------------------------------------------------------------------
 
-/*
-  eslint-disable
-  max-lines,
-  lit/no-invalid-html,
-  lit/binding-positions,
-  template-curly-spacing,
-  line-comment-position,
-  no-inline-comments,
-  no-warning-comments
-  */
+/* eslint-disable */
 
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
 import { LitElement } from "lit";
+import { createRef, ref } from 'lit/directives/ref.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
-import { FocusTrap } from "@aurodesignsystem/auro-library/scripts/runtime/FocusTrap/index.mjs";
 import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/runtime/Focusables/index.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -30,6 +20,9 @@ import iconVersion from './iconVersion.js';
 
 import { AuroDropdownBib } from './auro-dropdownBib.js';
 import dropdownVersion from './dropdownVersion.js';
+
+import { AuroLayover } from "@aurodesignsystem/auro-layover/class";
+import layoverVersion from './layoverVersion.js';
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
 import colorCss from "./styles/color-css.js";
@@ -82,9 +75,13 @@ export class AuroDropdown extends AuroElement {
     this.parentBorder = false;
 
     /** @private */
-    this.handleDropdownToggle = this.handleDropdownToggle.bind(this);
+    this.handleDropdownToggle = this._handleDropdownToggle.bind(this);
 
     this.privateDefaults();
+
+    this._createElementRefs();
+
+    this._handleTriggerClick = this._handleTriggerClick.bind(this);
   }
 
   /**
@@ -108,7 +105,6 @@ export class AuroDropdown extends AuroElement {
   privateDefaults() {
     this.chevron = false;
     this.disabled = false;
-    this.disableFocusTrap = false;
     this.error = false;
     this.tabIndex = 0;
     this.noToggle = false;
@@ -117,12 +113,6 @@ export class AuroDropdown extends AuroElement {
     this.showTriggerBorders = true;
     this.triggerContentFocusable = false;
     this.simple = false;
-
-    // floaterConfig
-    this.placement = 'bottom-start';
-    this.offset = 0;
-    this.noFlip = false;
-    this.autoPlacement = false;
 
     /**
      * @private
@@ -151,7 +141,7 @@ export class AuroDropdown extends AuroElement {
     /**
      * @private
      */
-    this.floater = new AuroFloatingUI();
+    // this.floater = new AuroFloatingUI();
 
     /**
      * Generate unique names for dependency components.
@@ -171,6 +161,11 @@ export class AuroDropdown extends AuroElement {
     /**
      * @private
      */
+    this._layoverTag = versioning.generateTag("auro-formkit-dropdown-layover", layoverVersion, AuroLayover);
+
+    /**
+     * @private
+     */
     this.helpTextTag = versioning.generateTag('auro-formkit-dropdown-helptext', helpTextVersion, AuroHelpText);
 
     /**
@@ -179,16 +174,42 @@ export class AuroDropdown extends AuroElement {
     this.bindFocusEventToTrigger = this.bindFocusEventToTrigger.bind(this);
   }
 
+  /** Creates refs for elements in the template @returns {void} @private */
+  _createElementRefs() {
+
+    // A reference to the layover element itself
+    this._layoverRef = createRef();
+
+    // A reference to the bib element inside of the layover
+    this._bibRef = createRef();
+  }
+
+  get _layover() {
+    return this._layoverRef.value;
+  }
+
+  get _bib() {
+    return this._bibRef.value;
+  }
+
   /**
    * @ignore
    */
-  get floaterConfig() {
-    return {
-      placement: this.placement,
-      flip: !this.noFlip,
-      autoPlacement: this.autoPlacement,
-      offset: this.offset,
-    };
+  // get layoverConfig() {
+  //   return {
+  //     placement: this.placement,
+  //     flip: !this.noFlip,
+  //     autoPlacement: this.autoPlacement,
+  //     offset: this.offset,
+  //   };
+  // }
+
+  /**
+   * Public method to toggle the dropdown.
+   * @returns {void}
+   */
+  toggle() {
+    if (this._layover) this._layover.toggle();
   }
 
   /**
@@ -196,7 +217,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   hide() {
-    this.floater.hideBib();
+    if (this._layover) this._layover.hide();
   }
 
   /**
@@ -204,19 +225,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   show() {
-    this.floater.showBib();
-  }
-
-  /**
-   * When bib is open, focus on the first element inside of bib.
-   * If not, trigger element will get focus.
-   */
-  focus() {
-    if (this.isPopoverVisible && this.focusTrap) {
-      this.focusTrap.focusFirstElement();
-    } else {
-      this.trigger.focus();
-    }
+    this._layover.show();
   }
 
   // function to define props used within the scope of this component
@@ -344,6 +353,15 @@ export class AuroDropdown extends AuroElement {
        */
       hasTriggerContent: {
         type: Boolean
+      },
+
+      /**
+       * A reference to the input in the trigger element if it exists
+       * @private
+       */
+      _inputInTrigger: {
+        type: Object,
+        state: true
       },
 
       /**
@@ -491,7 +509,7 @@ export class AuroDropdown extends AuroElement {
    * @private
    * @returns {string}
    */
-  get focusableEntityQuery () {
+  get focusableEntityQuery() {
     return 'auro-input, [auro-input], auro-button, [auro-button], button, input';
   }
 
@@ -501,19 +519,19 @@ export class AuroDropdown extends AuroElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.floater.disconnect();
+    if (this.layover) this.layover.disconnect();
     this.clearTriggerFocusEventBinding();
   }
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    this.floater.handleUpdate(changedProperties);
+    // this.layover.handleUpdate(changedProperties);
 
     // Note: `disabled` is not a breakpoint (it is not a screen size),
     // so it looks like we never consume this - however, dropdownBib handles this in the setter as "undefined"
-    if (changedProperties.has('fullscreenBreakpoint')) {
-      this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
-    }
+    // if (changedProperties.has('fullscreenBreakpoint')) {
+    //   this.bibContent.mobileFullscreenBreakpoint = this.fullscreenBreakpoint;
+    // }
 
     // when trigger's content is changed without any attribute or node change,
     // `requestUpdate` needs to be called to update hasTriggerContent
@@ -523,48 +541,53 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Handles the custom event `auroDropdown-toggled` to update the visibility of the dropdown bib.
+   * Toggles the state of the popover visibility to the legacy isPopoverVisible property.
    * @private
-   * @param {CustomEvent} event - The custom event that contains the dropdown toggle information.
    */
-  handleDropdownToggle(event) {
-    this.updateFocusTrap();
-    this.isPopoverVisible = event.detail.expanded;
-    const eventType = event.detail.eventType || "unknown";
-    if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown") {
-      this.trigger.focus();
-    }
+  _handleDropdownToggle() {
+    this.isPopoverVisible = this._layover.shown;
+
+    this.dispatchEvent(new CustomEvent('auroDropdown-toggled', { detail: { expanded: this.isPopoverVisible } }));
+  }
+
+  _handleBeforeDropdownToggle() {
+    this._calculateIsBibFullscreen();
+  }
+
+  _calculateIsBibFullscreen() {
+    const styles = getComputedStyle(document.documentElement);
+    const breakpoint = styles.getPropertyValue(`--ds-grid-breakpoint-${this.fullscreenBreakpoint}`).trim();
+    const smallerThanBreakpoint = window.matchMedia(`(max-width: ${breakpoint})`).matches;
+    this.isBibFullscreen = smallerThanBreakpoint;
+    this.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
   }
 
   firstUpdated() {
 
-    // Configure the floater to, this will generate the ID for the bib
-    this.floater.configure(this, 'auroDropdown');
-    this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
+    // Configure the layover to, this will generate the ID for the bib
+    // this.layover.configure(this, 'auroDropdown');
+    this.addEventListener('auro-layover-change', this._handleDropdownToggle);
+    this.addEventListener('auro-layover-beforechange', this._handleBeforeDropdownToggle);
+
+    // Initial measuring of if we should be fullscreen
+    this._calculateIsBibFullscreen();
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
      * @event auroDropdown-idAdded
      * @type {Object<key: 'id', value: string>} - The ID of the dropdown bib element.
      */
-    this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
+    // this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
 
     // Set the bib ID locally if the user hasn't provided a focusable trigger
-    if (!this.triggerContentFocusable) {
-      this.dropdownId = this.floater.element.id;
-    }
+    // if (!this.triggerContentFocusable) {
+    //   this.dropdownId = this.floater.element.id;
+    // }
 
-    this.bibContent = this.floater.element.bib;
+    // this.bibContent = this.floater.element.bib;
 
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-dropdown');
-
-    this.trigger.addEventListener('click', () => {
-      this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', {
-        bubbles: true,
-        composed: true
-      }));
-    });
   }
 
   /**
@@ -601,56 +624,17 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Function to support @focusin event.
-   * @private
-   * @return {void}
-   */
-  handleFocusin() {
-    this.hasFocus = true;
-  }
-
-  /**
-   * @private
-   */
-  updateFocusTrap() {
-    // If the dropdown is open, create a focus trap and focus the first element
-    if (this.isPopoverVisible && !this.disableFocusTrap) {
-      this.focusTrap = new FocusTrap(this.bibContent);
-      this.focusTrap.focusFirstElement();
-      return;
-    }
-
-    // Guard Clause: Ensure there is a focus trap currently active before continuing
-    if (!this.focusTrap) {
-      return;
-    }
-
-    // If the dropdown is not open, disconnect the focus trap if it exists
-    this.focusTrap.disconnect();
-    this.focusTrap = undefined;
-  }
-
-  /**
-   * Function to support @focusout event.
-   * @private
-   * @return {void}
-   */
-  handleFocusout() {
-    this.hasFocus = false;
-  }
-
-  /**
    * Creates and dispatches a duplicate focus event on the trigger element.
    * @private
    * @param {Event} event - The original focus event.
    */
   bindFocusEventToTrigger(event) {
-    const dupEvent = new FocusEvent(event.type, {
-      bubbles: false,
-      cancelable: false,
-      composed: true,
-    });
-    this.trigger.dispatchEvent(dupEvent);
+    // const dupEvent = new FocusEvent(event.type, {
+    //   bubbles: false,
+    //   cancelable: false,
+    //   composed: true,
+    // });
+    //this.trigger.dispatchEvent(dupEvent);
   }
 
   /**
@@ -732,7 +716,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void}
    */
   handleTriggerContentSlotChange(event) {
-    this.floater.handleTriggerTabIndex();
+    // this.floater.handleTriggerTabIndex();
 
     // Get the trigger
     const trigger = this.shadowRoot.querySelector('#trigger');
@@ -754,6 +738,11 @@ export class AuroDropdown extends AuroElement {
 
         // If any of them are focusable elements
         if (this.triggerContentFocusable) {
+
+          // Check if any of the focusable elements are input elements
+          this._inputInTrigger = triggerContentNodes.find((node) => {
+            return node.tagName && node.tagName.toLowerCase().match('input') ? node : false;
+          });
 
           // Assume the consumer will be providing their own a11y in whatever they passed in
           this.clearTriggerA11yAttributes(trigger);
@@ -815,6 +804,19 @@ export class AuroDropdown extends AuroElement {
     }
   }
 
+  _handleTriggerClick(evt) {
+    this.dispatchEvent(new CustomEvent('auroDropdown-triggerClick', { detail: { event: evt } }));
+  }
+
+  get _currentBehavior() {
+
+    // Handle input
+    if (this._inputInTrigger) return this.isBibFullscreen ? 'input-fullscreen' : 'input-dropdown';
+
+    // Fallback to the default behaviors
+    return this.isBibFullscreen ? 'dialog-fullscreen' : 'dropdown'
+  }
+
   /**
    * Returns HTML for the common portion of the layouts.
    * @private
@@ -823,21 +825,32 @@ export class AuroDropdown extends AuroElement {
    */
   renderBasicHtml(helpTextClasses) {
     return html`
-      <div>
+      <${this._layoverTag} 
+        ${ref(this._layoverRef)}
+        .behavior="${this._currentBehavior}"
+        .input="${this._inputInTrigger}"
+        .minInputLength="${1}"
+        .offset="${this.offset || 4}"
+        .useFlip=${!this.noFlip}
+        .placement="${this.placement || 'bottom-start'}"
+        .showOnFocus="${this._currentBehavior !== 'input-fullscreen'}"
+        .hideOnNoValue="${this._currentBehavior !== 'input-fullscreen'}"
+        .showOnHover="${this.hoverToggle}"
+        .matchWidth="${this.matchWidth && !this.isBibFullscreen}"
+        ?disabled="${this.disabled}"
+      >
         <div
+          slot="trigger"
           id="trigger"
-          class="${classMap(this.commonWrapperClasses)}" part="wrapper"
-          tabindex="${ifDefined(this.triggerContentFocusable ? undefined : this.tabIndex)}"
-          role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
-          aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
-          aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
-          @focusin="${this.handleFocusin}"
-          @blur="${this.handleFocusOut}">
+          part="wrapper"          
+          class="${classMap(this.commonWrapperClasses)}"
+          @click="${this._handleTriggerClick}"
+        >
           <div class="triggerContentWrapper" id="triggerLabel">
             <slot
               name="trigger"
-              @slotchange="${this.handleTriggerContentSlotChange}"></slot>
+              @slotchange="${this.handleTriggerContentSlotChange}">
+            </slot>
           </div>
           ${this.chevron ? html`
               <div
@@ -852,21 +865,22 @@ export class AuroDropdown extends AuroElement {
                   >
                 </${this.iconTag}>
               </div>
-            ` : undefined }
+            ` : undefined}
         </div>
-        <div class="${classMap(helpTextClasses)}">
-          <slot name="helpText"></slot>
-        </div>
-        <div id="bibSizer" part="size"></div>
         <${this.dropdownBibTag}
+          ${ref(this._bibRef)}
           id="bib"
           shape="${this.shape}"
+          ?matchWidth="${this.matchWidth && !this.isBibFullscreen}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}">
           <div class="slotContent">
             <slot @slotchange="${this.handleDefaultSlot}"></slot>
           </div>
         </${this.dropdownBibTag}>
+      </${this._layoverTag}>
+      <div class="${classMap(helpTextClasses)}">
+        <slot name="helpText"></slot>
       </div>
     `;
   }

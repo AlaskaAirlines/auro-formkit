@@ -40,7 +40,6 @@
 
 #bodyContainer {
   position: relative;
-  overflow: auto;
   flex: 1 1 100%;
 }
 
@@ -50,6 +49,7 @@
   }
 
   #bodyContainer {
+    overflow: auto;
     margin-top: var(--ds-size-100, #{vac.$ds-size-100});
   }
 }

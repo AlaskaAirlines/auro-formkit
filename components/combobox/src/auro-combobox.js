@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
+/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, curly */
 
 // If using litElement base class
 import { css } from "lit";
@@ -617,9 +617,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   hideBib() {
-    if (this.dropdown && this.dropdown.isPopoverVisible) {
-      this.dropdown.hide();
-    }
+    if (this.dropdown) this.dropdown.hide();
   }
 
   /**
@@ -627,20 +625,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
-    if (!this.input.value) {
-      this.dropdown.hide();
-      return;
-    }
-
-    if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
-      if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
-        if (this.menu.hasAttribute('loading') && !this.menu.hasLoadingPlaceholder) {
-          this.isHiddenWhileLoading = true;
-        } else {
-          this.dropdown.show();
-        }
-      }
-    }
+    if (this.dropdown) this.dropdown.show();
   }
 
   /**
@@ -661,16 +646,15 @@ export class AuroCombobox extends AuroElement {
       this.dropdownOpen = ev.detail.expanded;
       this.updateMenuShapeSize();
 
+      // Don't show the bib if there are no options available
+      if (this.dropdownOpen && this.options.length <= 1) this.hideBib();
+
       // wait a frame in case the bib gets hide immediately after showing because there is no value
       setTimeout(() => {
         if (this.componentHasFocus) {
           this.setInputFocus();
         }
       }, 0);
-    });
-
-    this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
-      this.showBib();
     });
 
     // setting up bibtemplate
@@ -687,10 +671,6 @@ export class AuroCombobox extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
       this.updateMenuShapeSize();
-
-      setTimeout(() => {
-        this.setInputFocus();
-      }, 0);
     });
   }
 
@@ -865,9 +845,9 @@ export class AuroCombobox extends AuroElement {
    */
   handleMenuLoadingChange(event) {
     if (!event.detail.loading && this.isHiddenWhileLoading) {
-      if (this.contains(document.activeElement)) {
-        this.dropdown.show();
-      }
+      // if (this.contains(document.activeElement)) {
+      //   this.dropdown.show();
+      // }
       this.isHiddenWhileLoading = false;
     }
   }
@@ -899,10 +879,10 @@ export class AuroCombobox extends AuroElement {
       this.validate();
     }
 
-    // Hide menu if value is empty, otherwise show if there are available suggestions
-    if (this.input.value && this.input.value.length === 0) {
-      this.hideBib();
-    }
+    // // Hide menu if value is empty, otherwise show if there are available suggestions
+    // if (this.input.value && this.input.value.length === 0) {
+    //   this.hideBib();
+    // }
 
     // Force dropdown bib to hide if input value has no matching suggestions
     if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
@@ -956,19 +936,23 @@ export class AuroCombobox extends AuroElement {
        * Prevent moving the cursor position while navigating the menu options.
        */
       if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown') {
-        if (this.availableOptions.length > 0) {
+        if (this.availableOptions.length > 0 && !this.dropdown.isPopoverVisible) {
           this.showBib();
         }
 
         if (this.dropdown.isPopoverVisible) {
           evt.preventDefault();
 
-          // navigate on menu only when the focus is on input
-          if (!this.dropdown.isBibFullscreen || this.shadowRoot.activeElement === this.inputInBib) {
+          // navigate on menu only when the dropdown is open
+          if (this.dropdown.isPopoverVisible) {
             const direction = evt.key.replace('Arrow', '').toLowerCase();
             this.menu.navigateOptions(direction);
           }
         }
+      }
+
+      if (evt.key === 'Escape') {
+        this.hideBib();
       }
     });
 
@@ -1026,9 +1010,9 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   focus() {
-    if (!this.componentHasFocus) {
-      this.input.focus();
-    }
+    // if (!this.componentHasFocus) {
+    //   this.input.focus();
+    // }
   }
 
   /**
@@ -1109,7 +1093,7 @@ export class AuroCombobox extends AuroElement {
     if (changedProperties.has('availableOptions')) {
       if (this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) {
         this.showBib();
-      } else {
+      } else if (!this.dropdown.isBibFullscreen) {
         this.hideBib();
       }
     }
@@ -1269,9 +1253,8 @@ export class AuroCombobox extends AuroElement {
             </${this.inputTag}>
 
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}">
-            <slot name="bib.fullscreen.headline" slot="header"></slot>
             <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
-            <slot @slotchange="${this.handleSlotChange}"></slot>
+            <slot name="bib.fullscreen.headline" slot="header"></slot>
             <${this.inputTag}
               id="inputInBib"
               @input="${this.handleInputValueChange}"
@@ -1294,6 +1277,7 @@ export class AuroCombobox extends AuroElement {
               size="sm"
               slot="subheader">
             </${this.inputTag}>
+            <slot></slot>
           </${this.bibtemplateTag}>
 
           <span slot="helpText">
