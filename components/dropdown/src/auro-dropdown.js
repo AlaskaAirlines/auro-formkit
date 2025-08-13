@@ -525,7 +525,7 @@ export class AuroDropdown extends AuroElement {
       this.handleTriggerContentSlotChange();
     }
 
-    if (changedProperties.has('isPopoverVisible')) {
+    if (changedProperties.has('isPopoverVisible') && this.bibElement.value) {
       if (this.isPopoverVisible) {
         this.bibElement.value.showPopover();
       } else {
