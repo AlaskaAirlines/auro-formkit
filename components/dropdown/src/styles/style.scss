@@ -11,6 +11,12 @@
   z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
 }
 
+:host([open][isbibfullscreen]) {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .wrapper {
   display: flex;
   flex: 1;
