@@ -6,7 +6,7 @@
 @use '@aurodesignsystem/webcorestylesheets/src/utilityClasses/displayProperties';
 
 :host {
-  display: block;
+  display: inline-block;
   text-align: left;
 
   [auro-dropdown] {
@@ -26,6 +26,10 @@
       display: none;
     }
   }
+}
+
+:host([fluid]) {
+  display: block;
 }
 
 :host([layout*='classic']) {

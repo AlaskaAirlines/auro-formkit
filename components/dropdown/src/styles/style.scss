@@ -2,9 +2,17 @@
 
 :host {
   position: relative;
-  display: block;
+  display: inline-block;
   text-align: left;
   transform: translateZ(0); // fixes a safari rendering issue
+}
+
+:host([fluid]) {
+  display: block;
+
+  ::slotted([slot='trigger']) {
+    width: 100%;
+  }
 }
 
 :host([open]) {

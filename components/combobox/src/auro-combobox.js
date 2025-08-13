@@ -34,6 +34,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
+ * @attr fluid - When attribute is present, element will be 100% width of container element.
  * @slot - Default slot for the menu content.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot ariaLabel.input.clear - Sets aria-label on clear button

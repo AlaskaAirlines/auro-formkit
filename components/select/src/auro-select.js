@@ -44,6 +44,8 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
 /**
  * The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
  *
+ * @attr fluid - When attribute is present, element will be 100% width of container element.
+ *
  * @slot - Default slot for the menu content.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
@@ -190,14 +192,6 @@ export class AuroSelect extends AuroElement {
        * When attribute is present, element shows disabled state.
        */
       disabled: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * When attribute is present, element will be 100% width of container element.
-       */
-      fluid: {
         type: Boolean,
         reflect: true
       },
@@ -1209,6 +1203,7 @@ export class AuroSelect extends AuroElement {
           .offset="${this.offset}"
           .placement="${this.placement}"
           chevron
+          fluid
           for="selectMenu"
           layout="${this.layout}"
           part="dropdown"
@@ -1287,6 +1282,7 @@ export class AuroSelect extends AuroElement {
           .offset="${this.offset}"
           .placement="${this.placement}"
           chevron
+          fluid
           for="selectMenu"
           layout="${this.layout}"
           part="dropdown"
@@ -1371,6 +1367,7 @@ export class AuroSelect extends AuroElement {
           .offset="${this.offset}"
           .placement="${this.placement}"
           chevron
+          fluid
           for="selectMenu"
           layout="${this.layout}"
           part="dropdown"

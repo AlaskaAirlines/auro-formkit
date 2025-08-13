@@ -2,6 +2,12 @@
 
 The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
 
+## Attributes
+
+| Attribute | Description                                      |
+|-----------|--------------------------------------------------|
+| `fluid`   | When attribute is present, element will be 100% width of container element. |
+
 ## Properties
 
 | Property                        | Attribute                       | Type                              | Default        | Description                                      |
@@ -10,7 +16,6 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `autocomplete`                  | `autocomplete`                  | `string`                          |                | If declared, sets the autocomplete attribute for the select element. |
 | `disabled`                      | `disabled`                      | `boolean`                         |                | When attribute is present, element shows disabled state. |
 | `error`                         | `error`                         | `string`                          |                | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
-| `fluid`                         | `fluid`                         | `boolean`                         |                | When attribute is present, element will be 100% width of container element. |
 | `forceDisplayValue`             | `forceDisplayValue`             | `boolean`                         | false          | If declared, the label and value will be visually hidden and the displayValue will render 100% of the time. |
 | `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`                          | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
 | `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`                         |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |

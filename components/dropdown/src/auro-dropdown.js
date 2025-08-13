@@ -52,6 +52,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
 
 /*
+ * @attr fluid - To make dropdown `block` instead of `inline-block`
  * @slot - Default slot for the popover content.
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
