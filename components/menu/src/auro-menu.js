@@ -248,11 +248,17 @@ export class AuroMenu extends AuroElement {
     }
   }
 
+  // eslint-disable-next-line complexity
   updated(changedProperties) {
     super.updated(changedProperties);
 
     if (changedProperties.has('optionSelected')) {
-      this.notifySelectionChange();
+      const old = changedProperties.get('optionSelected');
+      if ((old && this.optionSelected && old.value !== this.optionSelected.value) ||
+        (!old && this.optionSelected) ||
+        (old && !this.optionSelected)) {
+        this.notifySelectionChange();
+      }
     }
 
     if (changedProperties.has('multiSelect') && !changedProperties.has("value")) {
