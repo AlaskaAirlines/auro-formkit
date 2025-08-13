@@ -622,12 +622,21 @@ export class AuroSelect extends AuroElement {
       this.menu.setAttribute('shape', 'box');
     } else {
       // set menu's default size if there it's not specified.
-      if (!this.menu.getAttribute('size')) {
-        this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
-      }
+      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.defaultMenuSize || this.size);
 
-      if (!this.getAttribute('shape')) {
-        this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+      switch (this.layout) {
+        case 'classic':
+          this.menu.setAttribute('shape', 'box');
+          break;
+        case 'emphasized':
+          if (this.dropdown && this.dropdown.bib) {
+            this.dropdown.bib.shape = 'rounded';
+          }
+          this.menu.setAttribute('shape', 'rounded');
+          break;
+        default:
+          this.menu.setAttribute('shape', this.defaultMenuShape || this.shape);
+          break;
       }
     }
   }
@@ -639,6 +648,8 @@ export class AuroSelect extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+    this.defaultMenuSize = this.menu.getAttribute('size');
+    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     // racing condition on custom-select with custom-menu
     if (!this.menu) {
@@ -1016,11 +1027,21 @@ export class AuroSelect extends AuroElement {
     }
 
     if (changedProperties.has('shape') && this.menu) {
-      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+      switch (this.layout) {
+        case 'classic':
+          this.menu.setAttribute('shape', 'box');
+          break;
+        case 'emphasized':
+          this.menu.setAttribute('shape', 'rounded');
+          break;
+        default:
+          this.menu.setAttribute('shape', this.defaultMenuShape || this.shape);
+          break;
+      }
     }
 
     if (changedProperties.has('size') && this.menu) {
-      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.defaultMenuSize || this.size);
     }
   }
 
