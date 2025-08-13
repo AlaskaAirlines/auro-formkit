@@ -7,6 +7,15 @@
   transform: translateZ(0); // fixes a safari rendering issue
 }
 
+[popover="manual"] {
+  overflow: visible;
+  padding: 0;
+  border: inherit;
+  margin: 0;
+  background: inherit;
+  outline: inherit;
+}
+
 :host([open]) {
   z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
 }
