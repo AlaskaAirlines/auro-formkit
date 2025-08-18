@@ -249,10 +249,14 @@ export class AuroRadioGroup extends LitElement {
 
     if (changedProperties.has('validity')) {
       if (this.validity && this.validity !== 'valid') {
+        this.setAttribute('aria-invalid', 'true');
+
         this.items.forEach((el) => {
           el.setAttribute('error', true);
         });
       } else {
+        this.removeAttribute('aria-invalid');
+
         this.items.forEach((el) => {
           el.removeAttribute('error');
         });
