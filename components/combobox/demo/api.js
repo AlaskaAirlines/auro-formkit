@@ -1,6 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 
 import { dynamicMenuExample } from '../apiExamples/dynamicMenu';
+import { setupExternalSelectionExample } from '../apiExamples/externalSelection.js';
 import { valueExample } from '../apiExamples/value';
 import { focusExample } from '../apiExamples/focus';
 import { inDialogExample } from '../apiExamples/inDialog';
@@ -24,6 +25,7 @@ export function initExamples(initCount) {
     inDialogExample();
     resetStateExample();
     auroMenuLoadingExample();
+    setupExternalSelectionExample();
   } catch (err) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called
