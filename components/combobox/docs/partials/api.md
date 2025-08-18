@@ -49,6 +49,25 @@ The menu in this example was populated from data from a country/city API. To kee
 
 </auro-accordion>
 
+### Updating Externally
+
+This example demonstrates using the <code>updateActiveOption</code> method to set a specific menu option as "active."
+
+This is useful for situations like matching IATA codes (sea -> SeaTac airport) 
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/externalSelection.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/externalSelection.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Property Examples
 
 #### disabled
