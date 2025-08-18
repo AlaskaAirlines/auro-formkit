@@ -108,13 +108,13 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
-  it('hides the bib when making a selection', async () => {
+  it(`hides the bib when making a selection with Enter`, async () => {
     const el = await defaultFixture(mobileview);
 
     el.focus();
     setInputValue(el, 'a');
     el.dispatchEvent(new KeyboardEvent('keydown', {
-      'key': 'Enter'
+      key: 'Enter'
     }));
 
     await elementUpdated(el);
@@ -131,6 +131,23 @@ function runFulltest(mobileview) {
 
     await oneEvent(el, 'auroDropdown-toggled');
     await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
+
+  it(`selects the current active option when hitting Tab key`, async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+
+    await elementUpdated(el);
+
+    const options = el.querySelectorAll('auro-menuoption');
+    setTimeout(() => {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    });
+
+    await expect(el.value === options[0].textContent);
   });
 
   // it('hides the bib when tabbing away from combobox', async () => {
