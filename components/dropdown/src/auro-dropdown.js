@@ -17,6 +17,7 @@
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
 import { LitElement } from "lit";
+import { createRef, ref } from "lit/directives/ref.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFloatingUI from '@aurodesignsystem/auro-library/scripts/runtime/floatingUI.mjs';
@@ -83,6 +84,9 @@ export class AuroDropdown extends AuroElement {
 
     /** @private */
     this.handleDropdownToggle = this.handleDropdownToggle.bind(this);
+
+    /** @private */
+    this.bibElement = createRef();
 
     this.privateDefaults();
   }
@@ -520,6 +524,14 @@ export class AuroDropdown extends AuroElement {
     if (changedProperties.size === 0 || changedProperties.has('isPopoverVisible')) {
       this.handleTriggerContentSlotChange();
     }
+
+    if (changedProperties.has('isPopoverVisible') && this.bibElement.value) {
+      if (this.isPopoverVisible) {
+        this.bibElement.value.showPopover();
+      } else {
+        this.bibElement.value.hidePopover();
+      }
+    }
   }
 
   /**
@@ -862,7 +874,10 @@ export class AuroDropdown extends AuroElement {
           id="bib"
           shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
-          ?isfullscreen="${this.isBibFullscreen}">
+          ?isfullscreen="${this.isBibFullscreen}"
+          ${ref(this.bibElement)}
+          popover="manual"
+          >
           <div class="slotContent">
             <slot @slotchange="${this.handleDefaultSlot}"></slot>
           </div>

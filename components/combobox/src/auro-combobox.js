@@ -515,7 +515,7 @@ export class AuroCombobox extends AuroElement {
     if (this.availableOptions.length === 0) {
       if (this.noMatchOption) {
         this.noMatchOption.removeAttribute('hidden');
-      } else {
+      } else if (!this.menu.loading || this.isHiddenWhileLoading) {
         this.hideBib();
       }
     } else if (this.noMatchOption) {
@@ -631,7 +631,6 @@ export class AuroCombobox extends AuroElement {
       this.dropdown.hide();
       return;
     }
-
     if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
       if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
         if (this.menu.hasAttribute('loading') && !this.menu.hasLoadingPlaceholder) {
@@ -640,6 +639,29 @@ export class AuroCombobox extends AuroElement {
           this.dropdown.show();
         }
       }
+    }
+  }
+
+  /**
+   * Forces focus to the internal input element and positions the cursor at the end of the text.
+   * This is used when clicking anywhere within the Combobox to ensure the input receives focus
+   * and the cursor is positioned at the end for better user experience.
+   * @private
+   * @returns {void}
+   */
+  forceFocusToInputEnd() {
+    // Set up input ref
+    let inputElement = null;
+
+    if (this.input.shadowRoot) {
+      inputElement = this.input.shadowRoot.querySelector('input');
+    }
+
+    if (inputElement) {
+      // Force focus and set cursor position to end of text to ensure visibility
+      inputElement.focus();
+      const textLength = inputElement.value ? inputElement.value.length : 0;
+      inputElement.setSelectionRange(textLength, textLength);
     }
   }
 
@@ -671,6 +693,9 @@ export class AuroCombobox extends AuroElement {
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
+
+      // Fixes Chromium-specific issue where clicking outside input but within Combobox doesn't return focus
+      this.forceFocusToInputEnd();
     });
 
     // setting up bibtemplate
@@ -733,13 +758,21 @@ export class AuroCombobox extends AuroElement {
       this.menu.setAttribute('size', 'md');
       this.menu.setAttribute('shape', 'box');
     } else {
-      // set menu's default size if there it's not specified.
-      if (!this.menu.getAttribute('size')) {
-        this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
-      }
+      this.menu.setAttribute('size', this.layout === 'emphasized' ? 'lg' : 'md');
 
-      if (!this.getAttribute('shape')) {
-        this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+      switch (this.layout) {
+        case 'classic':
+          this.menu.setAttribute('shape', 'box');
+          break;
+        case 'emphasized':
+          if (this.dropdown && this.dropdown.bib) {
+            this.dropdown.bib.shape = 'rounded';
+          }
+          this.menu.setAttribute('shape', 'rounded');
+          break;
+        default:
+          this.menu.setAttribute('shape', this.defaultMenuShape || this.shape);
+          break;
       }
     }
   }
@@ -751,6 +784,7 @@ export class AuroCombobox extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     this.menu.value = this.value;
 
@@ -843,10 +877,6 @@ export class AuroCombobox extends AuroElement {
         this.validate();
       }
     });
-
-    this.input.addEventListener('input', () => {
-      this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue} }));
-    });
   }
 
   /**
@@ -899,15 +929,18 @@ export class AuroCombobox extends AuroElement {
       this.validate();
     }
 
-    // Hide menu if value is empty, otherwise show if there are available suggestions
     if (this.input.value && this.input.value.length === 0) {
+      // Hide menu if value is empty, otherwise show if there are available suggestions
+      this.hideBib();
+    } else if (this.menu.loading) {
+      // if input has value but menu is loading, show bib immediately
+      this.showBib();
+    } else if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
+      // Force dropdown bib to hide if input value has no matching suggestions
       this.hideBib();
     }
 
-    // Force dropdown bib to hide if input value has no matching suggestions
-    if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
-      this.hideBib();
-    }
+    this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue} }));
   }
 
   /**
@@ -1082,7 +1115,7 @@ export class AuroCombobox extends AuroElement {
       if (this.value) {
         // If the value got set programmatically make sure we hide the bib
         // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
-        if (!this.contains(document.activeElement) && !this.bibtemplate.contains(document.activeElement)) {
+        if (!this.componentHasFocus) {
           this.hideBib();
         }
       } else {
@@ -1107,7 +1140,8 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      if (this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) {
+      // eslint-disable-next-line no-extra-parens
+      if ((this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading) {
         this.showBib();
       } else {
         this.hideBib();
@@ -1120,11 +1154,21 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('shape') && this.menu) {
-      this.menu.setAttribute('shape', this.layout === 'classic' ? 'box' : this.shape);
+      switch (this.layout) {
+        case 'classic':
+          this.menu.setAttribute('shape', 'box');
+          break;
+        case 'emphasized':
+          this.menu.setAttribute('shape', 'rounded');
+          break;
+        default:
+          this.menu.setAttribute('shape', this.defaultMenuShape || this.shape);
+          break;
+      }
     }
 
     if (changedProperties.has('size') && this.menu) {
-      this.menu.setAttribute('size', this.layout !== 'emphasized' ? 'md' : this.size);
+      this.menu.setAttribute('size', this.layout === 'emphasized' ? 'lg' : 'md');
     }
   }
 

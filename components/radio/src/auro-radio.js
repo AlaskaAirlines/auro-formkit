@@ -204,10 +204,6 @@ export class AuroRadio extends LitElement {
   }
 
   updated(changedProperties) {
-    if (changedProperties.has('error') || changedProperties.has('validity')) {
-      this.setAttribute('aria-invalid', this.error || this.validity !== 'valid' ? 'true' : 'false');
-    }
-
     if (changedProperties.has('required')) {
       this.setAttribute('aria-required', this.isRequired(this.required));
     }

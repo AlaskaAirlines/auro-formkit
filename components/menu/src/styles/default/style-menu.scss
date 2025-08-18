@@ -52,6 +52,7 @@
     slot[name="loadingIcon"] {
       vertical-align: middle;
       display: inline-block;
+      margin-bottom: var(--ds-size-25, vac.$ds-size-25);
 
       &::slotted(*) {
         margin-right: var(--ds-size-150, vac.$ds-size-150);

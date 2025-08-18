@@ -4,17 +4,19 @@
   position: relative;
   display: block;
   text-align: left;
-  transform: translateZ(0); // fixes a safari rendering issue
+}
+
+[popover="manual"] {
+  overflow: visible;
+  padding: 0;
+  border: inherit;
+  margin: 0;
+  background: inherit;
+  outline: inherit;
 }
 
 :host([open]) {
   z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
-}
-
-:host([open][isbibfullscreen]) {
-  position: fixed;
-  top: 0;
-  left: 0;
 }
 
 .wrapper {

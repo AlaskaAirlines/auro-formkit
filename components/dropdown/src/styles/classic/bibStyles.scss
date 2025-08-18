@@ -50,6 +50,7 @@
 :host([common]:not([isfullscreen])),
 :host([rounded]:not([isfullscreen])) {
   .container {
+    // classic
     border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
   }
 }
@@ -72,6 +73,11 @@
     &[class*="shape-pill"],
     &[class*="shape-snowflake"] {
       border-radius: 30px;
+    }
+
+    // emphasized
+    &[class*="shape-rounded"] {
+      border-radius: 16px;
     }
   }
 }
