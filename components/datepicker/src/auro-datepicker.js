@@ -806,7 +806,6 @@ export class AuroDatePicker extends AuroElement {
 
       if (!this.contains(document.activeElement)) {
         this.validate();
-        this.dropdown.hide();
       }
     });
 
@@ -1246,7 +1245,7 @@ export class AuroDatePicker extends AuroElement {
     const targetIsInput = initTarget.tagName === 'INPUT';
     const isFocusAlreadyOnInput = this.inputList.includes(this.shadowRoot.activeElement);
 
-    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput) {
+    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput && !event.composedPath().includes(this.dropdown.bibContent)) {
       // Focus the first input
       this.inputList[0].focus();
     }
