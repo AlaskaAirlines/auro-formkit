@@ -126,6 +126,7 @@ export class AuroDropdown extends AuroElement {
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
+    this.shift = false;
     this.autoPlacement = false;
 
     /**
@@ -190,6 +191,7 @@ export class AuroDropdown extends AuroElement {
     return {
       placement: this.placement,
       flip: !this.noFlip,
+      shift: this.shift,
       autoPlacement: this.autoPlacement,
       offset: this.offset,
     };
@@ -386,6 +388,15 @@ export class AuroDropdown extends AuroElement {
        * @default false
        */
       noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * @default false
+       */
+      shift: {
         type: Boolean,
         reflect: true
       },

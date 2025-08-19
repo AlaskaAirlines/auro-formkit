@@ -30,6 +30,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `setCustomValidity`             | `setCustomValidity`             | `string`                          |                | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                          |                | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                          |                | Custom help text message to display when validity = `valueMissing`. |
+| `shift`                         | `shift`                         | `boolean`                         | "false"        | If set, the dropdown will shift its position to avoid being cut off by the viewport. |
 | `validity`                      | `validity`                      | `string`                          |                | Specifies the `validityState` this element is in. |
 | `value`                         | `value`                         | `string`                          |                | Value selected for the component.                |
 

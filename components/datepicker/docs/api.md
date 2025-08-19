@@ -36,6 +36,7 @@
 | `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` |           | `string`   |                                                  | Custom help text message to display when validity = `rangeUnderflow`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   |           | `string`   |                                                  | Custom help text message to display when validity = `valueMissing`. |
 | `shape`                           |                                   |           | `string`   | "classic"                                        |                                                  |
+| `shift`                           | `shift`                           |           | `boolean`  | "false"                                          | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
 | `size`                            |                                   |           | `string`   | "lg"                                             |                                                  |
 | `stacked`                         | `stacked`                         |           | `boolean`  | false                                            | Set true to make datepicker stacked style.       |
 | `validity`                        | `validity`                        |           | `string`   | "undefined"                                      | Specifies the `validityState` this element is in. |
