@@ -297,12 +297,23 @@ export default class AuroFormValidation {
     }
 
     if (this.auroInputElements?.length > 0 && elem.validity !== "valueMissing") {
-      elem.validity = this.auroInputElements[0].validity;
-      elem.errorMessage = this.auroInputElements[0].errorMessage;
+
+      const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
+
+      // Don't reset combobox validity if persistValue is set since we can't use the input value to validate
+      if (!isCombobox || isCombobox && !elem.persistValue) {
+
+        // run validation on all inputs since we're going to use them to set the validity of this component
+        this.auroInputElements.forEach(input => input.validate());
+
+        // Reset element validity to the validity of the input
+        elem.validity = this.auroInputElements[0].validity;
+        elem.errorMessage = this.auroInputElements[0].errorMessage;
+      }
 
       // multiple input in one components (datepicker)
       // combobox has 2 inputs but no need to check validity on the 2nd one which is in fullscreen bib. 
-      if (elem.validity === 'valid' && this.auroInputElements.length > 1 && !this.runtimeUtils.elementMatch(elem, 'auro-combobox')) {
+      if (elem.validity === 'valid' && this.auroInputElements.length > 1 && !isCombobox) {
         elem.validity = this.auroInputElements[1].validity;
         elem.errorMessage = this.auroInputElements[1].errorMessage;
       }

@@ -741,6 +741,7 @@ export class AuroCombobox extends AuroElement {
       // current focus is on a menuoption, after clicking on it.
       if (this.persistInput && focusedEl && (focusedEl.tagName.toLowerCase() === 'auro-menuoption' || focusedEl.hasAttribute('auro-menuoption'))) {
         this.setClearBtnFocus();
+        this.validate(true);
       }
     }
   }
