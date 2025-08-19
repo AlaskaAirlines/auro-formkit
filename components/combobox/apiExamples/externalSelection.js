@@ -1,7 +1,7 @@
 import { AuroCombobox } from "../src/auro-combobox";
 
 /**
- * Sets up demo  external selection in the combobox.
+ * Demonstrates how to make external selection in the combobox.
  */
 export function setupExternalSelectionExample() {
 

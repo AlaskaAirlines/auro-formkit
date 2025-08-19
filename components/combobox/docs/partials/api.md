@@ -66,6 +66,9 @@ This is useful for situations like matching IATA codes (sea -> SeaTac airport)
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/externalSelection.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/externalSelection.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
 </auro-accordion>
 
 ### Property Examples
