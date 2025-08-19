@@ -88,10 +88,15 @@
   justify-content: center;
 }
 
-:host([layout*='emphasized']),
-:host([layout*='snowflake']) {
+:host([layout*='emphasized']) {
   .triggerContent {
     padding: 0 var(--ds-size-100, vac.$ds-size-100) 0 var(--ds-size-300, vac.$ds-size-300);
+  }
+}
+
+:host([layout*='snowflake']) {
+  .triggerContent {
+    padding: 0 var(--ds-size-100, vac.$ds-size-100) 0 var(--ds-size-200, vac.$ds-size-200);
   }
 }
 
