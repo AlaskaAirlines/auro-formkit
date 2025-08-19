@@ -79,6 +79,7 @@ export class AuroSelect extends AuroElement {
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
+    this.shift = false;
     this.autoPlacement = false;
 
     this.forceDisplayValue = false;
@@ -262,6 +263,15 @@ export class AuroSelect extends AuroElement {
        * @default false
        */
       noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If set, the dropdown will shift its position to avoid being cut off by the viewport.
+       * @default false
+       */
+      shift: {
         type: Boolean,
         reflect: true
       },
@@ -1225,6 +1235,7 @@ export class AuroSelect extends AuroElement {
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
+          ?shift="${this.shift}"
           ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .offset="${this.offset}"
