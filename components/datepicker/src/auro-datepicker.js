@@ -819,6 +819,16 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Blurs the datepicker and hides the dropdown as part of blur action.
+   * @private
+   * @returns {void}
+   */
+  blur() {
+    super.blur();
+    this.hideBib();
+  }
+
+  /**
    * Hides the dropdown bib if its open.
    * @returns {void}
    */
