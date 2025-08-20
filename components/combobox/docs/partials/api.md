@@ -49,6 +49,28 @@ The menu in this example was populated from data from a country/city API. To kee
 
 </auro-accordion>
 
+### Updating Externally
+
+This example demonstrates using the <code>updateActiveOption</code> method to set a specific menu option as "active."
+
+This is useful for situations like matching IATA codes (sea -> SeaTac airport) 
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/externalSelection.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/externalSelection.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/externalSelection.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Property Examples
 
 #### disabled
@@ -326,12 +348,13 @@ While content is loading, the menu can either remain empty or display a loading 
 </auro-accordion>
 
 ### Customized bib position
-The bib position can be customized with `placement`, `offset`, `flip`, `autoPlacement` attributes.
+The bib position can be customized with `placement`, `offset`, `flip`, `autoPlacement`, and `shift` attributes.
 
 - `placement` specifies the preferred position where the bib should appear relative to the trigger.
 - `offset` sets the distance between the trigger and the bib.
 - When `autoPlacement` is enabled, smart positioning logic is applied to determine the best placement for the bib. If all sides have sufficient space, the bib will appear in the position specified by `placement`.
 - Unless `noFlip` is enabled, if there isn't enough space for the preferred `placement`, the bib will automatically flip to an alternative position.
+- `shift` when enabled, adjusts the bib position when it would overflow the viewport boundaries, ensuring it remains visible.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/floaterConfig.html) -->

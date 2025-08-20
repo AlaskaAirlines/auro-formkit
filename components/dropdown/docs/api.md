@@ -27,6 +27,7 @@
 | `onSlotChange`          | `onSlotChange`          |             |                | If declared, and a function is set, that function will execute when the slot content is updated. |
 | `placement`             | `placement`             | `string`    | "bottom-start" | Position where the bib should appear relative to the trigger. |
 | `shape`                 |                         |             | "undefined"    |                                                  |
+| `shift`                 | `shift`                 | `boolean`   | "false"        | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
 | `simple`                | `simple`                | `boolean`   |                | If declared, applies a border around the trigger slot. |
 | `size`                  |                         |             | "undefined"    |                                                  |
 

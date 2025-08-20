@@ -32,6 +32,7 @@
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  |           | `string`              |                            | Custom help text message to display when validity = `customError`. |
 | `setCustomValidityValueMissing` | `setCustomValidityValueMissing` |           | `string`              |                            | Custom help text message to display when validity = `valueMissing`. |
 | `shape`                         |                                 |           | `string`              | "classic"                  |                                                  |
+| `shift`                         | `shift`                         |           | `boolean`             | "false"                    | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
 | `size`                          |                                 |           | `string`              | "xl"                       |                                                  |
 | `triggerIcon`                   | `triggerIcon`                   |           | `boolean`             | false                      | If set, the `icon` attribute will be applied to the trigger `auro-input` element. |
 | `type`                          | `type`                          |           | `string`              |                            | Applies the defined value as the type attribute on auro-input. |

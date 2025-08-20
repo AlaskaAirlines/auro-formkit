@@ -588,6 +588,9 @@ export class AuroMenu extends AuroElement {
       case "ArrowUp":
         this.navigateOptions('up');
         break;
+      case "Tab":
+        this.makeSelection();
+        break;
       case "Enter":
         this.makeSelection();
         break;

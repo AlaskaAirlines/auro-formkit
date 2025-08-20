@@ -78,6 +78,7 @@ export class AuroCounterGroup extends AuroElement {
     this.largeFullscreenHeadline = false;
     this.autoPlacement = false;
     this.noFlip = false;
+    this.shift = false;
 
     this.placement = 'bottom-start';
 
@@ -241,6 +242,15 @@ export class AuroCounterGroup extends AuroElement {
        * @default false
        */
       noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * @default false
+       */
+      shift: {
         type: Boolean,
         reflect: true
       },
@@ -685,6 +695,7 @@ export class AuroCounterGroup extends AuroElement {
         ?error="${this.validity !== undefined && this.validity !== 'valid'}"
         ?matchWidth="${this.matchWidth}"
         ?noFlip="${this.noFlip}"
+        ?shift="${this.shift}"
         ?onDark="${this.onDark}"
         .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
         .offset="${this.offset}"

@@ -79,6 +79,7 @@ export class AuroCombobox extends AuroElement {
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
+    this.shift = false;
     this.autoPlacement = false;
 
     this.privateDefaults();
@@ -233,6 +234,15 @@ export class AuroCombobox extends AuroElement {
        * @default false
        */
       noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * @default false
+       */
+      shift: {
         type: Boolean,
         reflect: true
       },
@@ -741,6 +751,7 @@ export class AuroCombobox extends AuroElement {
       // current focus is on a menuoption, after clicking on it.
       if (this.persistInput && focusedEl && (focusedEl.tagName.toLowerCase() === 'auro-menuoption' || focusedEl.hasAttribute('auro-menuoption'))) {
         this.setClearBtnFocus();
+        this.validate(true);
       }
     }
   }
@@ -1271,6 +1282,7 @@ export class AuroCombobox extends AuroElement {
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?noFlip="${this.noFlip}"
+          ?shift="${this.shift}"
           ?onDark="${this.onDark}"
           disableEventShow
           fluid

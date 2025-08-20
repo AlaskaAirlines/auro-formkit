@@ -133,6 +133,7 @@ export class AuroDatePicker extends AuroElement {
     this.placement = 'bottom-start';
     this.offset = 0;
     this.noFlip = false;
+    this.shift = false;
     this.autoPlacement = false;
 
     this.largeFullscreenHeadline = false;
@@ -354,6 +355,15 @@ export class AuroDatePicker extends AuroElement {
        * @default false
        */
       noFlip: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * @default false
+       */
+      shift: {
         type: Boolean,
         reflect: true
       },
@@ -806,7 +816,6 @@ export class AuroDatePicker extends AuroElement {
 
       if (!this.contains(document.activeElement)) {
         this.validate();
-        this.dropdown.hide();
       }
     });
 
@@ -817,6 +826,16 @@ export class AuroDatePicker extends AuroElement {
     if (this.hasAttribute('valueEnd') && this.getAttribute('valueEnd').length > 0) {
       this.calendar.dateTo = new Date(this.formattedValueEnd).getTime();
     }
+  }
+
+  /**
+   * Blurs the datepicker and hides the dropdown as part of blur action.
+   * @private
+   * @returns {void}
+   */
+  blur() {
+    super.blur();
+    this.hideBib();
   }
 
   /**
@@ -1246,7 +1265,7 @@ export class AuroDatePicker extends AuroElement {
     const targetIsInput = initTarget.tagName === 'INPUT';
     const isFocusAlreadyOnInput = this.inputList.includes(this.shadowRoot.activeElement);
 
-    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput) {
+    if (layoutRequiresHandling && !targetIsInput && !isFocusAlreadyOnInput && !event.composedPath().includes(this.dropdown.bibContent)) {
       // Focus the first input
       this.inputList[0].focus();
     }
@@ -1671,6 +1690,7 @@ export class AuroDatePicker extends AuroElement {
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?noFlip="${this.noFlip}"
+          ?shift="${this.shift}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .layout="${this.layout}"
           .matchWidth="${false}"
