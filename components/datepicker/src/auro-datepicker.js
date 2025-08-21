@@ -147,7 +147,7 @@ export class AuroDatePicker extends AuroElement {
     /**
      * @private
      */
-    this.hasDisplayValueContent = false;
+    this.hasDisplayValueContent = true;
 
     /**
      * @private
@@ -1467,7 +1467,11 @@ export class AuroDatePicker extends AuroElement {
             ${this.renderHtmlInputs()}
           </div>
           <div class="${classMap(this.commonDisplayValueWrapperClasses)}">
-            <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
+            <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}>
+              <span>
+                ${this.formatShortDate(this.value)}${this.range ? html`–${this.formatShortDate(this.valueEnd)}` : undefined}
+              </span>
+            </slot>
           </div>
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
