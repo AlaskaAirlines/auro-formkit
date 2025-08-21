@@ -10,11 +10,11 @@
 
 :host([layout*='snowflake']) {
   .leftIndent {
-    margin-left: var(--ds-size-300, vac.$ds-size-300);
+    margin-left: var(--ds-size-200, vac.$ds-size-200);
   }
 
   .rightIndent {
-    margin-right: var(--ds-size-300, vac.$ds-size-300);
+    margin-right: var(--ds-size-200, vac.$ds-size-200);
   }
 }
 
@@ -87,11 +87,11 @@
     width: var(--ds-size-300, vac.$ds-size-300);
 
     &.left {
-      padding-left: var(--ds-size-300, vac.$ds-size-300);
+      padding-left: var(--ds-size-200, vac.$ds-size-200);
     }
 
     &.right {
-      padding-right: var(--ds-size-300, vac.$ds-size-300);
+      padding-right: var(--ds-size-200, vac.$ds-size-200);
     }
   }
 }

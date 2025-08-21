@@ -50,12 +50,12 @@
   }
 
   .wrapper {
-    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
+    width: calc(100% - var(--ds-size-400, vac.$ds-size-400));
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 
-    padding-inline: var(--ds-size-300, vac.$ds-size-300);
+    padding-inline: var(--ds-size-200, vac.$ds-size-200);
   }
 
   .mainLabel {
@@ -73,9 +73,8 @@
   }
 
   .inputDivider {
-    // 18px - size-200 + size-25
     height: calc(var(--ds-size-200, vac.$ds-size-200) + var(--ds-size-25, vac.$ds-size-25));
-    margin: var(--ds-size-50, vac.$ds-size-50) var(--ds-size-150, vac.$ds-size-150);
+    margin: var(--ds-size-50, vac.$ds-size-50) var(--ds-size-75, vac.$ds-size-75);
     width: var(--ds-size-25, vac.$ds-size-25);
   }
 

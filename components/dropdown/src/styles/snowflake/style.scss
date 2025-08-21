@@ -17,13 +17,13 @@
 
 :host([layout*='snowflake']) {
   .leftIndent {
-    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
-    margin-left: var(--ds-size-300, vac.$ds-size-300);
+    width: calc(100% - var(--ds-size-400, vac.$ds-size-400));
+    margin-left: var(--ds-size-200, vac.$ds-size-200);
   }
 
   .rightIndent {
-    width: calc(100% - var(--ds-size-600, vac.$ds-size-600));
-    margin-right: var(--ds-size-300, vac.$ds-size-300);
+    width: calc(100% - var(--ds-size-400, vac.$ds-size-400));
+    margin-right: var(--ds-size-200, vac.$ds-size-200);
   }
 
   .trigger,
@@ -36,6 +36,6 @@
 .layout-snowflake-left,
 .layout-snowflake-right {
   .chevron {
-    margin-right: var(--ds-size-300, vac.$ds-size-300);
+    margin-right: var(--ds-size-200, vac.$ds-size-200);
   }
 }
