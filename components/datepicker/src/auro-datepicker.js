@@ -101,6 +101,7 @@ export class AuroDatePicker extends AuroElement {
 
     this.touched = false;
     this.disabled = false;
+    this.dvInputOnly = false;
     this.required = false;
     this.onDark = false;
     this.range = false;
@@ -142,6 +143,26 @@ export class AuroDatePicker extends AuroElement {
      * @private
      */
     this.dateSlotContent = [];
+
+    /**
+     * @private
+     */
+    this.hasDisplayValueContent = false;
+
+    /**
+     * @private
+     */
+    this.hasFocus = false;
+
+    /**
+     * @private
+     */
+    this.hasValue = false;
+
+    /**
+     * @private
+     */
+    this.hasAllValues = false;
 
     /**
      * @private
@@ -262,6 +283,14 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
+       * If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked.
+       */
+      dvInputOnly: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * When defined, sets persistent validity to `customError` and sets the validation message to the attribute value.
        */
       error: {
@@ -280,6 +309,14 @@ export class AuroDatePicker extends AuroElement {
       hasValue: {
         type: Boolean,
         reflect: false,
+      },
+
+      /**
+       * @private
+       */
+      hasAllValues: {
+        type: Boolean,
+        reflect: false
       },
 
       /**
@@ -569,6 +606,88 @@ export class AuroDatePicker extends AuroElement {
     }
 
     return [];
+  }
+
+  /**
+   * Whether the label is being hidden currently based on state.
+   * @returns {boolean} - Returns true if the label is hidden.
+   * @private
+   */
+  get labelHidden() {
+    return this.hasDisplayValueContent && this.dvInputOnly && !this.hasFocus && this.hasAllValues;
+  }
+
+  /**
+   * Whether the displayValue container is being hidden currently based on state.
+   * @returns {boolean} - Returns true if the label is hidden.
+   * @private
+   */
+  get dvHidden() {
+    return !this.hasDisplayValueContent || this.hasFocus || !this.hasAllValues;
+  }
+
+  /**
+   * Returns the input font class based on layout and visibility state.
+   * @private
+   * @returns {string} - The font class for the input.
+   */
+  get displayValueFontClass() {
+    if (this.layout.startsWith('emphasized')) {
+      let typeSize = 'accent-xl';
+
+      if (this.hasDisplayValueContent) {
+        if (!this.hasValue) {
+          typeSize = 'body-sm';
+        }
+      } else if (this.noFocusOrValue) {
+        typeSize = 'body-sm';
+      }
+
+      return typeSize;
+    }
+
+    if (this.layout === 'snowflake') {
+      // same for both hidden and visible
+      return 'body-lg';
+    }
+
+    // edge case for enabling visual overrides in datepicker
+    if (this.layout === 'classic' && this.shape === 'snowflake') {
+      return 'body-lg';
+    }
+
+    // classic layout (default) - same for both hidden and visible
+    return 'body-default';
+  }
+
+  get commonDisplayValueWrapperClasses() {
+    return {
+      'displayValueWrapper': true,
+      'util_displayHiddenVisually': this.dvHidden,
+      [this.displayValueFontClass]: true,
+    };
+  }
+
+  /**
+   * Function to determine if there is any displayValue content to render.
+   * @private
+   * @returns {void}
+   */
+  checkDisplayValueSlotChange() {
+    let nodes = this.shadowRoot.querySelector('slot[name="displayValue"]').assignedNodes();
+
+    // Handle when DisplayValue is multi-level slot content (e.g. combobox passing displayValue to input)
+    if (nodes && nodes[0] && nodes[0].tagName === 'SLOT') {
+      nodes = nodes[0].assignedNodes();
+    }
+
+    let hasContent = false;
+
+    if (nodes.length > 0) {
+      hasContent = true;
+    }
+
+    this.hasDisplayValueContent = hasContent;
   }
 
   /**
@@ -1001,11 +1120,13 @@ export class AuroDatePicker extends AuroElement {
   setHasValue() {
     if (!this.range) {
       this.hasValue = this.value && this.value.length > 0;
+      this.hasAllValues = this.hasValue;
       return;
     }
 
     // eslint-disable-next-line no-extra-parens
     this.hasValue = (this.value && this.value.length > 0) || (this.valueEnd && this.valueEnd.length > 0);
+    this.hasAllValues = (this.value && this.value.length > 0) && (this.valueEnd && this.valueEnd.length > 0); // eslint-disable-line no-extra-parens
   }
 
   get hasError() {
@@ -1311,21 +1432,23 @@ export class AuroDatePicker extends AuroElement {
    */
   renderSnowflakeLayout() {
     const accentsClassMap = {
-      error: this.hasError
+      'error': this.hasError
     };
 
     const inputSectionClassMap = {
-      inputSection: true,
+      'inputSection': true,
 
-      hasValue: this.hasValue,
-      hasFocus: this.hasFocus,
+      'hasValue': this.hasValue,
+      'hasFocus': this.hasFocus,
+      'util_displayHiddenVisually': !this.dvHidden
     };
 
     const labelClassMap = {
-      mainLabel: true,
+      'mainLabel': true,
 
-      hasValue: this.hasValue,
-      hasFocus: this.hasFocus,
+      'hasValue': this.hasValue,
+      'hasFocus': this.hasFocus,
+      'util_displayHiddenVisually': this.labelHidden,
       [this.hasFocus || this.hasValue ? 'body-xs' : 'body-lg']: true,
     };
 
@@ -1342,6 +1465,9 @@ export class AuroDatePicker extends AuroElement {
           </label>
           <div class="${classMap(inputSectionClassMap)}" part="inputSection">
             ${this.renderHtmlInputs()}
+          </div>
+          <div class="${classMap(this.commonDisplayValueWrapperClasses)}">
+            <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}></slot>
           </div>
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
