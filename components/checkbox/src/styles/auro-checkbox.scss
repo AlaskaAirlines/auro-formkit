@@ -51,6 +51,7 @@ fieldset {
   gap: var(--ds-size-100, #{vac.$ds-size-100});
   padding-left: var(--ds-size-100, #{vac.$ds-size-100});
   padding-right: var(--ds-size-100, #{vac.$ds-size-100});
+  align-items: center;
 
   &:hover {
     cursor: pointer;
