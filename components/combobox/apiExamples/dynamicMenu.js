@@ -37,6 +37,14 @@ export async function dynamicMenuExample() {
     swapValues();
   });
 
+  document.querySelector('#dynamicMenuPersistButton').addEventListener('click', () => {
+    const elOne = document.querySelector('#dynamicMenuExample');
+    const elTwo = document.querySelector('#dynamicMenuExampleTwo');
+
+    elOne.persistInput = !elOne.persistInput;
+    elTwo.persistInput = !elTwo.persistInput;
+  });
+
   // Generates HTML for menu and submenus using country & city data from an external API
   function generateHtml(data, selector) {
     const initialMenu = document.querySelector(selector);
@@ -94,13 +102,13 @@ export async function dynamicMenuExample() {
 
   // TODO: Need to refactor this to to not console a console error
   const dynamicDataTwo = new DynamicData();
-  const dynamicMenuExampleElTwo = document.querySelector('#dynamicMenuExample');
+  const dynamicMenuExampleElTwo = document.querySelector('#dynamicMenuExampleTwo');
   const dropdownElTwo = dynamicMenuExampleElTwo.shadowRoot.querySelector(dynamicMenuExampleElTwo.dropdownTag._$litStatic$);
   const inputElTwo = dropdownElTwo.querySelector(dynamicMenuExampleElTwo.inputTag._$litStatic$);
 
   inputElTwo.addEventListener('input', () => {
     let data = dynamicDataTwo.getData();
-    data = dynamicDataTwo.filterData(data, inputEl.value);
+    data = dynamicDataTwo.filterData(data, inputElTwo.value);
 
     generateHtml(data, '#initMenuTwo');
   });
