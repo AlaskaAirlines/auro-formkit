@@ -682,9 +682,8 @@ export class AuroMenu extends AuroElement {
   /**
    * Handles slot change events.
    * @private
-   * @param {Event} evt - Event object from the browser.
    */
-  handleSlotChange(evt) {
+  handleSlotChange() {
     if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
       this.rootMenu = false;
     }
@@ -698,15 +697,6 @@ export class AuroMenu extends AuroElement {
           true
         ]
       ]));
-    }
-
-    if (this.value) {
-      this.items.forEach((opt) => {
-        if (opt.value === this.value || (this.multiSelect && this.formattedValue.includes(opt.value))) {
-          this.handleSelectState(opt);
-          this.notifySelectionChange(evt.type);
-        }
-      });
     }
   }
 
