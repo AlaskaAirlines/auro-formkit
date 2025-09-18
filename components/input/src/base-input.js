@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, dot-location, new-cap */
+/* eslint-disable max-lines, dot-location, new-cap, curly */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 
@@ -520,6 +520,8 @@ export default class BaseInput extends AuroElement {
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');
 
+    this.patchInputEvent(this.inputElement);
+
     if (this.wrapperElement) {
       this.wrapperElement.addEventListener('click', this.handleClick);
     }
@@ -542,6 +544,44 @@ export default class BaseInput extends AuroElement {
     this.getPlaceholder();
     this.setCustomHelpTextMessage();
     this.configureAutoFormatting();
+  }
+
+  /**
+   * Patches the input element to dispatch an 'input' event whenever its value is set programmatically.
+   * This ensures that changes to the input's value are consistently communicated, even if not triggered by user input.
+   *
+   * @param {HTMLInputElement} input - The input element to patch.
+   * @returns {void}
+   * @private
+   */
+  patchInputEvent(input) {
+    if (!input) return;
+    if (input && !input.valuePatched) {
+      const nativeDescriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+      Object.defineProperty(input, 'value', {
+        get() {
+          return nativeDescriptor.get.call(this);
+        },
+        set(val) {
+          // Call the native setter
+          nativeDescriptor.set.call(this, val);
+
+          // If the input is not connected to the DOM do not dispatch the event
+          if (!this.isConnected) return;
+
+          // If the input does not have focus, do not dispatch the event
+          if (!this.matches(":focus")) return;
+
+          // If all guard clauses are passed, dispatch the event
+          this.dispatchEvent(new CustomEvent('input', {
+            bubbles: true,
+            composed: true,
+            detail: { programmatic: true }
+          }));
+        }
+      });
+      input.valuePatched = true;
+    }
   }
 
   /**
@@ -760,15 +800,20 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
+   * @param {Event} event - The input event
    * @private
-   * @return {void}
+   * @returns {void}
    */
-  handleInput() {
+  handleInput(event) {
     // Sets value property to value of element value (el.value).
     this.value = this.inputElement.value;
 
-    // Validation on blur or input.
-    if (this.validateOnInput) {
+    // Determine if the value change was programmatic, including autofill.
+    const inputWasProgrammatic = !this.matches(":focus") || (event.detail && event.detail.programmatic === true); // eslint-disable-line
+
+    // Validation on input or programmatic value change (including autofill).
+    if (this.validateOnInput || inputWasProgrammatic) {
+      this.touched = true;
       this.validation.validate(this);
     }
 
