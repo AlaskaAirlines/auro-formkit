@@ -557,6 +557,7 @@ export default class BaseInput extends AuroElement {
   patchInputEvent(input) {
     if (!input) return;
     if (input && !input.valuePatched) {
+      const component = this; // eslint-disable-line consistent-this
       const nativeDescriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
       Object.defineProperty(input, 'value', {
         get() {
@@ -569,15 +570,22 @@ export default class BaseInput extends AuroElement {
           // If the input is not connected to the DOM do not dispatch the event
           if (!this.isConnected) return;
 
-          // If the input does not have focus, do not dispatch the event
-          if (!this.matches(":focus")) return;
+          // If the input has focus, do not dispatch the event because it was not programmatic
+          if (this.matches(":focus")) return;
+
+          // If the component has flagged to skip the next programmatic input event, do not dispatch the event
+          if (component.skipNextProgrammaticInputEvent) {
+            component.skipNextProgrammaticInputEvent = false;
+            return;
+          }
 
           // If all guard clauses are passed, dispatch the event
-          this.dispatchEvent(new CustomEvent('input', {
+          const inputEvent = new InputEvent('input', {
             bubbles: true,
             composed: true,
-            detail: { programmatic: true }
-          }));
+          });
+          inputEvent.isProgrammatic = true;
+          this.dispatchEvent(inputEvent);
         }
       });
       input.valuePatched = true;
@@ -658,6 +666,7 @@ export default class BaseInput extends AuroElement {
       }
 
       if (this.value !== this.inputElement.value) {
+        this.skipNextProgrammaticInputEvent = true;
         if (this.value) {
           this.inputElement.value = this.value;
         } else {
@@ -809,7 +818,7 @@ export default class BaseInput extends AuroElement {
     this.value = this.inputElement.value;
 
     // Determine if the value change was programmatic, including autofill.
-    const inputWasProgrammatic = !this.matches(":focus") || (event.detail && event.detail.programmatic === true); // eslint-disable-line
+    const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
 
     // Validation on input or programmatic value change (including autofill).
     if (this.validateOnInput || inputWasProgrammatic) {

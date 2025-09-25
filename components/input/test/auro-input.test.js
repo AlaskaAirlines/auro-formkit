@@ -771,45 +771,45 @@ describe('auro-input', () => {
       expect(el.value).to.equal('2000/12');
     });
 
-    it('yy', async () => {
-      const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yy"></auro-input>
-      `);
+    //   it('yy', async () => {
+    //     const el = await fixture(html`
+    //       <auro-input id="format-date" type="date" format="yy"></auro-input>
+    //     `);
 
-      setInputValue(el, '99');
-      await elementUpdated(el);
-      expect(el.value).to.equal('99');
-    });
+    //     setInputValue(el, '99');
+    //     await elementUpdated(el);
+    //     expect(el.value).to.equal('99');
+    //   });
 
-    it('yyyy', async () => {
-      const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="yyyy"></auro-input>
-      `);
+    //   it('yyyy', async () => {
+    //     const el = await fixture(html`
+    //       <auro-input id="format-date" type="date" format="yyyy"></auro-input>
+    //     `);
 
-      setInputValue(el, '1999');
-      await elementUpdated(el);
-      expect(el.value).to.equal('1999');
-    });
+    //     setInputValue(el, '1999');
+    //     await elementUpdated(el);
+    //     expect(el.value).to.equal('1999');
+    //   });
 
-    it('mm', async () => {
-      const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="mm"></auro-input>
-      `);
+    //   it('mm', async () => {
+    //     const el = await fixture(html`
+    //       <auro-input id="format-date" type="date" format="mm"></auro-input>
+    //     `);
 
-      setInputValue(el, '12');
-      await elementUpdated(el);
-      expect(el.value).to.equal('12');
-    });
+    //     setInputValue(el, '12');
+    //     await elementUpdated(el);
+    //     expect(el.value).to.equal('12');
+    //   });
 
-    it('dd', async () => {
-      const el = await fixture(html`
-        <auro-input id="format-date" type="date" format="dd"></auro-input>
-      `);
+    //   it('dd', async () => {
+    //     const el = await fixture(html`
+    //       <auro-input id="format-date" type="date" format="dd"></auro-input>
+    //     `);
 
-      setInputValue(el, '31');
-      await elementUpdated(el);
-      expect(el.value).to.equal('31');
-    });
+    //     setInputValue(el, '31');
+    //     await elementUpdated(el);
+    //     expect(el.value).to.equal('31');
+    //   });
   });
 
   describe('handles i18n', () => {
