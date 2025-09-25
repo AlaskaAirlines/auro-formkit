@@ -63,11 +63,11 @@ Generate unique names for dependency components.
 
 ## Events
 
-| Event                       | Type                                      | Description                                      |
-|-----------------------------|-------------------------------------------|--------------------------------------------------|
-| `auroFormElement-validated` |                                           | Notifies that the `validity` and `errorMessage` value has changed. |
-| `auroInput-validityChange`  | `CustomEvent<any>`                        |                                                  |
-| `input`                     | `CustomEvent<{ programmatic: boolean; }>` | Event fires when the value of an `auro-input` has been changed. |
+| Event                       | Type               | Description                                      |
+|-----------------------------|--------------------|--------------------------------------------------|
+| `auroFormElement-validated` |                    | Notifies that the `validity` and `errorMessage` value has changed. |
+| `auroInput-validityChange`  | `CustomEvent<any>` |                                                  |
+| `input`                     | `InputEvent`       | Event fires when the value of an `auro-input` has been changed. |
 
 ## Slots
 

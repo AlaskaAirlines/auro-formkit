@@ -1168,6 +1168,7 @@ export class AuroDatePicker extends AuroElement {
     }
 
     if (changedProperties.has('value')) {
+
       this.formattedValue = this.util.toNorthAmericanFormat(this.value, this.format);
 
       // Change the calendar focus to the first valid date value only the first time the value is set
@@ -1216,6 +1217,7 @@ export class AuroDatePicker extends AuroElement {
     }
 
     if (changedProperties.has('valueEnd') && this.inputList[1]) {
+
       this.formattedValueEnd = this.util.toNorthAmericanFormat(this.valueEnd, this.format);
 
       // update the calendar
