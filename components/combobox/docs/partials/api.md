@@ -27,6 +27,47 @@
 
 </auro-accordion>
 
+### Behavior
+
+There are two behaviors available for the combo box: suggestion and filter.
+The default behavior is "suggestion".
+
+#### Suggestion
+
+With the suggestion behavior, the menu options are displayed to the user as suggestions, but the user may enter whatever value they like into the input
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/suggestion.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/suggestion.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### Filter
+
+With the filter behavior, the menu options are displayed to the user, and the user is required to choose one of the menu options in order for the input to be considered valid.
+
+The `setCustomValidityValueMissingFilter` attribute is also available to display a custom message to the user when this validation check fails.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/filter.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/filter.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Dynamic Menu
 
 This example demonstrates a data driven combobox. The data is used to populate the `auro-menu`. In this example, each time the input's value changes, the data is updated and the menu is recreated.
