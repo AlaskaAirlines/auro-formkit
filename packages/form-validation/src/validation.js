@@ -336,6 +336,15 @@ export default class AuroFormValidation {
         }
       }
 
+      const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
+      
+      if (isCombobox) {
+
+        if (!elem.persistInput || elem.behavior === "filter") {
+          hasValue = elem.input.value?.length > 0;
+        }
+      }
+
       if (!hasValue && elem.required && elem.touched) {
         elem.validity = 'valueMissing';
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
@@ -344,7 +353,7 @@ export default class AuroFormValidation {
         this.validateElementAttributes(elem);
       } else if (hasValue && (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group'))) {
         this.validateElementAttributes(elem);
-      } else if (this.runtimeUtils.elementMatch(elem, 'auro-combobox')) {
+      } else if (isCombobox) {
         this.validateElementAttributes(elem);
 
         // Don't run extra validation for cases where the combobox is not being used as a filter
