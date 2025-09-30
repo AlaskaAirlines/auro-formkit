@@ -433,6 +433,8 @@ export default class AuroFormValidation {
     if (elem.validity !== 'valid') {
       if (elem.setCustomValidity) {
         elem.errorMessage = elem.setCustomValidity;
+      } else if (this.runtimeUtils.elementMatch(elem, 'auro-combobox') && elem.errorMessage === '') {
+        elem.errorMessage = elem.input?.inputElement?.validationMessage;
       } else if (this.runtimeUtils.elementMatch(elem, 'auro-input') && elem.errorMessage === '') {
         const input = elem.renderRoot.querySelector('input');
 
