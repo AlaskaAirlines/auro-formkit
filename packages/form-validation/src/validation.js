@@ -357,7 +357,7 @@ export default class AuroFormValidation {
       const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
 
       // Don't reset combobox validity if persistValue is set since we can't use the input value to validate
-      if (!isCombobox || isCombobox && !elem.persistValue) {
+      if (!isCombobox || isCombobox && !elem.persistInput) {
 
         // run validation on all inputs since we're going to use them to set the validity of this component
         this.auroInputElements.forEach(input => input.validate());
