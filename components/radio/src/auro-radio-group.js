@@ -58,6 +58,7 @@ export class AuroRadioGroup extends LitElement {
     this.optionSelected = undefined;
     this.onDark = false;
     this.touched = false;
+    this.hasLegend = false;
 
     /**
      * @private
@@ -161,6 +162,18 @@ export class AuroRadioGroup extends LitElement {
       touched: {
         type: Boolean,
         reflect: true,
+        attribute: false
+      },
+
+      /**
+       * Indicates whether the legend slot is set or not.
+       * @type {boolean}
+       * @default false
+       * @private
+       */
+      hasLegened: {
+        type: Boolean,
+        reflect: false,
         attribute: false
       }
     };
@@ -351,6 +364,16 @@ export class AuroRadioGroup extends LitElement {
   }
 
   /**
+   * Method for handling legend slot changes.
+   * @private
+   * @returns {void}
+   */
+  handleLegendSlotChange() {
+    const slot = this.shadowRoot.querySelector("[slot='legend']");
+    this.hasLegend = Boolean(slot);
+  }
+
+  /**
    * Method for initializing the tab index of the checked radio input.
    * @private
    * @returns {void}
@@ -467,11 +490,14 @@ export class AuroRadioGroup extends LitElement {
     const groupClasses = {
       'displayFlex': this.horizontal && this.items.length <= this.max
     };
+    const legendClasses = {
+      'hidden': !this.hasLegened && this.required
+    };
 
     return html`
       <fieldset class="${classMap(groupClasses)}" part="radio-group" role="radiogroup">
-        <legend>
-          <slot name="legend"></slot>
+        <legend class="${classMap(legendClasses)}">
+          <slot name="legend" @slotchange=${this.handleLegendSlotChange}></slot>
           ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
         </legend>
         <slot @slotchange=${this.handleSlotChange}></slot>
