@@ -31,6 +31,12 @@
 :host {
   display: inline-block;
   text-align: left;
+  
+  /**
+    * By default, inline-blocks align to the text baseline, leaving a small gap below.
+    * This fixes the "extra space" below inline-block elements.
+    * see more: https://css-tricks.com/fighting-the-space-between-inline-block-elements
+    */
   vertical-align: top;
 }
 
