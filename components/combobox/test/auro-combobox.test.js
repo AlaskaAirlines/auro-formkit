@@ -443,6 +443,25 @@ function runFulltest(mobileview) {
 
     await elementUpdated(el);
 
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
+  });
+
+  it('handles the required state with persistInput set', async () => {
+    const el = await persistInputFixture(mobileview);
+
+    el.focus();
+    el.shadowRoot.activeElement.blur();
+    await elementUpdated(el);
+
+    // validity should be `valueMissing` because the input and combo box value are still undefined
+    await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+
+    setInputValue(el, 'pp');
+    await elementUpdated(el);
+    el.shadowRoot.activeElement.blur();
+    await elementUpdated(el);
+
+    // validity should still be `valueMissing` because no menu option was selected
     await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
   });
 
@@ -488,6 +507,33 @@ function runFulltest(mobileview) {
   //   await expect(el.value).to.equal(undefined);
   // });
 }
+
+/**
+ * 
+ */
+async function persistInputFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  };
+
+  return fixture(html`
+  <auro-combobox required persistInput>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+  `);
+};
 
 /**
  *
