@@ -36,6 +36,8 @@
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+### Basic
+
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
