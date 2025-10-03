@@ -244,7 +244,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If set, combobox will not filter menuoptions based in input.
+       * If set, combobox will not filter menuoptions based on input.
        */
       noFilter: {
         type: Boolean,
@@ -885,7 +885,7 @@ export class AuroCombobox extends AuroElement {
   configureInput() {
 
     /**
-     * Validate every time we remove focus from the combo box.
+     * Validate every time we remove focus from the combobox.
      */
     this.addEventListener('focusout', () => {
       if (!this.componentHasFocus) {

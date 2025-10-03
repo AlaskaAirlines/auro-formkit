@@ -289,8 +289,7 @@ export default class AuroFormValidation {
       // State-based checks
       (
         // Element is not currently focused
-        !elem.contains(document.activeElement) && // native input is not focused directly
-        !document.activeElement.shadowRoot?.contains(elem) && // native input is not focused in the shadow DOM of another component
+        !elem.componentHasFocus &&
 
         // And element has been touched or is untouched but has a value
         ( elem.touched || (!elem.touched && typeof elem.value !== "undefined") )

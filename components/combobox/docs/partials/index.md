@@ -61,12 +61,12 @@
 
 ### Behavior
 
-There are two behaviors available for the combo box: suggestion and filter.
+There are two behaviors available for the combobox: suggestion and filter.
 The default behavior is "suggestion".
 
 #### Suggestion
 
-With the suggestion behavior, the menu options are displayed to the user as suggestions, but the user may enter whatever value they like into the input
+With the suggestion behavior, the menu options are displayed to the user as suggestions, but the user may enter whatever value they like into the input.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/suggestion.html) -->
