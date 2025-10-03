@@ -90,6 +90,29 @@ The menu in this example was populated from data from a country/city API. To kee
 
 </auro-accordion>
 
+### Persistant Input
+
+The `persistInput` attribute allows you to set the combo box to persist the value of the input regardless of the current value set for the combo box.
+
+A persistant input is typically used in conjunction with display values to show the actual value of the selected option to the user when the input is not focused.
+
+This is helpful for things like dynamic menus where you want the user to be able to continue their search where they left off but display a full selected value when the input is not focused.
+
+_*Note:*_ When using `persistInput` with the `required` attribute, you must also pass an error message for when there isn't a valid value but the user has typed something in the input to the `setCustomValidityValueMissing` attribute.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/persistInput.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/persistInput.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Updating Externally
 
 This example demonstrates using the <code>updateActiveOption</code> method to set a specific menu option as "active."
