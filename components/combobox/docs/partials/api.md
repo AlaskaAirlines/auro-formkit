@@ -90,11 +90,11 @@ The menu in this example was populated from data from a country/city API. To kee
 
 </auro-accordion>
 
-### Persistant Input
+### Persistent Input
 
 The `persistInput` attribute allows you to set the combo box to persist the value of the input regardless of the current value set for the combo box.
 
-A persistant input is typically used in conjunction with display values to show the actual value of the selected option to the user when the input is not focused.
+A persistent input is typically used in conjunction with display values to show the actual value of the selected option to the user when the input is not focused.
 
 This is helpful for things like dynamic menus where you want the user to be able to continue their search where they left off but display a full selected value when the input is not focused.
 

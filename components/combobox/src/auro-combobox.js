@@ -244,7 +244,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If set, combobox will not filter menuoptions based in input.
+       * If set, combobox will not filter menuoptions based on input.
        */
       noFilter: {
         type: Boolean,

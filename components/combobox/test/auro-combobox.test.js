@@ -42,6 +42,50 @@ function runFulltest(mobileview) {
     await expect(input.hasAttribute("inputmode")).to.be.false;
   });
 
+  it('enforces menu selection when behavior is set to filter', async () => {
+    const el = await filterFixture(mobileview);
+    
+    // initial state
+    await expect(el.value).to.be.undefined;
+    await expect(el.hasAttribute('error')).to.be.false;
+
+    // type in a value that matches an option
+    setInputValue(el, 'pp');
+    await elementUpdated(el);
+    await expect(el.value).to.be.undefined;
+    await expect(el.hasAttribute('error')).to.be.false;
+    await expect(el.hasAttribute('validity')).to.be.false;
+    
+    // blur the input to trigger validation
+    el.shadowRoot.activeElement.blur();
+    await elementUpdated(el);
+
+    // should be errored because no option was selected
+    await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+    await expect(el.errorMessage).to.be.equal('filter error');
+
+    // select a value
+    el.focus();
+    await elementUpdated(el);
+    setTimeout(() => {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    // wait for the valueSet event to ensure the value has been set
+    await oneEvent(el, 'auroCombobox-valueSet');
+    await elementUpdated(el);
+
+    // blur the input to trigger validation
+    el.shadowRoot.activeElement.blur();
+    await elementUpdated(el);
+
+    // expect the value to be set to 'Apples' and the error to be cleared
+    await expect(el.value).to.be.equal('Apples');
+    await expect(el.hasAttribute('error')).to.be.false;
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
+  });
+
   it('noFilter attribute results in no suggestion filtering', async () => {
     const el = await noFilterFixture(mobileview);
 
@@ -717,6 +761,33 @@ async function persistentFixture(mobileview) {
       <auro-menuoption persistent id="option-noMatch">Persistent</auro-menuoption>
     </auro-menu>
   </auro-combobox>
+  `);
+}
+
+/**
+ * 
+ */
+async function filterFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
+  return fixture(html`
+    <auro-combobox behavior="filter" setCustomValidityValueMissingFilter="filter error">
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+        <auro-menuoption persistent id="option-noMatch">Persistent</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
   `);
 }
 

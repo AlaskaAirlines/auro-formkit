@@ -20,7 +20,7 @@
 | `layout`                              |                                       |           | `string`              | "classic"                  |                                                  |
 | `matchWidth`                          | `matchWidth`                          |           | `boolean`             | true                       | If declared, the popover and trigger will be set to the same width. |
 | `msgSelectionMissing`                 |                                       |           | `string`              | "Please select an option." |                                                  |
-| `noFilter`                            | `noFilter`                            |           | `boolean`             | false                      | If set, combobox will not filter menuoptions based in input. |
+| `noFilter`                            | `noFilter`                            |           | `boolean`             | false                      | If set, combobox will not filter menuoptions based on input. |
 | `noFlip`                              | `noFlip`                              |           | `boolean`             | "false"                    | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                          | `noValidate`                          |           | `boolean`             | false                      | If set, disables auto-validation on blur.        |
 | `offset`                              | `offset`                              |           | `number`              | "0"                        | Gap between the trigger element and bib.         |
