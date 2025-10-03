@@ -31,6 +31,7 @@
 :host {
   display: inline-block;
   text-align: left;
+  vertical-align: top;
 }
 
 :host([layout*='emphasized']),
