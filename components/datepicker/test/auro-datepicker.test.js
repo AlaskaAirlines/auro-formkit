@@ -209,7 +209,6 @@ describe('auro-datepicker', () => {
 
     // non-existant day
     el.value = "02/31/2022";
-    el.validate();
     await elementUpdated(el);
     await expect(el.getAttribute('validity')).to.be.equal('invalidDate');
 
