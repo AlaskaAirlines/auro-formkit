@@ -26,7 +26,7 @@ This file is generated based on a template fetched from `./docs/partials/index.m
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -36,7 +36,7 @@ This file is generated based on a template fetched from `./docs/partials/index.m
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -72,7 +72,7 @@ The `disabled` attribute used to disable the entire `<auro-checkbox-group>`.
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -82,7 +82,7 @@ The `disabled` attribute used to disable the entire `<auro-checkbox-group>`.
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabledGroup.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -101,7 +101,7 @@ The `error` attribute used to set error state on the entire `<auro-checkbox-grou
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkError.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceError.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -111,7 +111,7 @@ The `error` attribute used to set error state on the entire `<auro-checkbox-grou
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/errorGroup.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkError.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceError.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
