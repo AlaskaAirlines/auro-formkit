@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@aurodesignsystem/auro-helptext": "*",
-    "@aurodesignsystem/auro-icon": "^8.1.2",
+    "@aurodesignsystem-dev/auro-icon": "0.0.0-pr211.3",
     "@aurodesignsystem/auro-layout-element": "*",
     "chalk": "^5.4.1",
     "imask": "^7.6.1"

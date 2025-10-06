@@ -44,7 +44,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import {AuroElement} from "@aurodesignsystem/auro-layout-element";
 import i18n from "@aurodesignsystem/auro-input/src/i18n.js";
 
-import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
 import iconVersion from './iconVersion.js';
 
 import { AuroButton } from "@aurodesignsystem/auro-button/class";

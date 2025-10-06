@@ -23,7 +23,7 @@ The default component supports the basic input `type="text"` structure. The `(op
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -33,7 +33,7 @@ The default component supports the basic input `type="text"` structure. The `(op
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/onDark.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inverseAppearance.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -50,7 +50,7 @@ Use the `disable` attribute to prevent the user from interacting with the input.
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -60,7 +60,7 @@ Use the `disable` attribute to prevent the user from interacting with the input.
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/onDarkDisabled.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -455,17 +455,17 @@ A custom error message can be set using the `error` attribute, or it can be used
 #### onDark Variation
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/onDarkError.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/inverseAppearanceError.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/onDarkError.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/inverseAppearanceError.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/onDarkError.js) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/inverseAppearanceError.js) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -484,7 +484,7 @@ Default help text will be added to the input `type="password"` if custom help te
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/onDarkPassword.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/inverseAppearancePassword.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -492,7 +492,7 @@ Default help text will be added to the input `type="password"` if custom help te
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/onDarkPassword.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/inverseAppearancePassword.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

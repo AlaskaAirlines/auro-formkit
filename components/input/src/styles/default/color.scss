@@ -88,7 +88,9 @@
 
 /* onDark styles */
 :host([class='layoutDefault'][onDark][bordered]),
-:host(:not([layout])[onDark][bordered]) {
+:host(:not([layout])[onDark][bordered]),
+:host([class='layoutDefault'][appearance="inverse"][bordered]),
+:host(:not([layout])[appearance="inverse"][bordered]) {
   --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
   --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
@@ -107,7 +109,9 @@
 }
 
 :host([class='layoutDefault'][onDark][validity]:not([validity='valid'])[bordered]),
-:host(:not([layout])[onDark][validity]:not([validity='valid'])[bordered]) {
+:host(:not([layout])[onDark][validity]:not([validity='valid'])[bordered]),
+:host([class='layoutDefault'][appearance="inverse"][validity]:not([validity='valid'])[bordered]),
+:host(:not([layout])[appearance="inverse"][validity]:not([validity='valid'])[bordered]) {
   .wrapper {
     --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 
@@ -116,7 +120,9 @@
 }
 
 :host([class='layoutDefault'][onDark][disabled]),
-:host(:not([layout])[onDark][disabled]) {
+:host(:not([layout])[onDark][disabled]),
+:host([class='layoutDefault'][appearance="inverse"][disabled]),
+:host(:not([layout])[appearance="inverse"][disabled]) {
   --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
   --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{v.$ds-advanced-color-shared-background-inverse-disabled});
