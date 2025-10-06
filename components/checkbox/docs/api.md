@@ -6,7 +6,7 @@ The auro-checkbox-group element is a wrapper for auro-checkbox element.
 
 | Property                        | Attribute                       | Type      | Default     | Description                                      |
 |---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
-| `appearance`                    | `appearance`                    | `string`  | "'default'" | Defines whether the component should be light colored for use on dark backgrounds. |
+| `appearance`                    | `appearance`                    | `string`  | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
 | `disabled`                      | `disabled`                      | `boolean` | "undefined" | If set, disables the checkbox group.             |
 | `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `horizontal`                    | `horizontal`                    | `boolean` | false       | If set, checkboxes will be aligned horizontally. |
@@ -49,7 +49,7 @@ Custom element for the purpose of allowing users to select one or more options o
 
 | Property     | Attribute    | Type      | Default     | Description                                      |
 |--------------|--------------|-----------|-------------|--------------------------------------------------|
-| `appearance` | `appearance` | `string`  | "'default'" | Defines whether the component should be light colored for use on dark backgrounds. |
+| `appearance` | `appearance` | `string`  | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
 | `apperance`  |              | `string`  | "default"   |                                                  |
 | `checked`    | `checked`    | `boolean` | false       | If set to true, the checkbox will be filled with a checkmark. |
 | `disabled`   | `disabled`   | `boolean` | false       | If set to true, the checkbox will not be clickable. |
