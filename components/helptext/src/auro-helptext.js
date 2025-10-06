@@ -40,7 +40,7 @@ export class AuroHelpText extends LitElement {
     return {
 
       /**
-       * Defines whether the icon should be light colored for use on dark backgrounds.
+       * Defines whether the component should be light colored for use on dark backgrounds.
        * @property {'default', 'inverse'}
        * @default 'default'
        */
