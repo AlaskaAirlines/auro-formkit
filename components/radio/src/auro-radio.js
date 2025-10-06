@@ -23,7 +23,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @attr {Boolean} disabled - If set to true, the radio button will be non-clickable.
  * @attr {Boolean} required - Defines element as required.
  * @attr {Boolean} error - If set to true, sets an error state on the radio button.
- * @attr {Boolean} onDark - If set to true, the component will render with a dark theme.
+ * @attr {Boolean} onDark - DEPRECATED - use `appearance` instead.
  * @event toggleSelected - Notifies that the component has toggled the checked/selected state.
  *
  * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
@@ -45,6 +45,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 export class AuroRadio extends LitElement {
   constructor() {
     super();
+
+    this.appearance = "default";
     this.checked = false;
     this.disabled = false;
     this.required = false;
@@ -70,6 +72,16 @@ export class AuroRadio extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
       checked: {
         type: Boolean,
         reflect: true
