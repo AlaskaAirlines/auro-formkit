@@ -19,7 +19,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
-import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
 import iconVersion from './iconVersion.js';
 
 import { AuroHeader } from '@aurodesignsystem/auro-header/src/auro-header.js';

@@ -6,11 +6,13 @@
   --ds-auro-helptext-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
 }
 
-:host([onDark]) {
+:host([onDark]),
+:host([appearance="inverse"]) {
   --ds-auro-helptext-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
 }
 
-:host([onDark][error]) {
+:host([onDark][error]),
+:host([appearance="inverse"][error]) {
   --ds-auro-helptext-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 }
 

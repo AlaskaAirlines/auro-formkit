@@ -36,7 +36,7 @@ import BaseInput from './base-input.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
 import iconVersion from './iconVersion.js';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
@@ -318,10 +318,10 @@ export class AuroInput extends BaseInput {
       ${this.validity && this.validity !== 'valid' ? html`
         <div class="notification alertNotification">
           <${this.iconTag}
+            appearance="${this.onDark ? 'inverse' : this.appearance}"
             category="alert"
             name="error-stroke"
-            variant="statusError"
-            ?ondark="${this.onDark}">
+            variant="statusError">
           </${this.iconTag}>
         </div>
       ` : undefined}
@@ -403,7 +403,7 @@ export class AuroInput extends BaseInput {
       <div class="notification clear">
         <${this.buttonTag}
           @click="${this.handleClickClear}"
-          ?onDark="${this.onDark}"
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           class="notificationBtn clearBtn"
           shape="circle"
           size="sm"
@@ -411,7 +411,7 @@ export class AuroInput extends BaseInput {
           <span><slot name="ariaLabel.clear">Clear Input</slot></span>
           <${this.iconTag}
             aria-hidden="true"
-            ?customColor="${this.onDark}"
+            ?customColor="${this.onDark || this.appearance === 'inverse'}"
             category="interface"
             name="x-lg"
             >
@@ -431,7 +431,7 @@ export class AuroInput extends BaseInput {
       <div class="notification">
         <${this.buttonTag}
           @click="${this.handleClickShowPassword}"
-          ?onDark="${this.onDark}"
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           class="notificationBtn passwordBtn"
           shape="circle"
           size="sm"
@@ -441,14 +441,14 @@ export class AuroInput extends BaseInput {
               : html`<slot name="ariaLabel.password.show">Show Password</slot>`}
             </span>
           <${this.iconTag}
-            ?customColor="${this.onDark}"
+            ?customColor="${this.onDark || this.appearance === 'inverse'}"
             aria-hidden="true"
             ?hidden=${!this.showPassword}
             category="interface"
             name="hide-password-stroke">
           </${this.iconTag}>
           <${this.iconTag}
-            ?customColor="${this.onDark}"
+            ?customColor="${this.onDark || this.appearance === 'inverse'}"
             aria-hidden="true"
             ?hidden=${this.showPassword}
             category="interface"
@@ -474,7 +474,7 @@ export class AuroInput extends BaseInput {
         ${this.inputIconName
         ? repeat([this.inputIconName], (val) => val, (name) => html`
           <${this.iconTag}
-            ?onDark="${this.onDark}"
+            appearance="${this.onDark ? 'inverse' : this.appearance}"
             category="payment"
             class="accentIcon"
             name="${name}"
@@ -486,7 +486,7 @@ export class AuroInput extends BaseInput {
         ${this.type === 'date'
         ? html`
           <${this.iconTag}
-            ?onDark="${this.onDark}"
+            appearance="${this.onDark ? 'inverse' : this.appearance}"
             category="interface"
             class="accentIcon"
             name="calendar"
@@ -508,14 +508,16 @@ export class AuroInput extends BaseInput {
     return html`
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}">
+          <${this.helpTextTag}
+            appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
               <slot name="helpText">${this.getHelpText()}</slot>
             </p>
           </${this.helpTextTag}>
         `
         : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
+          <${this.helpTextTag} error
+            appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
               ${this.errorMessage}
             </p>
