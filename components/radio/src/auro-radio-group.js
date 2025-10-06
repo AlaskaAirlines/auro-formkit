@@ -34,7 +34,7 @@ import helpTextVersion from './helptextVersion.js';
  * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
  * @attr {String} error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
  * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} onDark - Applies dark mode styles to the component.
+ * @attr {Boolean} onDark - DEPRECATED - use `appearance` instead.
  * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
  * @attr {Object} optionSelected - Specifies the current selected radio button.
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
@@ -48,6 +48,8 @@ import helpTextVersion from './helptextVersion.js';
 export class AuroRadioGroup extends LitElement {
   constructor() {
     super();
+
+    this.appearance = "default";
     this.disabled = false;
     this.horizontal = false;
     this.required = false;
@@ -98,6 +100,17 @@ export class AuroRadioGroup extends LitElement {
 
   static get properties() {
     return {
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
+
       disabled:   {
         type: Boolean,
         reflect: true
@@ -240,6 +253,12 @@ export class AuroRadioGroup extends LitElement {
     if (changedProperties.has('onDark')) {
       this.items.forEach((el) => {
         el.onDark = this.onDark;
+      });
+    }
+
+    if (changedProperties.has('appearance')) {
+      this.items.forEach((el) => {
+        el.appearance = this.appearance;
       });
     }
 
@@ -459,11 +478,11 @@ export class AuroRadioGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}" part="helpText">
+          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}" part="helpText">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} ?onDark="${this.onDark}" role="alert" error aria-live="assertive" part="helpText">
+          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}" role="alert" error aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }
