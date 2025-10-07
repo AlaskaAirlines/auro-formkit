@@ -142,6 +142,7 @@ export class AuroSelect extends AuroElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
+    this.appearance = 'default';
     this.options = [];
     this.optionActive = null;
     this.optionSelected = undefined;
@@ -161,6 +162,16 @@ export class AuroSelect extends AuroElement {
   // to understand how to use reflected attributes with your property settings.
   static get properties() {
     return {
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
 
       /**
        * If declared, sets the autocomplete attribute for the select element.
@@ -294,7 +305,7 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, onDark styles will be applied to the trigger.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -1183,14 +1194,14 @@ export class AuroSelect extends AuroElement {
     return html`
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}">
+          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
               <slot name="helpText"></slot>
             </p>
           </${this.helpTextTag}>
         `
         : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
+          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
               ${this.errorMessage}
             </p>
@@ -1230,13 +1241,13 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           a11yRole="select"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
           ?shift="${this.shift}"
-          ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .offset="${this.offset}"
           .placement="${this.placement}"
@@ -1310,11 +1321,11 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
           ?noFlip="${this.noFlip}"
-          ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .offset="${this.offset}"
           .placement="${this.placement}"
@@ -1394,11 +1405,11 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${!this.flexMenuWidth}"
           ?noFlip="${this.noFlip}"
-          ?onDark="${this.onDark}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .offset="${this.offset}"
           .placement="${this.placement}"
