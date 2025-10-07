@@ -6,6 +6,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 | Property                        | Attribute                       | Type                              | Default        | Description                                      |
 |---------------------------------|---------------------------------|-----------------------------------|----------------|--------------------------------------------------|
+| `appearance`                    | `appearance`                    | `string`                          | "'default'"    | Defines whether the component will be on lighter or darker backgrounds. |
 | `autoPlacement`                 | `autoPlacement`                 | `boolean`                         | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `autocomplete`                  | `autocomplete`                  | `string`                          |                | If declared, sets the autocomplete attribute for the select element. |
 | `disabled`                      | `disabled`                      | `boolean`                         |                | When attribute is present, element shows disabled state. |
@@ -22,7 +23,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | `noFlip`                        | `noFlip`                        | `boolean`                         | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    | `boolean`                         |                | If set, disables auto-validation on blur.        |
 | `offset`                        | `offset`                        | `number`                          | "0"            | Gap between the trigger element and bib.         |
-| `onDark`                        | `onDark`                        | `boolean`                         |                | If declared, onDark styles will be applied to the trigger. |
+| `onDark`                        | `onDark`                        | `boolean`                         |                | DEPRECATED - use `appearance` instead.           |
 | `optionSelected`                | `optionSelected`                | `HTMLElement\|Array<HTMLElement>` |                | Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true. |
 | `placeholder`                   | `placeholder`                   | `string`                          |                | Define custom placeholder text.                  |
 | `placement`                     | `placement`                     | `string`                          | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end". |

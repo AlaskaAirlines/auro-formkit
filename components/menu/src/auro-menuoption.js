@@ -15,7 +15,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
 
-import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
 import iconVersion from './iconVersion.js';
 
 import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.mjs';

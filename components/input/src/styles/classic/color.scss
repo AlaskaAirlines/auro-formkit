@@ -16,7 +16,8 @@
 
 // not valid state
 
-:host(:not([ondark])) {
+:host(:not([ondark])),
+:host(:not([appearance="inverse"])) {
   .layout-classic {
     &:focus-within {
       --ds-auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
@@ -25,7 +26,8 @@
   }
 }
 
-:host([ondark]) {
+:host([ondark]),
+:host([appearance="inverse"]) {
   .layout-classic {
     &:focus-within {
       --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
@@ -34,7 +36,8 @@
   }
 }
 
-:host([layout*="classic"]:not([ondark]):is([validity]:not([validity='valid']))) {
+:host([layout*="classic"]:not([ondark]):is([validity]:not([validity='valid']))),
+:host([layout*="classic"]:not([appearance="inverse"]):is([validity]:not([validity='valid']))) {
   --ds-auro-input-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
   --ds-auro-input-outline-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
 
@@ -46,7 +49,8 @@
   }
 }
 
-:host([layout*="classic"][ondark]:is([validity]:not([validity='valid']))) {
+:host([layout*="classic"][ondark]:is([validity]:not([validity='valid']))),
+:host([layout*="classic"][appearance="inverse"]:is([validity]:not([validity='valid']))) {
   --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
   --ds-auro-input-outline-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 

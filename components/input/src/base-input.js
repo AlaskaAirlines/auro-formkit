@@ -48,6 +48,7 @@ export default class BaseInput extends AuroElement {
     super();
 
     this.activeLabel = false;
+    this.appearance = "default";
     this.icon = false;
     this.disabled = false;
     this.dvInputOnly = false;
@@ -185,6 +186,16 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * An enumerated attribute that controls whether and how text input is automatically capitalized as it is entered/edited by the user. [off/none, on/sentences, words, characters].
        */
       autocapitalize: {
@@ -317,7 +328,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Sets onDark styles on input.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,

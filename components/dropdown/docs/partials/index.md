@@ -57,7 +57,7 @@ Not including one of the above options will result in your UI being non-complian
 
 ### Emphasized
 
-Only supports `ondark`.
+Only supports `appearance="inverse"`.
 
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
@@ -74,7 +74,7 @@ Only supports `ondark`.
 
 ### Snowflake
 
-Only supports `ondark`.
+Only supports `appearance="inverse"`.
 
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->

@@ -14,7 +14,7 @@ The following example illustrates the default use of the `<auro-radio>` custom e
 
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -26,7 +26,7 @@ The following example illustrates the default use of the `<auro-radio>` custom e
 
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -42,7 +42,7 @@ This is a default configuration using the `<auro-radio-group>` and `<auro-radio>
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkGroup.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -52,7 +52,7 @@ This is a default configuration using the `<auro-radio-group>` and `<auro-radio>
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicGroup.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkGroup.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -68,7 +68,7 @@ Use the `checked` attribute to pre-select a `<auro-radio>` element.
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkChecked.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceChecked.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -78,7 +78,7 @@ Use the `checked` attribute to pre-select a `<auro-radio>` element.
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/checked.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkChecked.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceChecked.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -93,7 +93,7 @@ Use the `disabled` attribute to disable singular `<auro-radio>` elements or the 
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -103,7 +103,7 @@ Use the `disabled` attribute to disable singular `<auro-radio>` elements or the 
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDisabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -120,7 +120,7 @@ A custom error message can be set using the `error` attribute, or it can be used
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkError.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceError.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -130,7 +130,7 @@ A custom error message can be set using the `error` attribute, or it can be used
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/error.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkError.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceError.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

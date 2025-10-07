@@ -34,6 +34,7 @@ export class AuroCheckboxGroup extends LitElement {
   constructor() {
     super();
 
+    this.appearance = 'default';
     this.validity = undefined;
     this.disabled = undefined;
     this.required = false;
@@ -97,6 +98,16 @@ export class AuroCheckboxGroup extends LitElement {
       ...super.properties,
 
       /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * If set, disables the checkbox group.
        */
       disabled: {
@@ -129,7 +140,7 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * Sets onDark styles for component.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -367,6 +378,12 @@ export class AuroCheckboxGroup extends LitElement {
       });
     }
 
+    if (changedProperties.has('appearance')) {
+      this.checkboxes.forEach((el) => {
+        el.appearance = this.appearance;
+      });
+    }
+
     if (changedProperties.has('error')) {
       if (this.error) {
         this.setAttribute('aria-invalid', true);
@@ -402,11 +419,11 @@ export class AuroCheckboxGroup extends LitElement {
 
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} part="helpText" ?onDark="${this.onDark}">
+          <${this.helpTextTag} part="helpText" appearance="${this.onDark ? 'inverse' : this.appearance}">
             <slot name="helpText"></slot>
           </${this.helpTextTag}>`
         : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}" role="alert" aria-live="assertive" part="helpText">
+          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}"" role="alert" aria-live="assertive" part="helpText">
             ${this.errorMessage}
           </${this.helpTextTag}>`
       }

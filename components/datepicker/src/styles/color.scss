@@ -40,13 +40,15 @@
 }
 
 // disabled state
-:host(:not([ondark])[disabled]) {
+:host(:not([ondark])[disabled]),
+:host(:not([appearance="inverse"])[disabled]) {
   --ds-auro-datepicker-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
   --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
   --ds-auro-datepicker-placeholder-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
-:host([ondark][disabled]) {
+:host([ondark][disabled]),
+:host([appearance="inverse"][disabled]) {
   --ds-auro-datepicker-border-color: var(--ds-advanced-color-button-primary-border-inverse-disabled, #{v.$ds-advanced-color-button-primary-border-inverse-disabled});
   --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-datepicker-placeholder-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
