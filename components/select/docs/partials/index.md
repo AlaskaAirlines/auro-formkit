@@ -61,7 +61,7 @@ The `classic` layout is default for `auro-select`. No customization is needed to
 
 #### Emphasized Layout
 
-The `emphasized` layout only supports `ondark` use.
+The `emphasized` layout only supports `appearance="inverse"` use.
 
 The `emphasized` layout supports the following shapes:
 - `pill`
