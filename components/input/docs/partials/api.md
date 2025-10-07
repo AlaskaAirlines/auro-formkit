@@ -452,7 +452,7 @@ A custom error message can be set using the `error` attribute, or it can be used
 
 </auro-accordion>
 
-#### onDark Variation
+#### Visual state on dark backgrounds
 
 <div class="exampleWrapper--ondark" aria-hidden>
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/inverseAppearanceError.html) -->
