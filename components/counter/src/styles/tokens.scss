@@ -1,6 +1,7 @@
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
-:host(:not([ondark])) {
+:host(:not([ondark])),
+:host(:not([appearance="inverse"])) {
   /* Snowflake Dropdown Tokens */
   --ds-auro-counter-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
   --ds-auro-counter-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
@@ -19,7 +20,8 @@
   --ds-auro-counter-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
 }
 
-:host([ondark]) {
+:host([ondark]),
+:host([appearance="inverse"]) {
   /* Snowflake Dropdown Tokens */
   --ds-auro-counter-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
   --ds-auro-counter-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});

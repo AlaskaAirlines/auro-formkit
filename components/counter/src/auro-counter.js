@@ -43,6 +43,7 @@ export class AuroCounter extends LitElement {
   constructor() {
     super();
 
+    this.appearance = "default";
     this.defaultSlot = undefined;
     this.disabled = false;
     this.disableMax = false;
@@ -109,6 +110,16 @@ export class AuroCounter extends LitElement {
     return {
 
       /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * The default slot content.
        * @type {string}
        * @private
@@ -167,7 +178,7 @@ export class AuroCounter extends LitElement {
       },
 
       /**
-       * If declared, the counter will be rendered with onDark styles.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -357,14 +368,14 @@ export class AuroCounter extends LitElement {
     return html`
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}">
+          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
               <slot name="helpText"></slot>
             </p>
           </${this.helpTextTag}>
         `
         : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
+          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}"">
             <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
               ${this.errorMessage}
             </p>
@@ -403,9 +414,9 @@ export class AuroCounter extends LitElement {
             <auro-counter-button
               aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.minus') || '−'}"
               .tabindex="${'-1'}"
+              appearance="${this.onDark ? 'inverse' : this.appearance}"
               part="controlMinus"
               @click="${() => this.decrement()}"
-              ?onDark="${this.onDark}"
               ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
             >
               <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
@@ -414,13 +425,12 @@ export class AuroCounter extends LitElement {
             <div class="quantityWrapper body-lg">
               <div class="quantity">${this.value !== undefined ? this.value : this.min}</div>
             </div>
-
             <auro-counter-button
               aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.plus') || '+'}"
               .tabindex="${'-1'}"
+              appearance="${this.onDark ? 'inverse' : this.appearance}"
               part="controlPlus"
               @click="${() => this.increment()}"
-              ?onDark="${this.onDark}"
               ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
             >
               <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>

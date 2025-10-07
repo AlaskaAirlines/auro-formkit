@@ -21,7 +21,8 @@
   }
 }
 
-:host([onDark]) .auro-button {
+:host([onDark]) .auro-button,
+:host([appearance="inverse"]) .auro-button {
   --ds-auro-counter-control-background-color: var(--ds-advanced-color-button-tertiary-background-inverse, #{v.$ds-advanced-color-button-tertiary-background-inverse});
 
   @media (hover: hover) {
