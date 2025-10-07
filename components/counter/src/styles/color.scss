@@ -43,7 +43,8 @@
 
 /* onDark styles */
 
-[onDark], :host([onDark]) {
+[onDark], :host([onDark]),
+[appearance="inverse"], :host([appearance="inverse"]) {
   --ds-auro-counter-description-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
   --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
@@ -52,7 +53,8 @@
   --ds-auro-counter-icon-color: var(--ds-advanced-color-button-tertiary-text-inverse, #{v.$ds-advanced-color-button-tertiary-text-inverse});
 }
 
-[onDark][disabled], :host([onDark][disabled]) {
+[onDark][disabled], :host([onDark][disabled]),
+[appearance="inverse"][disabled], :host([appearance="inverse"][disabled]) {
   --ds-auro-counter-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-counter-quantity-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-counter-icon-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});

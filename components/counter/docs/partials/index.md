@@ -23,7 +23,7 @@ The counter component provides a simple interface for incrementing or decrementi
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -33,7 +33,7 @@ The counter component provides a simple interface for incrementing or decrementi
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic-standalone.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -49,7 +49,7 @@ Adding a description provides additional context to users. The description appea
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDescription.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDescription.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -59,7 +59,7 @@ Adding a description provides additional context to users. The description appea
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic-description.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDescription.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDescription.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -74,7 +74,7 @@ Help text is supported with counters, and can be added by targetting the `helpte
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-helptext.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-helptext.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -84,7 +84,7 @@ Help text is supported with counters, and can be added by targetting the `helpte
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/counter-helptext.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-helptext.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-helptext.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -99,7 +99,7 @@ A custom error can be set on the counter by adding the `error` attribute with th
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-error.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-error.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -109,7 +109,7 @@ A custom error can be set on the counter by adding the `error` attribute with th
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/counter-error.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ondark-counter-error.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-error.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -125,7 +125,7 @@ Counter groups allow you to manage multiple related counters together. This is u
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkGroup.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -135,7 +135,7 @@ Counter groups allow you to manage multiple related counters together. This is u
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkGroup.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -152,7 +152,7 @@ When using a dropdown, an additional layout, `snowflake`, is available for use:
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDropdown.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDropdown.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -162,7 +162,7 @@ When using a dropdown, an additional layout, `snowflake`, is available for use:
 </div>
 
 <div class="exampleWrapper--ondark">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark-dropdown-snowflake.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-dropdown-snowflake.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -172,13 +172,13 @@ When using a dropdown, an additional layout, `snowflake`, is available for use:
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dropdown-basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkDropdown.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDropdown.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-snowflake.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark-dropdown-snowflake.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-dropdown-snowflake.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
