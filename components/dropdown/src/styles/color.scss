@@ -11,7 +11,8 @@
   --ds-auro-dropdown-trigger-border-color: transparent;
 }
 
-:host(:not([ondark])) {
+:host(:not([ondark])),
+:host(:not([appearance="inverse"])) {
   .wrapper {
     border-color: var(--ds-auro-dropdown-trigger-border-color);
     background-color: var(--ds-auro-dropdown-trigger-background-color);
@@ -30,18 +31,21 @@
 }
 
 /* Disabled state */
-:host(:not([onDark])[disabled]) {
+:host(:not([onDark])[disabled]),
+:host(:not([appearance="inverse"])[disabled]) {
   --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
   --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
 }
 
-:host(:not([ondark])[error]) {
+:host(:not([ondark])[error]),
+:host(:not([appearance="inverse"])[error]) {
   --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
 }
 
 /* onDark */
-:host([onDark]) {
+:host([onDark]),
+:host([appearance="inverse"]) {
   .label, .helpText {
     color: var(--ds-auro-dropdown-label-text-color);
   }
@@ -63,12 +67,14 @@
   }
 }
 
-:host([onDark][disabled]) {
+:host([onDark][disabled]),
+:host([appearance="inverse"][disabled]) {
   --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse-disabled, #{v.$ds-advanced-color-shared-background-inverse-disabled});
 }
 
-:host([ondark][error]) {
+:host([ondark][error]),
+:host([appearance="inverse"][error]) {
   --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 }

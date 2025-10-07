@@ -110,6 +110,7 @@ export class AuroDropdown extends AuroElement {
    * @returns {void} Internal defaults.
    */
   privateDefaults() {
+    this.appearance = 'default';
     this.chevron = false;
     this.disabled = false;
     this.disableFocusTrap = false;
@@ -228,6 +229,16 @@ export class AuroDropdown extends AuroElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
 
       /**
        * If declared, bib's position will be automatically calculated where to appear.
@@ -427,7 +438,7 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       *  If declared, onDark styles will be applied.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -870,7 +881,7 @@ export class AuroDropdown extends AuroElement {
                 <${this.iconTag}
                   category="interface"
                   name="${this.isPopoverVisible ? 'chevron-up' : `chevron-down`}"
-                  ?onDark="${this.onDark}"
+                  appearance="${this.onDark ? 'inverse' : this.appearance}"
                   variant="${this.disabled ? 'disabled' : 'muted'}">
                   >
                 </${this.iconTag}>
