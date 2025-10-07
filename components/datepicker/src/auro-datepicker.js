@@ -100,6 +100,7 @@ export class AuroDatePicker extends AuroElement {
       this.calendarRenderUtil.updateCentralDate(this, new Date());
     }
 
+    this.appearance = "default";
     this.touched = false;
     this.disabled = false;
     this.dvInputOnly = false;
@@ -234,6 +235,16 @@ export class AuroDatePicker extends AuroElement {
   static get properties() {
     return {
       // ...super.properties,
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
 
       /**
        * If declared, bib's position will be automatically calculated where to appear.
@@ -424,7 +435,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, onDark styles will be applied to the trigger.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -1597,8 +1608,8 @@ export class AuroDatePicker extends AuroElement {
     return html`
       <div class="inputContainer">
         <${this.inputTag}
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           ?disabled="${this.disabled}"
-          ?onDark="${this.onDark}"
           ?required="${this.required}"
           .format="${this.format}"
           .max="${this.maxDate}"
@@ -1640,8 +1651,8 @@ export class AuroDatePicker extends AuroElement {
       ${this.range ? html`
         <div class="inputContainer">
           <${this.inputTag}
+            appearance="${this.onDark ? 'inverse' : this.appearance}"
             ?disabled="${this.disabled}"
-            ?onDark="${this.onDark}"
             ?required="${this.required}"
             .format="${this.format}"
             .max="${this.maxDate}"
@@ -1700,13 +1711,14 @@ export class AuroDatePicker extends AuroElement {
           @click="${this.resetInputs}"
           @keydown="${this.handleKeydownReset}"
           ?onDark="${this.onDark}"
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
           shape="circle"
           size="sm"
           variant="ghost">
           <${this.iconTag}
-            ?customColor="${this.onDark}"
+            ?customColor="${this.onDark || this.appearance === 'inverse'}"
             category="interface"
             name="x-lg"
             >
@@ -1748,7 +1760,7 @@ export class AuroDatePicker extends AuroElement {
   renderHtmlIconCalendar() {
     return html`
       <${this.iconTag}
-        ?onDark="${this.onDark}"
+        appearance="${this.onDark ? 'inverse' : this.appearance}"
         category="interface"
         class="accentIcon"
         name="calendar"
@@ -1766,14 +1778,14 @@ export class AuroDatePicker extends AuroElement {
     return html`
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}">
+          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
               <slot name="helpText"></slot>
             </p>
           </${this.helpTextTag}>
         `
         : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
+          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
               ${this.errorMessage}
             </p>
@@ -1823,8 +1835,8 @@ export class AuroDatePicker extends AuroElement {
       <slot name="ariaLabel.input.clear" hidden @slotchange=${this.requestUpdate}></slot>
 
       <${this.dropdownTag}
-          ?autoPlacement="${this.autoPlacement}"
-          ?onDark="${this.onDark}"
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
+          ?autoPlacement="${this.autoPlacement}"}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?noFlip="${this.noFlip}"
