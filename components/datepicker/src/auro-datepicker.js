@@ -822,11 +822,21 @@ export class AuroDatePicker extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.notifyDatepickerToggled();
 
+      // This forces the calendar to render when the dropdown is opened.
+      // It is not rendered by default
       this.calendar.visible = this.dropdown.isPopoverVisible;
 
-      if (this.dropdown.getAttribute('data-show') && this.forceScrollOnNextMobileCalendarRender) {
-        this.calendar.scrollMonthIntoView(this.formattedFocusDate);
-        this.forceScrollOnNextMobileCalendarRender = false;
+      // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
+      if (this.dropdown.isPopoverVisible && this.forceScrollOnNextMobileCalendarRender) {
+
+        // Since the calendar is not rendered until the dropdown is opened,
+        // and the auroDropdown-toggled event fires before the popover is actually open,
+        // we need to wait until the next frame to ensure the calendar is fully rendered
+        // and the area we're trying to scroll to is present in the DOM.
+        setTimeout(() => {
+          this.calendar.scrollMonthIntoView(this.formattedFocusDate);
+          this.forceScrollOnNextMobileCalendarRender = false;
+        }, 0);
       }
     });
   }
@@ -985,10 +995,13 @@ export class AuroDatePicker extends AuroElement {
   handleReadOnly() {
     // --ds-grid-breakpoint-sm
     const docStyle = getComputedStyle(document.documentElement);
-    const mobileBreakpoint = Number(docStyle.getPropertyValue('--ds-grid-breakpoint-sm').replace("px", ""));
+
+    // We need to store this so that we can pass it to calendar
+    this.mobileBreakpoint = Number(docStyle.getPropertyValue('--ds-grid-breakpoint-sm').replace("px", ""));
+    const isMobile = window.innerWidth < this.mobileBreakpoint;
 
     this.inputList.forEach((input) => {
-      if (window.innerWidth < mobileBreakpoint) {
+      if (isMobile) {
         input.setAttribute('readonly', true);
       } else {
         input.removeAttribute('readonly');
@@ -1175,6 +1188,9 @@ export class AuroDatePicker extends AuroElement {
       if (!this.calendarFocusDate && this.util.validDateStr(this.value, this.format)) {
         if (!this.dropdown.isPopoverVisible) {
           this.calendarFocusDate = this.value;
+
+          // Let the calendar know to scroll to the focus date when it is next rendered on mobile
+          this.forceScrollOnNextMobileCalendarRender = true;
         }
       }
 
@@ -1797,6 +1813,7 @@ export class AuroDatePicker extends AuroElement {
         .maxDate="${this.maxDate}"
         .minDate="${this.minDate}"
         .monthNames="${this.monthNames}"
+        .mobileBreakpoint="${this.mobileBreakpoint}"
         part="calendar"
       >
         <slot name="ariaLabel.bib.close" slot="ariaLabel.close" @slotchange="${this.handleSlotToSlot}">Close</slot>

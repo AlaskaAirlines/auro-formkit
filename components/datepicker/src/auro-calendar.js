@@ -163,6 +163,15 @@ export class AuroCalendar extends RangeDatepicker {
       },
 
       /**
+       * Mobile breakpoint for responsive design.
+       * @private
+       */
+      mobileBreakpoint: {
+        type: Number,
+        reflect: false
+      },
+
+      /**
        * @private
        */
       monthFirst: {
