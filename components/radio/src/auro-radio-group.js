@@ -171,7 +171,7 @@ export class AuroRadioGroup extends LitElement {
        * @default false
        * @private
        */
-      hasLegened: {
+      hasLegend: {
         type: Boolean,
         reflect: false,
         attribute: false
@@ -368,8 +368,10 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   handleLegendSlotChange() {
-    const slot = this.shadowRoot.querySelector("[slot='legend']");
-    this.hasLegend = Boolean(slot);
+    const slot = this.shadowRoot.querySelector('slot[name="legend"]');
+    if (slot) {
+      this.hasLegend = slot.assignedNodes().length > 0;
+    }
   }
 
   /**
@@ -490,7 +492,7 @@ export class AuroRadioGroup extends LitElement {
       'displayFlex': this.horizontal && this.items.length <= this.max
     };
     const legendClasses = {
-      'hidden': !this.hasLegened && this.required
+      'hidden': !this.hasLegend && this.required
     };
 
     return html`
