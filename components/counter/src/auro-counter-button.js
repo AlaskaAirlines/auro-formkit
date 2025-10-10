@@ -7,7 +7,7 @@ import styleButtonTokenCss from "./styles/tokens-css.js";
 import styleButtonColorCss from "./styles/counter-button-color-css.js";
 import styleButtonCss from "./styles/counter-button-css.js";
 
-import { AuroButton } from "@aurodesignsystem/auro-button/src/auro-button.js";
+import { AuroButton } from "@aurodesignsystem/auro-button/class";
 
 import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
