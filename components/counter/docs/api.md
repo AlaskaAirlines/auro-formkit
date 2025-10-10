@@ -28,10 +28,13 @@
 
 ## Slots
 
-| Name          | Description                          |
-|---------------|--------------------------------------|
-| `default`     | Main label content for the counter.  |
-| `description` | Descriptive content for the counter. |
+| Name              | Description                                |
+|-------------------|--------------------------------------------|
+|                   | Main label content for the counter.        |
+| `ariaLabel.minus` | Accessible label for the decrement button. |
+| `ariaLabel.plus`  | Accessible label for the increment button. |
+| `description`     | Descriptive content for the counter.       |
+| `helpText`        | Help text content for the counter.         |
 
 
 # auro-counter-group

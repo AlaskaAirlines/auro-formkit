@@ -33,7 +33,10 @@ import helptextVersion from "./helptextVersion.js";
  *
  * @element auro-counter
  * @extends LitElement
- * @slot default - Main label content for the counter.
+ * @slot - Main label content for the counter.
+ * @slot ariaLabel.minus - Accessible label for the decrement button.
+ * @slot ariaLabel.plus - Accessible label for the increment button.
+ * @slot helpText - Help text content for the counter.
  * @slot description - Descriptive content for the counter.
  */
 export class AuroCounter extends LitElement {
@@ -72,6 +75,11 @@ export class AuroCounter extends LitElement {
      * @private
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helptextVersion, AuroHelpText);
+
+    /**
+     * @private
+     */
+    this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
     /**
      * @private
@@ -368,6 +376,10 @@ export class AuroCounter extends LitElement {
 
   render() {
     return html`
+      <!-- Hidden slots for button aria-labels -->
+      <slot name="ariaLabel.minus" hidden @slotchange=${this.requestUpdate}></slot>
+      <slot name="ariaLabel.plus" hidden @slotchange=${this.requestUpdate}></slot>
+
       <div class="counterWrapper">
         <div class="counter">
           <div class="content" >
@@ -389,7 +401,7 @@ export class AuroCounter extends LitElement {
             tabindex="${this.disabled ? '-1' : '0'}" 
           >
             <auro-counter-button
-              aria-label="-"
+              aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.minus') || '−'}"
               .tabindex="${'-1'}"
               part="controlMinus"
               @click="${() => this.decrement()}"
@@ -404,7 +416,7 @@ export class AuroCounter extends LitElement {
             </div>
 
             <auro-counter-button
-              aria-label="+"
+              aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.plus') || '+'}"
               .tabindex="${'-1'}"
               part="controlPlus"
               @click="${() => this.increment()}"
