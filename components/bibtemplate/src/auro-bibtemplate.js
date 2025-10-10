@@ -16,7 +16,7 @@ import tokenCss from "./styles/tokens-css.js";
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
-import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';

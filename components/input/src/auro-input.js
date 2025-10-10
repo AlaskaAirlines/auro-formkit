@@ -38,7 +38,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
 import iconVersion from './iconVersion.js';
-import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
