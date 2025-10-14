@@ -41,7 +41,7 @@ import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
 import { classMap } from "lit/directives/class-map.js";
 
-import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
+import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from "./iconVersion.js";
 
 /**

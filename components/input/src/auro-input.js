@@ -36,7 +36,7 @@ import BaseInput from './base-input.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
+import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from './iconVersion.js';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';

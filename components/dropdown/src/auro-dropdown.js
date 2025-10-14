@@ -26,7 +26,7 @@ import { getFocusableElements } from '@aurodesignsystem/auro-library/scripts/run
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
-import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
+import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from './iconVersion.js';
 
 import { AuroDropdownBib } from './auro-dropdownBib.js';
