@@ -19,10 +19,10 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
-import { AuroIcon } from '@aurodesignsystem-dev/auro-icon/class';
+import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from './iconVersion.js';
 
-import { AuroHeader } from '@aurodesignsystem/auro-header/src/auro-header.js';
+import { AuroHeader } from '@aurodesignsystem/auro-header/class';
 import headerVersion from './headerVersion.js';
 
 export class AuroBibtemplate extends LitElement {
