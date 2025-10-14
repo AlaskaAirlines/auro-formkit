@@ -75,6 +75,7 @@
 | Name                       | Description                                      |
 |----------------------------|--------------------------------------------------|
 | `ariaLabel.bib.close`      | Sets aria-label on close button in fullscreen bib |
+| `ariaLabel.input.clear`    | Sets aria-label on clear button                  |
 | `bib.fullscreen.dateLabel` | Defines the content to display above selected dates in the mobile layout. |
 | `bib.fullscreen.headline`  | Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout. |
 | `date_MM_DD_YYYY`          | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |
