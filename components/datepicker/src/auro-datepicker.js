@@ -1626,6 +1626,7 @@ export class AuroDatePicker extends AuroElement {
             `
         : undefined
       }
+          <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
           <span slot="label"><slot name="fromLabel"></slot></span>
         </${this.inputTag}>
       </div>
@@ -1667,6 +1668,7 @@ export class AuroDatePicker extends AuroElement {
             `
           : undefined
         }
+            <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
             <span slot="label"><slot name="toLabel"></slot></span>
           </${this.inputTag}>
         </div>
