@@ -56,6 +56,7 @@ import { LitElement } from 'lit';
 /**
  * @slot helpText - Defines the content of the helpText.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
+ * @slot ariaLabel.input.clear - Sets aria-label on clear button
  * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
  * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
@@ -1478,9 +1479,9 @@ export class AuroDatePicker extends AuroElement {
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
           ${this.hasError
-        ? this.renderHtmlIconError()
-        : this.renderHtmlActionClear()
-      }
+            ? this.renderHtmlIconError()
+            : this.renderHtmlActionClear()
+          }
         </div>
       </div>
     `;
@@ -1517,9 +1518,9 @@ export class AuroDatePicker extends AuroElement {
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
           ${this.hasError
-        ? this.renderHtmlIconError()
-        : this.renderHtmlActionClear()
-      }
+            ? this.renderHtmlIconError()
+            : this.renderHtmlActionClear()
+          }
         </div>
       </div>
     `;
@@ -1668,7 +1669,7 @@ export class AuroDatePicker extends AuroElement {
             `
           : undefined
         }
-            <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
+            <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
             <span slot="label"><slot name="toLabel"></slot></span>
           </${this.inputTag}>
         </div>
@@ -1699,7 +1700,7 @@ export class AuroDatePicker extends AuroElement {
           @click="${this.resetInputs}"
           @keydown="${this.handleKeydownReset}"
           ?onDark="${this.onDark}"
-          aria-label="${i18n(this.lang, 'clearInput')}"
+          aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
           shape="circle"
           size="sm"
@@ -1818,6 +1819,9 @@ export class AuroDatePicker extends AuroElement {
 
     // Base HTML render() handles dropdown and calendar bib
     return html`
+      <!-- Hidden slot for clear button aria-label -->
+      <slot name="ariaLabel.input.clear" hidden @slotchange=${this.requestUpdate}></slot>
+
       <${this.dropdownTag}
           ?autoPlacement="${this.autoPlacement}"
           ?onDark="${this.onDark}"
