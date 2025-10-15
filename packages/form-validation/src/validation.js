@@ -269,6 +269,14 @@ export default class AuroFormValidation {
       if (typeof elem.value === "string") {
         hasValue = elem.value && elem.value.length > 0;
       }
+      
+      if (typeof elem.value === "boolean") {
+        hasValue = elem.value || elem.value === false;
+      }
+
+      if (typeof elem.value === "number") {
+        hasValue = !isNaN(elem.value) && elem.value !== null;
+      }
 
       // Check array value types for having a value
       if (Array.isArray(elem.value)) {
