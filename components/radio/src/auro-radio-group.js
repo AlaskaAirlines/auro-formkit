@@ -200,7 +200,8 @@ export class AuroRadioGroup extends LitElement {
    * @returns {void}
    */
   handleSelection(event) {
-    if (event.target.value) {
+    // specifically check null and undefined in case if the value is false or 0
+    if (event.target.value !== null && event.target.value !== undefined) {
       this.value = event.target.value;
     } else {
       this.value = '';
