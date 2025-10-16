@@ -120,6 +120,43 @@ function runTest(mobileView) {
       await expect(nativeSelect).to.exist;
     });
 
+    it('should open bib with showBib() method', async () => {
+      const el = await defaultFixture();
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      await expect(dropdown.isPopoverVisible).to.be.false;
+
+      el.showBib();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+    });
+
+    it('should close bib with hideBib() method', async () => {
+      const el = await defaultFixture();
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      await expect(dropdown.isPopoverVisible).to.be.false;
+
+      el.showBib();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      el.hideBib();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.false;
+    });
+
+    it('formattedValue should return objet format value when multiselect is true', async () => {
+      const element = await multiSelectFixture();
+      element.value = '["Apples", "Bananas"]';
+      await elementUpdated(element);
+      const elValue = element.formattedValue;
+      await expect(Array.isArray(elValue)).to.be.true;
+      await expect(elValue.length).to.equal(2);
+      await expect(elValue[0]).to.equal('Apples');
+      await expect(elValue[1]).to.equal('Bananas');
+    });
+
     it('should pass the name to the native select', async () => {
       const element = await defaultFixture();
       const testName = 'test-name';
@@ -253,6 +290,37 @@ function runTest(mobileView) {
 
       await expect(el.optionSelected[0]).to.equal(selectedOption1);
       await expect(el.optionSelected[1]).to.equal(selectedOption2);
+    });
+
+
+    it('should close when selecting an option', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      el.showBib();
+      await elementUpdated(el);
+      await expect(el.isPopoverVisible).to.be.true;
+
+      el.value = 'Apples';
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      const selectedOption = menu.querySelector('auro-menuoption[value="Apples"]');
+
+      await expect(el.value).to.eql('Apples');
+      await expect(el.optionSelected).to.equal(selectedOption);
+
+      await expect(el.isPopoverVisible).to.be.false;
+    });
+
+    it('should clear selection when non-existent value is set programmatically', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+
+      el.value = 'Non-existent value';
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      await expect(el.optionSelected).to.be.undefined;
     });
 
     // TODO: Remake this test, likely a false positive, and is no longer working after component updates
