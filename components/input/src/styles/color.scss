@@ -38,7 +38,8 @@
 
 }
 
-:host(:not([ondark])) {
+:host(:not([ondark])),
+:host(:not([appearance="inverse"])) {
   .wrapper {
     &:focus-within {
       --ds-auro-input-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
@@ -46,7 +47,8 @@
   }
 }
 
-:host([ondark]) {
+:host([ondark]),
+:host([appearance="inverse"]) {
   .wrapper {
     &:focus-within {
       --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
@@ -60,21 +62,24 @@
   }
 }
 
-:host([ondark]:is([validity]:not([validity='valid']))) {
+:host([ondark]:is([validity]:not([validity='valid']))),
+:host([appearance="inverse"]:is([validity]:not([validity='valid']))) {
   .wrapper {
     --ds-auro-input-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
   }
 }
 
 // disabled state
-:host(:not([ondark])[disabled]) {
+:host(:not([ondark])[disabled]),
+:host(:not([appearance="inverse"])[disabled]) {
   --ds-auro-input-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
   --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
   --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
-:host([ondark][disabled]) {
+:host([ondark][disabled]),
+:host([appearance="inverse"][disabled]) {
   --ds-auro-input-border-color: var(--ds-advanced-color-button-primary-border-inverse-disabled, #{v.$ds-advanced-color-button-primary-border-inverse-disabled});
   --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});

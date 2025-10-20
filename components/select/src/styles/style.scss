@@ -146,7 +146,8 @@ label {
   }
 }
 
-:host([ondark]:is([validity]:not([validity='valid']))) {
+:host([ondark]:is([validity]:not([validity='valid']))),
+:host([appearance='inverse']:is([validity]:not([validity='valid']))) {
   [auro-dropdown] {
     --ds-auro-select-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
     --ds-auro-dropdown-helptext-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
@@ -166,13 +167,15 @@ label {
   user-select: none;
 }
 
-:host([disabled]:not([ondark])) {
+:host([disabled]:not([ondark])),
+:host([disabled]:not([appearance='inverse'])) {
   [auro-dropdown] {
     --ds-auro-select-border-color: var(--ds-basic-color-border-subtle, #{v.$ds-basic-color-border-subtle});
   }
 }
 
-:host(:not([layout*="classic"])[disabled][ondark]) {
+:host(:not([layout*="classic"])[disabled][ondark]),
+:host(:not([layout*="classic"])[disabled][appearance='inverse']) {
   [auro-dropdown] {
     --ds-auro-select-border-color: transparent;
   }

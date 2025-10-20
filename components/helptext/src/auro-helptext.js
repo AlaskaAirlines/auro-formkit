@@ -20,6 +20,7 @@ export class AuroHelpText extends LitElement {
     super();
 
     this.error = false;
+    this.appearance = "default";
     this.onDark = false;
     this.hasTextContent = false;
 
@@ -37,6 +38,16 @@ export class AuroHelpText extends LitElement {
   // function to define props used within the scope of this component
   static get properties() {
     return {
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
 
       /**
        * @private
@@ -61,7 +72,7 @@ export class AuroHelpText extends LitElement {
       },
 
       /**
-       * If declared, will apply onDark styles.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,

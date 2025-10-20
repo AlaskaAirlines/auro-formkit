@@ -4,6 +4,7 @@
 
 | Property                           | Attribute                         | Modifiers | Type                                             | Default                                          | Description                                      |
 |------------------------------------|-----------------------------------|-----------|--------------------------------------------------|--------------------------------------------------|--------------------------------------------------|
+| `appearance`                       | `appearance`                      |           | `string`                                         | "'default'"                                      | Defines whether the component will be on lighter or darker backgrounds. |
 | `autoPlacement`                    | `autoPlacement`                   |           | `boolean`                                        | "false"                                          | If declared, bib's position will be automatically calculated where to appear. |
 | `calendarEndDate`                  | `calendarEndDate`                 |           | `string`                                         | "undefined"                                      | The last date that may be displayed in the calendar. |
 | `calendarFocusDate`                | `calendarFocusDate`               |           | `string`                                         | "value"                                          | The date that will first be visually rendered to the user in the calendar. |
@@ -25,7 +26,7 @@
 | `noFlip`                           | `noFlip`                          |           | `boolean`                                        | "false"                                          | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                       | `noValidate`                      |           | `boolean`                                        | false                                            | If set, disables auto-validation on blur.        |
 | `offset`                           | `offset`                          |           | `number`                                         | "0"                                              | Gap between the trigger element and bib.         |
-| `onDark`                           | `onDark`                          |           | `boolean`                                        | false                                            | If declared, onDark styles will be applied to the trigger. |
+| `onDark`                           | `onDark`                          |           | `boolean`                                        | false                                            | DEPRECATED - use `appearance` instead.           |
 | `placeholder`                      | `placeholder`                     |           | `string`                                         |                                                  | Placeholder text to display in the input(s) when no value is set. |
 | `placeholderEndDate`               | `placeholderEndDate`              |           | `string`                                         |                                                  | Optional placeholder text to display in the second input when using date range.<br />By default, datepicker will use `placeholder` for both inputs if placeholder is<br />specified, but placeholderendDate is not. |
 | `placement`                        | `placement`                       |           | `string`                                         | "bottom-start"                                   | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end" |
@@ -75,6 +76,7 @@
 | Name                       | Description                                      |
 |----------------------------|--------------------------------------------------|
 | `ariaLabel.bib.close`      | Sets aria-label on close button in fullscreen bib |
+| `ariaLabel.input.clear`    | Sets aria-label on clear button                  |
 | `bib.fullscreen.dateLabel` | Defines the content to display above selected dates in the mobile layout. |
 | `bib.fullscreen.headline`  | Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout. |
 | `date_MM_DD_YYYY`          | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |

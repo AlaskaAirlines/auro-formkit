@@ -2,15 +2,16 @@
 
 ## Properties
 
-| Property   | Attribute  | Type      | Default     | Description                                      |
-|------------|------------|-----------|-------------|--------------------------------------------------|
-| `disabled` | `disabled` | `boolean` | false       | Indicates if the counter is disabled.            |
-| `error`    | `error`    | `string`  |             | Error state and message.<br />True if set, value is the error message. |
-| `max`      | `max`      | `number`  | 9           | The maximum value for the counter.               |
-| `min`      | `min`      | `number`  | 0           | The minimum value for the counter.               |
-| `onDark`   | `onDark`   | `boolean` | false       | If declared, the counter will be rendered with onDark styles. |
-| `validity` | `validity` | `string`  | "undefined" | The validity state of the counter.               |
-| `value`    | `value`    | `number`  | "undefined" | The current value of the counter.                |
+| Property     | Attribute    | Type      | Default     | Description                                      |
+|--------------|--------------|-----------|-------------|--------------------------------------------------|
+| `appearance` | `appearance` | `string`  | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
+| `disabled`   | `disabled`   | `boolean` | false       | Indicates if the counter is disabled.            |
+| `error`      | `error`      | `string`  |             | Error state and message.<br />True if set, value is the error message. |
+| `max`        | `max`        | `number`  | 9           | The maximum value for the counter.               |
+| `min`        | `min`        | `number`  | 0           | The minimum value for the counter.               |
+| `onDark`     | `onDark`     | `boolean` | false       | DEPRECATED - use `appearance` instead.           |
+| `validity`   | `validity`   | `string`  | "undefined" | The validity state of the counter.               |
+| `value`      | `value`      | `number`  | "undefined" | The current value of the counter.                |
 
 ## Methods
 
@@ -28,10 +29,13 @@
 
 ## Slots
 
-| Name          | Description                          |
-|---------------|--------------------------------------|
-| `default`     | Main label content for the counter.  |
-| `description` | Descriptive content for the counter. |
+| Name              | Description                                |
+|-------------------|--------------------------------------------|
+|                   | Main label content for the counter.        |
+| `ariaLabel.minus` | Accessible label for the decrement button. |
+| `ariaLabel.plus`  | Accessible label for the increment button. |
+| `description`     | Descriptive content for the counter.       |
+| `helpText`        | Help text content for the counter.         |
 
 
 # auro-counter-group
@@ -40,6 +44,7 @@
 
 | Property                  | Attribute                 | Type                     | Default        | Description                                      |
 |---------------------------|---------------------------|--------------------------|----------------|--------------------------------------------------|
+| `appearance`              | `appearance`              | `string`                 | "'default'"    | Defines whether the component will be on lighter or darker backgrounds. |
 | `autoPlacement`           | `autoPlacement`           | `boolean`                | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `error`                   | `error`                   | `string`                 |                | The current error message to display when the component is invalid. |
 | `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `string`                 | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
@@ -51,7 +56,7 @@
 | `min`                     | `min`                     | `number`                 | "undefined"    | The minimum value allowed for the whole group of counters. |
 | `noFlip`                  | `noFlip`                  | `boolean`                | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `offset`                  | `offset`                  | `number`                 | "0"            | Gap between the trigger element and bib.         |
-| `onDark`                  | `onDark`                  | `boolean`                | false          | If declared, counters and dropdown will be rendered with onDark styles. |
+| `onDark`                  | `onDark`                  | `boolean`                | false          | DEPRECATED - use `appearance` instead.           |
 | `placement`               | `placement`               | `string`                 | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end". |
 | `shift`                   | `shift`                   | `boolean`                | "false"        | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
 | `total`                   | `total`                   | `number`                 | "undefined"    | The total value of the counters.                 |

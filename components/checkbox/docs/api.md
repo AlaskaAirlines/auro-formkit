@@ -6,11 +6,12 @@ The auro-checkbox-group element is a wrapper for auro-checkbox element.
 
 | Property                        | Attribute                       | Type      | Default     | Description                                      |
 |---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
+| `appearance`                    | `appearance`                    | `string`  | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
 | `disabled`                      | `disabled`                      | `boolean` | "undefined" | If set, disables the checkbox group.             |
 | `error`                         | `error`                         | `string`  |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
 | `horizontal`                    | `horizontal`                    | `boolean` | false       | If set, checkboxes will be aligned horizontally. |
 | `noValidate`                    | `noValidate`                    | `boolean` |             | If set, disables auto-validation on blur.        |
-| `onDark`                        | `onDark`                        | `boolean` | false       | Sets onDark styles for component.                |
+| `onDark`                        | `onDark`                        | `boolean` | false       | DEPRECATED - use `appearance` instead.           |
 | `required`                      | `required`                      | `boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
 | `setCustomValidity`             | `setCustomValidity`             | `string`  |             | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`  |             | Custom help text message to display when validity = `customError`. |
@@ -46,15 +47,17 @@ Custom element for the purpose of allowing users to select one or more options o
 
 ## Properties
 
-| Property   | Attribute  | Type      | Default | Description                                      |
-|------------|------------|-----------|---------|--------------------------------------------------|
-| `checked`  | `checked`  | `boolean` | false   | If set to true, the checkbox will be filled with a checkmark. |
-| `disabled` | `disabled` | `boolean` | false   | If set to true, the checkbox will not be clickable. |
-| `error`    | `error`    | `boolean` | false   | If set to true, the checkbox will be displayed with an error state. |
-| `id`       | `id`       | `string`  |         | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
-| `name`     | `name`     | `string`  |         | Accepts any string and is used to identify related checkboxes when submitting form data. |
-| `onDark`   | `onDark`   | `boolean` | false   | Sets onDark styles for component.                |
-| `value`    | `value`    | `string`  |         | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
+| Property     | Attribute    | Type      | Default     | Description                                      |
+|--------------|--------------|-----------|-------------|--------------------------------------------------|
+| `appearance` | `appearance` | `string`  | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
+| `apperance`  |              | `string`  | "default"   |                                                  |
+| `checked`    | `checked`    | `boolean` | false       | If set to true, the checkbox will be filled with a checkmark. |
+| `disabled`   | `disabled`   | `boolean` | false       | If set to true, the checkbox will not be clickable. |
+| `error`      | `error`      | `boolean` | false       | If set to true, the checkbox will be displayed with an error state. |
+| `id`         | `id`         | `string`  |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
+| `name`       | `name`       | `string`  |             | Accepts any string and is used to identify related checkboxes when submitting form data. |
+| `onDark`     | `onDark`     | `boolean` | false       | DEPRECATED - use `appearance` instead.           |
+| `value`      | `value`      | `string`  |             | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
 
 ## Methods
 

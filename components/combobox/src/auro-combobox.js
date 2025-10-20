@@ -55,6 +55,7 @@ export class AuroCombobox extends AuroElement {
     super();
 
     // Defaults that effect the combobox behavior and state
+    this.appearance = "default";
     this.disabled = false;
     this.msgSelectionMissing = 'Please select an option.';
     this.noFilter = false;
@@ -117,6 +118,16 @@ export class AuroCombobox extends AuroElement {
   static get properties() {
     return {
       // ...super.properties,
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
 
       /**
        * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
@@ -265,7 +276,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If declared, onDark styles will be applied to the trigger.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -653,29 +664,6 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Forces focus to the internal input element and positions the cursor at the end of the text.
-   * This is used when clicking anywhere within the Combobox to ensure the input receives focus
-   * and the cursor is positioned at the end for better user experience.
-   * @private
-   * @returns {void}
-   */
-  forceFocusToInputEnd() {
-    // Set up input ref
-    let inputElement = null;
-
-    if (this.input.shadowRoot) {
-      inputElement = this.input.shadowRoot.querySelector('input');
-    }
-
-    if (inputElement) {
-      // Force focus and set cursor position to end of text to ensure visibility
-      inputElement.focus();
-      const textLength = inputElement.value ? inputElement.value.length : 0;
-      inputElement.setSelectionRange(textLength, textLength);
-    }
-  }
-
-  /**
    * Binds all behavior needed to the dropdown after rendering.
    * @private
    * @returns {void}
@@ -703,9 +691,6 @@ export class AuroCombobox extends AuroElement {
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
-
-      // Fixes Chromium-specific issue where clicking outside input but within Combobox doesn't return focus
-      this.forceFocusToInputEnd();
     });
 
     // setting up bibtemplate
@@ -1275,6 +1260,7 @@ export class AuroCombobox extends AuroElement {
           }
         </div>
         <${this.dropdownTag}
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
           .offset="${this.offset}"
           .placement="${this.placement}"
@@ -1283,7 +1269,6 @@ export class AuroCombobox extends AuroElement {
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?noFlip="${this.noFlip}"
           ?shift="${this.shift}"
-          ?onDark="${this.onDark}"
           disableEventShow
           fluid
           for="dropdownMenu"
@@ -1296,6 +1281,7 @@ export class AuroCombobox extends AuroElement {
           size="${this.size}">
             <${this.inputTag}
               @input="${this.handleInputValueChange}"
+              appearance="${this.onDark ? 'inverse' : this.appearance}"
               .a11yExpanded="${this.dropdownOpen}"
               .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
@@ -1306,7 +1292,6 @@ export class AuroCombobox extends AuroElement {
               ?disabled="${this.disabled}"
               ?icon="${this.triggerIcon}"
               ?dvInputOnly="${this.dvInputOnly}"
-              ?onDark="${this.onDark}"
               ?required="${this.required}"
               a11yRole="combobox"
               id="${this.id}"
@@ -1355,14 +1340,14 @@ export class AuroCombobox extends AuroElement {
           <span slot="helpText">
             ${!this.validity || this.validity === 'valid'
               ? html`
-                <${this.helpTextTag} class="${classMap(helpTextContentClasses)}" ?onDark="${this.onDark}">
+                <${this.helpTextTag} class="${classMap(helpTextContentClasses)}" appearance="${this.onDark ? 'inverse' : this.appearance}"">
                   <p id="${this.uniqueId}" part="helpText">
                     <slot name="helpText"></slot>
                   </p>
                 </${this.helpTextTag}>
               `
               : html`
-                <${this.helpTextTag} class="${classMap(errorTextContentClasses)}" error ?onDark="${this.onDark}">
+                <${this.helpTextTag} class="${classMap(errorTextContentClasses)}" error appearance="${this.onDark ? 'inverse' : this.appearance}"">
                   <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
                     ${this.errorMessage}
                   </p>

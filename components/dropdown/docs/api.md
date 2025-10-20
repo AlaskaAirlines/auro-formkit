@@ -5,6 +5,7 @@
 | Property                | Attribute               | Type        | Default        | Description                                      |
 |-------------------------|-------------------------|-------------|----------------|--------------------------------------------------|
 | `a11yRole`              |                         |             |                | The value for the role attribute of the trigger element. |
+| `appearance`            | `appearance`            | `string`    | "'default'"    | Defines whether the component will be on lighter or darker backgrounds. |
 | `autoPlacement`         | `autoPlacement`         | `boolean`   | "false"        | If declared, bib's position will be automatically calculated where to appear. |
 | `chevron`               | `chevron`               | ` Boolean ` |                | If declared, the dropdown displays a chevron on the right. |
 | `disableEventShow`      | `disableEventShow`      | ` Boolean ` | "false"        | If declared, the dropdown will only show by calling the API .show() public method. |
@@ -23,7 +24,7 @@
 | `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | ` Boolean ` | false          | If declared, the dropdown will not hide when moving focus outside the element. |
 | `noToggle`              | `noToggle`              | ` Boolean ` |                | If declared, the trigger will only show the dropdown bib. |
 | `offset`                | `offset`                | `number`    | "0"            | Gap between the trigger element and bib.         |
-| `onDark`                | `onDark`                | `boolean`   |                | If declared, onDark styles will be applied.      |
+| `onDark`                | `onDark`                | `boolean`   |                | DEPRECATED - use `appearance` instead.           |
 | `onSlotChange`          | `onSlotChange`          |             |                | If declared, and a function is set, that function will execute when the slot content is updated. |
 | `placement`             | `placement`             | `string`    | "bottom-start" | Position where the bib should appear relative to the trigger. |
 | `shape`                 |                         |             | "undefined"    |                                                  |

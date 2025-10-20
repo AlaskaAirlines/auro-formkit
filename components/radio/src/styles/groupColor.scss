@@ -25,10 +25,12 @@
   --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
-:host([onDark]) {
+:host([onDark]),
+:host([appearance="inverse"]) {
   --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
 }
 
-:host([onDark][disabled]) {
+:host([onDark][disabled]),
+:host([appearance="inverse"][disabled]) {
   --ds-auro-radio-group-label-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
 }

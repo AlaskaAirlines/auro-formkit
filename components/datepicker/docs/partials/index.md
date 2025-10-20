@@ -14,38 +14,38 @@
 
 #### Single date
 <div class="exampleWrapper--ondark" style="width: 306px">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <div class="exampleWrapper--ondark">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/ondark.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/inverseAppearance.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
 
 #### Range
 <div class="exampleWrapper--ondark" style="width: 306px">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark-range.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/inverseAppearance-range.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <div class="exampleWrapper--ondark">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ondark-range.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/inverseAppearance-range.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/ondark-range.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/inverseAppearance-range.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -59,7 +59,7 @@
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -69,7 +69,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDark.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -82,7 +82,7 @@
 </div>
 
 <div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkRange.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceRange.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -92,7 +92,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicRange.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/onDarkRange.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceRange.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

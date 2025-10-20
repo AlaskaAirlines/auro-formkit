@@ -1,6 +1,6 @@
 import { changeLang } from "../apiExamples/changeLang";
 import { customError } from "../apiExamples/error";
-import { customErrorOnDark } from "../apiExamples/onDarkError";
+import { customErrorOnDark } from "../apiExamples/inverseAppearanceError";
 import { setReadonlyValue } from "../apiExamples/readonly";
 import { swapInputValues } from "../apiExamples/swapValue";
 import { programmaticallySetValue } from "../apiExamples/value";

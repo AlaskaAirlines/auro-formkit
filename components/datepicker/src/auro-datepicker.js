@@ -44,10 +44,10 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import {AuroElement} from "@aurodesignsystem/auro-layout-element";
 import i18n from "@aurodesignsystem/auro-input/src/i18n.js";
 
-import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from './iconVersion.js';
 
-import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 import { LitElement } from 'lit';
 
@@ -56,6 +56,7 @@ import { LitElement } from 'lit';
 /**
  * @slot helpText - Defines the content of the helpText.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
+ * @slot ariaLabel.input.clear - Sets aria-label on clear button
  * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
  * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
@@ -99,6 +100,7 @@ export class AuroDatePicker extends AuroElement {
       this.calendarRenderUtil.updateCentralDate(this, new Date());
     }
 
+    this.appearance = "default";
     this.touched = false;
     this.disabled = false;
     this.dvInputOnly = false;
@@ -233,6 +235,16 @@ export class AuroDatePicker extends AuroElement {
   static get properties() {
     return {
       // ...super.properties,
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
 
       /**
        * If declared, bib's position will be automatically calculated where to appear.
@@ -423,7 +435,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, onDark styles will be applied to the trigger.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -822,11 +834,21 @@ export class AuroDatePicker extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.notifyDatepickerToggled();
 
+      // This forces the calendar to render when the dropdown is opened.
+      // It is not rendered by default
       this.calendar.visible = this.dropdown.isPopoverVisible;
 
-      if (this.dropdown.getAttribute('data-show') && this.forceScrollOnNextMobileCalendarRender) {
-        this.calendar.scrollMonthIntoView(this.formattedFocusDate);
-        this.forceScrollOnNextMobileCalendarRender = false;
+      // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
+      if (this.dropdown.isPopoverVisible && this.forceScrollOnNextMobileCalendarRender) {
+
+        // Since the calendar is not rendered until the dropdown is opened,
+        // and the auroDropdown-toggled event fires before the popover is actually open,
+        // we need to wait until the next frame to ensure the calendar is fully rendered
+        // and the area we're trying to scroll to is present in the DOM.
+        setTimeout(() => {
+          this.calendar.scrollMonthIntoView(this.formattedFocusDate);
+          this.forceScrollOnNextMobileCalendarRender = false;
+        }, 0);
       }
     });
   }
@@ -985,10 +1007,13 @@ export class AuroDatePicker extends AuroElement {
   handleReadOnly() {
     // --ds-grid-breakpoint-sm
     const docStyle = getComputedStyle(document.documentElement);
-    const mobileBreakpoint = Number(docStyle.getPropertyValue('--ds-grid-breakpoint-sm').replace("px", ""));
+
+    // We need to store this so that we can pass it to calendar
+    this.mobileBreakpoint = Number(docStyle.getPropertyValue('--ds-grid-breakpoint-sm').replace("px", ""));
+    const isMobile = window.innerWidth < this.mobileBreakpoint;
 
     this.inputList.forEach((input) => {
-      if (window.innerWidth < mobileBreakpoint) {
+      if (isMobile) {
         input.setAttribute('readonly', true);
       } else {
         input.removeAttribute('readonly');
@@ -1175,6 +1200,9 @@ export class AuroDatePicker extends AuroElement {
       if (!this.calendarFocusDate && this.util.validDateStr(this.value, this.format)) {
         if (!this.dropdown.isPopoverVisible) {
           this.calendarFocusDate = this.value;
+
+          // Let the calendar know to scroll to the focus date when it is next rendered on mobile
+          this.forceScrollOnNextMobileCalendarRender = true;
         }
       }
 
@@ -1478,9 +1506,9 @@ export class AuroDatePicker extends AuroElement {
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
           ${this.hasError
-        ? this.renderHtmlIconError()
-        : this.renderHtmlActionClear()
-      }
+            ? this.renderHtmlIconError()
+            : this.renderHtmlActionClear()
+          }
         </div>
       </div>
     `;
@@ -1517,9 +1545,9 @@ export class AuroDatePicker extends AuroElement {
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
           ${this.hasError
-        ? this.renderHtmlIconError()
-        : this.renderHtmlActionClear()
-      }
+            ? this.renderHtmlIconError()
+            : this.renderHtmlActionClear()
+          }
         </div>
       </div>
     `;
@@ -1596,8 +1624,8 @@ export class AuroDatePicker extends AuroElement {
     return html`
       <div class="inputContainer">
         <${this.inputTag}
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
           ?disabled="${this.disabled}"
-          ?onDark="${this.onDark}"
           ?required="${this.required}"
           .format="${this.format}"
           .max="${this.maxDate}"
@@ -1626,6 +1654,7 @@ export class AuroDatePicker extends AuroElement {
             `
         : undefined
       }
+          <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
           <span slot="label"><slot name="fromLabel"></slot></span>
         </${this.inputTag}>
       </div>
@@ -1638,8 +1667,8 @@ export class AuroDatePicker extends AuroElement {
       ${this.range ? html`
         <div class="inputContainer">
           <${this.inputTag}
+            appearance="${this.onDark ? 'inverse' : this.appearance}"
             ?disabled="${this.disabled}"
-            ?onDark="${this.onDark}"
             ?required="${this.required}"
             .format="${this.format}"
             .max="${this.maxDate}"
@@ -1667,6 +1696,7 @@ export class AuroDatePicker extends AuroElement {
             `
           : undefined
         }
+            <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
             <span slot="label"><slot name="toLabel"></slot></span>
           </${this.inputTag}>
         </div>
@@ -1697,13 +1727,14 @@ export class AuroDatePicker extends AuroElement {
           @click="${this.resetInputs}"
           @keydown="${this.handleKeydownReset}"
           ?onDark="${this.onDark}"
-          aria-label="${i18n(this.lang, 'clearInput')}"
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
+          aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}"
           class="notificationBtn clearBtn"
           shape="circle"
           size="sm"
           variant="ghost">
           <${this.iconTag}
-            ?customColor="${this.onDark}"
+            ?customColor="${this.onDark || this.appearance === 'inverse'}"
             category="interface"
             name="x-lg"
             >
@@ -1745,7 +1776,7 @@ export class AuroDatePicker extends AuroElement {
   renderHtmlIconCalendar() {
     return html`
       <${this.iconTag}
-        ?onDark="${this.onDark}"
+        appearance="${this.onDark ? 'inverse' : this.appearance}"
         category="interface"
         class="accentIcon"
         name="calendar"
@@ -1763,14 +1794,14 @@ export class AuroDatePicker extends AuroElement {
     return html`
       ${!this.validity || this.validity === undefined || this.validity === 'valid'
         ? html`
-          <${this.helpTextTag} ?onDark="${this.onDark}">
+          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
               <slot name="helpText"></slot>
             </p>
           </${this.helpTextTag}>
         `
         : html`
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
+          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
               ${this.errorMessage}
             </p>
@@ -1797,6 +1828,7 @@ export class AuroDatePicker extends AuroElement {
         .maxDate="${this.maxDate}"
         .minDate="${this.minDate}"
         .monthNames="${this.monthNames}"
+        .mobileBreakpoint="${this.mobileBreakpoint}"
         part="calendar"
       >
         <slot name="ariaLabel.bib.close" slot="ariaLabel.close" @slotchange="${this.handleSlotToSlot}">Close</slot>
@@ -1816,9 +1848,12 @@ export class AuroDatePicker extends AuroElement {
 
     // Base HTML render() handles dropdown and calendar bib
     return html`
+      <!-- Hidden slot for clear button aria-label -->
+      <slot name="ariaLabel.input.clear" hidden @slotchange=${this.requestUpdate}></slot>
+
       <${this.dropdownTag}
-          ?autoPlacement="${this.autoPlacement}"
-          ?onDark="${this.onDark}"
+          appearance="${this.onDark ? 'inverse' : this.appearance}"
+          ?autoPlacement="${this.autoPlacement}"}"
           ?disabled="${this.disabled}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?noFlip="${this.noFlip}"

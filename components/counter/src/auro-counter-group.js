@@ -41,7 +41,7 @@ import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
 import { classMap } from "lit/directives/class-map.js";
 
-import { AuroIcon } from '@aurodesignsystem/auro-icon/src/auro-icon.js';
+import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from "./iconVersion.js";
 
 /**
@@ -65,6 +65,7 @@ export class AuroCounterGroup extends AuroElement {
   constructor() {
     super();
 
+    this.appearance = "default";
     this.max = undefined;
     this.min = undefined;
     this.onDark = false;
@@ -153,6 +154,16 @@ export class AuroCounterGroup extends AuroElement {
     return {
 
       ...super.properties,
+
+      /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
 
       /**
        * If declared, bib's position will be automatically calculated where to appear.
@@ -265,7 +276,7 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * If declared, counters and dropdown will be rendered with onDark styles.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,
@@ -348,6 +359,7 @@ export class AuroCounterGroup extends AuroElement {
   configureCounters() {
     this.counters = this.querySelectorAll("auro-counter, [auro-counter]");
     this.counters.forEach((counter) => {
+      counter.appearance = this.appearance;
       counter.onDark = this.onDark;
       counter.addEventListener("input", this.updateValue);
       counter.addEventListener("auroFormElement-validated", this.updateValidity);
@@ -608,7 +620,7 @@ export class AuroCounterGroup extends AuroElement {
       );
     }
 
-    if (changedProperties.has("onDark") && !this.isDropdown) {
+    if ((changedProperties.has("onDark") || changedProperties.has("appearance")) && !this.isDropdown) {
       this.configureCounters();
     }
   }
@@ -638,7 +650,7 @@ export class AuroCounterGroup extends AuroElement {
     return !this.validity || this.validity === undefined || this.validity === 'valid'
       ? html`
         <div slot="helpText">
-          <${this.helpTextTag} ?onDark="${this.onDark}">
+          <${this.helpTextTag} appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
               <slot name="helpText"></slot>
             </p>
@@ -647,7 +659,7 @@ export class AuroCounterGroup extends AuroElement {
       `
       : html`
         <div slot="helpText">
-          <${this.helpTextTag} error ?onDark="${this.onDark}">
+          <${this.helpTextTag} error appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText" role="alert" aria-live="assertive">
               ${this.error || this.errorMessage}
             </p>
@@ -673,7 +685,7 @@ export class AuroCounterGroup extends AuroElement {
             category="alert"
             name="error-stroke"
             variant="statusError"
-            ?ondark="${this.onDark}">
+            appearance="${this.onDark ? 'inverse' : this.appearance}">
           </${this.iconTag}>
         </div>
       ` : undefined}
@@ -691,19 +703,18 @@ export class AuroCounterGroup extends AuroElement {
         noHideOnThisFocusLoss
         chevron
         part="dropdown"
+        appearance="${this.onDark ? 'inverse' : this.appearance}"
         ?autoPlacement="${this.autoPlacement}"
         ?error="${this.validity !== undefined && this.validity !== 'valid'}"
         ?matchWidth="${this.matchWidth}"
         ?noFlip="${this.noFlip}"
         ?shift="${this.shift}"
-        ?onDark="${this.onDark}"
         .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
         .offset="${this.offset}"
         .placement="${this.placement}"
         .layout="${this.layout}"
         .shape="${this.shape}"
         .size="${this.size}"
-        .ondark="${this.onDark}"
       >
         ${this.renderDropdownTrigger()}
         ${this.renderBibTemplate()}

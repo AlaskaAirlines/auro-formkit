@@ -34,6 +34,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 export class AuroCheckbox extends LitElement {
   constructor() {
     super();
+
+    this.apperance = 'default';
     this.checked = false;
     this.disabled = false;
     this.error = false;
@@ -69,6 +71,16 @@ export class AuroCheckbox extends LitElement {
       ...super.properties,
 
       /**
+       * Defines whether the component will be on lighter or darker backgrounds.
+       * @property {'default', 'inverse'}
+       * @default 'default'
+       */
+      appearance: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * If set to true, the checkbox will be filled with a checkmark.
        */
       checked: {
@@ -98,7 +110,7 @@ export class AuroCheckbox extends LitElement {
       name: { type: String },
 
       /**
-       * Sets onDark styles for component.
+       * DEPRECATED - use `appearance` instead.
        */
       onDark: {
         type: Boolean,

@@ -4,6 +4,7 @@
 
 | Property                        | Attribute                       | Modifiers | Type                  | Default                    | Description                                      |
 |---------------------------------|---------------------------------|-----------|-----------------------|----------------------------|--------------------------------------------------|
+| `appearance`                    | `appearance`                    |           | `string`              | "'default'"                | Defines whether the component will be on lighter or darker backgrounds. |
 | `autoPlacement`                 | `autoPlacement`                 |           | `boolean`             | false                      | If declared, bib's position will be automatically calculated where to appear. |
 | `autocomplete`                  | `autocomplete`                  |           | `string`              | "false"                    | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
 | `checkmark`                     | `checkmark`                     |           | `boolean`             | false                      | When attribute is present auro-menu will apply check marks to selected options. |
@@ -22,7 +23,7 @@
 | `noFlip`                        | `noFlip`                        |           | `boolean`             | "false"                    | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
 | `noValidate`                    | `noValidate`                    |           | `boolean`             | false                      | If set, disables auto-validation on blur.        |
 | `offset`                        | `offset`                        |           | `number`              | "0"                        | Gap between the trigger element and bib.         |
-| `onDark`                        | `onDark`                        |           | `boolean`             |                            | If declared, onDark styles will be applied to the trigger. |
+| `onDark`                        | `onDark`                        |           | `boolean`             |                            | DEPRECATED - use `appearance` instead.           |
 | `optionSelected`                | `optionSelected`                |           | `HTMLElement`         |                            | Specifies the current selected option.           |
 | `persistInput`                  | `persistInput`                  |           | `Boolean`             | false                      | If declared, selecting a menu option will not change the input value. By doing so,<br />the current menu filter will be preserved and the user can continue from their last<br />filter state. It is recommended to use this in combination with the `displayValue` slot. |
 | `placeholder`                   | `placeholder`                   |           | `string`              |                            | Define custom placeholder text, only supported by date input formats. |

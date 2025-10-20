@@ -397,6 +397,22 @@ Sets the label used for the input. When the `range` attribute is used this is th
 
 </auro-accordion>
 
+#### toLabel
+
+Only for use with the `range` attribute. Sets the label for the second input.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicRange.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicRange.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### helpText
 
 Sets the help text displayed below the trigger. The `helpText` slot can be used to provide additional context for the combobox. When using the `error` attribute, the `helpText` slot can be used to describe the error.
@@ -430,19 +446,24 @@ To view this demo, set your window to a mobile screen size.
 
 </auro-accordion>
 
-#### toLabel
+#### ariaLabel.input.clear
 
-Only for use with the `range` attribute. Sets the label for the second input.
-
+Use the `ariaLabel.input.clear` slot to set the `aria-label` for the clear button in the trigger input.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicRange.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/ariaLabelInputClear.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/ariaLabelInputClear.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicRange.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/ariaLabelInputClear.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

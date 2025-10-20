@@ -18,7 +18,7 @@ import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import bibTemplateVersion from './bibtemplateVersion.js';
 
-import { AuroButton } from '@aurodesignsystem/auro-button/src/auro-button.js';
+import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -160,6 +160,15 @@ export class AuroCalendar extends RangeDatepicker {
       },
       dropdown: {
         type: Object
+      },
+
+      /**
+       * Mobile breakpoint for responsive design.
+       * @private
+       */
+      mobileBreakpoint: {
+        type: Number,
+        reflect: false
       },
 
       /**
