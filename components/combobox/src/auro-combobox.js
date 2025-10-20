@@ -664,29 +664,6 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Forces focus to the internal input element and positions the cursor at the end of the text.
-   * This is used when clicking anywhere within the Combobox to ensure the input receives focus
-   * and the cursor is positioned at the end for better user experience.
-   * @private
-   * @returns {void}
-   */
-  forceFocusToInputEnd() {
-    // Set up input ref
-    let inputElement = null;
-
-    if (this.input.shadowRoot) {
-      inputElement = this.input.shadowRoot.querySelector('input');
-    }
-
-    if (inputElement) {
-      // Force focus and set cursor position to end of text to ensure visibility
-      inputElement.focus();
-      const textLength = inputElement.value ? inputElement.value.length : 0;
-      inputElement.setSelectionRange(textLength, textLength);
-    }
-  }
-
-  /**
    * Binds all behavior needed to the dropdown after rendering.
    * @private
    * @returns {void}
@@ -714,9 +691,6 @@ export class AuroCombobox extends AuroElement {
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       this.showBib();
-
-      // Fixes Chromium-specific issue where clicking outside input but within Combobox doesn't return focus
-      this.forceFocusToInputEnd();
     });
 
     // setting up bibtemplate
