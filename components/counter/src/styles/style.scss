@@ -71,6 +71,9 @@
 
 auro-counter-button {
   display: flex;
+
+  // Since the icon is inside the button shadowRoot we can't style it directly
+  // so we apply margin to the icon itself to adjust its position
   .controlIcon {
     margin-top: calc(var(--ds-size-25, 0.125rem) * -1);
   }
