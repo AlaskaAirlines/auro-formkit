@@ -71,4 +71,7 @@
 
 auro-counter-button {
   display: flex;
+  .controlIcon {
+    margin-top: calc(var(--ds-size-25, 0.125rem) * -1);
+  }
 }
