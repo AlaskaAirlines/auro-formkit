@@ -69,14 +69,16 @@
   padding-bottom: var(--ds-size-75, vac.$ds-size-75);
 }
 
+.rdoGroup:has(:enabled) {
+  .label:hover {
+    cursor: pointer
+  }
+}
+
 .label {
   display: block;
 
   margin-left: var(--ds-size-300, vac.$ds-size-300);
-
-  &:hover {
-    cursor: pointer;
-  }
 
   &:after {
     position: absolute;
