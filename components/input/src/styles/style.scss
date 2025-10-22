@@ -9,8 +9,12 @@
   display: block;
 }
 
-.wrapper {
+.wrapper:has(:enabled) {
   cursor: text;
+  
+  label {
+    cursor: text;
+  } 
 }
 
 .helpTextClasses {
