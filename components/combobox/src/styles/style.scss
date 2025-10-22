@@ -10,7 +10,9 @@
   text-align: left;
 
   [auro-dropdown] {
-    --ds-auro-dropdown-trigger-background-color: transparent;
+    &:not([disabled]) {
+      --ds-auro-dropdown-trigger-background-color: transparent;
+    }
   }
 
   #inputInBib {
