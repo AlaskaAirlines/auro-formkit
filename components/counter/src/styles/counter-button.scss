@@ -27,9 +27,10 @@ slot {
   display: flex;
   align-items: center;
 
-  span {
-      display: block;
-      height: var(--ds-size-300, vac.$ds-size-300);
+  .textSlot {
+    display: inline-flex;
+    align-items: center;
+    height: var(--ds-size-300, vac.$ds-size-300);
   }
 }
 
