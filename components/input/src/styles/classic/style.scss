@@ -32,11 +32,9 @@
     flex: 1;
     flex-direction: column;
     justify-content: center;
-    cursor: text;
 
     label {
       overflow: hidden;
-      cursor: text;
       padding-block: var(--ds-size-50, vac.$ds-size-50);
       text-overflow: ellipsis;
       transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
