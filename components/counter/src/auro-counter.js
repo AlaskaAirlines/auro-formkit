@@ -423,7 +423,7 @@ export class AuroCounter extends LitElement {
             </auro-counter-button>
 
             <div class="quantityWrapper body-lg">
-              <div class="quantity">${this.value !== undefined ? this.value : this.min}</div>
+              <div>${this.value !== undefined ? this.value : this.min}</div>
             </div>
             <auro-counter-button
               aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.plus') || '+'}"

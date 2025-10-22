@@ -36,10 +36,6 @@
   text-align: center;
 }
 
-.quantity {
-  margin-top: 0.25rem;
-}
-
 :host{
   position: relative;
   text-align: left;
@@ -71,10 +67,4 @@
 
 auro-counter-button {
   display: flex;
-
-  // Since the icon is inside the button shadowRoot we can't style it directly
-  // so we apply margin to the icon itself to adjust its position
-  .controlIcon {
-    margin-top: calc(var(--ds-size-25, vac.$ds-size-25) * -1);
-  }
 }
