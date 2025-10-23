@@ -73,6 +73,27 @@ A custom error message can be set using the `error` attribute, or it can be used
 
 </auro-accordion>
 
+#### Reference Dates
+
+You can choose to outline dates for the user to reference by passing a string containing an array of values to the component to tell it which dates are your reference dates.
+
+Example:
+```html
+<auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]'></auro-datepicker>
+```
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/referenceDates.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/referenceDates.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### Input Mode
 
 You can manually set the input mode for the input.

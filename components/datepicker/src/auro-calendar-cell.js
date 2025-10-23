@@ -15,7 +15,7 @@ import popoverVersion from './popoverVersion.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-/* eslint-disable max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-void, init-declarations, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable curly, max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-void, init-declarations, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
 
 export class AuroCalendarCell extends LitElement {
   constructor() {
@@ -235,6 +235,32 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
+   * Checks if the current date is a highlighted date.
+   * @param {Object} dateStr - The date string in MM_DD_YYYY format.
+   * @returns Boolean - True if the date is a highlighted date.
+   */
+  isReferenceDate(dateStr) {
+
+    // If the datepicker has highlighted dates specified
+    if (this.datepicker && this.datepicker.hasAttribute('referenceDates')) {
+
+      // Get the referenceDates attribute from the datepicker
+      const {referenceDates} = this.datepicker;
+
+      // Guard clause: no dates in the array
+      if (!Array.isArray(referenceDates) || referenceDates.length === 0) return false;
+
+      // Compare the dateStr (MM_DD_YYYY) to the referenceDates (MM-DD-YYYY)
+      const compareDateStr = dateStr.replace(/_/gu, '-');
+
+      // Check if the compareDateStr is in the referenceDates array
+      return referenceDates.includes(compareDateStr);
+    };
+
+    return false;
+  }
+
+  /**
    * Determines the title of the auro-calendar-cell.
    * @private
    * @param {Number} date - The date of the auro-calendar-cell.
@@ -352,6 +378,7 @@ export class AuroCalendarCell extends LitElement {
       'disabled': this.isEnabled(this.day, this.min, this.max, this.disabledDays),
       'rangeDepartDate': this.isDepartDate(this.day, this.dateFrom) && (this.hoveredDate > this.dateFrom || this.dateTo),
       'rangeReturnDate': this.isReturnDate(this.day, this.dateFrom, this.dateTo),
+      'reference': this.isReferenceDate(this.dateStr),
       'sameDateTrip': this.dateFrom === this.dateTo
     };
 
