@@ -37,6 +37,19 @@
         --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
       }
     }
+
+    &.reference {
+
+      --ds-auro-calendar-cell-border-color: var(--ds-basic-color-border-default, #{v.$ds-basic-color-border-default});
+
+      &:not(.selected):not(.disabled) {
+        --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+      }
+
+      &.selected {
+        --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+      }
+    }
   
     &:hover {
       --ds-auro-calendar-cell-container-color: var(--ds-advanced-color-state-background-hover, #{v.$ds-advanced-color-state-background-hover});

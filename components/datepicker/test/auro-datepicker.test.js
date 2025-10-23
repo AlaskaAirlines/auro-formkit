@@ -961,6 +961,52 @@ describe('auro-datepicker', () => {
     await expect(el.value).to.be.equal(undefined);
     await expect(el.valueEnd).to.be.equal(undefined);
   });
+
+  it('marks dates as reference dates when referenceDates attribute is set', async () => {
+    const el = await fixture(html`
+      <auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]' centralDate="10-10-2025"></auro-datepicker>
+    `);
+
+    await elementUpdated(el);
+
+    // Show the bib so the calendar is rendered
+    el.showBib();
+    await elementUpdated(el);
+
+    // Get the calendar
+    const {calendar} = el;
+
+    // Get the calendar months
+    const calendarMonths = calendar.shadowRoot.querySelectorAll('auro-formkit-calendar-month');
+
+    // Guard Clause: Ensure we have months to work with
+    if (!calendarMonths.length) return;
+
+    // Get the first rendered month
+    const firstMonth = calendarMonths[0];
+    await elementUpdated(firstMonth);
+
+    // Get the date cells for the month
+    const calendarCells = firstMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell');
+
+    // Get the buttons for each date cell
+    const calendarCellButtons = Array.from(calendarCells).map((cell) => cell.shadowRoot.querySelector('button'));
+
+    // Filter down to our reference months
+    const referenceDateButtons = calendarCellButtons.filter((button) => button.classList.contains('reference'));
+
+    // Make sure we found all 4 reference dates
+    await expect(referenceDateButtons.length).to.be.equal(4);
+
+    // Check that each reference date is correct
+    const referenceButtonDateStrings = referenceDateButtons.map((button) => button.getAttribute('title'));
+    await expect(referenceButtonDateStrings).to.include.members([
+      'Sunday, October 5th, 2025',
+      'Wednesday, October 15th, 2025',
+      'Monday, October 20th, 2025',
+      'Wednesday, October 22nd, 2025'
+    ]);
+  });
 });
 
 describe('auro-datepicker with format', () => {
