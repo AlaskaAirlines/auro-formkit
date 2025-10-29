@@ -13,6 +13,16 @@
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 @use '@aurodesignsystem/webcorestylesheets/src/breakpoints';
 
+:host(:not([disabled])) {
+  @media (hover: hover) {
+    .wrapper {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
 :host([layout*='classic']) {
   position: relative;
   max-width: 100%;
@@ -33,14 +43,6 @@
     display: flex;
     flex-direction: row;
     box-shadow: inset 0 0 0 1px var(--ds-auro-dropdown-trigger-outline-color);
-  }
-
-  @media (hover: hover) {
-    .wrapper {
-      &:hover {
-        cursor: pointer;
-      }
-    }
   }
 
   .triggerContentWrapper {
