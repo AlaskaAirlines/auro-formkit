@@ -22,6 +22,10 @@
   }
 }
 
+[auro-dropdown] {
+  --ds-auro-dropdown-trigger-outline-color: var(--ds-auro-datepicker-outline-color);
+}
+
 [auro-input] {
   &::part(wrapper) {
     --ds-auro-input-border-color: transparent;
@@ -52,4 +56,15 @@
   --ds-auro-datepicker-border-color: var(--ds-advanced-color-button-primary-border-inverse-disabled, #{v.$ds-advanced-color-button-primary-border-inverse-disabled});
   --ds-auro-datepicker-label-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
   --ds-auro-datepicker-placeholder-text-color: var(--ds-basic-color-texticon-inverse-disabled, #{v.$ds-basic-color-texticon-inverse-disabled});
+}
+
+// error state
+:host(:not([ondark]):is([validity]:not([validity='valid']))),
+:host(:not([appearance="inverse"]):is([validity]:not([validity='valid']))) {
+  --ds-auro-datepicker-outline-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+}
+
+:host([ondark]:is([validity]:not([validity='valid']))),
+:host([appearance="inverse"]:is([validity]:not([validity='valid']))) {
+  --ds-auro-datepicker-outline-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
 }
