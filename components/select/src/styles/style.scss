@@ -26,6 +26,7 @@
   --ds-auro-dropdown-trigger-border-color: var(--ds-auro-select-border-color);
   --ds-auro-dropdown-trigger-background-color: var(--ds-auro-select-background-color);
   --ds-auro-dropdown-trigger-container-color: var(--ds-auro-select-background-color);
+  --ds-auro-dropdown-trigger-outline-color: var(--ds-auro-select-outline-color);
 }
 
 :host {
@@ -142,6 +143,7 @@ label {
 :host(:is([validity]:not([validity='valid']))) {
   [auro-dropdown] {
     --ds-auro-select-border-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+    --ds-auro-select-outline-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
     --ds-auro-dropdown-helptext-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
   }
 }
@@ -150,6 +152,7 @@ label {
 :host([appearance='inverse']:is([validity]:not([validity='valid']))) {
   [auro-dropdown] {
     --ds-auro-select-border-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+    --ds-auro-select-outline-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
     --ds-auro-dropdown-helptext-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
   }
 }
