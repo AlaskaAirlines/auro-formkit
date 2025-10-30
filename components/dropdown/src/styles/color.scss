@@ -19,6 +19,10 @@
       --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
       --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
     }
+
+    &:hover {
+      --ds-auro-dropdown-trigger-background-color: var(--ds-auro-dropdown-trigger-hover-background-color);
+    }
   }
 }
 
@@ -28,10 +32,6 @@
     border-color: var(--ds-auro-dropdown-trigger-border-color);
     background-color: var(--ds-auro-dropdown-trigger-background-color);
     color: var(--ds-auro-dropdown-trigger-text-color);
-
-    &:hover {
-      --ds-auro-dropdown-trigger-background-color: var(--ds-auro-dropdown-trigger-hover-background-color);
-    }
   }
 }
 
@@ -60,6 +60,10 @@
       --ds-auro-dropdown-trigger-border-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
       --ds-auro-dropdown-trigger-outline-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
     }
+    
+    &:hover {
+      --ds-auro-dropdown-trigger-background-color: var(--ds-auro-dropdown-trigger-hover-background-color);
+    }
   }
 }
 
@@ -74,10 +78,6 @@
     border-color: var(--ds-auro-dropdown-trigger-border-color);
     background-color: var(--ds-auro-dropdown-trigger-background-color);
     color: var(--ds-auro-dropdown-trigger-text-color);
-    
-    &:hover {
-      --ds-auro-dropdown-trigger-background-color: var(--ds-auro-dropdown-trigger-hover-background-color);
-    }
   }
 }
 
