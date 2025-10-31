@@ -27,6 +27,47 @@
 
 </auro-accordion>
 
+### Behavior
+
+There are two behaviors available for the combo box: suggestion and filter.
+The default behavior is "suggestion".
+
+#### Suggestion
+
+With the suggestion behavior, the menu options are displayed to the user as suggestions, but the user may enter whatever value they like into the input
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/suggestion.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/suggestion.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### Filter
+
+With the filter behavior, the menu options are displayed to the user, and the user is required to choose one of the menu options in order for the input to be considered valid.
+
+The `setCustomValidityValueMissingFilter` attribute is also available to display a custom message to the user when this validation check fails.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/filter.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/filter.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Dynamic Menu
 
 This example demonstrates a data driven combobox. The data is used to populate the `auro-menu`. In this example, each time the input's value changes, the data is updated and the menu is recreated.
@@ -45,6 +86,29 @@ The menu in this example was populated from data from a country/city API. To kee
 <!-- AURO-GENERATED-CONTENT:END -->
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dynamicMenu.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+### Persistent Input
+
+The `persistInput` attribute allows you to set the combo box to persist the value of the input regardless of the current value set for the combo box.
+
+A persistent input is typically used in conjunction with display values to show the actual value of the selected option to the user when the input is not focused.
+
+This is helpful for things like dynamic menus where you want the user to be able to continue their search where they left off but display a full selected value when the input is not focused.
+
+_*Note:*_ When using `persistInput` with the `required` attribute, you must also pass an error message for when there isn't a valid value but the user has typed something in the input to the `setCustomValidityValueMissing` attribute.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/persistInput.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/persistInput.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

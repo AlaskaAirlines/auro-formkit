@@ -99,6 +99,52 @@ export default class AuroFormValidation {
             message: e => e.getAttribute('setCustomValidityRangeUnderflow') || ''
           }
         ]
+      },
+      combobox: {
+        filter: [
+          {
+            check: (e) => {
+
+              // Guard Clause: If the behavior is not 'filter', skip this validation
+              if (e.behavior !== 'filter') return false;
+
+              // Get the current input value
+              const currentInputValue = e.input.value;
+
+              // Skip validation if the input has no value
+              if (!currentInputValue) return false;
+
+              /**
+               * Let's check if the option selected and combobox value match.
+               */
+
+              // Guard Clause: If there is no option selected fail the validation
+              if (!e.optionSelected) return true;
+
+              // Guard Clause: If there is no value fail the validation
+              if (!e.value) return true;
+
+              // Guard Clause: If the selected option's value doesn't match the input value fail the validation
+              if (e.optionSelected.value !== e.value) return true;
+
+              /**
+               * Now let's make sure the user hasn't change the value in the input after selecting an option.
+               * This is to make sure there's no user confusion if they select an option but then change the value to something else.
+               */
+
+              // Guard Clause: If the current input value doesn't match the option selected value fail the validation
+              if (currentInputValue && currentInputValue !== e.optionSelected.value) return true;
+
+              // Guard Clause: If the current input value doesn't match the combobox value fail the validation
+              if (currentInputValue && currentInputValue !== e.value) return true;
+
+              // If all the checks passed the validation passes
+              return false;
+            },
+            validity: 'valueMissing',
+            message: e => e.getAttribute('setCustomValidityValueMissingFilter') || e.setCustomValidity || ''
+          }
+        ] 
       }
     };
 
@@ -107,6 +153,8 @@ export default class AuroFormValidation {
       elementType = 'input';
     } else if (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group')) {
       elementType = 'counter';
+    } else if (this.runtimeUtils.elementMatch(elem, 'auro-combobox')) {
+      elementType = 'combobox';
     }
 
     if (elementType) {
@@ -293,6 +341,15 @@ export default class AuroFormValidation {
         }
       }
 
+      const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
+      
+      if (isCombobox) {
+
+        if (!elem.persistInput || elem.behavior === "filter") {
+          hasValue = elem.input.value?.length > 0;
+        }
+      }
+
       if (!hasValue && elem.required && elem.touched) {
         elem.validity = 'valueMissing';
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
@@ -301,6 +358,11 @@ export default class AuroFormValidation {
         this.validateElementAttributes(elem);
       } else if (hasValue && (this.runtimeUtils.elementMatch(elem, 'auro-counter') || this.runtimeUtils.elementMatch(elem, 'auro-counter-group'))) {
         this.validateElementAttributes(elem);
+      } else if (isCombobox) {
+        this.validateElementAttributes(elem);
+
+        // Don't run extra validation for cases where the combobox is not being used as a filter
+        validationShouldRun = elem.behavior !== 'filter';
       }
     }
 
@@ -308,8 +370,8 @@ export default class AuroFormValidation {
 
       const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
 
-      // Don't reset combobox validity if persistValue is set since we can't use the input value to validate
-      if (!isCombobox || isCombobox && !elem.persistValue) {
+      // Don't reset combobox validity if persistInput is set since we can't use the input value to validate
+      if (!isCombobox || isCombobox && !elem.persistInput) {
 
         // run validation on all inputs since we're going to use them to set the validity of this component
         this.auroInputElements.forEach(input => input.validate());
@@ -382,6 +444,8 @@ export default class AuroFormValidation {
         if (input.validationMessage.length > 0) {
           elem.errorMessage = input.validationMessage;
         }
+      } else if (this.runtimeUtils.elementMatch(elem, 'auro-combobox') && elem.errorMessage === '') {
+        elem.errorMessage = elem.input?.inputElement?.validationMessage;
       } else if (this.inputElements?.length > 0 && elem.errorMessage === '') {
         const firstInput = this.inputElements[0];
 

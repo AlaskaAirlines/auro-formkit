@@ -65,6 +65,7 @@ export class AuroCombobox extends AuroElement {
     this.required = false;
     this.value = undefined;
     this.typedValue = undefined;
+    this.behavior = "suggestion";
 
     // Defaults that effect the overall layout of the combobox
     this.checkmark = false;
@@ -157,6 +158,17 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
+       * Sets the behavior of the combobox, "filter" or "suggestion".
+       * "filter" requires the user to select an option from the menu.
+       * "suggestion" allows the user to enter a value not present in the menu options.
+       * @default suggestion
+       */
+      behavior: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * When attribute is present auro-menu will apply check marks to selected options.
        */
       checkmark: {
@@ -232,7 +244,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * If set, combobox will not filter menuoptions based in input.
+       * If set, combobox will not filter menuoptions based on input.
        */
       noFilter: {
         type: Boolean,
@@ -352,6 +364,13 @@ export class AuroCombobox extends AuroElement {
        * Custom help text message to display when validity = `valueMissing`.
        */
       setCustomValidityValueMissing: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing` due to the user not choosing a menu option when behavior = "filter".
+       */
+      setCustomValidityValueMissingFilter: {
         type: String
       },
 
@@ -1010,6 +1029,8 @@ export class AuroCombobox extends AuroElement {
     this.addEventListener('auroFormElement-validated', (evt) => {
       this.input.validity = evt.detail.validity;
       this.input.errorMessage = evt.detail.message;
+      this.validity = evt.detail.validity;
+      this.errorMessage = evt.detail.message;
     });
   }
 

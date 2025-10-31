@@ -65,6 +65,15 @@
 
   &.withValue {
     justify-content: flex-start;
+
+    // When there is a value and the user hovers over the input
+    &:hover {
+
+      // Hide the alert notification
+      .alertNotification {
+        display: none;
+      }
+    }
   }
 
   // HIDE BORDER WHEN NOT FOCUSED AND NOT INVALID
