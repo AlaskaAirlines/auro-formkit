@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
+/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, no-extra-parens */
 
 // If using litElement base class
 import { css } from "lit";
@@ -1157,8 +1157,7 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      // eslint-disable-next-line no-extra-parens
-      if ((this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading) {
+      if ((this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
         this.showBib();
       } else {
         this.hideBib();
