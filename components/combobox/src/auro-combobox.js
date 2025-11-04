@@ -672,7 +672,7 @@ export class AuroCombobox extends AuroElement {
       return;
     }
     if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
-      if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
+      if (this.menu.getAttribute('loading') || this.availableOptions.length > 0 || this.noMatchOption !== undefined) {
         if (this.menu.hasAttribute('loading') && !this.menu.hasLoadingPlaceholder) {
           this.isHiddenWhileLoading = true;
         } else {
@@ -950,7 +950,7 @@ export class AuroCombobox extends AuroElement {
     } else if (this.menu.loading) {
       // if input has value but menu is loading, show bib immediately
       this.showBib();
-    } else if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
+    } else if (this.availableOptions.length === 0 && !this.dropdown.isBibFullscreen) {
       // Force dropdown bib to hide if input value has no matching suggestions
       this.hideBib();
     }
@@ -1157,7 +1157,7 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      if ((this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
+      if ((this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
         this.showBib();
       } else {
         this.hideBib();
