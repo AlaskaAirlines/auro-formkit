@@ -13,11 +13,12 @@
     "url": "https://github.com/AlaskaAirlines/auro-formkit"
   },
   "engines": {
-    "node": "^20.x || ^22.x"
+    "node": ">=20"
   },
   "packageManager": "npm@11.6.2",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "workspaces": [
     "components/*",
@@ -48,7 +49,8 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky",
     "deploy-demo": "npm run build && sh ./deploy-components.sh",
-    "local-demo": "npm run build && sh ./local-demo.sh --zip"
+    "local-demo": "npm run build && sh ./local-demo.sh --zip",
+    "test:coverage": "auro test --coverage-report --open"
   },
   "dependencies": {
     "@lit/reactive-element": "^2.1.1",
@@ -214,6 +216,7 @@
       "module": "./components/select/dist/index.js",
       "types": "./components/select/dist/index.d.ts",
       "default": "./components/select/dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   }
 }
