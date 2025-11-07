@@ -104,7 +104,7 @@ export class AuroInput extends BaseInput {
       (
         (!this.value || this.value.length === 0) &&
         !this.hasFocus &&
-        (!this.placeholder || this.placeholder === '')
+        (!this.placeholderStr || this.placeholderStr === '')
       );
   }
 
@@ -149,11 +149,11 @@ export class AuroInput extends BaseInput {
     }
 
     if (this.layout === 'snowflake') {
-      return this.hasValue || this.hasFocus || this.placeholder ? 'body-xs' : 'body-lg';
+      return this.hasValue || this.hasFocus || this.placeholderStr ? 'body-xs' : 'body-lg';
     }
 
     // classic layout (default)
-    return ((!this.value || this.value.length === 0) && !this.placeholder && !this.hasFocus) ? 'body-default' : 'body-xs';
+    return ((!this.value || this.value.length === 0) && !this.placeholderStr && !this.hasFocus) ? 'body-default' : 'body-xs';
   }
 
   /**
