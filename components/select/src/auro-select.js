@@ -681,6 +681,7 @@ export class AuroSelect extends AuroElement {
     }
 
     this.updateMenuShapeSize();
+    this.updateMenuValue(this.value);
 
     if (this.multiSelect) {
       this.menu.multiSelect = this.multiSelect;
