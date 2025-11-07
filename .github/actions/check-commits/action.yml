@@ -26,7 +26,7 @@ runs:
         git --version
       shell: bash
     - name: Auro Check Commits
-      run: npx --package=@aurodesignsystem/auro-cli -- auro cc -l -d
+      run: npx  --ignore-scripts  --package=@aurodesignsystem/auro-cli -- auro cc -l -d
       shell: bash
       env:
           GITHUB_TOKEN: ${{ inputs.github-token }}
