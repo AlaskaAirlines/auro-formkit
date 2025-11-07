@@ -112,10 +112,15 @@ export class AuroMenuOption extends AuroElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroMenuOption);
   }
 
-  firstUpdated() {
-    // Add the tag name as an attribute if it is different than the component name
-    this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
+  connectedCallback() {
+    super.connectedCallback();
 
+    // Add the tag name as an attribute if it is different than the component name
+    // Add this step soon as this node gets attached to the DOM to avoid racing condition with menu's value setting logic.
+    this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
+  }
+
+  firstUpdated() {
     if (!this.hasAttribute('size')) {
       this.size = this.parentElement.getAttribute('size') || 'sm';
     }
