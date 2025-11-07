@@ -93,7 +93,6 @@ export default class BaseInput extends AuroElement {
     this.validationCCLength = undefined;
     this.hasValue = false;
     this.label = 'Input label is undefined';
-    this.placeholderStr = '';
 
     this.allowedInputTypes = [
       "text",
@@ -248,6 +247,26 @@ export default class BaseInput extends AuroElement {
       format: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * @private
+       * Flag to indicate if the input currently has value.
+       */
+      hasValue: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
+       * @private
+       * Flag to indicate if the input currently has focus.
+       */
+      hasFocus: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
       },
 
       /**
@@ -552,7 +571,6 @@ export default class BaseInput extends AuroElement {
       this.ValidityMessageOverride = this.setCustomValidity;
     }
 
-    this.getPlaceholder();
     this.setCustomHelpTextMessage();
     this.configureAutoFormatting();
   }
@@ -670,10 +688,8 @@ export default class BaseInput extends AuroElement {
     if (changedProperties.has('value')) {
       if (this.value && this.value.length > 0) {
         this.hasValue = true;
-        this.requestUpdate();
       } else {
         this.hasValue = false;
-        this.requestUpdate();
       }
 
       if (this.value !== this.inputElement.value) {
@@ -859,8 +875,6 @@ export default class BaseInput extends AuroElement {
   handleFocusin() {
     this.hasFocus = true;
 
-    this.getPlaceholder();
-
     this.touched = true;
   }
 
@@ -871,7 +885,6 @@ export default class BaseInput extends AuroElement {
    */
   handleFocusout() {
     this.hasFocus = false;
-    this.getPlaceholder();
   }
 
   /**
@@ -1008,16 +1021,11 @@ export default class BaseInput extends AuroElement {
    * @private
    * @returns {void}
    */
-  getPlaceholder() {
-    if (this.placeholder) {
-      this.placeholderStr = this.placeholder;
-    } else if (this.type === 'date') {
-      this.placeholderStr = this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
+  get placeholderStr() {
+    if (!this.placeholder && this.type === 'date') {
+      return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
     }
-
-    this.requestUpdate();
-
-    return this.placeholderStr;
+    return this.placeholder || "";
   }
 
   /**
