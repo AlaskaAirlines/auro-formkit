@@ -4,25 +4,35 @@ The auro-menu element provides users a way to select from a list of options.
 
 ## Properties
 
-| Property                | Attribute        | Type                              | Default     | Description                                      |
-|-------------------------|------------------|-----------------------------------|-------------|--------------------------------------------------|
-| `disabled`              | `disabled`       | `boolean`                         |             | When true, the entire menu and all options are disabled; |
-| `hasLoadingPlaceholder` |                  | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
-| `layout`                |                  | `string`                          |             |                                                  |
-| `loading`               | `loading`        | `boolean`                         | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
-| `matchWord`             | `matchword`      | `string`                          | "undefined" | Specifies a string used to highlight matched string parts in options. |
-| `multiSelect`           | `multiselect`    | `boolean`                         | false       | When true, the selected option can be multiple options. |
-| `noCheckmark`           | `nocheckmark`    | `boolean`                         | false       | When true, selected option will not show the checkmark. |
-| `optionActive`          | `optionactive`   | `object`                          | "undefined" | Specifies the current active menuOption.         |
-| `optionSelected`        | `optionSelected` | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `value`                 | `value`          | `string`                          | "undefined" | Value selected for the component.                |
+| Property                   | Attribute                  | Modifiers | Type                                             | Default     | Description                                      |
+|----------------------------|----------------------------|-----------|--------------------------------------------------|-------------|--------------------------------------------------|
+| `allowDeselect`            | `allowDeselect`            |           | `boolean`                                        | false       | Allows deselecting an already selected option when clicked again in single-select mode. |
+| `disabled`                 | `disabled`                 |           | `boolean`                                        |             | When true, the entire menu and all options are disabled; |
+| `hasLoadingPlaceholder`    |                            |           | `boolean`                                        |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| `layout`                   |                            |           | `string`                                         |             |                                                  |
+| `loading`                  | `loading`                  |           | `boolean`                                        | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
+| `matchWord`                | `matchword`                |           | `string`                                         | "undefined" | Specifies a string used to highlight matched string parts in options. |
+| `multiSelect`              | `multiselect`              |           | `boolean`                                        | false       | When true, the selected option can be multiple options. |
+| `noCheckmark`              | `nocheckmark`              |           | `boolean`                                        | false       | When true, selected option will not show the checkmark. |
+| `optionActive`             | `optionactive`             |           | `object`                                         | "undefined" | Specifies the current active menuOption.         |
+| `optionSelected`           | `optionSelected`           |           | `HTMLElement\|Array<HTMLElement>`                | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
+| `options`                  |                            | readonly  | `array`                                          |             | Available menu options                           |
+| `propertyValues`           |                            | readonly  | `{ size: string; shape: string; noCheckmark: any; disabled: any; }` |             |                                                  |
+| `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`                                        | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
+| `selectedOptions`          |                            | readonly  |                                                  |             |                                                  |
+| `value`                    | `value`                    |           | `string`                                         | "undefined" | Value selected for the component.                |
 
 ## Methods
 
-| Method               | Type                    | Description                                      |
-|----------------------|-------------------------|--------------------------------------------------|
-| `reset`              | `(): void`              | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
-| `updateActiveOption` | `(index: number): void` | Updates the active option state and dispatches events.<br /><br />**index**: Index of the option to make active. |
+| Method             | Type                     | Description                                      |
+|--------------------|--------------------------|--------------------------------------------------|
+| `handleMenuChange` | `(event: any): void`     |                                                  |
+| `makeSelection`    | `(): void`               |                                                  |
+| `navigateOptions`  | `(direction: any): void` |                                                  |
+| `provideContext`   | `(): void`               |                                                  |
+| `reset`            | `(): void`               | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
+| `setInternalValue` | `(value: any): void`     |                                                  |
+| `setLoadingState`  | `(isLoading: any): void` |                                                  |
 
 ## Events
 
@@ -56,19 +66,40 @@ The auro-menu element provides users a way to define a menu option.
 
 ## Properties
 
-| Property      | Attribute     | Type      | Default | Description                                      |
-|---------------|---------------|-----------|---------|--------------------------------------------------|
-| `disabled`    | `disabled`    | `Boolean` | false   | When true specifies that the menuoption is disabled. |
-| `iconTag`     |               | `string`  |         |                                                  |
-| `layout`      |               | `string`  |         |                                                  |
-| `nocheckmark` | `nocheckmark` | `boolean` | false   |                                                  |
-| `selected`    | `selected`    | `Boolean` | false   | Specifies that an option is selected.            |
-| `value`       | `value`       | `String`  |         | Specifies the value to be sent to a server.      |
+| Property      | Attribute     | Modifiers | Type      | Default | Description                                      |
+|---------------|---------------|-----------|-----------|---------|--------------------------------------------------|
+| `disabled`    | `disabled`    |           | `Boolean` | false   | When true specifies that the menuoption is disabled. |
+| `iconTag`     |               |           | `string`  |         |                                                  |
+| `isActive`    |               | readonly  | `boolean` |         |                                                  |
+| `key`         | `key`         |           | `string`  |         |                                                  |
+| `layout`      |               |           | `string`  |         |                                                  |
+| `matchWord`   | `matchWord`   |           | `string`  |         |                                                  |
+| `menuService` | `menuService` |           | `object`  | null    |                                                  |
+| `nocheckmark` | `nocheckmark` |           | `boolean` | false   |                                                  |
+| `selected`    | `selected`    |           | `Boolean` | false   | Specifies that an option is selected.            |
+| `tabIndex`    | `tabIndex`    |           | `number`  |         |                                                  |
+| `unsubscribe` |               |           |           | null    |                                                  |
+| `value`       | `value`       |           | `String`  |         | Specifies the value to be sent to a server.      |
+
+## Methods
+
+| Method                | Type                      |
+|-----------------------|---------------------------|
+| `attachTo`            | `(service: any): void`    |
+| `bindEvents`          | `(): void`                |
+| `dispatchClickEvent`  | `(): void`                |
+| `handleClick`         | `(): void`                |
+| `handleMenuChange`    | `(event: any): void`      |
+| `handleMouseEnter`    | `(): void`                |
+| `setSelected`         | `(isSelected: any): void` |
+| `updateActive`        | `(isActive: any): void`   |
+| `updateTextHighlight` | `(): void`                |
 
 ## Events
 
 | Event                      | Type                | Description                                      |
 |----------------------------|---------------------|--------------------------------------------------|
+| `auroMenuOption-click`     | `CustomEvent<this>` |                                                  |
 | `auroMenuOption-mouseover` | `CustomEvent<this>` | Notifies that this option has been hovered over. |
 
 ## Slots

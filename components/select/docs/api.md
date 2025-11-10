@@ -37,12 +37,13 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
-| `reset`    | `(): void`                             | Resets component to initial state.               |
-| `showBib`  | `(): void`                             | Shows the dropdown bib if there are options to show. |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method         | Type                                   | Description                                      |
+|----------------|----------------------------------------|--------------------------------------------------|
+| `hideBib`      | `(): void`                             | Hides the dropdown bib if its open.              |
+| `reset`        | `(): void`                             | Resets component to initial state.               |
+| `setMenuValue` | `(value: any): void`                   |                                                  |
+| `showBib`      | `(): void`                             | Shows the dropdown bib if there are options to show. |
+| `validate`     | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
@@ -50,7 +51,7 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 |-----------------------------|--------------------------------------------------|--------------------------------------------------|
 | `auroFormElement-validated` |                                                  | Notifies that the `validity` and `errorMessage` values have changed. |
 | `auroSelect-valueSet`       | `CustomEvent<any>`                               | Notifies that the component has a new value set. |
-| `input`                     | `CustomEvent<{ optionSelected: any; value: string \| string[]; }>` | Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object. |
+| `input`                     | `CustomEvent<{ optionSelected: any; value: any; }>` | Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object. |
 
 ## Slots
 
