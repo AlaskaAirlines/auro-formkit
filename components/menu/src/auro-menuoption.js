@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
-/* eslint-disable lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, curly, max-lines */
 
 // ---------------------------------------------------------------------
 import { html } from 'lit/static-html.js';
@@ -20,6 +20,8 @@ import iconVersion from './iconVersion.js';
 
 import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.mjs';
 import { classMap } from 'lit/directives/class-map.js';
+import { MenuContext } from './auro-menu.context.js';
+import { ContextConsumer } from '@lit/context';
 
 /**
  * The auro-menu element provides users a way to define a menu option.
@@ -34,6 +36,8 @@ import { classMap } from 'lit/directives/class-map.js';
 export class AuroMenuOption extends AuroElement {
   constructor() {
     super();
+
+    this.bindEvents();
 
     /**
      * @private
@@ -58,17 +62,32 @@ export class AuroMenuOption extends AuroElement {
     /**
      * @private
      */
-    this.tabIndex = -1;
-
-    /**
-     * @private
-     */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    // Initialize context-related properties
+    this.menuService = null;
+    this.unsubscribe = null;
   }
 
   static get properties() {
     return {
       ...super.properties,
+      disabled:  {
+        type: Boolean,
+        reflect: true
+      },
+      key: {
+        type: String,
+        reflect: true
+      },
+      menuService: {
+        type: Object,
+        state: true
+      },
+      matchWord: {
+        type: String,
+        state: true
+      },
       nocheckmark: {
         type: Boolean,
         reflect: true
@@ -77,18 +96,14 @@ export class AuroMenuOption extends AuroElement {
         type: Boolean,
         reflect: true
       },
-      disabled:  {
-        type: Boolean,
+      tabIndex: {
+        type: Number,
         reflect: true
       },
       value: {
         type: String,
         reflect: true
       },
-      tabIndex: {
-        type: Number,
-        reflect: true
-      }
     };
   }
 
@@ -118,15 +133,111 @@ export class AuroMenuOption extends AuroElement {
     // Add the tag name as an attribute if it is different than the component name
     // Add this step soon as this node gets attached to the DOM to avoid racing condition with menu's value setting logic.
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
+
+    // Set up context consumption in connectedCallback
+    this._contextConsumer = new ContextConsumer(this, {
+      context: MenuContext,
+      callback: this.attachTo.bind(this),
+      subscribe: true
+    });
+  }
+
+  attachTo(service) {
+    if (!service) {
+      return;
+    }
+    this.menuService = service;
+    this.menuService.addMenuOption(this);
+    this.menuService.subscribe(this.handleMenuChange.bind(this));
+  }
+
+  handleMenuChange(event) {
+
+    // Ignore events without a type or property
+    if (!event.type && !event.property) {
+      return;
+    }
+
+    // Update reactive properties based on event type
+    if (event.property && Object.keys(AuroMenuOption.properties).includes(event.property)) {
+      this[event.property] = event.value;
+    }
+
+    // Handle highlight changes
+    if (event.type === 'highlightChange') {
+      const isActive = event.highlightedOption === this;
+      this.updateActive(isActive);
+    }
+
+    if (event.type === 'stateChange') {
+      const isSelected = event.selectedOptions.includes(this);
+      this.setSelected(isSelected);
+    }
+  }
+
+  bindEvents() {
+    this.addEventListener('click', this.handleClick.bind(this));
+    this.addEventListener('mouseenter', this.handleMouseEnter.bind(this));
+  }
+
+  setSelected(isSelected) {
+    this.selected = isSelected;
+  }
+
+  updateActive(isActive) {
+
+    // Set active state
+    this.active = isActive;
+
+    // Update class based on active state
+    if (this.active) this.classList.add('active');
+    else this.classList.remove('active');
+  }
+
+  disconnectedCallback() {
+    if (this.menuService) {
+      this.menuService.removeMenuOption(this);
+    }
+  }
+
+  updateTextHighlight() {
+
+    // Regex for matchWord if needed
+    let regexWord = null;
+
+    if (this.matchWord && this.matchWord.length) {
+      const escapedWord = this.matchWord.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+      regexWord = new RegExp(escapedWord, 'giu');
+    }
+
+    // Update text highlighting if matchWord changed
+    if (regexWord &&
+        this.isActive && !this.hasAttribute('persistent')) {
+      const nested = this.querySelectorAll('.nestingSpacer');
+
+      const displayValueEl = this.querySelector('[slot="displayValue"]');
+      if (displayValueEl) {
+        this.removeChild(displayValueEl);
+      }
+
+      // Create nested spacers
+      const nestingSpacerBundle = [...nested].map(() => this.nestingSpacer).join('');
+
+      // Update with spacers and matchWord
+      this.innerHTML = nestingSpacerBundle +
+        this.textContent.replace(
+          regexWord,
+          (match) => `<strong>${match}</strong>`
+        );
+      if (displayValueEl) {
+        this.append(displayValueEl);
+      }
+    }
   }
 
   firstUpdated() {
-    if (!this.hasAttribute('size')) {
-      this.size = this.parentElement.getAttribute('size') || 'sm';
-    }
-    if (!this.hasAttribute('shape')) {
-      this.shape = this.parentElement.getAttribute('shape') || 'box';
-    }
+    // Add the tag name as an attribute if it is different than the component name
+    this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
 
     this.setAttribute('role', 'option');
     this.setAttribute('aria-selected', 'false');
@@ -141,12 +252,29 @@ export class AuroMenuOption extends AuroElement {
     });
   }
 
-  // observer for selected property changes
+  get isActive() {
+    return !this.hasAttribute('hidden') &&
+      !this.hasAttribute('disabled') &&
+      !this.hasAttribute('static');
+  }
+
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    // Update aria-selected attribute if selected changed
     if (changedProperties.has('selected')) {
       this.setAttribute('aria-selected', this.selected.toString());
+      this.menuService[this.selected ? 'selectOption' : 'deselectOption'](this);
+    }
+
+    // Update text highlight if matchWord changed
+    if (changedProperties.has('matchWord')) {
+      this.updateTextHighlight();
+    }
+
+    // Set the key to be the passed value if no key is provided
+    if (changedProperties.has('value') && this.key === undefined) {
+      this.key = this.value;
     }
   }
 
@@ -164,6 +292,28 @@ export class AuroMenuOption extends AuroElement {
     svg.setAttribute('slot', 'svg');
 
     return html`<${this.iconTag} customColor customSvg>${svg}</${this.iconTag}>`;
+  }
+
+  dispatchClickEvent() {
+    this.dispatchEvent(new CustomEvent('auroMenuOption-click', {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+      detail: this
+    }));
+  }
+
+  handleClick() {
+    if (!this.disabled) {
+      this.dispatchClickEvent();
+      this.menuService.toggleOption(this);
+    }
+  }
+
+  handleMouseEnter() {
+    if (!this.disabled) {
+      this.menuService.setHighlightedOption(this);
+    }
   }
 
   /**

@@ -140,9 +140,6 @@ export class AuroSelect extends AuroElement {
    */
   privateDefaults() {
     this.appearance = 'default';
-    this.options = [];
-    this.optionActive = null;
-    this.optionSelected = undefined;
     this.value = undefined;
     this.fullscreenBreakpoint = 'sm';
     this.onDark = false;
@@ -310,25 +307,11 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * @private
-       */
-      optionActive: {
-        type: Object
-      },
-
-      /**
        * Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true.
        * @type {HTMLElement|Array<HTMLElement>}
        */
       optionSelected: {
         type: Object
-      },
-
-      /**
-       * @private
-       */
-      options: {
-        type: Array
       },
 
       /**
@@ -464,16 +447,7 @@ export class AuroSelect extends AuroElement {
    * @returns {String|Array<String>}
    */
   get formattedValue() {
-    if (this.multiSelect) {
-      if (!this.value) {
-        return undefined;
-      }
-      if (this.value.startsWith("[")) {
-        return JSON.parse(this.value);
-      }
-      return [this.value];
-    }
-    return this.value;
+    return this.menu.value || undefined;
   }
 
   /**
@@ -607,14 +581,25 @@ export class AuroSelect extends AuroElement {
     });
 
     // Handle selected options
-    if (this.optionSelected) {
-      if (this.multiSelect && this.optionSelected.length > 0) {
-        const displayText = this.optionSelected.map((option) => option.textContent).join(', ');
+    if (this.menu && this.menu.optionSelected) {
 
-        valueElem.textContent = displayText;
-      } else {
-        valueElem.innerHTML = this.optionSelected.innerHTML;
-        const displayValueEl = this.optionSelected.querySelector("[slot='displayValue']");
+      // If multiSelect and we got an array of selected options
+      if (this.multiSelect && Array.isArray(this.menu.optionSelected)) {
+
+        // If we have selected options, join and display their text content
+        if (this.menu.optionSelected.length > 0) {
+          const displayText = this.menu.optionSelected.map((option) => option.textContent).join(', ');
+          valueElem.textContent = displayText;
+
+        // If no selected options, clear out value display
+        } else {
+          valueElem.textContent = '';
+        }
+
+      // If single select and we got an option that was selected, update value display
+      } else if (!this.multiSelect && this.menu && this.menu.optionSelected instanceof HTMLElement) {
+        valueElem.innerHTML = this.menu.optionSelected.innerHTML;
+        const displayValueEl = this.menu.optionSelected.querySelector("[slot='displayValue']");
 
         if (displayValueEl) {
           this.appendChild(displayValueEl.cloneNode(true));
@@ -687,46 +672,16 @@ export class AuroSelect extends AuroElement {
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
     this.menu.setAttribute('aria-hidden', 'true');
 
-    this.generateOptionsArray();
+    this.menu.addEventListener('auroMenu-selectedOption', (event) => {
 
-    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
-      this.optionActive = evt.detail;
-    });
+      // Update the displayed value
+      this.updateDisplayedValue();
 
-    this.menu.addEventListener('auroMenu-selectedOption', () => {
-      // Get array of selected options from menu
-      this.optionSelected = this.menu.optionSelected;
-      // For single select, we still use arrays but only take first value
-      this.value = this.menu.value;
+      // Update the internal value to match
+      this.value = event.detail.stringValue;
 
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
-      }
-    });
-
-    /**
-     * When this.value is preset auro-menu.selectByValue(this.value) is called.
-     * However, if this.value does not match one of the menu options,
-     * auro-menu will notify via event. In this case, clear out this.value
-     * so that it is not storing an invalid value which can then later be returned
-     * with `auro-select.value`.
-     */
-    this.menu.addEventListener('auroMenu-selectValueFailure', () => {
-      this.menu.clearSelection();
-    });
-
-    this.menu.addEventListener('auroMenu-selectValueReset', () => {
-      this.optionSelected = this.menu.optionSelected;
-      this.validate(this);
-    });
-
-    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
-      if (evt.detail) {
-        evt.detail.scrollIntoView({
-          alignToTop: false,
-          block: "nearest",
-          behavior: "smooth"
-        });
       }
     });
   }
@@ -825,7 +780,7 @@ export class AuroSelect extends AuroElement {
     this.lastLetter = key;
 
     // Get all the options that start with the last letter pressed
-    const letterOptions = this.options.filter((option) => {
+    const letterOptions = this.menu.options.filter((option) => {
       const optionText = option.value || '';
       return optionText.toLowerCase().startsWith(this.lastLetter);
     });
@@ -841,7 +796,7 @@ export class AuroSelect extends AuroElement {
 
       // Select the new option in the menu
       const newOption = letterOptions[index];
-      const newOptionIndex = this.options.indexOf(newOption);
+      const newOptionIndex = this.menu.options.indexOf(newOption);
       this.menu.updateActiveOption(newOptionIndex);
     }
   }
@@ -923,26 +878,11 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Determines the element error state based on the `required` attribute and input value.
-   * @private
-   * @returns {void}
-   */
-  generateOptionsArray() {
-    if (this.menu) {
-      this.options = [...this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]')];
-    } else {
-      this.options = [];
-    }
-  }
-
-  /**
    * Resets all options to their default state.
    * @private
    */
   clearSelection() {
     this.value = undefined;
-    this.optionSelected = undefined;
-
     this.menu.multiSelect = this.multiSelect;
   }
 
@@ -981,42 +921,23 @@ export class AuroSelect extends AuroElement {
     this.configureSelect();
   }
 
-  /**
-   * Update the menu value. With checks for menu existence. Awaits value update.
-   * @param {string} value - The value to set in the menu.
-   * @returns {void}
-   * @private
-   */
-  async updateMenuValue(value) {
+  setMenuValue(value) {
     if (!this.menu) return;
-
-    this.menu.setAttribute('value', value);
-    if (value) {
-      this.menu.value = value;
-    } else {
-      this.menu.reset();
-    }
-    await this.menu.updateComplete;
+    this.menu.value = value;
   }
 
-  async updated(changedProperties) {
+  updated(changedProperties) {
     if (changedProperties.has('multiSelect') && !changedProperties.has('value')) {
       this.clearSelection();
     }
 
     if (changedProperties.has('value')) {
-      if (this.value) {
-        await this.updateMenuValue(this.value);
-
-        if (this.menu) {
-          this.optionSelected = this.menu.optionSelected;
-        }
-      } else {
-        await this.updateMenuValue(undefined);
-      }
+      this.setMenuValue(this.value);
 
       this._updateNativeSelect();
       this.validate();
+      this.hideBib();
+      this.focus();
 
       // LEGACY EVENT
       this.dispatchEvent(new CustomEvent('auroSelect-valueSet', {
@@ -1030,14 +951,10 @@ export class AuroSelect extends AuroElement {
         cancelable: true,
         composed: true,
         detail: {
-          optionSelected: this.optionSelected,
-          value: this.formattedValue
+          optionSelected: this.menu.optionSelected,
+          value: this.menu.value
         }
       }));
-    }
-
-    if (changedProperties.has('optionSelected')) {
-      this.updateDisplayedValue();
     }
 
     if (changedProperties.has('error')) {
@@ -1091,7 +1008,7 @@ export class AuroSelect extends AuroElement {
     const selectedValue = selectedOption.value;
 
     if (this.multiSelect) {
-      const currentArray = this.formattedValue;
+      const currentArray = this.menu.value || [];
 
       if (!currentArray.includes(selectedValue)) {
         this.value = JSON.stringify([
@@ -1114,40 +1031,14 @@ export class AuroSelect extends AuroElement {
    * @private
    */
   _updateNativeSelect() {
-    if (!this.nativeSelect) {
-      return;
-    }
+    if (!this.nativeSelect) return;
 
-    if (this.multiSelect) {
-     this.nativeSelect.value = this.multiSelect ? this.multiSelect[0] : '';
-    } else {
-      this.nativeSelect.value = this.value || '';
-    }
-  }
+    const currentValue = this.nativeSelect.value;
+    const newValue = this.multiSelect
+      ? this.formattedValue[0] || ''
+      : this.value || '';
 
-  /**
-   * Returns HTML for the hidden a11y screen reader content.
-   * @private
-   * @returns {html} - Returns HTML for the hidden a11y screen reader content.
-   */
-  renderAriaHtml() {
-    return html`
-      <div aria-live="polite" class="util_displayHiddenVisually">
-        ${this.optionActive && this.options.length > 0
-          ? html`
-            ${`${this.optionActive.innerText}, option ${this.options.indexOf(this.optionActive) + 1} of ${this.options.length}`}
-          `
-          : undefined
-        };
-
-        ${this.optionSelected && this.options.length > 0
-          ? html`
-          ${`${this.optionSelected.innerText} selected`}
-          `
-          : undefined
-        };
-      </div>
-    `;
+    if (currentValue !== newValue) this.nativeSelect.value = newValue || '';
   }
 
   /**
@@ -1168,7 +1059,7 @@ export class AuroSelect extends AuroElement {
           autocomplete="${ifDefined(this.autocomplete)}"
           @change="${this._handleNativeSelectChange}">
           <option value="" ?selected="${!this.value}"></option>
-          ${this.options.map((option) => {
+          ${this.menu && Array.isArray(this.menu.options) && this.menu.options.map((option) => {
             const optionValue = option.value || option.textContent;
             return html`
               <option
