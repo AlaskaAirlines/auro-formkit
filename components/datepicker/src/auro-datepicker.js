@@ -32,13 +32,9 @@ import snowflakeColors from "./styles/snowflake/color-css.js";
 import './auro-calendar.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import dropdownVersion from './dropdownVersion.js';
-
 import { AuroInput } from '@aurodesignsystem/auro-input';
-import inputVersion from './inputVersion.js';
-
-import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
-import helpTextVersion from "@aurodesignsystem/auro-select/src/helptextVersion.js";
+import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
+import formkitVersion from '@auro-formkit/version';
 
 import { ifDefined } from "lit/directives/if-defined.js";
 import {AuroElement} from "@aurodesignsystem/auro-layout-element";
@@ -189,7 +185,7 @@ export class AuroDatePicker extends AuroElement {
     /**
      * @private
      */
-    this.dropdownTag = versioning.generateTag('auro-formkit-datepicker-dropdown', dropdownVersion, AuroDropdown);
+    this.dropdownTag = versioning.generateTag('auro-formkit-datepicker-dropdown', formkitVersion, AuroDropdown);
 
     /**
      * @private
@@ -204,12 +200,12 @@ export class AuroDatePicker extends AuroElement {
     /**
      * @private
      */
-    this.inputTag = versioning.generateTag('auro-formkit-datepicker-input', inputVersion, AuroInput);
+    this.inputTag = versioning.generateTag('auro-formkit-datepicker-input', formkitVersion, AuroInput);
 
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
     /** @private */
     this.handleClick = this.handleClick.bind(this);

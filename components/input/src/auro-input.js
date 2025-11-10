@@ -42,7 +42,7 @@ import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import helpTextVersion from './helptextVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 // build the component class
 export class AuroInput extends BaseInput {
@@ -68,7 +68,7 @@ export class AuroInput extends BaseInput {
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
     /**
      * @private

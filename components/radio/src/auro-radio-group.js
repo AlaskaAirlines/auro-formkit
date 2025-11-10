@@ -22,7 +22,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import helpTextVersion from './helptextVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
@@ -88,7 +88,7 @@ export class AuroRadioGroup extends LitElement {
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-radio-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-radio-helptext', formkitVersion, AuroHelpText);
   }
 
   static get styles() {

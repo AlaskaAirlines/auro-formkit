@@ -23,7 +23,7 @@ import tokensCss from "./styles/tokens-css.js";
 import colorCss from "./styles/color-css.js";
 import styleCss from "./styles/style-css.js";
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
-import helptextVersion from "./helptextVersion.js";
+import formkitVersion from '@auro-formkit/version';
 
 /**
  * Auro Counter is a customizable counter component for user interface interactions.
@@ -75,7 +75,7 @@ export class AuroCounter extends LitElement {
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helptextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
     /**
      * @private

@@ -15,13 +15,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import AuroFormValidation from '@auro-formkit/form-validation';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import dropdownVersion from './dropdownVersion.js';
-
 import { AuroInput } from '@aurodesignsystem/auro-input';
-import inputVersion from './inputVersion.js';
-
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import bibTemplateVersion from './bibtemplateVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
@@ -94,9 +90,9 @@ export class AuroCombobox extends AuroElement {
   privateDefaults() {
     const versioning = new AuroDependencyVersioning();
 
-    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
-    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
+    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', formkitVersion, AuroDropdown);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', formkitVersion, AuroBibtemplate);
+    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', formkitVersion, AuroInput);
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', '1.0.0', AuroHelpText);
 
     this.availableOptions = [];
