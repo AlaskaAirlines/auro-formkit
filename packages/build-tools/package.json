@@ -11,5 +11,8 @@
     "./formVersionWriter": "./src/formVersionWriter.mjs",
     "./docProcessor": "./src/docProcessor.mjs",
     "./kitDocProcessor": "./src/kitDocProcessor.mjs"
+  },
+  "scripts": {
+    "build:formkit-version": "node ./src/writeFormkitVersion.mjs"
   }
 }

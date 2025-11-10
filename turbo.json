@@ -3,7 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "build:version"],
+      "dependsOn": ["^build:version", "^@auro-formkit/build-tools#build:formkit-version"],
       "outputs": [
         "dist/**",
         "demo/*.md",
@@ -11,17 +11,15 @@
         "docTemplates/**",
         "docs/api.md",
         "src/styles/*.css",
-        "src/styles/*-css.js",
-        "src/*Version.js"
+        "src/styles/*-css.js"
       ]
+    },
+    "build:version": {
+      "outputs": ["src/*Version.js"]
     },
     "build:watch": {
       "dependsOn": ["^build"],
       "persistent": true
-    },
-    "build:version": {
-      "inputs": ["src/*Version.js"],
-      "outputs": ["src/*Version.js"]
     },
     "build:docs": {
       "outputs": ["README.md", "demo/index.*", "docs/partials/*.md"]
@@ -38,7 +36,7 @@
       "cache": false
     },
     "test": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "inputs": ["src/**/*.js", "test/**/*.js"]
     },
@@ -49,6 +47,10 @@
     },
     "lint": {
       "outputs": []
+    },
+    "@auro-formkit/build-tools#build:formkit-version": {
+      "inputs": ["src/writeFormkitVersion.mjs"],
+      "outputs": ["../version/version.js"]
     },
     "@auro-formkit/build-tools#build:docs:kit": {
       "inputs": ["../../docs/partials/**/*", "../../docs/templates/**/*", "src/kitDocProcessor.mjs"],

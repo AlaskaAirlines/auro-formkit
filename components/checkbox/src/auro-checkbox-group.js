@@ -19,7 +19,7 @@ import colorCss from "./styles/colorGroup-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import helpTextVersion from './helptextVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.
@@ -82,7 +82,7 @@ export class AuroCheckboxGroup extends LitElement {
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-checkbox-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-checkbox-helptext', formkitVersion, AuroHelpText);
   }
 
   static get styles() {

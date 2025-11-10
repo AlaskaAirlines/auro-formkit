@@ -16,7 +16,7 @@ import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import bibTemplateVersion from './bibtemplateVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
@@ -97,7 +97,7 @@ export class AuroCalendar extends RangeDatepicker {
     /**
      * @private
      */
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-datepicker-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-datepicker-bibtemplate', formkitVersion, AuroBibtemplate);
 
     /**
      * @private

@@ -28,13 +28,10 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import dropdownVersion from './dropdownVersion.js';
-
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import bibTemplateVersion from './bibtemplateVersion.js';
-
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import helpTextVersion from './helptextVersion.js';
+
+import formkitVersion from '@auro-formkit/version';
 
 import styleCss from "./styles/style-css.js";
 import emphasizedColorCss from "./styles/emphasized/color-css.js";
@@ -109,17 +106,17 @@ export class AuroSelect extends AuroElement {
     /**
      * @private
      */
-    this.dropdownTag = versioning.generateTag('auro-formkit-select-dropdown', dropdownVersion, AuroDropdown);
+    this.dropdownTag = versioning.generateTag('auro-formkit-select-dropdown', formkitVersion, AuroDropdown);
 
     /**
      * @private
      */
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-select-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-select-bibtemplate', formkitVersion, AuroBibtemplate);
 
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
     /**
      * @private
