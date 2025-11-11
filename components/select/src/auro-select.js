@@ -1033,9 +1033,12 @@ export class AuroSelect extends AuroElement {
   _updateNativeSelect() {
     if (!this.nativeSelect) return;
 
+    let {formattedValue} = this;
+    if (!formattedValue) formattedValue = this.multiSelect ? [] : '';
+
     const currentValue = this.nativeSelect.value;
     const newValue = this.multiSelect
-      ? this.formattedValue[0] || ''
+      ? formattedValue[0] || ''
       : this.value || '';
 
     if (currentValue !== newValue) this.nativeSelect.value = newValue || '';
