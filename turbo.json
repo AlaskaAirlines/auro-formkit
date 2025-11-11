@@ -3,7 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build:version", "^@auro-formkit/build-tools#build:formkit-version", "^build"],
+      "dependsOn": ["^build", "^build:version", "^@auro-formkit/build-tools#build:formkit-version"],
       "outputs": [
         "dist/**",
         "demo/*.md",
@@ -64,6 +64,8 @@
     },
     "@aurodesignsystem/auro-form#test": {
       "dependsOn": [
+        "^build",
+        "build",
         "@aurodesignsystem/auro-input#build",
         "@aurodesignsystem/auro-datepicker#build",
         "@aurodesignsystem/auro-counter#build",
