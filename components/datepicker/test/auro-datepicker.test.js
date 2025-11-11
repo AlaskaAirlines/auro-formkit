@@ -971,7 +971,6 @@ describe('auro-datepicker', () => {
 
     // Show the bib so the calendar is rendered
     el.showBib();
-    await elementUpdated(el);
 
     // Get the calendar
     const {calendar} = el;

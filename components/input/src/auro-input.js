@@ -42,7 +42,7 @@ import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import helpTextVersion from './helptextVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 // build the component class
 export class AuroInput extends BaseInput {
@@ -68,7 +68,7 @@ export class AuroInput extends BaseInput {
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
     /**
      * @private
@@ -104,7 +104,7 @@ export class AuroInput extends BaseInput {
       (
         (!this.value || this.value.length === 0) &&
         !this.hasFocus &&
-        (!this.placeholder || this.placeholder === '')
+        (!this.placeholderStr || this.placeholderStr === '')
       );
   }
 
@@ -149,11 +149,11 @@ export class AuroInput extends BaseInput {
     }
 
     if (this.layout === 'snowflake') {
-      return this.hasValue || this.hasFocus || this.placeholder ? 'body-xs' : 'body-lg';
+      return this.hasValue || this.hasFocus || this.placeholderStr ? 'body-xs' : 'body-lg';
     }
 
     // classic layout (default)
-    return ((!this.value || this.value.length === 0) && !this.placeholder && !this.hasFocus) ? 'body-default' : 'body-xs';
+    return ((!this.value || this.value.length === 0) && !this.placeholderStr && !this.hasFocus) ? 'body-default' : 'body-xs';
   }
 
   /**

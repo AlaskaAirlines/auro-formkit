@@ -29,12 +29,14 @@
     "CHANGELOG.md",
     "README.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "version.js"
   ],
   "scripts": {
     "build": "turbo run build",
     "sass": "turbo run sass",
     "build:version": "turbo run build:version",
+    "build:formkit-version": "turbo run build:formkit-version",
     "dev": "turbo run dev --parallel",
     "dev:closed": "turbo run dev:closed --parallel",
     "lint": "turbo run lint",
@@ -58,6 +60,7 @@
     "@rollup/rollup-linux-x64-gnu": "*"
   },
   "devDependencies": {
+    "@auro-formkit/version": "*",
     "@aurodesignsystem/auro-button": "^12.3.0",
     "@aurodesignsystem/auro-library": "^5.5.4",
     "@aurodesignsystem/design-tokens": "^8.5.0",

@@ -44,7 +44,6 @@
   },
   "scripts": {
     "build": "run-s sass bundler types build:docs",
-    "build:version": "node ./scripts/version.mjs",
     "sass": "run-s build:sass postCss:component sass:render",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",

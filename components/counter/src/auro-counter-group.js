@@ -29,13 +29,9 @@ import AuroFormValidation from "@auro-formkit/form-validation";
 
 import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs";
 import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
-import dropdownVersion from "./dropdownVersion.js";
-
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import bibTemplateVersion from './bibtemplateVersion.js';
-
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import helptextVersion from './helptextVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
@@ -120,21 +116,21 @@ export class AuroCounterGroup extends AuroElement {
      * @private
      * @type {string}
      */
-    this.dropdownTag = versioning.generateTag("auro-formkit-counter-dropdown", dropdownVersion, AuroDropdown);
+    this.dropdownTag = versioning.generateTag("auro-formkit-counter-dropdown", formkitVersion, AuroDropdown);
 
     /**
      * Dynamically generated bibtempalate tag.
      * @private
      * @type {string}
      */
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-counter-bibtemplate', bibTemplateVersion, AuroBibtemplate);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-counter-bibtemplate', formkitVersion, AuroBibtemplate);
 
     /**
      * Dynamically generated helpText tag.
      * @private
      * @type {string}
      */
-    this.helpTextTag = versioning.generateTag("auro-formkit-counter-helptext", helptextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag("auro-formkit-counter-helptext", formkitVersion, AuroHelpText);
 
     /**
      * @private

@@ -1,0 +1,17 @@
+{
+  "name": "@auro-formkit/version",
+  "description": "Shared version file for auro-formkit monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./version.js",
+  "exports": {
+    ".": "./version.js"
+  },
+  "files": [
+    "version.js"
+  ],
+  "scripts": {
+    "clean": "rm -rf .turbo && rm -rf node_modules"
+  }
+}

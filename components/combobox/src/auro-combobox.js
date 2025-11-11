@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
+/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, no-extra-parens */
 
 // If using litElement base class
 import { css } from "lit";
@@ -15,13 +15,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 import AuroFormValidation from '@auro-formkit/form-validation';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import dropdownVersion from './dropdownVersion.js';
-
 import { AuroInput } from '@aurodesignsystem/auro-input';
-import inputVersion from './inputVersion.js';
-
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import bibTemplateVersion from './bibtemplateVersion.js';
+import formkitVersion from '@auro-formkit/version';
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
@@ -94,10 +90,10 @@ export class AuroCombobox extends AuroElement {
   privateDefaults() {
     const versioning = new AuroDependencyVersioning();
 
-    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', dropdownVersion, AuroDropdown);
-    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', bibTemplateVersion, AuroBibtemplate);
-    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', inputVersion, AuroInput);
-    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', '1.0.0', AuroHelpText);
+    this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', formkitVersion, AuroDropdown);
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', formkitVersion, AuroBibtemplate);
+    this.inputTag = versioning.generateTag('auro-formkit-combobox-input', formkitVersion, AuroInput);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
     this.availableOptions = [];
     this.dropdownId = undefined;
@@ -672,7 +668,7 @@ export class AuroCombobox extends AuroElement {
       return;
     }
     if (!this.dropdown.isPopoverVisible && this.input.value && this.input.value.length > 0) {
-      if (this.menu.getAttribute('loading') || (this.availableOptions && this.availableOptions.length > 0) || this.noMatchOption !== undefined) { // eslint-disable-line no-extra-parens
+      if (this.menu.getAttribute('loading') || this.availableOptions.length > 0 || this.noMatchOption !== undefined) {
         if (this.menu.hasAttribute('loading') && !this.menu.hasLoadingPlaceholder) {
           this.isHiddenWhileLoading = true;
         } else {
@@ -950,7 +946,7 @@ export class AuroCombobox extends AuroElement {
     } else if (this.menu.loading) {
       // if input has value but menu is loading, show bib immediately
       this.showBib();
-    } else if ((!this.availableOptions || this.availableOptions.length === 0) && !this.dropdown.isBibFullscreen) {
+    } else if (this.availableOptions.length === 0 && !this.dropdown.isBibFullscreen) {
       // Force dropdown bib to hide if input value has no matching suggestions
       this.hideBib();
     }
@@ -1157,8 +1153,7 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      // eslint-disable-next-line no-extra-parens
-      if ((this.availableOptions && this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading) {
+      if ((this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
         this.showBib();
       } else {
         this.hideBib();

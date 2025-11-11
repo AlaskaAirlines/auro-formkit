@@ -377,15 +377,11 @@ describe('auro-input', () => {
         <auro-input type="date" format=${dateFormats[index]}></auro-input>
       `);
 
-      let placeholder = el.getPlaceholder();
-
-      expect(placeholder).to.equal(dateFormats[index].toUpperCase());
+      expect(el.placeholderStr).to.equal(dateFormats[index].toUpperCase());
 
       el.placeholder = "some date";
 
-      placeholder = el.getPlaceholder();
-
-      expect(placeholder).not.to.equal(dateFormats[index].toUpperCase());
+      expect(el.placeholderStr).not.to.equal(dateFormats[index].toUpperCase());
     }
   });
 

@@ -30,7 +30,6 @@ import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from './iconVersion.js';
 
 import { AuroDropdownBib } from './auro-dropdownBib.js';
-import dropdownVersion from './dropdownVersion.js';
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
 import colorCss from "./styles/color-css.js";
@@ -46,7 +45,7 @@ import styleEmphasizedCss from "./styles/emphasized/style-css.js";
 import styleSnowflakeCss from "./styles/snowflake/style-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import helpTextVersion from './helptextVersion.js';
+import formkitVersion from '@auro-formkit/version';
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
@@ -172,12 +171,12 @@ export class AuroDropdown extends AuroElement {
     /**
      * @private
      */
-    this.dropdownBibTag = versioning.generateTag('auro-formkit-dropdown-dropdownbib', dropdownVersion, AuroDropdownBib);
+    this.dropdownBibTag = versioning.generateTag('auro-formkit-dropdown-dropdownbib', formkitVersion, AuroDropdownBib);
 
     /**
      * @private
      */
-    this.helpTextTag = versioning.generateTag('auro-formkit-dropdown-helptext', helpTextVersion, AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-dropdown-helptext', formkitVersion, AuroHelpText);
 
     /**
      * @private

@@ -29,8 +29,8 @@ slot {
 
   .textSlot {
     display: inline-flex;
-    align-items: center;
     height: var(--ds-size-300, vac.$ds-size-300);
+    align-items: center;
   }
 }
 
