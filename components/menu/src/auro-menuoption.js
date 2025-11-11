@@ -306,7 +306,7 @@ export class AuroMenuOption extends AuroElement {
   handleClick() {
     if (!this.disabled) {
       this.dispatchClickEvent();
-      this.menuService.toggleOption(this);
+      this.selected = !this.selected;
     }
   }
 

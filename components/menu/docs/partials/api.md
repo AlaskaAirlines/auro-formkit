@@ -48,6 +48,25 @@ _Note: Since the value passed to the `value` property when programmatically sett
 
 ### Attribute Examples
 
+#### allowDeselect
+
+When set, the `allowDeselect` attribute allows the user to click on a selected menu option again to deselect it when the menu is not in multi-select mode.
+
+When the menu is in multi-select mode, this attribute has no effect and the user will be able to deselect the last remaining selected option.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/allowDeselect.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/allowDeselect.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 #### noCheckmark<a name="noCheckmark"></a>
 
 Applying the `noCheckmark` attribute will prevent the check icon from being shown on the selected option. The left padding to reserve space for the checkmark is also removed.
@@ -102,9 +121,18 @@ The `auro-menu` component supports the use of the `matchWord` attribute to highl
 
 </auro-accordion>
 
-### Multi Select<a name="multiSelect"></a>
+### Multi-Select<a name="multiSelect"></a>
 
-The `auro-menu` supports a multi-select option. To use, place the `multiselect` attribute on the `<auro-menu>` element tag. When applied, the `value` attribute will become an Array versus String value.
+The `auro-menu` supports a multi-select option. To use, place the `multiselect` attribute on the `<auro-menu>` element tag or update the `multiselect` property programmatically.
+
+In multi-select mode, the `value` property will always return a valid JSON string that contains an array of selected values, e.g. `'["stops","duration","arrival"]'`, when accessed.
+
+The value of the menu may be set via multiple methods when in multi-select mode: 
+- Programmatically or via attribute by passing a valid JSON string that can be parsed using `JSON.parse`.
+- Programmatically or via attribute by passing a single matching value in a string, e.g. `"stops"`.
+- Programmatically by passing an array of string values, e.g. `["stops","duration","arrival"]`.
+
+_Note: Other methods of setting the value may work but are not officially supported and may stop working unexpectedly._
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multiSelect.html) -->
@@ -115,6 +143,25 @@ The `auro-menu` supports a multi-select option. To use, place the `multiselect` 
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multiSelect.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+#### Optional Flag - `selectAllMatchingOptions`
+
+When this flag is set on the `auro-menu` tag, when the value is set, any option with a matching key will be selected, even when multiple options with that key exist.
+
+If not set, only the first matching option will be selected.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/selectAllMatchingOptions.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/selectAllMatchingOptions.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
