@@ -36,7 +36,7 @@
       "cache": false
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build","build"],
       "outputs": ["coverage/**"],
       "inputs": ["src/**/*.js", "test/**/*.js"]
     },
