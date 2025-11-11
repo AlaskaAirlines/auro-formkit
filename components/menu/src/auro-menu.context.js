@@ -26,7 +26,23 @@ export class MenuService {
 
   get stringValue() {
     const {currentValue} = this;
-    return Array.isArray(currentValue) ? JSON.stringify(currentValue) : currentValue;  
+    if (Array.isArray(currentValue) && currentValue.length) {
+      return JSON.stringify(currentValue);
+    }
+
+    if (Array.isArray(currentValue) && !currentValue.length) {
+      return undefined;
+    }
+
+    if (typeof currentValue === 'string' && currentValue.length) {
+      return currentValue;
+    }
+
+    if (typeof currentValue === 'string' && !currentValue.length) {
+      return undefined;
+    }
+    
+    return undefined;
   }
 
   get currentKeys() {
