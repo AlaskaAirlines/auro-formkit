@@ -93,7 +93,7 @@ export class AuroCombobox extends AuroElement {
     this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', formkitVersion, AuroDropdown);
     this.bibtemplateTag = versioning.generateTag('auro-formkit-combobox-bibtemplate', formkitVersion, AuroBibtemplate);
     this.inputTag = versioning.generateTag('auro-formkit-combobox-input', formkitVersion, AuroInput);
-    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', '1.0.0', AuroHelpText);
+    this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
     this.availableOptions = [];
     this.dropdownId = undefined;
