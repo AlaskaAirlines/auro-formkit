@@ -52,18 +52,19 @@
 | `hideBib`            | `(): void`                             | Hides the dropdown bib if its open.              |
 | `isValid`            | `(): boolean`                          | Checks if the element is valid.                  |
 | `reset`              | `(): void`                             | Resets component to initial state.               |
+| `setMenuValue`       | `(value: string): void`                | Sets the menu value if menu is available.<br /><br />**value**: The value to set on the menu. |
 | `showBib`            | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `updateActiveOption` | `(index: number): void`                | Updates the active option in the menu.<br /><br />**index**: Index of the option to make active. |
 | `validate`           | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
-| Event                       | Type                                           | Description                                      |
-|-----------------------------|------------------------------------------------|--------------------------------------------------|
-| `auroCombobox-valueSet`     | `CustomEvent<any>`                             | (Deprecated) Notifies that the component has a new value set. |
-| `auroFormElement-validated` |                                                | Notifies that the component value(s) have been validated. |
-| `input`                     | `CustomEvent<any>`                             | Notifies that the component has a new value set. |
-| `inputValue`                | `CustomEvent<{ value: string \| undefined; }>` | Notifies that the components internal HTML5 input value has changed. |
+| Event                       | Type                                             | Description                                      |
+|-----------------------------|--------------------------------------------------|--------------------------------------------------|
+| `auroCombobox-valueSet`     | `CustomEvent<any>`                               | (Deprecated) Notifies that the component has a new value set. |
+| `auroFormElement-validated` |                                                  | Notifies that the component value(s) have been validated. |
+| `input`                     | `CustomEvent<{ optionSelected: any; value: any; }>` | Notifies that the component has a new value set. |
+| `inputValue`                | `CustomEvent<{ value: string \| undefined; }>`   | Notifies that the components internal HTML5 input value has changed. |
 
 ## Slots
 

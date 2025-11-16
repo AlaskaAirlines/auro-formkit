@@ -612,6 +612,7 @@ export default class BaseInput extends AuroElement {
           const inputEvent = new InputEvent('input', {
             bubbles: true,
             composed: true,
+            cancelable: false
           });
           inputEvent.isProgrammatic = true;
           this.dispatchEvent(inputEvent);

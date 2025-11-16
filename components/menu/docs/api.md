@@ -9,6 +9,8 @@ The auro-menu element provides users a way to select from a list of options.
 | `allowDeselect`            | `allowDeselect`            |           | `boolean`                                        | false       | Allows deselecting an already selected option when clicked again in single-select mode. |
 | `disabled`                 | `disabled`                 |           | `boolean`                                        |             | When true, the entire menu and all options are disabled; |
 | `hasLoadingPlaceholder`    |                            |           | `boolean`                                        |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| `index`                    |                            |           |                                                  |             |                                                  |
+| `items`                    |                            | readonly  | `HTMLElement[]`                                  |             |                                                  |
 | `layout`                   |                            |           | `string`                                         |             |                                                  |
 | `loading`                  | `loading`                  |           | `boolean`                                        | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
 | `matchWord`                | `matchword`                |           | `string`                                         | "undefined" | Specifies a string used to highlight matched string parts in options. |
@@ -19,20 +21,22 @@ The auro-menu element provides users a way to select from a list of options.
 | `options`                  |                            | readonly  | `array`                                          |             | Available menu options                           |
 | `propertyValues`           |                            | readonly  | `{ size: string; shape: string; noCheckmark: any; disabled: any; }` |             |                                                  |
 | `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`                                        | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
+| `selectedOption`           |                            | readonly  |                                                  |             |                                                  |
 | `selectedOptions`          |                            | readonly  |                                                  |             |                                                  |
 | `value`                    | `value`                    |           | `string`                                         | "undefined" | Value selected for the component.                |
 
 ## Methods
 
-| Method             | Type                     | Description                                      |
-|--------------------|--------------------------|--------------------------------------------------|
-| `handleMenuChange` | `(event: any): void`     |                                                  |
-| `makeSelection`    | `(): void`               |                                                  |
-| `navigateOptions`  | `(direction: any): void` |                                                  |
-| `provideContext`   | `(): void`               |                                                  |
-| `reset`            | `(): void`               | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
-| `setInternalValue` | `(value: any): void`     |                                                  |
-| `setLoadingState`  | `(isLoading: any): void` |                                                  |
+| Method               | Type                     | Description                                      |
+|----------------------|--------------------------|--------------------------------------------------|
+| `handleMenuChange`   | `(event: any): void`     |                                                  |
+| `makeSelection`      | `(): void`               |                                                  |
+| `navigateOptions`    | `(direction: any): void` |                                                  |
+| `provideContext`     | `(): void`               |                                                  |
+| `reset`              | `(): void`               | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
+| `setInternalValue`   | `(value: any): void`     |                                                  |
+| `setLoadingState`    | `(isLoading: any): void` |                                                  |
+| `updateActiveOption` | `(option: any): void`    |                                                  |
 
 ## Events
 
@@ -41,6 +45,7 @@ The auro-menu element provides users a way to select from a list of options.
 | `auroMenu-activatedOption`    | `CustomEvent<Element>`                           | Notifies that a menuoption has been made `active`. |
 | `auroMenu-customEventFired`   | `CustomEvent<any>`                               | Notifies that a custom event has been fired.     |
 | `auroMenu-loadingChange`      | `CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>` | Notifies when the loading attribute is changed.  |
+| `auroMenu-optionsChange`      | `CustomEvent<{ options: any; }>`                 |                                                  |
 | `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that an attempt to select a menuoption by matching a value has failed. |
 | `auroMenu-selectValueReset`   | `CustomEvent<any>`                               | Notifies that the component value has been reset. |
 | `auroMenu-selectedOption`     | `CustomEvent<any>`                               | Notifies that a new menuoption selection has been made. |
@@ -69,6 +74,7 @@ The auro-menu element provides users a way to define a menu option.
 | Property      | Attribute     | Modifiers | Type      | Default | Description                                      |
 |---------------|---------------|-----------|-----------|---------|--------------------------------------------------|
 | `disabled`    | `disabled`    |           | `Boolean` | false   | When true specifies that the menuoption is disabled. |
+| `event`       | `event`       |           | `string`  |         |                                                  |
 | `iconTag`     |               |           | `string`  |         |                                                  |
 | `isActive`    |               | readonly  | `boolean` |         |                                                  |
 | `key`         | `key`         |           | `string`  |         |                                                  |
@@ -89,8 +95,10 @@ The auro-menu element provides users a way to define a menu option.
 | `bindEvents`          | `(): void`                |
 | `dispatchClickEvent`  | `(): void`                |
 | `handleClick`         | `(): void`                |
+| `handleCustomEvent`   | `(): void`                |
 | `handleMenuChange`    | `(event: any): void`      |
 | `handleMouseEnter`    | `(): void`                |
+| `setInternalSelected` | `(isSelected: any): void` |
 | `setSelected`         | `(isSelected: any): void` |
 | `updateActive`        | `(isActive: any): void`   |
 | `updateTextHighlight` | `(): void`                |

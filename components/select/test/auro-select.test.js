@@ -36,6 +36,68 @@ async function defaultFixture() {
   `);
 }
 
+async function emphasizedFixture() {
+  return await fixture(html`
+    <auro-select layout="emphasized" shape="pill" size="xl" value="flights">
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <span slot="label">Select Example</span>
+      <auro-menu nocheckmark>
+        <auro-menuoption value="flights">
+          <auro-icon category="terminal" name="plane-diag-stroke" customcolor></auro-icon> Flights
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="terminal" name="plane-diag-fill" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="cars">
+          <auro-icon category="destination" name="car-rental-stroke" customcolor></auro-icon> Cars
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="destination" name="car-rental-stroke" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="hotels">
+          <auro-icon category="destination" name="hotel-stroke" customcolor></auro-icon> Hotels
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="destination" name="hotel-filled" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="packages">
+          <auro-icon category="shop" name="gift-stroke" customcolor></auro-icon> Packages
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="shop" name="gift-filled" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="cruises">
+          <auro-icon category="in-flight" name="boarding" customcolor></auro-icon> Cruises
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="in-flight" name="boarding" customcolor></auro-icon>
+        </auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  `);
+}
+
+async function snowflakeFixture() {
+  return await fixture(html`
+    <auro-select placeholder="placeholder text" layout="snowflake" shape="snowflake">
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <span slot="label">Select Example</span>
+      <auro-menu nocheckmark>
+        <auro-menuoption value="flights">
+          <auro-icon category="terminal" name="plane-diag-stroke" customcolor></auro-icon> Flights
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="terminal" name="plane-diag-fill" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="cars">
+          <auro-icon category="destination" name="car-rental-stroke" customcolor></auro-icon> Cars
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="destination" name="car-rental-stroke" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="hotels">
+          <auro-icon category="destination" name="hotel-stroke" customcolor></auro-icon> Hotels
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="destination" name="hotel-filled" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="packages">
+          <auro-icon category="shop" name="gift-stroke" customcolor></auro-icon> Packages
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="shop" name="gift-filled" customcolor></auro-icon>
+        </auro-menuoption>
+        <auro-menuoption value="cruises">
+          <auro-icon category="in-flight" name="boarding" customcolor></auro-icon> Cruises
+          <auro-icon style="--ds-auro-icon-size: 40px;" slot="displayValue" category="in-flight" name="boarding" customcolor></auro-icon>
+        </auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  `);
+}
+
 async function presetValueFixture() {
   return await fixture(html`
   <auro-select value="price">
@@ -113,6 +175,22 @@ function runTest(mobileView) {
       await expect(el.localName).to.equal('auro-select');
     });
 
+    it('renders in emphasized mode', async () => {
+      const el = await emphasizedFixture();
+
+      await expect(el.getAttribute('layout')).to.equal('emphasized');
+      await expect(el.getAttribute('shape')).to.equal('pill');
+      await expect(el.getAttribute('size')).to.equal('xl');
+    });
+
+    it('renders in snowflake mode', async () => {
+      const el = await snowflakeFixture();
+
+      await expect(el.getAttribute('layout')).to.equal('snowflake');
+      await expect(el.getAttribute('shape')).to.equal('snowflake');
+      await expect(el.getAttribute('placeholder')).to.equal('placeholder text');
+    });
+
     it('should have a native select element for autofill', async () => {
       const el = await defaultFixture();
 
@@ -146,7 +224,7 @@ function runTest(mobileView) {
       await expect(dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('formattedValue should return objet format value when multiselect is true', async () => {
+    it('formattedValue should return object format value when multiselect is true', async () => {
       const element = await multiSelectFixture();
       element.value = '["Apples", "Bananas"]';
       await elementUpdated(element);
@@ -168,8 +246,8 @@ function runTest(mobileView) {
 
     it('should sync value changes from native select to component', async () => {
       const element = await defaultFixture();
-      element.setAttribute('required', '');
-      const nativeSelect = element.shadowRoot.querySelector('.nativeSelectWrapper select');
+      await elementUpdated(element);
+      const {nativeSelect} = element;
       nativeSelect.value = 'Apples';
       nativeSelect.dispatchEvent(new Event('change'));
 
@@ -179,7 +257,7 @@ function runTest(mobileView) {
       await expect(elValue).to.equal('Apples');
 
       // Also check that the visible selection matches
-      const triggerText = element.shadowRoot.querySelector('[slot="trigger"]').textContent.trim();
+      const triggerText = element.shadowRoot.querySelector('#value').textContent.trim();
       await expect(triggerText).to.equal('Apples');
     });
 
