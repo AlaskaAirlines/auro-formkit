@@ -107,7 +107,7 @@ export class AuroMenu extends AuroElement {
       // Root-level menu (true) or a nested submenu (false)
       rootMenu: true,
       // Currently focused/active menu item index
-      index: -1,
+      _index: -1,
       // Nested menu spacer
       nestingSpacer: '<span class="nestingSpacer"></span>',
       // Loading indicator for slot elements
@@ -201,6 +201,23 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
+   * @readonly
+   * @returns {Array<HTMLElement>} - Returns the array of available menu options.
+   * @deprecated use `options` property instead.
+   */
+  get items() {
+    return this.options;
+  }
+
+  get index() {
+    return this._index;
+  }
+
+  set index(value) {
+    this.menuService.setHighlightedIndex(value);
+  }
+
+  /**
    * This will register this element with the browser.
    * @param {string} [name="auro-menu"] - The name of element that you want to register to.
    *
@@ -219,7 +236,7 @@ export class AuroMenu extends AuroElement {
    * @returns {String|Array<String>}
    */
   get formattedValue() {
-    return this.value;
+    return this.menuService.currentValue;
   }
 
   get propertyValues() {
@@ -241,6 +258,10 @@ export class AuroMenu extends AuroElement {
     });
   }
 
+  updateActiveOption(option) {
+    this.menuService.setHighlightedOption(option);
+  }
+
   setInternalValue(value) {
     if (this.value !== value) {
       this.internalUpdateInProgress = true;
@@ -254,12 +275,13 @@ export class AuroMenu extends AuroElement {
 
   handleMenuChange(event) {
     if (event.type === 'valueChange') {
-      // Only update if values actually changed
-      const newOption = this.multiSelect ? event.options : event.options[0];
+
+      // New option is array value or first option with fallback to undefined for empty array in all cases
+      const newOption = this.multiSelect && event.options.length ? event.options : event.options[0] || undefined;
       const newValue = event.stringValue;
 
       // Check if the option or value has actually changed
-      if (this.optionSelected !== newOption || this.stringValue !== newValue) {
+      if (newValue === undefined || (this.optionSelected !== newOption || this.stringValue !== newValue)) {
         this.optionSelected = newOption;
         this.setInternalValue(newValue);
       }
@@ -268,13 +290,27 @@ export class AuroMenu extends AuroElement {
       this.notifySelectionChange(event);
     }
 
+    if (event.type === 'highlightChange') {
+      this.optionActive = event.option;
+      this._index = event.index;
+    }
+
     if (event.type === 'optionsChange') {
       this.options = event.options;
+      this.dispatchEvent(new CustomEvent('auroMenu-optionsChange', {
+        detail: {
+          options: event.options
+        }
+      }));
     }
   }
 
   get selectedOptions() {
     return this.menuService ? this.menuService.selectedOptions : [];
+  }
+
+  get selectedOption() {
+    return this.menuService ? this.menuService.selectedOptions[0] : null;
   }
 
   // Lifecycle Methods
@@ -365,7 +401,7 @@ export class AuroMenu extends AuroElement {
   clearSelection() {
     this.optionSelected = undefined;
     this.value = undefined;
-    this.index = -1;
+    this._index = -1;
   }
 
   /**

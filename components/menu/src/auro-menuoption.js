@@ -22,6 +22,7 @@ import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.
 import { classMap } from 'lit/directives/class-map.js';
 import { MenuContext } from './auro-menu.context.js';
 import { ContextConsumer } from '@lit/context';
+import { dispatchMenuEvent } from './auro-menu-utils.js';
 
 /**
  * The auro-menu element provides users a way to define a menu option.
@@ -74,6 +75,10 @@ export class AuroMenuOption extends AuroElement {
       ...super.properties,
       disabled:  {
         type: Boolean,
+        reflect: true
+      },
+      event: {
+        type: String,
         reflect: true
       },
       key: {
@@ -140,6 +145,11 @@ export class AuroMenuOption extends AuroElement {
       callback: this.attachTo.bind(this),
       subscribe: true
     });
+
+    // Establish the key property as early as possible
+    const valueAttr = this.getAttribute('value');
+    const keyAttr = this.getAttribute('key');
+    this.key = !keyAttr && valueAttr ? valueAttr : keyAttr;
   }
 
   attachTo(service) {
@@ -165,14 +175,28 @@ export class AuroMenuOption extends AuroElement {
 
     // Handle highlight changes
     if (event.type === 'highlightChange') {
-      const isActive = event.highlightedOption === this;
+      const isActive = event.option === this;
       this.updateActive(isActive);
     }
 
     if (event.type === 'stateChange') {
       const isSelected = event.selectedOptions.includes(this);
-      this.setSelected(isSelected);
+      this.setInternalSelected(isSelected);
     }
+  }
+
+  setInternalSelected(isSelected) {
+    this.internalUpdateInProgress = true;
+    this.selected = isSelected;
+
+    // Fire custom event if selected
+    if (isSelected) {
+      this.handleCustomEvent();
+    }
+
+    setTimeout(() => {
+      this.internalUpdateInProgress = false;
+    }, 0);
   }
 
   bindEvents() {
@@ -254,8 +278,15 @@ export class AuroMenuOption extends AuroElement {
 
   get isActive() {
     return !this.hasAttribute('hidden') &&
-      !this.hasAttribute('disabled') &&
+      !this.disabled &&
       !this.hasAttribute('static');
+  }
+
+  handleCustomEvent() {
+    if (this.event) {
+      dispatchMenuEvent(this, this.event, { option: this });
+      dispatchMenuEvent(this, 'auroMenu-customEventFired', { option: this });
+    }
   }
 
   updated(changedProperties) {
@@ -263,8 +294,14 @@ export class AuroMenuOption extends AuroElement {
 
     // Update aria-selected attribute if selected changed
     if (changedProperties.has('selected')) {
+
+      // Update aria-selected attribute
       this.setAttribute('aria-selected', this.selected.toString());
-      this.menuService[this.selected ? 'selectOption' : 'deselectOption'](this);
+
+      // Update menu service selection state if this isn't an internal update
+      if (this.internalUpdateInProgress !== true) {
+        this.menuService[this.selected ? 'selectOption' : 'deselectOption'](this);
+      }
     }
 
     // Update text highlight if matchWord changed

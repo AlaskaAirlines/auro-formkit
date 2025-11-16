@@ -153,6 +153,8 @@ export class MenuService {
    */
   setHighlightedOption(option) {
 
+    if (!option) return;
+
     // Get the index of the option to highlight
     const index = this._menuOptions.indexOf(option);
 
@@ -160,13 +162,16 @@ export class MenuService {
     this.highlightedIndex = index;
 
     // Notify subscribers of highlight change
-    this.notify({type: 'highlightChange', highlightedOption: option});
+    this.notify({type: 'highlightChange', option, index: this.highlightedIndex});
 
     // Dispatch the change event
     this.dispatchChangeEvent('auroMenu-activatedOption', option);
   }
 
-
+  setHighlightedIndex(index) {
+    const option = this._menuOptions[index] || null;
+    this.setHighlightedOption(option);
+  }
 
   dispatchChangeEvent(eventName, detail) {
     this.host.dispatchEvent(new CustomEvent(eventName, {
@@ -188,8 +193,11 @@ export class MenuService {
    * @param {AuroMenuOption|AuroMenuOption[]} options - Single option or array of options to select
    */
   selectOptions(options) {
-    const optionsToSelect = Array.isArray(options) ? options : [options];
-    
+    let optionsToSelect = Array.isArray(options) ? options : [options];
+
+    // Filter out options that are inactive
+    optionsToSelect = optionsToSelect.filter(option => option.isActive);
+
     if (!optionsToSelect.length) return;
 
     if (this.multiSelect) {
@@ -253,7 +261,7 @@ export class MenuService {
     if (this.internalUpdateInProgress || this.host.internalUpdateInProgress) {
       return;
     }
-    
+
     // Reset current selection since a new value is being set
     this.reset();
 
@@ -326,10 +334,12 @@ export class MenuService {
 
     // If we got options to select, select them
     if (optionsToSelect.length && !this.optionsArraysMatch(optionsToSelect, this.selectedOptions)) {
+
       this.selectOptions(optionsToSelect)
       
     // Otherwise stage an immediate update since no changes will occur
     } else {
+
       this.stageUpdate();
     }
 
@@ -364,7 +374,6 @@ export class MenuService {
   }
 
   stageUpdate() {
-
     this.notifyStateChange();
     this.notifyValueChange();
     this.updateFrame = null;
@@ -385,12 +394,18 @@ export class MenuService {
   }
 
   notifyValueChange() {
+
+    // Prepare details for the event
     const details = {
       value: this.currentValue,
       stringValue: this.stringValue,
       keys: this.currentKeys,
       options: this.selectedOptions
     }
+
+    // If only one option is selected, include its index
+    if (this.selectedOptions.length === 1) details.index = this._menuOptions.indexOf(this.selectedOptions[0]);
+    
     this.notify({
       type: 'valueChange',
       ...details
