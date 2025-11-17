@@ -1,7 +1,12 @@
 /* eslint-disable */
 import { createContext } from "@lit/context";
+import { AuroMenuOption } from "./auro-menuoption";
 
 export class MenuService {
+
+  /**
+   * PROPERTIES AND GETTERS
+   */
 
   /**
    * Gets the list of registered menu options.
@@ -19,38 +24,61 @@ export class MenuService {
     return this._menuOptions[this.highlightedIndex] || null;
   }
 
+  /**
+   * Gets the current value(s) of the selected option(s).
+   * @returns {string|string[]|undefined}
+   */
   get currentValue() {
     const values = (this.selectedOptions || []).map(option => option.value);
     return this.multiSelect ? values : values[0];
   }
 
+  /**
+   * Gets the string representation of the current value(s).
+   * For multi-select, this is a JSON stringified array.
+   * @returns {string|undefined}
+   */
   get stringValue() {
-    const {currentValue} = this;
-    if (Array.isArray(currentValue) && currentValue.length) {
-      return JSON.stringify(currentValue);
-    }
+    const { currentValue } = this;
 
-    if (Array.isArray(currentValue) && !currentValue.length) {
+    if (Array.isArray(currentValue)) {
+      if (currentValue.length > 0) {
+        return JSON.stringify(currentValue);
+      }
       return undefined;
     }
 
-    if (typeof currentValue === 'string' && currentValue.length) {
-      return currentValue;
-    }
-
-    if (typeof currentValue === 'string' && !currentValue.length) {
+    if (typeof currentValue === 'string') {
+      if (currentValue.length > 0) {
+        return currentValue;
+      }
       return undefined;
     }
-    
+
+    // Future: handle other types here (e.g., number, object, etc.)
     return undefined;
   }
 
+  /**
+   * Gets the key(s) of the currently selected option(s).
+   * @returns {string|string[]|undefined}
+   */
   get currentKeys() {
     const keys = (this.selectedOptions || []).map(option => option.key);
     return this.multiSelect ? keys : keys[0];
   }
 
-  constructor({host} = {}) {
+  /**
+   * CONSTRUCTOR
+   */
+
+  /**
+   * Creates a new MenuService instance.
+   * @param {Object} options - The options object.
+   *   @param {AuroMenu} options.host - The host element that this service will control. Required.
+   * @throws {Error} If the host is not provided.
+   */
+  constructor({ host } = {}) {
 
     // Ensure a host was passed
     if (!host) {
@@ -75,7 +103,13 @@ export class MenuService {
 
     this._menuOptions = [];
     this._subscribers = [];
+    this.internalUpdateInProgress = false;
+    this.selectedOptions = [];
   }
+
+  /**
+   * PROPERTY SYNCING
+   */
 
   /**
    * Handles host updates.
@@ -103,6 +137,49 @@ export class MenuService {
       selectAllMatchingOptions: this.host.selectAllMatchingOptions
     });
   }
+
+  /**
+   * Handles host disconnection and memory cleanup.
+   */
+  hostDisconnected() {
+    this._subscribers = [];
+    this._menuOptions = [];
+  }
+
+  /**
+   * Sets a property value if it exists on the instance and the value has changed.
+   * @param {string} property
+   * @param {any} value
+   */
+  setProperty(property, value) {
+
+    // Only update if we are tracking the property in this service
+    if (this.hasOwnProperty(property)) {
+
+      // Check if the value has changed
+      const valueChanged = this[property] !== value;
+
+      // Update and notify if changed
+      if (valueChanged) {
+        this[property] = value;
+        this.notify({ property, value });
+      }
+    }
+  }
+
+  /**
+   * Sets multiple properties on the instance.
+   * @param {Object} properties - Key-value pairs of properties to set.
+   */
+  setProperties(properties) {
+    for (const [key, value] of Object.entries(properties)) {
+      this.setProperty(key, value);
+    }
+  }
+
+  /**
+   * MENU OPTION HIGHLIGHTING
+   */
 
   /**
    * Highlights the next active option in the menu.
@@ -162,31 +239,33 @@ export class MenuService {
     this.highlightedIndex = index;
 
     // Notify subscribers of highlight change
-    this.notify({type: 'highlightChange', option, index: this.highlightedIndex});
+    this.notify({ type: 'highlightChange', option, index: this.highlightedIndex });
 
     // Dispatch the change event
     this.dispatchChangeEvent('auroMenu-activatedOption', option);
   }
 
+  /**
+   * Sets the highlighted option to the option at the specified index if it exists.
+   * @param {number} index 
+   */
   setHighlightedIndex(index) {
     const option = this._menuOptions[index] || null;
     this.setHighlightedOption(option);
   }
 
-  dispatchChangeEvent(eventName, detail) {
-    this.host.dispatchEvent(new CustomEvent(eventName, {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-      detail
-    }));
-  }
-
+  /**
+   * Selects the currently highlighted option.
+   */
   selectHighlightedOption() {
     if (this.highlightedOption) {
       this.toggleOption(this.highlightedOption);
     }
   }
+
+  /**
+   * SELECTION AND DESELECTION METHODS
+   */
 
   /**
    * Selects one or more options in a batch operation
@@ -216,21 +295,15 @@ export class MenuService {
    */
   deselectOptions(options) {
     const optionsToDeselect = Array.isArray(options) ? options : [options];
-    
+
     if (!optionsToDeselect.length) return;
 
-    if (!this.allowDeselect && !this.multiSelect) {
-      // Loop over the options to deselect and ignore if it's the only selected option
-      optionsToDeselect.forEach(option => {
-        if (this.selectedOptions.length === 1 && this.selectedOptions[0] === option) {
-          // Remove from options to deselect
-          const index = optionsToDeselect.indexOf(option);
-          if (index > -1) {
-            optionsToDeselect.splice(index, 1);
-          }
-        }
-      });
-    }
+    // Check if deselection should be prevented
+    const shouldPreventDeselect = !this.allowDeselect && !this.multiSelect;
+    const isOnlySelectedOption = this.selectedOptions.length === 1 && optionsToDeselect.includes(this.selectedOptions[0]);
+
+    // Prevent deselecting the only selected option if not allowed
+    if ( shouldPreventDeselect && isOnlySelectedOption ) return;
 
     const optionsSet = new Set(optionsToDeselect);
     this.selectedOptions = (this.selectedOptions || [])
@@ -239,25 +312,42 @@ export class MenuService {
     this.stageUpdate();
   }
 
-  // Update existing methods to use new batch operations
+  /**
+   * Selects a single option.
+   * @param {AuroMenuOption} option 
+   */
   selectOption(option) {
     this.selectOptions(option);
   }
 
+  /**
+   * Deselects a single option.
+   * @param {AuroMenuOption} option 
+   */
   deselectOption(option) {
     this.deselectOptions(option);
   }
 
+  /**
+   * Toggles the selection state of a single option.
+   * @param {AuroMenuOption} option 
+   */
   toggleOption(option) {
     if (option.selected) {
-      this.deselectOptions(option);
+      this.deselectOption(option);
     } else {
-      this.selectOptions(option);
+      this.selectOption(option);
     }
   }
 
+  /**
+   * Selects options based on their value(s) when compared to a passed value or values.
+   * Value or values are normalized to an array of strings that can be matched to option keys.
+   * @param {string|number|Array<string|number>} value - The value(s) to select.
+   */
   selectByValue(value) {
 
+    // Guard Clause: Prevent recursive updates due to internal updates
     if (this.internalUpdateInProgress || this.host.internalUpdateInProgress) {
       return;
     }
@@ -270,10 +360,12 @@ export class MenuService {
       return;
     }
 
-    // Normalize value to an array
+    // Begin operations to normalize value(s) to an array
+
+    // Establish working values variable
     let values = value;
 
-    // Handle JSON string input
+    // Handle JSON string and single value string input
     if (!Array.isArray(values) && typeof values === 'string') {
 
       // Attempt to parse as JSON array
@@ -284,7 +376,7 @@ export class MenuService {
 
         // Attempt parse
         const parsed = JSON.parse(parseValue);
-        
+
         // Ensure parsed value is an array
         if (!Array.isArray(parsed)) throw new Error('Not an array');
 
@@ -297,12 +389,12 @@ export class MenuService {
       }
     }
 
-    // Handle case where a number is passed
+    // Handle a single number being passed
     if (typeof values === 'number') {
       values = [String(values)];
     }
 
-    // Handle each value in the values array
+    // Coerce each value to string and validate types
     values.forEach((val, index) => {
 
       // Throw an error for invalid value types
@@ -318,17 +410,28 @@ export class MenuService {
 
     // Flag for single-select menus when multiple values are provided
     if (values.length > 1 && !this.multiSelect) {
+
+      // Throw a warning in the console to inform developers
       console.warn("MenuService - Multiple values provided for single-select menu. Only the first value will be selected.");
+
+      // Take the first option
       values = [values[0]];
     }
 
-    const trackedKeys = [];
+    // Establish array to track processed keys
+    const trackedKeys = new Set();
 
     // Get the options to be selected based on the provided values and matched on key
     const optionsToSelect = this._menuOptions.filter(option => {
+
+      // Check if option key matches any of the provided values and hasn't already been tracked
       const passesFilter = values.includes(option.key);
-      const alreadyTracked = trackedKeys.includes(option.key);
-      trackedKeys.push(option.key);
+      const alreadyTracked = trackedKeys.has(option.key);
+
+      // Track the key
+      trackedKeys.add(option.key);
+
+      // Include the option if it passes the filter and either hasn't been tracked yet, or has been tracked but selectAllMatchingOptions is true
       return passesFilter && (!alreadyTracked || alreadyTracked && this.selectAllMatchingOptions);
     });
 
@@ -336,13 +439,15 @@ export class MenuService {
     if (optionsToSelect.length && !this.optionsArraysMatch(optionsToSelect, this.selectedOptions)) {
 
       this.selectOptions(optionsToSelect)
-      
-    // Otherwise stage an immediate update since no changes will occur
+
+      // Otherwise stage an immediate update since no changes will occur
     } else {
 
       this.stageUpdate();
     }
 
+    // If no options were found to select, dispatch a failure event
+    // FUTURE: This should be deprecated in favor of the valueChange event handling no selection
     if (!optionsToSelect.length && values.length) {
       this.dispatchChangeEvent('auroMenu-selectValueFailure', {
         message: 'No matching options found for the provided value(s).',
@@ -351,6 +456,133 @@ export class MenuService {
     }
   }
 
+  /**
+   * Resets the selected options to an empty array.
+   */
+  reset() {
+    const previousOptions = [...this.selectedOptions];
+    this.selectedOptions = [];
+
+    // Single update after clearing all
+    if (previousOptions.length) {
+      this.stageUpdate();
+    }
+  }
+
+  /**
+   * SUBSCRIPTION, NOTIFICATION AND EVENT DISPATCH METHODS
+   */
+
+  /**
+   * Subscribes a callback to menu service events.
+   * @param {Function} callback - The callback to invoke on events.
+   */
+  subscribe(callback) {
+    this._subscribers.push(callback);
+  }
+
+  /**
+   * Remove a previously subscribed callback from menu service events.
+   * @param {Function} callback 
+   */
+  unsubscribe(callback) {
+    this._subscribers = this._subscribers.filter(cb => cb !== callback);
+  }
+
+  /**
+   * Stages an update to notify subscribers of state and value changes.
+   */
+  stageUpdate() {
+    this.notifyStateChange();
+    this.notifyValueChange();
+  }
+
+  /**
+   * Notifies subscribers of a menu service event.
+   * All notifications are sent to all subscribers.
+   * @param {string} event - The event to send to subscribers.
+   */
+  notify(event) {
+    this._subscribers.forEach(callback => callback(event));
+  }
+
+  /**
+   * Notifies subscribers of a state change (selected options has changed).
+   */
+  notifyStateChange() {
+    this.notify({ type: 'stateChange', selectedOptions: this.selectedOptions });
+  }
+
+  /**
+   * Notifies subscribers of a value change (current value has changed).
+   */
+  notifyValueChange() {
+
+    // Prepare details for the event
+    const details = {
+      value: this.currentValue,
+      stringValue: this.stringValue,
+      keys: this.currentKeys,
+      options: this.selectedOptions
+    }
+
+    // If only one option is selected, include its index
+    if (this.selectedOptions.length === 1) details.index = this._menuOptions.indexOf(this.selectedOptions[0]);
+
+    this.notify({
+      type: 'valueChange',
+      ...details
+    });
+
+    this.dispatchChangeEvent('auroMenu-selectedOption', details);
+  }
+
+  /**
+   * Dispatches a custom event from the host element.
+   * @param {string} eventName 
+   * @param {any} detail 
+   */
+  dispatchChangeEvent(eventName, detail) {
+    this.host.dispatchEvent(new CustomEvent(eventName, {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+      detail
+    }));
+  }
+
+  /**
+   * MENU OPTION MANAGEMENT METHODS
+   */
+
+  /**
+   * Adds a menu option to the service's list.
+   * @param {AuroMenuOption} option - the option to track
+   */
+  addMenuOption(option) {
+    this._menuOptions.push(option);
+    this.notify({ type: 'optionsChange', options: this._menuOptions });
+  }
+
+  /**
+   * Removes a menu option from the service's list.
+   * @param {AuroMenuOption} option - the option to remove
+   */
+  removeMenuOption(option) {
+    this._menuOptions = this._menuOptions.filter(opt => opt !== option);
+    this.notify({ type: 'optionsChange', options: this._menuOptions });
+  }
+
+  /**
+   * UTILITIES
+   */
+
+  /**
+   * Utility to compare two arrays of options for equality.
+   * @param {AuroMenuOption[]} arr1 
+   * @param {AuroMenuOption[]} arr2 
+   * @returns 
+   */
   optionsArraysMatch(arr1, arr2) {
     if (arr1.length !== arr2.length) return false;
 
@@ -364,119 +596,6 @@ export class MenuService {
     }
 
     return true;
-  }
-
-  reset() {
-    if (this.selectedOptions && this.selectedOptions.length) {
-      this.selectedOptions = [];
-      this.stageUpdate();
-    }
-  }
-
-  stageUpdate() {
-    this.notifyStateChange();
-    this.notifyValueChange();
-    this.updateFrame = null;
-  }
-
-  reset() {
-    const previousOptions = [...this.selectedOptions];
-    this.selectedOptions = [];
-    
-    // Single update after clearing all
-    if (previousOptions.length) {
-      this.stageUpdate();
-    }
-  }
-
-  notifyStateChange() {
-    this.notify({type: 'stateChange', selectedOptions: this.selectedOptions});
-  }
-
-  notifyValueChange() {
-
-    // Prepare details for the event
-    const details = {
-      value: this.currentValue,
-      stringValue: this.stringValue,
-      keys: this.currentKeys,
-      options: this.selectedOptions
-    }
-
-    // If only one option is selected, include its index
-    if (this.selectedOptions.length === 1) details.index = this._menuOptions.indexOf(this.selectedOptions[0]);
-    
-    this.notify({
-      type: 'valueChange',
-      ...details
-    });
-    this.dispatchChangeEvent('auroMenu-selectedOptionChange', details);
-    this.dispatchChangeEvent('auroMenu-selectedOption', details);
-  }
-
-  /**
-   * Subscribes a callback to menu service events.
-   * @param {Function} callback - The callback to invoke on events.
-   */
-  subscribe(callback) {
-    this._subscribers.push(callback);
-  }
-
-  /**
-   * Notifies subscribers of a menu service event.
-   * @param {string} eventType - The type of event to notify subscribers about.
-   */
-  notify(event) {
-    this._subscribers.forEach(callback => callback(event));
-  }
-  
-  /**
-   * Adds a menu option to the service's list.
-   * @param {AuroMenuOption} option - the option to track
-   */
-  addMenuOption(option) {
-    this._menuOptions.push(option);
-    this.notify({type: 'optionsChange', options: this._menuOptions});
-  }
-
-  /**
-   * Removes a menu option from the service's list.
-   * @param {AuroMenuOption} option - the option to remove
-   */
-  removeMenuOption(option) {
-    this._menuOptions = this._menuOptions.filter(opt => opt !== option);
-    this.notify({type: 'optionsChange', options: this._menuOptions});
-  }
-
-  /**
-   * Sets a property value if it exists on the instance and the value has changed.
-   * @param {string} property
-   * @param {any} value
-   */
-  setProperty(property, value) {
-
-    // Only update if we are tracking the property in this service
-    if (this.hasOwnProperty(property)) {
-
-      // Check if the value has changed
-      const valueChanged = this[property] !== value;
-
-      // Update and notify if changed
-      if (valueChanged) {
-        this[property] = value;
-        this.notify({property, value});
-      }
-    }
-  }
-
-  /**
-   * Sets multiple properties on the instance.
-   * @param {Object} properties - Key-value pairs of properties to set.
-   */
-  setProperties(properties) {
-    for (const [key, value] of Object.entries(properties)) {
-      this.setProperty(key, value);
-    }
   }
 }
 
