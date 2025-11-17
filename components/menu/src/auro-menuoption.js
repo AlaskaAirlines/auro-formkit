@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
-/* eslint-disable lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, curly, max-lines */
+/* eslint-disable no-extra-parens, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, curly, max-lines */
 
 // ---------------------------------------------------------------------
 import { html } from 'lit/static-html.js';
@@ -68,6 +68,11 @@ export class AuroMenuOption extends AuroElement {
     // Initialize context-related properties
     this.menuService = null;
     this.unsubscribe = null;
+
+    /**
+     * @private
+     */
+    this.handleMenuChange = this.handleMenuChange.bind(this);
   }
 
   static get properties() {
@@ -149,7 +154,7 @@ export class AuroMenuOption extends AuroElement {
     // Establish the key property as early as possible
     const valueAttr = this.getAttribute('value');
     const keyAttr = this.getAttribute('key');
-    this.key = !keyAttr && valueAttr ? valueAttr : keyAttr;
+    this.key = keyAttr !== null ? keyAttr : valueAttr;
   }
 
   attachTo(service) {
@@ -158,13 +163,13 @@ export class AuroMenuOption extends AuroElement {
     }
     this.menuService = service;
     this.menuService.addMenuOption(this);
-    this.menuService.subscribe(this.handleMenuChange.bind(this));
+    this.menuService.subscribe(this.handleMenuChange);
   }
 
   handleMenuChange(event) {
 
     // Ignore events without a type or property
-    if (!event.type && !event.property) {
+    if (!event || (!event.type && !event.property)) {
       return;
     }
 
@@ -220,6 +225,7 @@ export class AuroMenuOption extends AuroElement {
 
   disconnectedCallback() {
     if (this.menuService) {
+      this.menuService.unsubscribe(this.handleMenuChange);
       this.menuService.removeMenuOption(this);
     }
   }

@@ -21,7 +21,6 @@ import { classMap } from "lit/directives/class-map.js";
 import { ContextProvider } from "@lit/context";
 
 
-// See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The auro-menu element provides users a way to select from a list of options.
  * @attr {HTMLElement|Array<HTMLElement>} optionSelected - An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements.
@@ -329,7 +328,7 @@ export class AuroMenu extends AuroElement {
 
   disconnectedCallback() {
     this.removeEventListener('keydown', this.handleKeyDown);
-    this.removeEventListener('auro', this.handleMouseSelect);
+    this.removeEventListener('auroMenuOption-click', this.handleMouseSelect);
     this.removeEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.removeEventListener('slotchange', this.handleSlotChange);
 

@@ -22,7 +22,7 @@ The auro-menu element provides users a way to select from a list of options.
 | `propertyValues`           |                            | readonly  | `{ size: string; shape: string; noCheckmark: any; disabled: any; }` |             |                                                  |
 | `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`                                        | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
 | `selectedOption`           |                            | readonly  |                                                  |             |                                                  |
-| `selectedOptions`          |                            | readonly  |                                                  |             |                                                  |
+| `selectedOptions`          |                            | readonly  | `array`                                          |             |                                                  |
 | `value`                    | `value`                    |           | `string`                                         | "undefined" | Value selected for the component.                |
 
 ## Methods
