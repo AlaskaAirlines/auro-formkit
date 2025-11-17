@@ -2,6 +2,7 @@ import { Meta, StoryObj } from "@storybook/web-components";
 import { action } from "@storybook/addon-actions";
 import { expect, userEvent } from '@storybook/test';
 import { screen } from "shadow-dom-testing-library";
+import { getWcStorybookHelpers } from "wc-storybook-helpers";
 
 import { html } from "lit-html";
 
@@ -17,13 +18,39 @@ import '@aurodesignsystem/auro-icon';
 AuroCombobox.register(); // registering to `auro-combobox`
 AuroCombobox.register("custom-combobox");
 
-const meta: Meta = {
+const { events, args, argTypes, template } =
+  getWcStorybookHelpers("auro-combobox");
+
+const meta: Meta<AuroCombobox> = {
   component: "auro-combobox",
   title: "Combobox",
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events,
+    },
+  },
 };
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<AuroCombobox & typeof args>;
+
+export const Playground: Story = {
+  render: (args) => template(args),
+  args: {
+    'default-slot': `
+<auro-menu>
+  <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+  <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+  <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+  <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+  <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+  <auro-menuoption static nomatch>No matching option</auro-menuoption>
+</auro-menu>
+    `,
+  },
+};
 
 export const Basic: Story = {
   render: () => html`

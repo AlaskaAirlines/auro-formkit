@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/web-components';
+import { getWcStorybookHelpers } from "wc-storybook-helpers";
 
 import { html } from 'lit-html';
 
@@ -12,13 +13,31 @@ AuroDropdown.register(); // registering to `auro-dropdown`
 
 AuroDropdown.register('custom-dropdown');
 
-const meta: Meta = {
+const { events, args, argTypes, template } =
+  getWcStorybookHelpers("auro-dropdown");
+
+const meta: Meta<AuroDropdown> = {
   component: "auro-dropdown",
   title: 'Dropdown',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events,
+    },
+  },
 };
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<AuroDropdown & typeof args>;
+
+export const Playground: Story = {
+  render: (args) => template(args),
+  args: {
+    'default-slot': 'Lorem ipsum solar',
+    'trigger-slot': 'Trigger',
+  },
+};
 
 export const Basic: Story = {
   render: () => html`

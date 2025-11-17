@@ -3,6 +3,7 @@ import { action } from "@storybook/addon-actions";
 import { expect, userEvent, waitFor } from "@storybook/test";
 import MockDate from 'mockdate';
 import { screen } from "shadow-dom-testing-library";
+import { getWcStorybookHelpers } from "wc-storybook-helpers";
 
 import { html } from "lit-html";
 
@@ -14,19 +15,34 @@ AuroDatePicker.register(); // registering to `auro-datepicker`
 
 AuroDatePicker.register("custom-datepicker");
 
+const { events, args, argTypes, template } =
+  getWcStorybookHelpers("auro-datepicker");
+
 function formatDateString(date) {
   const dd = String("0" + date.getDate()).slice(-2);
   const mm = String("0" + (date.getMonth() + 1)).slice(-2);
   return `${mm}/${dd}/${date.getFullYear()}`;
 }
 
-const meta: Meta = {
+const meta: Meta<AuroDatePicker> = {
   component: "auro-datepicker",
   title: "Datepicker",
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events,
+    },
+  },
 };
 export default meta;
 
-type Story = StoryObj;
+type Story = StoryObj<AuroDatePicker & typeof args>;
+
+export const Playground: Story = {
+  render: (args) => template(args),
+  args: {},
+};
 
 export const Basic: Story = {
   render: () => html`

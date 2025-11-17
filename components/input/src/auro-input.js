@@ -222,3 +222,9 @@ export class AuroInput extends BaseInput {
     `;
   }
 }
+
+/* istanbul ignore else */
+// define the name of the custom component
+if (!customElements.get("auro-input")) {
+  customElements.define("auro-input", AuroInput);
+}
