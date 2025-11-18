@@ -303,7 +303,7 @@ export class MenuService {
     const isOnlySelectedOption = this.selectedOptions.length === 1 && optionsToDeselect.includes(this.selectedOptions[0]);
 
     // Prevent deselecting the only selected option if not allowed
-    if ( shouldPreventDeselect && isOnlySelectedOption ) return;
+    if (shouldPreventDeselect && isOnlySelectedOption) return;
 
     const optionsSet = new Set(optionsToDeselect);
     this.selectedOptions = (this.selectedOptions || [])
@@ -346,112 +346,53 @@ export class MenuService {
    * @param {string|number|Array<string|number>} value - The value(s) to select.
    */
   selectByValue(value) {
-
-    // Guard Clause: Prevent recursive updates due to internal updates
-    if (this.internalUpdateInProgress || this.host.internalUpdateInProgress) {
+    // Early exit for invalid/empty values or internal updates
+    if (this.internalUpdateInProgress ||
+        this.host.internalUpdateInProgress ||
+        value === undefined ||
+        value === null ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === 'string' && value.trim() === '')) {
       return;
     }
 
-    // Reset current selection since a new value is being set
     this.reset();
 
-    // Guard Clause: If the value is empty, exit early
-    if (value === undefined || value === null || (Array.isArray(value) && value.length === 0) || typeof value === 'string' && value.trim() === '') {
-      return;
-    }
-
-    // Begin operations to normalize value(s) to an array
-
-    // Establish working values variable
-    let values = value;
-
-    // Handle JSON string and single value string input
-    if (!Array.isArray(values) && typeof values === 'string') {
-
-      // Attempt to parse as JSON array
-      try {
-
-        // Normalize single quotes to double quotes for JSON parsing
-        const parseValue = values.replace(/'/g, '"');
-
-        // Attempt parse
-        const parsed = JSON.parse(parseValue);
-
-        // Ensure parsed value is an array
-        if (!Array.isArray(parsed)) throw new Error('Not an array');
-
-        // Set values to parsed array
-        values = parsed;
-      } catch (err) {
-
-        // If parsing fails, treat as single value
-        values = [value];
-      }
-    }
-
-    // Handle a single number being passed
-    if (typeof values === 'number') {
-      values = [String(values)];
-    }
-
-    // Coerce each value to string and validate types
-    values.forEach((val, index) => {
-
-      // Throw an error for invalid value types
-      if (typeof val !== 'string' && typeof val !== 'number') {
-        throw new Error('Value contains invalid value type. Supported types are string and number.');
-      }
-
-      // Convert numbers to strings for consistency
-      if (typeof val === 'number') {
-        values[index] = String(val);
-      }
-    });
-
-    // Flag for single-select menus when multiple values are provided
-    if (values.length > 1 && !this.multiSelect) {
-
-      // Throw a warning in the console to inform developers
+    // Normalize values to array of strings
+    const normalizedValues = this._getNormalizedValues(value);
+    
+    // Validate for single-select mode
+    let validatedValues = normalizedValues;
+    if (normalizedValues.length > 1 && !this.multiSelect) {
       console.warn("MenuService - Multiple values provided for single-select menu. Only the first value will be selected.");
-
-      // Take the first option
-      values = [values[0]];
+      validatedValues = [normalizedValues[0]];
     }
 
-    // Establish array to track processed keys
+    // Find matching options by comparing available options to validated values
     const trackedKeys = new Set();
-
-    // Get the options to be selected based on the provided values and matched on key
     const optionsToSelect = this._menuOptions.filter(option => {
-
-      // Check if option key matches any of the provided values and hasn't already been tracked
-      const passesFilter = values.includes(option.key);
+      const passesFilter = validatedValues.includes(option.key);
       const alreadyTracked = trackedKeys.has(option.key);
-
-      // Track the key
+      
       trackedKeys.add(option.key);
 
-      // Include the option if it passes the filter and either hasn't been tracked yet, or has been tracked but selectAllMatchingOptions is true
-      return passesFilter && (!alreadyTracked || alreadyTracked && this.selectAllMatchingOptions);
+      // Include the option in the options to be selected if it passes the filter check and
+      // either hasn't been tracked yet or selectAllMatchingOptions is true
+      return passesFilter && (!alreadyTracked || (alreadyTracked && this.selectAllMatchingOptions));
     });
 
-    // If we got options to select, select them
+    // Handle selection result
     if (optionsToSelect.length && !this.optionsArraysMatch(optionsToSelect, this.selectedOptions)) {
-
-      this.selectOptions(optionsToSelect)
-
-      // Otherwise stage an immediate update since no changes will occur
+      this.selectOptions(optionsToSelect);
     } else {
-
       this.stageUpdate();
     }
 
-    // If no options were found to select, dispatch a failure event
-    // FUTURE: This should be deprecated in favor of the valueChange event handling no selection
-    if (!optionsToSelect.length && values.length) {
+    // Dispatch failure event if no matches found
+    if (!optionsToSelect.length && validatedValues.length) {
       this.dispatchChangeEvent('auroMenu-selectValueFailure', {
         message: 'No matching options found for the provided value(s).',
-        values
+        values: validatedValues
       });
     }
   }
@@ -576,6 +517,65 @@ export class MenuService {
   /**
    * UTILITIES
    */
+
+  /**
+   * Normalizes a value or array of values into an array of strings for option selection.
+   * This function ensures that input values are consistently formatted for matching menu options.
+   *
+   * @param {string|number|Array<string|number>} value - The value(s) to normalize.
+   * @returns {Array<string>} An array of string values suitable for option matching.
+   * @throws {Error} If any value is not a string or number.
+   */
+  _getNormalizedValues(value) {
+    let values = value;
+
+    // Handle JSON string and single value string input
+    if (!Array.isArray(values) && typeof values === 'string') {
+
+      // Attempt to parse as JSON array
+      try {
+
+        // Normalize single quotes to double quotes for JSON parsing
+        // This will not handle complex cases but will cover basic usage
+        const parseValue = values.replace(/'([^']*?)'/g, '"$1"');
+
+        // Attempt parse
+        const parsed = JSON.parse(parseValue);
+
+        // Ensure parsed value is an array
+        if (!Array.isArray(parsed)) throw new Error('Not an array');
+
+        // Set values to parsed array
+        values = parsed;
+      } catch (err) {
+
+        // If parsing fails, treat as single value
+        values = [value];
+      }
+    }
+
+    // Handle a single number being passed
+    if (typeof values === 'number') {
+      values = [String(values)];
+    }
+
+    // Coerce each value to string and validate types
+    values.forEach((val, index) => {
+
+      // Throw an error for invalid value types
+      if (typeof val !== 'string' && typeof val !== 'number') {
+        throw new Error('Value contains invalid value type. Supported types are string and number.');
+      }
+
+      // Convert numbers to strings for consistency
+      if (typeof val === 'number') {
+        values[index] = String(val);
+      }
+    });
+
+    // Return the resulting array of string values
+    return values;
+  }
 
   /**
    * Utility to compare two arrays of options for equality.
