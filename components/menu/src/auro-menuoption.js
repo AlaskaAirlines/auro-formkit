@@ -267,6 +267,7 @@ export class AuroMenuOption extends AuroElement {
     if (event.type === 'highlightChange') {
       const isActive = event.option === this;
       this.active = isActive;
+      this.updateActiveClasses();
     }
 
     if (event.type === 'stateChange') {
