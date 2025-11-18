@@ -208,10 +208,16 @@ export class AuroMenu extends AuroElement {
     return this.options;
   }
 
+  /**
+   * @returns {number} - Returns the index of the currently active option.
+   */
   get index() {
     return this._index;
   }
 
+  /**
+   * @param {number} value - Sets the index of the currently active option.
+   */
   set index(value) {
     this.menuService.setHighlightedIndex(value);
   }
@@ -238,6 +244,11 @@ export class AuroMenu extends AuroElement {
     return this.menuService.currentValue;
   }
 
+  /**
+   * Gets the current property values for the menu service.
+   * @private
+   * @returns {Object}
+   */
   get propertyValues() {
     return {
       size: this.size,
@@ -247,6 +258,11 @@ export class AuroMenu extends AuroElement {
     };
   }
 
+  /**
+   * Provides the menu context to child components.
+   * Initializes the MenuService and subscribes to menu changes.
+   * @protected
+   */
   provideContext() {
     this.menuService = new MenuService({host: this});
     this.menuService.setProperties(this.propertyValues);
@@ -257,10 +273,19 @@ export class AuroMenu extends AuroElement {
     });
   }
 
+  /**
+   * Updates the currently active option in the menu.
+   * @param {HTMLElement} option - The option to set as active.
+   */
   updateActiveOption(option) {
     this.menuService.setHighlightedOption(option);
   }
 
+  /**
+   * Sets the internal value and manages update state.
+   * @param {String|Array<String>} value - The value to set.
+   * @protected
+   */
   setInternalValue(value) {
     if (this.value !== value) {
       this.internalUpdateInProgress = true;
@@ -272,6 +297,11 @@ export class AuroMenu extends AuroElement {
     }
   }
 
+  /**
+   * Handles changes from the menu service and updates component state.
+   * @param {Object} event - The event object from the menu service.
+   * @protected
+   */
   handleMenuChange(event) {
     if (event.type === 'valueChange') {
 
@@ -304,10 +334,18 @@ export class AuroMenu extends AuroElement {
     }
   }
 
+  /**
+   * Gets the currently selected options.
+   * @returns {Array<HTMLElement>}
+   */
   get selectedOptions() {
     return this.menuService ? this.menuService.selectedOptions : [];
   }
 
+  /**
+   * Gets the first selected option, or null if none.
+   * @returns {HTMLElement|null}
+   */
   get selectedOption() {
     return this.menuService ? this.menuService.selectedOptions[0] : null;
   }
@@ -342,16 +380,6 @@ export class AuroMenu extends AuroElement {
     this.initializeMenu();
   }
 
-  /**
-   * Sets an attribute that matches the default tag name if the tag name is not the default.
-   * @param {string} tagName - The tag name to set as an attribute.
-   * @private
-   */
-  setTagAttribute(tagName) {
-    if (this.tagName.toLowerCase() !== tagName) {
-      this.setAttribute(tagName, true);
-    }
-  }
 
   updated(changedProperties) {
     super.updated(changedProperties);
@@ -367,6 +395,22 @@ export class AuroMenu extends AuroElement {
     }
   }
 
+  /**
+   * Sets an attribute that matches the default tag name if the tag name is not the default.
+   * @param {string} tagName - The tag name to set as an attribute.
+   * @private
+   */
+  setTagAttribute(tagName) {
+    if (this.tagName.toLowerCase() !== tagName) {
+      this.setAttribute(tagName, true);
+    }
+  }
+
+  /**
+   * Sets the loading state and dispatches a loading change event.
+   * @param {boolean} isLoading - Whether the menu is loading.
+   * @protected
+   */
   setLoadingState(isLoading) {
     this.setAttribute("aria-busy", isLoading);
     dispatchMenuEvent(this, "auroMenu-loadingChange", {
@@ -389,6 +433,10 @@ export class AuroMenu extends AuroElement {
     }
   }
 
+  /**
+   * Selects the currently highlighted option.
+   * @protected
+   */
   makeSelection() {
     this.menuService.selectHighlightedOption();
   }
@@ -463,6 +511,11 @@ export class AuroMenu extends AuroElement {
     }
   }
 
+  /**
+   * Navigates the menu options in the specified direction.
+   * @param {'up'|'down'} direction - The direction to navigate.
+   * @protected
+   */
   navigateOptions(direction) {
     if (direction === 'up') {
       this.menuService.highlightPrevious();

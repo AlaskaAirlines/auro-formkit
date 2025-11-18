@@ -578,10 +578,10 @@ export class MenuService {
   }
 
   /**
-   * Utility to compare two arrays of options for equality.
-   * @param {AuroMenuOption[]} arr1 
-   * @param {AuroMenuOption[]} arr2 
-   * @returns 
+   * Returns whether two arrays of options contain the same elements.
+   * @param {AuroMenuOption[]} arr1 - First array of options.
+   * @param {AuroMenuOption[]} arr2 - Second array of options.
+   * @returns {boolean} True if arrays match, false otherwise.
    */
   optionsArraysMatch(arr1, arr2) {
     if (arr1.length !== arr2.length) return false;

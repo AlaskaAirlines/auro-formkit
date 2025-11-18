@@ -4,39 +4,32 @@ The auro-menu element provides users a way to select from a list of options.
 
 ## Properties
 
-| Property                   | Attribute                  | Modifiers | Type                                             | Default     | Description                                      |
-|----------------------------|----------------------------|-----------|--------------------------------------------------|-------------|--------------------------------------------------|
-| `allowDeselect`            | `allowDeselect`            |           | `boolean`                                        | false       | Allows deselecting an already selected option when clicked again in single-select mode. |
-| `disabled`                 | `disabled`                 |           | `boolean`                                        |             | When true, the entire menu and all options are disabled; |
-| `hasLoadingPlaceholder`    |                            |           | `boolean`                                        |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
-| `index`                    |                            |           |                                                  |             |                                                  |
-| `items`                    |                            | readonly  | `HTMLElement[]`                                  |             |                                                  |
-| `layout`                   |                            |           | `string`                                         |             |                                                  |
-| `loading`                  | `loading`                  |           | `boolean`                                        | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
-| `matchWord`                | `matchword`                |           | `string`                                         | "undefined" | Specifies a string used to highlight matched string parts in options. |
-| `multiSelect`              | `multiselect`              |           | `boolean`                                        | false       | When true, the selected option can be multiple options. |
-| `noCheckmark`              | `nocheckmark`              |           | `boolean`                                        | false       | When true, selected option will not show the checkmark. |
-| `optionActive`             | `optionactive`             |           | `object`                                         | "undefined" | Specifies the current active menuOption.         |
-| `optionSelected`           | `optionSelected`           |           | `HTMLElement\|Array<HTMLElement>`                | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `options`                  |                            | readonly  | `array`                                          |             | Available menu options                           |
-| `propertyValues`           |                            | readonly  | `{ size: string; shape: string; noCheckmark: any; disabled: any; }` |             |                                                  |
-| `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`                                        | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
-| `selectedOption`           |                            | readonly  |                                                  |             |                                                  |
-| `selectedOptions`          |                            | readonly  | `array`                                          |             |                                                  |
-| `value`                    | `value`                    |           | `string`                                         | "undefined" | Value selected for the component.                |
+| Property                   | Attribute                  | Modifiers | Type                              | Default     | Description                                      |
+|----------------------------|----------------------------|-----------|-----------------------------------|-------------|--------------------------------------------------|
+| `allowDeselect`            | `allowDeselect`            |           | `boolean`                         | false       | Allows deselecting an already selected option when clicked again in single-select mode. |
+| `disabled`                 | `disabled`                 |           | `boolean`                         |             | When true, the entire menu and all options are disabled; |
+| `hasLoadingPlaceholder`    |                            |           | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
+| `index`                    |                            |           | `number`                          |             |                                                  |
+| `items`                    |                            | readonly  | `HTMLElement[]`                   |             |                                                  |
+| `layout`                   |                            |           | `string`                          |             |                                                  |
+| `loading`                  | `loading`                  |           | `boolean`                         | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
+| `matchWord`                | `matchword`                |           | `string`                          | "undefined" | Specifies a string used to highlight matched string parts in options. |
+| `multiSelect`              | `multiselect`              |           | `boolean`                         | false       | When true, the selected option can be multiple options. |
+| `noCheckmark`              | `nocheckmark`              |           | `boolean`                         | false       | When true, selected option will not show the checkmark. |
+| `optionActive`             | `optionactive`             |           | `object`                          | "undefined" | Specifies the current active menuOption.         |
+| `optionSelected`           | `optionSelected`           |           | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
+| `options`                  |                            | readonly  | `array`                           |             | Available menu options                           |
+| `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`                         | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
+| `selectedOption`           |                            | readonly  | `HTMLElement \| null`             |             | Gets the first selected option, or null if none. |
+| `selectedOptions`          |                            | readonly  | `HTMLElement[]`                   |             | Gets the currently selected options.             |
+| `value`                    | `value`                    |           | `string`                          | "undefined" | Value selected for the component.                |
 
 ## Methods
 
-| Method               | Type                     | Description                                      |
-|----------------------|--------------------------|--------------------------------------------------|
-| `handleMenuChange`   | `(event: any): void`     |                                                  |
-| `makeSelection`      | `(): void`               |                                                  |
-| `navigateOptions`    | `(direction: any): void` |                                                  |
-| `provideContext`     | `(): void`               |                                                  |
-| `reset`              | `(): void`               | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
-| `setInternalValue`   | `(value: any): void`     |                                                  |
-| `setLoadingState`    | `(isLoading: any): void` |                                                  |
-| `updateActiveOption` | `(option: any): void`    |                                                  |
+| Method               | Type                          | Description                                      |
+|----------------------|-------------------------------|--------------------------------------------------|
+| `reset`              | `(): void`                    | Resets the menu to its initial state.<br />This is the only way to return value to undefined. |
+| `updateActiveOption` | `(option: HTMLElement): void` | Updates the currently active option in the menu.<br /><br />**option**: The option to set as active. |
 
 ## Events
 
@@ -76,7 +69,7 @@ The auro-menu element provides users a way to define a menu option.
 | `disabled`    | `disabled`    |           | `Boolean` | false   | When true specifies that the menuoption is disabled. |
 | `event`       | `event`       |           | `string`  |         |                                                  |
 | `iconTag`     |               |           | `string`  |         |                                                  |
-| `isActive`    |               | readonly  | `boolean` |         |                                                  |
+| `isActive`    |               | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable.<br />An option is considered active if it is not hidden, not disabled, and not static. |
 | `key`         | `key`         |           | `string`  |         |                                                  |
 | `layout`      |               |           | `string`  |         |                                                  |
 | `matchWord`   | `matchWord`   |           | `string`  |         |                                                  |
@@ -89,19 +82,14 @@ The auro-menu element provides users a way to define a menu option.
 
 ## Methods
 
-| Method                | Type                      |
-|-----------------------|---------------------------|
-| `attachTo`            | `(service: any): void`    |
-| `bindEvents`          | `(): void`                |
-| `dispatchClickEvent`  | `(): void`                |
-| `handleClick`         | `(): void`                |
-| `handleCustomEvent`   | `(): void`                |
-| `handleMenuChange`    | `(event: any): void`      |
-| `handleMouseEnter`    | `(): void`                |
-| `setInternalSelected` | `(isSelected: any): void` |
-| `setSelected`         | `(isSelected: any): void` |
-| `updateActive`        | `(isActive: any): void`   |
-| `updateTextHighlight` | `(): void`                |
+| Method                | Type                          | Description                                      |
+|-----------------------|-------------------------------|--------------------------------------------------|
+| `attachTo`            | `(service: Object): void`     | Attaches this menu option to a menu service and subscribes to its events.<br />This method enables the option to participate in menu selection and highlighting logic.<br /><br />**service**: The menu service instance to attach to. |
+| `bindEvents`          | `(): void`                    | Sets up event listeners for user interaction with the menu option.<br />This function enables click and mouse enter events to trigger selection and highlighting logic. |
+| `handleMenuChange`    | `(event: Object): void`       | Handles changes from the menu service and updates the option's state.<br />This function synchronizes the option's properties and selection/highlight state with menu events.<br /><br />**event**: The event object from the menu service. |
+| `setInternalSelected` | `(isSelected: boolean): void` | Updates the internal selected state of the menu option bypassing 'updated' and triggers custom events if selected.<br />This function ensures the option's selection state is synchronized with menu logic and notifies listeners.<br /><br />**isSelected**: Whether the option should be marked as selected. |
+| `setSelected`         | `(isSelected: boolean): void` | Sets the selected state of the menu option.<br />This function updates whether the option is currently selected.<br /><br />**isSelected**: Whether the option should be marked as selected. |
+| `updateActive`        | `(isActive: boolean): void`   | Updates the active state and visual highlighting of the menu option.<br />This function toggles the option's active status and applies or removes the active CSS class.<br /><br />**isActive**: Whether the option should be marked as active. |
 
 ## Events
 
