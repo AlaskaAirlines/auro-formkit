@@ -4,6 +4,7 @@
 
 import { AuroMenu } from '../src/auro-menu.js';
 import { AuroMenuOption } from '../src/auro-menuoption.js';
+import { initKeysExample } from '../apiExamples/keys.js';
 
 AuroMenu.register();
 AuroMenuOption.register();
@@ -16,6 +17,7 @@ export function initExamples(initCount) {
   try {
     // javascript example function calls to be added here upon creation to test examples
     // auroMenuResetExample();
+    initKeysExample();
   } catch (err) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called

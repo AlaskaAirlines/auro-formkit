@@ -234,7 +234,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-select', componentTemplate);
 
-    it('should store select value as a string array', async () => {
+    it('should store select value as a string', async () => {
       const form = await fixture(componentTemplate);
       const [select] = form._elements;
 
@@ -247,11 +247,33 @@ describe('auro-form', () => {
         });
       });
 
-      select.value = ['Apples'];
+      select.value = 'stops';
       await selectEvent;
       await elementUpdated(form);
 
-      await expect(form.value.selectExample).to.deep.equal(['Apples']);
+      await expect(form.value.selectExample).to.deep.equal('stops');
+    });
+
+    it('should store select value as a string', async () => {
+      const form = await fixture(componentTemplate);
+      const [select] = form._elements;
+      select.multiSelect = true;
+      await elementUpdated(select);
+
+      // wait for the select 'input' event to ensure we're testing that part of the code
+      const selectEvent = new Promise((resolve) => {
+        select.addEventListener('input', (event) => {
+          if (event.target.getAttribute('name') === 'selectExample') {
+            resolve(event);
+          }
+        });
+      });
+
+      select.value = ['stops'];
+      await selectEvent;
+      await elementUpdated(form);
+
+      await expect(form.value.selectExample).to.deep.equal(JSON.stringify(['stops']));
     });
   });
 });

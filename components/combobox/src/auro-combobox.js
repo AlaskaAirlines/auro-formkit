@@ -25,8 +25,8 @@ import styleEmphasizedCss from './styles/emphasized/style-css.js';
 import styleSnowflakeCss from './styles/snowflake/style-css.js';
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
-import {AuroHelpText} from "@aurodesignsystem/auro-helptext";
-import {ifDefined} from "lit/directives/if-defined.js";
+import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -538,8 +538,14 @@ export class AuroCombobox extends AuroElement {
         matchString = `${matchString} ${option.getAttribute('suggest')}`.toLowerCase();
       }
 
-      // only count options that match the typed input value AND are not currently selected AND are not static
-      if (this.input.value && matchString.includes(this.input.value.toLowerCase()) && !option.hasAttribute('static')) {
+      // If input is empty, show all options (except static ones)
+      if (!this.input.value || this.input.value.length === 0) {
+        if (!option.hasAttribute('static')) {
+          option.removeAttribute('hidden');
+          this.availableOptions.push(option);
+        }
+      } else if (matchString.includes(this.input.value.toLowerCase()) && !option.hasAttribute('static')) {
+        // only count options that match the typed input value AND are not static
         option.removeAttribute('hidden');
         this.availableOptions.push(option);
       } else if (!option.hasAttribute('persistent')) {
@@ -564,13 +570,11 @@ export class AuroCombobox extends AuroElement {
    * @private
    * @returns {void}
    */
-  async syncValuesAndStates() {
-    this.menu.value = this.value;
-    this.menu.matchWord = this.input.value;
-
-    // Wait a lifecycle for child components to update
-    await Promise.all([this.menu.updateComplete]);
-
+  syncValuesAndStates() {
+    // Only sync matchWord, don't set menu.value here since setMenuValue should handle that
+    if (this.menu) {
+      this.menu.matchWord = this.input.value;
+    }
     this.updateTriggerTextDisplay();
   }
 
@@ -581,11 +585,7 @@ export class AuroCombobox extends AuroElement {
   updateTriggerTextDisplay() {
     // update the input content if persistInput is false
     if (!this.persistInput) {
-      if (this.menu.optionSelected && this.menu.optionSelected.textContent.length > 0) {
-        this.input.value = this.menu.optionSelected.textContent;
-      } else {
-        this.input.value = this.value;
-      }
+      this.input.value = this.value;
     }
 
     // update the displayValue in the trigger if displayValue slot content is present
@@ -606,26 +606,11 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Resets the menu matchWord to true.
-   * @private
-   */
-  resetMenuMatchword() {
-    this.menu.updateItemsState(new Map([
-      [
-        'matchWord',
-        true
-      ]
-    ]));
-  };
-
-  /**
    * Processes hidden state of all menu options and determines if there are any available options not hidden.
    * @private
    * @returns {void}
    */
   handleMenuOptions() {
-    this.resetMenuMatchword();
-
     this.generateOptionsArray();
     this.availableOptions = [];
     this.updateFilter();
@@ -641,8 +626,8 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   generateOptionsArray() {
-    if (this.menu) {
-      this.options = this.menu.querySelectorAll('auro-menuoption, [auro-menuoption]');
+    if (this.menu && this.menu.options) {
+      this.options = this.menu.options;
     } else {
       this.options = [];
     }
@@ -797,20 +782,19 @@ export class AuroCombobox extends AuroElement {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
     this.defaultMenuShape = this.menu.getAttribute('shape');
 
-    this.menu.value = this.value;
-
-    this.updateMenuShapeSize();
-
-    // a racing condition on custom-combobox with custom-menu
-    if (!this.menu || this.menuShadowRoot === null) {
+    // racing condition on custom-combobox with custom-menu
+    if (!this.menu) {
       setTimeout(() => {
         this.configureMenu();
       }, 0);
       return;
     }
 
-    this.menu.addEventListener('auroMenu-loadingChange', (event) => this.handleMenuLoadingChange(event));
-    this.menu.shadowRoot.addEventListener('slotchange', (event) => this.handleSlotChange(event));
+    this.updateMenuShapeSize();
+
+    // Sync options array like select does
+    this.options = this.menu.options;
+    this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
     if (this.checkmark) {
       this.menu.removeAttribute('nocheckmark');
@@ -818,32 +802,27 @@ export class AuroCombobox extends AuroElement {
       this.menu.setAttribute('nocheckmark', '');
     }
 
-    // handle the menu event for an option selection
-    this.menu.addEventListener('auroMenu-selectedOption', (evt) => {
-      if (this.menu.optionSelected) {
-        const selected = this.menu.optionSelected;
+    // Handle menu option selection like select does
+    this.menu.addEventListener('auroMenu-selectedOption', (event) => {
+      // Update the optionSelected from the event details, not manually
+      [this.optionSelected] = event.detail.options;
 
-        if (!this.optionSelected || this.optionSelected !== selected) {
-          this.optionSelected = selected;
-        }
+      // Update the internal value to match the menu's value
+      this.value = event.detail.stringValue;
 
-        if (!this.value || this.value !== this.optionSelected.value) {
-          this.value = this.optionSelected.value;
-          // this.menu.value = this.value;
-        }
+      // Update display
+      this.updateTriggerTextDisplay();
 
-        this.updateTriggerTextDisplay();
-
-        if (this.menu.matchWord !== this.input.value) {
-          this.menu.matchWord = this.input.value;
-        }
-
-        // update the hidden state of options based on newly selected value
-        this.handleMenuOptions();
+      // Update match word for filtering
+      if (this.menu.matchWord !== this.input.value) {
+        this.menu.matchWord = this.input.value;
       }
 
-      // dropdown bib should hide when making a selection
-      if (evt.detail && evt.detail.source !== 'slotchange') {
+      // Update available options based on selection
+      this.handleMenuOptions();
+
+      // Hide dropdown on selection (except during slot changes)
+      if (event.detail && event.detail.source !== 'slotchange') {
         setTimeout(() => {
           this.hideBib();
         }, 0);
@@ -864,13 +843,8 @@ export class AuroCombobox extends AuroElement {
       });
     });
 
-    this.menu.addEventListener('auroMenu-selectValueFailure', () => {
-      this.menu.clearSelection();
-    });
-
-    this.menu.addEventListener('auroMenu-selectValueReset', () => {
-      this.clear();
-    });
+    // Handle slot changes
+    this.menu.shadowRoot.addEventListener('slotchange', (event) => this.handleSlotChange(event));
   }
 
   /**
@@ -951,7 +925,7 @@ export class AuroCombobox extends AuroElement {
       this.hideBib();
     }
 
-    this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue} }));
+    this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
   }
 
   /**
@@ -1008,7 +982,7 @@ export class AuroCombobox extends AuroElement {
           evt.preventDefault();
 
           // navigate on menu only when the focus is on input
-          if (!this.dropdown.isBibFullscreen || this.shadowRoot.activeElement === this.inputInBib) {
+          if (!this.dropdown.isBibFullscreen || this.dropdown.isPopoverVisible) {
             const direction = evt.key.replace('Arrow', '').toLowerCase();
             this.menu.navigateOptions(direction);
           }
@@ -1078,6 +1052,18 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
+   * Sets the menu value if menu is available.
+   * @param {string} value - The value to set on the menu.
+   * @returns {void}
+   */
+  setMenuValue(value) {
+    if (!this.menu) {
+      return;
+    }
+    this.menu.value = value;
+  }
+
+  /**
    * Resets component to initial state.
    * @returns {void}
    */
@@ -1096,12 +1082,17 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   clear() {
-    this.input.clear();
+    // Clear combobox state first
+    this.optionSelected = undefined;
+    this.value = undefined;
+
+    // Then clear input and menu
+    if (this.input.value) {
+      this.input.clear();
+    }
     if (this.menu.value || this.menu.optionSelected) {
       this.menu.reset();
     }
-    this.optionSelected = undefined;
-    this.value = undefined;
   }
 
   /**
@@ -1112,7 +1103,7 @@ export class AuroCombobox extends AuroElement {
     this.validation.validate(this, force);
   }
 
-  async updated(changedProperties) {
+  updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
       if (this.value && this.value.length > 0) {
@@ -1121,9 +1112,12 @@ export class AuroCombobox extends AuroElement {
         this.hasValue = false;
       }
 
-      if (this.hasValue && !this.input.value && (!this.menu.availableOptions || this.menu.availableOptions.length === 0)) {
+      if (this.hasValue && !this.input.value && (!this.menu.options || this.menu.options.length === 0)) {
         this.input.value = this.value;
       }
+
+      // Use setMenuValue like select does instead of direct assignment
+      this.setMenuValue(this.value);
 
       if (this.value) {
         // If the value got set programmatically make sure we hide the bib
@@ -1135,13 +1129,19 @@ export class AuroCombobox extends AuroElement {
         this.clear();
       }
 
-      // Sync the input, menu, and optionSelected states
-      await this.syncValuesAndStates();
+      // Sync the input and match word, but don't directly set menu.value again
+      if (this.menu) {
+        this.menu.matchWord = this.input.value;
+      }
 
       this.dispatchEvent(new CustomEvent('input', {
         bubbles: true,
         cancelable: false,
         composed: true,
+        detail: {
+          optionSelected: this.menu.optionSelected,
+          value: this.menu.value
+        }
       }));
 
       // Deprecated, need to be removed.
@@ -1269,11 +1269,11 @@ export class AuroCombobox extends AuroElement {
       <div>
         <div aria-live="polite" class="util_displayHiddenVisually">
           ${this.optionActive && this.availableOptions.length > 0
-            ? html`
+        ? html`
               ${`${this.optionActive.textContent}, selected, ${this.availableOptions.indexOf(this.optionActive) + 1} of ${this.availableOptions.length}`}
             `
-            : undefined
-          }
+        : undefined
+      }
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
@@ -1355,21 +1355,21 @@ export class AuroCombobox extends AuroElement {
 
           <span slot="helpText">
             ${!this.validity || this.validity === 'valid'
-              ? html`
+        ? html`
                 <${this.helpTextTag} class="${classMap(helpTextContentClasses)}" appearance="${this.onDark ? 'inverse' : this.appearance}"">
                   <p id="${this.uniqueId}" part="helpText">
                     <slot name="helpText"></slot>
                   </p>
                 </${this.helpTextTag}>
               `
-              : html`
+        : html`
                 <${this.helpTextTag} class="${classMap(errorTextContentClasses)}" error appearance="${this.onDark ? 'inverse' : this.appearance}"">
                   <p id="${this.uniqueId}" role="alert" aria-live="assertive" part="helpText">
                     ${this.errorMessage}
                   </p>
                 </${this.helpTextTag}>
               `
-            }
+      }
           </span>
         </${this.dropdownTag}>
       </div>
