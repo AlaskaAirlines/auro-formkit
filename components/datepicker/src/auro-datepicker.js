@@ -1163,7 +1163,7 @@ export class AuroDatePicker extends AuroElement {
     return this.validity !== undefined && this.validity !== 'valid';
   }
 
-  updated(changedProperties) {
+  async updated(changedProperties) {
     if (changedProperties.has('format')) {
       this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
     }
@@ -1294,10 +1294,10 @@ export class AuroDatePicker extends AuroElement {
 
       if (this.hasAttribute('error')) {
         // Set the error attribute on the last input
-        lastInput.setAttribute('error', this.getAttribute('error'));
+        await lastInput.setAttribute('error', this.getAttribute('error'));
       } else {
         // Remove the error attribute on the last input
-        lastInput.removeAttribute('error');
+        await lastInput.removeAttribute('error');
       }
 
       // Validate the last input
