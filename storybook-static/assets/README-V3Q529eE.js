@@ -1,0 +1,158 @@
+import{j as n}from"./index-BlAcB6DZ.js";import{useMDXComponents as a}from"./index-DMGburbG.js";import{s as i}from"./combobox.stories-O7hbvPGF.js";import"./_commonjsHelpers-gnU0ypJ3.js";import"./index-B-lxVbXh.js";import"./v4-CtRu48qb.js";import"./index-CeujA6c9.js";import"./index-DDrVoSdw.js";import"./storybook-utils-BWaCeRRT.js";import"./lit-element-CzkqXGGu.js";import"./static-CzM4uoyW.js";import"./async-directive-ByMGbIdb.js";import"./directive-helpers-BYhjznv8.js";import"./auro-menu-BXEacBn8.js";import"./auroElement-CqxMywsH.js";import"./auro-icon-CNMF0wKG-vCjlPHA5.js";import"./version-CcLPgAjI.js";import"./validation-DrYD_Tc9.js";import"./index-B1GZsKVb.js";import"./ref-3AivGw2q.js";import"./index-CXFB-ZtJ.js";import"./repeat-NDFA8eVF.js";import"./registered-DrZ9fufq.js";import"./auro-button-CvWxpTkj-B19uADyS.js";import"./registered-BmRy1yHw.js";const m=`<!--
+The README.md file is a compiled document. No edits should be made directly to this file.
+
+README.md is created by running \`npm run build:docs\`.
+
+This file is generated based on a template fetched from
+\`../../docs/templates/componentReadmeTemplate.md\`
+and copied to \`./componentDocs/README.md\` each time the docs are compiled.
+
+The following sections are editable by making changes to the following files:
+
+| SECTION                | DESCRIPTION                                       | FILE LOCATION                       |
+|------------------------|---------------------------------------------------|-------------------------------------|
+| Description            | Description of the component                      | \`./docs/partials/description.md\`    |
+| Use Cases              | Examples for when to use this component           | \`./docs/partials/useCases.md\`       |
+| Additional Information | For use to add any component specific information | \`./docs/partials/readmeAddlInfo.md\` |
+| Component Example Code | HTML sample code of the components use            | \`./apiExamples/basic.html\`          |
+-->\r
+\r
+# Combobox
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
+<!-- The below content is automatically added from ./docs/partials/description.md -->
+\`<auro-combobox>\` is the combination of [dropdown](http://auro.alaskaair.com/components/auro/dropdown), [input](http://auro.alaskaair.com/components/auro/input), and [menu](http://auro.alaskaair.com/components/auro/menu) and allows users to filter search results from a predefined list as they type. When the user starts typing in the text input, a dropdown of a menu shows up to display options that match the user’s search.
+
+By default, \`auro-combobox\` behaves as a suggestion list. This means any value may be typed into the combobox and the menu list presented effectively provides sample or suggestion options. With the use of the \`persistInput\` attribute the \`auro-combobox\` behaves as a filter of menu options. In this mode. typing into the input field will execute the filter but will not set the \`value\` of the combobox. The combobox value is set by selecting a menu option. Clicking the \`X\` clear button in the input will remove the current value of the HTML5 input causing the menu filter to reset as well as remove the current value of the combobox.
+<!-- AURO-GENERATED-CONTENT:END -->\r
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
+<!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
+<!-- AURO-GENERATED-CONTENT This file is to be used for any additional content that should be included in the README.md which is specific to this component. -->
+<!-- AURO-GENERATED-CONTENT:END -->\r
+\r
+## Getting Started
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
+<!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->\r
+\r
+#### NPM Installation
+
+\`\`\`shell
+$ npm i @aurodesignsystem/auro-formkit
+\`\`\`
+<!-- AURO-GENERATED-CONTENT:END -->\r
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
+<!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->\r
+\r
+### Import Options\r
+\r
+#### Automatic Registration
+
+For automatic registration, simply import the component:
+
+\`\`\`javascript
+// Registers <auro-combobox> automatically
+import '@aurodesignsystem/auro-formkit/auro-combobox';
+\`\`\`\r
+\r
+#### Custom Registration
+
+To protect from versioning conflicts with other instances of the component being loaded, it is recommended to use our static \`AuroCombobox.register('custom-combobox')\` method on the component class and pass in a unique name.
+
+\`\`\`javascript
+// Import the class only
+import { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';
+
+// Register with a custom name if desired
+AuroCombobox.register('custom-combobox');
+\`\`\`\r
+\r
+#### TypeScript Module Resolution
+
+When using TypeScript set \`moduleResolution\` to \`bundler\`, add the following to your \`tsconfig.json\`:
+
+\`\`\`json
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler"
+    }
+}
+\`\`\`
+
+This configuration enables proper module resolution for the component's TypeScript files.
+<!-- AURO-GENERATED-CONTENT:END -->\r
+**Reference component in HTML**
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./apiExamples/basic.html) -->
+<!-- The below code snippet is automatically added from ./apiExamples/basic.html -->\r
+\r
+\`\`\`html
+<auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+    <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+    <auro-menuoption static nomatch>No matching option</auro-menuoption>
+  </auro-menu>
+</auro-combobox>\r
+\`\`\`\r
+<!-- AURO-GENERATED-CONTENT:END -->\r
+\r
+### Design Token CSS Custom Property dependency
+
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/designTokens.md) -->
+The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
+
+<!-- AURO-GENERATED-CONTENT:END -->\r
+\r
+## Install from CDN
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/bundleInstallDescription.md) -->
+<!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
+In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
+
+\`\`\`html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-combobox/+esm"><\/script>\r
+\`\`\`\r
+<!-- AURO-GENERATED-CONTENT:END -->\r
+\r
+## UI development browser support
+<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/browserSupport.md) -->
+For the most up to date information on [UI development browser support](https://auro.alaskaair.com/support/browsersSupport)
+
+<!-- AURO-GENERATED-CONTENT:END -->\r
+\r
+## auro-combobox use cases
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
+<!-- The below content is automatically added from ./docs/partials/useCases.md -->
+The \`<auro-combobox>\` element should be used in situations where users may:
+
+* Search
+  * Airports: user looks for a specific airport by searching for the city name or airport code
+  * Site wide: user searches for a topic site wide and combobox makes suggestions on searchable results
+* Filter
+  * Options: user chooses filters for their search by using combobox
+* Select
+  * Quantity: user types a quantity to select an option within a range (for example, the user may be limited to 2-34)
+<!-- AURO-GENERATED-CONTENT:END -->\r
+\r
+## Formkit development
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/partials/developmentDescription.md) -->
+<!-- The below content is automatically added from ../../docs/partials/developmentDescription.md -->\r
+\r
+### Filtering
+
+Running the \`dev\` command will open a \`localhost\` development server for all components in the monorepo at once.
+
+To only develop a single component, use the \`--filter\` flag:
+
+\`\`\`shell
+npx turbo dev --filter=@aurodesignsystem/auro-input
+\`\`\`
+<!-- AURO-GENERATED-CONTENT:END -->
+`;function s(o){const{Markdown:e,Meta:t}={...a(),...o.components};return e||r("Markdown"),t||r("Meta"),n.jsxs(n.Fragment,{children:[n.jsx(t,{of:i}),`
+`,n.jsx(e,{children:m})]})}function k(o={}){const{wrapper:e}={...a(),...o.components};return e?n.jsx(e,{...o,children:n.jsx(s,{...o})}):s(o)}function r(o,e){throw new Error("Expected component `"+o+"` to be defined: you likely forgot to import, pass, or provide it.")}export{k as default};

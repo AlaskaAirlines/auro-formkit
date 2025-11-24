@@ -1,0 +1,129 @@
+import * as stories from "./combobox.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+
+<Meta of={stories} />
+
+# Combobox
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+### Basic
+
+<Canvas of={stories.Basic} />
+
+### Dynamic Menu
+
+This example demonstrates a data driven combobox. The data is used to populate the `auro-menu`. In this example, each time the input's value changes, the data is updated and the menu is recreated.
+
+The menu in this example was populated from data from a country/city API. To keep the data set small, the data in the menu is based off an API call that returns all countries and cities that contain the substring "**germ**" (non case-sensitive) in their name.
+
+<Canvas of={stories.DynamicMenu} />
+
+### Property Examples
+
+#### disabled
+
+If set, disables the combobox.
+
+<Canvas of={stories.Disabled} />
+
+#### noFilter
+
+If set, combobox will not do suggestion filtering of the menuoptions. This option is useful when the `<auro-menuoption>` elements are being pre-filtered externally to combobox (e.g. using the citysearch API).
+
+<Canvas of={stories.NoFilter} />
+
+#### error
+
+Sets a persistent error state (e.g. an error state returned from the server).
+
+<Canvas of={stories.Error} />
+
+#### noValidate
+
+Intended for use with the `required` attribute. If set, disables auto-validation on blur. By using these two attributes in combination the validation for required fields is still computed for forms but no validation messaging will be generated in the UI.
+
+<Canvas of={stories.NoValidate} />
+
+#### required
+
+Populates the `required` attribute on the input. Used for client-side validation.
+
+<Canvas of={stories.Required} />
+
+#### value
+
+Use the `value` attribute to programmatically set the value of the combobox.
+
+<Canvas of={stories.ProgrammaticValue} />
+
+#### Dynamically Set Value
+
+Use the `value` attribute in combination with another element to dynamically set the value of the combobox.
+
+Can be used in the following ways:
+
+- Preset the value of the combobox to valid menu option
+- Set the value of the combobox to invalid menu option
+- Reset the value of the combobox to undefined
+
+Note: using a value that does not match a menu option will reset the combobox value to undefined.
+
+<Canvas of={stories.Value} />
+
+#### type
+
+When defined, the `auro-input` in the combobox trigger will use the defined `type` (e.g. `credit-card`).
+
+<Canvas of={stories.TypeMonthDayYear} />
+
+### Method Examples
+
+#### focus
+
+The focus method will apply focus state to the combobox input field.
+
+<Canvas of={stories.Focus} />
+
+#### reset
+
+Use the `reset()` method to reset the `<auro-combobox>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<Canvas of={stories.ResetState} />
+
+### Slot Examples
+
+#### helpText
+
+Sets the help text displayed below the trigger. The `helpText` slot can be used to provide additional context for the combobox. When using the `error` property, the `helpText` slot can be used to describe the error.
+
+<Canvas of={stories.HelpText} />
+
+#### loading
+
+While content is loading, the menu can either remain empty or display a loading placeholder
+
+<Canvas of={stories.Loading} />
+
+### Dropdown with fullscreen bib
+
+You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
+
+The default value of `fullscreenBreakpoint` is `sm`.
+
+Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens)
+
+To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMMENDED**.
+
+<Canvas of={stories.FullscreenBreakpoint} />
+
+#### in Dialog
+
+The component can be in a dialog.
+
+<Canvas of={stories.InDialog} />
