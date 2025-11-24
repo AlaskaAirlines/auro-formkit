@@ -1,0 +1,93 @@
+import * as stories from "./radio-and-radio-group.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+import tokens from "../src/styles/tokens.scss?raw";
+
+<Meta of={stories} />
+
+# Radio
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+### Default
+
+The following example illustrates the default use of the `<auro-radio>` custom element.
+
+<Canvas of={stories.Basic} />
+
+### Default Group
+
+This is a default configuration using the `<auro-radio-group>` and `<auro-radio>` elements. Notice the use of the `slot` attribute to set the group title of the `<auro-radio-group>`.
+
+<Canvas of={stories.BasicGroup} />
+
+### Checked
+
+Use the `checked` attribute to pre-select a `<auro-radio>` element.
+
+<Canvas of={stories.Checked} />
+
+
+### Disabled
+
+Use the `disabled` attribute to disable singular `<auro-radio>` elements or the entire `<auro-radio-group>`.
+
+<Canvas of={stories.Disabled} />
+
+### Error
+
+Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
+
+A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
+
+<Canvas of={stories.Error} />
+
+### Horizontal Group
+
+Using the `horizontal` attribute will render the `auro-radio` elements in a horizontal line.
+
+**Note**: Using the horizontal attribute has a limit of 3 options. Beyond three, options will be listed in vertically.
+
+<Canvas of={stories.Horizontal} />
+
+### Required
+
+When present, the `required` attribute specifies that an `<auro-radio>` within the `<auro-radio-group>` must be checked. There is no error message associated with the `required` attribute by default. Use `setCustomValidityValueMissing` to set a custom error message.
+
+<Canvas of={stories.Required} />
+
+### Custom optional label
+
+The `<auro-radio-group>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
+
+<Canvas of={stories.OptionalLabel} />
+
+### Reset State
+
+Use the `reset()` method to reset the `<auro-radio-group>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<Canvas of={stories.ResetState} />
+
+### Dynamic Example
+
+This example demonstrates a data drive approach to rendering `<auro-radio>` buttons.
+
+**Note**: When dynamically creating `<auro-radio>` elements, make sure to add an `id` attribute, as it is a required part of the HTML5 spec for all form elements.
+
+<Canvas of={stories.Dynamic} />
+
+### Theme Support
+
+The component may be restyled using the following code sample and changing the values of the following token(s).
+
+<Markdown>
+{`
+  \`\`\`scss
+  ${tokens}
+  \`\`\`
+`}
+</Markdown>
