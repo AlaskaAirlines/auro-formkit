@@ -1,0 +1,186 @@
+import * as stories from "./dropdown.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+import tokens from "../src/styles/tokens.scss?raw";
+
+<Meta of={stories} />
+
+# Dropdown
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+### Basic
+
+The most basic, simple version of `auro-dropdown`.
+
+<Canvas of={stories.Basic} />
+
+<Canvas of={stories.BasicIcon} />
+
+<Canvas of={stories.BasicButton} />
+
+### Property Examples
+
+#### bordered
+
+Adds the border style around the dropdown trigger.
+
+<Canvas of={stories.Bordered} />
+
+#### chevron
+
+Adds the bib visibility state chevron to the right side of the trigger content.
+
+<Canvas of={stories.Chevron} />
+
+<Canvas of={stories.ChevronIcon} />
+
+<Canvas of={stories.ChevronButton} />
+
+<Canvas of={stories.ChevronInput} />
+
+#### disabled
+
+Disables the trigger preventing the dropdown bib from being shown.
+
+<Canvas of={stories.Disabled} />
+
+<Canvas of={stories.DisabledAll} />
+
+#### error
+
+Adds the error state UI to the trigger.
+
+<Canvas of={stories.Error} />
+
+<Canvas of={stories.ErrorBordered} />
+
+#### fluid
+
+The `fluid` property makes the trigger to have the full width.
+
+<Canvas of={stories.Fluid} />
+
+#### inset
+
+The `inset` property applies a predefined amount of CSS `padding` to the `trigger` slot content. Use this property to apply borderless style.
+
+<Canvas of={stories.Inset} />
+
+<Canvas of={stories.InsetBordered} />
+
+#### rounded
+
+The `rounded` property applies `border-radius` CSS to the trigger and default slot content.
+
+<Canvas of={stories.Rounded} />
+
+#### noToggle
+
+In cases where it is desired behavior for `auro-dropdown` to only show, not toggle, the bib content when activating the trigger the `noToggle` attribute must be applied.
+
+<Canvas of={stories.NoToggle} />
+
+#### fullscreenBreakpoint
+
+On mobile view, adding the `fullscreenBreakpoint="{breakpoint-token}"` will switch the dropdown to fullscreen mode. 
+
+<Canvas of={stories.CustomDimensions300} />
+
+### Slot Examples
+
+#### default
+
+All examples shown on this page include default slot content.
+
+#### trigger
+
+Content defined in the `trigger` slot will be rendered in the clickable trigger of the dropdown that is used to display the bib. Focus state visual effects will be disabled on the trigger when it contains a focusable element other than `<auro-input>`.
+
+This slot may contain any static content (e.g. plain text) and/or no more than one of the following elements:
+- `<a>`
+- `<auro-hyperlink>`
+- `<button>`
+- `<auro-button>`
+- `<input>`
+- `<auro-input>`
+
+#### label
+
+Content defined in the `label` slot will be rendered left aligned inside the trigger above all other defined trigger slot content.
+
+<Canvas of={stories.Label} />
+
+#### helpText
+
+Content defined in the `helpText` slot will be rendered left aligned below the trigger.
+
+<Canvas of={stories.HelpText} />
+
+#####
+
+When combined with the `error` property the `helpText` slot content is colored red.
+
+<Canvas of={stories.HelpTextError} />
+
+### Method Examples
+
+#### show
+
+The `show` method may also be called from anywhere in your code by executing `document.querySelector('#idOfTheDropdownElement').show()`. This example will execute the `show` method on a `keydown` event with focus in the input element.
+
+<Canvas of={stories.ProgramaticallyShow} />
+
+#### hide
+
+The `hide` method can be called from within the default slot content. This is useful for cases such as `auro-select` when the dropdown should be collapsed after making a selection.
+
+The `hide` method may also be called from anywhere in your code by executing `document.querySelector('#idOfTheDropdownElement').hide()`.
+
+This example demonstrations collapsing the dropdown by clicking a button within the dropdown bib content.
+
+<Canvas of={stories.ProgramaticallyHide} />
+
+### Other Examples
+
+#### Width and Sizing Behavior
+
+- **Width:** The `auro-dropdown` component will automatically consume the full width of its parent container. To make it narrower, you can style the `size` part.
+
+- **Styling Options:** Only the following styles can be applied to the `size` part:
+  - `width`
+  - `height`
+  - `maxWidth`
+  - `maxHeight`
+
+- **Scroll Behavior:** When the content exceeds the specified size, the browser will provide a scroll for the overflow.
+
+<Canvas of={stories.CustomDimensions100} />
+
+#### Truncated trigger component with fixed width
+
+`auro-dropdown` trigger component will be truncated if the text is too long than its container width.
+
+<Canvas of={stories.TruncatedText} />
+
+#### in Dialog
+
+The component can be in a dialog.
+
+<Canvas of={stories.InDialog} />
+
+### Theme Support
+
+The component may be restyled using the following code sample and changing the values of the following token(s).
+
+<Markdown>
+{`
+  \`\`\`scss
+  ${tokens}
+  \`\`\`
+`}
+</Markdown>

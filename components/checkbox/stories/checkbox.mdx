@@ -1,0 +1,72 @@
+import * as stories from "./checkbox-and-checkbox-group.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+import tokens from "../src/styles/tokens.scss?raw";
+
+<Meta of={stories} />
+
+# Checkbox
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+### Basic
+
+<Canvas of={stories.Basic} />
+
+### Disabled
+
+Use the `disabled` attribute to disable individual `<auro-checkbox>` elements or the entire `<auro-checkbox-group>`.
+
+#### Disabled Group
+
+The `disabled` attribute used to disable the entire `<auro-checkbox-group>`.
+
+<Canvas of={stories.DisabledGroup} />
+
+#### Disabled Checkbox within Group
+
+The `disabled` attribute used to disable a single `<auro-checkbox>` element.
+
+<Canvas of={stories.DisabledCheckboxWithinGroup} />
+
+### Form Validation
+
+In the `auro-checkbox-group` element, the `required` and `error` states are the tqo possible validation states.
+
+It should be noted that form validation is only supported within an `auro-checkbox-group` element. In order to support validation on a single `auro-checkbox` element, it must be wrapped in an `auro-checkbox-group`.
+
+#### Required
+
+<Canvas of={stories.Required} />
+
+#### Error
+
+Use the `error` attribute to apply a persistent custom error that supersedes the HTML5 validation logic.
+
+A custom error message can be set using the `error` attribute, or it can be used in conjuction with the `setCustomValidityCustomError` attribute.
+
+<Canvas of={stories.ErrorGroup} />
+
+### Functional Examples
+
+#### Reset State
+
+Use the `reset()` method to reset the `<auro-checkbox-group>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
+
+<Canvas of={stories.ResetState} />
+
+### Theme Support
+
+The component may be restyled using the following code sample and changing the values of the following token(s).
+
+<Markdown>
+{`
+  \`\`\`scss
+  ${tokens}
+  \`\`\`
+`}
+</Markdown>
