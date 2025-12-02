@@ -81,7 +81,7 @@ export class AuroMenuOption extends AuroElement {
     this.iconTag = versioning.generateTag('auro-formkit-menuoption-icon', iconVersion, AuroIcon);
 
     this.selected = false;
-    this.nocheckmark = false;
+    this.noCheckmark = false;
     this.disabled = false;
 
     /**
@@ -122,7 +122,7 @@ export class AuroMenuOption extends AuroElement {
         type: String,
         state: true
       },
-      nocheckmark: {
+      noCheckmark: {
         type: Boolean,
         reflect: true
       },
@@ -457,7 +457,7 @@ export class AuroMenuOption extends AuroElement {
 
     return html`
       <div class="${classes}">
-        ${this.selected && !this.nocheckmark
+        ${this.selected && !this.noCheckmark
         ? this.generateIconHtml(checkmarkIcon.svg)
         : undefined}
         <slot></slot>
