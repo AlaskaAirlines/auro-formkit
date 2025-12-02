@@ -56,12 +56,6 @@ The auro-menu element provides users a way to select from a list of options.
 
 The auro-menu element provides users a way to define a menu option.
 
-## Attributes
-
-| Attribute     | Type     | Description                                      |
-|---------------|----------|--------------------------------------------------|
-| `noCheckmark` | `String` | When true, selected option will not show the checkmark. |
-
 ## Properties
 
 | Property      | Attribute     | Modifiers | Type      | Default | Description                                      |
@@ -74,7 +68,7 @@ The auro-menu element provides users a way to define a menu option.
 | `layout`      |               |           | `string`  |         |                                                  |
 | `matchWord`   | `matchWord`   |           | `string`  |         |                                                  |
 | `menuService` | `menuService` |           | `object`  | null    |                                                  |
-| `nocheckmark` | `nocheckmark` |           | `boolean` | false   |                                                  |
+| `noCheckmark` | `noCheckmark` |           | `String`  | false   | When true, selected option will not show the checkmark. |
 | `selected`    | `selected`    |           | `Boolean` | false   | Specifies that an option is selected.            |
 | `tabIndex`    | `tabIndex`    |           | `number`  |         |                                                  |
 | `unsubscribe` |               |           |           | null    |                                                  |

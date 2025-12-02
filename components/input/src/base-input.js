@@ -12,7 +12,7 @@ import { AuroInputUtilities } from "./utilities.js";
 
 import IMask from 'imask';
 
-import AuroFormValidation from '@auro-formkit/form-validation';
+import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 

@@ -1,4 +1,4 @@
-import config from "@auro-formkit/config/wtr";
+import config from "@aurodesignsystem/config/wtr";
 
 export default {
   ...config,

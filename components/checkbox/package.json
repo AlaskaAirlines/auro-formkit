@@ -19,10 +19,10 @@
     "lit": "^3.2.1"
   },
   "devDependencies": {
-    "@auro-formkit/build-tools": "*",
-    "@auro-formkit/config": "*",
-    "@auro-formkit/form-validation": "*",
-    "@auro-formkit/typescript": "*",
+    "@aurodesignsystem/build-tools": "*",
+    "@aurodesignsystem/config": "*",
+    "@aurodesignsystem/form-validation": "*",
+    "@aurodesignsystem/typescript": "*",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "rollup": "^4.39.0",
     "rollup-plugin-serve": "^3.0.0",
@@ -48,7 +48,7 @@
     "sass": "run-s build:sass postCss:component sass:render",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
-    "bundler": "rollup -c node:@auro-formkit/config/rollup",
+    "bundler": "rollup -c node:@aurodesignsystem/config/rollup",
     "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component checkbox",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",

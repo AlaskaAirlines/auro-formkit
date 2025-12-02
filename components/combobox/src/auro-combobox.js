@@ -12,12 +12,12 @@ import { classMap } from 'lit/directives/class-map.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFormValidation from '@auro-formkit/form-validation';
+import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';

@@ -16,7 +16,7 @@ import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
