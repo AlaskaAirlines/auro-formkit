@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@alaskaairux/icons": "^5.5.0",
-    "@auro-formkit/form-validation": "*",
     "@aurodesignsystem/auro-bibtemplate": "*",
     "@aurodesignsystem/auro-dropdown": "*",
     "@aurodesignsystem/auro-icon": "^9.1.0",
@@ -27,10 +26,7 @@
     "lit": "^3.3.0",
     "wc-range-datepicker": "^1.3.0"
   },
-  "devDependencies": {
-    "@auro-formkit/build-tools": "*",
-    "@auro-formkit/config": "*",
-    "@auro-formkit/typescript": "*",
+  "devDependencies": {    
     "@rollup/plugin-node-resolve": "^16.0.1",
     "compression": "^1.8.0",
     "copyfiles": "^2.4.1",
@@ -59,7 +55,7 @@
     "build:version": "node ./scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
-    "bundler": "rollup -c node:@auro-formkit/config/rollup",
+    "bundler": "rollup -c node:@aurodesignsystem/config/rollup",
     "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component datepicker",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",

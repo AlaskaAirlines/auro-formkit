@@ -42,7 +42,7 @@ import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 // build the component class
 export class AuroInput extends BaseInput {

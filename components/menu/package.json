@@ -17,9 +17,6 @@
   },
   "devDependencies": {
     "@alaskaairux/icons": "^5.6.0",
-    "@auro-formkit/build-tools": "*",
-    "@auro-formkit/config": "*",
-    "@auro-formkit/typescript": "*",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "chalk": "^5.4.1",
     "rollup": "^4.45.1",
@@ -47,7 +44,7 @@
     "build:version": "node ./scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
-    "bundler": "rollup -c node:@auro-formkit/config/rollup",
+    "bundler": "rollup -c node:@aurodesignsystem/config/rollup",
     "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component menu",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",

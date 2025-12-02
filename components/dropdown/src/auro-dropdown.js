@@ -45,7 +45,7 @@ import styleEmphasizedCss from "./styles/emphasized/style-css.js";
 import styleSnowflakeCss from "./styles/snowflake/style-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 import { ifDefined } from "lit/directives/if-defined.js";
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';

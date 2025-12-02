@@ -3,7 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "^build:version", "^@auro-formkit/build-tools#build:formkit-version"],
+      "dependsOn": ["^build", "^build:version", "^@aurodesignsystem/build-tools#build:formkit-version"],
       "outputs": [
         "dist/**",
         "demo/*.md",
@@ -48,11 +48,11 @@
     "lint": {
       "outputs": []
     },
-    "@auro-formkit/build-tools#build:formkit-version": {
+    "@aurodesignsystem/build-tools#build:formkit-version": {
       "inputs": ["src/writeFormkitVersion.mjs"],
       "outputs": ["../version/version.js"]
     },
-    "@auro-formkit/build-tools#build:docs:kit": {
+    "@aurodesignsystem/build-tools#build:docs:kit": {
       "inputs": ["../../docs/partials/**/*", "../../docs/templates/**/*", "src/kitDocProcessor.mjs"],
       "outputs": ["../../README.md"]
     },

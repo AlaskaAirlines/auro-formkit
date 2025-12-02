@@ -61,7 +61,12 @@
     "@rollup/rollup-linux-x64-gnu": "*"
   },
   "devDependencies": {
-    "@auro-formkit/version": "*",
+    "@aurodesignsystem/form-validation": "*",
+    "@aurodesignsystem/utils": "*",
+    "@aurodesignsystem/build-tools": "*",
+    "@aurodesignsystem/config": "*",
+    "@aurodesignsystem/typescript": "*",
+    "@aurodesignsystem/version": "*",
     "@aurodesignsystem/auro-button": "^12.3.0",
     "@aurodesignsystem/auro-library": "^5.5.4",
     "@aurodesignsystem/design-tokens": "^8.5.0",

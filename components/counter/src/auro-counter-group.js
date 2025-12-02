@@ -25,13 +25,13 @@ import counterGroupStyles from "./styles/counter-group-css.js";
 import shapeSizeCss from "./styles/shapeSize-css.js";
 
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
-import AuroFormValidation from "@auro-formkit/form-validation";
+import AuroFormValidation from "@aurodesignsystem/form-validation";
 
 import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs";
 import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";

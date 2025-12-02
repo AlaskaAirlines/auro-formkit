@@ -13,9 +13,9 @@ import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/util
 
 import { AuroIcon } from "@aurodesignsystem/auro-icon/class";
 import iconVersion from "./iconVersion.js";
-import AuroFormValidation from "@auro-formkit/form-validation";
+import AuroFormValidation from "@aurodesignsystem/form-validation";
 
-import { IconUtil } from "@auro-formkit/utils";
+import { IconUtil } from "@aurodesignsystem/utils";
 import plusIcon from '@alaskaairux/icons/dist/icons/interface/plus-lg.mjs';
 import minusIcon from '@alaskaairux/icons/dist/icons/interface/minus-lg.mjs';
 
@@ -23,7 +23,7 @@ import tokensCss from "./styles/tokens-css.js";
 import colorCss from "./styles/color-css.js";
 import styleCss from "./styles/style-css.js";
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 /**
  * Auro Counter is a customizable counter component for user interface interactions.

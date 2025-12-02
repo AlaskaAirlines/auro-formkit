@@ -9,7 +9,7 @@
 import { html } from 'lit/static-html.js';
 import {classMap} from "lit/directives/class-map.js";
 
-import AuroFormValidation from '@auro-formkit/form-validation';
+import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import { AuroDatepickerUtilities } from './utilities.js';
@@ -34,7 +34,7 @@ import './auro-calendar.js';
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 import { ifDefined } from "lit/directives/if-defined.js";
 import {AuroElement} from "@aurodesignsystem/auro-layout-element";
