@@ -575,17 +575,19 @@ export class AuroCombobox extends AuroElement {
     if (this.menu) {
       this.menu.matchWord = this.input.value;
     }
-    this.updateTriggerTextDisplay();
+    const label = this.menu.currentLabel;
+    this.updateTriggerTextDisplay(label || this.value);
   }
 
   /**
    * Update displayValue or input.value, it's called when making a selection.
+   * @param {string} label - The label of the selected option.
    * @private
    */
-  updateTriggerTextDisplay() {
+  updateTriggerTextDisplay(label) {
     // update the input content if persistInput is false
     if (!this.persistInput) {
-      this.input.value = this.value;
+      this.input.value = label || this.value;
     }
 
     // update the displayValue in the trigger if displayValue slot content is present
@@ -811,7 +813,7 @@ export class AuroCombobox extends AuroElement {
       this.value = event.detail.stringValue;
 
       // Update display
-      this.updateTriggerTextDisplay();
+      this.updateTriggerTextDisplay(event.detail.label || event.detail.value);
 
       // Update match word for filtering
       if (this.menu.matchWord !== this.input.value) {
