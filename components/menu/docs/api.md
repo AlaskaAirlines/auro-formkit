@@ -7,6 +7,7 @@ The auro-menu element provides users a way to select from a list of options.
 | Property                   | Attribute                  | Modifiers | Type                              | Default     | Description                                      |
 |----------------------------|----------------------------|-----------|-----------------------------------|-------------|--------------------------------------------------|
 | `allowDeselect`            | `allowDeselect`            |           | `boolean`                         | false       | Allows deselecting an already selected option when clicked again in single-select mode. |
+| `currentLabel`             |                            | readonly  | `string`                          |             |                                                  |
 | `disabled`                 | `disabled`                 |           | `boolean`                         |             | When true, the entire menu and all options are disabled; |
 | `hasLoadingPlaceholder`    |                            |           | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
 | `index`                    |                            |           | `number`                          |             |                                                  |

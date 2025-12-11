@@ -34,6 +34,15 @@ export class MenuService {
   }
 
   /**
+   * Gets the label(s) of the currently selected option(s).
+   * @returns {string}
+   */
+  get currentLabel() {
+    const labels = (this.selectedOptions || []).map(option => option.textContent);
+    return this.multiSelect ? labels.join(", ") : labels[0] || '';
+  }
+
+  /**
    * Gets the string representation of the current value(s).
    * For multi-select, this is a JSON stringified array.
    * @returns {string|undefined}
@@ -464,7 +473,8 @@ export class MenuService {
       value: this.currentValue,
       stringValue: this.stringValue,
       keys: this.currentKeys,
-      options: this.selectedOptions
+      options: this.selectedOptions,
+      label: this.currentLabel
     }
 
     // If only one option is selected, include its index
