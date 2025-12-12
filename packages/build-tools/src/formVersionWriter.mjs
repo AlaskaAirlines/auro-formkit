@@ -17,13 +17,13 @@ export async function writeDepVersionFile(pkg) {
     // List of possible locations to check
     const possiblePaths = [
       // Direct workspace path
-      resolve(process.cwd(), '..', packageName.replace('@auro-formkit/', ''), 'package.json'),
+      resolve(process.cwd(), '..', packageName.replace('@aurodesignsystem/', ''), 'package.json'),
       // Workspace root node_modules
       resolve(process.cwd(), '../../node_modules', packageName, 'package.json'),
       // Component-level node_modules
       resolve(process.cwd(), 'node_modules', packageName, 'package.json'),
       // Try monorepo packages directory if it exists
-      resolve(process.cwd(), '../../packages', packageName.replace('@auro-formkit/', ''), 'package.json')
+      resolve(process.cwd(), '../../packages', packageName.replace('@aurodesignsystem/', ''), 'package.json')
     ];
 
     for (const path of possiblePaths) {

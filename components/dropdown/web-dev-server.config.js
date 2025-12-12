@@ -1,4 +1,4 @@
-import config from "@auro-formkit/config/wds";
+import config from "@aurodesignsystem/config/wds";
 
 export default {
   ...config,

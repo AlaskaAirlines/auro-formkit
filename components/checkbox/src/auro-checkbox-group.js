@@ -9,7 +9,7 @@ import { LitElement } from 'lit';
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
 
-import AuroFormValidation from '@auro-formkit/form-validation';
+import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -19,7 +19,7 @@ import colorCss from "./styles/colorGroup-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 /**
  * The auro-checkbox-group element is a wrapper for auro-checkbox element.

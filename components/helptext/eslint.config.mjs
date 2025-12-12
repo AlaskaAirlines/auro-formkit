@@ -1,3 +1,3 @@
-import auroConfig from '@auro-formkit/config/eslint';
+import auroConfig from '@aurodesignsystem/config/eslint';
 
 export default [...auroConfig];

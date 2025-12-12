@@ -15,14 +15,14 @@ import colorCss from './styles/groupColor-css.js';
 import tokenCss from './styles/tokens-css.js';
 
 // Import formvalidation class
-import AuroFormValidation from '@auro-formkit/form-validation';
+import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 // Import library runtime utils
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
 /* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */

@@ -22,7 +22,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
 import shapeSizeCss from "./styles/shapeSize-css.js";
 import tokensCss from "./styles/tokens-css.js";
 
-import AuroFormValidation from '@auro-formkit/form-validation';
+import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -31,7 +31,7 @@ import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 import styleCss from "./styles/style-css.js";
 import emphasizedColorCss from "./styles/emphasized/color-css.js";

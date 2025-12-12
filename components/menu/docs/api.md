@@ -7,6 +7,7 @@ The auro-menu element provides users a way to select from a list of options.
 | Property                   | Attribute                  | Modifiers | Type                              | Default     | Description                                      |
 |----------------------------|----------------------------|-----------|-----------------------------------|-------------|--------------------------------------------------|
 | `allowDeselect`            | `allowDeselect`            |           | `boolean`                         | false       | Allows deselecting an already selected option when clicked again in single-select mode. |
+| `currentLabel`             |                            | readonly  | `string`                          |             |                                                  |
 | `disabled`                 | `disabled`                 |           | `boolean`                         |             | When true, the entire menu and all options are disabled; |
 | `hasLoadingPlaceholder`    |                            |           | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
 | `index`                    |                            |           | `number`                          |             |                                                  |
@@ -56,12 +57,6 @@ The auro-menu element provides users a way to select from a list of options.
 
 The auro-menu element provides users a way to define a menu option.
 
-## Attributes
-
-| Attribute     | Type     | Description                                      |
-|---------------|----------|--------------------------------------------------|
-| `noCheckmark` | `String` | When true, selected option will not show the checkmark. |
-
 ## Properties
 
 | Property      | Attribute     | Modifiers | Type      | Default | Description                                      |
@@ -74,7 +69,7 @@ The auro-menu element provides users a way to define a menu option.
 | `layout`      |               |           | `string`  |         |                                                  |
 | `matchWord`   | `matchWord`   |           | `string`  |         |                                                  |
 | `menuService` | `menuService` |           | `object`  | null    |                                                  |
-| `nocheckmark` | `nocheckmark` |           | `boolean` | false   |                                                  |
+| `noCheckmark` | `noCheckmark` |           | `String`  | false   | When true, selected option will not show the checkmark. |
 | `selected`    | `selected`    |           | `Boolean` | false   | Specifies that an option is selected.            |
 | `tabIndex`    | `tabIndex`    |           | `number`  |         |                                                  |
 | `unsubscribe` |               |           |           | null    |                                                  |

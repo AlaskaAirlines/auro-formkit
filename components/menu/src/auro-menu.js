@@ -201,6 +201,14 @@ export class AuroMenu extends AuroElement {
 
   /**
    * @readonly
+   * @returns {string} - Returns the label of the currently selected option(s).
+   */
+  get currentLabel() {
+    return this.menuService.currentLabel;
+  };
+
+  /**
+   * @readonly
    * @returns {Array<HTMLElement>} - Returns the array of available menu options.
    * @deprecated use `options` property instead.
    */

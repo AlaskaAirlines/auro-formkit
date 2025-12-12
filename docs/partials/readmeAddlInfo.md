@@ -20,7 +20,7 @@ The package's `package.json` will have every dependency that it needs. This is t
 #### Internal Dependencies
 - These are packages from within the `auro-formkit` monorepo
 - Allow sharing code between different packages in your repository
-- Example: The `@aurodesignsystem/combobox` package might depend on `@auro-formkit/input`
+- Example: The `@aurodesignsystem/combobox` package might depend on `@aurodesignsystem/input`
 - Must be declared in `package.json` just like external dependencies
 - Use workspace protocols (e.g., `"workspace:*"` or `"workspace:^1.0.0"`)
 
@@ -33,7 +33,7 @@ The package's `package.json` will have every dependency that it needs. This is t
   {
     "dependencies": {
       "lit.js": "^3.0.0",                    // External dependency
-      "@auro-formkit/input": "workspace:*"  // Internal dependency
+      "@aurodesignsystem/input": "workspace:*"  // Internal dependency
     }
   }
   ```
@@ -70,7 +70,7 @@ Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
 
 ```json
 {
-  "name": "@auro-formkit/combobox",
+  "name": "@aurodesignsystem/combobox",
   "dependencies": {
     // Internal dependencies
     "@aurodesignsystem/auro-dropdown": "*",     // Required UI component
@@ -87,7 +87,7 @@ Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
   "devDependencies": {
     // Build utilities
     "rollup": "^4.24.4",
-    "@auro-formkit/build-tools": "*",
+    "@aurodesignsystem/build-tools": "*",
   }
 }
 ```

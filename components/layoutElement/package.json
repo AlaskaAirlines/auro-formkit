@@ -13,9 +13,6 @@
     "lit": "^3.2.1"
   },
   "devDependencies": {
-    "@auro-formkit/build-tools": "*",
-    "@auro-formkit/config": "*",
-    "@auro-formkit/typescript": "*",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "rollup": "^4.39.0",
     "rollup-plugin-serve": "^3.0.0",
@@ -27,7 +24,7 @@
   "scripts": {
     "build": "run-s types bundler",
     "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
-    "bundler": "rollup -c node:@auro-formkit/config/internal.rollup",
+    "bundler": "rollup -c node:@aurodesignsystem/config/internal.rollup",
     "clean": "rm -rf dist build",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all esLint",

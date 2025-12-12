@@ -12,12 +12,12 @@ import { classMap } from 'lit/directives/class-map.js';
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
-import AuroFormValidation from '@auro-formkit/form-validation';
+import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
-import formkitVersion from '@auro-formkit/version';
+import formkitVersion from '@aurodesignsystem/version';
 
 // Import touch detection lib
 import styleCss from './styles/style-css.js';
@@ -575,17 +575,19 @@ export class AuroCombobox extends AuroElement {
     if (this.menu) {
       this.menu.matchWord = this.input.value;
     }
-    this.updateTriggerTextDisplay();
+    const label = this.menu.currentLabel;
+    this.updateTriggerTextDisplay(label || this.value);
   }
 
   /**
    * Update displayValue or input.value, it's called when making a selection.
+   * @param {string} label - The label of the selected option.
    * @private
    */
-  updateTriggerTextDisplay() {
+  updateTriggerTextDisplay(label) {
     // update the input content if persistInput is false
     if (!this.persistInput) {
-      this.input.value = this.value;
+      this.input.value = label || this.value;
     }
 
     // update the displayValue in the trigger if displayValue slot content is present
@@ -811,7 +813,7 @@ export class AuroCombobox extends AuroElement {
       this.value = event.detail.stringValue;
 
       // Update display
-      this.updateTriggerTextDisplay();
+      this.updateTriggerTextDisplay(event.detail.label || event.detail.value);
 
       // Update match word for filtering
       if (this.menu.matchWord !== this.input.value) {
@@ -1103,7 +1105,7 @@ export class AuroCombobox extends AuroElement {
     this.validation.validate(this, force);
   }
 
-  updated(changedProperties) {
+  async updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
       if (this.value && this.value.length > 0) {
@@ -1161,8 +1163,8 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('error')) {
-      this.input.setAttribute('error', this.getAttribute('error'));
-      this.validate();
+      await this.input.setAttribute('error', this.getAttribute('error'));
+      this.validate(true);
     }
 
     if (changedProperties.has('shape') && this.menu) {
