@@ -36,6 +36,19 @@ async function defaultFixture() {
   `);
 }
 
+async function labelValueFixture() {
+  return await fixture(html`
+  <auro-select>
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="app-val" id="option-0">Apples</auro-menuoption>
+      <auro-menuoption value="ora-val" id="option-1">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+
 async function emphasizedFixture() {
   return await fixture(html`
     <auro-select layout="emphasized" shape="pill" size="xl" value="flights">
@@ -207,6 +220,21 @@ function runTest(mobileView) {
       el.showBib();
       await elementUpdated(el);
       await expect(dropdown.isPopoverVisible).to.be.true;
+    });
+
+    it('should display label of and return value of selected menu option', async () => {
+      const el = await labelValueFixture();
+
+      const menu = el.querySelector('auro-menu');
+      const optionToSelect = menu.querySelector('#option-1');
+
+      // Simulate selecting the option
+      el.value = optionToSelect.value;
+      await elementUpdated(el);
+
+      const triggerText = el.shadowRoot.querySelector('#value').textContent.trim();
+      await expect(triggerText).to.equal('Oranges');
+      await expect(el.value).to.equal('ora-val');
     });
 
     it('should close bib with hideBib() method', async () => {

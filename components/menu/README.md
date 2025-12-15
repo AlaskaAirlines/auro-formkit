@@ -88,11 +88,11 @@ This configuration enables proper module resolution for the component's TypeScri
 
 ```html
 <auro-menu>
-  <auro-menuoption value="stops">Stops</auro-menuoption>
-  <auro-menuoption value="price">Price</auro-menuoption>
-  <auro-menuoption value="duration">Duration</auro-menuoption>
-  <auro-menuoption value="departure">Departure</auro-menuoption>
-  <auro-menuoption value="arrival">Arrival</auro-menuoption>
+  <auro-menuoption value="stops-val">Stops</auro-menuoption>
+  <auro-menuoption value="price-val">Price</auro-menuoption>
+  <auro-menuoption value="duration-val">Duration</auro-menuoption>
+  <auro-menuoption value="departure-val">Departure</auro-menuoption>
+  <auro-menuoption value="arrival-val">Arrival</auro-menuoption>
 </auro-menu>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->

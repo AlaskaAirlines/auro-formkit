@@ -99,6 +99,27 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions.length).to.be.equal(2);
   });
 
+  it('displays the label and returns the value of selected menu options', async () => {
+    const el = await valueLabelFixture(mobileview);
+
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    await expect(el.value).to.equal('app-value');
+    await expect(el.input.value).to.equal('Apples');
+  });
+
   it('can programmatically apply focus to input', async () => {
     const el = await defaultFixture(mobileview);
 
@@ -618,6 +639,32 @@ async function presetValueFixture(mobileview) {
       <auro-menu>
         <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
         <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  `);
+}
+
+/**
+ *
+ */
+async function valueLabelFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
+  return fixture(html`
+    <auro-combobox value="Apples">
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="app-value" id="option-0">Apples</auro-menuoption>
+        <auro-menuoption value="ora-value" id="option-1">Oranges</auro-menuoption>
       </auro-menu>
     </auro-combobox>
   `);

@@ -91,11 +91,11 @@ This configuration enables proper module resolution for the component's TypeScri
   <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Name</span>
   <auro-menu>
-    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
-    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
-    <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
-    <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
-    <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+    <auro-menuoption value="app" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="ora" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="pea" id="option-2">Peaches</auro-menuoption>
+    <auro-menuoption value="gra" id="option-3">Grapes</auro-menuoption>
+    <auro-menuoption value="che" id="option-4">Cherries</auro-menuoption>
     <auro-menuoption static nomatch>No matching option</auro-menuoption>
   </auro-menu>
 </auro-combobox>
