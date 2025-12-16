@@ -128,6 +128,8 @@ export default class AuroFloatingUI {
   }
 
   showBib() {
+    const main = document.querySelector('main');
+    main.setAttribute('inert', 'true');
     if (!this.element.disabled && !this.element.isPopoverVisible) {
       this.updateCurrentExpandedDropdown();
       this.element.isPopoverVisible = true;
