@@ -347,9 +347,76 @@ describe('auro-checkbox', () => {
     expect(input.name).to.equal(expectedName);
     expect(input.type).to.equal('checkbox');
     expect(errorBorder).to.not.be.undefined;
-    expect(el).dom.to.equal(`
-      <auro-checkbox id="${expectedId}" name="${expectedName}" value="${expectedValue}" error checked disabled>
-        Checkbox option
-      </auro-checkbox>`);
+    expect(el.getAttribute('id')).to.equal(expectedId);
+    expect(el.getAttribute('name')).to.equal(expectedName);
+    expect(el.getAttribute('value')).to.equal(expectedValue);
+    expect(el.hasAttribute('error')).to.be.true;
+    expect(el.hasAttribute('checked')).to.be.true;
+    expect(el.hasAttribute('disabled')).to.be.true;
+    expect(el.getAttribute('role')).to.equal('checkbox');
+    expect(el.getAttribute('aria-checked')).to.equal('true');
+    expect(el.getAttribute('aria-disabled')).to.equal('true');
+    expect(el.getAttribute('aria-label')).to.equal('Checkbox option');
+    expect(el.getAttribute('tabindex')).to.equal('0');
+  });
+
+  it('has role="checkbox" attribute', async () => {
+    const el = await fixture(html`
+      <auro-checkbox value="test">Test</auro-checkbox>
+    `);
+
+    expect(el.getAttribute('role')).to.equal('checkbox');
+  });
+
+  it('has aria-checked attribute that reflects checked state', async () => {
+    const el = await fixture(html`
+      <auro-checkbox value="test">Test</auro-checkbox>
+    `);
+
+    expect(el.getAttribute('aria-checked')).to.equal('false');
+
+    el.checked = true;
+    await elementUpdated(el);
+
+    expect(el.getAttribute('aria-checked')).to.equal('true');
+
+    el.checked = false;
+    await elementUpdated(el);
+
+    expect(el.getAttribute('aria-checked')).to.equal('false');
+  });
+
+  it('has aria-disabled attribute when disabled', async () => {
+    const el = await fixture(html`
+      <auro-checkbox value="test" disabled>Test</auro-checkbox>
+    `);
+
+    expect(el.getAttribute('aria-disabled')).to.equal('true');
+
+    el.disabled = false;
+    await elementUpdated(el);
+
+    expect(el.hasAttribute('aria-disabled')).to.be.false;
+
+    el.disabled = true;
+    await elementUpdated(el);
+
+    expect(el.getAttribute('aria-disabled')).to.equal('true');
+  });
+
+  it('has tabindex="0" for keyboard accessibility', async () => {
+    const el = await fixture(html`
+      <auro-checkbox value="test">Test</auro-checkbox>
+    `);
+
+    expect(el.getAttribute('tabindex')).to.equal('0');
+  });
+
+  it('has aria-label derived from slot content', async () => {
+    const el = await fixture(html`
+      <auro-checkbox value="test">My checkbox label</auro-checkbox>
+    `);
+
+    expect(el.getAttribute('aria-label')).to.equal('My checkbox label');
   });
 });

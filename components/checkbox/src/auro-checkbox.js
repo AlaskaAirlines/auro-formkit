@@ -41,20 +41,14 @@ export class AuroCheckbox extends LitElement {
     this.error = false;
     this.onDark = false;
     this.touched = false;
+    this.tabIndex = 0;
+    this.ariaChecked = 'false';
+    this.role = 'checkbox';
 
     /**
      * @private
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
-
-    /**
-     * @private
-     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
-     */
-    this.constructor.shadowRootOptions = {
-      ...LitElement.shadowRootOptions,
-      delegatesFocus: true,
-    };
   }
 
   static get styles() {
@@ -144,7 +138,48 @@ export class AuroCheckbox extends LitElement {
         type: String,
         reflect: false,
         attribute: false
-      }
+      },
+
+      /**
+       * The tabindex attribute for the checkbox.
+       * @private
+       */
+      tabIndex: {
+        type: Number,
+        reflect: true,
+        attribute: 'tabindex'
+      },
+
+      /**
+       * The aria-checked attribute for the checkbox.
+       * @private
+       */
+      ariaChecked: {
+        type: String,
+        reflect: true,
+        attribute: 'aria-checked'
+      },
+
+      /**
+       * The aria-disabled attribute for the checkbox.
+       * @private
+       */
+      ariaDisabled: {
+        type: String,
+        reflect: true,
+        attribute: 'aria-disabled'
+      },
+
+      /**
+       * The ARIA role for the element. Must remain 'checkbox' for screen readers
+       * to correctly identify this as a checkbox control.
+       * @private
+       */
+      role: {
+        type: String,
+        reflect: true
+      },
+
     };
   }
 
@@ -231,6 +266,22 @@ export class AuroCheckbox extends LitElement {
     this.touched = false;
   }
 
+  /**
+   * Updates the aria-label based on slot content.
+   * @private
+   * @returns {void}
+   */
+  updateAriaLabel() {
+    const slot = this.shadowRoot.querySelector('slot');
+    const text = slot.assignedNodes().
+      map((node) => node.textContent).
+      join('').
+      trim();
+    if (text) {
+      this.setAttribute('aria-label', text);
+    }
+  }
+
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-checkbox');
@@ -276,6 +327,24 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
+   * Updates ARIA attributes when properties change.
+   * @private
+   * @param {Map} changedProperties - Map of changed properties.
+   * @returns {void}
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('checked')) {
+      this.ariaChecked = this.checked ? 'true' : 'false';
+    }
+
+    if (changedProperties.has('disabled')) {
+      this.ariaDisabled = this.disabled ? 'true' : undefined;
+    }
+  }
+
+  /**
    * Handles keydown event to toggle the checkbox with Space key.
    * @private
    * @param {KeyboardEvent} event - The keydown event from the checkbox input.
@@ -304,7 +373,7 @@ export class AuroCheckbox extends LitElement {
       <div class="cbxContainer body-default" part="checkbox">
         <div class="inputContainer">
           <input
-            class="util_displayHiddenVisually cbx--input"
+            class="util_displayHidden cbx--input"
             part="checkbox-input"
             @change="${this.handleChange}"
             @input="${this.handleInput}"
@@ -314,13 +383,15 @@ export class AuroCheckbox extends LitElement {
             name="${ifDefined(this.name)}"
             type="checkbox"
             .value="${this.value}"
+            aria-hidden="true"
+            tabindex="-1"
           />
           ${this.checked ? this.generateIconHtml() : undefined}
         </div>
 
-        <label for="${this.inputId}" class="${classMap(labelClasses)}" part="checkbox-label">
-          <slot></slot>
-        </label>
+        <span class="${classMap(labelClasses)}" part="checkbox-label">
+          <slot @slotchange="${this.updateAriaLabel}"></slot>
+        </span>
       </div>
     `;
   }
