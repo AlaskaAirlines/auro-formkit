@@ -1,8 +1,7 @@
-
 import { AuroCheckboxGroup } from '../../src/auro-checkbox-group.js';
 
 /**
- * The auro-checkbox-group element is a wrapper for auro-checkbox element.
+ * The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements..
  */
 class AuroCheckboxGroupWCA extends AuroCheckboxGroup {}
 

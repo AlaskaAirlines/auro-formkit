@@ -1,9 +1,9 @@
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
 
 import { LitElement } from 'lit';
 import { html } from 'lit/static-html.js';
@@ -22,7 +22,8 @@ import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
 /**
- * The auro-checkbox-group element is a wrapper for auro-checkbox element.
+ * The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements.
+ * @customElement auro-checkbox-group
  *
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
@@ -34,6 +35,10 @@ export class AuroCheckboxGroup extends LitElement {
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  _initializeDefaults() {
     this.appearance = 'default';
     this.validity = undefined;
     this.disabled = undefined;
@@ -99,7 +104,7 @@ export class AuroCheckboxGroup extends LitElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -140,7 +145,7 @@ export class AuroCheckboxGroup extends LitElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
+       * DEPRECATED - use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
@@ -188,7 +193,7 @@ export class AuroCheckboxGroup extends LitElement {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-checkbox-group"] - The name of element that you want to register to.
+   * @param {string} [name="auro-checkbox-group"] - The name of the element that you want to register.
    *
    * @example
    * AuroCheckboxGroup.register("custom-checkbox-group") // this will register this element to <custom-checkbox-group/>

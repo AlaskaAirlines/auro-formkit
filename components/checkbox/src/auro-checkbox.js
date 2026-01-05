@@ -1,8 +1,9 @@
-/* eslint-disable max-lines */
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
+
+/* eslint-disable max-lines, no-underscore-dangle */
 
 import { LitElement, html } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
@@ -17,17 +18,15 @@ import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * Custom element for the purpose of allowing users to select one or more options of a limited number of choices.
- *
- * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
- * @attr id
+ * The `auro-checkbox` element is for the purpose of allowing users to select one or more options of a limited number of choices.
+ * @customElement auro-checkbox
  *
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.
  *
- * @event {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
- * @event {InputEvent} input - Notifies when when checked value is changed by user's interface.
+ * @fires {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
+ * @fires {InputEvent} input - Notifies when when checked value is changed by user's interface.
  */
 
 // build the component class
@@ -35,6 +34,10 @@ export class AuroCheckbox extends LitElement {
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  _initializeDefaults() {
     this.apperance = 'default';
     this.checked = false;
     this.disabled = false;
@@ -66,7 +69,7 @@ export class AuroCheckbox extends LitElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -99,35 +102,10 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * Accepts any string and is used to identify related checkboxes when submitting form data.
+       * The id global attribute defines an identifier (ID) which must be unique in the whole document.
        */
-      name: { type: String },
-
-      /**
-       * DEPRECATED - use `appearance` instead.
-       */
-      onDark: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * Sets the element's input value. Must be unique within an auro-checkbox-group element.
-       */
-      value: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * Indicates whether the checkbox has been interacted with.
-       * @type {boolean}
-       * @private
-       */
-      touched: {
-        type: Boolean,
-        reflect: true,
-        attribute: false
+      id: {
+        type: String
       },
 
       /**
@@ -138,6 +116,37 @@ export class AuroCheckbox extends LitElement {
         type: String,
         reflect: false,
         attribute: false
+      },
+
+      /**
+       * Accepts any string and is used to identify related checkboxes when submitting form data.
+       */
+      name: { type: String },
+
+      /**
+       * DEPRECATED - use `appearance="inverse"` instead.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Indicates whether the checkbox has been interacted with.
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
+      },
+
+      /**
+       * Sets the element's input value. Must be unique within an auro-checkbox-group element.
+       */
+      value: {
+        type: String,
+        reflect: false
       },
 
       /**
@@ -245,7 +254,7 @@ export class AuroCheckbox extends LitElement {
   /**
    * Function to generate checkmark svg.
    * @private
-   * @returns {void}
+   * @returns {HTMLElement}
    */
   generateIconHtml() {
     this.dom = new DOMParser().parseFromString(checkLg.svg, 'text/html');
