@@ -37,7 +37,7 @@ export const fileConfigs = (config) => [
   // README.md
   {
     identifier: 'README.md',
-    input: fromAuroComponentRoot(`docs/templates/README.md`),
+    input: fromAuroComponentRoot(`docs/templates/componentReadmeTemplate.md`),
     output: fromAuroComponentRoot(`README.md`)
   }
 ];
