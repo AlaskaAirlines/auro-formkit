@@ -1,4 +1,4 @@
-import { resetStateExample } from "../apiExamples/resetState";
+import { resetStateExample } from "../apiExamples/reset-state";
 import './index.js';
 
 export function initExamples(initCount) {
