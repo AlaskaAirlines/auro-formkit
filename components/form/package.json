@@ -16,7 +16,7 @@
     "lit": "^3.2.1"
   },
   "devDependencies": {
-    "@alaskaairux/icons": "^5.3.0",   
+    "@alaskaairux/icons": "^5.14.0",   
     "@aurodesignsystem/auro-datepicker": "*",
     "@aurodesignsystem/auro-input": "*",
     "@rollup/plugin-node-resolve": "^16.0.1",

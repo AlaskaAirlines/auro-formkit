@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@aurodesignsystem/auro-layout-element": "*",
-    "@alaskaairux/icons": "^5.5.0",
+    "@alaskaairux/icons": "^5.14.0",
     "@aurodesignsystem/auro-helptext": "*",
     "chalk": "^5.4.1",
     "lit": "^3.2.1"
