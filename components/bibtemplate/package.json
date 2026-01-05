@@ -10,7 +10,7 @@
   "private": true,
   "dependencies": {
     "@aurodesignsystem/auro-header": "^5.0.0",
-    "@aurodesignsystem/auro-icon": "^9.1.0",
+    "@aurodesignsystem/auro-icon": "^9.1.1",
     "chalk": "^5.4.1",
     "lit": "^3.2.1"
   },
