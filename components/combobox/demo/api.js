@@ -1,13 +1,12 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 
-import { dynamicMenuExample } from '../apiExamples/dynamicMenu';
-import { setupExternalSelectionExample } from '../apiExamples/externalSelection.js';
-import { valueExample } from '../apiExamples/value';
 import { focusExample } from '../apiExamples/focus';
-import { inDialogExample } from '../apiExamples/inDialog';
-import { resetStateExample } from '../apiExamples/resetState';
-import { auroMenuLoadingExample } from '../apiExamples/loading';
-
+import { resetStateExample } from '../apiExamples/reset-state';
+// import { setupExternalSelectionExample } from '../apiExamples/external-selection';
+import { valueExample } from '../apiExamples/value';
+import { inDialogExample } from '../apiExamples/in-dialog';
+import { persistentExample } from '../apiExamples/persistent';
+import { swapValueExample } from '../apiExamples/swap-value';
 
 import { AuroCombobox } from '../src/auro-combobox.js';
 import '../../menu/src/registered.js';
@@ -19,13 +18,13 @@ export function initExamples(initCount) {
 
   try {
     // javascript example function calls to be added here upon creation to test examples
-    dynamicMenuExample();
-    valueExample();
     focusExample();
-    inDialogExample();
     resetStateExample();
-    auroMenuLoadingExample();
-    setupExternalSelectionExample();
+    // setupExternalSelectionExample();
+    valueExample();
+    inDialogExample();  
+    persistentExample();
+    swapValueExample();
   } catch (err) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called

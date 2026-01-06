@@ -1,6 +1,6 @@
 // Javascript example file
 // -----------------------
-import { DynamicData } from './dynamicMenuDataApi';
+import { DynamicData } from './dynamic-menu_api-data';
 
 export async function dynamicMenuExample() {
   // Resets the root menu
@@ -83,6 +83,7 @@ export async function dynamicMenuExample() {
   // Main javascript that runs all JS to create example
   const dynamicData = new DynamicData();
   const dynamicMenuExampleEl = document.querySelector('#dynamicMenuExample');
+
   const dropdownEl = dynamicMenuExampleEl.shadowRoot.querySelector(dynamicMenuExampleEl.dropdownTag._$litStatic$);
   const inputEl = dropdownEl.querySelector(dynamicMenuExampleEl.inputTag._$litStatic$);
 

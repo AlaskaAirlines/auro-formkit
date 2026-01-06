@@ -1,201 +1,68 @@
-# Combobox
+<!--
+ THIS PAGE'S CONTENT SHOULD BE KEPT MINIMAL.
+ ONLY ADD EXAMPLES THAT ARE TRULY NECESSARY FOR THE INDEX PAGE — THE BASIC EXAMPLE IS USUALLY ENOUGH.
+ ALL OTHER EXAMPLES SHOULD GO IN THE API DOCUMENTATION.
+-->
 
+# Combobox
+ 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-## auro-combobox use cases
-
+ 
+## Use Cases
+ 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
+ 
 ## Example(s)
 
-## Default
-
+### Basic
+ 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
-
+ 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-
+ 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
+ 
 </auro-accordion>
 
-## Layouts
+### Layouts
 
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/basic.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
+#### Emphasized
 
-<div class="exampleWrapper--ondark">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/inverseAppearance.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-### Emphasized
+Use `layout="emphasized"` to apply the emphasized style to the combobox. This layout is designed for use on light backgrounds.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-### Snowflake
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+ 
+</auro-accordion>
+
+#### Snowflake
+
+Use `layout="snowflake"`, with `shape="snowflake"` and `appearance="inverse"` to apply the snowflake style to the combobox. This layout is designed for use on dark backgrounds.
 
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-### Classic
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Behavior
-
-There are two behaviors available for the combo box: suggestion and filter.
-The default behavior is "suggestion".
-
-#### Suggestion
-
-With the suggestion behavior, the menu options are displayed to the user as suggestions, but the user may enter whatever value they like into the input
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/suggestion.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/suggestion.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-#### Filter
-
-With the filter behavior, the menu options are displayed to the user, and the user is required to choose one of the menu options in order for the input to be considered valid.
-
-The `setCustomValidityValueMissingFilter` attribute is also available to display a custom message to the user when this validation check fails.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/filter.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/filter.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
-
-### Airports example
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/airports.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/airports.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Example with checkmark for selected option
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/withCheckmark.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/withCheckmark.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Using the type attribute
-
-The `type` attribute may be used to apply the corresponding `type` attribute on [auro-input](http://auro.alaskaair.com/components/auro/input/api).
-
-`type="credit-card"` is not currently supported.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/typeMonthDayYear.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/typeMonthDayYear.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Persistent menu option with a custom event
-
-This example demonstrates a static menu option that will always appears regardless of the suggestion filtering performed. In this example "Add new address" will always be a displayed menu option.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/persistent.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/persistent.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Additional Use Case Examples
-
-#### Swapping Values Between Comboboxes
-
-This example illustrates using a JavaScript function attached to an auro-button component click event to swap the values of two `auro-combobox` elements. An example of this use case would be swapping the departure and arrival airports in a flight search form.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/swapValue.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/swapValue.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
