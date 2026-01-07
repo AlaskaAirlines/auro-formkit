@@ -21,28 +21,14 @@ import formkitVersion from '@aurodesignsystem/version';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
+/* eslint-disable no-magic-numbers, no-undef-init, max-lines, lit/binding-positions, lit/no-invalid-html */
+
+
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * @prop {Object} firstDayOfWeek - Weekday that will be displayed in first column of month grid.
- * 0: sunday, 1: monday, 2: tuesday, 3: wednesday , 4: thursday, 5: friday, 6: saturday
- * Default is 0.
- * @prop {Date | null} focusedDate - The currently focused date (if any).
- * @prop {Date} maxDate - Maximum date. All dates after will be disabled.
- * @prop {Date} minDate - Minimum date. All dates before will be disabled.
- * @prop {Date | undefined} selectedDate - The selected date, usually synchronized with datepicker-input.
- * Not to be confused with the focused date (therefore not necessarily in active month view).
- * @prop {string} weekdayHeaderNotation - Weekday header notation, based on Intl DatetimeFormat:.
- * @prop {Boolean} visible - Flag indicating if the calendar is visible.
- * - 'short' (e.g., Thu)
- * - 'narrow' (e.g., T).
- * Default is 'short'.
  * @event auroCalendar-dateSelected - Notifies that a date has been selected in the calendar.
  * @event auroCalendar-monthChanged - Notifies that the visible calendar month(s) have changed.
  */
-
-/* eslint-disable no-magic-numbers, no-undef-init, max-lines, lit/binding-positions, lit/no-invalid-html */
-
-// class AuroCalendar extends LitElement {
 export class AuroCalendar extends RangeDatepicker {
   constructor() {
     super();
@@ -117,49 +103,83 @@ export class AuroCalendar extends RangeDatepicker {
 
   static get properties() {
     return {
-      numCalendars: {
-        type: Number
-      },
-      dateFrom: {
-        type: String
-      },
-      dateTo: {
-        type: String
-      },
-      maxDate: {
-        type: String,
-        reflect: true
-      },
-      minDate: {
-        type: String,
-        reflect: true
-      },
-      calendarStartMonth: {
-        type: String,
-        reflect: true
-      },
+      /**
+       * The last month that may be displayed in the calendar.
+       */
       calendarEndMonth: {
         type: String,
         reflect: true
       },
+
+      /**
+       * The first month that may be displayed in the calendar.
+       */
+      calendarStartMonth: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * The date that determines the currently visible month.
+       */
       centralDate: {
         type: String,
         reflect: true
       },
-      visible: {
-        type: Boolean,
-        reflect: false
+
+      /**
+       * The starting date of the selected range.
+       */
+      dateFrom: {
+        type: String
       },
-      largeFullscreenHeadline: {
-        type: Boolean,
-        reflect: true
+
+      /**
+       * The ending date of the selected range.
+       */
+      dateTo: {
+        type: String
       },
+
+      /**
+       * Dropdown element that contains the calendar.
+       * @private
+       */
+      dropdown: {
+        type: Object
+      },
+
+      /**
+       * Flag indicating if the calendar is in fullscreen mode.
+       */
       isFullscreen: {
         type: Boolean,
         reflect: true
       },
-      dropdown: {
-        type: Object
+
+      /**
+       * If declared, make bib.fullscreen.headline in HeadingDisplay.
+       * Otherwise, Heading 600.
+       */
+      largeFullscreenHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Maximum date. All dates after will be disabled.
+       */
+      maxDate: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Minimum date. All dates before will be disabled.
+       */
+      minDate: {
+        type: String,
+        reflect: true
       },
 
       /**
@@ -176,6 +196,22 @@ export class AuroCalendar extends RangeDatepicker {
        */
       monthFirst: {
         type: Boolean
+      },
+
+      /**
+       * Number of calendars to render.
+       * @private
+       */
+      numCalendars: {
+        type: Number
+      },
+
+      /**
+       * Flag indicating if the calendar is visible.
+       */
+      visible: {
+        type: Boolean,
+        reflect: false
       }
     };
   }
