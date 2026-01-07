@@ -1,184 +1,53 @@
 <!--
-The index.md file is a compiled document. No edits should be made directly to this file.
-
-index.md is created by running `npm run build:markdownDocs`.
-
-This file is generated based on a template fetched from `./docs/partials/index.md`
+ THIS PAGE'S CONTENT SHOULD BE KEPT MINIMAL.
+ ONLY ADD EXAMPLES THAT ARE TRULY NECESSARY FOR THE INDEX PAGE — THE BASIC EXAMPLE IS USUALLY ENOUGH.
+ ALL OTHER EXAMPLES SHOULD GO IN THE API DOCUMENTATION.
 -->
 
 # Counter
-
+ 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-## Examples
+ 
+## Use Cases
+ 
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+ 
+## Example(s)
 
 ### Basic Counter
 
-The counter component provides a simple interface for incrementing or decrementing numeric values. It displays a label with increment/decrement buttons and the current value. This is the most basic implementation of a standalone counter:
+The counter component provides a simple interface for incrementing or decrementing numeric values. It displays a label with increment/decrement buttons and the current value. 
 
+This example demonstrates most basic implementation of a standalone counter.
+ 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
+ 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-
+ 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic-standalone.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
+ 
 </auro-accordion>
-
-
-### Counter with Description
-
-Adding a description provides additional context to users. The description appears below the main label and is useful for displaying important information or requirements:
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-description.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDescription.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic-description.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDescription.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Counter with Help Text
-
-Help text is supported with counters, and can be added by targetting the `helptext` slot.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-helptext.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-helptext.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/counter-helptext.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-helptext.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Counter with Custom Error
-
-A custom error can be set on the counter by adding the `error` attribute with the desired message.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-error.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-error.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/counter-error.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-counter-error.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
 
 ### Basic Counter Group
 
-Counter groups allow you to manage multiple related counters together. This is useful when you need to collect multiple quantities that are related, such as different passenger types:
+Counter groups allow you to manage multiple related counters together. This is useful when you need to collect multiple quantities that are related, such as different passenger types.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
+ 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
-
+ 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Dropdown Counter Group
-
-The dropdown mode provides a more compact interface, ideal for forms where space is limited. It collapses the counters into a dropdown that expands when clicked.
-
-When using a dropdown, an additional layout, `snowflake`, is available for use:
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-basic.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDropdown.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-snowflake.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-dropdown-snowflake.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-  <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/dropdown-basic.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDropdown.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dropdown-snowflake.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance-dropdown-snowflake.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-
+ 
 </auro-accordion>

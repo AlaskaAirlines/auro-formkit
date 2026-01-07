@@ -1,12 +1,12 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers */
 import '../src/registered.js';
-import { dropdownCounterExample } from "../apiExamples/dropdown-mobile-properties.js";
+// import { dropdownCounterExample } from "../apiExamples/dropdown-mobile-properties.js";
 import { eventCounterExample } from "../apiExamples/events.js";
 
 export function initExamples(initialCount = 0) {
   try {
     // javascript example function calls to be added here upon creation to test examples
-    dropdownCounterExample();
+    // dropdownCounterExample();
     eventCounterExample();
 
   } catch (err) {

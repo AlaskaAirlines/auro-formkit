@@ -1,6 +1,7 @@
-/* eslint-disable lit/binding-positions, lit/no-invalid-html, max-lines */
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
+
+/* eslint-disable lit/binding-positions, lit/no-invalid-html, max-lines, no-underscore-dangle */
 
 import { LitElement } from "lit";
 import { html } from "lit/static-html.js";
@@ -26,14 +27,10 @@ import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
 import formkitVersion from '@aurodesignsystem/version';
 
 /**
- * Auro Counter is a customizable counter component for user interface interactions.
+ * The `auro-counter` element provides a flexible counter interface with increment and decrement buttons, supporting optional sub-labels and disabled states.
+ * @customElement auro-counter
  *
- * This web component provides a flexible counter interface with increment and decrement buttons,
- * supporting optional sub-labels and disabled states.
- *
- * @element auro-counter
- * @extends LitElement
- * @slot - Main label content for the counter.
+ * @slot default - Main label content for the counter.
  * @slot ariaLabel.minus - Accessible label for the decrement button.
  * @slot ariaLabel.plus - Accessible label for the increment button.
  * @slot helpText - Help text content for the counter.
@@ -43,6 +40,10 @@ export class AuroCounter extends LitElement {
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  _initializeDefaults() {
     this.appearance = "default";
     this.defaultSlot = undefined;
     this.disabled = false;
@@ -111,7 +112,7 @@ export class AuroCounter extends LitElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -121,11 +122,10 @@ export class AuroCounter extends LitElement {
 
       /**
        * The default slot content.
-       * @type {string}
        * @private
        */
       defaultSlot: {
-        type: String,
+        type: String
       },
 
       /**
@@ -133,7 +133,7 @@ export class AuroCounter extends LitElement {
        */
       disabled: {
         type: Boolean,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -141,7 +141,7 @@ export class AuroCounter extends LitElement {
        * @private
        */
       disableMax: {
-        type: Boolean,
+        type: Boolean
       },
 
       /**
@@ -149,7 +149,7 @@ export class AuroCounter extends LitElement {
        * @private
        */
       disableMin: {
-        type: Boolean,
+        type: Boolean
       },
 
       /**
@@ -158,7 +158,7 @@ export class AuroCounter extends LitElement {
        */
       error: {
         type: String,
-        reflect: false,
+        reflect: false
       },
 
       /**
@@ -166,7 +166,7 @@ export class AuroCounter extends LitElement {
        */
       max: {
         type: Number,
-        reflect: true,
+        reflect: true
       },
 
       /**
@@ -174,11 +174,11 @@ export class AuroCounter extends LitElement {
        */
       min: {
         type: Number,
-        reflect: true,
+        reflect: true
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
+       * DEPRECATED - use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
@@ -190,21 +190,21 @@ export class AuroCounter extends LitElement {
        */
       validity: {
         type: String,
-        reflect: true,
+        reflect: true
       },
 
       /**
        * The current value of the counter.
        */
       value: {
-        type: Number,
+        type: Number
       },
     };
   }
 
   /**
    * Registers the custom element with the browser.
-   * @param {string} [name="auro-counter"] - Custom element name to register.
+   * @param {string} [name="auro-counter"] - The name of the element that you want to register.
    * @example
    * AuroCounter.register("custom-counter") // registers <custom-counter/>
    */

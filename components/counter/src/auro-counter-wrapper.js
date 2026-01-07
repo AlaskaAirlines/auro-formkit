@@ -13,13 +13,8 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs";
 
 /**
- * Auro Counter Wrapper is a group of counter components.
+ * Wrapper element for auro-counter elements in an application to provide layout structure for multiple counters.
  *
- * This web component provides a flexible interface for grouping multiple counters, supporting
- * validation, custom validity messages, and disabled states based on the group's value.
- *
- * @element auro-counter-group
- * @extends LitElement
  * @slot Default - Slot for counter elements.
  */
 export class AuroCounterWrapper extends LitElement {
