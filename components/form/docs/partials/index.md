@@ -11,7 +11,7 @@ This file is generated based on a template fetched from `./docs/partials/index.m
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Form value generation
+## Form Value Generation
 
 Auro form exists to make a developer's life easier through surfacing all Auro form elements in a given form as a single
 JSON object.
@@ -26,7 +26,7 @@ The following is required on each Auro form element in a form for it to be colle
 That being said, we do _not_ require form elements to be direct children of `auro-form`.
 They can be nested within other elements for styling, such as a `div`, `span` or `fieldset`.
 
-### Form data structure
+### Form Data Structure
 
 In a correctly registered scenario, `auro-form`
 will automatically recognize the auro form elements and collect data from each on the form's `value` key as a JSON object.
@@ -62,7 +62,7 @@ interface AuroFormState {
 }
 ```
 
-## Accessing form data
+## Accessing Form Data
 
 As Auro components are designed to be framework-agnostic, data can be retrieved using simple vanilla JavaScript patterns.
 If you have ever worked with a standard HTML5 form, you are already equipped to work with Auro forms!
@@ -70,11 +70,11 @@ If you have ever worked with a standard HTML5 form, you are already equipped to 
 Once you have a reference to the form element (React ref, querySelector, etc.),
 you can access the form data using the following methods:
 
-**Data keys + get methods**:
+**Data Keys + Get Methods**:
 - `.value` - Getter which returns the current form data as a JSON object.
 - `.validity` - Returns the current validity state of the form (`valid` or `invalid`).
 
-**Extra information**:
+**Extra Information**:
 - `.isInitialState` - Returns a boolean indicating if the form is in its initial state.
 
 **Events**
@@ -82,12 +82,12 @@ you can access the form data using the following methods:
 - `reset` - Fires when the form is reset.
 - `submit` - Fires when the form is submitted.
 
-**Advanced features**:
+**Advanced Features**:
 - `.formState` - This is the internal form state. It includes extra `required` and `validity` information for each form element.
 This key is not required for normal form usage, but can add additional context for more complex forms.
 
 
-## Important note for custom elements
+## Important Note for Custom Elements
 
 This **only applies to custom-named elements**.
 
@@ -99,8 +99,8 @@ which are only assigned during the initial render.
 For example, the following is correct:
 
 ```javascript
-import {AuroInput} from '@aurodesignsystem/auro-input';
-import {AuroForm} from '@aurodesignsystem/auro-form';
+import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
+import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
 
 AuroInput.register('my-custom-input'); // adds an internal identifier auro-form uses to recognize the custom element
 AuroForm.register(); // render looks for said identifier
@@ -109,8 +109,8 @@ AuroForm.register(); // render looks for said identifier
 The following is NOT correct and will result in forms not working as expected:
 
 ```javascript
-import {AuroInput} from '@aurodesignsystem/auro-input';
-import {AuroForm} from '@aurodesignsystem/auro-form';
+import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
+import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
 
 AuroForm.register(); // forms start rendering, looking for auro inputs, or custom-named inputs
 AuroInput.register('my-custom-input'); // too late, form has already rendered and did not find the custom element
@@ -119,6 +119,7 @@ AuroInput.register('my-custom-input'); // too late, form has already rendered an
 ## Examples
 
 ### Basic Form
+
 The most basic form implementation requires an `auro-input` and an optional auro button with `type="submit"`.
 
 By default, Auro Form connects a `submit` event to all `type="submit"` buttons within the form.
@@ -134,7 +135,8 @@ By default, Auro Form connects a `submit` event to all `type="submit"` buttons w
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-### Form with column layout
+### Form with Column Layout
+
 Auro Form is designed to be completely unstyled by default, allowing developers to use divs, structural elements, or
 custom CSS to style the form.
 
@@ -152,7 +154,8 @@ This example shows that you can use advanced layouts with Auro Form, such as a c
 </auro-accordion>
 
 
-### Complex form
+### Complex Form
+
 Finally, a more complex form example with multiple form elements, including a date picker and a select element.
 
 <div class="exampleWrapper">

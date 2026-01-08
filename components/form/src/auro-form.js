@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle,max-lines */
+/* eslint-disable no-underscore-dangle, max-lines, object-property-newline */
 
 // Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -24,20 +24,25 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @typedef {Object.<string, FormStateMember>} FormState - The form state.
  */
 
-
-// See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * The auro-form element provides users a way to ... (it would be great if you fill this out).
+ * The `auro-form` element provides users a way to create and manage forms in a consistent manner.
+ * @customElement auro-form
  *
- * @attr {Boolean} fixed - Uses fixed pixel values for element shape
- * @attr {String} cssClass - Applies designated CSS class to demo element - you want to delete me!
  * @event {Event} change - Fires when form state changes.
  */
-
-// build the component class
 export class AuroForm extends LitElement {
   static get properties() {
     return {
+
+      /**
+       * Applies designated CSS class to demo element - you want to delete me!
+       */
+      cssClass: { type: Boolean },
+
+      /**
+       * If declared, use fixed pixel values for element shape.
+       */
+      fixed: { type: Boolean, reflect: true },
       formState: { attribute: false },
       _validity: { attribute: false },
       _isInitialState: { attribute: false },

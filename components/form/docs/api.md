@@ -1,29 +1,24 @@
 # auro-form
 
-The auro-form element provides users a way to ... (it would be great if you fill this out).
-
-## Attributes
-
-| Attribute  | Type      | Description                                      |
-|------------|-----------|--------------------------------------------------|
-| `cssClass` | `String`  | Applies designated CSS class to demo element - you want to delete me! |
-| `fixed`    | `Boolean` | Uses fixed pixel values for element shape        |
+The `auro-form` element provides users a way to create and manage forms in a consistent manner.
 
 ## Properties
 
-| Property                   | Modifiers | Type                                             | Default | Description                                      |
-|----------------------------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
-| `formState`                |           | `FormState`                                      | {}      |                                                  |
-| `isInitialState`           | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
-| `mutationEventListener`    |           |                                                  |         |                                                  |
-| `reset`                    |           |                                                  |         |                                                  |
-| `resetElements`            | readonly  | `HTMLButtonElement[]`                            |         | Returns a collection of elements that will reset the form. |
-| `sharedInputListener`      |           |                                                  |         |                                                  |
-| `sharedValidationListener` |           |                                                  |         |                                                  |
-| `submit`                   |           |                                                  |         |                                                  |
-| `submitElements`           | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _submitElements.             |
-| `validity`                 | readonly  | `"valid" \| "invalid"`                           |         | Current validity state of the form, based on form element events. |
-| `value`                    | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` |         | Reduce the form value into a key-value pair.<br /><br />NOTE: form keys use `name` first, and `id` second if `name` is not available.<br />This follows standard HTML5 form behavior - submission uses `name` by default when creating<br />the FormData object. |
+| Property                   | Attribute  | Modifiers | Type                                             | Default | Description                                      |
+|----------------------------|------------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
+| `cssClass`                 | `cssClass` |           | `boolean`                                        |         | Applies designated CSS class to demo element - you want to delete me! |
+| `fixed`                    | `fixed`    |           | `boolean`                                        |         | If declared, use fixed pixel values for element shape. |
+| `formState`                |            |           | `FormState`                                      | {}      |                                                  |
+| `isInitialState`           |            | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
+| `mutationEventListener`    |            |           |                                                  |         |                                                  |
+| `reset`                    |            |           |                                                  |         |                                                  |
+| `resetElements`            |            | readonly  | `HTMLButtonElement[]`                            |         | Returns a collection of elements that will reset the form. |
+| `sharedInputListener`      |            |           |                                                  |         |                                                  |
+| `sharedValidationListener` |            |           |                                                  |         |                                                  |
+| `submit`                   |            |           |                                                  |         |                                                  |
+| `submitElements`           |            | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _submitElements.             |
+| `validity`                 |            | readonly  | `"valid" \| "invalid"`                           |         | Current validity state of the form, based on form element events. |
+| `value`                    |            | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` |         | Reduce the form value into a key-value pair.<br /><br />NOTE: form keys use `name` first, and `id` second if `name` is not available.<br />This follows standard HTML5 form behavior - submission uses `name` by default when creating<br />the FormData object. |
 
 ## Methods
 
