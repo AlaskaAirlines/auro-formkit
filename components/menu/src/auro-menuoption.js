@@ -25,12 +25,9 @@ import { ContextConsumer } from '@lit/context';
 import { dispatchMenuEvent } from './auro-menu-utils.js';
 
 /**
- * The auro-menu element provides users a way to define a menu option.
+ * The `auro-menuoption` element provides users a way to define a menu option.
+ * @customElement auro-menuoption
  *
- * @attr {String} value - Specifies the value to be sent to a server.
- * @attr {String} noCheckmark - When true, selected option will not show the checkmark.
- * @attr {Boolean} disabled - When true specifies that the menuoption is disabled.
- * @attr {Boolean} selected - Specifies that an option is selected.
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
  * @slot - Specifies text for an option, but is not the value.
  */
@@ -38,7 +35,7 @@ export class AuroMenuOption extends AuroElement {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-menuoption"] - The name of element that you want to register to.
+   * @param {string} [name="auro-menuoption"] - The name of the element that you want to register.
    *
    * @example
    * AuroMenuOption.register("custom-menuoption") // this will register this element to <custom-menuoption/>
@@ -102,38 +99,81 @@ export class AuroMenuOption extends AuroElement {
   static get properties() {
     return {
       ...super.properties,
+
+      /**
+       * When true, disables the menu option.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * @private
+       */
       event: {
         type: String,
         reflect: true
       },
+
+      /**
+       * @private
+       */
+      layout: {
+        type: String
+      },
+
+      /**
+       * Allows users to set a unique key for the menu option for specified option selection. If no key is provided, the value property will be used.
+       */
       key: {
         type: String,
         reflect: true
       },
+
+      /**
+       * @private
+       */
       menuService: {
         type: Object,
         state: true
       },
+
+      /**
+       * @private
+       */
       matchWord: {
         type: String,
         state: true
       },
+
+      /**
+       * @private
+       */
       noCheckmark: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * Specifies that an option is selected.
+       */
       selected: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * Specifies the tab index of the menu option.
+       */
       tabIndex: {
         type: Number,
         reflect: true
       },
+
+      /**
+       * Specifies the value to be sent to a server.
+       */
       value: {
         type: String,
         reflect: true
