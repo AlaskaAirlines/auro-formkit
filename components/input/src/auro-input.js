@@ -3,13 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable
-  lit-a11y/click-events-have-key-events,
-  lit/binding-positions,
-  lit/no-invalid-html,
-  max-lines,
-  no-extra-parens
-  */
+/* eslint-disable lit-a11y/click-events-have-key-events, lit/binding-positions, lit/no-invalid-html, max-lines, no-extra-parens */
 
 import shapeSizeCss from "./styles/shapeSize-css.js";
 
@@ -44,7 +38,6 @@ import buttonVersion from './buttonVersion.js';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
-// build the component class
 export class AuroInput extends BaseInput {
 
   constructor() {
@@ -216,6 +209,10 @@ export class AuroInput extends BaseInput {
     };
   }
 
+  /**
+   * Common display value wrapper classes.
+   * @private
+   */
   get commonDisplayValueWrapperClasses() {
     return {
       'displayValueWrapper': true,
@@ -263,7 +260,7 @@ export class AuroInput extends BaseInput {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-input"] - The name of element that you want to register to.
+   * @param {string} [name="auro-input"] - The name of the element that you want to register.
    *
    * @example
    * AuroInput.register("custom-input") // this will register this element to <custom-input/>

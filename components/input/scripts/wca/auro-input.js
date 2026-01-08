@@ -1,9 +1,8 @@
-
 import { AuroInput } from '../../src/auro-input.js';
 
 /**
-     * Generate unique names for dependency components.
-     */
+ * The `auro-input` element provides users a way to enter data into a text field.
+ */
 class AuroInputWCA extends AuroInput {}
 
 if (!customElements.get("auro-input")) {

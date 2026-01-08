@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, dot-location, new-cap, curly */
+/* eslint-disable max-lines, dot-location, new-cap, curly, no-underscore-dangle */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
 
@@ -17,19 +17,16 @@ import AuroFormValidation from '@aurodesignsystem/form-validation';
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
 /**
- * Auro-input provides users a way to enter data into a text field.
- *
- * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
- * @attr id
+ * The `auro-input` element provides users a way to enter data into a text field.
+ * @customElement auro-input
  *
  * @slot ariaLabel.clear - Sets aria-label on clear button for screen reader to read
  * @slot ariaLabel.password.show - Sets aria-label on password button to toggle on showing password
  * @slot ariaLabel.password.hide - Sets aria-label on password button to toggle off showing password
  * @slot helpText - Sets the help text displayed below the input.
  * @slot label - Sets the label text for the input.
- * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
+ * @slot optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot displayValue - Allows custom HTML content to display in place of the value when the input is not focused.
- *
  * @csspart wrapper - Use for customizing the style of the root element
  * @csspart label - Use for customizing the style of the label element
  * @csspart helpText - Use for customizing the style of the helpText element
@@ -47,6 +44,15 @@ export default class BaseInput extends AuroElement {
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  /**
+   * Internal Defaults.
+   * @private
+   * @returns {void}
+   */
+  _initializeDefaults() {
     this.activeLabel = false;
     this.appearance = "default";
     this.icon = false;
@@ -76,15 +82,6 @@ export default class BaseInput extends AuroElement {
      */
     this.size = 'lg';
 
-    this.privateDefaults();
-  }
-
-  /**
-   * Internal Defaults.
-   * @private
-   * @returns {void}
-   */
-  privateDefaults() {
     this.touched = false;
     this.util = new AuroInputUtilities();
     this.validation = new AuroFormValidation();
@@ -145,17 +142,17 @@ export default class BaseInput extends AuroElement {
       ...super.properties,
 
       /**
-       * If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked.
+       * The value for the role attribute.
        */
-      dvInputOnly: {
-        type: Boolean,
+      a11yRole: {
+        type: String,
         reflect: true
       },
 
       /**
-       * The value for the role attribute.
+       * The value for the aria-controls attribute.
        */
-      a11yRole: {
+      a11yControls: {
         type: String,
         reflect: true
       },
@@ -169,14 +166,6 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The value for the aria-controls attribute.
-       */
-      a11yControls: {
-        type: String,
-        reflect: true
-      },
-
-      /**
        * If set, the label will remain fixed in the active position.
        */
       activeLabel: {
@@ -186,7 +175,7 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -219,9 +208,24 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * Custom help text message for email type validity.
+       */
+      customValidityTypeEmail: {
+        type: String
+      },
+
+      /**
        * If set, disables the input.
        */
       disabled: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked.
+       */
+      dvInputOnly: {
         type: Boolean,
         reflect: true
       },
@@ -250,20 +254,18 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * @private
-       * Flag to indicate if the input currently has value.
+       * Flag to indicate if the input currently has focus.
        */
-      hasValue: {
+      hasFocus: {
         type: Boolean,
         reflect: false,
         attribute: false
       },
 
       /**
-       * @private
-       * Flag to indicate if the input currently has focus.
+       * Flag to indicate if the input currently has value.
        */
-      hasFocus: {
+      hasValue: {
         type: Boolean,
         reflect: false,
         attribute: false
@@ -275,6 +277,23 @@ export default class BaseInput extends AuroElement {
       icon: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * The id global attribute defines an identifier (ID) which must be unique in the whole document.
+       */
+      id: {
+        type: String
+      },
+
+      /**
+       * The id for input node.
+       * @private
+       */
+      inputId: {
+        type: String,
+        reflect: false,
+        attribute: false
       },
 
       /** Exposes inputmode attribute for input.  */
@@ -347,7 +366,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
+       * DEPRECATED - use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
@@ -384,13 +403,6 @@ export default class BaseInput extends AuroElement {
       required: {
         type: Boolean,
         reflect: true
-      },
-
-      /**
-       * @ignore
-       */
-      showPassword: {
-        state: true
       },
 
       /**
@@ -457,18 +469,18 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * @ignore
+       */
+      showPassword: {
+        state: true
+      },
+
+      /**
        * Simple makes the input render without a border.
        */
       simple: {
         type: Boolean,
         reflect: true
-      },
-
-      /**
-       * Custom help text message for email type validity.
-       */
-      customValidityTypeEmail: {
-        type: String
       },
 
       /**
@@ -480,18 +492,23 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Populates the `type` attribute on the input. Allowed values are `password`, `email`, `credit-card`, `date`, `tel` or `text`. If given value is not allowed or set, defaults to `text`.
+       * Indicates whether the input is in a dirty state (has been interacted with).
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
+      },
+
+      /**
+       * Populates the `type` attribute on the input.
+       * @type {'text' | 'password' | 'email' | 'credit-card' | 'tel' | 'number'}
+       * @default 'text'
        */
       type: {
         type: String,
         reflect: true
-      },
-
-      /**
-       * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
-       */
-      value: {
-        type: String
       },
 
       /**
@@ -510,25 +527,10 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * Indicates whether the input is in a dirty state (has been interacted with).
-       * @type {boolean}
-       * @default false
-       * @private
+       * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
        */
-      touched: {
-        type: Boolean,
-        reflect: true,
-        attribute: false
-      },
-
-      /**
-       * The id for input node.
-       * @private
-       */
-      inputId: {
-        type: String,
-        reflect: false,
-        attribute: false
+      value: {
+        type: String
       }
     };
   }
@@ -837,7 +839,7 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * @param {Event} event - The input event
+   * @param {Event} event - The input event.
    * @private
    * @returns {void}
    */
