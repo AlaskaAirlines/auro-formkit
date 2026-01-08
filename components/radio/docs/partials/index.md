@@ -1,89 +1,47 @@
 <!--
-The index.md file is a compiled document. No edits should be made directly to this file.
-README.md is created by running `npm run build:docs`.
-This file is generated based on a template fetched from `./docs/partials/index.md`
+ THIS PAGE'S CONTENT SHOULD BE KEPT MINIMAL.
+ ONLY ADD EXAMPLES THAT ARE TRULY NECESSARY FOR THE INDEX PAGE — THE BASIC EXAMPLE IS USUALLY ENOUGH.
+ ALL OTHER EXAMPLES SHOULD GO IN THE API DOCUMENTATION.
 -->
 
 # Radio
-
+ 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-## auro-radio use cases
-
+ 
+## Use Cases
+ 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
+ 
 ## Example(s)
 
-### Default
+### Basic Radio
+ 
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+ 
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
 
-This is a default configuration of `<auro-radio>`.
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic-standalone.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+ 
+</auro-accordion>
+
+### Basic Radio Group
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
-
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
+ 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-</auro-accordion>
-
-### Default Group
-
-This is a default configuration using the `<auro-radio-group>` and `<auro-radio>` elements. Notice the use of the `slot` attribute to set the group title of the `<auro-radio-group>`.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-  <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
-### Accordion Nested Group
-
-This example shows how to use `<auro-accordion>` with the `<auro-radio-group>` and `<auro-radio>` elements for
-nested/optional groups (such as a "More Options" section in a payment processor).
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/accordionExample.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/accordionExample.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
+ 
 </auro-accordion>
