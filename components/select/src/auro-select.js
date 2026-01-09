@@ -1,16 +1,9 @@
-// Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable
-  max-lines,
-  no-underscore-dangle,
-  lit/binding-positions,
-  lit/no-invalid-html,
-  indent,
-  curly
-*/
+/* eslint-disable max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html, indent, curly */
 
 // If using litElement base class
 import { css } from "lit";
@@ -39,7 +32,8 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
- * The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
+ * The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
+ * @customElement auro-select
  *
  * @slot - Default slot for the menu content.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
@@ -52,10 +46,9 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
  * @event input - Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
- *
  * @csspart dropdownTrigger - Apply CSS to the trigger content container.
  * @csspart dropdownChevron - Apply CSS to the collapsed/expanded state icon container.
- * @csspart dropdownSize - Apply size styles to the dropdown bib. (height, width, maxHeight, maxWidth only)
+ * @csspart dropdownSize - Apply size styles to the dropdown bib (height, width, maxHeight, maxWidth only).
  * @csspart helpText - Apply CSS to the help text.
  */
 
@@ -64,7 +57,7 @@ export class AuroSelect extends AuroElement {
   constructor() {
     super();
 
-    this.privateDefaults();
+    this._initializeDefaults();
 
     const idLength = 36;
     const idSubstrEnd = 8;
@@ -138,7 +131,7 @@ export class AuroSelect extends AuroElement {
    * @private
    * @returns {void} Internal defaults.
    */
-  privateDefaults() {
+  _initializeDefaults() {
     this.appearance = 'default';
     this.value = undefined;
     this.fullscreenBreakpoint = 'sm';
@@ -159,11 +152,19 @@ export class AuroSelect extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
         type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, bib's position will be automatically calculated where to appear.
+       */
+      autoPlacement: {
+        type: Boolean,
         reflect: true
       },
 
@@ -176,28 +177,27 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * If declared, the label and value will be visually hidden and the displayValue will render 100% of the time.
-       */
-      forceDisplayValue: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, bib's position will be automatically calculated where to appear.
-       * @default false
-       */
-      autoPlacement: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
        * When attribute is present, element shows disabled state.
        */
       disabled: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+       */
+      error: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, make the width of the bib match the width of the content, rather than the trigger.
+       */
+      flexMenuWidth: {
+        type: Boolean,
+        reflect: true,
       },
 
       /**
@@ -209,11 +209,69 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
+       * If declared, the label and value will be visually hidden and the displayValue will render 100% of the time.
+       */
+      forceDisplayValue: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       *
+       * When expanded, the dropdown will automatically display in fullscreen mode
+       * if the screen size is equal to or smaller than the selected breakpoint.
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
+       * @default 'sm'
+       */
+      fullscreenBreakpoint: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * @private
+       */
+      hasDisplayValueContent: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
+       * @private
+       */
+      hasFocus: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
+
+      /**
        * @private
        */
       isPopoverVisible: {
         type: Boolean,
         reflect: false
+      },
+
+      /**
+       * If declared, make bib.fullscreen.headline in HeadingDisplay.
+       * Otherwise, Heading 600.
+       */
+      largeFullscreenHeadline: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Determines the overall layout of the select component.
+       * @type {'classic' | 'emphasized' | 'snowflake'}
+       * @default 'classic'
+       */
+      layout: {
+        type: String,
+        reflect: true
       },
 
       /**
@@ -225,32 +283,19 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
+       * Sets multi-select mode, allowing multiple options to be selected at once.
+       */
+      multiSelect: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'multiselect'
+      },
+
+      /**
        * The name for the select element.
        */
       name: {
         type: String,
-        reflect: true
-      },
-
-      /**
-       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
-       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
-       *
-       * When expanded, the dropdown will automatically display in fullscreen mode
-       * if the screen size is equal to or smaller than the selected breakpoint.
-       * @default sm
-       */
-      fullscreenBreakpoint: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * If declared, make bib.fullscreen.headline in HeadingDisplay.
-       * Otherwise, Heading 600.
-       */
-      largeFullscreenHeadline: {
-        type: Boolean,
         reflect: true
       },
 
@@ -265,18 +310,8 @@ export class AuroSelect extends AuroElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
-       * @default false
        */
       noFlip: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If set, the dropdown will shift its position to avoid being cut off by the viewport.
-       * @default false
-       */
-      shift: {
         type: Boolean,
         reflect: true
       },
@@ -299,11 +334,19 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
+       * DEPRECATED - use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * @private
+       */
+      options: {
+        type: Array,
+        state: true
       },
 
       /**
@@ -315,23 +358,19 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Position where the bib should appear relative to the trigger.
-       * Accepted values:
-       * "top" | "right" | "bottom" | "left" |
-       * "bottom-start" | "top-start" | "top-end" |
-       * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end".
-       * @default bottom-start
+       * Define custom placeholder text.
        */
-      placement: {
+      placeholder: {
         type: String,
         reflect: true
       },
 
       /**
-       * Define custom placeholder text.
+       * Position where the bib should appear relative to the trigger.
+       * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
+       * @default 'bottom-start'
        */
-      placeholder: {
+      placement: {
         type: String,
         reflect: true
       },
@@ -341,14 +380,6 @@ export class AuroSelect extends AuroElement {
        */
       required: {
         type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
-       */
-      error: {
-        type: String,
         reflect: true
       },
 
@@ -374,6 +405,42 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
+       * Determines the shape of the dropdown bib.
+       * @type {'classic' | 'pill' | 'pill-left' | 'pill-right' | 'snowflake'}
+       */
+      shape: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If set, the dropdown will shift its position to avoid being cut off by the viewport.
+       */
+      shift: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Determines the size of the dropdown bib. Only the `emphasized` layout supports size=`xl`, while all other layouts support size=`lg`.
+       * @type {'lg' | 'xl'}
+       */
+      size: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Indicates whether the input is in a dirty state (has been interacted with).
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
+      },
+
+      /**
        * Specifies the `validityState` this element is in.
        */
       validity: {
@@ -388,53 +455,6 @@ export class AuroSelect extends AuroElement {
         type: String,
         reflect: true,
         attribute: 'value'
-      },
-
-      /**
-       * Sets multi-select mode, allowing multiple options to be selected at once.
-       */
-      multiSelect: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'multiselect'
-      },
-
-      /**
-       * Indicates whether the input is in a dirty state (has been interacted with).
-       * @type {boolean}
-       * @default false
-       * @private
-       */
-      touched: {
-        type: Boolean,
-        reflect: true,
-        attribute: false
-      },
-
-      /**
-       * @private
-       */
-      hasFocus: {
-        type: Boolean,
-        reflect: false,
-        attribute: false
-      },
-
-      /**
-       * @private
-       */
-      hasDisplayValueContent: {
-        type: Boolean,
-        reflect: false,
-        attribute: false
-      },
-
-      /**
-       * @private
-       */
-      options: {
-        type: Array,
-        state: true
       },
     };
   }
