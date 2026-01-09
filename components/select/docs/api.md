@@ -1,39 +1,42 @@
 # auro-select
 
-The auro-select element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
+The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
 
 ## Properties
 
-| Property                        | Attribute                       | Type                              | Default        | Description                                      |
-|---------------------------------|---------------------------------|-----------------------------------|----------------|--------------------------------------------------|
-| `appearance`                    | `appearance`                    | `string`                          | "'default'"    | Defines whether the component will be on lighter or darker backgrounds. |
-| `autoPlacement`                 | `autoPlacement`                 | `boolean`                         | "false"        | If declared, bib's position will be automatically calculated where to appear. |
-| `autocomplete`                  | `autocomplete`                  | `string`                          |                | If declared, sets the autocomplete attribute for the select element. |
-| `disabled`                      | `disabled`                      | `boolean`                         |                | When attribute is present, element shows disabled state. |
-| `error`                         | `error`                         | `string`                          |                | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
-| `fluid`                         | `fluid`                         | `boolean`                         |                | When attribute is present, element will be 100% width of container element. |
-| `forceDisplayValue`             | `forceDisplayValue`             | `boolean`                         | false          | If declared, the label and value will be visually hidden and the displayValue will render 100% of the time. |
-| `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `string`                          | "sm"           | Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)<br />at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
-| `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`                         |                | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
-| `layout`                        |                                 | `string`                          |                |                                                  |
-| `matchWidth`                    | `matchWidth`                    | `boolean`                         | false          | If declared, the popover and trigger will be set to the same width. |
-| `multiSelect`                   | `multiselect`                   | `boolean`                         |                | Sets multi-select mode, allowing multiple options to be selected at once. |
-| `name`                          | `name`                          | `string`                          |                | The name for the select element.                 |
-| `noCheckmark`                   | `noCheckmark`                   | `boolean`                         |                | When true, checkmark on selected option will no longer be present. |
-| `noFlip`                        | `noFlip`                        | `boolean`                         | "false"        | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
-| `noValidate`                    | `noValidate`                    | `boolean`                         |                | If set, disables auto-validation on blur.        |
-| `offset`                        | `offset`                        | `number`                          | "0"            | Gap between the trigger element and bib.         |
-| `onDark`                        | `onDark`                        | `boolean`                         |                | DEPRECATED - use `appearance` instead.           |
-| `optionSelected`                | `optionSelected`                | `HTMLElement\|Array<HTMLElement>` |                | Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true. |
-| `placeholder`                   | `placeholder`                   | `string`                          |                | Define custom placeholder text.                  |
-| `placement`                     | `placement`                     | `string`                          | "bottom-start" | Position where the bib should appear relative to the trigger.<br />Accepted values:<br />"top" \| "right" \| "bottom" \| "left" \|<br />"bottom-start" \| "top-start" \| "top-end" \|<br />"right-start" \| "right-end" \| "bottom-end" \|<br />"left-start" \| "left-end". |
-| `required`                      | `required`                      | `boolean`                         |                | Populates the `required` attribute on the element. Used for client-side validation. |
-| `setCustomValidity`             | `setCustomValidity`             | `string`                          |                | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                          |                | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                          |                | Custom help text message to display when validity = `valueMissing`. |
-| `shift`                         | `shift`                         | `boolean`                         | "false"        | If set, the dropdown will shift its position to avoid being cut off by the viewport. |
-| `validity`                      | `validity`                      | `string`                          |                | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `string`                          |                | Value selected for the component.                |
+| Property                        | Attribute                       | Type                                             | Default          | Description                                      |
+|---------------------------------|---------------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
+| `appearance`                    | `appearance`                    | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
+| `autoPlacement`                 | `autoPlacement`                 | `boolean`                                        | false            | If declared, bib's position will be automatically calculated where to appear. |
+| `autocomplete`                  | `autocomplete`                  | `string`                                         |                  | If declared, sets the autocomplete attribute for the select element. |
+| `disabled`                      | `disabled`                      | `boolean`                                        |                  | When attribute is present, element shows disabled state. |
+| `error`                         | `error`                         | `string`                                         |                  | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| `flexMenuWidth`                 | `flexMenuWidth`                 | `boolean`                                        |                  | If declared, make the width of the bib match the width of the content, rather than the trigger. |
+| `fluid`                         | `fluid`                         | `boolean`                                        |                  | When attribute is present, element will be 100% width of container element. |
+| `forceDisplayValue`             | `forceDisplayValue`             | `boolean`                                        | false            | If declared, the label and value will be visually hidden and the displayValue will render 100% of the time. |
+| `fullscreenBreakpoint`          | `fullscreenBreakpoint`          | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
+| `largeFullscreenHeadline`       | `largeFullscreenHeadline`       | `boolean`                                        |                  | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
+| `layout`                        | `layout`                        | `'classic' \| 'emphasized' \| 'snowflake'`       | "'classic'"      | Determines the overall layout of the select component. |
+| `matchWidth`                    | `matchWidth`                    | `boolean`                                        | false            | If declared, the popover and trigger will be set to the same width. |
+| `multiSelect`                   | `multiselect`                   | `boolean`                                        |                  | Sets multi-select mode, allowing multiple options to be selected at once. |
+| `name`                          | `name`                          | `string`                                         |                  | The name for the select element.                 |
+| `noCheckmark`                   | `noCheckmark`                   | `boolean`                                        |                  | When true, checkmark on selected option will no longer be present. |
+| `noFlip`                        | `noFlip`                        | `boolean`                                        | false            | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
+| `noValidate`                    | `noValidate`                    | `boolean`                                        |                  | If set, disables auto-validation on blur.        |
+| `offset`                        | `offset`                        | `number`                                         | "0"              | Gap between the trigger element and bib.         |
+| `onDark`                        | `onDark`                        | `boolean`                                        |                  | DEPRECATED - use `appearance="inverse"` instead. |
+| `optionSelected`                | `optionSelected`                | `HTMLElement\|Array<HTMLElement>`                |                  | Specifies the current selected menuOption. Default type is `HTMLElement`, changing to `Array<HTMLElement>` when `multiSelect` is true. |
+| `placeholder`                   | `placeholder`                   | `string`                                         |                  | Define custom placeholder text.                  |
+| `placement`                     | `placement`                     | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
+| `required`                      | `required`                      | `boolean`                                        |                  | Populates the `required` attribute on the element. Used for client-side validation. |
+| `setCustomValidity`             | `setCustomValidity`             | `string`                                         |                  | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                                         |                  | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                                         |                  | Custom help text message to display when validity = `valueMissing`. |
+| `shape`                         | `shape`                         | `'classic' \| 'pill' \| 'pill-left' \| 'pill-right' \| 'snowflake'` |                  | Determines the shape of the dropdown bib.        |
+| `shift`                         | `shift`                         | `boolean`                                        | false            | If set, the dropdown will shift its position to avoid being cut off by the viewport. |
+| `size`                          | `size`                          | `'lg' \| 'xl'`                                   |                  | Determines the size of the dropdown bib. Only the `emphasized` layout supports size=`xl`, while all other layouts support size=`lg`. |
+| `validity`                      | `validity`                      | `string`                                         |                  | Specifies the `validityState` this element is in. |
+| `value`                         | `value`                         | `string`                                         |                  | Value selected for the component.                |
 
 ## Methods
 
@@ -71,6 +74,6 @@ The auro-select element is a wrapper for auro-dropdown and auro-menu to create a
 | Part              | Description                                      |
 |-------------------|--------------------------------------------------|
 | `dropdownChevron` | Apply CSS to the collapsed/expanded state icon container. |
-| `dropdownSize`    | Apply size styles to the dropdown bib. (height, width, maxHeight, maxWidth only) |
+| `dropdownSize`    | Apply size styles to the dropdown bib (height, width, maxHeight, maxWidth only). |
 | `dropdownTrigger` | Apply CSS to the trigger content container.      |
 | `helpText`        | Apply CSS to the help text.                      |

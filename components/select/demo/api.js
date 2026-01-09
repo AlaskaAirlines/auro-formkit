@@ -1,9 +1,9 @@
-import { customErrorValidityExample } from "../apiExamples/customErrorValidity";
+import { customErrorValidityExample } from "../apiExamples/custom-error-validity";
 import { valueExample } from "../apiExamples/value";
-import { valueExtractionExample } from "../apiExamples/valueExtraction";
-import { valueAlertExample } from "../apiExamples/valueAlert.js";
-import { inDialogExample } from '../apiExamples/inDialog';
-import { resetStateExample } from "../apiExamples/resetState";
+import { valueExtractionExample } from "../apiExamples/value-extraction";
+import { valueAlertExample } from "../apiExamples/value-alert";
+import { inDialogExample } from '../apiExamples/in-dialog';
+import { resetStateExample } from "../apiExamples/reset-state";
 import { auroMenuLoadingExample } from "../apiExamples/loading";
 
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
