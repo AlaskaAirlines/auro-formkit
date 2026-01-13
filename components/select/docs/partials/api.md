@@ -540,26 +540,6 @@ This example programmatically adds the `error` state when a user selects an opti
 
 </auro-accordion>
 
-### Loading
-
-While content is loading, the menu can either remain empty or display a loading placeholder
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/loading.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/loading.js) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
 ### Max Height on Menu
 
 Setting a max height on the menu will cause the bib to become scrollable when the content exceeds the max height.
