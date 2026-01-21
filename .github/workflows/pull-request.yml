@@ -2,160 +2,22 @@ name: PR Workflow
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - closed
+    types: [opened, synchronize, reopened, closed]
     branches-ignore:
       - 'rc/**'
-      - 'main' 
-
-permissions:
-  contents: read
-  deployments: write
-  issues: write
-  pull-requests: write
+      - 'main'
 
 jobs:
-  build:
-    if: github.event.action != 'closed'
-    name: Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20, 22]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/build
-        with:
-          os: ubuntu-latest
-          node-version: ${{ matrix.node-version }}
-  test:
-    if: github.event.action != 'closed'
-    name: Test
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20, 22]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/test
-        with:
-          os: ubuntu-latest
-          node-version: ${{ matrix.node-version }}
-  release:
-    name: PR Release
-    needs: [build, test]
-    runs-on: ubuntu-latest
-    # Skip on PR close and on release branches
-    if: github.event.action != 'closed' && !startsWith(github.ref, 'refs/heads/rc/')
-    steps:
-        - uses: actions/checkout@v4
-        - name: Setup Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: 22
-            registry-url: 'https://registry.npmjs.org'
-        - name: Restore dist/demo directories to cache
-          uses: actions/cache@v4
-          id: build-ubuntu-latest-node-v22
-          with:
-            path: |
-              ./components/**/dist
-              ./components/**/demo
-              ./components/**/node_modules
-              ./node_modules
-              ./custom-elements.json
-            key: build-22-${{ github.run_id }}
-        - name: Generate PR release version
-          run: npx  --ignore-scripts  --package=@aurodesignsystem/auro-cli -- auro pr-release -p ${{ github.event.pull_request.number }} 
-        - name: Read package.json
-          id: package
-          uses: actions/github-script@v6
-          with:
-            script: |
-              const fs = require('fs');
-              const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-              core.setOutput('name', packageJson.name);
-              core.setOutput('version', packageJson.version);
-              return packageJson;
-            result-encoding: string
-        - name: Publish to NPM
-          run: npm publish --registry=https://registry.npmjs.org
-          env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        - name: Comment on PR
-          uses: marocchino/sticky-pull-request-comment@v2
-          with:
-            header: release
-            message: |
-              🚀 PR Release Published! `v${{ steps.package.outputs.version }}`
-
-              To install:
-              ```bash
-              npm install ${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}
-              ```
-
-              Install via alias:
-              ```bash
-              npm install @aurodesignsystem@npm:${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}
-              ```
-
-              [View on npmjs.com](https://www.npmjs.com/package/${{ steps.package.outputs.name }}/v/${{ steps.package.outputs.version }})
-  deploy:
-    name: Deploy
-    needs: [build, test]
-    runs-on: ubuntu-latest
-    # Skip on PR close
-    if: github.event.action != 'closed'
-    strategy:
-      matrix:
-        component: ["checkbox", "combobox", "counter", "datepicker", "dropdown", "form", "input", "menu", "radio", "select"]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Restore dist/demo directories to cache
-        uses: actions/cache@v4
-        id: build_cache
-        with:
-          path: |
-            ./components/**/dist
-            ./components/**/demo
-            ./components/**/node_modules
-            ./node_modules
-            ./custom-elements.json
-          key: build-22-${{ github.run_id }}
-      - name: Deploy ${{ matrix.component }} demo
-        uses: "./.github/actions/surge"
-        with:
-          action: deploy
-          component: ${{ matrix.component }}
-          pr-number: ${{ github.event.pull_request.number }}
-          demo-path: "./components/${{ matrix.component }}/demo"
-          surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
-          github-token: ${{ github.token }}
-  prune:
-    name: Teardown
-    runs-on: ubuntu-latest
-    # Only run on PR close
-    if: github.event.action == 'closed'
-    strategy:
-      matrix:
-        component: ["checkbox", "combobox", "counter", "datepicker", "dropdown", "form", "input", "menu", "radio", "select"]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Teardown ${{ matrix.component }} from Surge
-        uses: "./.github/actions/surge"
-        with:
-          action: teardown
-          component: ${{ matrix.component }}
-          pr-number: ${{ github.event.pull_request.number }}
-          demo-path: "components/${{ matrix.component }}/demo"
-          surge-token: ${{ secrets.AURO_SURGE_TOKEN }}
-          github-token: ${{ github.token }}
+  action:
+    uses: AlaskaAirlines/auro-actions/.github/workflows/pull-request.yml@main
+    with:
+      demo-dir: './auro-formkit-demo'
+      demo-build-command: 'npm run local-demo'
+      cache-dirs: |
+        ./components/**/dist
+        ./components/**/demo
+        ./components/**/node_modules
+        ./node_modules
+        ./custom-elements.json
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

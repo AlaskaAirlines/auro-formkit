@@ -1,0 +1,12 @@
+name: Chomatic
+on:
+  push:
+    branches:
+      - 'rc/**'
+
+jobs:
+  action:
+    uses: AlaskaAirlines/auro-actions/.github/workflows/chomatic.yml@main
+    with:
+      # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
+      projectToken: $

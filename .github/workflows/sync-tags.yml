@@ -5,27 +5,5 @@ on:
     types: [published]
 
 jobs:
-  sync-tags:
-    runs-on: ubuntu-latest
-    if: github.event.release.target_commitish == 'main'
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Push Tag to Dev Branch
-        run: |
-          # Get the current tag
-          TAG=$(git describe --tags --exact-match)
-          echo "Syncing tag $TAG to dev branch"
-
-          # Push the tag to the dev branch
-          git fetch --all
-          git checkout dev || { echo "Failed to checkout dev branch"; exit 1; }
-          git merge --ff-only $TAG || { echo "Failed to merge tag into dev"; exit 1; }
-          git push origin dev || { echo "Failed to push changes to dev"; exit 1; }
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  action:
+    uses: AlaskaAirlines/auro-actions/.github/workflows/sync-tags.yml@main
