@@ -1,0 +1,13 @@
+name: Dev Demo
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  action:
+    uses: AlaskaAirlines/auro-actions/.github/workflows/dev-demo.yml@main
+    with:
+      publish-dir: "./auro-formkit-demo"
+      build-command: "npm run local-demo:build"

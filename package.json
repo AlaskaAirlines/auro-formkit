@@ -55,7 +55,7 @@
     "local-demo": "npm run build && sh ./local-demo.sh --zip",
     "analyze": "custom-elements-manifest analyze",
     "storybook": "npm run analyze && storybook dev -p 6006",
-    "build-storybook": "npm run analyze && storybook build"
+    "build-storybook": "npm run build && npm run analyze && storybook build"
   },
   "dependencies": {
     "@lit/context": "^1.1.6",

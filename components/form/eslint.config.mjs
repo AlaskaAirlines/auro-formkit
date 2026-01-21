@@ -1,4 +1,4 @@
-import auroConfig from '@auro-formkit/config/eslint';
+import auroConfig from '@aurodesignsystem/config/eslint';
 import storybook from 'eslint-plugin-storybook';
 
 export default [
