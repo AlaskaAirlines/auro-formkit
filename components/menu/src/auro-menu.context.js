@@ -259,7 +259,7 @@ export class MenuService {
    * @param {number} index 
    */
   setHighlightedIndex(index) {
-    const option = this._menuOptions[index] || null;
+    const option = this._menuOptions[index] || undefined;
     this.setHighlightedOption(option);
   }
 
