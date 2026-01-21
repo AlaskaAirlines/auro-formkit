@@ -44,7 +44,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * The `auro-dropdown` element provides a way to place content in a bib that can be toggled.
  * @customElement auro-dropdown
  *
- * @slot - Default slot for the popover content.
+ * @slot - Default slot for the dropdown bib content.
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
  * @csspart trigger - The trigger content container.
@@ -210,10 +210,34 @@ export class AuroDropdown extends AuroElement {
    * If not, trigger element will get focus.
    */
   focus() {
-    if (this.isPopoverVisible && this.focusTrap) {
-      this.focusTrap.focusFirstElement();
+    if (this.isPopoverVisible && this.bibContent) {
+      const focusables = getFocusableElements(this.bibContent);
+      if (focusables.length > 0) {
+        focusables[0].focus();
+      }
     } else {
       this.trigger.focus();
+    }
+  }
+
+  /**
+   * Sets the active descendant element for accessibility.
+   * Uses ariaActiveDescendantElement to cross shadow DOM boundaries.
+   * This function is used in components that contain `auro-dropdown` to set the active descendant.
+   * @private
+   * @param {HTMLElement|null} element - The element to set as the active descendant, or null to clear.
+   * @returns {void}
+   */
+  setActiveDescendant(element) {
+    if (!this.trigger) {
+      return;
+    }
+
+    if (element) {
+      this.trigger.ariaActiveDescendantElement = element;
+    } else {
+      this.trigger.ariaActiveDescendantElement = null;
+      this.trigger.removeAttribute('aria-activedescendant');
     }
   }
 
@@ -474,6 +498,16 @@ export class AuroDropdown extends AuroElement {
        */
       tabIndex: {
         type: Number
+      },
+
+      /**
+       * Accessible label for the dropdown bib dialog element.
+       * @private
+       */
+      bibDialogLabel: {
+        type: String,
+        attribute: false,
+        reflect: false
       }
     };
   }
@@ -550,9 +584,12 @@ export class AuroDropdown extends AuroElement {
 
     if (changedProperties.has('isPopoverVisible') && this.bibElement.value) {
       if (this.isPopoverVisible) {
-        this.bibElement.value.showPopover();
+        // Fullscreen: use showModal() for native accessibility (inert outside, focus trap)
+        // Desktop: use show() for Floating UI positioning + FocusTrap for focus management
+        const useModal = this.isBibFullscreen && !this.disableFocusTrap;
+        this.bibElement.value.open(useModal);
       } else {
-        this.bibElement.value.hidePopover();
+        this.bibElement.value.close();
       }
     }
   }
@@ -576,6 +613,11 @@ export class AuroDropdown extends AuroElement {
     this.floater.configure(this, 'auroDropdown');
     this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
 
+    // Handle ESC key from dialog's cancel event
+    this.addEventListener('auro-bib-cancel', () => {
+      this.floater.hideBib('keydown');
+    });
+
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
      * @event auroDropdown-idAdded
@@ -583,9 +625,9 @@ export class AuroDropdown extends AuroElement {
      */
     this.dispatchEvent(new CustomEvent('auroDropdown-idAdded', {detail: {id: this.floater.element.id}}));
 
-    // Set the bib ID locally if the user hasn't provided a focusable trigger
+    // Set the bib ID locally for aria-controls (must be in the same shadow root as the trigger)
     if (!this.triggerContentFocusable) {
-      this.dropdownId = this.floater.element.id;
+      this.dropdownId = this.floater.element.bib.id;
     }
 
     this.bibContent = this.floater.element.bib;
@@ -647,21 +689,20 @@ export class AuroDropdown extends AuroElement {
    * @private
    */
   updateFocusTrap() {
-    // If the dropdown is open, create a focus trap and focus the first element
     if (this.isPopoverVisible && !this.disableFocusTrap) {
-      this.focusTrap = new FocusTrap(this.bibContent);
-      this.focusTrap.focusFirstElement();
+      if (!this.isBibFullscreen) {
+        // Desktop: show() doesn't trap focus, so use FocusTrap
+        this.focusTrap = new FocusTrap(this.bibContent);
+        this.focusTrap.focusFirstElement();
+      }
+      // Fullscreen: showModal() provides native focus trapping
       return;
     }
 
-    // Guard Clause: Ensure there is a focus trap currently active before continuing
-    if (!this.focusTrap) {
-      return;
+    if (this.focusTrap) {
+      this.focusTrap.disconnect();
+      this.focusTrap = undefined;
     }
-
-    // If the dropdown is not open, disconnect the focus trap if it exists
-    this.focusTrap.disconnect();
-    this.focusTrap = undefined;
   }
 
   /**
@@ -877,13 +918,14 @@ export class AuroDropdown extends AuroElement {
               <div
                 id="showStateIcon"
                 class="chevron"
-                part="chevron">
+                part="chevron"
+                aria-hidden="true">
                 <${this.iconTag}
                   category="interface"
                   name="${this.isPopoverVisible ? 'chevron-up' : `chevron-down`}"
                   appearance="${this.onDark ? 'inverse' : this.appearance}"
-                  variant="${this.disabled ? 'disabled' : 'muted'}">
-                  >
+                  variant="${this.disabled ? 'disabled' : 'muted'}"
+                  ariaHidden="true">
                 </${this.iconTag}>
               </div>
             ` : undefined }
@@ -897,8 +939,8 @@ export class AuroDropdown extends AuroElement {
           shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
+          .dialogLabel="${this.bibDialogLabel}"
           ${ref(this.bibElement)}
-          popover="manual"
           >
           <div class="slotContent">
             <slot @slotchange="${this.handleDefaultSlot}"></slot>

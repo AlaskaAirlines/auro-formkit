@@ -18,6 +18,48 @@
   z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
   display: none;
   isolation: isolate;
+
+  dialog {
+    // Reset dialog defaults for custom styling
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: none;
+    margin: 0;
+    outline: none;
+
+    // Fix Safari rendering bug - force GPU compositing
+    transform: translateZ(0);
+
+    &::backdrop {
+      background: transparent;
+    }
+  }
+}
+
+:host(:not([isfullscreen])) {
+  dialog {
+    // Explicit positioning for non-modal show() - only needed for desktop mode
+    // Avoid setting position in fullscreen mode as it causes scroll jump with showModal()
+    position: absolute;
+    inset: unset;
+  }
+
+  .container{
+    &.shape-box {
+      border-radius: unset;
+    }
+
+    &[class*="shape-pill"],
+    &[class*="shape-snowflake"] {
+      border-radius: 30px;
+    }
+
+    // emphasized
+    &[class*="shape-rounded"] {
+      border-radius: 16px;
+    }
+  }
 }
 
 :host(:not([matchWidth])) {
@@ -64,30 +106,23 @@
 }
 
 
-:host(:not([isfullscreen])) {
-  .container{
-    &.shape-box {
-      border-radius: unset;
-    }
-
-    &[class*="shape-pill"],
-    &[class*="shape-snowflake"] {
-      border-radius: 30px;
-    }
-
-    // emphasized
-    &[class*="shape-rounded"] {
-      border-radius: 16px;
-    }
-  }
-}
-
-
 .container {
   display: inline-block;
   overflow: auto;
   box-sizing: border-box;
   border-radius: var(--ds-border-radius, #{vac.$ds-border-radius});
   margin: var(--ds-size-50, #{vac.$ds-size-50}) 0;
+}
+
+.util_displayHiddenVisually {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 

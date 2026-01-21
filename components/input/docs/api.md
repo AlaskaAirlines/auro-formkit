@@ -6,6 +6,7 @@ The `auro-input` element provides users a way to enter data into a text field.
 
 | Property                          | Attribute                         | Type                                             | Default     | Description                                      |
 |-----------------------------------|-----------------------------------|--------------------------------------------------|-------------|--------------------------------------------------|
+| `a11yActivedescendant`            | `a11yActivedescendant`            | `string`                                         |             | The value for the aria-activedescendant attribute.<br />Points to the ID of the currently active/highlighted option in a listbox. |
 | `a11yControls`                    | `a11yControls`                    | `string`                                         |             | The value for the aria-controls attribute.       |
 | `a11yExpanded`                    | `a11yExpanded`                    | `boolean`                                        |             | The value for the aria-expanded attribute.       |
 | `a11yRole`                        | `a11yRole`                        | `string`                                         |             | The value for the role attribute.                |
