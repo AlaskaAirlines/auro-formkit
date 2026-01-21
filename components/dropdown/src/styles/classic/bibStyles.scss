@@ -18,6 +18,19 @@
   z-index: var(--depth-tooltip, #{vac.$ds-depth-tooltip});
   display: none;
   isolation: isolate;
+
+  dialog {
+    // Reset dialog defaults for custom styling
+    border: none;
+    padding: 0;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+
+    &::backdrop {
+      background: transparent;
+    }
+  }
 }
 
 :host(:not([matchWidth])) {
