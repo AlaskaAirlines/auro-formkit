@@ -385,6 +385,7 @@ export class AuroInput extends BaseInput {
         ?activeLabel="${this.activeLabel}"
         ?disabled="${this.disabled}"
         ?required="${this.required}"
+        aria-activedescendant=${ifDefined(this.a11yActivedescendant)}
         aria-controls=${ifDefined(this.a11yControls)}
         aria-describedby="${this.uniqueId}"
         aria-expanded=${ifDefined(this.a11yExpanded)}

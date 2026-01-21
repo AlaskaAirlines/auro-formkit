@@ -148,6 +148,26 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+<<<<<<< HEAD
+=======
+       * The value for the aria-controls attribute.
+       */
+      a11yControls: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * The value for the aria-activedescendant attribute.
+       * Points to the ID of the currently active/highlighted option in a listbox.
+       */
+      a11yActivedescendant: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+>>>>>>> 23408ab0 (Additional testing)
        * If set, the label will remain fixed in the active position.
        */
       activeLabel: {
