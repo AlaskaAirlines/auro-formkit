@@ -1320,6 +1320,7 @@ export class AuroCombobox extends AuroElement {
             <${this.inputTag}
               @input="${this.handleInputValueChange}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
+              .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
               .a11yExpanded="${this.dropdownOpen}"
               .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
@@ -1354,6 +1355,7 @@ export class AuroCombobox extends AuroElement {
             <${this.inputTag}
               id="inputInBib"
               @input="${this.handleInputValueChange}"
+              .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
               .a11yControls=${`${this.dropdownId}-floater-bib`}
               .autocomplete="${this.autocomplete}"
               .format="${this.format}"

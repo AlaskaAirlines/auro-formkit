@@ -214,6 +214,17 @@ export class AuroMenuOption extends AuroElement {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
 
+    // Generate unique ID if not already set (required for aria-activedescendant)
+    if (!this.id) {
+      const idLength = 36;
+      const idSubstrEnd = 8;
+      const idSubstrStart = 2;
+      const uniqueId = Math.random()
+        .toString(idLength)
+        .substring(idSubstrStart, idSubstrEnd);
+      this.id = `menuoption-${uniqueId}`;
+    }
+
     this.setAttribute('role', 'option');
     this.setAttribute('aria-selected', 'false');
 
