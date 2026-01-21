@@ -540,31 +540,91 @@ export class AuroSelect extends AuroElement {
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
 
+    // Prevent dropdown from closing on focus loss since menu content is slotted
+    // from select's light DOM and won't be detected by dropdown's contains() check.
+    // Select handles Tab key closing explicitly, ESC via dialog cancel, and
+    // click outside works correctly via composedPath().
+    this.dropdown.noHideOnThisFocusLoss = true;
+
+
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.isPopoverVisible = this.dropdown.isPopoverVisible;
 
+      // Clear aria-activedescendant when dropdown closes
+      if (!this.dropdown.isPopoverVisible) {
+        this.dropdown.setActiveDescendant(null);
+        this.optionActive = null;
+
+        // Restore trigger accessibility when closing fullscreen
+        this.dropdown.trigger.inert = false;
+      }
+
       if (this.dropdown.isPopoverVisible) {
         this.updateMenuShapeSize();
-        // wait til the bib gets fully rendered
-        setTimeout(() => {
-          if (this.dropdown.isBibFullscreen) {
-            // trigger holds the focus since menu is not a focusable element.
-            this.dropdown.trigger.focus();
 
-            // default focus indicator on the first menu option
-            if (this.menu.index < 0) {
-              this.menu.navigateOptions('down');
-            }
+        if (this.dropdown.isBibFullscreen) {
+          // Hide the trigger from assistive technology so VoiceOver cannot reach it
+          // behind the fullscreen dialog
+          this.dropdown.trigger.inert = true;
+
+          // On touch devices the tap that opens the fullscreen dialog can
+          // "pass through" to the menu beneath the finger: the touchstart
+          // opens the dialog, but the finger is still on the screen, so the
+          // subsequent touchend / click lands on whatever menu option sits at
+          // those coordinates, selecting it unintentionally.
+          //
+          // This does NOT happen with mouse clicks because showModal()
+          // promotes the dialog to the top layer synchronously and the click
+          // has already completed — there is no lingering pointer contact.
+          //
+          // Guard: only on devices whose primary input is coarse (phones /
+          // tablets). Laptops with a touchscreen report `pointer: fine`
+          // (trackpad / mouse is primary) so they are unaffected.
+          // Re-enable on the next touchstart, which is the user's first
+          // deliberate gesture inside the dialog.
+          if (window.matchMedia('(pointer: coarse)').matches) {
+            this.menu.style.pointerEvents = 'none';
+            document.addEventListener('touchstart', () => {
+              this.menu.style.pointerEvents = '';
+            }, { once: true });
           }
 
-          // Scroll the selected option into view when dropdown opens
-          this.scrollSelectedOptionIntoView();
-        });
+          // Wait for the bibtemplate to fully render (close button) across
+          // multiple Lit update cycles before moving focus into the bib
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              this.dropdown.focus();
+
+              // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
+              // No selection → no highlight
+              if (this.optionSelected && !Array.isArray(this.optionSelected)) {
+                this.menu.updateActiveOption(this.optionSelected);
+              } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
+                this.menu.updateActiveOption(this.optionSelected[0]);
+              }
+            });
+          });
+        } else {
+          // wait til the bib gets fully rendered
+          setTimeout(() => {
+            // Keep focus on trigger so aria-activedescendant announces menu options
+            this.dropdown.trigger.focus();
+          });
+        }
       }
     });
 
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       this.updateMenuShapeSize();
+
+      // When switching to fullscreen while open, move focus into the bib
+      // so it's not stuck on the trigger behind the dialog
+      if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
+        this.dropdown.trigger.inert = true;
+        this.dropdown.focus();
+      } else if (!this.dropdown.isBibFullscreen) {
+        this.dropdown.trigger.inert = false;
+      }
     });
 
     // setting up bibtemplate
@@ -572,6 +632,12 @@ export class AuroSelect extends AuroElement {
 
     if (this.customBibWidth) {
       this.dropdown.dropdownWidth = this.customBibWidth;
+    }
+
+    // Pass label text to the dropdown bib for accessible dialog naming
+    const labelElement = this.querySelector('span[slot="label"]');
+    if (labelElement) {
+      this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
 
     // Exposes the CSS parts from the dropdown for styling
@@ -676,6 +742,23 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Sets aria-setsize and aria-posinset on each menu option so screen readers
+   * can announce position even when the listbox context is broken by
+   * shadow DOM boundaries.
+   * @private
+   * @returns {void}
+   */
+  updateOptionPositions() {
+    if (!this.menu || !this.menu.options) return;
+    const visibleOptions = this.menu.options;
+    const count = visibleOptions.length;
+    visibleOptions.forEach((option, index) => {
+      option.setAttribute('aria-setsize', count);
+      option.setAttribute('aria-posinset', index + 1);
+    });
+  }
+
+  /**
    * Binds all behavior needed to the menu after rendering.
    * @private
    * @returns {void}
@@ -696,18 +779,38 @@ export class AuroSelect extends AuroElement {
     this.updateMenuShapeSize();
     this.setMenuValue(this.value);
 
+    // Set accessible name on the menu for screen readers based on the label slot content
+    const labelElement = this.querySelector('[slot="label"]');
+    if (labelElement) {
+      this.menu.setAttribute('aria-label', labelElement.textContent.trim());
+    }
+
     if (this.multiSelect) {
       this.menu.multiSelect = this.multiSelect;
     }
 
     this.options = this.menu.options;
-    this.menu.setAttribute('aria-hidden', 'true');
-    this.menu.addEventListener('auroMenu-activatedOption', () => {
+    this.updateOptionPositions();
+    this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
+
+    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
+      this.optionActive = evt.detail;
+
+      if (this.dropdown) {
+        this.dropdown.setActiveDescendant(this.optionActive);
+      }
+
+      // Announce the active option for screen readers
+      if (this.optionActive) {
+        const optionText = this.optionActive.textContent.trim();
+        const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
+        this.announceToScreenReader(`${optionText}${selectedState}`);
+      }
+
       if (this.dropdown.isPopoverVisible) {
         this.scrollActiveOptionIntoView();
       }
     });
-    this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
 
       // Update the displayed value
@@ -720,6 +823,13 @@ export class AuroSelect extends AuroElement {
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
       }
+
+      // Announce the selection after the dropdown closes so it isn't
+      // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
+      const selectedValue = event.detail.stringValue;
+      setTimeout(() => {
+        this.announceToScreenReader(`${selectedValue}, selected`);
+      }, 300);
     });
   }
 
@@ -733,58 +843,42 @@ export class AuroSelect extends AuroElement {
 
     this.addEventListener('keydown', (evt) => {
 
-      // when the focus is on trigger not on close button
-      if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
-        if (evt.key === 'ArrowUp') {
-          evt.preventDefault();
+      if (evt.key === 'ArrowUp') {
+        evt.preventDefault();
 
+        if (this.dropdown.isPopoverVisible) {
+          this.menu.navigateOptions('up');
+        } else {
           this.dropdown.show();
-
-          if (this.dropdown.isPopoverVisible) {
-            this.menu.navigateOptions('up');
-          }
-
-          return;
         }
 
-        if (evt.key === 'ArrowDown') {
-          evt.preventDefault();
+        return;
+      }
 
+      if (evt.key === 'ArrowDown') {
+        evt.preventDefault();
+
+        if (this.dropdown.isPopoverVisible) {
+          this.menu.navigateOptions('down');
+        } else {
           this.dropdown.show();
-
-          if (this.dropdown.isPopoverVisible) {
-            this.menu.navigateOptions('down');
-          }
-
-          return;
         }
 
-        if (evt.key === 'Enter') {
-          if (!this.dropdown.isPopoverVisible) {
-            evt.preventDefault();
-            this.menu.makeSelection();
-          }
+        return;
+      }
 
-          return;
-        }
+      if (evt.key === 'Enter') {
+        evt.preventDefault();
+        this.menu.makeSelection();
+
+        return;
       }
 
       if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        if (this.dropdown.isBibFullscreen) {
-          evt.preventDefault();
-
-          // when the focus is on trigger not on close button
-          if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
-            // `dropdown.focus` will move focus to the first focusable element in bib when it's open,
-            // when bib it not open, it will focus onto trigger.
-            this.dropdown.focus();
-          } else {
-            // when close button has the focus, move focus back to the trigger
-            this.dropdown.trigger.focus();
-          }
-        } else {
+        if (!this.dropdown.isBibFullscreen) {
           this.dropdown.hide();
         }
+        // Fullscreen: let native dialog handle Tab focus trapping
         return;
       }
 
@@ -807,6 +901,29 @@ export class AuroSelect extends AuroElement {
   updateActiveOption(index) {
     if (this.menu) {
       this.menu.index = index;
+    }
+  }
+
+  /**
+   * Announces text to screen readers via the aria-live region.
+   * @private
+   * @param {string} text - The text to announce.
+   */
+  announceToScreenReader(text) {
+    const liveRegion = this.shadowRoot.querySelector('#srAnnouncement');
+    if (liveRegion) {
+      const announcementDuration = 1000;
+
+      // Clear and re-set to ensure the announcement fires even with same text
+      liveRegion.textContent = '';
+      requestAnimationFrame(() => {
+        liveRegion.textContent = text;
+
+        // Clear after the announcement so VoiceOver cannot swipe to stale text
+        setTimeout(() => {
+          liveRegion.textContent = '';
+        }, announcementDuration);
+      });
     }
   }
 
@@ -1225,7 +1342,7 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          a11yRole="select"
+          .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
@@ -1240,16 +1357,16 @@ export class AuroSelect extends AuroElement {
           part="dropdown"
           shape="${this.shape}"
           size="${this.size}">
-          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+          <div slot="trigger" id="triggerFocus" class="triggerContent">
             <div class="accents left">
               <slot name="typeIcon"></slot>
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label class="${classMap(this.commonLabelClasses)}">
+                <span id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
-                </label>
+                </span>
                 <div class="value" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
@@ -1261,7 +1378,6 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="accents right"></div>
           </div>
-          <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
             <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
@@ -1305,6 +1421,7 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
+          .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
@@ -1318,16 +1435,16 @@ export class AuroSelect extends AuroElement {
           part="dropdown"
           shape="${this.shape}"
           size="${this.size}">
-          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+          <div slot="trigger" id="triggerFocus" class="triggerContent">
             <div class="accents left">
               <slot name="typeIcon"></slot>
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label class="${classMap(this.commonLabelClasses)}">
+                <span id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
-                </label>
+                </span>
                 <div class="value body-default" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
@@ -1339,7 +1456,6 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="accents right"></div>
           </div>
-          <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
             <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
@@ -1349,6 +1465,7 @@ export class AuroSelect extends AuroElement {
           </div>
         </${this.dropdownTag}>
         ${this.renderNativeSelect()}
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
       </div>
     `;
   }
@@ -1389,6 +1506,7 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
+          .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${!this.flexMenuWidth}"
@@ -1402,16 +1520,16 @@ export class AuroSelect extends AuroElement {
           part="dropdown"
           shape="${this.shape}"
           size="${this.size}">
-          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
+          <div slot="trigger" id="triggerFocus" class="triggerContent">
             <div class="accents left">
               <slot name="typeIcon"></slot>
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label class="${classMap(this.commonLabelClasses)}">
+                <span id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
-                </label>
+                </span>
                 <div class="${classMap(valueClasses)}" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
@@ -1423,7 +1541,6 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="accents right"></div>
           </div>
-          <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
             <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
@@ -1433,6 +1550,7 @@ export class AuroSelect extends AuroElement {
           </div>
         </${this.dropdownTag}>
         ${this.renderNativeSelect()}
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
       </div>
     `;
   }

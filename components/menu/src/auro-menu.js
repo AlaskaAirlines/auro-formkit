@@ -493,6 +493,11 @@ export class AuroMenu extends AuroElement {
     if (this.rootMenu) {
       this.setAttribute('role', 'listbox');
       this.setAttribute('root', '');
+
+      if (this.multiSelect) {
+        this.setAttribute('aria-multiselectable', 'true');
+      }
+
       this.handleNestedMenus(this);
     }
   }

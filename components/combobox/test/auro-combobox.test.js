@@ -68,8 +68,14 @@ function runFulltest(mobileview) {
     // select a value from the menu by setting the value of the combobox
     el.value = 'Apples';
 
-    // wait for the element to be updated
+    // wait for the combobox and dialog close to fully settle
     await elementUpdated(el);
+    await new Promise((r) => setTimeout(r, 0));
+    await elementUpdated(el);
+
+    // blur to move focus away (dialog.close() restores focus to the combobox,
+    // which prevents child input validation from running)
+    el.blur();
 
     // trigger validation
     el.validate(true);

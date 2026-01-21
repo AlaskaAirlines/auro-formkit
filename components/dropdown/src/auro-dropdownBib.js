@@ -8,6 +8,7 @@
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
@@ -107,6 +108,17 @@ export class AuroDropdownBib extends LitElement {
       shape: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * Accessible label for the dialog element, used when displayed as a modal.
+       * Applied via aria-labelledby on a visually hidden element rather than
+       * aria-label because iOS VoiceOver does not reliably read aria-label
+       * on <dialog> elements.
+       * @private
+       */
+      dialogLabel: {
+        type: String
       }
     };
   }
@@ -174,6 +186,37 @@ export class AuroDropdownBib extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
 
+    // Handle ESC key via dialog's cancel event
+    const dialog = this.shadowRoot.querySelector('dialog');
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault(); // Let parent handle closing
+      this.dispatchEvent(new CustomEvent('auro-bib-cancel', {
+        bubbles: true,
+        composed: true
+      }));
+    });
+
+    // Re-dispatch navigation keyboard events so they cross the shadow DOM
+    // boundary and reach the combobox/select key handlers.
+    // Only intercept keys used for menu navigation — let all other keys
+    // (characters, Backspace, etc.) through so typing in inputs works.
+    const navKeys = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
+    dialog.addEventListener('keydown', (event) => {
+      if (!navKeys.has(event.key)) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      const newEvent = new KeyboardEvent('keydown', {
+        key: event.key,
+        code: event.code,
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      });
+      this.dispatchEvent(newEvent);
+    });
+
     // Dispatch a custom event when the component is connected
     this.dispatchEvent(new CustomEvent('auro-dropdownbib-connected', {
       bubbles: true,
@@ -182,6 +225,45 @@ export class AuroDropdownBib extends LitElement {
         element: this
       }
     }));
+  }
+
+  /**
+   * Opens the dialog using showModal() for accessibility.
+   * @param {boolean} modal - If true, uses showModal() (default). If false, uses show().
+   */
+  open(modal = true) {
+    const dialog = this.shadowRoot.querySelector('dialog');
+    if (dialog && !dialog.open) {
+      if (modal) {
+        // Prevent showModal() from scrolling the page to bring the dialog
+        // into view. Locking overflow on <html> blocks the viewport scroll
+        // that browsers perform natively; we release it immediately after
+        // so it doesn't interfere with the modal's focus management.
+        const { documentElement } = document;
+        const prevOverflow = documentElement.style.overflow;
+        documentElement.style.overflow = 'hidden';
+
+        dialog.showModal();
+
+        documentElement.style.overflow = prevOverflow;
+
+      } else {
+        // Use setAttribute instead of dialog.show() to avoid the dialog
+        // focusing steps which steal focus from the trigger and cause
+        // the floater's handleFocusLoss() to immediately hide the bib.
+        dialog.setAttribute('open', '');
+      }
+    }
+  }
+
+  /**
+   * Closes the dialog.
+   */
+  close() {
+    const dialog = this.shadowRoot.querySelector('dialog');
+    if (dialog && dialog.open) {
+      dialog.close();
+    }
   }
 
   // function that renders the HTML and CSS into  the scope of the component
@@ -195,9 +277,10 @@ export class AuroDropdownBib extends LitElement {
     classes[`shape-${this.shape}`] = true;
 
     return html`
-      <div class="${classMap(classes)}" part="bibContainer">
+      <dialog class="${classMap(classes)}" part="bibContainer" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
+        ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually" aria-hidden="true">${this.dialogLabel}</span>` : ''}
         <slot></slot>
-      </div>
+      </dialog>
     `;
   }
 }

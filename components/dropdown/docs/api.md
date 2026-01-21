@@ -53,11 +53,11 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 
 ## Slots
 
-| Name       | Description                           |
-|------------|---------------------------------------|
-|            | Default slot for the popover content. |
-| `helpText` | Defines the content of the helpText.  |
-| `trigger`  | Defines the content of the trigger.   |
+| Name       | Description                                |
+|------------|--------------------------------------------|
+|            | Default slot for the dropdown bib content. |
+| `helpText` | Defines the content of the helpText.       |
+| `trigger`  | Defines the content of the trigger.        |
 
 ## CSS Shadow Parts
 
