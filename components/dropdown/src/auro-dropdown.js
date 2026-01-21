@@ -210,8 +210,11 @@ export class AuroDropdown extends AuroElement {
    * If not, trigger element will get focus.
    */
   focus() {
-    if (this.isPopoverVisible && this.focusTrap) {
-      this.focusTrap.focusFirstElement();
+    if (this.isPopoverVisible && this.bibContent) {
+      const focusables = getFocusableElements(this.bibContent);
+      if (focusables.length > 0) {
+        focusables[0].focus();
+      }
     } else {
       this.trigger.focus();
     }
@@ -561,9 +564,12 @@ export class AuroDropdown extends AuroElement {
 
     if (changedProperties.has('isPopoverVisible') && this.bibElement.value) {
       if (this.isPopoverVisible) {
-        this.bibElement.value.showPopover();
+        // Fullscreen: use showModal() for native accessibility (inert outside, focus trap)
+        // Desktop: use show() for Floating UI positioning + FocusTrap for focus management
+        const useModal = this.isBibFullscreen && !this.disableFocusTrap;
+        this.bibElement.value.open(useModal);
       } else {
-        this.bibElement.value.hidePopover();
+        this.bibElement.value.close();
       }
     }
   }
@@ -587,6 +593,11 @@ export class AuroDropdown extends AuroElement {
     // Configure the floater to, this will generate the ID for the bib
     this.floater.configure(this, 'auroDropdown');
     this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
+
+    // Handle ESC key from dialog's cancel event
+    this.addEventListener('auro-bib-cancel', () => {
+      this.floater.hideBib('keydown');
+    });
 
     /**
      * @description Let subscribers know that the dropdown ID ha been generated and added.
@@ -659,21 +670,29 @@ export class AuroDropdown extends AuroElement {
    * @private
    */
   updateFocusTrap() {
-    // If the dropdown is open, create a focus trap and focus the first element
     if (this.isPopoverVisible && !this.disableFocusTrap) {
-      this.focusTrap = new FocusTrap(this.bibContent);
-      this.focusTrap.focusFirstElement();
+      if (this.isBibFullscreen) {
+        // Fullscreen: showModal() provides native focus trapping
+        // Just focus the first element
+        requestAnimationFrame(() => {
+          const focusables = getFocusableElements(this.bibContent);
+          if (focusables.length > 0) {
+            focusables[0].focus();
+          }
+        });
+      } else {
+        // Desktop: show() doesn't trap focus, so use FocusTrap
+        this.focusTrap = new FocusTrap(this.bibContent);
+        this.focusTrap.focusFirstElement();
+      }
       return;
     }
 
-    // Guard Clause: Ensure there is a focus trap currently active before continuing
-    if (!this.focusTrap) {
-      return;
+    // If closing and FocusTrap exists, disconnect it
+    if (this.focusTrap) {
+      this.focusTrap.disconnect();
+      this.focusTrap = undefined;
     }
-
-    // If the dropdown is not open, disconnect the focus trap if it exists
-    this.focusTrap.disconnect();
-    this.focusTrap = undefined;
   }
 
   /**
@@ -910,7 +929,6 @@ export class AuroDropdown extends AuroElement {
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
           ${ref(this.bibElement)}
-          popover="manual"
           >
           <div class="slotContent">
             <slot @slotchange="${this.handleDefaultSlot}"></slot>

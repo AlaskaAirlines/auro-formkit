@@ -174,6 +174,16 @@ export class AuroDropdownBib extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
 
+    // Handle ESC key via dialog's cancel event
+    const dialog = this.shadowRoot.querySelector('dialog');
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault(); // Let parent handle closing
+      this.dispatchEvent(new CustomEvent('auro-bib-cancel', {
+        bubbles: true,
+        composed: true
+      }));
+    });
+
     // Dispatch a custom event when the component is connected
     this.dispatchEvent(new CustomEvent('auro-dropdownbib-connected', {
       bubbles: true,
@@ -182,6 +192,31 @@ export class AuroDropdownBib extends LitElement {
         element: this
       }
     }));
+  }
+
+  /**
+   * Opens the dialog using showModal() for accessibility.
+   * @param {boolean} modal - If true, uses showModal() (default). If false, uses show().
+   */
+  open(modal = true) {
+    const dialog = this.shadowRoot.querySelector('dialog');
+    if (dialog && !dialog.open) {
+      if (modal) {
+        dialog.showModal();
+      } else {
+        dialog.show();
+      }
+    }
+  }
+
+  /**
+   * Closes the dialog.
+   */
+  close() {
+    const dialog = this.shadowRoot.querySelector('dialog');
+    if (dialog && dialog.open) {
+      dialog.close();
+    }
   }
 
   // function that renders the HTML and CSS into  the scope of the component
@@ -195,9 +230,9 @@ export class AuroDropdownBib extends LitElement {
     classes[`shape-${this.shape}`] = true;
 
     return html`
-      <div class="${classMap(classes)}" part="bibContainer">
+      <dialog class="${classMap(classes)}" part="bibContainer">
         <slot></slot>
-      </div>
+      </dialog>
     `;
   }
 }
