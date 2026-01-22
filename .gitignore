@@ -28,8 +28,9 @@ coverage/
 .turbo
 
 ## ignore all files/folders in generated auro-formkit-demo
-auro-formkit-demo/**/*.**
+auro-formkit-demo
 auro-formkit-demo.zip
 
 ## ignore CEM
 custom-elements.json
+storybook-static
