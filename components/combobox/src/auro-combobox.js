@@ -1212,7 +1212,7 @@ export class AuroCombobox extends AuroElement {
    */
   updateActiveOption(index) {
     if (this.menu) {
-      this.menu.updateActiveOption(index);
+      this.menu.index = index;
     }
   }
 
