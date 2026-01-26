@@ -25,6 +25,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.
  *
+ * @slot default - The default slot for the checkbox label.
+ *
  * @fires {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
  * @fires {InputEvent} input - Notifies when when checked value is changed by user's interface.
  */

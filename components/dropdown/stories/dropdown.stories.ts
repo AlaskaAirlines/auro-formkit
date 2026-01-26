@@ -32,11 +32,11 @@ export default meta;
 type Story = StoryObj<AuroDropdown & typeof args>;
 
 export const Playground: Story = {
-  render: (args) => template(args),
   args: {
-    'default-slot': 'Lorem ipsum solar',
-    'trigger-slot': 'Trigger',
+    "default-slot": "Lorem ipsum solar",
+    "trigger-slot": "Trigger",
   },
+  render: (args) => template(args),
 };
 
 export const Basic: Story = {

@@ -25,6 +25,16 @@ import iconVersion from './iconVersion.js';
 import { AuroHeader } from '@aurodesignsystem/auro-header/class';
 import headerVersion from './headerVersion.js';
 
+/**
+ * The `auro-bibtemplate` element provides users a template for creating modal dialog elements.
+ * @customElement auro-bibtemplate
+ *
+ * @slot default - The default slot for the main content.
+ * @slot header - Slot for the header content.
+ * @slot subheader - Slot for the subheader content.
+ * @slot footer - Slot for the footer content.
+ * @slot ariaLabel.close - Slot for the close button aria-label.
+ */
 export class AuroBibtemplate extends LitElement {
 
   constructor() {

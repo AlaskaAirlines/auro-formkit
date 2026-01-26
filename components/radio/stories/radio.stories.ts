@@ -30,6 +30,7 @@ type Story = StoryObj<AuroRadio & typeof args>;
 export const Playground: Story = {
   render: (args) => template(args),
   args: {
-    'default-slot': 'Label',
+    "default-slot": "Label",
+    checked: null,
   },
 };
