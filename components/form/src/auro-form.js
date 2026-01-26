@@ -28,6 +28,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * The `auro-form` element provides users a way to create and manage forms in a consistent manner.
  * @customElement auro-form
  *
+ * @slot default - The default slot for form elements.
+ *
  * @event {Event} change - Fires when form state changes.
  */
 export class AuroForm extends LitElement {
@@ -43,12 +45,12 @@ export class AuroForm extends LitElement {
        * If declared, use fixed pixel values for element shape.
        */
       fixed: { type: Boolean, reflect: true },
-      formState: { attribute: false },
-      _validity: { attribute: false },
-      _isInitialState: { attribute: false },
-      _elements: { attribute: false },
-      _submitElements: { attribute: false },
-      _resetElements: { attribute: false },
+      formState: { type: Object, attribute: false },
+      _validity: { type: Object, attribute: false },
+      _isInitialState: { type: Boolean, attribute: false },
+      _elements: { type: Array, attribute: false },
+      _submitElements: { type: Array, attribute: false },
+      _resetElements: { type: Array, attribute: false },
     };
   }
 

@@ -37,19 +37,23 @@ export default meta;
 type Story = StoryObj<AuroCombobox & typeof args>;
 
 export const Playground: Story = {
-  render: (args) => template(args),
   args: {
-    'default-slot': `
-<auro-menu>
-  <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
-  <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
-  <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
-  <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
-  <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
-  <auro-menuoption static nomatch>No matching option</auro-menuoption>
-</auro-menu>
-    `,
+    value: null,
   },
+  render: (args) =>
+    template(
+      args,
+      html`
+        <auro-menu>
+          <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+          <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+          <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+          <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+          <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+          <auro-menuoption static nomatch>No matching option</auro-menuoption>
+        </auro-menu>
+      `,
+    )
 };
 
 export const Basic: Story = {

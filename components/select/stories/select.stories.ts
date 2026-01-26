@@ -33,7 +33,9 @@ type Story = StoryObj<AuroSelect & typeof args>;
 
 export const Playground: Story = {
   render: (args) => template(args),
-  args: {},
+  args: {
+    value: null,
+  },
 };
 
 export const Basic: Story = {

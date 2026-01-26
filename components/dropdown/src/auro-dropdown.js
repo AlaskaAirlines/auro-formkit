@@ -225,7 +225,7 @@ export class AuroDropdown extends AuroElement {
        * The value for the role attribute of the trigger element.
        */
       a11yRole: {
-        type: String || undefined,
+        type: String,
         attribute: false,
         reflect: false
       },

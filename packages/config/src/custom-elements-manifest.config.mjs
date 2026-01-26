@@ -1,8 +1,5 @@
 export default {
-  globs: [
-    'components/checkbox/src/auro-checkbox-group.js',
-    'components/checkbox/src/auro-checkbox.js',
-  ],
+  globs: ['components/**/src/*.js'],
   exclude: [
     'components/**/src/**/*.stories.ts',
     'components/**/dist/**/*.js'

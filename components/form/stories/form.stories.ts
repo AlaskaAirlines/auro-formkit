@@ -31,16 +31,17 @@ export default meta;
 type Story = StoryObj<AuroForm & typeof args>;
 
 export const Playground: Story = {
-  render: (args) => template(args),
-  args: {
-    'default-slot': `
-<auro-input id="search-box" name="searchBox" required>
-  <span slot="label">Search flights</span>
-</auro-input>
-
-<auro-button type="submit">Submit</auro-button>    
-    `,
-  },
+  args: {},
+  render: (args) =>
+    template(
+      args,
+      html`
+        <auro-input id="search-box" name="searchBox" required>
+          <span slot="label">Search flights</span>
+        </auro-input>
+        <auro-button type="submit">Submit</auro-button>
+      `,
+    )
 };
 
 // TODO: Confirm functionality

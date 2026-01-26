@@ -31,12 +31,14 @@ export default meta;
 type Story = StoryObj<AuroRadioGroup & typeof args>;
 
 export const Playground: Story = {
-  render: (args) => template(args),
-  args: {
-    'default-slot': `
-<auro-radio id="basicGroupRadio1" label="Yes" name="radioDemo" value="yes"></auro-radio>
-<auro-radio id="basicGroupRadio2" label="No" name="radioDemo" value="no"></auro-radio>
-<auro-radio id="basicGroupRadio3" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
-    `,
-  },
+  args: {},
+  render: (args) =>
+    template(
+      args,
+      html`
+        <auro-radio id="basicGroupRadio1" label="Yes" name="radioDemo" value="yes"></auro-radio>
+        <auro-radio id="basicGroupRadio2" label="No" name="radioDemo" value="no"></auro-radio>
+        <auro-radio id="basicGroupRadio3" label="Maybe" name="radioDemo" value="maybe"></auro-radio>
+      `,
+    )
 };

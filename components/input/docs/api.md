@@ -91,8 +91,10 @@ The `auro-input` element provides users a way to enter data into a text field.
 | `accent-left`   | Use for customizing the style of the left accent element (e.g. padding, margin) |
 | `accent-right`  | Use for customizing the style of the right accent element (e.g. padding, margin) |
 | `accentIcon`    | Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon) |
+| `displayValue`  | Use for customizing the style of the displayValue element |
 | `helpText`      | Use for customizing the style of the helpText element |
 | `iconContainer` | Use for customizing the style of the iconContainer (e.g. X icon for clearing input value) |
 | `input`         | Use for customizing the style of the input element |
+| `inputHelpText` | Use for customizing the style of the input help text wrapper |
 | `label`         | Use for customizing the style of the label element |
 | `wrapper`       | Use for customizing the style of the root element |

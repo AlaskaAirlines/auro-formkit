@@ -89,6 +89,6 @@ The `auro-menuoption` element provides users a way to define a menu option.
 
 ## Slots
 
-| Name | Description                                      |
-|------|--------------------------------------------------|
-|      | Specifies text for an option, but is not the value. |
+| Name      | Description                                |
+|-----------|--------------------------------------------|
+| `default` | The default slot for the menu option text. |

@@ -38,6 +38,28 @@ import buttonVersion from './buttonVersion.js';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
+/**
+ * The `auro-input` element provides users a way to enter data into a text field.
+ * @customElement auro-input
+ *
+ * @slot ariaLabel.clear - Sets aria-label on clear button for screen reader to read
+ * @slot ariaLabel.password.show - Sets aria-label on password button to toggle on showing password
+ * @slot ariaLabel.password.hide - Sets aria-label on password button to toggle off showing password
+ * @slot helpText - Sets the help text displayed below the input.
+ * @slot label - Sets the label text for the input.
+ * @slot optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
+ * @slot displayValue - Allows custom HTML content to display in place of the value when the input is not focused.
+ * @csspart wrapper - Use for customizing the style of the root element
+ * @csspart label - Use for customizing the style of the label element
+ * @csspart helpText - Use for customizing the style of the helpText element
+ * @csspart input - Use for customizing the style of the input element
+ * @csspart accentIcon - Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon)
+ * @csspart iconContainer - Use for customizing the style of the iconContainer (e.g. X icon for clearing input value)
+ * @csspart accent-left - Use for customizing the style of the left accent element (e.g. padding, margin)
+ * @csspart accent-right - Use for customizing the style of the right accent element (e.g. padding, margin)
+ * @csspart displayValue - Use for customizing the style of the displayValue element
+ * @csspart inputHelpText - Use for customizing the style of the input help text wrapper
+ */
 export class AuroInput extends BaseInput {
 
   constructor() {
