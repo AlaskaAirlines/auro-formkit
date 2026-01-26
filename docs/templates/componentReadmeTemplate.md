@@ -48,24 +48,5 @@ The following sections are editable by making changes to the following files:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/partials/developmentDescription.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Custom Component Registration for Version Management
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/partials/customRegistrationDescription.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-<div class="exampleWrapper exampleWrapper--flex">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./apiExamples/custom.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./apiExamples/custom.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
