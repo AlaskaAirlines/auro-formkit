@@ -1,9 +1,9 @@
-import { Meta, StoryObj } from "@storybook/web-components";
-import { action } from "@storybook/addon-actions";
-import { expect, userEvent, waitFor } from "@storybook/test";
+import { Meta, StoryObj } from "@storybook/web-components-vite";
+import { action } from "storybook/actions";
+import { expect, userEvent, waitFor } from "storybook/test";
 import MockDate from 'mockdate';
 import { screen } from "shadow-dom-testing-library";
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { html } from "lit-html";
 
@@ -16,7 +16,7 @@ AuroDatePicker.register(); // registering to `auro-datepicker`
 AuroDatePicker.register("custom-datepicker");
 
 const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-datepicker");
+  getStorybookHelpers("auro-datepicker");
 
 function formatDateString(date) {
   const dd = String("0" + date.getDate()).slice(-2);

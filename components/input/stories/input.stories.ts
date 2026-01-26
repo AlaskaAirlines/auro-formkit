@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from '@storybook/web-components';
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { html } from 'lit-html';
 
@@ -11,19 +11,15 @@ AuroInput.register(); // registering to `auro-input`
 
 AuroInput.register('custom-input');
 
-const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-input");
+const { args, argTypes, template } =
+  getStorybookHelpers<AuroInput>("auro-input");
 
 const meta: Meta<AuroInput> = {
   component: "auro-input",
   title: 'Input',
   args,
   argTypes,
-  parameters: {
-    actions: {
-      handles: events,
-    },
-  },
+  render: (args) => template(args),
 };
 export default meta;
 

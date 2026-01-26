@@ -9,4 +9,4 @@ jobs:
     uses: AlaskaAirlines/auro-actions/.github/workflows/chomatic.yml@main
     with:
       # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
-      projectToken: $
+      projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

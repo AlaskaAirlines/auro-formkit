@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from '@storybook/web-components';
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { html } from 'lit-html';
 
@@ -14,7 +14,7 @@ AuroDropdown.register(); // registering to `auro-dropdown`
 AuroDropdown.register('custom-dropdown');
 
 const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-dropdown");
+  getStorybookHelpers("auro-dropdown");
 
 const meta: Meta<AuroDropdown> = {
   component: "auro-dropdown",

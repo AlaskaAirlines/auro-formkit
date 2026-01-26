@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from '@storybook/web-components';
-import { action } from '@storybook/addon-actions';
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { action } from 'storybook/actions';
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { html } from 'lit-html';
 
@@ -14,7 +14,7 @@ AuroSelect.register(); // registering to `auro-select`
 AuroSelect.register('custom-select');
 
 const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-select");
+  getStorybookHelpers("auro-select");
 
 const meta: Meta<AuroSelect> = {
   component: "auro-select",

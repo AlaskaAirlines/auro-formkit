@@ -25,9 +25,10 @@ import formkitVersion from '@aurodesignsystem/version';
  * The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements.
  * @customElement auro-checkbox-group
  *
- * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
- * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
- * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.
+ * @slot legend - Allows for the legend to be overridden.
+ * @slot optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
+ * @slot helpText - Allows for the helper text to be overridden.
+ * @slot default - The default slot for the checkbox items.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.
  */
 

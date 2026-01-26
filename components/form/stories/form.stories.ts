@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from '@storybook/web-components';
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { html } from 'lit-html';
 
@@ -13,7 +13,7 @@ AuroForm.register(); // registering to `auro-form`
 AuroForm.register('custom-form');
 
 const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-form");
+  getStorybookHelpers("auro-form");
 
 const meta: Meta<AuroForm> = {
   component: "auro-form",
