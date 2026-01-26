@@ -408,6 +408,28 @@ Use the `reset()` method to reset the `<auro-combobox>`'s `value` and `validity`
 
 </auro-accordion>
 
+### Updating Externally
+
+The `updateActiveOption` method allows you to programmatically set which menu option is active/highlighted. This is useful for situations like matching IATA codes (sea -> SeaTac airport).
+
+The method accepts an index parameter representing the position of the option to make active in the menu.
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/external-selection.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/external-selection.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/external-selection.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Slot Examples
 
 ### Custom Display Value

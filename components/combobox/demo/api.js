@@ -2,7 +2,7 @@
 
 import { focusExample } from '../apiExamples/focus';
 import { resetStateExample } from '../apiExamples/reset-state';
-// import { setupExternalSelectionExample } from '../apiExamples/external-selection';
+import { setupExternalSelectionExample } from '../apiExamples/external-selection';
 import { valueExample } from '../apiExamples/value';
 import { inDialogExample } from '../apiExamples/in-dialog';
 import { persistentExample } from '../apiExamples/persistent';
@@ -20,7 +20,7 @@ export function initExamples(initCount) {
     // javascript example function calls to be added here upon creation to test examples
     focusExample();
     resetStateExample();
-    // setupExternalSelectionExample();
+    setupExternalSelectionExample();
     valueExample();
     inDialogExample();  
     persistentExample();
