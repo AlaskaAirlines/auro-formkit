@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/web-components";
-import { expect, userEvent } from "@storybook/test";
+import { Meta, StoryObj } from "@storybook/web-components-vite";
+import { expect, userEvent } from "storybook/test";
 
 import { html } from "lit-html";
 

@@ -1,8 +1,12 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
+import { createRequire } from "node:module";
 import type { StorybookConfig } from "@storybook/web-components-vite";
 
 import { join, dirname } from "path";
 
 import remarkGfm from 'remark-gfm';
+
+const require = createRequire(import.meta.url);
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -22,29 +26,23 @@ const config: StorybookConfig = {
     `${relativeComponentDirectory}/**/stories/*.stories.@(js|jsx|mjs|ts|tsx)`,
     `${relativeComponentDirectory}/*/stories/*.mdx`,
   ],
-  addons: [
-    getAbsolutePath("@storybook/addon-essentials"),
-    {
-      // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
-      name: '@storybook/addon-docs',
-      options: {
-        mdxPluginOptions: {
-          mdxCompileOptions: {
-            remarkPlugins: [remarkGfm],
-          },
+  addons: [{
+    // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
+    name: getAbsolutePath("@storybook/addon-docs"),
+    options: {
+      mdxPluginOptions: {
+        mdxCompileOptions: {
+          remarkPlugins: [remarkGfm],
         },
       },
     },
-    getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-interactions"),
-    getAbsolutePath("@chromatic-com/storybook"),
-  ],
+  }, getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook")],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},
   },
   core: {
     disableTelemetry: true,
-  },
+  }
 };
 export default config;

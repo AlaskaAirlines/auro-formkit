@@ -36,6 +36,7 @@ The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements..
 
 | Name            | Description                                      |
 |-----------------|--------------------------------------------------|
+| `default`       | The default slot for the checkbox items.         |
 | `helpText`      | Allows for the helper text to be overridden.     |
 | `legend`        | Allows for the legend to be overridden.          |
 | `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
@@ -73,6 +74,12 @@ The `auro-checkbox` element is for the purpose of allowing users to select one o
 | `auroCheckbox-input`    | `CustomEvent<any>` |                                                  |
 | `change`                | `CustomEvent<any>` | (Deprecated) Notifies when checked value is changed. |
 | `input`                 | `InputEvent`       | Notifies when when checked value is changed by user's interface. |
+
+## Slots
+
+| Name      | Description                              |
+|-----------|------------------------------------------|
+| `default` | The default slot for the checkbox label. |
 
 ## CSS Shadow Parts
 

@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from '@storybook/web-components';
-import { action } from "@storybook/addon-actions";
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { action } from "storybook/actions";
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { html } from 'lit-html';
 
@@ -15,7 +15,7 @@ AuroMenu.register(); // registering to `auro-menu`
 AuroMenu.register('custom-menu');
 
 const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-menu");
+  getStorybookHelpers("auro-menu");
 
 const meta: Meta<AuroMenu> = {
   component: "auro-menu",

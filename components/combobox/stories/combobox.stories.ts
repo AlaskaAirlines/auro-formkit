@@ -1,8 +1,8 @@
-import { Meta, StoryObj } from "@storybook/web-components";
-import { action } from "@storybook/addon-actions";
-import { expect, userEvent } from '@storybook/test';
+import { Meta, StoryObj } from "@storybook/web-components-vite";
+import { action } from "storybook/actions";
+import { expect, userEvent } from 'storybook/test';
 import { screen } from "shadow-dom-testing-library";
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { html } from "lit-html";
 
@@ -19,7 +19,7 @@ AuroCombobox.register(); // registering to `auro-combobox`
 AuroCombobox.register("custom-combobox");
 
 const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-combobox");
+  getStorybookHelpers("auro-combobox");
 
 const meta: Meta<AuroCombobox> = {
   component: "auro-combobox",

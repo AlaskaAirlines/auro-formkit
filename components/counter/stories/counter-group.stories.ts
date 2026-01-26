@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/web-components";
-import { getWcStorybookHelpers } from "wc-storybook-helpers";
+import { Meta, StoryObj } from "@storybook/web-components-vite";
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 
 import { AuroCounter } from "../src/auro-counter";
 import { AuroCounterGroup } from "../src/auro-counter-group";
@@ -11,7 +11,7 @@ AuroCounter.register("custom-counter");
 AuroCounterGroup.register("custom-counter-group");
 
 const { events, args, argTypes, template } =
-  getWcStorybookHelpers("auro-counter-group");
+  getStorybookHelpers("auro-counter-group");
 
 const meta: Meta<AuroCounterGroup> = {
   component: "auro-counter-group",

@@ -3,14 +3,25 @@ import {
   type StoryContext,
   type Args,
   setCustomElementsManifest,
-} from "@storybook/web-components";
-import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
+} from "@storybook/web-components-vite";
+import { INITIAL_VIEWPORTS } from "storybook/viewport";
 import { DecoratorHelpers } from "@storybook/addon-themes";
-import { Canvas, Controls, Meta, Markdown } from "@storybook/blocks";
+import { Canvas, Controls, Meta, Markdown } from "@storybook/addon-docs/blocks";
 import { html } from "lit-html";
 import { within as withinShadow } from "shadow-dom-testing-library";
-
+import { setStorybookHelpersConfig } from '@wc-toolkit/storybook-helpers';
 import customElements from "../custom-elements.json";
+
+setStorybookHelpersConfig({
+  /** hides the `arg ref` label on each control */
+  hideArgRef: false,
+  /** sets the custom type reference in the Custom Elements Manifest */
+  typeRef: 'parsedTypes',
+  /** Adds a <script> tag where a `component` variable will reference the story's component */
+  setComponentVariable: false,
+  /** renders default values for attributes and CSS properties */
+  renderDefaultValues: false,
+});
 
 setCustomElementsManifest(customElements);
 
@@ -148,7 +159,7 @@ const preview: Preview = {
       },
       toc: true,
     },
-    viewport: { viewports: INITIAL_VIEWPORTS },
+    viewport: { options: INITIAL_VIEWPORTS },
   },
 };
 
