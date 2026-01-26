@@ -1107,7 +1107,7 @@ export class AuroCombobox extends AuroElement {
     this.validation.validate(this, force);
   }
 
-  async updated(changedProperties) {
+  updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
       if (this.value && this.value.length > 0) {
@@ -1165,7 +1165,11 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('error')) {
-      await this.input.setAttribute('error', this.getAttribute('error'));
+      if (this.hasAttribute('error')) {
+        this.input.setAttribute('error', this.getAttribute('error'));
+      } else {
+        this.input.removeAttribute('error');
+      }
       this.validate(true);
     }
 

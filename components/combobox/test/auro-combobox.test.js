@@ -542,6 +542,30 @@ function runFulltest(mobileview) {
   //   await expect(el.hasAttribute('validity')).to.be.false;
   //   await expect(el.value).to.equal(undefined);
   // });
+
+  it('shows error state when error attribute is set', async () => {
+    const el = await defaultFixture(mobileview);
+
+    // Initial state should have no error
+    await expect(el.hasAttribute('error')).to.be.false;
+    await expect(el.validity).to.be.undefined;
+
+    // Set error attribute
+    el.setAttribute('error', 'This is an error message');
+    await elementUpdated(el);
+
+    // Should show error state with customError validity
+    await expect(el.getAttribute('validity')).to.be.equal('customError');
+    await expect(el.errorMessage).to.be.equal('This is an error message');
+
+    // Remove error attribute
+    el.removeAttribute('error');
+    el.validate(true);
+    await elementUpdated(el);
+
+    // Should clear the customError state (validity should not be customError anymore)
+    await expect(el.getAttribute('validity')).to.not.equal('customError');
+  });
 }
 
 /**

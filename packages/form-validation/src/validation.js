@@ -366,7 +366,7 @@ export default class AuroFormValidation {
       }
     }
 
-    if (this.auroInputElements?.length > 0 && elem.validity !== "valueMissing") {
+    if (this.auroInputElements?.length > 0 && elem.validity !== "valueMissing" && elem.validity !== "customError") {
 
       const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
 
