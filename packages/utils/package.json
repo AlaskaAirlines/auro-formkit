@@ -6,6 +6,12 @@
   "type": "module",
   "main": "./src/index.js",
   "types": "tsc",
+  "bin": {
+    "update-stories": "./update-stories.js"
+  },
+  "scripts": {
+    "update-stories": "node update-stories.js"
+  },
   "exports": {
     ".": "./src/index.js"
   }
