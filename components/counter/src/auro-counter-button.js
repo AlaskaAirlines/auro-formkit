@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -11,7 +11,6 @@ import { AuroButton } from "@aurodesignsystem/auro-button/class";
 
 import * as RuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-// build the component class
 export class AuroCounterButton extends AuroButton {
 
   constructor() {

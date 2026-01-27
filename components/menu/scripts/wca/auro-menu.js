@@ -2,7 +2,7 @@
 import { AuroMenu } from '../../src/auro-menu.js';
 
 /**
- * The auro-menu element provides users a way to select from a list of options.
+ * The `auro-menu` element provides users a way to select from a list of options.
  */
 class AuroMenuWCA extends AuroMenu {}
 

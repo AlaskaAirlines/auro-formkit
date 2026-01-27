@@ -1,5 +1,5 @@
-/* eslint-disable max-lines */
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+/* eslint-disable max-lines, no-underscore-dangle */
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -19,16 +19,10 @@ import tokenCss from './styles/tokens-css.js';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * @attr {Boolean} checked - If set to true, the radio button will be filled.
- * @attr {Boolean} disabled - If set to true, the radio button will be non-clickable.
- * @attr {Boolean} required - Defines element as required.
- * @attr {Boolean} error - If set to true, sets an error state on the radio button.
- * @attr {Boolean} onDark - DEPRECATED - use `appearance` instead.
+ * The `auro-radio` element is used to a button that allows the user to select one option from a set.
+ * @customElement auro-radio
+ *
  * @event toggleSelected - Notifies that the component has toggled the checked/selected state.
- *
- * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
- * @attr id
- *
  * @event {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
  * @event {InputEvent} input - Notifies when when checked value is changed by user's interface.
  * @event focusSelected - Notifies that the component has gained focus.
@@ -40,12 +34,14 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @csspart radio-input - apply css to a specific checkbox's input.
  * @csspart radio-label - apply css to a specific checkbox's label.
  */
-
-// build the component class
 export class AuroRadio extends LitElement {
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  _initializeDefaults() {
     this.appearance = "default";
     this.checked = false;
     this.disabled = false;
@@ -75,45 +71,44 @@ export class AuroRadio extends LitElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
         type: String,
         reflect: true
       },
+
+      /**
+       * If set to true, the radio button will be filled.
+       */
       checked: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * If set to true, the radio button will be non-clickable.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
-      required: {
-        type: Boolean,
-        reflect: true
-      },
+
+      /**
+       * If set to true, sets an error state on the radio button.
+       */
       error: {
         type: Boolean,
         reflect: true
       },
-      onDark: {
-        type: Boolean,
-        reflect: true
-      },
-      label:    { type: String },
-      name:     { type: String },
-      value:    { type: String },
 
       /**
-       * Whether or not the radio button has been touched by the user.
-       * @private
+       * The id global attribute defines an identifier (ID) which must be unique in the whole document.
        */
-      touched: {
-        type: Boolean,
-        reflect: true,
-        attribute: false
+      id: {
+        type: String,
+        reflect: true
       },
 
       /**
@@ -127,19 +122,60 @@ export class AuroRadio extends LitElement {
       },
 
       /**
+       * Label for the radio button.
+       */
+      label:    { type: String },
+
+      /**
+       * Name for the radio button group.
+       */
+      name:     { type: String },
+
+      /**
+       * DEPRECATED - use `appearance="inverse"` instead.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Defines element as required.
+       */
+      required: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * Don't add to api.md since changing of this can easily break a11y.
        * @private
        */
       role: {
         type: String,
         reflect: true
-      }
+      },
+
+      /**
+       * Whether or not the radio button has been touched by the user.
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
+      },
+
+      /**
+       * The value of the radio button.
+       */
+      value:    { type: String }
     };
   }
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-radio"] - The name of element that you want to register to.
+   * @param {string} [name="auro-radio"] - The name of the element that you want to register.
    *
    * @example
    * AuroRadio.register("custom-radio") // This will resgiter this element to <custom-radio/>

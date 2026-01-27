@@ -25,18 +25,12 @@ import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, -1] }] */
-/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle */
 
 /**
- * @attr {String} validity - Specifies the `validityState` this element is in.
- * @attr {String} setCustomValidity - Sets a custom help text message to display for all validityStates.
- * @attr {String} setCustomValidityCustomError - Custom help text message to display when validity = `customError`.
- * @attr {String} setCustomValidityValueMissing - Custom help text message to display when validity = `valueMissing`.
- * @attr {String} error - When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
- * @attr {Boolean} noValidate - If set, disables auto-validation on blur.
- * @attr {Boolean} onDark - DEPRECATED - use `appearance` instead.
- * @attr {Boolean} required - Populates the `required` attribute on the element. Used for client-side validation.
- * @attr {Object} optionSelected - Specifies the current selected radio button.
+ * The `auro-radio-group` element is used to group a set `auro-radio` elements.
+ * @customElement auro-radio-group
+ *
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
@@ -49,6 +43,10 @@ export class AuroRadioGroup extends LitElement {
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  _initializeDefaults() {
     this.appearance = "default";
     this.disabled = false;
     this.horizontal = false;
@@ -104,7 +102,7 @@ export class AuroRadioGroup extends LitElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -112,51 +110,91 @@ export class AuroRadioGroup extends LitElement {
         reflect: true
       },
 
-      disabled:   {
+      /**
+       * If true, all radio buttons will be disabled.
+       */
+      disabled: {
         type: Boolean,
         reflect: true
       },
-      horizontal: { type: Boolean },
-      error:      {
+
+      /**
+       * If true, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value.
+       */
+      error: {
         type: String,
         reflect: true
       },
-      value: {
-        type: String
+
+      /**
+       * Indicates whether the legend slot is set or not.
+       * @private
+       */
+      hasLegend: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
       },
+
+      /**
+       * If true, displays radio buttons horizontally.
+       */
+      horizontal: { type: Boolean },
+
+      /**
+       * If true, disables auto-validation on blur.
+       */
       noValidate: {
         type: Boolean,
         reflect: true
       },
+
+      /**
+       * DEPRECATED - use `appearance="inverse"` instead.
+       */
       onDark: {
         type: Boolean,
         reflect: true
       },
-      required: {
-        type: Boolean,
-        reflect: true
-      },
-      setCustomValidity: {
-        type: String
-      },
-      setCustomValidityCustomError: {
-        type: String
-      },
-      setCustomValidityValueMissing: {
-        type: String
-      },
-      validity: {
-        type: String,
-        reflect: true
-      },
+
+      /**
+       * Specifies the current selected radio button.
+       */
       optionSelected: {
         type: Object
       },
 
       /**
+       * Populates the `required` attribute on the element. Used for client-side validation.
+       */
+      required: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets a custom help text message to display for all validityStates.
+       */
+      setCustomValidity: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `customError`.
+       */
+      setCustomValidityCustomError: {
+        type: String
+      },
+
+      /**
+       * Custom help text message to display when validity = `valueMissing`.
+       */
+      setCustomValidityValueMissing: {
+        type: String
+      },
+
+      /**
        * Indicates whether the radio group is in a dirty state (has been interacted with).
-       * @type {boolean}
-       * @default false
        * @private
        */
       touched: {
@@ -166,22 +204,25 @@ export class AuroRadioGroup extends LitElement {
       },
 
       /**
-       * Indicates whether the legend slot is set or not.
-       * @type {boolean}
-       * @default false
-       * @private
+       * Specifies the `validityState` this element is in.
        */
-      hasLegend: {
-        type: Boolean,
-        reflect: false,
-        attribute: false
+      validity: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Specifies the current value of the selected radio button.
+       */
+      value: {
+        type: String
       }
     };
   }
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-radio-group"] - The name of element that you want to register to.
+   * @param {string} [name="auro-radio-group"] - The name of the element that you want to register.
    *
    * @example
    * AuroRadioGroup.register("custom-radio-group") // This will register this element to <custom-radio-group/>

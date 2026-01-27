@@ -1,18 +1,9 @@
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
-/*
-  eslint-disable
-  max-lines,
-  lit/no-invalid-html,
-  lit/binding-positions,
-  template-curly-spacing,
-  line-comment-position,
-  no-inline-comments,
-  no-warning-comments
-  */
+/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, line-comment-position, no-inline-comments, no-warning-comments, no-underscore-dangle */
 
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
@@ -37,7 +28,6 @@ import tokensCss from "./styles/tokens-css.js";
 
 import styleCss from "./styles/style-css.js";
 
-// default layout
 import classicColorCss from "./styles/classic/color-css.js";
 import classicLayoutCss from "./styles/classic/style-css.js";
 
@@ -50,8 +40,10 @@ import { ifDefined } from "lit/directives/if-defined.js";
 
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 
-
-/*
+/**
+ * The `auro-dropdown` element provides a way to place content in a bib that can be toggled.
+ * @customElement auro-dropdown
+ *
  * @slot - Default slot for the popover content.
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
@@ -87,7 +79,7 @@ export class AuroDropdown extends AuroElement {
     /** @private */
     this.bibElement = createRef();
 
-    this.privateDefaults();
+    this._intializeDefaults();
   }
 
   /**
@@ -108,7 +100,7 @@ export class AuroDropdown extends AuroElement {
    * @private
    * @returns {void} Internal defaults.
    */
-  privateDefaults() {
+  _intializeDefaults() {
     this.appearance = 'default';
     this.chevron = false;
     this.disabled = false;
@@ -230,8 +222,17 @@ export class AuroDropdown extends AuroElement {
     return {
 
       /**
+       * The value for the role attribute of the trigger element.
+       */
+      a11yRole: {
+        type: String || undefined,
+        attribute: false,
+        reflect: false
+      },
+
+      /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -241,7 +242,6 @@ export class AuroDropdown extends AuroElement {
 
       /**
        * If declared, bib's position will be automatically calculated where to appear.
-       * @default false
        */
       autoPlacement: {
         type: Boolean,
@@ -250,7 +250,6 @@ export class AuroDropdown extends AuroElement {
 
       /**
        * If declared, the dropdown will only show by calling the API .show() public method.
-       * @default false
        */
       disableEventShow: {
         type: Boolean,
@@ -267,11 +266,11 @@ export class AuroDropdown extends AuroElement {
 
       /**
        * If declared, the dropdown displays a chevron on the right.
-       * @attr {Boolean} chevron
        */
       chevron: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        attribute: 'chevron'
       },
 
       /**
@@ -308,7 +307,7 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared in combination with not using the `simple` property or `helpText` slot content, will apply red color to both.
+       * If declared, will apply error UI to the dropdown.
        */
       error: {
         type: Boolean,
@@ -363,14 +362,24 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
-       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
        * When expanded, the dropdown will automatically display in fullscreen mode
        * if the screen size is equal to or smaller than the selected breakpoint.
-       * @default sm
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
+       * @default 'sm'
        */
       fullscreenBreakpoint: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Sets the layout of the dropdown.
+       * @type {'classic' | 'emphasized' | 'snowflake'}
+       * @default 'classic'
+       */
+      layout: {
         type: String,
         reflect: true
       },
@@ -395,7 +404,6 @@ export class AuroDropdown extends AuroElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
-       * @default false
        */
       noFlip: {
         type: Boolean,
@@ -404,7 +412,6 @@ export class AuroDropdown extends AuroElement {
 
       /**
        * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
-       * @default false
        */
       shift: {
         type: Boolean,
@@ -437,7 +444,7 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
+       * DEPRECATED - use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
@@ -454,7 +461,8 @@ export class AuroDropdown extends AuroElement {
 
       /**
        * Position where the bib should appear relative to the trigger.
-       * @default bottom-start
+       * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
+       * @default 'bottom-start'
        */
       placement: {
         type: String,
@@ -466,15 +474,6 @@ export class AuroDropdown extends AuroElement {
        */
       tabIndex: {
         type: Number
-      },
-
-      /**
-       * The value for the role attribute of the trigger element.
-       */
-      a11yRole: {
-        type: String || undefined,
-        attribute: false,
-        reflect: false
       }
     };
   }
@@ -501,7 +500,7 @@ export class AuroDropdown extends AuroElement {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-dropdown"] - The name of element that you want to register to.
+   * @param {string} [name="auro-dropdown"] - The name of the element that you want to register.
    *
    * @example
    * AuroDropdown.register("custom-dropdown") // this will register this element to <custom-dropdown/>

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -30,6 +30,9 @@ import { ifDefined } from "lit/directives/if-defined.js";
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
+ * The `auro-combobox` element provides users with a way to select an option from a list of filtered or suggested options based on user input.
+ * @customElement auro-combobox
+ *
  * @slot - Default slot for the menu content.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
@@ -43,13 +46,19 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @event inputValue - Notifies that the components internal HTML5 input value has changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
-
-// build the component class
 export class AuroCombobox extends AuroElement {
 
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  /**
+   * @private
+   * @returns {void} Internal defaults.
+   */
+  _initializeDefaults() {
     // Defaults that effect the combobox behavior and state
     this.appearance = "default";
     this.disabled = false;
@@ -80,14 +89,7 @@ export class AuroCombobox extends AuroElement {
     this.shift = false;
     this.autoPlacement = false;
 
-    this.privateDefaults();
-  }
-
-  /**
-   * @private
-   * @returns {void} Internal defaults.
-   */
-  privateDefaults() {
+    // Private properties that manage internal state
     const versioning = new AuroDependencyVersioning();
 
     this.dropdownTag = versioning.generateTag('auro-formkit-combobox-dropdown', formkitVersion, AuroDropdown);
@@ -118,7 +120,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @property {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -128,7 +130,6 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported.
-       * @default false
        */
       autocomplete: {
         type: String,
@@ -157,7 +158,8 @@ export class AuroCombobox extends AuroElement {
        * Sets the behavior of the combobox, "filter" or "suggestion".
        * "filter" requires the user to select an option from the menu.
        * "suggestion" allows the user to enter a value not present in the menu options.
-       * @default suggestion
+       * @type {'filter' | 'suggestion'}
+       * @default 'suggestion'
        */
       behavior: {
         type: String,
@@ -232,7 +234,18 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
+       * Sets the layout of the combobox.
+       * @type {'classic' | 'emphasized' | 'snowflake'}
+       * @default 'classic'
+       */
+      layout: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * If declared, the popover and trigger will be set to the same width.
+       * @private
        */
       matchWidth: {
         type: Boolean,
@@ -250,7 +263,6 @@ export class AuroCombobox extends AuroElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
-       * @default false
        */
       noFlip: {
         type: Boolean,
@@ -259,7 +271,6 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
-       * @default false
        */
       shift: {
         type: Boolean,
@@ -284,7 +295,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
+       * DEPRECATED - use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
@@ -303,28 +314,21 @@ export class AuroCombobox extends AuroElement {
        * If declared, selecting a menu option will not change the input value. By doing so,
        * the current menu filter will be preserved and the user can continue from their last
        * filter state. It is recommended to use this in combination with the `displayValue` slot.
-       * @type {Boolean}
        */
       persistInput: {
         type: Boolean,
         reflect: true
       },
 
-      /* eslint-disable jsdoc/require-description-complete-sentence */
       /**
        * Position where the bib should appear relative to the trigger.
-       * Accepted values:
-       * "top" | "right" | "bottom" | "left" |
-       * "bottom-start" | "top-start" | "top-end" |
-       * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
-       * @default bottom-start
+       * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
+       * @default 'bottom-start'
        */
       placement: {
         type: String,
         reflect: true
       },
-      /* eslint-enable jsdoc/require-description-complete-sentence */
 
       /**
        * Define custom placeholder text, only supported by date input formats.
@@ -372,8 +376,6 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Indicates whether the combobox is in a dirty state (has been interacted with).
-       * @type {boolean}
-       * @default false
        * @private
        */
       touched: {
@@ -391,7 +393,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Applies the defined value as the type attribute on auro-input.
+       * Applies the defined value as the type attribute on `auro-input`.
        */
       type: {
         type: String,
@@ -433,12 +435,12 @@ export class AuroCombobox extends AuroElement {
       /* eslint-enable jsdoc/require-description-complete-sentence */
 
       /**
-       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
-       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       * Defines the screen size breakpointat which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
        * When expanded, the dropdown will automatically display in fullscreen mode
        * if the screen size is equal to or smaller than the selected breakpoint.
-       * @default sm
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
+       * @default 'sm'
        */
       fullscreenBreakpoint: {
         type: String,
@@ -499,7 +501,7 @@ export class AuroCombobox extends AuroElement {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name='auro-combobox'] - The name of element that you want to register to.
+   * @param {string} [name='auro-combobox'] - The name of the element that you want to register.
    *
    * @example
    * AuroCombobox.register('custom-combobox') // this will register this element to <custom-combobox/>

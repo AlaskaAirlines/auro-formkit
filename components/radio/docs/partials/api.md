@@ -1,20 +1,25 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/api.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## API Examples
-
-### Default
-
-The following example illustrates the default use of the `<auro-radio>` custom element.
+## Basic Radio
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
 
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic-standalone.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+## Basic Radio Group
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
@@ -24,39 +29,39 @@ The following example illustrates the default use of the `<auro-radio>` custom e
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearance.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
 </auro-accordion>
 
-### Default Group
+## Property & Attribute Examples
 
-This is a default configuration using the `<auro-radio-group>` and `<auro-radio>` elements. Notice the use of the `slot` attribute to set the group title of the `<auro-radio-group>`.
+### Appearance on Dark Backgrounds
 
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basicGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
+Use the `appearance="inverse"` attribute to render the radio for use on dark backgrounds.
 
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-  <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basicGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceGroup.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-inverse.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
 
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-group.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-inverse-group.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
 
 ### Checked
 
@@ -67,18 +72,23 @@ Use the `checked` attribute to pre-select a `<auro-radio>` element.
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceChecked.html) -->
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/checked.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-checked.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-  <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/checked.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceChecked.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-checked.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -92,18 +102,24 @@ Use the `disabled` attribute to disable singular `<auro-radio>` elements or the 
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/disabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceDisabled.html) -->
+</auro-accordion>
+
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-disabled.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-disabled.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -119,18 +135,23 @@ A custom error message can be set using the `error` attribute, or it can be used
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceError.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
   <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/error.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/inverseAppearanceError.html) -->
+</auro-accordion>
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-error.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-error.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
@@ -171,42 +192,48 @@ When present, the `required` attribute specifies that an `<auro-radio>` within t
 
 </auro-accordion>
 
-### Custom optional label
-
-The `<auro-radio-group>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optionalLabel.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optionalLabel.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
+## Method Examples
 
 ### Reset State
 
 Use the `reset()` method to reset the `<auro-radio-group>`'s `value` and `validity` state. Doing so will preserve all other attributes and properties.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/resetState.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reset-state.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/resetState.js) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
+
+## Slot Examples
+
+### Optional Label
+
+The `<auro-radio-group>` supports an `optionalLabel` slot, where users can can override the default `(optional)` notification text.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optional-label.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optional-label.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+## Common Usage Patterns & Functional Examples
 
 ### Dynamic Example
 
@@ -230,28 +257,44 @@ This example demonstrates a data drive approach to rendering `<auro-radio>` butt
 
 </auro-accordion>
 
-## Multiline Label
+### Multiline Label
 
 Example to show text wrapping on multiline labels.
 
 <div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multilineGroup.html) -->
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multiline-group.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
 
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multilineGroup.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multiline-group.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
 
+### Accordion Nested Group
 
+This example shows how to use `<auro-accordion>` with the `<auro-radio-group>` and `<auro-radio>` elements for
+nested/optional groups (such as a "More Options" section in a payment processor).
 
-## Theme Support
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/accordion-example.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
 
-The component may be restyled using the following code sample and changing the values of the following token(s).
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/accordion-example.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
+## Restyle Component with CSS Variables
+
+The component may be restyled by changing the values of the following token(s).
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../src/styles/tokens.scss) -->
 <!-- AURO-GENERATED-CONTENT:END -->

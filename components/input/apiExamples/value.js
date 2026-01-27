@@ -1,6 +1,6 @@
 export function programmaticallySetValue() {
   const elem = document.querySelector('#setProgrammaticValueExample');
-  
+
   // set value of auro-input element
   document.querySelector('#setValidValueBtn').addEventListener('click', () => {
     elem.value = "Alaska Airlines is the best";

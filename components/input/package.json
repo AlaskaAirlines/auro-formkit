@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "@aurodesignsystem/auro-helptext": "*",
-    "@aurodesignsystem/auro-icon": "^9.1.0",
+    "@aurodesignsystem/auro-icon": "^9.1.1",
     "@aurodesignsystem/auro-layout-element": "*",
     "chalk": "^5.4.1",
     "imask": "^7.6.1"
   },
   "devDependencies": {
-    "@alaskaairux/icons": "^5.5.0",
+    "@alaskaairux/icons": "^5.14.0",
     "@aurodesignsystem/build-tools": "*",
     "@aurodesignsystem/config": "*",
     "@aurodesignsystem/form-validation": "*",

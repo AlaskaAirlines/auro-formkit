@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -50,11 +50,15 @@ import { LitElement } from 'lit';
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
+ * The `auro-datepicker` component provides users with a way to select a date or date range from a calendar popup or fullscreen calendar on mobile.
+ * @customElement auro-datepicker
+ * 
  * @slot helpText - Defines the content of the helpText.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
  * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
  * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
+ * @slot label - Defines the label content for the entire datepicker when `layout="snowflake"`.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
  * @slot fromLabel - Defines the label content for the first input.
  * @slot date_MM_DD_YYYY - Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot.
@@ -72,8 +76,6 @@ import { LitElement } from 'lit';
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  * @event auroDatePicker-newSlotContent - Notifies that new slot content has been added to the datepicker.
  */
-
-// build the component class
 export class AuroDatePicker extends AuroElement {
   constructor() {
     super();
@@ -336,19 +338,19 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
-       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
        * When expanded, the dropdown will automatically display in fullscreen mode
        * if the screen size is equal to or smaller than the selected breakpoint.
-       * @default sm
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
+       * @default 'sm'
        */
       fullscreenBreakpoint: {
         type: String,
         reflect: true
       },
 
-      /** Exposes inputmode attribute for input.  */
+      /** Exposes inputmode attribute for input. */
       inputmode: {
         type: String,
         attribute: true,
@@ -361,6 +363,16 @@ export class AuroDatePicker extends AuroElement {
        */
       largeFullscreenHeadline: {
         type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Sets the layout of the datepicker.
+       * @type {'classic' | 'snowflake'}
+       * @default 'classic'
+       */
+      layout: {
+        type: String,
         reflect: true
       },
 
@@ -397,7 +409,6 @@ export class AuroDatePicker extends AuroElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
-       * @default false
        */
       noFlip: {
         type: Boolean,
@@ -406,7 +417,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
-       * @default false
        */
       shift: {
         type: Boolean,
@@ -431,7 +441,7 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * DEPRECATED - use `appearance` instead.
+       * DEPRECATED - use `appearance="inverse"` instead.
        */
       onDark: {
         type: Boolean,
@@ -458,12 +468,8 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Position where the bib should appear relative to the trigger.
-       * Accepted values:
-       * "top" | "right" | "bottom" | "left" |
-       * "bottom-start" | "top-start" | "top-end" |
-       * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end"
-       * @default bottom-start
+       * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
+       * @default 'bottom-start'
        */
       placement: {
         type: String,
@@ -562,8 +568,6 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Indicates whether the datepicker is in a dirty state (has been interacted with).
-       * @type {boolean}
-       * @default false
        * @private
        */
       touched: {
@@ -593,7 +597,7 @@ export class AuroDatePicker extends AuroElement {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-datepicker"] - The name of element that you want to register to.
+   * @param {string} [name="auro-datepicker"] - The name of the element that you want to register.
    *
    * @example
    * AuroDatePicker.register("custom-datepicker") // this will register this element to <custom-datepicker/>
@@ -677,6 +681,10 @@ export class AuroDatePicker extends AuroElement {
     return 'body-default';
   }
 
+  /**
+   * @private
+   * Common display value wrapper classes.
+   */
   get commonDisplayValueWrapperClasses() {
     return {
       'displayValueWrapper': true,

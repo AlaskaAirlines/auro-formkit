@@ -16,7 +16,8 @@
    scss/selector-no-redundant-nesting-selector,
    no-descending-specificity,
    no-duplicate-selectors,
-   declaration-empty-line-before */
+   declaration-empty-line-before,
+   declaration-no-important */
 
 // Import Auro tokens
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
@@ -29,7 +30,15 @@
 // container styles - defines the look of the outer custom component
 :host {
   display: block;
+
   --cbxLocation: var(--ds-size-50, #{vac.$ds-size-50});
+}
+
+// Override global *:focus-visible rule to remove focus outline on the host element.
+// Focus indication is shown on the checkbox visual via :focus-within styles in color.scss.
+// !important is required to override the global design system *:focus-visible rule.
+:host(:focus-visible) {
+  outline: none !important;
 }
 
 fieldset {

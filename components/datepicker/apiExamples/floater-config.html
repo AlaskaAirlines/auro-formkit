@@ -1,0 +1,30 @@
+<div style="width: 400px">
+  <auro-datepicker offset="20" placement="bottom-start" noFlip>
+    <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+    <span slot="fromLabel">bottom-start with 20px offset and noFlip</span>
+    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  </auro-datepicker>
+  <br/>
+  <auro-datepicker offset="20" placement="bottom-start">
+    <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+    <span slot="fromLabel">bottom-start with 20px offset and flip</span>
+    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  </auro-datepicker>
+  <br/>
+  <auro-datepicker offset="20" placement="right" autoPlacement noFlip>
+    <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+    <span slot="fromLabel">right with 20px offset, noFlip and autoPlacement</span>
+    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  </auro-datepicker>
+</div>
+
+<div style="width: 600px; padding-top: 1em;">
+  <p>Range bottom-start with 20px offset, noFlip and shift enabled</p>
+  <auro-datepicker range offset="20" placement="bottom-start" shift noFlip minDate="07/08/2025">
+    <span slot="ariaLabel.bib.close">Close Calendar</span>
+    <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
+    <span slot="fromLabel">Departure</span>
+    <span slot="toLabel">Return</span>
+    <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+  </auro-datepicker>
+</div>

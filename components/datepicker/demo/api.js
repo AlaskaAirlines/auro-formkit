@@ -1,13 +1,13 @@
-import { alertValueExample } from './../apiExamples/alertValue.js';
+import { alertValueExample } from './../apiExamples/alert-value';
 import { errorExample } from './../apiExamples/error';
-import { focusExample } from './../apiExamples/focus.js';
-import { populateSlotContentExample } from './../apiExamples/dynamicSlot.js';
-import { updateMaxDateExample } from './../apiExamples/updateMaxDate';
-import { updateMinDateExample } from './../apiExamples/updateMinDate';
+import { focusExample } from './../apiExamples/focus';
+import { populateSlotContentExample } from './../apiExamples/dynamic-slot';
+import { updateMaxDateExample } from './../apiExamples/update-max-date';
+import { updateMinDateExample } from './../apiExamples/update-min-date';
 import { validityExample } from './../apiExamples/validity';
-import { inDialogExample } from '../apiExamples/inDialog.js';
-import { localizationExample } from '../apiExamples/localization.js';
-import { resetStateExample } from '../apiExamples/resetState.js';
+import { inDialogExample } from '../apiExamples/in-dialog';
+import { localizationExample } from '../apiExamples/localization';
+import { resetStateExample } from '../apiExamples/reset-state';
 import '../src/registered.js';
 
 export function initExamples(initCount) {

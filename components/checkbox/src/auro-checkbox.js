@@ -1,8 +1,9 @@
-/* eslint-disable max-lines */
-// Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
+
+/* eslint-disable max-lines, no-underscore-dangle */
 
 import { LitElement, html } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
@@ -17,17 +18,15 @@ import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /**
- * Custom element for the purpose of allowing users to select one or more options of a limited number of choices.
- *
- * @prop {string} id - The id global attribute defines an identifier (ID) which must be unique in the whole document.
- * @attr id
+ * The `auro-checkbox` element is for the purpose of allowing users to select one or more options of a limited number of choices.
+ * @customElement auro-checkbox
  *
  * @csspart checkbox - apply css to a specific checkbox.
  * @csspart checkbox-input - apply css to a specific checkbox's input.
  * @csspart checkbox-label - apply css to a specific checkbox's label.
  *
- * @event {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
- * @event {InputEvent} input - Notifies when when checked value is changed by user's interface.
+ * @fires {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
+ * @fires {InputEvent} input - Notifies when when checked value is changed by user's interface.
  */
 
 // build the component class
@@ -35,26 +34,24 @@ export class AuroCheckbox extends LitElement {
   constructor() {
     super();
 
+    this._initializeDefaults();
+  }
+
+  _initializeDefaults() {
     this.apperance = 'default';
     this.checked = false;
     this.disabled = false;
     this.error = false;
     this.onDark = false;
     this.touched = false;
+    this.tabIndex = 0;
+    this.ariaChecked = 'false';
+    this.role = 'checkbox';
 
     /**
      * @private
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
-
-    /**
-     * @private
-     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
-     */
-    this.constructor.shadowRootOptions = {
-      ...LitElement.shadowRootOptions,
-      delegatesFocus: true,
-    };
   }
 
   static get styles() {
@@ -72,7 +69,7 @@ export class AuroCheckbox extends LitElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -105,35 +102,10 @@ export class AuroCheckbox extends LitElement {
       },
 
       /**
-       * Accepts any string and is used to identify related checkboxes when submitting form data.
+       * The id global attribute defines an identifier (ID) which must be unique in the whole document.
        */
-      name: { type: String },
-
-      /**
-       * DEPRECATED - use `appearance` instead.
-       */
-      onDark: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * Sets the element's input value. Must be unique within an auro-checkbox-group element.
-       */
-      value: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * Indicates whether the checkbox has been interacted with.
-       * @type {boolean}
-       * @private
-       */
-      touched: {
-        type: Boolean,
-        reflect: true,
-        attribute: false
+      id: {
+        type: String
       },
 
       /**
@@ -144,7 +116,79 @@ export class AuroCheckbox extends LitElement {
         type: String,
         reflect: false,
         attribute: false
-      }
+      },
+
+      /**
+       * Accepts any string and is used to identify related checkboxes when submitting form data.
+       */
+      name: { type: String },
+
+      /**
+       * DEPRECATED - use `appearance="inverse"` instead.
+       */
+      onDark: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Indicates whether the checkbox has been interacted with.
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
+      },
+
+      /**
+       * Sets the element's input value. Must be unique within an auro-checkbox-group element.
+       */
+      value: {
+        type: String,
+        reflect: false
+      },
+
+      /**
+       * The tabindex attribute for the checkbox.
+       * @private
+       */
+      tabIndex: {
+        type: Number,
+        reflect: true,
+        attribute: 'tabindex'
+      },
+
+      /**
+       * The aria-checked attribute for the checkbox.
+       * @private
+       */
+      ariaChecked: {
+        type: String,
+        reflect: true,
+        attribute: 'aria-checked'
+      },
+
+      /**
+       * The aria-disabled attribute for the checkbox.
+       * @private
+       */
+      ariaDisabled: {
+        type: String,
+        reflect: true,
+        attribute: 'aria-disabled'
+      },
+
+      /**
+       * The ARIA role for the element. Must remain 'checkbox' for screen readers
+       * to correctly identify this as a checkbox control.
+       * @private
+       */
+      role: {
+        type: String,
+        reflect: true
+      },
+
     };
   }
 
@@ -210,7 +254,7 @@ export class AuroCheckbox extends LitElement {
   /**
    * Function to generate checkmark svg.
    * @private
-   * @returns {void}
+   * @returns {HTMLElement}
    */
   generateIconHtml() {
     this.dom = new DOMParser().parseFromString(checkLg.svg, 'text/html');
@@ -229,6 +273,22 @@ export class AuroCheckbox extends LitElement {
     this.checked = false;
     this.error = false;
     this.touched = false;
+  }
+
+  /**
+   * Updates the aria-label based on slot content.
+   * @private
+   * @returns {void}
+   */
+  updateAriaLabel() {
+    const slot = this.shadowRoot.querySelector('slot');
+    const text = slot.assignedNodes().
+      map((node) => node.textContent).
+      join('').
+      trim();
+    if (text) {
+      this.setAttribute('aria-label', text);
+    }
   }
 
   firstUpdated() {
@@ -276,6 +336,24 @@ export class AuroCheckbox extends LitElement {
   }
 
   /**
+   * Updates ARIA attributes when properties change.
+   * @private
+   * @param {Map} changedProperties - Map of changed properties.
+   * @returns {void}
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('checked')) {
+      this.ariaChecked = this.checked ? 'true' : 'false';
+    }
+
+    if (changedProperties.has('disabled')) {
+      this.ariaDisabled = this.disabled ? 'true' : undefined;
+    }
+  }
+
+  /**
    * Handles keydown event to toggle the checkbox with Space key.
    * @private
    * @param {KeyboardEvent} event - The keydown event from the checkbox input.
@@ -304,7 +382,7 @@ export class AuroCheckbox extends LitElement {
       <div class="cbxContainer body-default" part="checkbox">
         <div class="inputContainer">
           <input
-            class="util_displayHiddenVisually cbx--input"
+            class="util_displayHidden cbx--input"
             part="checkbox-input"
             @change="${this.handleChange}"
             @input="${this.handleInput}"
@@ -314,13 +392,15 @@ export class AuroCheckbox extends LitElement {
             name="${ifDefined(this.name)}"
             type="checkbox"
             .value="${this.value}"
+            aria-hidden="true"
+            tabindex="-1"
           />
           ${this.checked ? this.generateIconHtml() : undefined}
         </div>
 
-        <label for="${this.inputId}" class="${classMap(labelClasses)}" part="checkbox-label">
-          <slot></slot>
-        </label>
+        <span class="${classMap(labelClasses)}" part="checkbox-label">
+          <slot @slotchange="${this.updateAriaLabel}"></slot>
+        </span>
       </div>
     `;
   }

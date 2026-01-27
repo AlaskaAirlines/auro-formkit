@@ -1,14 +1,14 @@
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers */
-import { showExample } from './../apiExamples/programmaticallyShow.js';
-import { hideExample } from './../apiExamples/programmaticallyHide.js';
-import { inDialogExample } from '../apiExamples/inDialog.js';
+import { hideExample } from './../apiExamples/programmatically-hide.js';
+import { showExample } from './../apiExamples/programmatically-show.js';
+import { inDialogExample } from './../apiExamples/in-dialog.js';
 import '../src/registered.js';
 
 export function initExamples(initialCount = 0) {
   try {
     // javascript example function calls to be added here upon creation to test examples
-    showExample();
     hideExample();
+    showExample();
     inDialogExample();
   } catch (err) {
     if (initialCount <= 20) {

@@ -1,22 +1,24 @@
 # auro-radio-group
 
+The `auro-radio-group` element is used to group a set `auro-radio` elements.
+
 ## Properties
 
-| Property                        | Attribute                       | Type      | Default     | Description                                      |
-|---------------------------------|---------------------------------|-----------|-------------|--------------------------------------------------|
-| `appearance`                    | `appearance`                    | `string`  | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
-| `disabled`                      | `disabled`                      | `boolean` | false       |                                                  |
-| `error`                         | `error`                         | `String`  |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
-| `horizontal`                    | `horizontal`                    | `boolean` | false       |                                                  |
-| `noValidate`                    | `noValidate`                    | `Boolean` |             | If set, disables auto-validation on blur.        |
-| `onDark`                        | `onDark`                        | `Boolean` | false       | DEPRECATED - use `appearance` instead.           |
-| `optionSelected`                | `optionSelected`                | `Object`  | "undefined" | Specifies the current selected radio button.     |
-| `required`                      | `required`                      | `Boolean` | false       | Populates the `required` attribute on the element. Used for client-side validation. |
-| `setCustomValidity`             | `setCustomValidity`             | `String`  |             | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `String`  |             | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `String`  |             | Custom help text message to display when validity = `valueMissing`. |
-| `validity`                      | `validity`                      | `String`  | "undefined" | Specifies the `validityState` this element is in. |
-| `value`                         | `value`                         | `string`  | "undefined" |                                                  |
+| Property                        | Attribute                       | Type                     | Default     | Description                                      |
+|---------------------------------|---------------------------------|--------------------------|-------------|--------------------------------------------------|
+| `appearance`                    | `appearance`                    | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
+| `disabled`                      | `disabled`                      | `boolean`                |             | If true, all radio buttons will be disabled.     |
+| `error`                         | `error`                         | `string`                 |             | If true, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
+| `horizontal`                    | `horizontal`                    | `boolean`                |             | If true, displays radio buttons horizontally.    |
+| `noValidate`                    | `noValidate`                    | `boolean`                |             | If true, disables auto-validation on blur.       |
+| `onDark`                        | `onDark`                        | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `optionSelected`                | `optionSelected`                | `object`                 |             | Specifies the current selected radio button.     |
+| `required`                      | `required`                      | `boolean`                |             | Populates the `required` attribute on the element. Used for client-side validation. |
+| `setCustomValidity`             | `setCustomValidity`             | `string`                 |             | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                 |             | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                 |             | Custom help text message to display when validity = `valueMissing`. |
+| `validity`                      | `validity`                      | `string`                 |             | Specifies the `validityState` this element is in. |
+| `value`                         | `value`                         | `string`                 |             | Specifies the current value of the selected radio button. |
 
 ## Methods
 
@@ -49,20 +51,22 @@
 
 # auro-radio
 
+The `auro-radio` element is used to a button that allows the user to select one option from a set.
+
 ## Properties
 
-| Property     | Attribute    | Type      | Default     | Description                                      |
-|--------------|--------------|-----------|-------------|--------------------------------------------------|
-| `appearance` | `appearance` | `string`  | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
-| `checked`    | `checked`    | `Boolean` | false       | If set to true, the radio button will be filled. |
-| `disabled`   | `disabled`   | `Boolean` | false       | If set to true, the radio button will be non-clickable. |
-| `error`      | `error`      | `Boolean` | false       | If set to true, sets an error state on the radio button. |
-| `id`         | `id`         | `string`  |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
-| `label`      | `label`      | `string`  |             |                                                  |
-| `name`       | `name`       | `string`  |             |                                                  |
-| `onDark`     | `onDark`     | `Boolean` | false       | DEPRECATED - use `appearance` instead.           |
-| `required`   | `required`   | `Boolean` | false       | Defines element as required.                     |
-| `value`      | `value`      | `string`  |             |                                                  |
+| Property     | Attribute    | Type                     | Default     | Description                                      |
+|--------------|--------------|--------------------------|-------------|--------------------------------------------------|
+| `appearance` | `appearance` | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
+| `checked`    | `checked`    | `boolean`                |             | If set to true, the radio button will be filled. |
+| `disabled`   | `disabled`   | `boolean`                |             | If set to true, the radio button will be non-clickable. |
+| `error`      | `error`      | `boolean`                |             | If set to true, sets an error state on the radio button. |
+| `id`         | `id`         | `string`                 |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
+| `label`      | `label`      | `string`                 |             | Label for the radio button.                      |
+| `name`       | `name`       | `string`                 |             | Name for the radio button group.                 |
+| `onDark`     | `onDark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `required`   | `required`   | `boolean`                |             | Defines element as required.                     |
+| `value`      | `value`      | `string`                 |             | The value of the radio button.                   |
 
 ## Methods
 

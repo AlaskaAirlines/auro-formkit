@@ -22,19 +22,9 @@ import { ContextProvider } from "@lit/context";
 
 
 /**
- * The auro-menu element provides users a way to select from a list of options.
- * @attr {HTMLElement|Array<HTMLElement>} optionSelected - An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements.
- * @attr {object} optionactive - Specifies the current active menuOption.
- * @attr {string} matchword - Specifies a string used to highlight matched string parts in options.
- * @attr {boolean} disabled - When true, the entire menu and all options are disabled;
- * @attr {boolean} nocheckmark - When true, selected option will not show the checkmark.
- * @attr {boolean} loading - When true, displays a loading state using the loadingIcon and loadingText slots if provided.
- * @attr {boolean} multiselect - When true, the selected option can be multiple options.
- * @attr {boolean} selectAllMatchingOptions - When true, selects all options that match the provided value/key when setting value and multiselect is enabled.
- * @attr {string} value - The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.
- * @prop {string} size - Sets the size of the menu. Accepted values are 'sm' and 'md'. Default is 'sm'.
- * @prop {string} shape - Sets the shape of the menu options. Accepted values are 'box' and 'round'. Default is 'box'.
- * @prop {boolean} hasLoadingPlaceholder - Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state.
+ * The `auro-menu` element provides users a way to select from a list of options.
+ * @customElement auro-menu
+ *
  * @event {CustomEvent<Element>} auroMenu-activatedOption - Notifies that a menuoption has been made `active`.
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Notifies when the loading attribute is changed.
@@ -125,48 +115,27 @@ export class AuroMenu extends AuroElement {
         type: Boolean,
         reflect: true,
       },
-      noCheckmark: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'nocheckmark'
-      },
+
+      /**
+       * When true, the entire menu and all options are disabled.
+       */
       disabled: {
         type: Boolean,
         reflect: true
       },
-      loading: {
-        type: Boolean,
-        reflect: true
-      },
-      optionSelected: {
-        // Allow HTMLElement, HTMLElement[] arrays and undefined
-        type: Object
-      },
-      optionActive: {
-        type: Object,
-        attribute: 'optionactive'
-      },
-      matchWord: {
-        type: String,
-        attribute: 'matchword'
-      },
-      multiSelect: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'multiselect'
-      },
-      selectAllMatchingOptions: {
-        type: Boolean,
-        reflect: true,
+
+      /**
+       * Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state.
+       */
+      hasLoadingPlaceholder: {
+        type: Boolean
       },
 
       /**
-       * Value selected for the component.
+       * @private
        */
-      value: {
-        type: String,
-        reflect: true,
-        attribute: 'value'
+      layout: {
+        type: String
       },
 
       /**
@@ -180,6 +149,56 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
+       * When true, displays a loading state using the loadingIcon and loadingText slots if provided.
+       */
+      loading: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Specifies a string used to highlight matched string parts in options.
+       */
+      matchWord: {
+        type: String,
+        attribute: 'matchword'
+      },
+
+      /**
+       * When true, the selected option can be multiple options.
+       */
+      multiSelect: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'multiselect'
+      },
+
+      /**
+       * When true, selected option will not show the checkmark.
+       */
+      noCheckmark: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'nocheckmark'
+      },
+
+      /**
+       * Specifies the current active menuOption.
+       */
+      optionActive: {
+        type: Object,
+        attribute: 'optionactive'
+      },
+
+      /**
+       * An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements.
+       */
+      optionSelected: {
+        // Allow HTMLElement, HTMLElement[] arrays and undefined
+        type: Object
+      },
+
+      /**
        * Available menu options
        * @readonly
        */
@@ -187,6 +206,43 @@ export class AuroMenu extends AuroElement {
         type: Array,
         reflect: false,
         attribute: false
+      },
+
+      /**
+       * Sets the size of the menu.
+       * @type {'sm' | 'md'}
+       * @default 'sm'
+       */
+      size: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * When true, selects all options that match the provided value/key when setting value and multiselect is enabled.
+       */
+      selectAllMatchingOptions: {
+        type: Boolean,
+        reflect: true,
+      },
+
+      /**
+       * Sets the shape of the menu.
+       * @type {'box' | 'round'}
+       * @default 'box'
+       */
+      shape: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.
+       */
+      value: {
+        type: String,
+        reflect: true,
+        attribute: 'value'
       }
     };
   }
@@ -232,7 +288,7 @@ export class AuroMenu extends AuroElement {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-menu"] - The name of element that you want to register to.
+   * @param {string} [name="auro-menu"] - The name of the element that you want to register.
    *
    * @example
    * AuroMenu.register("custom-menu") // this will register this element to <custom-menu/>

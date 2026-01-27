@@ -1,15 +1,4 @@
-/*
-  eslint-disable
-  lit/no-invalid-html,
-  lit/binding-positions,
-  max-lines,
-  no-underscore-dangle,
-  arrow-parens,
-  no-confusing-arrow,
-  curly,
-  dot-location,
-  no-inline-comments,
-  line-comment-position,
+/* eslint-disable lit/no-invalid-html, lit/binding-positions, max-lines, no-underscore-dangle, arrow-parens, no-confusing-arrow, curly, dot-location, no-inline-comments, line-comment-position,
 */
 
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
@@ -18,7 +7,6 @@
 // ---------------------------------------------------------------------
 
 import { html } from "lit/static-html.js";
-import { LitElement } from "lit";
 
 import tokens from "./styles/tokens-css.js";
 import counterGroupStyles from "./styles/counter-group-css.js";
@@ -41,13 +29,9 @@ import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from "./iconVersion.js";
 
 /**
- * Auro Counter Group is a group of counter components.
+ * The `auro-counter-group` element provides a flexible interface for grouping multiple counters, supporting validation, custom validity messages, and disabled states based on the group's value.
+ * @customElement auro-counter-group
  *
- * This web component provides a flexible interface for grouping multiple counters, supporting
- * validation, custom validity messages, and disabled states based on the group's value.
- *
- * @element auro-counter-group
- * @extends LitElement
  * @slot default - Slot for counter elements.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline -  Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required.
@@ -55,7 +39,6 @@ import iconVersion from "./iconVersion.js";
  * @slot label - Dropdown label content. Only used when `isDropdown` is true.
  * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
  * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
- * @property {'classic'|'snowflake'} layout - Determines the layout style of the counter group when it is a dropdown. Options are 'classic' or 'snowflake'. Default is 'classic'.
  */
 export class AuroCounterGroup extends AuroElement {
   constructor() {
@@ -153,7 +136,7 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -190,12 +173,12 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Defines the screen size breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `disabled`)
-       * at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
+       * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
        * When expanded, the dropdown will automatically display in fullscreen mode
        * if the screen size is equal to or smaller than the selected breakpoint.
-       * @default sm
+       * @type {'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'disabled'}
+       * @default 'sm'
        */
       fullscreenBreakpoint: {
         type: String,
@@ -203,10 +186,20 @@ export class AuroCounterGroup extends AuroElement {
       },
 
       /**
-       * Indicates if the counter group is displayed as a dropdown.
+       * If true, the counter group is displayed as a dropdown.
        */
       isDropdown: {
         type: Boolean
+      },
+
+      /**
+       * Determines the layout style of the counter group when it is a dropdown.
+       * @type {'classic' | 'snowflake'}
+       * @default 'classic'
+       */
+      layout: {
+        type: String,
+        reflect: true
       },
 
       /**
@@ -246,7 +239,6 @@ export class AuroCounterGroup extends AuroElement {
       /**
        * If declared, the bib will NOT flip to an alternate position
        * when there isn't enough space in the specified `placement`.
-       * @default false
        */
       noFlip: {
         type: Boolean,
@@ -255,7 +247,6 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
-       * @default false
        */
       shift: {
         type: Boolean,
@@ -281,12 +272,8 @@ export class AuroCounterGroup extends AuroElement {
 
       /**
        * Position where the bib should appear relative to the trigger.
-       * Accepted values:
-       * "top" | "right" | "bottom" | "left" |
-       * "bottom-start" | "top-start" | "top-end" |
-       * "right-start" | "right-end" | "bottom-end" |
-       * "left-start" | "left-end".
-       * @default bottom-start
+       * @type {'top' | 'right' | 'bottom' | 'left' | 'bottom-start' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'bottom-end' | 'left-start' | 'left-end'}
+       * @default 'bottom-start'
        */
       placement: {
         type: String,
@@ -297,7 +284,7 @@ export class AuroCounterGroup extends AuroElement {
        * The total value of the counters.
        */
       total: {
-        type: Number,
+        type: Number
       },
 
       /**
@@ -629,7 +616,7 @@ export class AuroCounterGroup extends AuroElement {
 
   /**
    * Registers the custom element with the browser.
-   * @param {string} [name="auro-counter-group"] - Custom element name to register.
+   * @param {string} [name="auro-counter-group"] - The name of the element that you want to register.
    * @example
    * AuroCounterGroup.register("custom-counter-group") // registers <custom-counter-group/>
    */

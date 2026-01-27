@@ -1,17 +1,15 @@
-import { changeLang } from "../apiExamples/changeLang";
 import { customError } from "../apiExamples/error";
-import { customErrorOnDark } from "../apiExamples/inverseAppearanceError";
+import { customErrorOnDark } from "../apiExamples/appearance-inverse-error";
 import { setReadonlyValue } from "../apiExamples/readonly";
-import { swapInputValues } from "../apiExamples/swapValue";
 import { programmaticallySetValue } from "../apiExamples/value";
-import { resetStateExample } from "../apiExamples/resetState";
+import { resetStateExample } from "../apiExamples/reset-state";
+import { swapInputValues } from "../apiExamples/swap-value";
 import './index.js';
 
 export function initExamples(initCount) {
   initCount = initCount || 0;
 
   try {
-    changeLang();
     customError();
     customErrorOnDark();
     setReadonlyValue();

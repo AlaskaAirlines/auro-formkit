@@ -1,10 +1,10 @@
-import { customErrorValidityExample } from "../apiExamples/customErrorValidity";
+import { customErrorValidityExample } from "../apiExamples/custom-error-validity";
 import { valueExample } from "../apiExamples/value";
-import { valueExtractionExample } from "../apiExamples/valueExtraction";
-import { valueAlertExample } from "../apiExamples/valueAlert.js";
-import { inDialogExample } from '../apiExamples/inDialog';
-import { resetStateExample } from "../apiExamples/resetState";
-import { auroMenuLoadingExample } from "../apiExamples/loading";
+import { valueExtractionExample } from "../apiExamples/value-extraction";
+import { valueAlertExample } from "../apiExamples/value-alert";
+import { inDialogExample } from '../apiExamples/in-dialog';
+import { resetStateExample } from "../apiExamples/reset-state";
+// import { auroMenuLoadingExample } from "../apiExamples/loading";
 
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 import { AuroSelect } from '../src/auro-select.js';
@@ -23,7 +23,7 @@ export function initExamples(initCount) {
     valueAlertExample();
     inDialogExample();
     resetStateExample();
-    auroMenuLoadingExample();
+    // auroMenuLoadingExample();
   } catch (err) {
     if (initCount <= 20) {
       // setTimeout handles issue where content is sometimes loaded after the functions get called
