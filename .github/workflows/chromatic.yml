@@ -1,4 +1,4 @@
-name: Chomatic
+name: Chromatic
 on:
   push:
     branches:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   action:
-    uses: AlaskaAirlines/auro-actions/.github/workflows/chomatic.yml@main
+    uses: AlaskaAirlines/auro-actions/.github/workflows/chromatic.yml@main
     with:
       # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
       projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
