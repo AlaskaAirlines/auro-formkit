@@ -12,7 +12,7 @@ const { args, argTypes, template } =
 
 const meta: Meta<AuroCheckbox> = {
   component: "auro-checkbox",
-  title: "Checkbox & Checkbox Group/Checkbox",
+  title: "Checkbox & Checkbox Group/Playground",
   args,
   argTypes,
   render: (args) => template(args),
@@ -21,7 +21,7 @@ export default meta;
 
 type Story = StoryObj<AuroCheckbox & typeof args>;
 
-export const Playground: Story = {
+export const Checkbox: Story = {
   render: (args) => template(args),
   args: {
     "default-slot": "Label",

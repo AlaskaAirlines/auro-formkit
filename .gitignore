@@ -33,4 +33,7 @@ auro-formkit-demo.zip
 
 ## ignore CEM
 custom-elements.json
+
+## Storybook files
 storybook-static
+debug-storybook.log

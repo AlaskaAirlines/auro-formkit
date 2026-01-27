@@ -52,8 +52,11 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky",
     "deploy-demo": "npm run build && sh ./deploy-components.sh",
-    "local-demo": "npm run build && sh ./local-demo.sh --zip",
+    "local-demo": "sh ./local-demo.sh",
+    "local-demo:build": "npm run build && npm run local-demo",
+    "local-demo:zip": "npm run local-demo:build -- --zip",
     "analyze": "custom-elements-manifest analyze --config ./packages/config/src/custom-elements-manifest.config.mjs",
+    "update-stories": "node ./packages/utils/update-stories.js",
     "storybook": "npm run analyze && storybook dev -p 6006",
     "build-storybook": "npm run build && npm run analyze && storybook build"
   },

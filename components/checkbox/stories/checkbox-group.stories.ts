@@ -13,7 +13,7 @@ AuroCheckboxGroup.register("custom-checkbox-group");
 const { args, events, argTypes, template } = getStorybookHelpers("auro-checkbox-group");
 
 const meta: Meta<AuroCheckboxGroup> = {
-  title: "Checkbox & Checkbox Group/Checkbox Group",
+  title: "Checkbox & Checkbox Group/Playground",
   component: "auro-checkbox-group",
   args,
   argTypes,
@@ -27,7 +27,7 @@ export default meta;
 
 type Story = StoryObj<AuroCheckboxGroup & typeof args>;
 
-export const Playground: Story = {
+export const CheckboxGroup: Story = {
   args: {},
   render: (args) =>
     template(
