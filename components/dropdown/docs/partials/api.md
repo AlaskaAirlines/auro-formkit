@@ -59,9 +59,9 @@ The following examples demonstrate basic usage of the `auro-dropdown` component 
 
 Use the `appearance="inverse"` attribute to ensure proper styling when the dropdown is used on dark backgrounds.
 
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 
 <auro-accordion alignRight>
@@ -71,11 +71,6 @@ Use the `appearance="inverse"` attribute to ensure proper styling when the dropd
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>
-
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
 
 ### Chevron
 
