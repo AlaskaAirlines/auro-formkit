@@ -1537,7 +1537,7 @@ This example demonstrates data driven slot content for days in the calendar. In 
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/dynamic-slot.html) -->
   <!-- The below content is automatically added from ./../apiExamples/dynamic-slot.html -->
   <auro-datepicker id="slotContentExample" centralDate="12/13/2023" minDate="12/13/2023" maxDate="01/18/2024" range>
-    <span slot="bib.fullscreen.headline">dynamic slot  Example</span>
+    <span slot="bib.fullscreen.headline">dynamic slot Example</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
     <span slot="bib.fullscreen.dateLabel">Choose a date</span>
@@ -1551,7 +1551,7 @@ This example demonstrates data driven slot content for days in the calendar. In 
 
 ```html
 <auro-datepicker id="slotContentExample" centralDate="12/13/2023" minDate="12/13/2023" maxDate="01/18/2024" range>
-  <span slot="bib.fullscreen.headline">dynamic slot  Example</span>
+  <span slot="bib.fullscreen.headline">dynamic slot Example</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>
