@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
+import { html } from 'lit-html';
 
 import { AuroRadio } from '../src/auro-radio';
 import { AuroRadioGroup } from '../src/auro-radio-group';
@@ -16,7 +17,7 @@ const { events, args, argTypes, template } =
   getStorybookHelpers("auro-radio-group");
 
 const meta: Meta<AuroRadioGroup> = {
-  component: "auro-radio",
+  component: "auro-radio-group",
   title: 'Radio & Radio Group/Radio Group',
   args,
   argTypes,

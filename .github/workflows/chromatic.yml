@@ -1,8 +1,6 @@
 name: Chromatic
 on:
-  push:
-    branches:
-      - 'rc/**'
+  workflow_dispatch:
 
 jobs:
   action:

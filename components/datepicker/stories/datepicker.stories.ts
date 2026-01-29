@@ -721,7 +721,7 @@ export const DynamicSlot: Story = {
 
     return html`
 <auro-datepicker id="slotContentExample" @auroDatePicker-toggled=${populateSlotContentExample} centralDate="12/13/2023" minDate="12/13/2023" maxDate="01/18/2024" range>
-  <span slot="bib.fullscreen.headline">dynamic slot  Example</span>
+  <span slot="bib.fullscreen.headline">dynamic slot Example</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
   <span slot="bib.fullscreen.dateLabel">Choose a date</span>
