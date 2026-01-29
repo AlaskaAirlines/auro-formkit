@@ -94,7 +94,7 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#classic').hide()">
+      <auro-button id="classicButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -117,7 +117,7 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#classic').hide()">
+    <auro-button id="classicButton">
       Dismiss Dropdown
     </auro-button>
   </div>
@@ -134,11 +134,11 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/appearance-inverse.html) -->
   <!-- The below content is automatically added from ./../apiExamples/classic/appearance-inverse.html -->
-  <auro-dropdown appearance="inverse" layout="classic" shape="classic" size="lg" id="classicOnDark" chevron aria-label="Label content for screen reader">
+  <auro-dropdown id="classicInverse" appearance="inverse" layout="classic" shape="classic" size="lg" chevron aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#classicOnDark').hide()">
+      <auro-button id="classicInverseButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -157,11 +157,11 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
 <!-- The below code snippet is automatically added from ./../apiExamples/classic/appearance-inverse.html -->
 
 ```html
-<auro-dropdown appearance="inverse" layout="classic" shape="classic" size="lg" id="classicOnDark" chevron aria-label="Label content for screen reader">
+<auro-dropdown id="classicInverse" appearance="inverse" layout="classic" shape="classic" size="lg" chevron aria-label="Label content for screen reader">
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#classicOnDark').hide()">
+    <auro-button id="classicInverseButton">
       Dismiss Dropdown
     </auro-button>
   </div>

@@ -186,16 +186,16 @@ The following examples demonstrate basic usage of the `auro-dropdown` component 
 
 Use the `appearance="inverse"` attribute to ensure proper styling when the dropdown is used on dark backgrounds.
 
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
-<!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
-<auro-dropdown appearance="inverse" aria-label="custom label">
-  Lorem ipsum solar
-  <div slot="trigger">
-    Trigger
-  </div>
-</auro-dropdown>
-<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
+  <auro-dropdown appearance="inverse" aria-label="custom label">
+    Lorem ipsum solar
+    <div slot="trigger">
+      Trigger
+    </div>
+  </auro-dropdown>
+  <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
   <span slot="trigger">See code</span>
@@ -212,17 +212,6 @@ Use the `appearance="inverse"` attribute to ensure proper styling when the dropd
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<div class="exampleWrapper--ondark" aria-hidden>
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
-  <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
-  <auro-dropdown appearance="inverse" aria-label="custom label">
-    Lorem ipsum solar
-    <div slot="trigger">
-      Trigger
-    </div>
-  </auro-dropdown>
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
 
 ### Chevron
 
@@ -358,11 +347,11 @@ Use the `error` attribute to set persistent error state styling on the dropdown.
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/error.html) -->
   <!-- The below content is automatically added from ./../apiExamples/error.html -->
-  <auro-dropdown layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
+  <auro-dropdown id="error" layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#errorDropdownExample').hide()">
+      <auro-button id="errorButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -381,11 +370,11 @@ Use the `error` attribute to set persistent error state styling on the dropdown.
 <div class="exampleWrapper--ondark" aria-hidden>
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-error.html) -->
   <!-- The below content is automatically added from ./../apiExamples/appearance-inverse-error.html -->
-  <auro-dropdown appearance="inverse" layout="classic" shape="classic" size="lg" error id="errorDropdownOnDarkExample">
+  <auro-dropdown id="inverseError" appearance="inverse" layout="classic" shape="classic" size="lg" error>
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#errorDropdownOnDarkExample').hide()">
+      <auro-button id="inverseErrorButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -407,11 +396,11 @@ Use the `error` attribute to set persistent error state styling on the dropdown.
 <!-- The below code snippet is automatically added from ./../apiExamples/error.html -->
 
 ```html
-<auro-dropdown layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
+<auro-dropdown id="error" layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#errorDropdownExample').hide()">
+    <auro-button id="errorButton">
       Dismiss Dropdown
     </auro-button>
   </div>
@@ -431,11 +420,11 @@ Use the `error` attribute to set persistent error state styling on the dropdown.
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse-error.html -->
 
 ```html
-<auro-dropdown appearance="inverse" layout="classic" shape="classic" size="lg" error id="errorDropdownOnDarkExample">
+<auro-dropdown id="inverseError" appearance="inverse" layout="classic" shape="classic" size="lg" error>
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#errorDropdownOnDarkExample').hide()">
+    <auro-button id="inverseErrorButton">
       Dismiss Dropdown
     </auro-button>
   </div>
@@ -464,7 +453,7 @@ Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/fullscreen-breakpoint.html) -->
   <!-- The below content is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
-  <auro-dropdown fullscreenBreakpoint="sm" layout="classic" shape="classic" size="lg" chevron id="fullscreenBreakpointExample">
+  <auro-dropdown id="fullscreen" fullscreenBreakpoint="sm" layout="classic" shape="classic" size="lg" chevron>
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -476,7 +465,7 @@ Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </p>
     </div>
-    <auro-button onclick="document.querySelector('#fullscreenBreakpointExample').hide()">
+    <auro-button id="fullscreenButton">
       Dismiss Dropdown
     </auro-button>
     <div slot="trigger">
@@ -491,7 +480,7 @@ Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/
 <!-- The below code snippet is automatically added from ./../apiExamples/fullscreen-breakpoint.html -->
 
 ```html
-<auro-dropdown fullscreenBreakpoint="sm" layout="classic" shape="classic" size="lg" chevron id="fullscreenBreakpointExample">
+<auro-dropdown id="fullscreen" fullscreenBreakpoint="sm" layout="classic" shape="classic" size="lg" chevron>
   <div>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -503,7 +492,7 @@ Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
   </div>
-  <auro-button onclick="document.querySelector('#fullscreenBreakpointExample').hide()">
+  <auro-button id="fullscreenButton">
     Dismiss Dropdown
   </auro-button>
   <div slot="trigger">
@@ -529,7 +518,7 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#classic').hide()">
+      <auro-button id="classicButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -552,7 +541,7 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#classic').hide()">
+    <auro-button id="classicButton">
       Dismiss Dropdown
     </auro-button>
   </div>
@@ -569,11 +558,11 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
 <div class="exampleWrapper--ondark">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/classic/appearance-inverse.html) -->
   <!-- The below content is automatically added from ./../apiExamples/classic/appearance-inverse.html -->
-  <auro-dropdown appearance="inverse" layout="classic" shape="classic" size="lg" id="classicOnDark" chevron aria-label="Label content for screen reader">
+  <auro-dropdown id="classicInverse" appearance="inverse" layout="classic" shape="classic" size="lg" chevron aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#classicOnDark').hide()">
+      <auro-button id="classicInverseButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -592,11 +581,11 @@ The `auro-dropdown` element supports multiple layouts to fit different design ne
 <!-- The below code snippet is automatically added from ./../apiExamples/classic/appearance-inverse.html -->
 
 ```html
-<auro-dropdown appearance="inverse" layout="classic" shape="classic" size="lg" id="classicOnDark" chevron aria-label="Label content for screen reader">
+<auro-dropdown id="classicInverse" appearance="inverse" layout="classic" shape="classic" size="lg" chevron aria-label="Label content for screen reader">
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#classicOnDark').hide()">
+    <auro-button id="classicInverseButton">
       Dismiss Dropdown
     </auro-button>
   </div>
@@ -925,11 +914,11 @@ When the `matchWidth` attribute is applied, the width of the dropdown bib will m
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/match-width.html) -->
   <!-- The below content is automatically added from ./../apiExamples/match-width.html -->
-  <auro-dropdown id="common" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
+  <auro-dropdown id="matchWidth" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#common').hide()">
+      <auro-button id="matchWidthButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -948,11 +937,11 @@ When the `matchWidth` attribute is applied, the width of the dropdown bib will m
 <!-- The below code snippet is automatically added from ./../apiExamples/match-width.html -->
 
 ```html
-<auro-dropdown id="common" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
+<auro-dropdown id="matchWidth" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
   <div style="padding: var(--ds-size-150);">
     Lorem ipsum solar
     <br />
-    <auro-button onclick="document.querySelector('#common').hide()">
+    <auro-button id="matchWidthButton">
       Dismiss Dropdown
     </auro-button>
   </div>
@@ -1016,7 +1005,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
       Lorem ipsum solar
     </p>
     <div style="padding: var(--ds-size-150);">
-      <auro-button id="hideExampleBtn" onclick="document.querySelector('#hideExample').hide()">
+      <auro-button id="hideExampleBtn">
         Hide Dropdown
       </auro-button>
     </div>
@@ -1037,7 +1026,7 @@ This example demonstrations collapsing the dropdown by clicking a button within 
     Lorem ipsum solar
   </p>
   <div style="padding: var(--ds-size-150);">
-    <auro-button id="hideExampleBtn" onclick="document.querySelector('#hideExample').hide()">
+    <auro-button id="hideExampleBtn">
       Hide Dropdown
     </auro-button>
   </div>
@@ -1055,8 +1044,8 @@ export function hideExample() {
   const btn = document.querySelector('#hideExampleBtn');
   const dropdown = document.querySelector('#hideExample');
 
-  btn.addEventListener('click', () => {
-    dropdown.hide();
+  btn?.addEventListener('click', () => {
+    dropdown?.hide();
   });
 }
 ```
@@ -1108,8 +1097,8 @@ export function showExample() {
   const triggerInput = document.querySelector('#showExampleTriggerInput');
   const dropdownElem = document.querySelector('#showMethodExample');
 
-  triggerInput.addEventListener('keydown', () => {
-    dropdownElem.show();
+  triggerInput?.addEventListener('keydown', () => {
+    dropdownElem?.show();
   });
 }
 ```
@@ -1252,7 +1241,7 @@ The element used within an `auro-dialog`.
           <div style="padding: var(--ds-size-150);">
             Lorem ipsum solar
             <br />
-            <auro-button onclick="document.querySelector('#in-dialog-dropdown').hide()">
+            <auro-button id="in-dialog-dismiss-btn">
               Dismiss Dropdown
             </auro-button>
           </div>
@@ -1286,7 +1275,7 @@ The element used within an `auro-dialog`.
         <div style="padding: var(--ds-size-150);">
           Lorem ipsum solar
           <br />
-          <auro-button onclick="document.querySelector('#in-dialog-dropdown').hide()">
+          <auro-button id="in-dialog-dismiss-btn">
             Dismiss Dropdown
           </auro-button>
         </div>
@@ -1310,9 +1299,17 @@ The element used within an `auro-dialog`.
 
 ```js
 export function inDialogExample() {
-  document.querySelector("#dropdown-dialog-opener").addEventListener("click", () => {
+  const openBtn = document.querySelector("#dropdown-dialog-opener");
+  const closeBtn = document.querySelector("#in-dialog-dismiss-btn");
+  const dropdown = document.querySelector("#in-dialog-dropdown");
+
+  openBtn?.addEventListener("click", () => {
     const dialog = document.querySelector("#dropdown-dialog");
     dialog.open = true;
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    dropdown?.hide();
   });
 };
 ```
