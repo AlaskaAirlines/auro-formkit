@@ -23,7 +23,7 @@ This will create a new custom element `<custom-dropdown>` that behaves exactly l
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#customCommon').hide()">
+      <auro-button id="customCommonButton">
         Dismiss Dropdown
       </auro-button>
     </div>
@@ -44,7 +44,7 @@ This will create a new custom element `<custom-dropdown>` that behaves exactly l
     <div style="padding: var(--ds-size-150);">
       Lorem ipsum solar
       <br />
-      <auro-button onclick="document.querySelector('#customCommon').hide()">
+      <auro-button id="customCommonButton">
         Dismiss Dropdown
       </auro-button>
     </div>

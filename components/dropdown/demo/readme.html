@@ -48,9 +48,17 @@
           Prism.highlightAll();
         })
     </script>
-    <script src="./index.min.js" data-demo-script="true" type="module"></script>
+    <script type="module">
+      import { initExamples } from "./index.min.js";
+
+      window.addEventListener('load', () => {
+        initExamples();
+      });
+    </script>
 
     <!-- If additional elements are needed for the demo, add them here. -->
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-icon@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/+esm" type="module"></script>
   </body>
 </html>

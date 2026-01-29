@@ -51,7 +51,9 @@
     <script type="module">
       import { initExamples } from "./index.min.js";
 
-      initExamples();
+      window.addEventListener('load', () => {
+        initExamples();
+      });
     </script>
     <!-- If additional elements are needed for the demo, add them here. -->
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-icon@latest/+esm" type="module"></script>
