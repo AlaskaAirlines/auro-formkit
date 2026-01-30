@@ -1181,9 +1181,15 @@ export class AuroDatePicker extends AuroElement {
         event.stopPropagation();
 
         if (index === 0) {
-          this.value = input.value;
+          this.value =
+            input.formattedDate
+              ? input.formattedDate
+              : input.value;
         } else if (index === 1) {
-          this.valueEnd = input.value;
+          this.valueEnd =
+            input.formattedDate
+              ? input.formattedDate
+              : input.value;
         }
 
         this.notifyValueChanged();
