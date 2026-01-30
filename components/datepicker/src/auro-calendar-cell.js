@@ -1,8 +1,6 @@
 import { LitElement, nothing } from "lit";
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { format, startOfDay } from 'date-fns';
-import { enUS } from 'date-fns/locale';
 
 import styleCss from './styles/style-auro-calendar-cell-css.js';
 import colorCss from './styles/color-cell-css.js';
@@ -16,6 +14,12 @@ import popoverVersion from './popoverVersion.js';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 /* eslint-disable curly, max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
+
+const startOfDay = (ms) => {
+  const date = new Date(ms);
+  date.setHours(0, 0, 0, 0);
+  return date.getTime();
+};
 
 export class AuroCalendarCell extends LitElement {
   constructor() {
@@ -65,7 +69,7 @@ export class AuroCalendarCell extends LitElement {
       },
       disabledDays:  { type: Array },
       isCurrentDate: { type: Boolean },
-      locale:        { type: Object },
+      locale:        { type: String },
       dateStr:       { type: String },
       renderForDateSlot: { type: Boolean },
       hasPopoverContent: { type: Boolean }
@@ -73,7 +77,7 @@ export class AuroCalendarCell extends LitElement {
   }
 
   get locale() {
-    return this._locale ? this._locale : enUS;
+    return this._locale || 'en-US';
   }
 
   set locale(value) {
@@ -194,10 +198,9 @@ export class AuroCalendarCell extends LitElement {
     }
 
     // Check against disabledDays timestamps (legacy path)
-    if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0) {
-      if (this.disabledDays.findIndex(dd => parseInt(dd, 10) === this.day.date) !== -1) {
-        return true;
-      }
+    if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0 &&
+      (this.disabledDays.findIndex(dd => parseInt(dd, 10) === this.day.date) !== -1)) {
+      return true;
     }
 
     // Check against blackoutDates (ISO format YYYY-MM-DD) on the datepicker
@@ -232,12 +235,12 @@ export class AuroCalendarCell extends LitElement {
   isEnabled(day, min, max, disabledDays) {
     this.removeAttribute('disabled');
 
-    if (disabledDays && day && day.date) {
-      if (day.date < min || day.date > max || disabledDays.findIndex(disabledDay => parseInt(disabledDay, 10) === day.date) !== -1) {
-        this.setAttribute('disabled', true);
-        return true;
-      }
+    if (disabledDays && day && day.date &&
+      (day.date < min || day.date > max || disabledDays.findIndex(disabledDay => parseInt(disabledDay, 10) === day.date) !== -1)) {
+      this.setAttribute('disabled', true);
+      return true;
     }
+
     return false;
   }
 
@@ -408,7 +411,7 @@ export class AuroCalendarCell extends LitElement {
 
   /**
    * Checks if the current date is a referenced date.
-   * @param {Object} dateStr - The date string in MM_DD_YYYY format.
+   * @param {Object} dateStr - The date string in YYYY_MM_DD format.
    * @returns Boolean - True if the date is a referenced date.
    */
   isReferenceDate(dateStr) {
@@ -421,11 +424,10 @@ export class AuroCalendarCell extends LitElement {
       // Guard clause: no dates in the array
       if (!Array.isArray(referenceDates) || referenceDates.length === 0) return false;
 
-      // Compare the dateStr (MM_DD_YYYY) to the referenceDates (MM/DD/YYYY)
-      const compareDateStr = dateStr.replace(/_/gu, '/');
+      // eslint-disable-next-line require-unicode-regexp
+      const cellISO = dateStr.replace(/_/g, '-');
 
-      // Check if the compareDateStr is in the referenceDates array
-      return referenceDates.includes(compareDateStr);
+      return referenceDates.includes(cellISO);
     };
 
     return false;
@@ -441,9 +443,16 @@ export class AuroCalendarCell extends LitElement {
     if (date === undefined) {
       return '';
     }
-    return format(date * 1000, 'PPPP', {
-      locale: this.locale,
-    });
+    if (!this._titleFormatter || this._titleFormatterLocale !== this.locale) {
+      this._titleFormatter = new Intl.DateTimeFormat(this.locale, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      this._titleFormatterLocale = this.locale;
+    }
+    return this._titleFormatter.format(new Date(date * 1000));
   }
 
   /**
@@ -452,6 +461,10 @@ export class AuroCalendarCell extends LitElement {
    * @returns {void}
    */
   setDateSlotName() {
+    if (!this.day || !this.day.date) {
+      this.dateStr = null;
+      return;
+    }
     const date = new Date(this.day.date * 1000);
 
     let month = date.getMonth() + 1;
@@ -467,7 +480,7 @@ export class AuroCalendarCell extends LitElement {
 
     const year = date.getFullYear();
 
-    this.dateStr = `${month}_${day}_${year}`;
+    this.dateStr = `${year}_${month}_${day}`;
   }
 
   /**

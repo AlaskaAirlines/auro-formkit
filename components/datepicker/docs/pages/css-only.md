@@ -94,7 +94,7 @@
 
 <auro-header level="3">Custom cell content</auro-header>
 
-<p>Native date inputs render a fixed grid of numbers, with no way to add prices, icons, or supplementary information to individual dates. <code>auro-datepicker</code> supports per-date slot content via <code>date_MM_DD_YYYY</code> slots for content rendered below each date number (e.g. flight prices) and <code>popover_MM_DD_YYYY</code> slots for content that appears on hover or focus for a specific date, enabling reference data alongside dates for decision-making.</p>
+<p>Native date inputs render a fixed grid of numbers, with no way to add prices, icons, or supplementary information to individual dates. <code>auro-datepicker</code> supports per-date slot content via <code>date_YYYY_MM_DD</code> slots for content rendered below each date number (e.g. flight prices) and <code>popover_YYYY_MM_DD</code> slots for content that appears on hover or focus for a specific date, enabling reference data alongside dates for decision-making.</p>
 
 <auro-header level="3">Design system integration</auro-header>
 

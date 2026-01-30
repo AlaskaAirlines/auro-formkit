@@ -88,7 +88,7 @@
 <p>The datepicker does not force the user to select a date. If no selection is made and the field is not <code>required</code>, the user can move past the datepicker without entering a value.</p>
 <p>If the field is <code>required</code>, moving focus away without selecting a date triggers validation and renders the <code>valueMissing</code> error state.</p>
 <auro-header level="3" id="popoverSlot">Popover slot</auro-header>
-<p>Use the <code>popover_MM_DD_YYYY</code> slot to display additional information when the user hovers over a calendar cell. This is useful for showing pricing, availability, or other contextual details for specific dates.</p>
+<p>Use the <code>popover_YYYY_MM_DD</code> slot to display additional information when the user hovers over a calendar cell. This is useful for showing pricing, availability, or other contextual details for specific dates.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/popover-slot.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -112,6 +112,7 @@
 </auro-accordion>
 <auro-header level="3" id="referenceDates">Reference dates</auro-header>
 <p>Use the <code>referenceDates</code> attribute to highlight specific dates on the calendar. Reference dates are displayed with a distinct visual treatment to draw attention to dates of interest, such as the cheapest travel dates or dates with special availability.</p>
+<p class="note"><strong>NOTE:</strong> it is recommended to provide popover slot content for reference dates to give context for why the date is marked <code>reference</code>.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reference-dates.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->

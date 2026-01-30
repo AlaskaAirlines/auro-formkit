@@ -22,8 +22,8 @@
       <auro-anchorlink fluid href="#slot-bib-fullscreen-headline" class="level2 body-xs">bib.fullscreen.headline</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-bib-fullscreen-fromLabel" class="level2 body-xs">bib.fullscreen.fromLabel</auro-anchorlink>
       <auro-anchorlink fluid href="#slot-bib-fullscreen-toLabel" class="level2 body-xs">bib.fullscreen.toLabel</auro-anchorlink>
-      <auro-anchorlink fluid href="#slot-date" class="level2 body-xs">date_MM_DD_YYYY</auro-anchorlink>
-      <auro-anchorlink fluid href="#slot-popover" class="level2 body-xs">popover_MM_DD_YYYY</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-date" class="level2 body-xs">date_YYYY_MM_DD</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-popover" class="level2 body-xs">popover_YYYY_MM_DD</auro-anchorlink>
       <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
       <auro-anchorlink fluid href="#validity" class="level2 body-xs">Validity</auro-anchorlink>
       <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>

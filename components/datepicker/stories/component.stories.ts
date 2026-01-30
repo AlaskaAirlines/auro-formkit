@@ -53,7 +53,7 @@ export const DatepickerBibOpensOnClick: Story = {
     },
   },
   render: () => html`
-<auro-datepicker centralDate="03/01/2025">
+<auro-datepicker centralDate="2025-03-01">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
@@ -79,7 +79,7 @@ export const DatepickerBibOpensOnClick: Story = {
 export const DatepickerCalendarSelectsDate: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-datepicker centralDate="03/01/2025">
+<auro-datepicker centralDate="2025-03-01">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
@@ -102,7 +102,7 @@ export const DatepickerCalendarSelectsDate: Story = {
 export const DatepickerRangeSelectsBothDates: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-datepicker range centralDate="03/01/2025">
+<auro-datepicker range centralDate="2025-03-01">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
   <span slot="fromLabel">Departure</span>
@@ -159,7 +159,7 @@ export const DatepickerRequiredValidationError: Story = {
 export const DatepickerPresetValue: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-datepicker value="03/15/2025">
+<auro-datepicker value="2025-03-15">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
@@ -208,7 +208,7 @@ DatepickerFocusWithin.parameters = {
 export const DatepickerFromLabelSlot: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-datepicker centralDate="03/01/2025">
+<auro-datepicker centralDate="2025-03-01">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
@@ -229,7 +229,7 @@ export const DatepickerFromLabelSlot: Story = {
 export const DatepickerHelpTextSlot: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-datepicker centralDate="03/01/2025">
+<auro-datepicker centralDate="2025-03-01">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
@@ -251,7 +251,7 @@ export const DatepickerHelpTextSlot: Story = {
 export const DatepickerRangeAllLabelsSlot: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-datepicker range centralDate="03/01/2025">
+<auro-datepicker range centralDate="2025-03-01">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
   <span slot="fromLabel">Departure</span>
@@ -277,7 +277,7 @@ export const DatepickerRangeAllLabelsSlot: Story = {
 export const DatepickerBibCloseAriaLabel: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-datepicker centralDate="03/01/2025">
+<auro-datepicker centralDate="2025-03-01">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
@@ -302,7 +302,7 @@ export const DatepickerInDialogBibClosed: Story = {
 <auro-dialog open>
   <span slot="header">Datepicker in Dialog</span>
   <div slot="content">
-    <auro-datepicker centralDate="03/01/2025">
+    <auro-datepicker centralDate="2025-03-01">
       <span slot="ariaLabel.bib.close">Close Calendar</span>
       <span slot="bib.fullscreen.headline">Datepicker Headline</span>
       <span slot="fromLabel">Departure</span>
@@ -321,7 +321,7 @@ export const DatepickerInDialogBibOpen: Story = {
 <auro-dialog open>
   <span slot="header">Datepicker in Dialog</span>
   <div slot="content">
-    <auro-datepicker centralDate="03/01/2025">
+    <auro-datepicker centralDate="2025-03-01">
       <span slot="ariaLabel.bib.close">Close Calendar</span>
       <span slot="bib.fullscreen.headline">Datepicker Headline</span>
       <span slot="fromLabel">Departure</span>
@@ -347,7 +347,7 @@ export const DatepickerInDrawerBibClosed: Story = {
 <auro-drawer open aria-label="Datepicker in Drawer">
   <span slot="header">Datepicker in Drawer</span>
   <div slot="content">
-    <auro-datepicker centralDate="03/01/2025">
+    <auro-datepicker centralDate="2025-03-01">
       <span slot="ariaLabel.bib.close">Close Calendar</span>
       <span slot="bib.fullscreen.headline">Datepicker Headline</span>
       <span slot="fromLabel">Departure</span>
@@ -366,7 +366,7 @@ export const DatepickerInDrawerBibOpen: Story = {
 <auro-drawer open aria-label="Datepicker in Drawer">
   <span slot="header">Datepicker in Drawer</span>
   <div slot="content">
-    <auro-datepicker centralDate="03/01/2025">
+    <auro-datepicker centralDate="2025-03-01">
       <span slot="ariaLabel.bib.close">Close Calendar</span>
       <span slot="bib.fullscreen.headline">Datepicker Headline</span>
       <span slot="fromLabel">Departure</span>

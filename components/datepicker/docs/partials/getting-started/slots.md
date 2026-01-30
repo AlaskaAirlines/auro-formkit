@@ -18,7 +18,7 @@
 <p>Defines the content to display above the first date input in the fullscreen (mobile) layout.</p>
 <auro-header level="3" id="slot-bib-fullscreen-toLabel">bib.fullscreen.toLabel</auro-header>
 <p>Defines the content to display above the second date input in the fullscreen (mobile) layout when <code>range</code> is true.</p>
-<auro-header level="3" id="slot-date">date_MM_DD_YYYY</auro-header>
-<p>Defines the content to display in the <code>auro-calendar-cell</code> for the specified date. The date format in the slot name should match <code>MM_DD_YYYY</code> (e.g. <code>slot="date_01_15_2026"</code>). Colored using the success state token when the <code>highlight</code> attribute is applied.</p>
-<auro-header level="3" id="slot-popover">popover_MM_DD_YYYY</auro-header>
-<p>Defines the content to display in the <code>auro-calendar-cell</code> popover for the specified date. The date format in the slot name should match <code>MM_DD_YYYY</code> (e.g. <code>slot="popover_01_15_2026"</code>).</p>
+<auro-header level="3" id="slot-date">date_YYYY_MM_DD</auro-header>
+<p>Defines the content to display in the <code>auro-calendar-cell</code> for the specified date. The date format in the slot name should match <code_YYYY>MM_DD</code> (e.g. <code>slot="date_2026_01_15"</code>). Colored using the success state token when the <code>highlight</code> attribute is applied.</p>
+<auro-header level="3" id="slot-popover">popover_YYYY_MM_DD</auro-header>
+<p>Defines the content to display in the <code>auro-calendar-cell</code> popover for the specified date. The date format in the slot name should match <code>YYYY_MM_DD</code> (e.g. <code>slot="popover_2026_01_15"</code>).</p>

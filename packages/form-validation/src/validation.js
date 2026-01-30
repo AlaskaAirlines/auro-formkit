@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------
 
 /* eslint-disable complexity, max-depth, no-extra-parens, no-magic-numbers, line-comment-position, no-inline-comments, prefer-destructuring */
-import { validDateStr, toNorthAmericanFormat, dateAndFormatMatch } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 export default class AuroFormValidation {
@@ -144,7 +144,7 @@ export default class AuroFormValidation {
             validity: 'valueMissing',
             message: e => e.getAttribute('setCustomValidityValueMissingFilter') || e.setCustomValidity || ''
           }
-        ] 
+        ]
       }
     };
 
@@ -209,12 +209,12 @@ export default class AuroFormValidation {
 
         // Guard Clause: if the value is too short
         if (elem.value?.length < elem.lengthForType) {
-          
+
           elem.validity = 'tooShort';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
           return;
-        } 
-        
+        }
+
         // Guard Clause: If the value is too long for the type
         if (elem.value?.length > elem.lengthForType) {
 
@@ -222,31 +222,20 @@ export default class AuroFormValidation {
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || '';
           return;
         }
-        
-        // Validate that the date passed was the correct format
-        if (!dateAndFormatMatch(elem.value, elem.format)) {
+
+        // Validate that the date passed was the correct format and is a valid date
+        if (elem.value && !elem.valueObject) {
           elem.validity = 'patternMismatch';
-          elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || 'Invalid Date Format Entered';
-          return;
-        }
-        
-        // Validate that the date passed was a valid date
-        if (!validDateStr(elem.value, elem.format)) {
-          elem.validity = 'invalidDate';
-          elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
+          elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
           return;
         }
 
         // Perform the rest of the validation
-        const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
-        const valueDate = new Date(formattedValue);
 
         // // Validate max date
         if (elem.max?.length === elem.lengthForType) {
 
-          const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format));
-
-          if (valueDate > maxDate) {
+          if (elem.valueObject > elem.maxObject) {
             elem.validity = 'rangeOverflow';
             elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
             return;
@@ -255,9 +244,7 @@ export default class AuroFormValidation {
 
         // Validate min date
         if (elem.min?.length === elem.lengthForType) {
-          const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format));
-
-          if (valueDate < minDate) {
+          if (elem.valueObject < elem.minObject) {
             elem.validity = 'rangeUnderflow';
             elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
             return;
@@ -317,7 +304,7 @@ export default class AuroFormValidation {
       if (typeof elem.value === "string") {
         hasValue = elem.value && elem.value.length > 0;
       }
-      
+
       if (typeof elem.value === "boolean") {
         hasValue = elem.value || elem.value === false;
       }
@@ -342,7 +329,7 @@ export default class AuroFormValidation {
       }
 
       const isCombobox = this.runtimeUtils.elementMatch(elem, 'auro-combobox');
-      
+
       if (isCombobox) {
 
         if (!elem.persistInput || elem.behavior === "filter") {
@@ -382,7 +369,7 @@ export default class AuroFormValidation {
       }
 
       // multiple input in one components (datepicker)
-      // combobox has 2 inputs but no need to check validity on the 2nd one which is in fullscreen bib. 
+      // combobox has 2 inputs but no need to check validity on the 2nd one which is in fullscreen bib.
       if (elem.validity === 'valid' && this.auroInputElements.length > 1 && !isCombobox) {
         elem.validity = this.auroInputElements[1].validity;
         elem.errorMessage = this.auroInputElements[1].errorMessage;

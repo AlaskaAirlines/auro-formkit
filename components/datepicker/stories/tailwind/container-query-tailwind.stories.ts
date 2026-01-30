@@ -39,7 +39,7 @@ export const InDialogContainerQuery: Story = {
   <auro-dialog open>
     <span slot="header">Datepicker in Dialog (@container)</span>
     <div slot="content">
-      <auro-datepicker centralDate="03/01/2025">
+      <auro-datepicker centralDate="2025-03-01">
         <span slot="ariaLabel.bib.close">Close Calendar</span>
         <span slot="bib.fullscreen.headline">Datepicker Headline</span>
         <span slot="fromLabel">Departure</span>
@@ -66,7 +66,7 @@ export const InDrawerContainerQuery: Story = {
   <auro-drawer open aria-label="Datepicker in Drawer">
     <span slot="header">Datepicker in Drawer (@container)</span>
     <div slot="content">
-      <auro-datepicker centralDate="03/01/2025">
+      <auro-datepicker centralDate="2025-03-01">
         <span slot="ariaLabel.bib.close">Close Calendar</span>
         <span slot="bib.fullscreen.headline">Datepicker Headline</span>
         <span slot="fromLabel">Departure</span>
