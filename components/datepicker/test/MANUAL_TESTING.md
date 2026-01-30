@@ -171,8 +171,8 @@ Note: Calendar keyboard navigation is NOT YET FULLY SUPPORTED. The following tes
 [ ] Set custom content in the `bib.fullscreen.toLabel` slot — verify it renders above the second input in fullscreen
 [ ] Set custom content in the `ariaLabel.bib.close` slot — verify screen reader announces it for the close button
 [ ] Set custom content in the `ariaLabel.input.clear` slot — verify screen reader announces it for the clear button
-[ ] Set custom content in a `date_MM_DD_YYYY` slot — verify it renders inside the calendar cell for that date
-[ ] Set custom content in a `popover_MM_DD_YYYY` slot — verify it renders in the cell popover for that date
+[ ] Set custom content in a `date_YYYY_MM_DD` slot — verify it renders inside the calendar cell for that date
+[ ] Set custom content in a `popover_YYYY_MM_DD` slot — verify it renders in the cell popover for that date
 
 ## Public Methods
 

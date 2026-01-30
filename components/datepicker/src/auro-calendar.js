@@ -12,6 +12,7 @@ import chevronRight from '@alaskaairux/icons/dist/icons/interface/chevron-right.
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 import { AuroDatepickerUtilities } from './utilities.js';
 import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
@@ -220,6 +221,8 @@ export class AuroCalendar extends RangeDatepicker {
       },
 
       /**
+       * If true, the month will be displayed before the year in the calendar header.
+       * Passed to AuroCalendarMonth via utilitesCalendarRender.
        * @private
        */
       monthFirst: {
@@ -240,8 +243,40 @@ export class AuroCalendar extends RangeDatepicker {
       visible: {
         type: Boolean,
         reflect: false
+      },
+
+      /**
+       * BCP 47 locale tag (such as `en-US`) for calendar localization.
+       * as wc-range-datepicker expects a `locale` prop, we use `localeCode` to avoid conflicts and pass the locale down to calendar-month elements.
+       */
+      localeCode: {
+        type: String
+      },
+
+      /**
+       * Names of all 12 months. When omitted, names are derived from `localeCode`.
+       */
+      monthNames: {
+        type: Array
       }
     };
+  }
+
+  // ─── Read-only *Object properties ─────────────────────────────────────────
+
+  /** @returns {Date|undefined} */
+  get centralDateObject() {
+    return this.centralDate && dateFormatter.isValidDate(this.centralDate) ? dateFormatter.stringToDateInstance(this.centralDate) : undefined;
+  }
+
+  /** @returns {Date|undefined} */
+  get minDateObject() {
+    return this.minDate && dateFormatter.isValidDate(this.minDate) ? dateFormatter.stringToDateInstance(this.minDate) : undefined;
+  }
+
+  /** @returns {Date|undefined} */
+  get maxDateObject() {
+    return this.maxDate && dateFormatter.isValidDate(this.maxDate) ? dateFormatter.stringToDateInstance(this.maxDate) : undefined;
   }
 
   /**
@@ -293,7 +328,7 @@ export class AuroCalendar extends RangeDatepicker {
       this._focusAnnounceTimer = null;
     }
 
-    const date = new Date(this.centralDate);
+    const date = this.centralDateObject;
     const localeCode = this.locale?.code || undefined;
     const formatter = new Intl.DateTimeFormat(localeCode, { month: 'long',
       year: 'numeric' });
@@ -342,20 +377,18 @@ export class AuroCalendar extends RangeDatepicker {
       let dateMatches = undefined;
 
       if (!this.isFullscreen) {
-        const formattedDateStr = this.util.getDateAsString(new Date(this.centralDate), this.datepicker.format);
-
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
-        if (this.util.validDateStr(formattedDateStr, this.datepicker.format)) {
-          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDate));
+        if (this.centralDateObject) {
+          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDateObject));
 
           if (!dateMatches) {
-            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.centralDate);
+            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.centralDateObject);
           }
-        } else if (this.minDate) {
-          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.minDate));
+        } else if (this.minDateObject) {
+          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.minDateObject));
 
           if (!dateMatches) {
-            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.minDate);
+            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.minDateObject);
           }
         } else {
           const now = new Date();
@@ -398,8 +431,8 @@ export class AuroCalendar extends RangeDatepicker {
           newYear = oldYear;
         }
 
-        const newMonthDateStr = `${newMonth}/01/${newYear}`;
-        newMonthDate = new Date(newMonthDateStr);
+        const newMonthDateStr = `${String(newMonth).padStart(2, '0')}/01/${newYear}`;
+        newMonthDate = dateFormatter.stringToDateInstance(newMonthDateStr, 'mm/dd/yyyy');
 
         renderedHtml = html`${renderedHtml}${this.utilCalRender.renderCalendar(this, newMonth, newYear)}`;
       }
@@ -574,8 +607,8 @@ export class AuroCalendar extends RangeDatepicker {
       return Math.floor(date.getTime() / 1000);
     };
 
-    const rawMin = Number(this.min);
-    const rawMax = Number(this.max);
+    const rawMin = this.minDateObject?.getTime() / 1000;
+    const rawMax = this.maxDateObject?.getTime() / 1000;
 
     // When min/max are NaN (no minDate/maxDate configured), treat as unbounded.
     const minTs = Number.isFinite(rawMin) ? rawMin : -Infinity;
@@ -630,11 +663,10 @@ export class AuroCalendar extends RangeDatepicker {
     // will actually be rendered. If today falls outside the visible range, an
     // active cell set to today would have no matching DOM element and keyboard
     // focus could not enter the calendar.
-    const centralDateValue = this.centralDate ? new Date(this.centralDate) : null;
 
-    if (centralDateValue && !isNaN(centralDateValue.getTime())) {
-      const centralMonth = centralDateValue.getMonth();
-      const centralYear = centralDateValue.getFullYear();
+    if (this.centralDateObject) {
+      const centralMonth = this.centralDateObject.getMonth();
+      const centralYear = this.centralDateObject.getFullYear();
       const todayDate = new Date(now * 1000);
       const todayMonth = todayDate.getMonth();
       const todayYear = todayDate.getFullYear();
@@ -676,9 +708,7 @@ export class AuroCalendar extends RangeDatepicker {
     // that has no DOM cell. Determine the visible range based on centralDate and
     // the number of rendered months.
     const renderedMonths = Math.max(this.numCalendars, 1);
-    const visibleAnchor = centralDateValue && !isNaN(centralDateValue.getTime())
-      ? centralDateValue
-      : new Date(now * 1000);
+    const visibleAnchor = this.centralDateObject ?? new Date(now * 1000);
     const visMonthStart = new Date(visibleAnchor.getFullYear(), visibleAnchor.getMonth(), 1);
     visMonthStart.setHours(0, 0, 0, 0);
     const visMonthEnd = new Date(visibleAnchor.getFullYear(), visibleAnchor.getMonth() + renderedMonths, 0);
@@ -781,8 +811,8 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {Boolean} True if the date is within range.
    */
   isDateInRange(targetTs) {
-    const rawMin = Number(this.min);
-    const rawMax = Number(this.max);
+    const rawMin = this.minDateObject?.getTime() / 1000;
+    const rawMax = this.maxDateObject?.getTime() / 1000;
     if (Number.isFinite(rawMin) && targetTs < rawMin) {
       return false;
     }
@@ -1112,7 +1142,7 @@ export class AuroCalendar extends RangeDatepicker {
     const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
     const dd = String(dateObj.getDate()).padStart(2, '0');
     const yyyy = dateObj.getFullYear();
-    const dateStr = `${mm}_${dd}_${yyyy}`;
+    const dateStr = `${yyyy}_${mm}_${dd}`;
     const dateSlotEl = this.datepicker?.querySelector(`[slot="date_${dateStr}"]`);
     if (dateSlotEl) {
       const text = dateSlotEl.innerText?.trim();

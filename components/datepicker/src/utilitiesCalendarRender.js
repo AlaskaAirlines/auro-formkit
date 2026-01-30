@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { AuroDatepickerUtilities } from './utilities.js';
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
 export class UtilitiesCalendarRender {
   constructor() {
@@ -13,13 +14,23 @@ export class UtilitiesCalendarRender {
    * @private
    */
   updateCentralDate(elem, date) {
+    // if date is already iso formatted string, we can skip the conversion and validation step
+    if (typeof date === 'string' && dateFormatter.isValidDate(date)) {
+      // eslint-disable-next-line
+      elem.centralDate = date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1-$2-01'); // Set to first of the month
+      return;
+    }
+
+    // Accept Date objects, Unix timestamps (numbers), and ISO strings
     const dateObj = new Date(date);
+
+    if (isNaN(dateObj)) {
+      return;
+    }
+
     dateObj.setDate(1);
     dateObj.setHours(0, 0, 0, 0);
-
-    if (!isNaN(dateObj)) {
-      elem.centralDate = dateObj;
-    }
+    elem.centralDate = dateFormatter.toISOFormatString(dateObj);
   }
 
   /**
@@ -31,7 +42,8 @@ export class UtilitiesCalendarRender {
   determineDefinedCalendarRange(elem) {
     if (elem.getAttribute('calendarStartDate') && elem.getAttribute('calendarEndDate')) {
       // if we have a defined range of months, use that
-      elem.calendarRangeMonths = elem.util.monthDiff(new Date(elem.getAttribute('calendarStartDate')), new Date(elem.getAttribute('calendarEndDate')));
+      // prop is not in sync with attribute yet, use attribute value
+      elem.calendarRangeMonths = elem.util.monthDiff(dateFormatter.stringToDateInstance(elem.getAttribute('calendarStartDate')), dateFormatter.stringToDateInstance(elem.getAttribute('calendarEndDate')));
     } else {
       // if we don't have a defined range of months, use undefined
       elem.calendarRangeMonths = undefined;
@@ -92,7 +104,7 @@ export class UtilitiesCalendarRender {
     // 3. If maximumRenderableMonths() returns 0 (e.g. an invalid/empty defined range),
     //    fall back to the min/max date range so something is rendered.
     if (!calendarCount && elem.minDate && elem.maxDate) {
-      calendarCount = this.util.monthDiff(new Date(elem.minDate), new Date(elem.maxDate));
+      calendarCount = this.util.monthDiff(elem.minDateObject, elem.maxDateObject);
     }
 
     if (elem.numCalendars !== calendarCount) {
@@ -114,9 +126,9 @@ export class UtilitiesCalendarRender {
     let firstMonthDate = new Date();
 
     if (start) {
-      firstMonthDate = new Date(start);
+      firstMonthDate = dateFormatter.stringToDateInstance(start);
     } else if (min) {
-      firstMonthDate = new Date(min);
+      firstMonthDate = dateFormatter.stringToDateInstance(min);
     }
 
     // sets to the first day of the month
@@ -143,6 +155,7 @@ export class UtilitiesCalendarRender {
         .dateTo="${elem.dateTo}"
         .dateFrom="${elem.dateFrom}"
         .locale="${elem.locale}"
+        .localeCode="${elem.localeCode}"
         .monthNames="${elem.monthNames}"
         month="${month}"
         year="${year}"

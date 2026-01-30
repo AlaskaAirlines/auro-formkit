@@ -1,10 +1,10 @@
 export function blackoutLabelExample() {
   const blackoutDP = document.querySelector('#blackoutLabelExample');
 
-  function formatMMDDYYYY(date) {
+  function formatISO(date) {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
-    return `${mm}/${dd}/${date.getFullYear()}`;
+    return `${date.getFullYear()}-${mm}-${dd}`;
   }
 
   function setup() {
@@ -27,10 +27,10 @@ export function blackoutLabelExample() {
     const maxDate = new Date(minDate);
     maxDate.setDate(minDate.getDate() + 75);
 
-    blackoutDP.setAttribute('calendarStartDate', formatMMDDYYYY(startDate));
-    blackoutDP.setAttribute('calendarEndDate', formatMMDDYYYY(endDate));
-    blackoutDP.setAttribute('minDate', formatMMDDYYYY(minDate));
-    blackoutDP.setAttribute('maxDate', formatMMDDYYYY(maxDate));
+    blackoutDP.setAttribute('calendarStartDate', formatISO(startDate));
+    blackoutDP.setAttribute('calendarEndDate', formatISO(endDate));
+    blackoutDP.setAttribute('minDate', formatISO(minDate));
+    blackoutDP.setAttribute('maxDate', formatISO(maxDate));
 
     // Generate all dates within the min/max range
     const blackoutDates = [];
@@ -40,7 +40,7 @@ export function blackoutLabelExample() {
       const mm = String(current.getMonth() + 1).padStart(2, '0');
       const dd = String(current.getDate()).padStart(2, '0');
       const yyyy = current.getFullYear();
-      const slotDateStr = `${mm}_${dd}_${yyyy}`;
+      const slotDateStr = `${yyyy}_${mm}_${dd}`;
 
       // Mark every 3rd date as blackout (deterministic pattern)
       const dayOfMonth = current.getDate();

@@ -62,7 +62,9 @@ function getValueEnd(page: Page, fixture: string) {
 /** Get the month index (0-based) of the currently displayed central date. */
 function getCentralMonth(page: Page, fixture: string) {
   return dp(page, fixture).evaluate((el: any) => {
-    return new Date(el.centralDate).getMonth();
+    // centralDate is an ISO string — use centralDateObject (local-time parsed) to avoid
+    // UTC off-by-one-day errors in UTC− timezones.
+    return el.centralDateObject?.getMonth() ?? new Date().getMonth();
   });
 }
 

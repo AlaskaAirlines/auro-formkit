@@ -91,8 +91,8 @@
 <p><code>auro-datepicker</code> supports per-date slot content:</p>
 
 <ul>
-  <li><strong>Date slots</strong> (<code>date_MM_DD_YYYY</code>) — Add custom HTML below the date number (e.g. flight prices, availability indicators)</li>
-  <li><strong>Popover slots</strong> (<code>popover_MM_DD_YYYY</code>) — Add popover content that appears on hover or focus for a specific date</li>
+  <li><strong>Date slots</strong> (<code>date_YYYY_MM_DD</code>) — Add custom HTML below the date number (e.g. flight prices, availability indicators)</li>
+  <li><strong>Popover slots</strong> (<code>popover_YYYY_MM_DD</code>) — Add popover content that appears on hover or focus for a specific date</li>
   <li><strong>Reference dates</strong> — Display reference data alongside dates for decision-making</li>
 </ul>
 

@@ -25,6 +25,9 @@ import { html } from 'lit/static-html.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+
+import i18n from './i18n.js';
+
 import BaseInput from './base-input.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -315,19 +318,6 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Function to determine if the input is meant to render an icon visualizing the input type.
-   * @private
-   * @returns {boolean} - Returns true if the input type is meant to render an icon.
-   */
-  hasTypeIcon() {
-    if (this.icon || this.type === 'date') {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Function to determine if there is any displayValue content to render.
    * @private
    * @returns {void}
@@ -365,6 +355,67 @@ export class AuroInput extends BaseInput {
         evt.stopPropagation();
       });
     }
+  }
+
+  /**
+   * Determines default help text string.
+   * @private
+   * @deprecated https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296
+   * @returns {string} Evaluates pre-determined help text.
+   */
+  getHelpText() {
+    const typeHelpText = [
+      'password',
+      'email',
+      'credit-card',
+      'tel'
+    ];
+
+    if (typeHelpText.includes(this.type)) {
+      return i18n(this.lang, this.type);
+    }
+
+    if (this.type === 'date') {
+      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
+    }
+
+    return '';
+  }
+
+  /**
+   * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
+   * @private
+   * @param {string} type Value entered into component prop.
+   * @returns {string} Iterates over allowed types array.
+   */
+  getInputType(type) {
+    if (this.allowedInputTypes.includes(type)) {
+      return type;
+    }
+
+    return "text";
+  }
+
+  /**
+   * Function to support show-password feature.
+   * @private
+   * @returns {void}
+   */
+  handleClickShowPassword() {
+    this.showPassword = !this.showPassword;
+    this.focus();
+  }
+
+  /**
+   * @private
+   * @returns {string}
+   */
+  definePattern() {
+    if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
+      return `.{${this.maxLength},${this.maxLength}}`;
+    }
+
+    return this.pattern;
   }
 
   /**

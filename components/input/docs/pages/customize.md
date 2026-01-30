@@ -23,6 +23,7 @@
       <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
       <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
       <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
+      <auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
       <auro-anchorlink fluid href="#max" class="level2 body-xs">Max</auro-anchorlink>
       <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
       <auro-anchorlink fluid href="#min" class="level2 body-xs">Min</auro-anchorlink>
@@ -237,6 +238,18 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
+        <auro-header level="3" id="localization">Localization</auro-header>
+        <p>When <code>type="date"</code> is used with the <code>locale</code> attribute, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
+        <p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/locale.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/locale.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="inputMode">Input Mode</auro-header>
         <p>Set the <code>inputmode</code> for the input.</p>
         <p><strong>IMPORTANT</strong>: If you are also passing a <code>type</code>, most browsers will use the <code>type</code> attribute to determine what keyboard to display on mobile devices and ignore the <code>inputmode</code> attribute.</p>
@@ -392,6 +405,7 @@
           <li><strong><code>setCustomValidityRangeUnderflow</code></strong> — Displayed when the value is below the <code>min</code> constraint.</li>
           <li><strong><code>setCustomValidityTooLong</code></strong> — Displayed when the value exceeds the <code>maxlength</code> constraint.</li>
           <li><strong><code>setCustomValidityTooShort</code></strong> — Displayed when the value is shorter than the <code>minlength</code> constraint.</li>
+          <li><strong><code>setCustomValidityPatternMismatch</code></strong> — Displayed when the value does not match the declared <code>pattern</code>, or when <code>type="date"</code> and the entered date is not a valid calendar date (e.g. month/day values out of range). Falls back to <code>"Invalid Date Format Entered"</code> if not set.</li>
         </ul>
         <p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message.</p>
         <p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using these properties.</p>

@@ -1,13 +1,117 @@
+/* eslint-disable max-lines */
+import * as dateFns from 'date-fns';
+import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
+
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, init-declarations, radix, no-nested-ternary */
+/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, radix, no-nested-ternary */
 
 import IMask from 'imask';
 
 export class AuroInputUtilities {
+
+  /**
+   * Creates an instance of AuroInputUtilities.
+   * @param {object} config - Configuration object for the utilities.
+   * @param {string} config.locale - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
+   * @param {string} config.format - Optional Date format override string.
+   */
+  constructor(config = { locale: undefined, format: undefined }) {
+    if (config.locale) {
+      try {
+        this.locale = new Intl.Locale(config.locale).toString();
+      } catch (error) {
+        console.debug('Invalid locale provided, defaulting to en-US', error); // eslint-disable-line no-console
+        this.locale = 'en-US';
+      }
+    } else {
+      this.locale = 'en-US';
+    }
+    this.overrideFormat = config.format;
+    this.formatter = new Intl.DateTimeFormat(this.locale);
+
+    // Bindings - many of these are passed into IMask callbacks,
+    // so we need to bind 'this' context for them to work properly.
+    // ------------------------------------------------------------------------------
+    this.getDateMaskFromLocale = this.getDateMaskFromLocale.bind(this);
+    this.parseDateByMask = this.parseDateByMask.bind(this);
+    this.getMaskOptions = this.getMaskOptions.bind(this);
+  }
+
+  /**
+   * Updates the date format override.
+   * @param {string} newFormat - New date format string.
+   * @returns {void}
+   */
+  updateFormat(newFormat) {
+    this.overrideFormat = newFormat;
+  }
+
+  /**
+   * Converts an IMask-style date mask to a date-fns compatible format string.
+   * @param {string} mask - IMask date mask (e.g. "MM/DD/YYYY").
+   * @returns {string} date-fns format string (e.g. "MM/dd/yyyy").
+   */
+  toDateFnsMask(mask) {
+    return mask
+      .replace('mm', 'MM')
+      .replace('DD', 'dd')
+      .replace('YYYY', 'yyyy')
+      .replace('YY', 'yy');
+  }
+
+  /**
+   * Generates a date mask based on the provided locale.
+   * @param {string} [locale] - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
+   * @returns {string}
+   */
+  getDateMaskFromLocale(locale) {
+    // Break out if we have an override format
+    if (this.overrideFormat) {
+      // IMask wants uppercase, everything else wants lower
+      return this.overrideFormat.toUpperCase();
+    }
+
+    const formatter = new Intl.DateTimeFormat(this.locale || locale, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+
+    // Format to parts does not need a relevant date when formatting our mask, just a valid Date object!
+    // I've chosen November 18, 2002, as that's Metroid Prime's release date :)
+    const parts = formatter.formatToParts(new Date(2002, 10, 18));
+
+    // Format parts is an array of DateTimeFormatPart objects, we want a string
+    return parts
+      .map((part) => {
+        switch (part.type) {
+          case "day":
+            return "DD";
+          case "month":
+            return "MM";
+          case "year":
+            return "YYYY";
+          default:
+            return part.value;
+        }
+      })
+      .join("");
+  }
+
+  /**
+   * Parses a date string using the provided mask.
+   * @private
+   * @param {string} dateString - The date string to parse.
+   * @param {string} mask - The date mask to use for parsing.
+   * @returns {string}
+   */
+  parseDateByMask(dateString, mask) {
+    return dateFns.parse(dateString, this.toDateFnsMask(mask), new Date());
+  }
 
   /**
    * Configures the mask to be used on the input element based on format and/or type.
@@ -15,7 +119,7 @@ export class AuroInputUtilities {
    * @private
    * @param {string} type - The input type.
    * @param {string} format - The format of the mask to apply.
-   * @returns {void}
+   * @returns {object} - The mask options object.
    */
   getMaskOptions(type, format) {
     if (type) {
@@ -38,7 +142,11 @@ export class AuroInputUtilities {
       }
 
       if (type === 'date') {
-        const dateFormat = format || 'mm/dd/yyyy';
+        // Get canonical pattern for locale
+        const pattern = this.getDateMaskFromLocale(this.locale);
+
+        // dateFormat is only used to determine if we have a full pattern or partial date pattern.
+        const dateFormat = format || this.overrideFormat || pattern || 'mm/dd/yyyy';
 
         if (dateFormat === 'dd' || dateFormat === 'yy' || dateFormat === 'yyyy') {
           const maxValue = dateFormat === 'dd' ? 31 : (dateFormat === 'yy' ? 99 : 9999);
@@ -61,9 +169,7 @@ export class AuroInputUtilities {
 
         if (dateFormat.includes('yyyy')) {
           blocks.yyyy = { mask: IMask.MaskedRange, from: 1900, to: 2100 };
-        }
-
-        if (dateFormat.includes('yy')) {
+        } else if (dateFormat.includes('yy')) {
           blocks.yy = { mask: IMask.MaskedRange, from: 0, to: 99 };
         }
 
@@ -75,80 +181,19 @@ export class AuroInputUtilities {
           blocks.dd = { mask: IMask.MaskedRange, from: 1, to: 31 };
         }
 
+        const dateFnsMask = this.toDateFnsMask(dateFormat);
+
         return {
           mask: Date,
-          pattern: dateFormat,
+          pattern: dateFormat.toLowerCase(),
           blocks,
           format(date) {
-            if (!date) {
+            if (!date || !dateFns.isValid(date)) {
               return '';
             }
-
-            const day = date.getDate()
-              .toString()
-              .padStart(2, '0');
-            const month = (date.getMonth() + 1)
-              .toString()
-              .padStart(2, '0');
-            const year = date
-              .getFullYear()
-              .toString();
-            const shortYear = year.slice(-2);
-
-            let formattedDate = this.mask;
-
-            if (formattedDate.includes('dd')) {
-              formattedDate = formattedDate.replace('dd', day);
-            }
-
-            if (formattedDate.includes('mm')) {
-              formattedDate = formattedDate.replace('mm', month);
-            }
-
-            if (formattedDate.includes('yyyy')) {
-              formattedDate = formattedDate.replace('yyyy', year);
-            }
-
-            if (formattedDate.includes('yy')) {
-              formattedDate = formattedDate.replace('yy', shortYear);
-            }
-
-            return formattedDate;
+            return dateFns.format(date, dateFnsMask);
           },
-          parse(str) {
-            if (!str) {
-              return null;
-            }
-
-            const parts = str.split('/');
-            const formatParts = this.mask.split('/');
-
-            let day = 1, month, year = new Date().getFullYear();
-
-            formatParts.forEach((part, index) => {
-              if (part === 'dd') {
-                day = parseInt(parts[index]) || 1;
-              }
-
-              if (part === 'mm') {
-                month = parseInt(parts[index]) - 1;
-              }
-
-              if (part === 'yyyy') {
-                year = parseInt(parts[index]);
-              }
-
-              if (part === 'yy') {
-                year = parseInt(parts[index]);
-                year = year <= 25 ? 2000 + year : 1900 + year;
-              }
-            });
-
-            if (isNaN(month) || isNaN(year)) {
-              return null;
-            }
-            return new Date(year, month, day);
-          },
+          parse: (str) => dateFns.parse(str, dateFnsMask, new Date()),
           lazy: true,
           placeholderChar: ''
         };
@@ -167,79 +212,74 @@ export class AuroInputUtilities {
   }
 
   /**
+   * Determines if the given type and format combination represents a full year/month/day date.
    * @private
-   * @param {string} dateStr - Date string to format.
-   * @param {string} format - Date format to use.
-   * @returns {void}
+   * @param {string} type - The input type.
+   * @param {string} format - The date format string.
+   * @returns {boolean}
    */
-  toNorthAmericanFormat(dateStr, format) {
-    const parsedDate = this.parseDate(dateStr, format);
+  isFullDateFormat(type, format) {
+    const normalizedFormat = format ? format.toLowerCase() : '';
 
-    if (!parsedDate) {
-      return parsedDate;
-    }
-
-    const { month, day, year } = parsedDate;
-    const fullYear = (year && year.length === 2) ? `20${year}` : year;
-    const currentYear = new Date().getFullYear();
-
-    const dateParts = [];
-    if (month) {
-      dateParts.push(month);
-    }
-
-    if (day) {
-      dateParts.push(day);
-    }
-
-    if (year) {
-      dateParts.push(year);
-    }
-
-    const comparisonParts = [
-      month || '01',
-      day || '01',
-      fullYear || currentYear
-    ];
-
-    return {
-      formattedDate: dateParts.join('/'),
-      dateForComparison: comparisonParts.join('/')
-    };
+    return type === 'date' && normalizedFormat.includes('yy') && normalizedFormat.includes('mm') && normalizedFormat.includes('dd');
   }
 
   /**
+   * Converts a display string to its model value.
+   * For full date formats, converts the display string to an ISO date string.
    * @private
-   * @param {string} dateStr - Date string to parse.
-   * @param {string} format - Date format to parse.
-   * @returns {void}
+   * @param {string} inputValue - String from the rendered input.
+   * @param {string} format - The date format string.
+   * @returns {string}
    */
-  parseDate(dateStr, format) {
-    const dateFormat = format || "mm/dd/yyyy";
-
-    // Define mappings for date components with named capture groups
-    const formatPatterns = {
-      'yyyy': '(?<year>\\d{4})',
-      'yy': '(?<year>\\d{2})',
-      'mm': '(?<month>\\d{2})',
-      'dd': '(?<day>\\d{2})'
-    };
-
-    // Escape slashes and replace format components with regex patterns
-    let regexPattern = dateFormat.replace(/(?:yyyy|yy|mm|dd)/gu, (match) => formatPatterns[match]);
-    regexPattern = `^${regexPattern}$`;
-
-    const regex = new RegExp(regexPattern, 'u');
-    const match = dateStr.match(regex);
-
-    if (match && match.groups) {
-      return {
-        year: match.groups.year,
-        month: match.groups.month,
-        day: match.groups.day
-      };
+  toModelValue(inputValue, format) {
+    if (!this.isFullDateFormat('date', format) || !inputValue) {
+      return inputValue;
     }
 
-    return undefined;
+    if (inputValue.length !== format.length) {
+      return inputValue;
+    }
+
+    const normalizedFormat = format.toLowerCase();
+    const parsedDate = this.parseDateByMask(inputValue, normalizedFormat);
+
+    if (!(parsedDate instanceof Date) || Number.isNaN(parsedDate.getTime())) {
+      return inputValue;
+    }
+
+    return dateFormatter.toISOFormatString(parsedDate);
   }
+
+  /**
+   * Converts a model value to a display value for the input element.
+   * For full date formats, converts an ISO model value to the configured display format.
+   * @private
+   * @param {Date|undefined} valueObject - Date object representation of value.
+   * @param {string} format - The date format string.
+   * @returns {string | undefined}
+   */
+  toFormattedValue(valueObject, format) {
+    const normalizedFormat = format.toLowerCase();
+    const maskOptions = this.getMaskOptions('date', normalizedFormat);
+
+    if (!(valueObject instanceof Date) || Number.isNaN(valueObject.getTime()) || !maskOptions || typeof maskOptions.format !== 'function') {
+      console.debug('Invalid date object or mask options for formatting', { valueObject, maskOptions }); // eslint-disable-line no-console
+      return undefined;
+    }
+
+    return maskOptions.format(valueObject);
+  }
+}
+
+/**
+ * Derives a locale-aware date format string suitable for use in input masks. This helper exposes the internal AuroInputUtilities locale logic in a simple function form.
+ *
+ * @param {string} locale - BCP 47 language tag used to determine the date format (e.g. "en-US", "fr-FR").
+ * @returns {string} A lowercase date format mask string corresponding to the provided locale.
+ */
+export function getDateFormatFromLocale (locale) {
+  return new AuroInputUtilities({ locale }).
+    getDateMaskFromLocale().
+    toLowerCase();
 }
