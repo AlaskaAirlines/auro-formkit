@@ -49,6 +49,9 @@ export default class BaseInput extends AuroElement {
     this.required = false;
     this.setCustomValidityForType = undefined;
 
+    // Used for storing raw values returned from input mask.
+    this._rawMaskValue = undefined;
+
     /**
      * @private
      */
@@ -65,7 +68,10 @@ export default class BaseInput extends AuroElement {
     this.size = 'lg';
 
     this.touched = false;
-    this.util = new AuroInputUtilities();
+    this.util = new AuroInputUtilities({
+      locale: "en-US",
+      format: this.format
+    });
     this.validation = new AuroFormValidation();
     this.inputIconName = undefined;
     this.showPassword = false;
@@ -725,6 +731,9 @@ export default class BaseInput extends AuroElement {
       this.maskInstance.destroy();
     }
 
+    // Pass new format to util
+    this.util.updateFormat(this.format);
+
     const maskOptions = this.util.getMaskOptions(this.type, this.format);
 
     if (this.inputElement && maskOptions.mask) {
@@ -732,10 +741,16 @@ export default class BaseInput extends AuroElement {
 
       this.maskInstance.on('accept', () => {
         this.value = this.maskInstance.value;
+        if (this.type === "date") {
+          this._rawMaskValue = this.maskInstance.value;
+        }
       });
 
       this.maskInstance.on('complete', () => {
         this.value = this.maskInstance.value;
+        if (this.type === "date") {
+          this._rawMaskValue = this.maskInstance.value;
+        }
 
         // Format date to North American format
         if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.util.toNorthAmericanFormat(this.value, this.format)) {
@@ -955,8 +970,11 @@ export default class BaseInput extends AuroElement {
       this.inputmode = this.inputmode || 'numeric';
     }
 
+    // Set default date format if type=date and no format is defined
     if (this.type === "date" && !this.format) {
-      this.format = 'mm/dd/yyyy';
+      // Use locale to determine default date format
+      this.format = this.util.getDateMaskFromLocale().toLowerCase();
+      this.util.updateFormat(this.format);
     }
   }
 
