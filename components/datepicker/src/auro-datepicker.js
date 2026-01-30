@@ -52,7 +52,7 @@ import { LitElement } from 'lit';
 /**
  * The `auro-datepicker` component provides users with a way to select a date or date range from a calendar popup or fullscreen calendar on mobile.
  * @customElement auro-datepicker
- * 
+ *
  * @slot helpText - Defines the content of the helpText.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
@@ -888,9 +888,15 @@ export class AuroDatePicker extends AuroElement {
 
       input.addEventListener('input', () => {
         if (index === 0) {
-          this.value = input.value;
+          this.value =
+            input.formattedDate
+              ? input.formattedDate
+              : input.value;
         } else if (index === 1) {
-          this.valueEnd = input.value;
+          this.valueEnd =
+            input.formattedDate
+              ? input.formattedDate
+              : input.value;
         }
 
         this.notifyValueChanged();

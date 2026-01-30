@@ -260,4 +260,17 @@ export class AuroInputUtilities {
       dateForComparison: parsedDate
     };
   }
+
+  /**
+   * The opposite of the toNorthAmericanFormat function.
+   * @param {string} dateStr - A North American formatted date string.
+   * @param {string} [format] - Optional: Date format string to use.
+   * @returns {string}
+   */
+  toLocaleFormat(dateStr, format) {
+    const maskForLocale = this.getDateMaskFromLocale(this.locale);
+    const parsedDate = this.parseDateByMask(dateStr, format || maskForLocale);
+
+    return dateFns.formatDate(parsedDate, maskForLocale);
+  }
 }
