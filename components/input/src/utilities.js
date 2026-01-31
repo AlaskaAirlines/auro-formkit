@@ -33,6 +33,14 @@ export class AuroInputUtilities {
   }
 
   /**
+   * Retrieves the current locale.
+   * @returns {string}
+   */
+  getLocale() {
+    return this.locale;
+  }
+
+  /**
    * Updates the locale used for date formatting.
    * @param {string} newLocale - New BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
    * @returns {void}
