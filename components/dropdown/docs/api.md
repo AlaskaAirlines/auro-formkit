@@ -45,11 +45,12 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 
 ## Events
 
-| Event                       | Type                                 | Description                                      |
-|-----------------------------|--------------------------------------|--------------------------------------------------|
-| `auroDropdown-idAdded`      | `Object<key  : 'id', value: string>` | Notifies consumers that the unique ID for the dropdown bib has been generated. |
-| `auroDropdown-toggled`      |                                      | Notifies that the visibility of the dropdown bib has changed. |
-| `auroDropdown-triggerClick` | `CustomEvent<any>`                   | Notifies that the trigger has been clicked.      |
+| Event                       | Type                                             | Description                                      |
+|-----------------------------|--------------------------------------------------|--------------------------------------------------|
+| `auroDropdown-idAdded`      | `Object<key  : 'id', value: string>`             | Notifies consumers that the unique ID for the dropdown bib has been generated. |
+| `auroDropdown-ready`        | `Object<key  : 'dropdown', value: AuroDropdown>` | Notifies that the dropdown is fully initialized and ready for external modification. |
+| `auroDropdown-toggled`      |                                                  | Notifies that the visibility of the dropdown bib has changed. |
+| `auroDropdown-triggerClick` | `CustomEvent<any>`                               | Notifies that the trigger has been clicked.      |
 
 ## Slots
 

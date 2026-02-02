@@ -42,6 +42,7 @@ The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create
 
 | Method         | Type                                   | Description                                      |
 |----------------|----------------------------------------|--------------------------------------------------|
+| `focus`        | `(): void`                             |                                                  |
 | `hideBib`      | `(): void`                             | Hides the dropdown bib if its open.              |
 | `reset`        | `(): void`                             | Resets component to initial state.               |
 | `setMenuValue` | `(value: any): void`                   |                                                  |

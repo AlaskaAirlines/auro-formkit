@@ -54,6 +54,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @event auroDropdown-triggerClick - Notifies that the trigger has been clicked.
  * @event auroDropdown-toggled - Notifies that the visibility of the dropdown bib has changed.
  * @event auroDropdown-idAdded - Notifies consumers that the unique ID for the dropdown bib has been generated.
+ * @event auroDropdown-ready - Notifies that the dropdown is fully initialized and ready for external modification.
  */
 export class AuroDropdown extends AuroElement {
   constructor() {
@@ -212,8 +213,10 @@ export class AuroDropdown extends AuroElement {
   focus() {
     if (this.isPopoverVisible && this.focusTrap) {
       this.focusTrap.focusFirstElement();
+      // console.log("focus trap enabled", document.activeElement);
     } else {
       this.trigger.focus();
+      // console.log("trigger focus", document.activeElement);
     }
   }
 
@@ -586,6 +589,7 @@ export class AuroDropdown extends AuroElement {
       this.dropdownId = this.floater.element.id;
     }
 
+    this.trigger = this.shadowRoot.querySelector('#trigger');
     this.bibContent = this.floater.element.bib;
 
     // Add the tag name as an attribute if it is different than the component name
@@ -597,6 +601,17 @@ export class AuroDropdown extends AuroElement {
         composed: true
       }));
     });
+
+    /**
+     * @description Let subscribers know that the dropdown is fully initialized and ready for external modification.
+     * @event auroDropdown-ready
+     * @type {Object<key: 'dropdown', value: AuroDropdown>} - The dropdown component instance.
+     */
+    this.dispatchEvent(new CustomEvent('auroDropdown-ready', {
+      detail: { dropdown: this },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   /**
@@ -648,7 +663,12 @@ export class AuroDropdown extends AuroElement {
     // If the dropdown is open, create a focus trap and focus the first element
     if (this.isPopoverVisible && !this.disableFocusTrap) {
       this.focusTrap = new FocusTrap(this.bibContent);
-      this.focusTrap.focusFirstElement();
+      // console.log("focus trap created", document.activeElement);
+      // this.focusTrap.focusFirstElement();
+      this.trigger.focus();
+      // console.log("trigger focused", document.activeElement);
+
+      // console.log("first elem focused", document.activeElement);
       return;
     }
 
@@ -767,7 +787,7 @@ export class AuroDropdown extends AuroElement {
     this.floater.handleTriggerTabIndex();
 
     // Get the trigger
-    const trigger = this.shadowRoot.querySelector('#trigger');
+    // const trigger = this.shadowRoot.querySelector('#trigger');
 
     // Get the trigger slot
     const triggerSlot = this.shadowRoot.querySelector('.triggerContentWrapper slot');
@@ -791,11 +811,10 @@ export class AuroDropdown extends AuroElement {
           this.clearTriggerA11yAttributes(trigger);
 
           // Remove the tabindex from the trigger so it doesn't interrupt focus flow
-          trigger.removeAttribute('tabindex');
+          this.trigger.removeAttribute('tabindex');
         } else {
-
           // Add the tabindex to the trigger so that it's in the focus flow
-          trigger.setAttribute('tabindex', '0');
+          this.trigger.setAttribute('tabindex', '0');
         }
       }
     }
@@ -856,6 +875,18 @@ export class AuroDropdown extends AuroElement {
   renderBasicHtml(helpTextClasses) {
     return html`
       <div>
+        <div class="combo-menu"
+          role="listbox"
+          id="listbox1"
+          aria-labelledby="trigger"
+          tabindex="-1">
+          <div role="option" id="combo1-0" class="combo-option" aria-selected="false">Orange</div>
+          <div role="option" id="combo1-1" class="combo-option" aria-selected="false">Apple</div>
+          <div role="option" id="combo1-2" class="combo-option" aria-selected="false">Banana</div>
+          <div role="option" id="combo1-3" class="combo-option" aria-selected="false">Pear</div>
+          <div role="option" id="combo1-4" class="combo-option" aria-selected="false">Blueberry</div>
+          <div role="option" id="combo1-5" class="combo-option" aria-selected="false">Dragon Fruit</div>
+        </div>
         <div
           id="trigger"
           class="${classMap(this.commonWrapperClasses)}" part="wrapper"

@@ -196,6 +196,11 @@ export class AuroMenuOption extends AuroElement {
     // Add this step soon as this node gets attached to the DOM to avoid racing condition with menu's value setting logic.
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
 
+    // Ensure the menuoption has a unique ID for aria-activedescendant
+    if (!this.id) {
+      this.id = `auro-menuoption-${Math.random().toString(36).substr(2, 9)}`;
+    }
+
     // Set up context consumption in connectedCallback
     this._contextConsumer = new ContextConsumer(this, {
       context: MenuContext,

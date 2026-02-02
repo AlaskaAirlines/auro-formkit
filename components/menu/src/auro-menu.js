@@ -419,6 +419,11 @@ export class AuroMenu extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
+    // Ensure the menu has a unique ID for aria-activedescendant
+    if (!this.id) {
+      this.id = `auro-menu-${Math.random().toString(36).substr(2, 9)}`;
+    }
+
     this.provideContext();
 
     this.addEventListener('keydown', this.handleKeyDown);
