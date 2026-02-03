@@ -184,6 +184,19 @@ export class AuroDropdownBib extends LitElement {
       }));
     });
 
+    // Re-dispatch keyboard events to ensure they cross shadow DOM boundary
+    dialog.addEventListener('keydown', (event) => {
+      event.stopPropagation();
+      const newEvent = new KeyboardEvent('keydown', {
+        key: event.key,
+        code: event.code,
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      });
+      this.dispatchEvent(newEvent);
+    });
+
     // Dispatch a custom event when the component is connected
     this.dispatchEvent(new CustomEvent('auro-dropdownbib-connected', {
       bubbles: true,
