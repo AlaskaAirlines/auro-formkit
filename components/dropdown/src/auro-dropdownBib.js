@@ -185,7 +185,11 @@ export class AuroDropdownBib extends LitElement {
     });
 
     // Re-dispatch keyboard events to ensure they cross shadow DOM boundary
+    // Don't interfere with Tab - let native dialog focus trapping work
     dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'Tab') {
+        return;
+      }
       event.stopPropagation();
       const newEvent = new KeyboardEvent('keydown', {
         key: event.key,
