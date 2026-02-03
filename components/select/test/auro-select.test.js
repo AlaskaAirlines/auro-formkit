@@ -3,7 +3,7 @@ import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plu
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
-import '@aurodesignsystem/auro-dropdown';
+import '../../dropdown/src/registered.js';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
 

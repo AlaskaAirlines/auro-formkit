@@ -790,6 +790,13 @@ export class AuroCombobox extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+
+    const labelElement = this.querySelector('span[slot="label"]');
+
+    if (labelElement) {
+      this.menu.setAttribute('aria-label', labelElement.textContent);
+    }
+
     this.defaultMenuShape = this.menu.getAttribute('shape');
 
     // racing condition on custom-combobox with custom-menu
@@ -1347,7 +1354,7 @@ export class AuroCombobox extends AuroElement {
             <${this.inputTag}
               id="inputInBib"
               @input="${this.handleInputValueChange}"
-              .a11yControls="${this.dropdownId}"
+              .a11yControls=${`${this.dropdownId}-floater-bib`}
               .autocomplete="${this.autocomplete}"
               .format="${this.format}"
               .inputmode="${this.inputmode}"

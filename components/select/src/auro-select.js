@@ -548,6 +548,7 @@ export class AuroSelect extends AuroElement {
    */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+    this.dropdown.a11yRole = 'combobox';
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.isPopoverVisible = this.dropdown.isPopoverVisible;
@@ -694,6 +695,13 @@ export class AuroSelect extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
+
+    const labelElement = this.querySelector('span[slot="label"]');
+
+    if (labelElement) {
+      this.menu.setAttribute('aria-label', labelElement.textContent);
+    }
+
     this.defaultMenuSize = this.menu.getAttribute('size');
     this.defaultMenuShape = this.menu.getAttribute('shape');
 
@@ -1186,7 +1194,6 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          a11yRole="combobox"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
@@ -1207,7 +1214,7 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label class="${classMap(this.commonLabelClasses)}">
+                <label id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
@@ -1286,7 +1293,7 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label class="${classMap(this.commonLabelClasses)}">
+                <label id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
@@ -1371,7 +1378,7 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label class="${classMap(this.commonLabelClasses)}">
+                <label id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
                 </label>
