@@ -31,13 +31,18 @@
     // Fix Safari rendering bug - force GPU compositing
     transform: translateZ(0);
 
-    // Explicit positioning for non-modal show()
-    position: absolute;
-    inset: unset;
-
     &::backdrop {
       background: transparent;
     }
+  }
+}
+
+:host(:not([isfullscreen])) {
+  dialog {
+    // Explicit positioning for non-modal show() - only needed for desktop mode
+    // Avoid setting position in fullscreen mode as it causes scroll jump with showModal()
+    position: absolute;
+    inset: unset;
   }
 }
 
