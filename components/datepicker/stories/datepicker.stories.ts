@@ -40,10 +40,7 @@ export default meta;
 type Story = StoryObj<AuroDatePicker & typeof args>;
 
 export const Playground: Story = {
-  render: (args) => template(args),
-  args: {
-    value: null,
-  },
+  render: (args) => template(args)
 };
 
 export const Basic: Story = {

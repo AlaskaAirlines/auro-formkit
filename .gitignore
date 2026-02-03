@@ -37,3 +37,4 @@ custom-elements.json
 ## Storybook files
 storybook-static
 debug-storybook.log
+build-storybook.log

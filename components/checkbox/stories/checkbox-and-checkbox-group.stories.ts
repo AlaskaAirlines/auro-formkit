@@ -2,6 +2,8 @@
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
+import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
+const { args, argTypes, template } = getStorybookHelpers("auro-checkbox-group");
 
 import { html } from 'lit-html';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
@@ -51,7 +53,6 @@ const specialConfigs = {
       docs: {
         source: { type: 'code' },
       },
-      chromatic: { disableSnapshot: true },
     },
     play: async ({ canvas }: { canvas: any }) => {
       const button = await canvas.findByShadowRole('button', { name: /Reset/i });
@@ -60,22 +61,54 @@ const specialConfigs = {
       const firstCheckbox = (await canvas.findAllByShadowRole('checkbox'))[0];
       expect(firstCheckbox).not.toBeChecked();
     }
-  },
-  'custom': {
-    parameters: {
-      chromatic: { disableSnapshot: true },
-    }
   }
 };
 
 const meta: Meta = {
-  component: "auro-checkbox-group",
+  component: 'auro-checkbox-group',
+  subcomponents: { AuroCheckbox: 'auro-checkbox' },
   title: 'Checkbox & Checkbox Group',
-  tags: ['autodocs']
+  tags: ['autodocs'],
+  args,
+  argTypes,
+  parameters: {
+    design: {
+      type: 'figma',
+      url: 'https://www.figma.com/design/VpUz89Ov6ImBpY5YvzYbZW/Auro-toolkit?node-id=0-1066&m=dev',
+    },
+  },
 };
 export default meta;
 
 type Story = StoryObj;
+
+export const Playground: Story = {
+  parameters:{
+    chromatic: { disableSnapshot: true },
+  },
+  tags: ['!dev'],
+  args: {
+    legend: 'Form label goes here',
+  },
+  render: (args) =>
+    template(
+      args,
+      html`
+<auro-checkbox value="value1" name="basic" id="checkbox-basic1"
+  >Checkbox option</auro-checkbox
+>
+<auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked
+  >Checkbox option</auro-checkbox
+>
+<auro-checkbox value="value3" name="basic" id="checkbox-basic3"
+  >Checkbox option</auro-checkbox
+>
+<auro-checkbox value="value4" name="basic" id="checkbox-basic4"
+  >Checkbox option</auro-checkbox
+>
+`,
+    )
+};
 
 const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialConfigs) as Record<string, Story>;
 
@@ -117,5 +150,27 @@ export const HorizontalLimit: Story = {
   <auro-checkbox value="maybe" name="horizontalLimit" id="checkbox-horizontalLimit3">Maybe</auro-checkbox>
   <auro-checkbox value="not sure" name="horizontalLimit" id="checkbox-horizontalLimit4">Not Sure</auro-checkbox>
 </auro-checkbox-group>
+  `
+};
+
+export const requiredCheckboxGroup: Story = {
+  tags: ['!autodocs'],
+  play: async ({ canvas }: { canvas: any }) => {
+    const checkboxes = await canvas.findAllByShadowRole('checkbox');
+    const focusButton = await canvas.findByShadowText('Focus here');
+    const firstCheckbox = checkboxes[0];
+    await userEvent.click(firstCheckbox);
+    await userEvent.click(firstCheckbox);
+    await focusButton.focus();
+  },
+  render: () => html`
+<auro-checkbox-group required>
+  <span slot="legend">Required checkbox</span>
+  <auro-checkbox value="yes" name="required-checkbox-grp" id="checkbox-required-checkbox-grp1">Yes</auro-checkbox>
+  <auro-checkbox value="no" name="required-checkbox-grp" id="checkbox-required-checkbox-grp2">No</auro-checkbox>
+  <auro-checkbox value="maybe" name="required-checkbox-grp" id="checkbox-required-checkbox-grp3">Maybe</auro-checkbox>
+  <auro-checkbox value="not sure" name="required-checkbox-grp" id="checkbox-required-checkbox-grp4">Not Sure</auro-checkbox>
+</auro-checkbox-group>
+<button role="button" id="focus-button">Focus here</button>
   `
 };

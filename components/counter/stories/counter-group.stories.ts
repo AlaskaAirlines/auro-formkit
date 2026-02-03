@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/web-components-vite";
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
+import { html } from "lit-html";
 
 import { AuroCounter } from "../src/auro-counter";
 import { AuroCounterGroup } from "../src/auro-counter-group";

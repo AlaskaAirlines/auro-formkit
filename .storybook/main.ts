@@ -23,20 +23,26 @@ const config: StorybookConfig = {
   stories: [
     `${relativeComponentDirectory}/*/*.mdx`,
     `${relativeDocDirectory}/*.mdx`,
-    `${relativeComponentDirectory}/**/stories/*.stories.@(js|jsx|mjs|ts|tsx)`,
-    `${relativeComponentDirectory}/*/stories/*.mdx`,
+    `${relativeComponentDirectory}/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
+    `${relativeComponentDirectory}/*/stories/**/*.mdx`,
   ],
-  addons: [{
-    // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
-    name: getAbsolutePath("@storybook/addon-docs"),
-    options: {
-      mdxPluginOptions: {
-        mdxCompileOptions: {
-          remarkPlugins: [remarkGfm],
+  addons: [
+    {
+      // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
+      name: getAbsolutePath("@storybook/addon-docs"),
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
         },
       },
     },
-  }, getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook")],
+    getAbsolutePath("@storybook/addon-themes"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-designs")
+  ],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},
