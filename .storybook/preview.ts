@@ -11,6 +11,7 @@ import { html } from "lit-html";
 import { within as withinShadow } from "shadow-dom-testing-library";
 import { setStorybookHelpersConfig } from '@wc-toolkit/storybook-helpers';
 import customElements from "../custom-elements.json";
+import { allModes, flatThemes, viewport } from './modes';
 
 setStorybookHelpersConfig({
   /** hides the `arg ref` label on each control */
@@ -57,88 +58,20 @@ export const withCssTheme = ({ themes, defaultTheme }) => {
   };
 };
 
-/**
- * List of container sizes to cycle through
- */
-const containerSizes = [
-  { title: "Full Width", value: "100%" },
-  { title: "Container (968px)", value: "968px" },
-  { title: "Container (856px)", value: "856px" },
-  { title: "Tablet (768px)", value: "768px" },
-  { title: "Container (668px)", value: "668px" },
-  { title: "Container (656px)", value: "656px" },
-  { title: "Container (543px)", value: "543px" },
-  { title: "Container (527px)", value: "527px" },
-  { title: "Container (476px)", value: "476px" },
-  { title: "Container (415px)", value: "415px" },
-  { title: "Mobile (320px)", value: "320px" },
-  { title: "Side Nav (288px)", value: "288px" },
-  { title: "Anchor Nav (168px)", value: "168px" },
-];
-
-/**
- * Global Container Decorator
- * Wraps all stories in multiple containers with adjustable sizes for Canvas.
- * Displays only one example in the Docs page.
- */
-const containerDecorator = (Story, context) => {
-  // Check if we are in the "docs" view mode
-  if (context.viewMode === "docs") {
-    // Show only one example (default size) in Docs
-    return html` ${Story()} `;
-  }
-
-  // In "story" view mode (Canvas), show all sizes
-  return html`
-    <div style="padding:1rem">
-      <div class="story-description-container">
-        <h2>Component Overview</h2>
-        <p>
-          This page demonstrates the
-          <strong>${context.name}</strong>
-          variant of the
-          <strong>${context.title}</strong>
-          component and its variations across the officially supported container
-          sizes. Use the controls to explore different configurations and
-          responsive behaviors.
-        </p>
-      </div>
-      ${containerSizes.map(
-        ({ title, value }) => html`
-          <div
-            style="
-              margin: 10px auto;
-              max-width: ${value};
-            "
-          >
-            <h4 style="text-align: center;">${title}</h4>
-            ${Story()}
-          </div>
-        `,
-      )}
-    </div>
-  `;
-};
-
 const preview: Preview = {
   beforeEach({ canvasElement, canvas }) {
     Object.assign(canvas, { ...withinShadow(canvasElement) });
   },
   decorators: [
-    // (Story, context) => containerDecorator(() => Story(context), context), // Add containerDecorator globally
     withCssTheme({
-      themes: {
-        // TODO: These are temporary CSS file(s) that override design tokens as multi-brand support is being added.
-        // Eventually these should be updated or replaced with the final css sheet/values.
-        // (https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1164663).
-        Alaska: "",
-        Hawaiian: "https://jetstream-rouge.vercel.app/themes/californian.css",
-      },
-      defaultTheme: "Alaska",
+        // reduced to only object with key and token URL value
+        themes: flatThemes,
+        defaultTheme: "Alaska",
     }),
   ],
   parameters: {
     controls: {
+      disableSaveFromUI: true,
       expanded: true,
       matchers: { color: /(background|color)$/i, date: /Date$/i }
     },
@@ -159,7 +92,10 @@ const preview: Preview = {
       },
       toc: true,
     },
-    viewport: { options: INITIAL_VIEWPORTS },
+    viewport: { options: viewport },
+    chromatic: {
+      modes: allModes, // Use the modes defined in modes.ts
+    }
   },
 };
 

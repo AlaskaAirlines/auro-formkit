@@ -17,11 +17,18 @@ const meta: Meta<AuroCheckboxGroup> = {
   component: "auro-checkbox-group",
   args,
   argTypes,
-    parameters: {
+  parameters: {
     actions: {
       handles: events,
     },
-  }
+    design: {
+      type: 'figma',
+      url: 'https://www.figma.com/design/VpUz89Ov6ImBpY5YvzYbZW/Auro-toolkit?node-id=0-1066&m=dev',
+    },
+    chromatic: {
+      disableSnapshot: true,
+    },
+  },
 };
 export default meta;
 

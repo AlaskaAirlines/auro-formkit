@@ -14,6 +14,7 @@ import { DynamicData } from './dynamicMenuDataApi';
 
 import '@aurodesignsystem/auro-button';
 import '@aurodesignsystem/auro-icon';
+import { Canvas } from "storybook/internal/csf";
 
 AuroCombobox.register(); // registering to `auro-combobox`
 AuroCombobox.register("custom-combobox");
@@ -37,9 +38,6 @@ export default meta;
 type Story = StoryObj<AuroCombobox & typeof args>;
 
 export const Playground: Story = {
-  args: {
-    value: null,
-  },
   render: (args) =>
     template(
       args,
@@ -76,7 +74,7 @@ export const Basic: Story = {
 export const BasicOpen: Story = {
   ...Basic,
   async play({ canvas }) {
-    const comboboxInput = await canvas.findByShadowRole('textbox');
+    const comboboxInput = await getComboboxInput(canvas);
     await userEvent.type(comboboxInput, 'a');
   }
 };
@@ -199,7 +197,7 @@ export const NoFilter: Story = {
     chromatic: { disableSnapshot: true },
   },
   async play({ canvas }) {
-    const comboboxInput = await canvas.findByShadowRole('textbox');
+    const comboboxInput = await getComboboxInput(canvas);
     await userEvent.type(comboboxInput, 'x');
 
     const noMatchOption = await screen.findByShadowRole('option', { name: /No matching option/i });
@@ -263,7 +261,7 @@ export const Required: Story = {
     chromatic: { disableSnapshot: true },
   },
   async play({ canvas }) {
-    const comboboxInput = await canvas.findByShadowRole('textbox');
+    const comboboxInput = await getComboboxInput(canvas);
     await userEvent.click(comboboxInput);
     await userEvent.click(document.body);
 
@@ -339,7 +337,7 @@ export const Value: Story = {
     chromatic: { disableSnapshot: true },
   },
   async play({ canvas }) {
-    const comboboxInput = await canvas.findByShadowRole('textbox');
+    const comboboxInput = await getComboboxInput(canvas);
 
     const setValidValueBtn = await canvas.findByShadowRole('button', { name: /Set to an existing option/i });
     await userEvent.click(setValidValueBtn);
@@ -371,7 +369,7 @@ export const TypeMonthDayYear: Story = {
 </auro-combobox>
   `,
   async play({ canvas }) {
-    const comboboxInput = await canvas.findByShadowRole('textbox');
+    const comboboxInput = await getComboboxInput(canvas);
     await userEvent.click(comboboxInput);
   }
 };
@@ -379,8 +377,8 @@ export const TypeMonthDayYear: Story = {
 export const TypeMonthDayYearOpen: Story = {
   ...TypeMonthDayYear,
   async play({ canvas }) {
-    const combobox = await canvas.findByShadowRole('textbox');
-    await userEvent.type(combobox, '0');
+    const comboboxInput = await getComboboxInput(canvas);
+    await userEvent.type(comboboxInput, '0');
   }
 };
 
@@ -449,7 +447,7 @@ export const ResetState: Story = {
     chromatic: { disableSnapshot: true },
   },
   async play({ canvas }) {
-    const comboboxInput = await canvas.findByShadowRole('textbox');
+    const comboboxInput = await getComboboxInput(canvas);
     await userEvent.type(comboboxInput, 'a');
     const option = await screen.findByShadowRole('option', { name: /Apples/i });
     await userEvent.click(option);
@@ -793,7 +791,7 @@ export const TypeCreditCard: Story = {
 </auro-combobox>
   `,
   async play({ canvas }) {
-    const comboboxInput = await canvas.findByShadowRole('textbox');
+    const comboboxInput = await getComboboxInput(canvas);
     await userEvent.type(comboboxInput, '0');
   }
 };
@@ -918,3 +916,5 @@ export const SwapValue: Story = {
     },
   },
 };
+
+const getComboboxInput = async (canvas: Canvas) => { return (await canvas.findAllByShadowRole('combobox')).filter(el => el.getAttribute('id') != 'inputInBib-input')[0] };

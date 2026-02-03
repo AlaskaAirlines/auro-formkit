@@ -29,6 +29,5 @@ export const Playground: Story = {
   render: (args) => template(args),
   args: {
     "default-slot": "Label",
-    value: null,
   },
 };

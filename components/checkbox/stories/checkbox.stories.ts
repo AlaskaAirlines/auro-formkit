@@ -16,6 +16,15 @@ const meta: Meta<AuroCheckbox> = {
   args,
   argTypes,
   render: (args) => template(args),
+  parameters: {
+    design: {
+      type: 'figma',
+      url: 'https://www.figma.com/design/VpUz89Ov6ImBpY5YvzYbZW/Auro-toolkit?node-id=0-1066&m=dev',
+    },
+    chromatic: {
+      disableSnapshot: true,
+    },
+  },
 };
 export default meta;
 
