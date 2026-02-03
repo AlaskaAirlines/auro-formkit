@@ -906,6 +906,20 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
+   * Sets the active descendant element for accessibility.
+   * Uses ariaActiveDescendantElement to cross shadow DOM boundaries.
+   * This function is used in components that contain `auro-input` to set the active descendant.
+   * @private
+   * @param {HTMLElement|null} element - The element to set as the active descendant, or null to clear.
+   * @returns {void}
+   */
+  setActiveDescendant(element) {
+    if (this.inputElement) {
+      this.inputElement.ariaActiveDescendantElement = element;
+    }
+  }
+
+  /**
    * Validates value.
    * @param {boolean} [force=false] - Whether to force validation.
    */

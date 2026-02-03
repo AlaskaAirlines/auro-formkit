@@ -217,6 +217,20 @@ export class AuroDropdown extends AuroElement {
     }
   }
 
+  /**
+   * Sets the active descendant element for accessibility.
+   * Uses ariaActiveDescendantElement to cross shadow DOM boundaries.
+   * This function is used in components that contain `auro-dropdown` to set the active descendant.
+   * @private
+   * @param {HTMLElement|null} element - The element to set as the active descendant, or null to clear.
+   * @returns {void}
+   */
+  setActiveDescendant(element) {
+    if (this.trigger) {
+      this.trigger.ariaActiveDescendantElement = element;
+    }
+  }
+
   // function to define props used within the scope of this component
   static get properties() {
     return {
