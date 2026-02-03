@@ -148,8 +148,6 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-<<<<<<< HEAD
-=======
        * The value for the aria-controls attribute.
        */
       a11yControls: {
@@ -167,7 +165,6 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
->>>>>>> 23408ab0 (Additional testing)
        * If set, the label will remain fixed in the active position.
        */
       activeLabel: {
