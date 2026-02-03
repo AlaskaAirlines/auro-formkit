@@ -876,7 +876,7 @@ export class AuroDropdown extends AuroElement {
           tabindex="${ifDefined(this.triggerContentFocusable ? undefined : this.tabIndex)}"
           role="${ifDefined(this.triggerContentFocusable ? undefined : this.a11yRole)}"
           aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
-          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
+          aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : `${this.dropdownId}-floater-bib`)}"
           aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
           @focusin="${this.handleFocusin}"
           @blur="${this.handleFocusOut}">
