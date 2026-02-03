@@ -2,10 +2,14 @@ name: Chromatic
 
 on:
   workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+    branches-ignore:
+      - 'rc/**'
+      - 'main'
 
 jobs:
   action:
     uses: AlaskaAirlines/auro-actions/.github/workflows/chromatic.yml@main
-    with:
-      # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
-      projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    secrets:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
