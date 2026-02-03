@@ -26,6 +26,14 @@
     max-width: none;
     max-height: none;
     margin: 0;
+    outline: none;
+
+    // Fix Safari rendering bug - force GPU compositing
+    transform: translateZ(0);
+
+    // Explicit positioning for non-modal show()
+    position: absolute;
+    inset: unset;
 
     &::backdrop {
       background: transparent;
