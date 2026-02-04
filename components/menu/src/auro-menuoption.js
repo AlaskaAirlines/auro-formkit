@@ -216,13 +216,7 @@ export class AuroMenuOption extends AuroElement {
 
     // Generate unique ID if not already set (required for aria-activedescendant)
     if (!this.id) {
-      const idLength = 36;
-      const idSubstrEnd = 8;
-      const idSubstrStart = 2;
-      const uniqueId = Math.random()
-        .toString(idLength)
-        .substring(idSubstrStart, idSubstrEnd);
-      this.id = `menuoption-${uniqueId}`;
+      this.id = `menuoption-${Math.random().toString(36).slice(2, 8)}`;
     }
 
     this.setAttribute('role', 'option');
