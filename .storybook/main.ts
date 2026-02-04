@@ -26,23 +26,17 @@ const config: StorybookConfig = {
     `${relativeComponentDirectory}/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
     `${relativeComponentDirectory}/*/stories/**/*.mdx`,
   ],
-  addons: [
-    {
-      // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
-      name: getAbsolutePath("@storybook/addon-docs"),
-      options: {
-        mdxPluginOptions: {
-          mdxCompileOptions: {
-            remarkPlugins: [remarkGfm],
-          },
+  addons: [{
+    // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
+    name: getAbsolutePath("@storybook/addon-docs"),
+    options: {
+      mdxPluginOptions: {
+        mdxCompileOptions: {
+          remarkPlugins: [remarkGfm],
         },
       },
     },
-    getAbsolutePath("@storybook/addon-themes"),
-    getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/addon-designs")
-  ],
+  }, getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook"), getAbsolutePath("@storybook/addon-designs"), getAbsolutePath("@storybook/addon-vitest")],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},

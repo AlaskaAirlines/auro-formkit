@@ -9,15 +9,15 @@ import { DecoratorHelpers } from "@storybook/addon-themes";
 import { Canvas, Controls, Meta, Markdown } from "@storybook/addon-docs/blocks";
 import { html } from "lit-html";
 import { within as withinShadow } from "shadow-dom-testing-library";
-import { setStorybookHelpersConfig } from '@wc-toolkit/storybook-helpers';
+import { setStorybookHelpersConfig } from "@wc-toolkit/storybook-helpers";
 import customElements from "../custom-elements.json";
-import { allModes, flatThemes, viewport } from './modes';
+import { allModes, flatThemes, viewport } from "./modes";
 
 setStorybookHelpersConfig({
   /** hides the `arg ref` label on each control */
   hideArgRef: false,
   /** sets the custom type reference in the Custom Elements Manifest */
-  typeRef: 'parsedTypes',
+  typeRef: "parsedTypes",
   /** Adds a <script> tag where a `component` variable will reference the story's component */
   setComponentVariable: false,
   /** renders default values for attributes and CSS properties */
@@ -64,17 +64,18 @@ const preview: Preview = {
   },
   decorators: [
     withCssTheme({
-        // reduced to only object with key and token URL value
-        themes: flatThemes,
-        defaultTheme: "Alaska",
+      // reduced to only object with key and token URL value
+      themes: flatThemes,
+      defaultTheme: "Alaska",
     }),
   ],
   parameters: {
     controls: {
       disableSaveFromUI: true,
       expanded: true,
-      matchers: { color: /(background|color)$/i, date: /Date$/i }
+      matchers: { color: /(background|color)$/i, date: /Date$/i },
     },
+
     docs: {
       components: { Canvas, Controls, Markdown, Meta },
       source: {
@@ -92,10 +93,19 @@ const preview: Preview = {
       },
       toc: true,
     },
+
     viewport: { options: viewport },
+
     chromatic: {
       modes: allModes, // Use the modes defined in modes.ts
-    }
+    },
+
+    a11y: {
+      // 'todo' - show a11y violations in the test UI only
+      // 'error' - fail CI on a11y violations
+      // 'off' - skip a11y checks entirely
+      test: "todo",
+    },
   },
 };
 

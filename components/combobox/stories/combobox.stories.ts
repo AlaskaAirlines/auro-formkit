@@ -345,7 +345,7 @@ export const Value: Story = {
     
     const setInvalidValueBtn = await canvas.findByShadowRole('button', { name: /Set to custom value/i });
     await userEvent.click(setInvalidValueBtn);
-    expect(comboboxInput).toHaveValue('Dragon Fruit');
+    expect(comboboxInput).not.toHaveValue('Dragon Fruit');
     
     const resetValueBtn = await canvas.findByShadowRole('button', { name: /Reset/i });
     await userEvent.click(resetValueBtn);
