@@ -550,6 +550,12 @@ export class AuroSelect extends AuroElement {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
     this.dropdown.a11yRole = 'combobox';
 
+    // Prevent dropdown from closing on focus loss since menu content is slotted
+    // from select's light DOM and won't be detected by dropdown's contains() check.
+    // Select handles Tab key closing explicitly, ESC via dialog cancel, and
+    // click outside works correctly via composedPath().
+    this.dropdown.noHideOnThisFocusLoss = true;
+
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.isPopoverVisible = this.dropdown.isPopoverVisible;
 
