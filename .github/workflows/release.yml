@@ -11,3 +11,10 @@ jobs:
     uses: AlaskaAirlines/auro-actions/.github/workflows/release.yml@main
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    with:
+      cache-dirs: |
+        ./components/**/dist
+        ./components/**/demo
+        ./components/**/node_modules
+        ./node_modules
+        ./custom-elements.json
