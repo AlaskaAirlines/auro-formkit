@@ -13,6 +13,9 @@ AuroSelect.register(); // registering to `auro-select`
 
 AuroSelect.register('custom-select');
 
+AuroMenu.register();
+AuroMenuOption.register();
+
 const { events, args, argTypes, template } =
   getStorybookHelpers("auro-select");
 
@@ -32,7 +35,17 @@ export default meta;
 type Story = StoryObj<AuroSelect & typeof args>;
 
 export const Playground: Story = {
-  render: (args) => template(args)
+  render: (args) => template(args, html`
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <auro-menu>
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="duration">Duration</auro-menuoption>
+      <auro-menuoption value="departure">Departure</auro-menuoption>
+      <auro-menuoption value="arrival">Arrival</auro-menuoption>
+      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+    </auro-menu>
+  `)
 };
 
 export const Basic: Story = {
