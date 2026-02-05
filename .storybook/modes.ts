@@ -39,6 +39,8 @@ const breakpoints = {
   }
 }
 
+const includedBreakpoints = ['xs', 'xl'];
+
 /** Breakpoint array formatted to to use
  * for Storybook viewport controls.
  * {
@@ -63,6 +65,20 @@ export const viewport: Record<string, Viewport> = Object.fromEntries(
   ])
 );
 
+export const chromaticViewport: Record<string, Viewport> = Object.fromEntries(
+  Object.entries(breakpoints.gridBreakpoint).filter(([key]) => includedBreakpoints.includes(key)).map(([key, bp]) => [
+    key,
+    {
+      name: key,
+      styles: {
+        width: bp.value,
+        height: '100%',
+      },
+      type: key === 'xs' || key === 'sm' ? 'mobile' : key === 'md' ? 'tablet' : 'desktop',
+    },
+  ])
+);
+
 /**
  * Themes object that points to stylesheets with design tokens for theming
  */
@@ -73,11 +89,11 @@ export const themes = {
     },
     Hawaiian: {
         tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/hawaiian/CSSCustomProperties--hawaiian.min.css",
-        chromaticKey: "Hawaiian",
+        chromaticKey: false,
     },
     Atmos: {
         tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/auro1/CSSCustomProperties--auro1.min.css",
-        chromaticKey: "Atmos",
+        chromaticKey: false,
     },
     Classic: {
         tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska-classic/CSSCustomProperties--alaskaClassic.css",
@@ -114,7 +130,7 @@ export const allModes = Object.fromEntries(
     Object.entries(themes)
         .filter(([, theme]) => !!theme.chromaticKey)
         .flatMap(([themeName, theme]) =>
-            Object.values(viewport)
+            Object.values(chromaticViewport)
                 .map((item) => [
                     `${item.name.toUpperCase()}-${theme.chromaticKey}-${item.styles.width.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`,
                     {

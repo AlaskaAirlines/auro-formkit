@@ -4,7 +4,6 @@ import {
   type Args,
   setCustomElementsManifest,
 } from "@storybook/web-components-vite";
-import { INITIAL_VIEWPORTS } from "storybook/viewport";
 import { DecoratorHelpers } from "@storybook/addon-themes";
 import { Canvas, Controls, Meta, Markdown } from "@storybook/addon-docs/blocks";
 import { html } from "lit-html";
@@ -63,19 +62,69 @@ const preview: Preview = {
     Object.assign(canvas, { ...withinShadow(canvasElement) });
   },
   decorators: [
+    (Story, context) => {
+      const background = context.globals.backgrounds?.value;
+      console.log("Background changed to:", background);
+      // Example: Add class based on dark mode value
+      if (background === 'dark') {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+      return Story();
+    },
     withCssTheme({
       // reduced to only object with key and token URL value
       themes: flatThemes,
       defaultTheme: "Alaska",
-    }),
+    })
   ],
   parameters: {
+    options: {
+      // The `a` and `b` arguments in this function have a type of `import('storybook/internal/types').IndexEntry`. Remember that the function is executed in a JavaScript environment, so use JSDoc for IntelliSense to introspect it.
+      storySort: (a, b) => {
+        if (a.id === b.id) return 0;
+
+        // Parse story IDs to extract component and story parts
+        const parseStoryId = (id) => {
+          const parts = id.split('--');
+          const storyName = parts[parts.length - 1];
+          const componentPath = parts.slice(0, -1).join('--');
+          const isDoc = storyName === 'docs' || id.includes('--docs');
+          
+          // Get main component name (first part before any sub-grouping)
+          const mainComponent = componentPath.split('-')[0];
+          
+          return { componentPath, mainComponent, storyName, isDoc, fullId: id };
+        };
+
+        const storyA = parseStoryId(a.id);
+        const storyB = parseStoryId(b.id);
+        
+        // 1. Sort by main component first
+        if (storyA.mainComponent !== storyB.mainComponent) {
+          return storyA.mainComponent.localeCompare(storyB.mainComponent, undefined, { numeric: true });
+        }
+        
+        // 2. Within same component, sort docs first
+        if (storyA.isDoc !== storyB.isDoc) {
+          return storyA.isDoc ? -1 : 1;
+        }
+        
+        // 3. Then sort by component path (handles sub-grouping like "checkbox-group-grouped-examples")
+        if (storyA.componentPath !== storyB.componentPath) {
+          return storyA.componentPath.localeCompare(storyB.componentPath, undefined, { numeric: true });
+        }
+        
+        // 4. Finally sort alphabetically by story name
+        return storyA.storyName.localeCompare(storyB.storyName, undefined, { numeric: true });
+      },
+    },
     controls: {
       disableSaveFromUI: true,
       expanded: true,
       matchers: { color: /(background|color)$/i, date: /Date$/i },
     },
-
     docs: {
       components: { Canvas, Controls, Markdown, Meta },
       source: {

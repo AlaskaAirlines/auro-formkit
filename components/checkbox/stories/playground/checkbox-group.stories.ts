@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/web-components-vite";
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 import { html } from "lit";
 
-import { AuroCheckbox, AuroCheckboxGroup } from "../src/index";
+import { AuroCheckbox, AuroCheckboxGroup } from "../../src/index";
 
 AuroCheckbox.register(); // registering to `auro-checkbox`
 AuroCheckboxGroup.register(); // registering to `auro-checkbox-group`
