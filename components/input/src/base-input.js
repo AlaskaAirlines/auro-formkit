@@ -826,9 +826,6 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   handleInput(event) {
-    // Sets value property to value of element value (el.value).
-    this.value = this.inputElement.value;
-
     // Determine if the value change was programmatic, including autofill.
     const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
 
@@ -1018,7 +1015,7 @@ export default class BaseInput extends AuroElement {
   /**
    * Support placeholder text.
    * @private
-   * @returns {void}
+   * @returns {string}
    */
   get placeholderStr() {
     if (!this.placeholder && this.type === 'date') {
