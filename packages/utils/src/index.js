@@ -1,2 +1,2 @@
 export { IconUtil } from './iconUtil.js';
-export { generateStoriesFromGlobData } from './storyHelpers.js';
+export { generateStoriesFromGlobData, generateGroupedStory } from './storyHelpers.js';

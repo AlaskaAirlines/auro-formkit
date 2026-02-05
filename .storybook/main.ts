@@ -16,15 +16,15 @@ function getAbsolutePath(value: string): any {
   return dirname(require.resolve(join(value, "package.json")));
 }
 
-const relativeComponentDirectory = "../components";
+const relativeComponentDirectory = "../components/checkbox";
 const relativeDocDirectory = "../docs";
 
 const config: StorybookConfig = {
   stories: [
-    `${relativeComponentDirectory}/*/*.mdx`,
+    `${relativeComponentDirectory}/**/**/*.mdx`,
     `${relativeDocDirectory}/*.mdx`,
     `${relativeComponentDirectory}/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
-    `${relativeComponentDirectory}/*/stories/**/*.mdx`,
+    `${relativeComponentDirectory}/**/stories/**/*.mdx`,
   ],
   addons: [{
     // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
@@ -36,7 +36,7 @@ const config: StorybookConfig = {
         },
       },
     },
-  }, getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook"), getAbsolutePath("@storybook/addon-designs"), getAbsolutePath("@storybook/addon-vitest")],
+  }, getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook"), getAbsolutePath("@storybook/addon-designs"), getAbsolutePath("@storybook/addon-vitest"), getAbsolutePath("storybook-addon-tag-badges")],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},
