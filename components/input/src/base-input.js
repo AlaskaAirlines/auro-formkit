@@ -826,6 +826,14 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   handleInput(event) {
+    // Process credit card type detection and formatting during input
+    if (this.type === 'credit-card') {
+      this.processCreditCard();
+    }
+
+    // Sets value property to value of element value (el.value).
+    this.value = this.inputElement.value;
+
     // Determine if the value change was programmatic, including autofill.
     const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
 
@@ -1064,6 +1072,7 @@ export default class BaseInput extends AuroElement {
    */
   processCreditCard() {
     const creditCard = this.matchInputValueToCreditCard();
+    const previousFormat = this.format;
 
     this.format = creditCard.maskFormat;
 
@@ -1076,7 +1085,8 @@ export default class BaseInput extends AuroElement {
       this.inputIconName = creditCard.cardIcon;
     }
 
-    if (this.inputElement) {
+    // Only reconfigure the mask if the format has changed
+    if (this.inputElement && previousFormat !== this.format) {
       this.configureAutoFormatting();
     }
   }
