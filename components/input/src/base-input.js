@@ -300,7 +300,8 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.
+       * The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. 
+       * **Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers.
        */
       maxLength: {
         type: Number,
@@ -962,6 +963,7 @@ export default class BaseInput extends AuroElement {
 
     if (this.type in defaultLengths) {
       this.lengthForType = this.format ? this.format.length : defaultLengths[this.type];
+      this.maxLength = this.lengthForType;
       this.inputmode = this.inputmode || 'numeric';
     } else if (this.type === 'number') {
       this.inputmode = this.inputmode || 'numeric';
