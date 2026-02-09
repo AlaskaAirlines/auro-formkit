@@ -908,7 +908,8 @@ export class AuroDropdown extends AuroElement {
               <div
                 id="showStateIcon"
                 class="chevron"
-                part="chevron">
+                part="chevron"
+                aria-hidden="true">
                 <${this.iconTag}
                   category="interface"
                   name="${this.isPopoverVisible ? 'chevron-up' : `chevron-down`}"

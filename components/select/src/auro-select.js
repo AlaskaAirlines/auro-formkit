@@ -569,10 +569,10 @@ export class AuroSelect extends AuroElement {
         this.updateMenuShapeSize();
         // wait til the bib gets fully rendered
         setTimeout(() => {
-          if (this.dropdown.isBibFullscreen) {
-            // trigger holds the focus since menu is not a focusable element.
-            this.dropdown.trigger.focus();
+          // Keep focus on trigger so aria-activedescendant announces menu options
+          this.dropdown.trigger.focus();
 
+          if (this.dropdown.isBibFullscreen) {
             // default focus indicator on the first menu option
             if (this.menu.index < 0) {
               this.menu.navigateOptions('down');
@@ -1215,10 +1215,10 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
+                <span id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
-                </label>
+                </span>
                 <div class="value" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
@@ -1294,10 +1294,10 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
+                <span id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
-                </label>
+                </span>
                 <div class="value body-default" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
@@ -1379,10 +1379,10 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="mainContent">
               <div class="${classMap(valueContainerClasses)}">
-                <label id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
+                <span id="dropdownLabel" class="${classMap(this.commonLabelClasses)}">
                   <slot name="label"></slot>
                   ${this.required ? undefined : html`<slot name="optionalLabel"> (optional)</slot>`}
-                </label>
+                </span>
                 <div class="${classMap(valueClasses)}" id="value"></div>
                 <div id="placeholder" class="${classMap(placeholderClass)}">
                   ${this.placeholder}
