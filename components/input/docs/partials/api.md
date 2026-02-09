@@ -204,6 +204,8 @@ Use the `maxlength` attribute to control the length of the input entered.
 
 The `setCustomValidityTooLong` attribute may optionally be used in combination with the `maxLength` attribute to define custom help text used when the length of the input is too long.
 
+**Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers.
+
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/max-length.html) -->
   <!-- AURO-GENERATED-CONTENT:END -->
