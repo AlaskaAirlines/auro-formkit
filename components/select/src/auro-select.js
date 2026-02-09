@@ -761,40 +761,35 @@ export class AuroSelect extends AuroElement {
 
     this.addEventListener('keydown', (evt) => {
 
-      // when the focus is on trigger not on close button
-      if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
-        if (evt.key === 'ArrowUp') {
-          evt.preventDefault();
+      if (evt.key === 'ArrowUp') {
+        evt.preventDefault();
 
+        if (this.dropdown.isPopoverVisible) {
+          this.menu.navigateOptions('up');
+        } else {
           this.dropdown.show();
-
-          if (this.dropdown.isPopoverVisible) {
-            this.menu.navigateOptions('up');
-          }
-
-          return;
         }
 
-        if (evt.key === 'ArrowDown') {
-          evt.preventDefault();
+        return;
+      }
 
+      if (evt.key === 'ArrowDown') {
+        evt.preventDefault();
+
+        if (this.dropdown.isPopoverVisible) {
+          this.menu.navigateOptions('down');
+        } else {
           this.dropdown.show();
-
-          if (this.dropdown.isPopoverVisible) {
-            this.menu.navigateOptions('down');
-          }
-
-          return;
         }
 
-        if (evt.key === 'Enter') {
-          if (!this.dropdown.isPopoverVisible) {
-            evt.preventDefault();
-            this.menu.makeSelection();
-          }
+        return;
+      }
 
-          return;
-        }
+      if (evt.key === 'Enter') {
+        evt.preventDefault();
+        this.menu.makeSelection();
+
+        return;
       }
 
       if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {

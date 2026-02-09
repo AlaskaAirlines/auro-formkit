@@ -190,6 +190,7 @@ export class AuroDropdownBib extends LitElement {
       if (event.key === 'Tab') {
         return;
       }
+      event.preventDefault();
       event.stopPropagation();
       const newEvent = new KeyboardEvent('keydown', {
         key: event.key,
