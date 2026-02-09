@@ -963,7 +963,7 @@ Use the `format` attribute to set a custom phone number format.
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/tel-format.html) -->
   <!-- The below content is automatically added from ../apiExamples/tel-format.html -->
-  <auro-input type="tel" format="+22 999 99 9999">
+  <auro-input type="tel" format="+00 000 00 0000">
     <span slot="label">Telephone</span>
     <span slot="helpText">Help Text</span>
   </auro-input>
@@ -975,7 +975,7 @@ Use the `format` attribute to set a custom phone number format.
 <!-- The below code snippet is automatically added from ../apiExamples/tel-format.html -->
 
 ```html
-<auro-input type="tel" format="+22 999 99 9999">
+<auro-input type="tel" format="+00 000 00 0000">
   <span slot="label">Telephone</span>
   <span slot="helpText">Help Text</span>
 </auro-input>
