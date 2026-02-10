@@ -1163,13 +1163,14 @@ export class AuroSelect extends AuroElement {
    */
   renderNativeSelect() {
     return html`
-      <div class="nativeSelectWrapper util_displayHiddenVisually" aria-hidden="true" inert>
+      <div class="nativeSelectWrapper util_displayHiddenVisually">
         <select
           tabindex="-1"
           id="${`native-select-${this.id || this.uniqueId}`}"
           name="${this.name || ''}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
+          aria-hidden="true"
           autocomplete="${ifDefined(this.autocomplete)}"
           @change="${this._handleNativeSelectChange}">
           <option value="" ?selected="${!this.value}"></option>
