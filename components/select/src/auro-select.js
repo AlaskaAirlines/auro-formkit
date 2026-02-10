@@ -832,21 +832,10 @@ export class AuroSelect extends AuroElement {
       }
 
       if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        if (this.dropdown.isBibFullscreen) {
-          evt.preventDefault();
-
-          // when the focus is on trigger not on close button
-          if (this.dropdown.shadowRoot.activeElement === this.dropdown.trigger) {
-            // `dropdown.focus` will move focus to the first focusable element in bib when it's open,
-            // when bib it not open, it will focus onto trigger.
-            this.dropdown.focus();
-          } else {
-            // when close button has the focus, move focus back to the trigger
-            this.dropdown.trigger.focus();
-          }
-        } else {
+        if (!this.dropdown.isBibFullscreen) {
           this.dropdown.hide();
         }
+        // Fullscreen: let native dialog handle Tab focus trapping
         return;
       }
 
@@ -870,10 +859,17 @@ export class AuroSelect extends AuroElement {
   announceToScreenReader(text) {
     const liveRegion = this.shadowRoot.querySelector('#srAnnouncement');
     if (liveRegion) {
+      const announcementDuration = 1000;
+
       // Clear and re-set to ensure the announcement fires even with same text
       liveRegion.textContent = '';
       requestAnimationFrame(() => {
         liveRegion.textContent = text;
+
+        // Clear after the announcement so VoiceOver cannot swipe to stale text
+        setTimeout(() => {
+          liveRegion.textContent = '';
+        }, announcementDuration);
       });
     }
   }
@@ -1167,14 +1163,13 @@ export class AuroSelect extends AuroElement {
    */
   renderNativeSelect() {
     return html`
-      <div class="nativeSelectWrapper util_displayHiddenVisually">
+      <div class="nativeSelectWrapper util_displayHiddenVisually" aria-hidden="true" inert>
         <select
           tabindex="-1"
           id="${`native-select-${this.id || this.uniqueId}`}"
           name="${this.name || ''}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
-          aria-hidden="true"
           autocomplete="${ifDefined(this.autocomplete)}"
           @change="${this._handleNativeSelectChange}">
           <option value="" ?selected="${!this.value}"></option>

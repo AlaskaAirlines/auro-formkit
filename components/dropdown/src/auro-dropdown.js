@@ -44,7 +44,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * The `auro-dropdown` element provides a way to place content in a bib that can be toggled.
  * @customElement auro-dropdown
  *
- * @slot - Default slot for the popover content.
+ * @slot - Default slot for the dropdown bib content.
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
  * @csspart trigger - The trigger content container.
@@ -671,24 +671,15 @@ export class AuroDropdown extends AuroElement {
    */
   updateFocusTrap() {
     if (this.isPopoverVisible && !this.disableFocusTrap) {
-      if (this.isBibFullscreen) {
-        // Fullscreen: showModal() provides native focus trapping
-        // Just focus the first element
-        requestAnimationFrame(() => {
-          const focusables = getFocusableElements(this.bibContent);
-          if (focusables.length > 0) {
-            focusables[0].focus();
-          }
-        });
-      } else {
+      if (!this.isBibFullscreen) {
         // Desktop: show() doesn't trap focus, so use FocusTrap
         this.focusTrap = new FocusTrap(this.bibContent);
         this.focusTrap.focusFirstElement();
       }
+      // Fullscreen: showModal() provides native focus trapping
       return;
     }
 
-    // If closing and FocusTrap exists, disconnect it
     if (this.focusTrap) {
       this.focusTrap.disconnect();
       this.focusTrap = undefined;
