@@ -563,22 +563,38 @@ export class AuroSelect extends AuroElement {
       if (!this.dropdown.isPopoverVisible) {
         this.dropdown.setActiveDescendant(null);
         this.optionActive = null;
+
+        // Restore trigger accessibility when closing fullscreen
+        this.dropdown.trigger.inert = false;
       }
 
       if (this.dropdown.isPopoverVisible) {
         this.updateMenuShapeSize();
-        // wait til the bib gets fully rendered
-        setTimeout(() => {
-          // Keep focus on trigger so aria-activedescendant announces menu options
-          this.dropdown.trigger.focus();
 
-          if (this.dropdown.isBibFullscreen) {
-            // default focus indicator on the first menu option
-            if (this.menu.index < 0) {
-              this.menu.navigateOptions('down');
-            }
-          }
-        });
+        if (this.dropdown.isBibFullscreen) {
+          // Hide the trigger from assistive technology so VoiceOver cannot reach it
+          // behind the fullscreen dialog
+          this.dropdown.trigger.inert = true;
+
+          // Wait for the bibtemplate to fully render (close button) across
+          // multiple Lit update cycles before moving focus into the bib
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              this.dropdown.focus();
+
+              // default focus indicator on the first menu option
+              if (this.menu.index < 0) {
+                this.menu.navigateOptions('down');
+              }
+            });
+          });
+        } else {
+          // wait til the bib gets fully rendered
+          setTimeout(() => {
+            // Keep focus on trigger so aria-activedescendant announces menu options
+            this.dropdown.trigger.focus();
+          });
+        }
       }
     });
 
@@ -588,7 +604,10 @@ export class AuroSelect extends AuroElement {
       // When switching to fullscreen while open, move focus into the bib
       // so it's not stuck on the trigger behind the dialog
       if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
+        this.dropdown.trigger.inert = true;
         this.dropdown.focus();
+      } else if (!this.dropdown.isBibFullscreen) {
+        this.dropdown.trigger.inert = false;
       }
     });
 
@@ -1266,7 +1285,6 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="accents right"></div>
           </div>
-          <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
             <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
@@ -1345,7 +1363,6 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="accents right"></div>
           </div>
-          <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
             <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
@@ -1431,7 +1448,6 @@ export class AuroSelect extends AuroElement {
             </div>
             <div class="accents right"></div>
           </div>
-          <div class="menuWrapper"></div>
           <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
             <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
             <slot></slot>
