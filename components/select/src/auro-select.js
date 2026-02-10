@@ -584,6 +584,12 @@ export class AuroSelect extends AuroElement {
 
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       this.updateMenuShapeSize();
+
+      // When switching to fullscreen while open, move focus into the bib
+      // so it's not stuck on the trigger behind the dialog
+      if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
+        this.dropdown.focus();
+      }
     });
 
     // setting up bibtemplate
@@ -735,6 +741,13 @@ export class AuroSelect extends AuroElement {
       if (this.dropdown) {
         this.dropdown.setActiveDescendant(this.optionActive);
       }
+
+      // Announce the active option for screen readers
+      if (this.optionActive) {
+        const optionText = this.optionActive.textContent.trim();
+        const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
+        this.announceToScreenReader(`${optionText}${selectedState}`);
+      }
     });
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
 
@@ -748,6 +761,13 @@ export class AuroSelect extends AuroElement {
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
       }
+
+      // Announce the selection after the dropdown closes so it isn't
+      // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
+      const selectedValue = event.detail.stringValue;
+      setTimeout(() => {
+        this.announceToScreenReader(`${selectedValue}, selected`);
+      }, 300);
     });
   }
 
@@ -821,6 +841,22 @@ export class AuroSelect extends AuroElement {
       this.validate();
       this.hasFocus = false;
     });
+  }
+
+  /**
+   * Announces text to screen readers via the aria-live region.
+   * @private
+   * @param {string} text - The text to announce.
+   */
+  announceToScreenReader(text) {
+    const liveRegion = this.shadowRoot.querySelector('#srAnnouncement');
+    if (liveRegion) {
+      // Clear and re-set to ensure the announcement fires even with same text
+      liveRegion.textContent = '';
+      requestAnimationFrame(() => {
+        liveRegion.textContent = text;
+      });
+    }
   }
 
   /**
@@ -1319,6 +1355,7 @@ export class AuroSelect extends AuroElement {
           </div>
         </${this.dropdownTag}>
         ${this.renderNativeSelect()}
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
       </div>
     `;
   }
@@ -1404,6 +1441,7 @@ export class AuroSelect extends AuroElement {
           </div>
         </${this.dropdownTag}>
         ${this.renderNativeSelect()}
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
       </div>
     `;
   }
