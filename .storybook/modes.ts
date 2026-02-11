@@ -84,15 +84,15 @@ export const chromaticViewport: Record<string, Viewport> = Object.fromEntries(
  */
 export const themes = {
     Alaska: {
-        tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.css",
+        tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/web/alaska.min.css",
         chromaticKey: "Alaska",
     },
     Hawaiian: {
-        tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/hawaiian/CSSCustomProperties--hawaiian.min.css",
+        tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/web/hawaiian.min.css",
         chromaticKey: false,
     },
     Atmos: {
-        tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/auro1/CSSCustomProperties--auro1.min.css",
+        tokens: "https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/web/atmos.min.css",
         chromaticKey: false,
     },
     Classic: {
