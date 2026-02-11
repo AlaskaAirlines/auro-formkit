@@ -234,6 +234,7 @@ export class AuroInput extends BaseInput {
   /**
    * Common display value wrapper classes.
    * @private
+   * @returns {Record<string, boolean>}
    */
   get commonDisplayValueWrapperClasses() {
     return {
