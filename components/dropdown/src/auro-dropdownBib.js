@@ -8,6 +8,7 @@
 import { html } from "lit/static-html.js";
 import { LitElement } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
@@ -107,6 +108,14 @@ export class AuroDropdownBib extends LitElement {
       shape: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * Accessible label for the dialog element, used when displayed as a modal.
+       * @private
+       */
+      dialogLabel: {
+        type: String
       }
     };
   }
@@ -221,9 +230,29 @@ export class AuroDropdownBib extends LitElement {
     if (dialog && !dialog.open) {
       if (modal) {
         dialog.showModal();
+        this.announceDialogLabel();
       } else {
         dialog.show();
       }
+    }
+  }
+
+  /**
+   * Announces the dialog label via an aria-live region so iOS VoiceOver
+   * speaks the label when the modal opens (it does not reliably read
+   * aria-label on dialog elements).
+   * @private
+   */
+  announceDialogLabel() {
+    if (!this.dialogLabel) {
+      return;
+    }
+    const liveRegion = this.shadowRoot.querySelector('#dialogAnnouncement');
+    if (liveRegion) {
+      liveRegion.textContent = '';
+      requestAnimationFrame(() => {
+        liveRegion.textContent = this.dialogLabel;
+      });
     }
   }
 
@@ -234,6 +263,10 @@ export class AuroDropdownBib extends LitElement {
     const dialog = this.shadowRoot.querySelector('dialog');
     if (dialog && dialog.open) {
       dialog.close();
+      const liveRegion = this.shadowRoot.querySelector('#dialogAnnouncement');
+      if (liveRegion) {
+        liveRegion.textContent = '';
+      }
     }
   }
 
@@ -248,7 +281,8 @@ export class AuroDropdownBib extends LitElement {
     classes[`shape-${this.shape}`] = true;
 
     return html`
-      <dialog class="${classMap(classes)}" part="bibContainer">
+      <dialog class="${classMap(classes)}" part="bibContainer" aria-label="${ifDefined(this.dialogLabel)}">
+        <span id="dialogAnnouncement" class="util_displayHiddenVisually" aria-live="polite"></span>
         <slot></slot>
       </dialog>
     `;

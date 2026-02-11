@@ -491,6 +491,16 @@ export class AuroDropdown extends AuroElement {
        */
       tabIndex: {
         type: Number
+      },
+
+      /**
+       * Accessible label for the dropdown bib dialog element.
+       * @private
+       */
+      bibDialogLabel: {
+        type: String,
+        attribute: false,
+        reflect: false
       }
     };
   }
@@ -919,6 +929,7 @@ export class AuroDropdown extends AuroElement {
           shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
+          .dialogLabel="${this.bibDialogLabel}"
           ${ref(this.bibElement)}
           >
           <div class="slotContent">

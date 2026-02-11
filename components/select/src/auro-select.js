@@ -618,6 +618,12 @@ export class AuroSelect extends AuroElement {
       this.dropdown.dropdownWidth = this.customBibWidth;
     }
 
+    // Pass label text to the dropdown bib for accessible dialog naming
+    const labelElement = this.querySelector('span[slot="label"]');
+    if (labelElement) {
+      this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
+    }
+
     // Exposes the CSS parts from the dropdown for styling
     this.dropdown.exposeCssParts();
   }
