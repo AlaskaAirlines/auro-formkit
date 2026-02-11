@@ -29,7 +29,7 @@ The `<auro-checkbox>` element should be used in situations where users may:
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
   <auro-checkbox-group>
-    <span slot="legend">Form label</span>
+    <span slot="legend">Form label goes here</span>
     <auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
     <auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>Checkbox option</auro-checkbox>
     <auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
@@ -44,7 +44,7 @@ The `<auro-checkbox>` element should be used in situations where users may:
 
 ```html
 <auro-checkbox-group>
-  <span slot="legend">Form label</span>
+  <span slot="legend">Form label goes here</span>
   <auro-checkbox value="value1" name="basic" id="checkbox-basic1">Checkbox option</auro-checkbox>
   <auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>Checkbox option</auro-checkbox>
   <auro-checkbox value="value3" name="basic" id="checkbox-basic3">Checkbox option that has some extra text that should wrap when rendered in a narrow container</auro-checkbox>
