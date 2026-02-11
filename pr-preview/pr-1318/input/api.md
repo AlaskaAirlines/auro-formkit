@@ -31,7 +31,7 @@ The `auro-input` element provides users a way to enter data into a text field.
 | [lang](#lang)                            | `lang`                            | `string`                                         |             | Defines the language of an element.              |
 | [layout](#layout)                          |                                   | `string`                                         |             |                                                  |
 | [max](#max)                             | `max`                             | `string`                                         |             | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
-| [maxLength](#maxLength)                       | `maxLength`                       | `number`                                         |             | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
+| [maxLength](#maxLength)                       | `maxLength`                       | `number`                                         |             | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. <br />**Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers. |
 | [min](#min)                             | `min`                             | `string`                                         |             | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | [minLength](#minLength)                       | `minLength`                       | `number`                                         |             | The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`. |
 | [name](#name)                            | `name`                            | `string`                                         |             | Populates the `name` attribute on the input.     |
@@ -455,6 +455,8 @@ The `setCustomValidityRangeOverflow` attribute may optionally be used in combina
 Use the `maxlength` attribute to control the length of the input entered.
 
 The `setCustomValidityTooLong` attribute may optionally be used in combination with the `maxLength` attribute to define custom help text used when the length of the input is too long.
+
+**Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/max-length.html) -->
