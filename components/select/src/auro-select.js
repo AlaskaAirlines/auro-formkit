@@ -576,15 +576,26 @@ export class AuroSelect extends AuroElement {
           // behind the fullscreen dialog
           this.dropdown.trigger.inert = true;
 
+          // Prevent the tap that opened the dialog from highlighting a menu option
+          // at the same screen coordinates (touch pass-through).
+          // Re-enabled on the next touchstart (a new deliberate interaction).
+          this.menu.style.pointerEvents = 'none';
+          document.addEventListener('touchstart', () => {
+            this.menu.style.pointerEvents = '';
+          }, { once: true });
+
           // Wait for the bibtemplate to fully render (close button) across
           // multiple Lit update cycles before moving focus into the bib
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               this.dropdown.focus();
 
-              // default focus indicator on the first menu option
-              if (this.menu.index < 0) {
-                this.menu.navigateOptions('down');
+              // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
+              // No selection → no highlight
+              if (this.optionSelected && !Array.isArray(this.optionSelected)) {
+                this.menu.updateActiveOption(this.optionSelected);
+              } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
+                this.menu.updateActiveOption(this.optionSelected[0]);
               }
             });
           });
