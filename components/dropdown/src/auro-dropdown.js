@@ -915,7 +915,8 @@ export class AuroDropdown extends AuroElement {
                   category="interface"
                   name="${this.isPopoverVisible ? 'chevron-up' : `chevron-down`}"
                   appearance="${this.onDark ? 'inverse' : this.appearance}"
-                  variant="${this.disabled ? 'disabled' : 'muted'}">
+                  variant="${this.disabled ? 'disabled' : 'muted'}"
+                  ariaHidden="true">
                 </${this.iconTag}>
               </div>
             ` : undefined }
