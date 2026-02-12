@@ -64,7 +64,7 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const background = context.globals.backgrounds?.value;
-      console.log("Background changed to:", background);
+
       // Example: Add class based on dark mode value
       if (background === 'dark') {
         document.body.classList.add('dark-theme');
