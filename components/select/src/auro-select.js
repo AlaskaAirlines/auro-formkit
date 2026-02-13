@@ -358,15 +358,6 @@ export class AuroSelect extends AuroElement {
       },
 
       /**
-       * Specifies the current active/highlighted `auro-menuoption`.
-       * @type {HTMLElement}
-       * @private
-       */
-      optionActive: {
-        type: Object
-      },
-
-      /**
        * Define custom placeholder text.
        */
       placeholder: {
@@ -552,12 +543,6 @@ export class AuroSelect extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.isPopoverVisible = this.dropdown.isPopoverVisible;
 
-      // Clear aria-activedescendant when dropdown closes
-      if (!this.dropdown.isPopoverVisible) {
-        this.dropdown.setActiveDescendant(null);
-        this.optionActive = null;
-      }
-
       if (this.dropdown.isPopoverVisible) {
         this.updateMenuShapeSize();
         // wait til the bib gets fully rendered
@@ -713,15 +698,8 @@ export class AuroSelect extends AuroElement {
     }
 
     this.options = this.menu.options;
+    this.menu.setAttribute('aria-hidden', 'true');
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
-
-    this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
-      this.optionActive = evt.detail;
-
-      if (this.dropdown) {
-        this.dropdown.setActiveDescendant(this.optionActive);
-      }
-    });
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
 
       // Update the displayed value
@@ -1186,7 +1164,7 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          a11yRole="combobox"
+          a11yRole="select"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
@@ -1201,7 +1179,7 @@ export class AuroSelect extends AuroElement {
           part="dropdown"
           shape="${this.shape}"
           size="${this.size}">
-          <div slot="trigger" aria-haspopup="listbox" id="triggerFocus" class="triggerContent">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
             <div class="accents left">
               <slot name="typeIcon"></slot>
             </div>
@@ -1266,7 +1244,6 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          a11yRole="combobox"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${this.matchWidth}"
@@ -1280,7 +1257,7 @@ export class AuroSelect extends AuroElement {
           part="dropdown"
           shape="${this.shape}"
           size="${this.size}">
-          <div slot="trigger" aria-haspopup="listbox" id="triggerFocus" class="triggerContent">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
             <div class="accents left">
               <slot name="typeIcon"></slot>
             </div>
@@ -1351,7 +1328,6 @@ export class AuroSelect extends AuroElement {
         </div>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          a11yRole="combobox"
           ?autoPlacement="${this.autoPlacement}"
           ?error="${this.validity !== undefined && this.validity !== 'valid'}"
           ?matchWidth="${!this.flexMenuWidth}"
@@ -1365,7 +1341,7 @@ export class AuroSelect extends AuroElement {
           part="dropdown"
           shape="${this.shape}"
           size="${this.size}">
-          <div slot="trigger" aria-haspopup="listbox" id="triggerFocus" class="triggerContent">
+          <div slot="trigger" aria-haspopup="true" id="triggerFocus" class="triggerContent">
             <div class="accents left">
               <slot name="typeIcon"></slot>
             </div>

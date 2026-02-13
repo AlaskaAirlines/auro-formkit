@@ -448,7 +448,7 @@ export class AuroCombobox extends AuroElement {
       },
 
       /**
-       * Specifies the currently active/highlighted `auro-menuoption`.
+       * Specifies the currently active option.
        * @private
        */
       optionActive: {
@@ -685,12 +685,6 @@ export class AuroCombobox extends AuroElement {
       this.dropdownOpen = ev.detail.expanded;
       this.updateMenuShapeSize();
 
-      // Clear aria-activedescendant when dropdown closes
-      if (!this.dropdownOpen && this.input) {
-        this.input.setActiveDescendant(null);
-        this.optionActive = null;
-      }
-
       // wait a frame in case the bib gets hide immediately after showing because there is no value
       setTimeout(() => {
         if (this.componentHasFocus) {
@@ -846,10 +840,6 @@ export class AuroCombobox extends AuroElement {
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
 
-      if (this.input) {
-        this.input.setActiveDescendant(this.optionActive);
-      }
-
       this.optionActive.scrollIntoView({
         alignToTop: false,
         block: "nearest",
@@ -917,7 +907,6 @@ export class AuroCombobox extends AuroElement {
 
     this.menu.matchWord = this.input.value;
     this.optionActive = null;
-    this.input.setActiveDescendant(null);
 
     if (!this.input.value) {
       this.clear();
