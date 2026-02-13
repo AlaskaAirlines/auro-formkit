@@ -563,8 +563,8 @@ function runFulltest(mobileview) {
     el.validate(true);
     await elementUpdated(el);
 
-    // Should clear the customError state (validity should not be customError anymore)
-    await expect(el.getAttribute('validity')).to.not.equal('customError');
+    // Should clear the customError state and return to valid
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 }
 
