@@ -1328,6 +1328,86 @@ export function resetStateExample() {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+### Updating Externally
+
+The `updateActiveOption` method allows you to programmatically set which menu option is active/highlighted. This is useful for situations like matching IATA codes (sea -> SeaTac airport).
+
+The method accepts an index parameter representing the position of the option to make active in the menu.
+
+<div class="exampleWrapper--ondark">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/external-selection.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/external-selection.html -->
+  <p style="color: white;">
+      Type an IATA code (sea, lax, jfk, ord, sfo) to highlight the matching airport.
+  </p>
+  <auro-combobox appearance="inverse" id="externalSelectionExample" noFilter>
+    <span slot="ariaLabel.bib.close">Close combobox</span>
+    <span slot="ariaLabel.input.clear">Clear All</span>
+    <span slot="bib.fullscreen.headline">Select an Airport</span>
+    <span slot="label">Airport</span>
+    <auro-menu>
+      <auro-menuoption value="SEA">SEA - Seattle-Tacoma International</auro-menuoption>
+      <auro-menuoption value="LAX">LAX - Los Angeles International</auro-menuoption>
+      <auro-menuoption value="JFK">JFK - John F. Kennedy International</auro-menuoption>
+      <auro-menuoption value="ORD">ORD - O'Hare International</auro-menuoption>
+      <auro-menuoption value="SFO">SFO - San Francisco International</auro-menuoption>
+      <auro-menuoption static nomatch>No matching airport</auro-menuoption>
+    </auro-menu>
+    <span slot="helpText">
+      Start typing an airport code to see it highlighted
+    </span>
+  </auro-combobox>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/external-selection.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/external-selection.html -->
+
+```html
+<p style="color: white;">
+    Type an IATA code (sea, lax, jfk, ord, sfo) to highlight the matching airport.
+</p>
+<auro-combobox appearance="inverse" id="externalSelectionExample" noFilter>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Select an Airport</span>
+  <span slot="label">Airport</span>
+  <auro-menu>
+    <auro-menuoption value="SEA">SEA - Seattle-Tacoma International</auro-menuoption>
+    <auro-menuoption value="LAX">LAX - Los Angeles International</auro-menuoption>
+    <auro-menuoption value="JFK">JFK - John F. Kennedy International</auro-menuoption>
+    <auro-menuoption value="ORD">ORD - O'Hare International</auro-menuoption>
+    <auro-menuoption value="SFO">SFO - San Francisco International</auro-menuoption>
+    <auro-menuoption static nomatch>No matching airport</auro-menuoption>
+  </auro-menu>
+  <span slot="helpText">
+    Start typing an airport code to see it highlighted
+  </span>
+</auro-combobox>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/external-selection.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/external-selection.js -->
+
+```js
+export function setupExternalSelectionExample() {
+  const combobox = document.getElementById('externalSelectionExample');
+  const iataCodes = ['sea', 'lax', 'jfk', 'ord', 'sfo'];
+
+  combobox.addEventListener('input', () => {
+    const input = combobox.inputValue?.toLowerCase();
+    const matchIndex = iataCodes.indexOf(input);
+
+    if (matchIndex !== -1) {
+      combobox.updateActiveOption(matchIndex);
+    }
+  });
+}
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ## Slot Examples
 
 ### Custom Display Value
