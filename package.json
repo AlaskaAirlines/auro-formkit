@@ -13,11 +13,12 @@
     "url": "https://github.com/AlaskaAirlines/auro-formkit"
   },
   "engines": {
-    "node": "^20.x || ^22.x"
+    "node": ">=20"
   },
   "packageManager": "npm@11.6.2",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "workspaces": [
     "components/*",
@@ -30,10 +31,11 @@
     "README.md",
     "LICENSE",
     "NOTICE",
-    "version.js"
+    "version.js",
+    "custom-elements.json"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "npm run analyze && turbo run build",
     "sass": "turbo run sass",
     "build:version": "turbo run build:version",
     "build:formkit-version": "turbo run build:formkit-version",
@@ -50,7 +52,13 @@
     "preCommit": "node ./node_modules/@aurodesignsystem/auro-library/scripts/build/pre-commit.mjs",
     "prepare": "husky",
     "deploy-demo": "npm run build && sh ./deploy-components.sh",
-    "local-demo": "npm run build && sh ./local-demo.sh --zip"
+    "local-demo": "sh ./local-demo.sh",
+    "local-demo:build": "npm run build && npm run local-demo",
+    "local-demo:zip": "npm run local-demo:build -- --zip",
+    "analyze": "custom-elements-manifest analyze --config ./packages/config/src/custom-elements-manifest.config.mjs",
+    "update-stories": "node ./packages/utils/update-stories.js",
+    "storybook": "npm run analyze && storybook dev -p 6006",
+    "build-storybook": "npm run build && npm run analyze && storybook build"
   },
   "dependencies": {
     "@lit/context": "^1.1.6",
@@ -61,8 +69,10 @@
     "@rollup/rollup-linux-x64-gnu": "*"
   },
   "devDependencies": {
+    "@aurodesignsystem/auro-accordion": "^6.1.1",
     "@aurodesignsystem/auro-button": "^12.3.0",
     "@aurodesignsystem/auro-library": "^5.5.4",
+    "@aurodesignsystem/auro-loader": "^6.1.0",
     "@aurodesignsystem/build-tools": "*",
     "@aurodesignsystem/config": "*",
     "@aurodesignsystem/design-tokens": "^8.9.0",
@@ -72,14 +82,26 @@
     "@aurodesignsystem/utils": "*",
     "@aurodesignsystem/version": "*",
     "@aurodesignsystem/webcorestylesheets": "^10.1.4",
+    "@chromatic-com/storybook": "^5.0.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@custom-elements-manifest/analyzer": "^0.10.4",
     "@open-wc/testing": "^4.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/npm": "^13.1.1",
+    "@storybook/addon-a11y": "^10.2.0",
+    "@storybook/addon-designs": "^11.1.1",
+    "@storybook/addon-docs": "^10.2.0",
+    "@storybook/addon-themes": "^10.2.1",
+    "@storybook/addon-vitest": "^10.2.6",
+    "@storybook/web-components": "^10.2.0",
+    "@storybook/web-components-vite": "^10.2.0",
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
+    "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/coverage-v8": "^4.0.18",
+    "@wc-toolkit/storybook-helpers": "^10.0.0",
     "@web/dev-server": "^0.4.6",
     "@web/dev-server-hmr": "^0.4.1",
     "@web/test-runner": "^0.20.2",
@@ -92,17 +114,24 @@
     "core-js": "^3.46.0",
     "eslint": "^9.38.0",
     "eslint-plugin-jsdoc": "^51.4.1",
+    "eslint-plugin-storybook": "^10.2.0",
     "husky": "^9.1.7",
     "lodash": "^4.17.21",
     "markdown-magic": "^3.7.0",
+    "mockdate": "^3.0.5",
     "nodemon": "^3.1.10",
     "npm-run-all": "^4.1.5",
+    "playwright": "^1.58.1",
     "postcss": "^8.5.6",
     "postcss-custom-properties": "^14.0.6",
     "postcss-discard-comments": "^7.0.4",
     "prettier": "^3.6.2",
+    "remark-gfm": "^4.0.1",
     "sass": "^1.93.2",
-    "semantic-release": "^24.2.7",
+    "semantic-release": "^25.0.1",
+    "shadow-dom-testing-library": "^1.13.1",
+    "storybook": "^10.2.0",
+    "storybook-addon-tag-badges": "^3.0.5",
     "stylelint": "^16.25.0",
     "stylelint-config-idiomatic-order": "^10.0.0",
     "stylelint-config-standard": "^39.0.1",
@@ -111,6 +140,7 @@
     "stylelint-scss": "^6.12.1",
     "turbo": "^2.5.8",
     "typescript": "^5.9.3",
+    "vitest": "^4.0.18",
     "whatwg-fetch": "^3.6.20",
     "yaml-lint": "^1.7.0"
   },
@@ -223,6 +253,8 @@
       "module": "./components/select/dist/index.js",
       "types": "./components/select/dist/index.d.ts",
       "default": "./components/select/dist/index.js"
-    }
-  }
+    },
+    "./custom-elements.json": "./custom-elements.json"
+  },
+  "customElements": "custom-elements.json"
 }

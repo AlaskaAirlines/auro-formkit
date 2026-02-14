@@ -1,0 +1,89 @@
+import * as stories from "./counter-and-counter-group.stories";
+import description from "../docs/partials/description.md?raw"
+import api from "../docs/api.md?raw";
+import tokens from "../src/styles/tokens.scss?raw";
+
+<Meta of={stories} />
+
+# Counter
+
+<Markdown>{description}</Markdown>
+
+<Markdown>{api}</Markdown>
+
+## API Examples
+
+### Counter
+
+#### Min/Max and Value
+
+<Canvas of={stories.MinMax} />
+
+#### Disabled State
+
+<Canvas of={stories.Disabled} />
+
+### Counter Group
+
+#### Group Properties
+
+All available counter-group properties:
+
+<Canvas of={stories.GroupProperties} />
+
+#### Available Slots
+
+All available slots for both components:
+
+<Canvas of={stories.Slots} />
+
+### Event Handling
+
+Listen for `input` events to react to user interactions.
+
+<Canvas of={stories.Events} />
+
+#### Custom Value Display
+
+<Canvas of={stories.DropdownValueText} />
+
+### Group Max/Min
+
+The group counter max or min property sets the value for all counters in the group. If a counter has a max value set, the group max attribute will override it. All increment buttons as a result will be disabled to prevent the group of counters from exceeding the group max.
+
+**Example has group max set to 12**
+
+<Canvas of={stories.GroupMax} />
+
+### Counter Max/Min
+
+You can also individually set the max or min value for each counter in a group.
+
+**Example has group max set to 12**
+
+<Canvas of={stories.GroupCounterMax} />
+
+### Dropdown with fullscreen bib
+
+You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
+
+The default value of `fullscreenBreakpoint` is `sm`.
+
+Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens)
+
+To support fullscreen bib, setting the `bib.fullscreen.headline` slot is **REQUIRED**.
+You can also set `bib.fullscreen.footer` slot to add any additional options on fullscreen view.
+
+<Canvas of={stories.DropdownMobileProperties} />
+
+### Theme Support
+
+The component may be restyled using the following code sample and changing the values of the following token(s).
+
+<Markdown>
+{`
+  \`\`\`scss
+  ${tokens}
+  \`\`\`
+`}
+</Markdown>

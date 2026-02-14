@@ -1,0 +1,14 @@
+<!-- .storybook/manager-head.html -->
+
+<style>
+  /* Target Playground stories to change the SVG icon color */
+  [data-item-id*="-playground"] svg[type="story"] {
+    color: rgb(255, 71, 133) !important;
+  }
+  
+  /* Change color when the Playground story item is selected */
+  [data-item-id*="-playground"][data-selected='true'] svg[type="story"] {
+    color: white !important;
+  }
+
+</style>

@@ -6,7 +6,7 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 
 | Property                | Attribute               | Type                                             | Default          | Description                                      |
 |-------------------------|-------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
-| `a11yRole`              |                         |                                                  |                  | The value for the role attribute of the trigger element. |
+| `a11yRole`              |                         | `string`                                         |                  | The value for the role attribute of the trigger element. |
 | `appearance`            | `appearance`            | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
 | `autoPlacement`         | `autoPlacement`         | `boolean`                                        |                  | If declared, bib's position will be automatically calculated where to appear. |
 | `chevron`               | `chevron`               | `boolean`                                        |                  | If declared, the dropdown displays a chevron on the right. |

@@ -28,8 +28,9 @@ import { dispatchMenuEvent } from './auro-menu-utils.js';
  * The `auro-menuoption` element provides users a way to define a menu option.
  * @customElement auro-menuoption
  *
+ * @slot default - The default slot for the menu option text.
+ *
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
- * @slot - Specifies text for an option, but is not the value.
  */
 export class AuroMenuOption extends AuroElement {
 

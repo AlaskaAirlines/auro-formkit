@@ -1,0 +1,47 @@
+<!-- Legacy reference is still needed to support auro-checkbox's use of legacy token values at this time -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
+
+<!-- Design Token Alaska Theme -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css"/>
+
+<!-- Webcore Stylesheet Alaska Theme -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem-dev/webcorestylesheets@0.0.0-pr243.4/dist/bundled/themes/alaska.global.min.css" />
+
+<!-- Demo Specific Styles -->
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" /> -->
+
+<style>
+  body {
+    margin: 0;
+  }
+
+  #root-theme {
+    overflow-x: hidden;
+    display: block;
+    padding: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* Grouped Story Styles */
+  .story-section {
+    margin-bottom: 2rem;
+  }
+
+  .story-title {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  }
+
+  .dark-theme .story-title {
+    border-color: color-mix(in srgb, currentColor 40%, transparent);
+    color: white;
+  }
+
+  .story-content {
+    margin-bottom: 1rem;
+  }
+</style>

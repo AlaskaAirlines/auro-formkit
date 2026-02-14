@@ -28,7 +28,7 @@ The `auro-input` element provides users a way to enter data into a text field.
 | `lang`                            | `lang`                            | `string`                                         |             | Defines the language of an element.              |
 | `layout`                          |                                   | `string`                                         |             |                                                  |
 | `max`                             | `max`                             | `string`                                         |             | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
-| `maxLength`                       | `maxLength`                       | `number`                                         |             | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher. |
+| `maxLength`                       | `maxLength`                       | `number`                                         |             | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.<br />**Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers. |
 | `min`                             | `min`                             | `string`                                         |             | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
 | `minLength`                       | `minLength`                       | `number`                                         |             | The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`. |
 | `name`                            | `name`                            | `string`                                         |             | Populates the `name` attribute on the input.     |
@@ -91,8 +91,10 @@ The `auro-input` element provides users a way to enter data into a text field.
 | `accent-left`   | Use for customizing the style of the left accent element (e.g. padding, margin) |
 | `accent-right`  | Use for customizing the style of the right accent element (e.g. padding, margin) |
 | `accentIcon`    | Use for customizing the style of the accentIcon element (e.g. credit card icon, calendar icon) |
+| `displayValue`  | Use for customizing the style of the displayValue element |
 | `helpText`      | Use for customizing the style of the helpText element |
 | `iconContainer` | Use for customizing the style of the iconContainer (e.g. X icon for clearing input value) |
 | `input`         | Use for customizing the style of the input element |
+| `inputHelpText` | Use for customizing the style of the input help text wrapper |
 | `label`         | Use for customizing the style of the label element |
 | `wrapper`       | Use for customizing the style of the root element |
