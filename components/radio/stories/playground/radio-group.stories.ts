@@ -1,29 +1,23 @@
-import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { Meta, StoryObj } from "@storybook/web-components-vite";
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
-import { html } from 'lit-html';
+import { html } from "lit";
 
-import { AuroRadio } from '../src/auro-radio';
-import { AuroRadioGroup } from '../src/auro-radio-group';
+import '../../src/registered';
+import { AuroRadioGroup } from '../../src/index';
 
-import '@aurodesignsystem/auro-button';
-
-AuroRadio.register(); // registering to `auro-radio`
-AuroRadioGroup.register(); // registering to `auro-radio-group`
-
-AuroRadio.register('custom-radio');
-AuroRadioGroup.register('custom-radio-group');
-
-const { events, args, argTypes, template } =
-  getStorybookHelpers("auro-radio-group");
+const { args, events, argTypes, template } = getStorybookHelpers("auro-radio-group");
 
 const meta: Meta<AuroRadioGroup> = {
+  title: "Radio & Radio Group/Playground",
   component: "auro-radio-group",
-  title: 'Radio & Radio Group/Radio Group',
   args,
   argTypes,
   parameters: {
     actions: {
       handles: events,
+    },
+    chromatic: {
+      disableSnapshot: true,
     },
   },
 };
@@ -31,7 +25,7 @@ export default meta;
 
 type Story = StoryObj<AuroRadioGroup & typeof args>;
 
-export const Playground: Story = {
+export const RadioGroup: Story = {
   args: {},
   render: (args) =>
     template(
