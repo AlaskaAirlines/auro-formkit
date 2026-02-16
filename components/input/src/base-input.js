@@ -35,6 +35,7 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   _initializeDefaults() {
+    this.a11yRole = 'input';
     this.activeLabel = false;
     this.appearance = "default";
     this.icon = false;
@@ -536,6 +537,10 @@ export default class BaseInput extends AuroElement {
     this.labelElement = this.shadowRoot.querySelector('label');
 
     this.patchInputEvent(this.inputElement);
+
+    this.addEventListener('click', () => {
+      console.warn('clicked the auro-input');
+    });
 
     if (this.wrapperElement) {
       this.wrapperElement.addEventListener('click', this.handleClick);
