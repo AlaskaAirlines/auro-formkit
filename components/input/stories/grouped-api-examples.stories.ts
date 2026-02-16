@@ -2,7 +2,10 @@
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { generateGroupedStory } from '@aurodesignsystem/utils';
-import '../src/registered';
+import { AuroInput } from '../src/index';  
+import '@aurodesignsystem/auro-button';
+AuroInput.register();
+AuroInput.register('custom-input');
 
 // Import all HTML files from apiExamples
 const apiExamples = import.meta.glob('../apiExamples/*.html', { query: '?raw', import: 'default', eager: true });

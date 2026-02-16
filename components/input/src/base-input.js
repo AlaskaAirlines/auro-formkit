@@ -538,10 +538,6 @@ export default class BaseInput extends AuroElement {
 
     this.patchInputEvent(this.inputElement);
 
-    this.addEventListener('click', () => {
-      console.warn('clicked the auro-input');
-    });
-
     if (this.wrapperElement) {
       this.wrapperElement.addEventListener('click', this.handleClick);
     }
