@@ -15,7 +15,7 @@ The `auro-input` element provides users a way to enter data into a text field.
 | `autocomplete`                    | `autocomplete`                    | `string`                                         |             | An enumerated attribute that defines what the user agent can suggest for autofill. At this time, only `autocomplete="off"` is supported. |
 | `autocorrect`                     | `autocorrect`                     | `string`                                         |             | When set to `off`, stops iOS from auto-correcting words when typed into a text box. |
 | `customValidityTypeEmail`         | `customValidityTypeEmail`         | `string`                                         |             | Custom help text message for email type validity. |
-| `disabled`                        | `disabled`                        | `boolean`                                        |             | If set, disables the input.                      |
+| `disabled`                        | `disabled`                        | `boolean`                                        | false       | If set, disables the input.                      |
 | `dvInputOnly`                     | `dvInputOnly`                     | `boolean`                                        |             | If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked. |
 | `error`                           | `error`                           | `string`                                         |             | When defined, sets persistent validity to `customError` and sets `setCustomValidity` = attribute value. |
 | `errorMessage`                    | `errorMessage`                    | `string`                                         |             | Contains the help text message for the current validity error. |
@@ -26,29 +26,32 @@ The `auro-input` element provides users a way to enter data into a text field.
 | `id`                              | `id`                              | `string`                                         |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
 | `inputmode`                       | `inputmode`                       | `string`                                         |             | Exposes inputmode attribute for input.           |
 | `lang`                            | `lang`                            | `string`                                         |             | Defines the language of an element.              |
-| `layout`                          |                                   | `string`                                         |             |                                                  |
-| `max`                             | `max`                             | `string`                                         |             | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
-| `maxLength`                       | `maxLength`                       | `number`                                         |             | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.<br />**Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers. |
-| `min`                             | `min`                             | `string`                                         |             | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
-| `minLength`                       | `minLength`                       | `number`                                         |             | The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`. |
+| `layout`                          |                                   | `string`                                         | "classic"   |                                                  |
+| `locale`                          | `locale`                          | `string`                                         | "en-US"     | Defines the locale of an element.<br />Used for locale-specific formatting, such as date formats. |
+| `max`                             | `max`                             | `string`                                         | "undefined" | The maximum value allowed. This only applies for inputs with a type of `number` and all date formats. |
+| `maxLength`                       | `maxLength`                       | `number`                                         | "undefined" | The maximum number of characters the user can enter into the text input. This must be an integer value `0` or higher.<br />**Note**: This attribute is not intended to be used with a `type` or `format` that already has a defined length, such as credit-cards, dates or phone numbers. |
+| `min`                             | `min`                             | `string`                                         | "undefined" | The minimum value allowed. This only applies for inputs with a type of `number` and all date formats. |
+| `minLength`                       | `minLength`                       | `number`                                         | "undefined" | The minimum number of characters the user can enter into the text input. This must be a non-negative integer value smaller than or equal to the value specified by `maxlength`. |
 | `name`                            | `name`                            | `string`                                         |             | Populates the `name` attribute on the input.     |
 | `nested`                          | `nested`                          | `boolean`                                        |             | Sets styles for nested operation - removes borders, hides help + error text, and<br />hides accents. |
 | `noValidate`                      | `noValidate`                      | `boolean`                                        |             | If set, disables auto-validation on blur.        |
-| `onDark`                          | `onDark`                          | `boolean`                                        |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `onDark`                          | `onDark`                          | `boolean`                                        | false       | DEPRECATED - use `appearance="inverse"` instead. |
 | `pattern`                         | `pattern`                         | `string`                                         |             | Specifies a regular expression the form control's value should match. |
 | `placeholder`                     | `placeholder`                     | `string`                                         |             | Define custom placeholder text.                  |
 | `readonly`                        | `readonly`                        | `boolean`                                        |             | Makes the input read-only, but can be set programmatically. |
-| `required`                        | `required`                        | `boolean`                                        |             | Populates the `required` attribute on the input. Used for client-side validation. |
+| `required`                        | `required`                        | `boolean`                                        | false       | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`               | `setCustomValidity`               | `string`                                         |             | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityBadInput`       | `setCustomValidityBadInput`       | `string`                                         |             | Custom help text message to display when validity = `badInput`. |
 | `setCustomValidityCustomError`    | `setCustomValidityCustomError`    | `string`                                         |             | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityForType`        | `setCustomValidityForType`        | `string`                                         |             | Custom help text message to display for the declared element `type` and type validity fails. |
+| `setCustomValidityForType`        | `setCustomValidityForType`        | `string`                                         | "undefined" | Custom help text message to display for the declared element `type` and type validity fails. |
 | `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  | `string`                                         |             | Custom help text message to display when validity = `rangeOverflow`. |
 | `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` | `string`                                         |             | Custom help text message to display when validity = `rangeUnderflow`. |
 | `setCustomValidityTooLong`        | `setCustomValidityTooLong`        | `string`                                         |             | Custom help text message to display when validity = `tooLong`. |
 | `setCustomValidityTooShort`       | `setCustomValidityTooShort`       | `string`                                         |             | Custom help text message to display when validity = `tooShort`. |
 | `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   | `string`                                         |             | Custom help text message to display when validity = `valueMissing`. |
+| `shape`                           |                                   | `string`                                         | "classic"   |                                                  |
 | `simple`                          | `simple`                          | `boolean`                                        |             | Simple makes the input render without a border.  |
+| `size`                            |                                   | `string`                                         | "lg"        |                                                  |
 | `spellcheck`                      | `spellcheck`                      | `string`                                         |             | An enumerated attribute defines whether the element may be checked for spelling errors. [true, false]. When set to `false` the attribute `autocorrect` is set to `off` and `autocapitalize` is set to `none`. |
 | `type`                            | `type`                            | `'text' \| 'password' \| 'email' \| 'credit-card' \| 'tel' \| 'number'` | "'text'"    | Populates the `type` attribute on the input.     |
 | `validateOnInput`                 | `validateOnInput`                 | `boolean`                                        |             | Sets validation mode to re-eval with each input. |
@@ -57,12 +60,14 @@ The `auro-input` element provides users a way to enter data into a text field.
 
 ## Methods
 
-| Method     | Type                                   | Description                                      |
-|------------|----------------------------------------|--------------------------------------------------|
-| `clear`    | `(): void`                             | Clears the input value.                          |
-| `focus`    | `(): void`                             | Function to set element focus.                   |
-| `reset`    | `(): void`                             | Resets component to initial state, including resetting the touched state and validity. |
-| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method                 | Type                                             | Description                                      |
+|------------------------|--------------------------------------------------|--------------------------------------------------|
+| `clear`                | `(): void`                                       | Clears the input value.                          |
+| `closestWithAttribute` | `(startNode: Node, attrName: string): Element\|null` | MOVE THIS TO AURO-LIBRARY ???<br />Walk up the DOM (including Shadow DOM boundaries) to find<br />the closest ancestor with a given attribute.<br /><br />**startNode**: The node to start from<br />**attrName**: Attribute name to match |
+| `focus`                | `(): void`                                       | Function to set element focus.                   |
+| `reset`                | `(): void`                                       | Resets component to initial state, including resetting the touched state and validity. |
+| `setLocale`            | `(): void`                                       | If the locale wasn't set via attribute,<br />look for the closest `data-locale` attribute in the DOM and use that.<br />If none is found, default to 'en-US'. |
+| `validate`             | `(force?: boolean \| undefined): void`           | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 

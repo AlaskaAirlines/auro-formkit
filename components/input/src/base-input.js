@@ -3,18 +3,15 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, dot-location, new-cap, curly, no-underscore-dangle */
+/* eslint-disable max-lines, no-continue, new-cap, curly, no-underscore-dangle, no-inline-comments, line-comment-position */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-
 import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
-import { AuroInputUtilities } from "./utilities.js";
-
 import IMask from 'imask';
-
 import AuroFormValidation from '@aurodesignsystem/form-validation';
-
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
+import { AuroInputUtilities } from "./utilities.js";
+import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
 
 /**
  * Base class for auro-input component that provides core input functionality.
@@ -26,7 +23,21 @@ export default class BaseInput extends AuroElement {
   constructor() {
     super();
 
-    this._initializeDefaults();
+    this.appearance = "default";
+    this.disabled = false;
+    this.layout = 'classic';
+    this.locale = 'en-US';
+    this.max = undefined;
+    this.maxLength = undefined;
+    this.min = undefined;
+    this.minLength = undefined;
+    this.required = false;
+    this.onDark = false;
+    this.setCustomValidityForType = undefined;
+    this.size = 'lg';
+    this.shape = 'classic';
+
+    this._initializePrivateDefaults();
   }
 
   /**
@@ -34,51 +45,8 @@ export default class BaseInput extends AuroElement {
    * @private
    * @returns {void}
    */
-  _initializeDefaults() {
+  _initializePrivateDefaults() {
     this.activeLabel = false;
-    this.appearance = "default";
-    this.icon = false;
-    this.disabled = false;
-    this.dvInputOnly = false;
-    this.max = undefined;
-    this.maxLength = undefined;
-    this.min = undefined;
-    this.minLength = undefined;
-    this.noValidate = false;
-    this.onDark = false;
-    this.required = false;
-    this.setCustomValidityForType = undefined;
-
-    // Used for storing raw values returned from input mask.
-    this._rawMaskValue = undefined;
-
-    /**
-     * @private
-     */
-    this.layout = 'classic';
-
-    /**
-     * @private
-     */
-    this.shape = 'classic';
-
-    /**
-     * @private
-     */
-    this.size = 'lg';
-
-    this.touched = false;
-    this.util = new AuroInputUtilities({
-      locale: "en-US",
-      format: this.format
-    });
-    this.validation = new AuroFormValidation();
-    this.inputIconName = undefined;
-    this.showPassword = false;
-    this.validationCCLength = undefined;
-    this.hasValue = false;
-    this.label = 'Input label is undefined';
-
     this.allowedInputTypes = [
       "text",
       "number",
@@ -87,17 +55,7 @@ export default class BaseInput extends AuroElement {
       "credit-card",
       "tel"
     ];
-
-    /**
-     * Credit Card is not included as this caused cursor placement issues.
-     * The Safari issue.
-     */
-    this.setSelectionInputTypes = [
-      "text",
-      "password",
-      "email"
-    ];
-
+    this.icon = false;
     this.dateFormatMap = {
       'mm/dd/yyyy': 'dateMMDDYYYY',
       'dd/mm/yyyy': 'dateDDMMYYYY',
@@ -114,14 +72,26 @@ export default class BaseInput extends AuroElement {
       'dd/mm': 'dateDDMM',
       'mm/dd': 'dateMMDD'
     };
-
-    const idLength = 36;
-    const idSubstrEnd = 8;
-    const idSubstrStart = 2;
-
-    this.uniqueId = Math.random()
-      .toString(idLength)
-      .substring(idSubstrStart, idSubstrEnd);
+    this.dvInputOnly = false;
+    this.hasValue = false;
+    this.inputIconName = undefined;
+    this.label = 'Input label is undefined';
+    this.noValidate = false;
+    this._rawMaskValue = undefined; // Used for storing raw values returned from input mask.
+    this.setSelectionInputTypes = [
+      "text",
+      "password",
+      "email"
+    ]; // Credit Card is not included as this caused cursor placement issues in Safari.
+    this.showPassword = false;
+    this.touched = false;
+    this.uniqueId = new UniqueId().create();
+    this.util = new AuroInputUtilities({
+      locale: this.locale,
+      format: this.format
+    });
+    this.validation = new AuroFormValidation();
+    this.validationCCLength = undefined;
   }
 
   // function to define props used within the scope of this component
@@ -294,6 +264,15 @@ export default class BaseInput extends AuroElement {
        * Defines the language of an element.
        */
       lang: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Defines the locale of an element.
+       * Used for locale-specific formatting, such as date formats.
+       */
+      locale: {
         type: String,
         reflect: true
       },
@@ -527,6 +506,8 @@ export default class BaseInput extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
+    this.setLocale();
+
     notifyOnLangChange(this);
   }
 
@@ -552,10 +533,6 @@ export default class BaseInput extends AuroElement {
       this.setAttribute('auro-input', true);
     }
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
-
-    if (this.format) {
-      this.format = this.format.toLowerCase();
-    }
 
     // use validity message override if declared when initializing the component
     if (this.hasAttribute('setCustomValidity')) {
@@ -640,12 +617,82 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
+   * MOVE THIS TO AURO-LIBRARY ???
+   * Walk up the DOM (including Shadow DOM boundaries) to find
+   * the closest ancestor with a given attribute.
+   *
+   * @param {Node} startNode - The node to start from
+   * @param {string} attrName - Attribute name to match
+   * @returns {Element|null}
+   */
+  closestWithAttribute(startNode, attrName) {
+    let node = startNode;
+
+    while (node) {
+      // Only check Elements
+      if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attrName)) {
+        return node;
+      }
+
+      // Normal DOM parent
+      if (node.parentNode) {
+        node = node.parentNode;
+        continue;
+      }
+
+      // Cross Shadow DOM boundary
+      if (node instanceof ShadowRoot) {
+        node = node.host;
+        continue;
+      }
+
+      // If we're inside a shadow tree and parentNode is null
+      if (node.getRootNode) {
+        const root = node.getRootNode();
+        if (root instanceof ShadowRoot) {
+          node = root.host;
+          continue;
+        }
+      }
+
+      // Nothing left to traverse
+      node = null;
+    }
+
+    return null;
+  }
+
+  /**
+   * If the locale wasn't set via attribute,
+   * look for the closest `data-locale` attribute in the DOM and use that.
+   * If none is found, default to 'en-US'.
+   */
+  setLocale() {
+    if (!this.hasAttribute('locale')) {
+      try {
+        this.locale = this.closestWithAttribute(this, 'data-locale').getAttribute('data-locale');
+      } catch (error) {
+        this.locale = 'en-US';
+      }
+      
+      // need to also validate that the locale string is valid before we try and use it, default to en-us if it's not valid
+    }
+  }
+
+  /**
    * LitElement lifecycle method. Called after the DOM has been updated.
    * @param {Map<string, any>} changedProperties - Keys are the names of changed properties, values are the corresponding previous values.
    * @returns {void}
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
+    if (changedProperties.has('locale') || changedProperties.has('format')) {
+      this.util = new AuroInputUtilities({
+        locale: this.locale,
+        format: this.format
+      });
+    }
 
     if (changedProperties.has('format')) {
       this.configureAutoFormatting();

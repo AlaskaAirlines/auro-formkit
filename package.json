@@ -71,7 +71,7 @@
   "devDependencies": {
     "@aurodesignsystem/auro-accordion": "^6.1.1",
     "@aurodesignsystem/auro-button": "^12.3.0",
-    "@aurodesignsystem/auro-library": "^5.5.4",
+    "@aurodesignsystem/auro-library": "^5.10.0",
     "@aurodesignsystem/auro-loader": "^6.1.0",
     "@aurodesignsystem/build-tools": "*",
     "@aurodesignsystem/config": "*",
