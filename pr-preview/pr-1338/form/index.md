@@ -301,7 +301,7 @@ Finally, a more complex form example with multiple form elements, including a da
       <span slot="label">First Name</span>
     </auro-input>
     <br />
-    <auro-input id="last-name" name="lastName" required>
+    <auro-input id="last-name" name="lastName" autocomplete="family-name" required>
       <span slot="label">Last Name</span>
     </auro-input>
     <br />
@@ -366,7 +366,7 @@ Finally, a more complex form example with multiple form elements, including a da
     <span slot="label">First Name</span>
   </auro-input>
   <br />
-  <auro-input id="last-name" name="lastName" required>
+  <auro-input id="last-name" name="lastName" autocomplete="family-name" required>
     <span slot="label">Last Name</span>
   </auro-input>
   <br />
