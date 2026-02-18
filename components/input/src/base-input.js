@@ -669,13 +669,13 @@ export default class BaseInput extends AuroElement {
    */
   setLocale() {
     if (!this.hasAttribute('locale')) {
-      try {
-        this.locale = this.closestWithAttribute(this, 'data-locale').getAttribute('data-locale');
-      } catch (error) {
+      const closestLocaleElement = this.closestWithAttribute(this, 'data-locale');
+
+      if (closestLocaleElement) {
+        this.locale = closestLocaleElement.getAttribute('data-locale');
+      } else {
         this.locale = 'en-US';
       }
-      
-      // need to also validate that the locale string is valid before we try and use it, default to en-us if it's not valid
     }
   }
 
