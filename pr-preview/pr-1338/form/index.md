@@ -305,6 +305,10 @@ Finally, a more complex form example with multiple form elements, including a da
       <span slot="label">Last Name</span>
     </auro-input>
     <br />
+    <auro-input id="credit-card" name="creditCard" autocomplete="cc-number" required>
+      <span slot="label">Credit Card</span>
+    </auro-input>
+    <br />
     <auro-input id="occupation" name="occupation" required>
       <span slot="label">Occupation</span>
     </auro-input>
@@ -368,6 +372,10 @@ Finally, a more complex form example with multiple form elements, including a da
   <br />
   <auro-input id="last-name" name="lastName" autocomplete="family-name" required>
     <span slot="label">Last Name</span>
+  </auro-input>
+  <br />
+  <auro-input id="credit-card" name="creditCard" autocomplete="cc-number" required>
+    <span slot="label">Credit Card</span>
   </auro-input>
   <br />
   <auro-input id="occupation" name="occupation" required>
