@@ -5,7 +5,7 @@ import * as dateFns from 'date-fns';
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, init-declarations, radix, no-nested-ternary */
+/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, radix, no-nested-ternary */
 
 import IMask from 'imask';
 
@@ -13,13 +13,21 @@ export class AuroInputUtilities {
 
   /**
    * Creates an instance of AuroInputUtilities.
-   * @param {object} config
+   * @param {object} config - Configuration object for the utilities.
    * @param {string} config.locale - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
    * @param {string} config.format - Optional Date format override string.
    */
-  constructor(config = { locale: 'en-US', format: undefined }) {
-    // NOTE: normalize locale as we set it
-    this.locale = config.locale || 'en-US';
+  constructor(config = { locale: undefined, format: undefined }) {
+    if (config.locale) {
+      try {
+        this.locale = new Intl.Locale(config.locale).toString();
+      } catch (error) {
+        console.debug('Invalid locale provided, defaulting to en-US', error); // eslint-disable-line no-console
+        this.locale = 'en-US';
+      }
+    } else {
+      this.locale = 'en-US';
+    }
     this.overrideFormat = config.format;
     this.formatter = new Intl.DateTimeFormat(this.locale);
 
@@ -38,16 +46,6 @@ export class AuroInputUtilities {
    */
   getLocale() {
     return this.locale;
-  }
-
-  /**
-   * Updates the locale used for date formatting.
-   * @param {string} newLocale - New BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
-   * @returns {void}
-   */
-  updateLocale(newLocale) {
-    this.locale = newLocale || 'en-US';
-    this.formatter = new Intl.DateTimeFormat(this.locale);
   }
 
   /**
@@ -110,9 +108,9 @@ export class AuroInputUtilities {
 
   /**
    * Parses a date string using the provided mask.
-   * @param {string} dateString
-   * @param {string} mask
-   * @return {string}
+   * @param {string} dateString - The date string to parse.
+   * @param {string} mask - The date mask to use for parsing.
+   * @returns {string}
    */
   parseDateByMask(dateString, mask) {
     return dateFns.format(
