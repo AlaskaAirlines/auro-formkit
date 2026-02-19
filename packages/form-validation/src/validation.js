@@ -299,9 +299,7 @@ export default class AuroFormValidation {
     if (elem.hasAttribute('error')) {
       elem.validity = 'customError';
       elem.errorMessage = elem.setCustomValidityCustomError || elem.error || elem.setCustomValidity || '';
-      if (!force) {
-        validationShouldRun = false;
-      }
+      validationShouldRun = false;
     } else if (validationShouldRun) {
       elem.validity = 'valid';
       elem.errorMessage = '';
