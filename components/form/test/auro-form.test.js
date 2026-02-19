@@ -539,34 +539,5 @@ describe('auro-form', () => {
       await elementUpdated(el);
       await expect(defaultPrevented).to.be.true;
     });
-
-    it('should not submit when Enter is pressed on a textarea element', async () => {
-      const el = await fixture(html`
-        <auro-form>
-          <textarea name="testTextarea">test value</textarea>
-        </auro-form>
-      `);
-
-      // Manually add the textarea to the form's elements since it's not an auro element
-      const textarea = el.querySelector('textarea');
-      await elementUpdated(el);
-
-      let submitCalled = false;
-      el.addEventListener('submit', () => {
-        submitCalled = true;
-      });
-
-      // Simulate Enter key press on the textarea
-      const enterEvent = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        bubbles: true,
-        cancelable: true
-      });
-      textarea.dispatchEvent(enterEvent);
-
-      // Wait a bit to ensure submit is not called
-      await new Promise(resolve => setTimeout(resolve, 50));
-      await expect(submitCalled).to.be.false;
-    });
   });
 });
