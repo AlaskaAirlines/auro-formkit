@@ -830,31 +830,34 @@ export default class BaseInput extends AuroElement {
     // Process credit card type detection and formatting during input
     if (this.type === 'credit-card') {
       this.processCreditCard();
-    }
-
-    // Sets value property to value of element value (el.value).
-    this.value = this.inputElement.value;
-
-    // Determine if the value change was programmatic, including autofill.
-    const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
-
-    // Validation on input or programmatic value change (including autofill).
-    if (this.validateOnInput || inputWasProgrammatic) {
       this.touched = true;
       this.validation.validate(this);
-    }
+    } else {
 
-    // Prevents cursor jumping in Safari.
-    const { selectionStart } = this.inputElement;
+      // Sets value property to value of element value (el.value).
+      this.value = this.inputElement.value;
 
-    if (this.setSelectionInputTypes.includes(this.type)) {
-      this.updateComplete.then(() => {
-        try {
-          this.inputElement.setSelectionRange(selectionStart, selectionStart);
-        } catch (error) { // eslint-disable-line
-          // do nothing
-        }
-      });
+      // Determine if the value change was programmatic, including autofill.
+      const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
+
+      // Validation on input or programmatic value change (including autofill).
+      if (this.validateOnInput || inputWasProgrammatic) {
+        this.touched = true;
+        this.validation.validate(this);
+      }
+
+      // Prevents cursor jumping in Safari.
+      const { selectionStart } = this.inputElement;
+
+      if (this.setSelectionInputTypes.includes(this.type)) {
+        this.updateComplete.then(() => {
+          try {
+            this.inputElement.setSelectionRange(selectionStart, selectionStart);
+          } catch (error) { // eslint-disable-line
+            // do nothing
+          }
+        });
+      }
     }
   }
 
@@ -887,6 +890,11 @@ export default class BaseInput extends AuroElement {
     this.inputElement.scrollLeft = 100;
 
     if (!this.noValidate) {
+      // For credit card inputs with mask, ensure value is synced from mask instance
+      if (this.type === 'credit-card' && this.maskInstance) {
+        this.value = this.maskInstance.value;
+      }
+
       this.validation.validate(this);
     }
   }

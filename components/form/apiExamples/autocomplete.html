@@ -1,0 +1,49 @@
+<!-- Use this file in place of the complex form example for testing purposes -->
+<auro-form class="payment-card-form">
+  <div class="payment-card-form-container">
+    <auro-input
+      id="cardNumber"
+      name="cardNumber"
+      required
+      validateOnInput
+      icon
+      type="credit-card"
+    >
+      <slot slot="label">Card number</slot>
+      <slot slot="helpText">Valid credit card numbers must include 16 digits (15 for Amex).</slot>
+    </auro-input>
+    
+    <auro-input
+      id="expirationDate"
+      name="expirationDate"
+      validateOnInput
+      required
+      type="date"
+      format="mm/yyyy"
+    >
+      <slot slot="label">Expiration date</slot>
+    </auro-input>
+    
+    <auro-input
+      id="nameOnCard"
+      name="nameOnCard"
+      validateOnInput
+      required
+      pattern="[a-zA-Z.\-']+( +[a-zA-Z.\-']+)+"
+      maxLength="50"
+      setCustomValidityPatternMismatch="Please enter name as stated on card."
+    >
+      <span slot="label">Name on card</span>
+      <slot slot="helpText">Enter name as stated on card.</slot>
+    </auro-input>
+
+    <div class="submit-button-container">
+      <auro-button type="cancel" variant="tertiary" fluid>
+        Cancel
+      </auro-button>
+      <auro-button type="submit" fluid>
+        Continue
+      </auro-button>
+    </div>
+  </div>
+</auro-form>

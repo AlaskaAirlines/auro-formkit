@@ -153,7 +153,6 @@ This example shows that you can use advanced layouts with Auro Form, such as a c
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-
 ### Complex Form
 
 Finally, a more complex form example with multiple form elements, including a date picker and a select element.
