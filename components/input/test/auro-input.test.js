@@ -697,15 +697,15 @@ describe('auro-input', () => {
       expect(el.value).to.equal('12/31/2000');
     });
 
-    // it('dd/mm/yyyy', async () => {
-    //   const el = await fixture(html`
-    //     <auro-input id="format-date" type="date" format="dd/mm/yyyy"></auro-input>
-    //   `);
+    it('dd/mm/yyyy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="dd/mm/yyyy"></auro-input>
+      `);
 
-    //   setInputValue(el, '31122000');
-    //   await elementUpdated(el);
-    //   expect(el.value).to.equal('31/12/2000');
-    // });
+      setInputValue(el, '31122000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('31/12/2000');
+    });
 
     it('yyyy/mm/dd', async () => {
       const el = await fixture(html`
@@ -717,15 +717,15 @@ describe('auro-input', () => {
       expect(el.value).to.equal('2000/12/31');
     });
 
-    // it('yyyy/dd/mm', async () => {
-    //   const el = await fixture(html`
-    //     <auro-input id="format-date" type="date" format="yyyy/dd/mm"></auro-input>
-    //   `);
+    it('yyyy/dd/mm', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="yyyy/dd/mm"></auro-input>
+      `);
 
-    //   setInputValue(el, '20003112');
-    //   await elementUpdated(el);
-    //   expect(el.value).to.equal('2000/31/12');
-    // });
+      setInputValue(el, '20003112');
+      await elementUpdated(el);
+      expect(el.value).to.equal('2000/31/12');
+    });
 
     it('mm/yy', async () => {
       const el = await fixture(html`
@@ -747,15 +747,15 @@ describe('auro-input', () => {
       expect(el.value).to.equal('99/12');
     });
 
-    // it('mm/yyyy', async () => {
-    //   const el = await fixture(html`
-    //     <auro-input id="format-date" type="date" format="mm/yyyy"></auro-input>
-    //   `);
+    it('mm/yyyy', async () => {
+      const el = await fixture(html`
+        <auro-input id="format-date" type="date" format="mm/yyyy"></auro-input>
+      `);
 
-    //   setInputValue(el, '122000');
-    //   await elementUpdated(el);
-    //   expect(el.value).to.equal('12/2000');
-    // });
+      setInputValue(el, '122000');
+      await elementUpdated(el);
+      expect(el.value).to.equal('12/2000');
+    });
 
     it('yyyy/mm', async () => {
       const el = await fixture(html`
@@ -767,64 +767,65 @@ describe('auro-input', () => {
       expect(el.value).to.equal('2000/12');
     });
 
-    //   it('yy', async () => {
-    //     const el = await fixture(html`
-    //       <auro-input id="format-date" type="date" format="yy"></auro-input>
-    //     `);
+      // Disabled: partial date formats throw in auro-library's dateFormatter.mjs
+      // it('yy', async () => {
+      //   const el = await fixture(html`
+      //     <auro-input id="format-date" type="date" format="yy"></auro-input>
+      //   `);
 
-    //     setInputValue(el, '99');
-    //     await elementUpdated(el);
-    //     expect(el.value).to.equal('99');
-    //   });
+      //   setInputValue(el, '99');
+      //   await elementUpdated(el);
+      //   expect(el.value).to.equal('99');
+      // });
 
-    //   it('yyyy', async () => {
-    //     const el = await fixture(html`
-    //       <auro-input id="format-date" type="date" format="yyyy"></auro-input>
-    //     `);
+      // it('yyyy', async () => {
+      //   const el = await fixture(html`
+      //     <auro-input id="format-date" type="date" format="yyyy"></auro-input>
+      //   `);
 
-    //     setInputValue(el, '1999');
-    //     await elementUpdated(el);
-    //     expect(el.value).to.equal('1999');
-    //   });
+      //   setInputValue(el, '1999');
+      //   await elementUpdated(el);
+      //   expect(el.value).to.equal('1999');
+      // });
 
-    //   it('mm', async () => {
-    //     const el = await fixture(html`
-    //       <auro-input id="format-date" type="date" format="mm"></auro-input>
-    //     `);
+      // it('mm', async () => {
+      //   const el = await fixture(html`
+      //     <auro-input id="format-date" type="date" format="mm"></auro-input>
+      //   `);
 
-    //     setInputValue(el, '12');
-    //     await elementUpdated(el);
-    //     expect(el.value).to.equal('12');
-    //   });
+      //   setInputValue(el, '12');
+      //   await elementUpdated(el);
+      //   expect(el.value).to.equal('12');
+      // });
 
-    //   it('dd', async () => {
-    //     const el = await fixture(html`
-    //       <auro-input id="format-date" type="date" format="dd"></auro-input>
-    //     `);
+      // it('dd', async () => {
+      //   const el = await fixture(html`
+      //     <auro-input id="format-date" type="date" format="dd"></auro-input>
+      //   `);
 
-    //     setInputValue(el, '31');
-    //     await elementUpdated(el);
-    //     expect(el.value).to.equal('31');
-    //   });
+      //   setInputValue(el, '31');
+      //   await elementUpdated(el);
+      //   expect(el.value).to.equal('31');
+      // });
   });
 
   describe('handles i18n', () => {
-    // it('credit-card translation', async () => {
-    //   const el = await fixture(html`
-    //     <auro-input type="credit-card" required id="input01"></auro-input>
-    //   `);
+    it('credit-card translation', async () => {
+      const el = await fixture(html`
+        <auro-input type="credit-card" required id="input01"></auro-input>
+      `);
 
-    //   const eli18n = await fixture(html`
-    //     <auro-input type="credit-card" required lang="es" id="input01"></auro-input>
-    //   `);
+      const eli18n = await fixture(html`
+        <auro-input type="credit-card" required lang="es" id="input01"></auro-input>
+      `);
 
-    //   const eli18nContent = eli18n.shadowRoot.querySelector('[name="helpText"]').innerHTML;
-    //   const content = el.shadowRoot.querySelector('[name="helpText"]').innerHTML;
+      const eli18nContent = eli18n.shadowRoot.querySelector('[name="helpText"]').innerHTML;
+      const content = el.shadowRoot.querySelector('[name="helpText"]').innerHTML;
 
-    //   expect(content).to.not.contain(`Por favor`);
-    //   expect(eli18nContent).to.contain(`Por favor`);
-    //   expect(eli18n.shadowRoot.querySelector('input')).to.have.attribute('lang', 'es');
-    // });
+      expect(content).to.not.contain(`Por favor`);
+      expect(eli18nContent).to.contain(`Por favor`);
+      expect(eli18n.shadowRoot.querySelector('input')).to.have.attribute('lang', 'es');
+    });
   });
 
   describe('handles credit card formatting', () => {
