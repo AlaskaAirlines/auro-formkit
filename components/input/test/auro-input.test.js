@@ -928,5 +928,49 @@ describe('auro-input', () => {
       await elementUpdated(el);
       expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-alaska');
     });
+
+    it('Visa autofill without focus validates correctly', async () => {
+      const el = await fixture(html`
+        <auro-input type="credit-card" required></auro-input>
+      `);
+
+      // Simulate browser autofill: set value on the native input without focus
+      const input = el.shadowRoot.querySelector('input');
+      input.value = '4111111111111111';
+      input.dispatchEvent(new InputEvent('input'));
+      await elementUpdated(el);
+
+      expect(el.validity).to.equal('valid');
+    });
+
+    it('Amex autofill without focus validates correctly', async () => {
+      const el = await fixture(html`
+        <auro-input type="credit-card" required></auro-input>
+      `);
+
+      // Simulate browser autofill: set value on the native input without focus
+      const input = el.shadowRoot.querySelector('input');
+      input.value = '378282246310005';
+      input.dispatchEvent(new InputEvent('input'));
+      await elementUpdated(el);
+
+      expect(el.validity).to.equal('valid');
+    });
+
+    it('focused credit card typing still validates correctly', async () => {
+      const el = await fixture(html`
+        <auro-input type="credit-card" required></auro-input>
+      `);
+
+      // Simulate normal typing with focus
+      setInputValue(el, '4111 1111 1111 1111');
+      await elementUpdated(el);
+
+      el.shadowRoot.querySelector('input').focus();
+      el.shadowRoot.querySelector('input').blur();
+      await elementUpdated(el);
+
+      expect(el.validity).to.equal('valid');
+    });
   });
 });

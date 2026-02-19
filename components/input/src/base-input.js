@@ -732,6 +732,16 @@ export default class BaseInput extends AuroElement {
 
       this.maskInstance.on('accept', () => {
         this.value = this.maskInstance.value;
+
+        if (this.type === 'credit-card') {
+          this.processCreditCard();
+        }
+
+        // Re-validate after IMask formats the value for non-focused inputs (e.g. autofill).
+        // !hasFocus: only re-validates on autofill (unfocused) which would show errors prematurely.
+        if (this.touched && !this.hasFocus) {
+          this.validation.validate(this);
+        }
       });
 
       this.maskInstance.on('complete', () => {
@@ -827,13 +837,14 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   handleInput(event) {
+    // Sets value property to value of element value (el.value).
+    // Must happen before processCreditCard() so card type detection uses the current value.
+    this.value = this.inputElement.value;
+
     // Process credit card type detection and formatting during input
     if (this.type === 'credit-card') {
       this.processCreditCard();
     }
-
-    // Sets value property to value of element value (el.value).
-    this.value = this.inputElement.value;
 
     // Determine if the value change was programmatic, including autofill.
     const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
@@ -1075,6 +1086,8 @@ export default class BaseInput extends AuroElement {
 
     // Only reconfigure the mask if the format has changed
     if (this.inputElement && previousFormat !== this.format) {
+      // Prevent the re-entrant input event that IMask initialization triggers via the patched setter
+      this.skipNextProgrammaticInputEvent = true;
       this.configureAutoFormatting();
     }
   }
