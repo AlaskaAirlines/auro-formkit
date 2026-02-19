@@ -85,6 +85,7 @@ export class AuroForm extends LitElement {
     this.sharedInputListener = this.sharedInputListener.bind(this);
     this.sharedValidationListener = this.sharedValidationListener.bind(this);
     this.mutationEventListener = this.mutationEventListener.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   // Note: button is NOT considered a form element in this context
@@ -385,26 +386,27 @@ export class AuroForm extends LitElement {
 
   /**
    * Submit fires an event called `submit` - just as you would expect from a normal form.
+   * Only dispatches the submit event if all form elements are valid.
    */
-  submit() {
-    // Steps required to get out of beta:
-    // 1. Submit triggers a forced validation on ALL elements
-    // 2. Wait for validation to complete (this.updateComplete.then or similar)
-    // 3. If still valid, go ahead with submit.
+  async submit() {
+    // Force validation on ALL elements
     this._elements.forEach((element) => {
-      if (element.tagName.toLowerCase() !== "auro-datepicker") {
-        // Next line currently does NOT force
-        element.validate();
-      }
+      element.validate(true);
     });
 
-    this.dispatchEvent(new CustomEvent('submit', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        value: this.value
-      }
-    }));
+    // Wait for validation to complete and formState to update
+    await this.updateComplete;
+
+    // Only dispatch submit event if form is valid
+    if (this.validity === 'valid') {
+      this.dispatchEvent(new CustomEvent('submit', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          value: this.value
+        }
+      }));
+    }
   }
 
   /**
@@ -472,15 +474,35 @@ export class AuroForm extends LitElement {
     this.requestUpdate('formState');
   }
 
+  /**
+   * Handle Enter key press on form elements.
+   * @private
+   * @param {KeyboardEvent} event - The keyboard event.
+   */
+  handleKeyDown(event) {
+    if (event.key === 'Enter' && this.isFormElement(event.target)) {
+      // Don't submit if it's a textarea (allow new lines)
+      if (event.target.tagName.toLowerCase() === 'textarea' ||
+          event.target.hasAttribute('textarea')) {
+        return;
+      }
+
+      event.preventDefault();
+      this.submit();
+    }
+  }
+
   _attachEventListeners() {
     this.queryAuroElements().forEach((element) => {
       // remove any existing event listeners (in case of re-initialization)
       element.removeEventListener('input', this.sharedInputListener);
       element.removeEventListener('auroFormElement-validated', this.sharedValidationListener);
+      element.removeEventListener('keydown', this.handleKeyDown);
 
       // add new event listeners
       element.addEventListener('input', this.sharedInputListener);
       element.addEventListener('auroFormElement-validated', this.sharedValidationListener);
+      element.addEventListener('keydown', this.handleKeyDown);
     });
   }
 
