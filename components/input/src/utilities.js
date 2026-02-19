@@ -113,16 +113,15 @@ export class AuroInputUtilities {
    * @returns {string}
    */
   parseDateByMask(dateString, mask) {
-    return dateFns.format(
-      dateString,
-      mask
-        // MM must be uppercase to distinguish from minutes, or we get strange, invalid dates
-        .replace('mm', 'MM')
-        // Same with DD and YYYY, we want lowercase for date-fns
-        .replace('DD', 'dd')
-        .replace('YYYY', 'yyyy')
-        .replace('YY', 'yy')
-    );
+    const dateFnsMask = mask
+      // MM must be uppercase to distinguish from minutes, or we get strange, invalid dates
+      .replace('mm', 'MM')
+      // Same with DD and YYYY, we want lowercase for date-fns
+      .replace('DD', 'dd')
+      .replace('YYYY', 'yyyy')
+      .replace('YY', 'yy');
+
+    return dateFns.parse(dateString, dateFnsMask, new Date());
   }
 
   /**
@@ -198,7 +197,7 @@ export class AuroInputUtilities {
           pattern: dateFormat.toLowerCase(),
           blocks,
           format(date) {
-            if (!date) {
+            if (!date || !dateFns.isValid(date)) {
               return '';
             }
 
@@ -260,10 +259,14 @@ export class AuroInputUtilities {
     const maskForLocale = this.getDateMaskFromLocale(this.locale);
     const parsedDate = this.parseDateByMask(dateStr, format || maskForLocale);
 
+    if (!dateFns.isValid(parsedDate)) {
+      return undefined;
+    }
+
     // Legacy, this object was returned this way before. Unsure why but keeping for now.
     return {
-      formattedDate: dateFns.formatDate(parsedDate, 'MM/dd/yyyy'),
-      dateForComparison: parsedDate
+      formattedDate: dateFns.format(parsedDate, 'MM/dd/yyyy'),
+      dateForComparison: dateFns.format(parsedDate, 'MM/dd/yyyy')
     };
   }
 
@@ -277,6 +280,16 @@ export class AuroInputUtilities {
     const maskForLocale = this.getDateMaskFromLocale(this.locale);
     const parsedDate = this.parseDateByMask(dateStr, format || maskForLocale);
 
-    return dateFns.formatDate(parsedDate, maskForLocale);
+    if (!dateFns.isValid(parsedDate)) {
+      return '';
+    }
+
+    const dateFnsMask = maskForLocale
+      .replace('mm', 'MM')
+      .replace('DD', 'dd')
+      .replace('YYYY', 'yyyy')
+      .replace('YY', 'yy');
+
+    return dateFns.format(parsedDate, dateFnsMask);
   }
 }

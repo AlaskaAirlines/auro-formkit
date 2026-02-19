@@ -107,7 +107,6 @@ function runFullTest(mobileView) {
           <auro-input id="format-ccWithIcon" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
         `);
 
-
         el.value = '34';
         await elementUpdated(el);
         expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-amex');
