@@ -2010,6 +2010,7 @@ export class AuroDatePicker extends AuroElement {
           setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
           setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
           setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
+          .format="${this.format}"
           type="date"
         >
           ${this.layout !== "classic"
@@ -2053,6 +2054,7 @@ export class AuroDatePicker extends AuroElement {
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
             setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
+            .format="${this.format}"
             type="date"
           >
             ${this.layout !== "classic"
