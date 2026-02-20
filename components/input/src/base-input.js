@@ -584,7 +584,7 @@ export default class BaseInput extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.setLocale();
+    this.locale = this.domHandler.getLocale(this);
   }
 
   firstUpdated() {
