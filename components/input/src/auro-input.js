@@ -294,19 +294,6 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Function to determine if the input is meant to render an icon visualizing the input type.
-   * @private
-   * @returns {boolean} - Returns true if the input type is meant to render an icon.
-   */
-  hasTypeIcon() {
-    if (this.icon || this.type === 'date') {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Function to determine if there is any displayValue content to render.
    * @private
    * @returns {void}
