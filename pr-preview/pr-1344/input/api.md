@@ -113,7 +113,7 @@ The `auro-input` element provides users a way to enter data into a text field.
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
   <auro-input>
     <span slot="ariaLabel.clear">Clear All</span>
-    <span slot="label">GB Date</span>
+    <span slot="label">Label</span>
     <span slot="helpText">Help Text</span>
   </auro-input>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -126,7 +126,7 @@ The `auro-input` element provides users a way to enter data into a text field.
 ```html
 <auro-input>
   <span slot="ariaLabel.clear">Clear All</span>
-  <span slot="label">GB Date</span>
+  <span slot="label">Label</span>
   <span slot="helpText">Help Text</span>
 </auro-input>
 ```

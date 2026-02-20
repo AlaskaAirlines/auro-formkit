@@ -30,7 +30,7 @@ The `<auro-input>` element should be used in situations where users may:
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
   <auro-input>
     <span slot="ariaLabel.clear">Clear All</span>
-    <span slot="label">GB Date</span>
+    <span slot="label">Label</span>
     <span slot="helpText">Help Text</span>
   </auro-input>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -43,7 +43,7 @@ The `<auro-input>` element should be used in situations where users may:
 ```html
 <auro-input>
   <span slot="ariaLabel.clear">Clear All</span>
-  <span slot="label">GB Date</span>
+  <span slot="label">Label</span>
   <span slot="helpText">Help Text</span>
 </auro-input>
 ```
