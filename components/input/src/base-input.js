@@ -716,6 +716,14 @@ export default class BaseInput extends AuroElement {
     const maskOptions = this.util.getMaskOptions(this.type, this.format);
 
     if (this.inputElement && maskOptions.mask) {
+
+      // Stash and clear any existing value before IMask init.
+      // IMask's constructor processes the current input value which requires
+      // selection state — clearing first avoids that scenario entirely.
+      const existingValue = this.inputElement.value;
+      this.skipNextProgrammaticInputEvent = true;
+      this.inputElement.value = '';
+
       this.maskInstance = IMask(this.inputElement, maskOptions);
 
       this.maskInstance.on('accept', () => {
@@ -739,6 +747,11 @@ export default class BaseInput extends AuroElement {
           this.comparisonDate = formattedDates.dateForComparison;
         }
       });
+
+      // Restore the stashed value through IMask so it's properly masked
+      if (existingValue) {
+        this.maskInstance.value = existingValue;
+      }
     }
   }
 
