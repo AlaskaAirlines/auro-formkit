@@ -28,19 +28,9 @@ The `<auro-input>` element should be used in situations where users may:
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
-  <auro-input type="date" locale="en-GB">
+  <auro-input>
     <span slot="ariaLabel.clear">Clear All</span>
     <span slot="label">GB Date</span>
-    <span slot="helpText">Help Text</span>
-  </auro-input>
-  <auro-input type="date" locale="en-US">
-    <span slot="ariaLabel.clear">Clear All</span>
-    <span slot="label">US Date</span>
-    <span slot="helpText">Help Text</span>
-  </auro-input>
-  <auro-input type="date">
-    <span slot="ariaLabel.clear">Clear All</span>
-    <span slot="label">Closest Locale Date</span>
     <span slot="helpText">Help Text</span>
   </auro-input>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -51,19 +41,9 @@ The `<auro-input>` element should be used in situations where users may:
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 ```html
-<auro-input type="date" locale="en-GB">
+<auro-input>
   <span slot="ariaLabel.clear">Clear All</span>
   <span slot="label">GB Date</span>
-  <span slot="helpText">Help Text</span>
-</auro-input>
-<auro-input type="date" locale="en-US">
-  <span slot="ariaLabel.clear">Clear All</span>
-  <span slot="label">US Date</span>
-  <span slot="helpText">Help Text</span>
-</auro-input>
-<auro-input type="date">
-  <span slot="ariaLabel.clear">Clear All</span>
-  <span slot="label">Closest Locale Date</span>
   <span slot="helpText">Help Text</span>
 </auro-input>
 ```

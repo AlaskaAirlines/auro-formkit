@@ -113,19 +113,9 @@ The `auro-input` element provides users a way to enter data into a text field.
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
-  <auro-input type="date" locale="en-GB">
+  <auro-input>
     <span slot="ariaLabel.clear">Clear All</span>
     <span slot="label">GB Date</span>
-    <span slot="helpText">Help Text</span>
-  </auro-input>
-  <auro-input type="date" locale="en-US">
-    <span slot="ariaLabel.clear">Clear All</span>
-    <span slot="label">US Date</span>
-    <span slot="helpText">Help Text</span>
-  </auro-input>
-  <auro-input type="date">
-    <span slot="ariaLabel.clear">Clear All</span>
-    <span slot="label">Closest Locale Date</span>
     <span slot="helpText">Help Text</span>
   </auro-input>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -136,19 +126,9 @@ The `auro-input` element provides users a way to enter data into a text field.
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 ```html
-<auro-input type="date" locale="en-GB">
+<auro-input>
   <span slot="ariaLabel.clear">Clear All</span>
   <span slot="label">GB Date</span>
-  <span slot="helpText">Help Text</span>
-</auro-input>
-<auro-input type="date" locale="en-US">
-  <span slot="ariaLabel.clear">Clear All</span>
-  <span slot="label">US Date</span>
-  <span slot="helpText">Help Text</span>
-</auro-input>
-<auro-input type="date">
-  <span slot="ariaLabel.clear">Clear All</span>
-  <span slot="label">Closest Locale Date</span>
   <span slot="helpText">Help Text</span>
 </auro-input>
 ```
@@ -415,6 +395,71 @@ Set the `inputmode` for the input.
   <span slot="label">Telephone</span>
   <span slot="helpText">Help Text</span>
 </auro-input>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+#### Locale
+
+Set the `locale` for the input (e.g. `en-US`).
+
+Locale currently only affects date format auro-input elements. If no locale is set, the element will look up the DOM to find the nearest `data-locale` attribute. If no `data-locale` is defined up the DOM tree, auro-input will default to `en-US`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/locale.html -->
+  <div data-locale="de-DE">
+      <auro-input type="date" locale="en-GB">
+      <span slot="ariaLabel.clear">Clear All</span>
+      <span slot="label">en-GB Date</span>
+      <span slot="helpText">Help Text</span>
+      </auro-input>
+      <auro-input type="date" locale="en-US">
+      <span slot="ariaLabel.clear">Clear All</span>
+      <span slot="label">en-US Date</span>
+      <span slot="helpText">Help Text</span>
+      </auro-input>
+      <auro-input type="date" locale="zh-CN">
+      <span slot="ariaLabel.clear">Clear All</span>
+      <span slot="label">zh-CN Date</span>
+      <span slot="helpText">Help Text</span>
+      </auro-input>
+      <auro-input type="date">
+      <span slot="ariaLabel.clear">Clear All</span>
+      <span slot="label">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
+      <span slot="helpText">Help Text</span>
+      </auro-input>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/locale.html -->
+
+```html
+<div data-locale="de-DE">
+    <auro-input type="date" locale="en-GB">
+    <span slot="ariaLabel.clear">Clear All</span>
+    <span slot="label">en-GB Date</span>
+    <span slot="helpText">Help Text</span>
+    </auro-input>
+    <auro-input type="date" locale="en-US">
+    <span slot="ariaLabel.clear">Clear All</span>
+    <span slot="label">en-US Date</span>
+    <span slot="helpText">Help Text</span>
+    </auro-input>
+    <auro-input type="date" locale="zh-CN">
+    <span slot="ariaLabel.clear">Clear All</span>
+    <span slot="label">zh-CN Date</span>
+    <span slot="helpText">Help Text</span>
+    </auro-input>
+    <auro-input type="date">
+    <span slot="ariaLabel.clear">Clear All</span>
+    <span slot="label">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
+    <span slot="helpText">Help Text</span>
+    </auro-input>
+</div>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
