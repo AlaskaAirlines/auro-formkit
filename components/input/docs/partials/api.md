@@ -162,6 +162,26 @@ Set the `inputmode` for the input.
 
 </auro-accordion>
 
+#### Locale
+
+Set the `locale` for the input (e.g. `en-US`).
+
+Locale currently only affects date format auro-input elements. If no locale is set, the element will look up the DOM to find the nearest `data-locale` attribute. If no `data-locale` is defined up the DOM tree, auro-input will default to `en-US`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ### Max
 
 Use the `max` attribute to define a maximum value used during validation. The attribute will only apply when `<auro-input>` also has a `type` attribute for `number` or any date format.
