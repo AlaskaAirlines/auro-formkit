@@ -12,6 +12,7 @@ import AuroFormValidation from '@aurodesignsystem/form-validation';
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
 import { AuroInputUtilities } from "./utilities.js";
 import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
+import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler';
 
 /**
  * Base class for auro-input component that provides core input functionality.
@@ -72,6 +73,7 @@ export default class BaseInput extends AuroElement {
       'dd/mm': 'dateDDMM',
       'mm/dd': 'dateMMDD'
     };
+    this.domHandler = new DomHandler();
     this.dvInputOnly = false;
     this.hasValue = false;
     this.inputIconName = undefined;
@@ -506,7 +508,7 @@ export default class BaseInput extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.setLocale();
+    this.locale = this.domHandler.getLocale(this);
   }
 
   firstUpdated() {
@@ -606,69 +608,6 @@ export default class BaseInput extends AuroElement {
       this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
     } else if (this.dateFormatMap[this.format]) {
       this.setCustomValidityForType = i18n(this.lang, this.dateFormatMap[this.format]);
-    }
-  }
-
-  /**
-   * MOVE THIS TO AURO-LIBRARY ???
-   * Walk up the DOM (including Shadow DOM boundaries) to find
-   * the closest ancestor with a given attribute.
-   *
-   * @param {Node} startNode - The node to start from
-   * @param {string} attrName - Attribute name to match
-   * @returns {Element|null}
-   */
-  closestWithAttribute(startNode, attrName) {
-    let node = startNode;
-
-    while (node) {
-      // Only check Elements
-      if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attrName)) {
-        return node;
-      }
-
-      // Normal DOM parent
-      if (node.parentNode) {
-        node = node.parentNode;
-        continue;
-      }
-
-      // Cross Shadow DOM boundary
-      if (node instanceof ShadowRoot) {
-        node = node.host;
-        continue;
-      }
-
-      // If we're inside a shadow tree and parentNode is null
-      if (node.getRootNode) {
-        const root = node.getRootNode();
-        if (root instanceof ShadowRoot) {
-          node = root.host;
-          continue;
-        }
-      }
-
-      // Nothing left to traverse
-      node = null;
-    }
-
-    return null;
-  }
-
-  /**
-   * If the locale wasn't set via attribute,
-   * look for the closest `data-locale` attribute in the DOM and use that.
-   * If none is found, default to 'en-US'.
-   */
-  setLocale() {
-    if (!this.hasAttribute('locale')) {
-      const closestLocaleElement = this.closestWithAttribute(this, 'data-locale');
-
-      if (closestLocaleElement) {
-        this.locale = closestLocaleElement.getAttribute('data-locale');
-      } else {
-        this.locale = 'en-US';
-      }
     }
   }
 
