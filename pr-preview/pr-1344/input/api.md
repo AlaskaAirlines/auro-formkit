@@ -63,14 +63,12 @@ The `auro-input` element provides users a way to enter data into a text field.
 
 ## Methods
 
-| Method                 | Type                                             | Description                                      |
-|------------------------|--------------------------------------------------|--------------------------------------------------|
-| [clear](#clear)                | `(): void`                                       | Clears the input value.                          |
-| [closestWithAttribute](#closestWithAttribute) | `(startNode: Node, attrName: string): Element\|null` | MOVE THIS TO AURO-LIBRARY ???<br />Walk up the DOM (including Shadow DOM boundaries) to find<br />the closest ancestor with a given attribute.<br /><br />**startNode**: The node to start from<br />**attrName**: Attribute name to match |
-| [focus](#focus)                | `(): void`                                       | Function to set element focus.                   |
-| [reset](#reset)                | `(): void`                                       | Resets component to initial state, including resetting the touched state and validity. |
-| [setLocale](#setLocale)            | `(): void`                                       | If the locale wasn't set via attribute,<br />look for the closest `data-locale` attribute in the DOM and use that.<br />If none is found, default to 'en-US'. |
-| [validate](#validate)             | `(force?: boolean \| undefined): void`           | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method     | Type                                   | Description                                      |
+|------------|----------------------------------------|--------------------------------------------------|
+| [clear](#clear)    | `(): void`                             | Clears the input value.                          |
+| [focus](#focus)    | `(): void`                             | Function to set element focus.                   |
+| [reset](#reset)    | `(): void`                             | Resets component to initial state, including resetting the touched state and validity. |
+| [validate](#validate) | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
