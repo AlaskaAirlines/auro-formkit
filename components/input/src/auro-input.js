@@ -26,6 +26,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import BaseInput from './base-input.js';
+import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -313,6 +314,77 @@ export class AuroInput extends BaseInput {
     }
 
     this.hasDisplayValueContent = hasContent;
+  }
+
+  /**
+   * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
+   * @private
+   * @param {string} type Value entered into component prop.
+   * @returns {string} Iterates over allowed types array.
+   */
+  getInputType(type) {
+    if (this.allowedInputTypes.includes(type)) {
+      return type;
+    }
+
+    return "text";
+  }
+
+  /**
+   * Determines default help text string.
+   * @private
+   * @returns {string} Evaluates pre-determined help text.
+   */
+  getHelpText() {
+    const typeHelpText = [
+      'password',
+      'email',
+      'credit-card',
+      'tel'
+    ];
+
+    if (typeHelpText.includes(this.type)) {
+      return i18n(this.lang, this.type);
+    }
+
+    if (this.type === 'date') {
+      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
+    }
+
+    return '';
+  }
+
+  /**
+   * Function to support show-password feature.
+   * @private
+   * @returns {void}
+   */
+  handleClickShowPassword() {
+    this.showPassword = !this.showPassword;
+    this.focus();
+  }
+
+  /**
+   * @private
+   * @returns {string}
+   */
+  definePattern() {
+    if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
+      return `.{${this.maxLength},${this.maxLength}}`;
+    }
+
+    return this.pattern;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    notifyOnLangChange(this);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    stopNotifyingOnLangChange(this);
   }
 
   /**

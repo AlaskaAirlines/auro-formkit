@@ -6,7 +6,7 @@
 /* eslint-disable max-lines, no-continue, new-cap, curly, no-underscore-dangle, no-inline-comments, line-comment-position */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
+import i18n from './i18n.js';
 import IMask from 'imask';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
@@ -507,13 +507,6 @@ export default class BaseInput extends AuroElement {
     super.connectedCallback();
 
     this.setLocale();
-
-    notifyOnLangChange(this);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    stopNotifyingOnLangChange(this);
   }
 
   firstUpdated() {
@@ -811,30 +804,6 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * @private
-   * @returns {string}
-   */
-  definePattern() {
-    if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
-      return `.{${this.maxLength},${this.maxLength}}`;
-    }
-
-    return this.pattern;
-  }
-
-  /**
-   * Required to convert SVG icons from data to HTML string.
-   * @private
-   * @param {string} icon HTML string for requested icon.
-   * @returns {object} Appended HTML for SVG.
-   */
-  getIconAsHtml(icon) {
-    const dom = new DOMParser().parseFromString(icon.svg, 'text/html');
-
-    return dom.body.firstChild;
-  }
-
-  /**
    * Sends event notifying that the input has changed it's value.
    * @private
    * @returns {void}
@@ -1026,54 +995,6 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
-   * @private
-   * @param {string} type Value entered into component prop.
-   * @returns {string} Iterates over allowed types array.
-   */
-  getInputType(type) {
-    if (this.allowedInputTypes.includes(type)) {
-      return type;
-    }
-
-    return "text";
-  }
-
-  /**
-   * Determines default help text string.
-   * @private
-   * @returns {string} Evaluates pre-determined help text.
-   */
-  getHelpText() {
-    const typeHelpText = [
-      'password',
-      'email',
-      'credit-card',
-      'tel'
-    ];
-
-    if (typeHelpText.includes(this.type)) {
-      return i18n(this.lang, this.type);
-    }
-
-    if (this.type === 'date') {
-      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
-    }
-
-    return '';
-  }
-
-  /**
-   * Function to support show-password feature.
-   * @private
-   * @returns {void}
-   */
-  handleClickShowPassword() {
-    this.showPassword = !this.showPassword;
-    this.focus();
-  }
-
-  /**
    * Support placeholder text.
    * @private
    * @returns {void}
@@ -1083,36 +1004,6 @@ export default class BaseInput extends AuroElement {
       return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
     }
     return this.placeholder || "";
-  }
-
-  /**
-   * Defines placement of input icon based on type, used with classMap.
-   * @private
-   * @returns {boolean}
-   */
-  defineInputIcon() {
-    if (this.icon && this.type === 'credit-card') {
-      return true;
-    } else if (this.type === 'date') {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Defines padding of input label based on type, used with classMap.
-   * @private
-   * @returns {boolean}
-   */
-  defineLabelPadding() {
-    if (this.icon && this.type === 'credit-card' && (this.value === "" || this.value === undefined)) {
-      return true;
-    } else if (this.type === 'date') {
-      return true;
-    }
-
-    return false;
   }
 
   // Functions specific to Credit Card component support
