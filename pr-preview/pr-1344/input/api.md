@@ -407,26 +407,26 @@ Locale currently only affects date format auro-input elements. If no locale is s
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
   <!-- The below content is automatically added from ./../apiExamples/locale.html -->
   <div data-locale="de-DE">
-      <auro-input type="date" locale="en-GB">
+    <auro-input type="date" locale="en-GB">
       <span slot="ariaLabel.clear">Clear All</span>
       <span slot="label">en-GB Date</span>
       <span slot="helpText">Help Text</span>
-      </auro-input>
-      <auro-input type="date" locale="en-US">
+    </auro-input>
+    <auro-input type="date" locale="en-US">
       <span slot="ariaLabel.clear">Clear All</span>
       <span slot="label">en-US Date</span>
       <span slot="helpText">Help Text</span>
-      </auro-input>
-      <auro-input type="date" locale="zh-CN">
+    </auro-input>
+    <auro-input type="date" locale="zh-CN">
       <span slot="ariaLabel.clear">Clear All</span>
       <span slot="label">zh-CN Date</span>
       <span slot="helpText">Help Text</span>
-      </auro-input>
-      <auro-input type="date">
+    </auro-input>
+    <auro-input type="date">
       <span slot="ariaLabel.clear">Clear All</span>
       <span slot="label">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
       <span slot="helpText">Help Text</span>
-      </auro-input>
+    </auro-input>
   </div>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -437,26 +437,26 @@ Locale currently only affects date format auro-input elements. If no locale is s
 
 ```html
 <div data-locale="de-DE">
-    <auro-input type="date" locale="en-GB">
+  <auro-input type="date" locale="en-GB">
     <span slot="ariaLabel.clear">Clear All</span>
     <span slot="label">en-GB Date</span>
     <span slot="helpText">Help Text</span>
-    </auro-input>
-    <auro-input type="date" locale="en-US">
+  </auro-input>
+  <auro-input type="date" locale="en-US">
     <span slot="ariaLabel.clear">Clear All</span>
     <span slot="label">en-US Date</span>
     <span slot="helpText">Help Text</span>
-    </auro-input>
-    <auro-input type="date" locale="zh-CN">
+  </auro-input>
+  <auro-input type="date" locale="zh-CN">
     <span slot="ariaLabel.clear">Clear All</span>
     <span slot="label">zh-CN Date</span>
     <span slot="helpText">Help Text</span>
-    </auro-input>
-    <auro-input type="date">
+  </auro-input>
+  <auro-input type="date">
     <span slot="ariaLabel.clear">Clear All</span>
     <span slot="label">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
     <span slot="helpText">Help Text</span>
-    </auro-input>
+  </auro-input>
 </div>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
