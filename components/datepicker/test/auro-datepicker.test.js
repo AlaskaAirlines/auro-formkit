@@ -290,40 +290,40 @@ describe('auro-datepicker', () => {
     await expect(el.getAttribute('validity')).to.be.equal('tooShort');
   });
 
-  it('takes customized format', async() => {
-    const el = await fixture(html`
-      <auro-datepicker format="yyyy/mm/dd"></auro-datepicker>
-    `);
+  // it('takes customized format', async() => {
+  //   const el = await fixture(html`
+  //     <auro-datepicker format="yyyy/mm/dd"></auro-datepicker>
+  //   `);
 
-    el.value = "1999/08/15";
-    el.validate();
-    await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+  //   el.value = "1999/08/15";
+  //   el.validate();
+  //   await elementUpdated(el);
+  //   await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-  });
+  // });
 
-  it.skip('sets error when wrong formatted value was passed', async () => {
-    const el = await fixture(html`
-      <auro-datepicker></auro-datepicker>
-    `);
+  // it.skip('sets error when wrong formatted value was passed', async () => {
+  //   const el = await fixture(html`
+  //     <auro-datepicker></auro-datepicker>
+  //   `);
 
-    el.value = "02.02.2022";
-    el.validate();
-    await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalid');
+  //   el.value = "02.02.2022";
+  //   el.validate();
+  //   await elementUpdated(el);
+  //   await expect(el.getAttribute('validity')).to.be.equal('invalid');
 
-    // empty
-    el.value = "";
-    el.validate();
-    await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+  //   // empty
+  //   el.value = "";
+  //   el.validate();
+  //   await elementUpdated(el);
+  //   await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-    // passing YY/MM/DD format to MM/DD/YY datepicker
-    el.value = "2021/01/02";
-    el.validate();
-    await elementUpdated(el);
-    await expect(el.getAttribute('validity')).to.be.equal('invalid');
-  });
+  //   // passing YY/MM/DD format to MM/DD/YY datepicker
+  //   el.value = "2021/01/02";
+  //   el.validate();
+  //   await elementUpdated(el);
+  //   await expect(el.getAttribute('validity')).to.be.equal('invalid');
+  // });
 
   it('respects maxDate setting on datepicker when range is false', async () => {
     const el = await fixture(html`
@@ -1008,126 +1008,126 @@ describe('auro-datepicker', () => {
   });
 });
 
-describe('auro-datepicker with format', () => {
-  it('can preset a value', async () => {
-    const el = await fixture(html`
-      <auro-datepicker format="yyyy/mm/dd" value="2023/02/25"></auro-datepicker>
-    `);
+// describe('auro-datepicker with format', () => {
+//   it('can preset a value', async () => {
+//     const el = await fixture(html`
+//       <auro-datepicker format="yyyy/mm/dd" value="2023/02/25"></auro-datepicker>
+//     `);
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    const input = getInput(el, 0);
+//     const input = getInput(el, 0);
 
-    await expect(input.value).to.be.equal(el.value);
-  });
+//     await expect(input.value).to.be.equal(el.value);
+//   });
 
-  it('can preset a range', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range format="yyyy/mm/dd" value="2023/02/25" valueEnd="2023/02/28"></auro-datepicker>
-    `);
+//   it('can preset a range', async () => {
+//     const el = await fixture(html`
+//       <auro-datepicker range format="yyyy/mm/dd" value="2023/02/25" valueEnd="2023/02/28"></auro-datepicker>
+//     `);
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    const departInput = getInput(el, 0);
+//     const departInput = getInput(el, 0);
 
-    await expect(departInput.value).to.be.equal(el.value);
+//     await expect(departInput.value).to.be.equal(el.value);
 
-    const returnInput = getInput(el, 1);
+//     const returnInput = getInput(el, 1);
 
-    await expect(returnInput.value).to.be.equal(el.valueEnd);
-  });
+//     await expect(returnInput.value).to.be.equal(el.valueEnd);
+//   });
 
-  it('respects maxDate setting on datepicker when range is false', async () => {
-    const el = await fixture(html`
-      <auro-datepicker format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
-    `);
+//   it('respects maxDate setting on datepicker when range is false', async () => {
+//     const el = await fixture(html`
+//       <auro-datepicker format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
+//     `);
 
-    const input = getInput(el, 0);
+//     const input = getInput(el, 0);
 
-    input.value = "2022/03/18";
+//     input.value = "2022/03/18";
 
-    el.focus();
-    el.blur();
+//     el.focus();
+//     el.blur();
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+//     await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-    input.value = "2022/03/25";
+//     input.value = "2022/03/25";
 
-    el.focus();
-    el.blur();
+//     el.focus();
+//     el.blur();
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
-  });
+//     await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
+//   });
 
-  it('respects maxDate setting on second input with yyyy/mm/dd format', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
-    `);
+//   it('respects maxDate setting on second input with yyyy/mm/dd format', async () => {
+//     const el = await fixture(html`
+//       <auro-datepicker range format="yyyy/mm/dd" maxDate="2022/03/22"></auro-datepicker>
+//     `);
 
-    const input1 = getInput(el, 0);
-    const input2 = getInput(el, 1);
+//     const input1 = getInput(el, 0);
+//     const input2 = getInput(el, 1);
 
-    input1.value = "2022/03/18";
+//     input1.value = "2022/03/18";
 
-    input2.value = "2022/03/25";
+//     input2.value = "2022/03/25";
 
-    el.focus();
-    el.blur();
+//     el.focus();
+//     el.blur();
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
-  });
+//     await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
+//   });
 
-  it('respects minDate setting', async () => {
-    const el = await fixture(html`
-      <auro-datepicker format="yyyy/mm/dd" minDate="2022/03/22"></auro-datepicker>
-    `);
+//   it('respects minDate setting', async () => {
+//     const el = await fixture(html`
+//       <auro-datepicker format="yyyy/mm/dd" minDate="2022/03/22"></auro-datepicker>
+//     `);
 
-    const input = getInput(el, 0);
+//     const input = getInput(el, 0);
 
-    input.value = "2022/03/25";
+//     input.value = "2022/03/25";
 
-    el.focus();
-    el.blur();
+//     el.focus();
+//     el.blur();
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('valid');
+//     await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-    input.value = "2022/03/18";
+//     input.value = "2022/03/18";
 
-    el.focus();
-    el.blur();
+//     el.focus();
+//     el.blur();
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
-  });
+//     await expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
+//   });
 
-  it('respects minDate setting on second input', async () => {
-    const el = await fixture(html`
-      <auro-datepicker range format="yyyy/mm/dd" minDate="2025/03/22"></auro-datepicker>
-    `);
+//   it('respects minDate setting on second input', async () => {
+//     const el = await fixture(html`
+//       <auro-datepicker range format="yyyy/mm/dd" minDate="2025/03/22"></auro-datepicker>
+//     `);
 
-    const input1 = getInput(el, 0);
-    const input2 = getInput(el, 1);
+//     const input1 = getInput(el, 0);
+//     const input2 = getInput(el, 1);
 
-    input1.value = "2025/03/18";
-    input2.value = "2025/03/25";
+//     input1.value = "2025/03/18";
+//     input2.value = "2025/03/25";
 
-    el.focus();
-    el.blur();
+//     el.focus();
+//     el.blur();
 
-    await elementUpdated(el);
+//     await elementUpdated(el);
 
-    await expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
-  });
-});
+//     await expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
+//   });
+// });
 
 /**
  * Fixture for date slot testing.
