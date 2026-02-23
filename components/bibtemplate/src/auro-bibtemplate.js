@@ -112,13 +112,13 @@ export class AuroBibtemplate extends LitElement {
     super.connectedCallback();
 
     this.preventBodyScroll = this.preventBodyScroll.bind(this);
-    this.addEventListener('touchmove', this.preventBodyScroll, { passive: false });
+    // this.addEventListener('touchmove', this.preventBodyScroll, { passive: false });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.removeEventListener('touchmove', this.preventBodyScroll, { passive: false });
+    // this.removeEventListener('touchmove', this.preventBodyScroll, { passive: false });
   }
 
   onCloseButtonClick() {
