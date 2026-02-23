@@ -1155,23 +1155,20 @@ export class AuroCombobox extends AuroElement {
       }
 
       if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        if (this.dropdown.isBibFullscreen) {
-
-          // when focus is on the input, move focus back to close button with Tab key
-          if (document.activeElement.shadowRoot.activeElement === this.inputInBib) {
-            evt.preventDefault();
-            this.dropdown.focus();
-          }
-        } else {
+        // Non-fullscreen (combobox pattern per WAI-ARIA APG):
+        // Tab accepts the focused option and closes the popup, moving focus
+        // to the next focusable element on the page.
+        // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
+        //
+        // Fullscreen (dialog / modal pattern): Tab navigates between
+        // focusable elements inside the modal (e.g. the close button) via
+        // the native focus trap provided by showModal(). The dropdown is
+        // closed by the close button or Escape instead.
+        if (!this.dropdown.isBibFullscreen) {
           if (this.menu.optionActive && this.menu.optionActive.value) {
             this.menu.value = this.menu.optionActive.value;
           }
-
-          setTimeout(() => {
-            if (!this.componentHasFocus) {
-              this.hideBib();
-            }
-          }, 0);
+          this.hideBib();
         }
       }
 
