@@ -876,11 +876,21 @@ export class AuroSelect extends AuroElement {
       }
 
       if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        // Tab selects the focused option, then closes
-        if (this.optionActive && !this.multiSelect) {
-          this.menu.makeSelection();
+        // Non-fullscreen (select-only combobox pattern per WAI-ARIA APG):
+        // Tab selects the focused option and closes the popup, moving focus
+        // to the next focusable element on the page.
+        // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
+        //
+        // Fullscreen (dialog / modal pattern): Tab navigates between
+        // focusable elements inside the modal (e.g. the close button) via
+        // the native focus trap provided by showModal(). The dropdown is
+        // closed by the close button or Escape instead.
+        if (!this.dropdown.isBibFullscreen) {
+          if (this.optionActive && !this.multiSelect) {
+            this.menu.makeSelection();
+          }
+          this.dropdown.hide();
         }
-        this.dropdown.hide();
         return;
       }
 
