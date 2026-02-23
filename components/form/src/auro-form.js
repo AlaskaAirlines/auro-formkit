@@ -39,11 +39,6 @@ export class AuroForm extends LitElement {
     return {
 
       /**
-       * Applies designated CSS class to demo element - you want to delete me!
-       */
-      cssClass: { type: Boolean },
-
-      /**
        * If declared, use fixed pixel values for element shape.
        */
       fixed: { type: Boolean, reflect: true },
