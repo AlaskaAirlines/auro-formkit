@@ -875,10 +875,11 @@ export class AuroSelect extends AuroElement {
       }
 
       if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        if (!this.dropdown.isBibFullscreen) {
-          this.dropdown.hide();
+        // Tab selects the focused option, then closes
+        if (this.optionActive && !this.multiSelect) {
+          this.menu.makeSelection();
         }
-        // Fullscreen: let native dialog handle Tab focus trapping
+        this.dropdown.hide();
         return;
       }
 
