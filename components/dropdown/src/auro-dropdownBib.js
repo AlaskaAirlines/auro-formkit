@@ -1,6 +1,6 @@
 // Copyright (c) 2020 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
-
+/* eslint-disable max-lines */
 // ---------------------------------------------------------------------
 
 /* eslint-disable no-underscore-dangle */
@@ -211,6 +211,16 @@ export class AuroDropdownBib extends LitElement {
       if (!navKeys.has(event.key)) {
         return;
       }
+
+      // Let Enter pass through on buttons so native click behavior works
+      // (e.g. clear button, close button inside the dialog).
+      if (event.key === 'Enter') {
+        const [target] = event.composedPath();
+        if (target && target.matches && target.matches('button, [role="button"], auro-button, [auro-button]')) {
+          return;
+        }
+      }
+
       event.preventDefault();
       event.stopPropagation();
       const newEvent = new KeyboardEvent('keydown', {

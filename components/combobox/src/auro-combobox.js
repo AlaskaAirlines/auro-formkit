@@ -677,7 +677,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
-    if (!this.input.value) {
+    if (!this.input.value && !this.dropdown.isBibFullscreen) {
       this.dropdown.hide();
       return;
     }
