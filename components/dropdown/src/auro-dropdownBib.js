@@ -189,7 +189,8 @@ export class AuroDropdownBib extends LitElement {
     // Handle ESC key via dialog's cancel event
     const dialog = this.shadowRoot.querySelector('dialog');
     dialog.addEventListener('cancel', (event) => {
-      event.preventDefault(); // Let parent handle closing
+      // Let parent handle closing
+      event.preventDefault();
       this.dispatchEvent(new CustomEvent('auro-bib-cancel', {
         bubbles: true,
         composed: true
@@ -200,7 +201,12 @@ export class AuroDropdownBib extends LitElement {
     // boundary and reach the combobox/select key handlers.
     // Only intercept keys used for menu navigation — let all other keys
     // (characters, Backspace, etc.) through so typing in inputs works.
-    const navKeys = new Set(['ArrowUp', 'ArrowDown', 'Enter', 'Escape']);
+    const navKeys = new Set([
+      'ArrowUp',
+      'ArrowDown',
+      'Enter',
+      'Escape'
+    ]);
     dialog.addEventListener('keydown', (event) => {
       if (!navKeys.has(event.key)) {
         return;

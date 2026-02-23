@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html, indent, curly */
+/* eslint-disable max-lines, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html, curly */
 
 // If using litElement base class
 import { css } from "lit";
@@ -827,9 +827,10 @@ export class AuroSelect extends AuroElement {
       // Announce the selection after the dropdown closes so it isn't
       // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
       const selectedValue = event.detail.stringValue;
+      const announcementDelay = 300;
       setTimeout(() => {
         this.announceToScreenReader(`${selectedValue}, selected`);
-      }, 300);
+      }, announcementDelay);
     });
   }
 

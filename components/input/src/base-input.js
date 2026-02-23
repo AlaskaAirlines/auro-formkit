@@ -148,14 +148,6 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The value for the aria-controls attribute.
-       */
-      a11yControls: {
-        type: String,
-        reflect: true
-      },
-
-      /**
        * The value for the aria-activedescendant attribute.
        * Points to the ID of the currently active/highlighted option in a listbox.
        */

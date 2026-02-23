@@ -880,7 +880,7 @@ export class AuroCombobox extends AuroElement {
    * @private
    */
   updateBibDialogRole() {
-    const bibEl = this.dropdown.bibElement?.value;
+    const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
     if (!bibEl) {
       return;
     }
@@ -1009,9 +1009,10 @@ export class AuroCombobox extends AuroElement {
         // Announce the selection after the dropdown closes so it isn't
         // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
         const selectedValue = event.detail.stringValue;
+        const announcementDelay = 300;
         setTimeout(() => {
           this.announceToScreenReader(`${selectedValue}, selected`);
-        }, 300);
+        }, announcementDelay);
       }
     });
 
