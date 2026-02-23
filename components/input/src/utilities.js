@@ -5,7 +5,7 @@ import * as dateFns from 'date-fns';
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, init-declarations, radix, no-nested-ternary */
+/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, radix, no-nested-ternary */
 
 import IMask from 'imask';
 
@@ -13,13 +13,21 @@ export class AuroInputUtilities {
 
   /**
    * Creates an instance of AuroInputUtilities.
-   * @param {object} config
+   * @param {object} config - Configuration object for the utilities.
    * @param {string} config.locale - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
    * @param {string} config.format - Optional Date format override string.
    */
-  constructor(config = { locale: 'en-US', format: undefined }) {
-    // NOTE: normalize locale as we set it
-    this.locale = config.locale || 'en-US';
+  constructor(config = { locale: undefined, format: undefined }) {
+    if (config.locale) {
+      try {
+        this.locale = new Intl.Locale(config.locale).toString();
+      } catch (error) {
+        console.debug('Invalid locale provided, defaulting to en-US', error); // eslint-disable-line no-console
+        this.locale = 'en-US';
+      }
+    } else {
+      this.locale = 'en-US';
+    }
     this.overrideFormat = config.format;
     this.formatter = new Intl.DateTimeFormat(this.locale);
 
@@ -41,22 +49,25 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Updates the locale used for date formatting.
-   * @param {string} newLocale - New BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
-   * @returns {void}
-   */
-  updateLocale(newLocale) {
-    this.locale = newLocale || 'en-US';
-    this.formatter = new Intl.DateTimeFormat(this.locale);
-  }
-
-  /**
    * Updates the date format override.
    * @param {string} newFormat - New date format string.
    * @returns {void}
    */
   updateFormat(newFormat) {
     this.overrideFormat = newFormat;
+  }
+
+  /**
+   * Converts an IMask-style date mask to a date-fns compatible format string.
+   * @param {string} mask - IMask date mask (e.g. "MM/DD/YYYY").
+   * @returns {string} date-fns format string (e.g. "MM/dd/yyyy").
+   */
+  toDateFnsMask(mask) {
+    return mask
+      .replace('mm', 'MM')
+      .replace('DD', 'dd')
+      .replace('YYYY', 'yyyy')
+      .replace('YY', 'yy');
   }
 
   /**
@@ -110,21 +121,12 @@ export class AuroInputUtilities {
 
   /**
    * Parses a date string using the provided mask.
-   * @param {string} dateString
-   * @param {string} mask
-   * @return {string}
+   * @param {string} dateString - The date string to parse.
+   * @param {string} mask - The date mask to use for parsing.
+   * @returns {string}
    */
   parseDateByMask(dateString, mask) {
-    return dateFns.format(
-      dateString,
-      mask
-        // MM must be uppercase to distinguish from minutes, or we get strange, invalid dates
-        .replace('mm', 'MM')
-        // Same with DD and YYYY, we want lowercase for date-fns
-        .replace('DD', 'dd')
-        .replace('YYYY', 'yyyy')
-        .replace('YY', 'yy')
-    );
+    return dateFns.parse(dateString, this.toDateFnsMask(mask), new Date());
   }
 
   /**
@@ -195,46 +197,25 @@ export class AuroInputUtilities {
           blocks.dd = { mask: IMask.MaskedRange, from: 1, to: 31 };
         }
 
+        const dateFnsMask = this.toDateFnsMask(dateFormat);
+
         return {
           mask: Date,
           pattern: dateFormat.toLowerCase(),
           blocks,
           format(date) {
-            if (!date) {
+            if (!date || !dateFns.isValid(date)) {
               return '';
             }
 
-            // NOTE: use dateFormat here as it already accounts for `this` context and closures
             if (dateFormat) {
-              return dateFns.format(
-                date,
-                dateFormat
-                  // MM must be uppercase to distinguish from minutes, or we get strange, invalid dates
-                  .replace('mm', 'MM')
-                  // Same with DD and YYYY, we want lowercase for date-fns
-                  .replace('DD', 'dd')
-                  .replace('YYYY', 'yyyy')
-                  .replace('YY', 'yy')
-              );
+              return dateFns.format(date, dateFnsMask);
             }
 
             // eslint-disable-next-line new-cap
             return Intl.DateTimeFormat(this.locale).format(new Date(date));
           },
-          // Parse directly with date-fns. Parsing manually is NOT RECOMMENDED.
-          // Manual parsing is incredibly complex for international support
-          parse: (str) => dateFns.parse(
-            str,
-            // Replace DD with dd
-            dateFormat
-              // MM must be uppercase to distinguish from minutes, or we get strange, invalid dates
-              .replace('mm', 'MM')
-              // Same with DD and YYYY, we want lowercase for date-fns
-              .replace('DD', 'dd')
-              .replace('YYYY', 'yyyy')
-              .replace('YY', 'yy'),
-            new Date()
-          ),
+          parse: (str) => dateFns.parse(str, dateFnsMask, new Date()),
           lazy: true,
           placeholderChar: ''
         };
@@ -262,10 +243,14 @@ export class AuroInputUtilities {
     const maskForLocale = this.getDateMaskFromLocale(this.locale);
     const parsedDate = this.parseDateByMask(dateStr, format || maskForLocale);
 
+    if (!dateFns.isValid(parsedDate)) {
+      return undefined;
+    }
+
     // Legacy, this object was returned this way before. Unsure why but keeping for now.
     return {
-      formattedDate: dateFns.formatDate(parsedDate, 'MM/dd/yyyy'),
-      dateForComparison: parsedDate
+      formattedDate: dateFns.format(parsedDate, 'MM/dd/yyyy'),
+      dateForComparison: dateFns.format(parsedDate, 'MM/dd/yyyy')
     };
   }
 
@@ -279,6 +264,10 @@ export class AuroInputUtilities {
     const maskForLocale = this.getDateMaskFromLocale(this.locale);
     const parsedDate = this.parseDateByMask(dateStr, format || maskForLocale);
 
-    return dateFns.formatDate(parsedDate, maskForLocale);
+    if (!dateFns.isValid(parsedDate)) {
+      return '';
+    }
+
+    return dateFns.format(parsedDate, this.toDateFnsMask(maskForLocale));
   }
 }

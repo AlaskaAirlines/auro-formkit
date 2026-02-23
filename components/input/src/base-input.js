@@ -3,18 +3,16 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, dot-location, new-cap, curly, no-underscore-dangle */
+/* eslint-disable max-lines, no-continue, new-cap, curly, no-underscore-dangle, no-inline-comments, line-comment-position */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-
-import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
-import { AuroInputUtilities } from "./utilities.js";
-
+import i18n from './i18n.js';
 import IMask from 'imask';
-
 import AuroFormValidation from '@aurodesignsystem/form-validation';
-
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
+import { AuroInputUtilities } from "./utilities.js";
+import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
+import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler';
 
 /**
  * Base class for auro-input component that provides core input functionality.
@@ -26,7 +24,21 @@ export default class BaseInput extends AuroElement {
   constructor() {
     super();
 
-    this._initializeDefaults();
+    this.appearance = "default";
+    this.disabled = false;
+    this.layout = 'classic';
+    this.locale = 'en-US';
+    this.max = undefined;
+    this.maxLength = undefined;
+    this.min = undefined;
+    this.minLength = undefined;
+    this.required = false;
+    this.onDark = false;
+    this.setCustomValidityForType = undefined;
+    this.size = 'lg';
+    this.shape = 'classic';
+
+    this._initializePrivateDefaults();
   }
 
   /**
@@ -34,51 +46,8 @@ export default class BaseInput extends AuroElement {
    * @private
    * @returns {void}
    */
-  _initializeDefaults() {
+  _initializePrivateDefaults() {
     this.activeLabel = false;
-    this.appearance = "default";
-    this.icon = false;
-    this.disabled = false;
-    this.dvInputOnly = false;
-    this.max = undefined;
-    this.maxLength = undefined;
-    this.min = undefined;
-    this.minLength = undefined;
-    this.noValidate = false;
-    this.onDark = false;
-    this.required = false;
-    this.setCustomValidityForType = undefined;
-
-    // Used for storing raw values returned from input mask.
-    this._rawMaskValue = undefined;
-
-    /**
-     * @private
-     */
-    this.layout = 'classic';
-
-    /**
-     * @private
-     */
-    this.shape = 'classic';
-
-    /**
-     * @private
-     */
-    this.size = 'lg';
-
-    this.touched = false;
-    this.util = new AuroInputUtilities({
-      locale: "en-US",
-      format: this.format
-    });
-    this.validation = new AuroFormValidation();
-    this.inputIconName = undefined;
-    this.showPassword = false;
-    this.validationCCLength = undefined;
-    this.hasValue = false;
-    this.label = 'Input label is undefined';
-
     this.allowedInputTypes = [
       "text",
       "number",
@@ -87,17 +56,7 @@ export default class BaseInput extends AuroElement {
       "credit-card",
       "tel"
     ];
-
-    /**
-     * Credit Card is not included as this caused cursor placement issues.
-     * The Safari issue.
-     */
-    this.setSelectionInputTypes = [
-      "text",
-      "password",
-      "email"
-    ];
-
+    this.icon = false;
     this.dateFormatMap = {
       'mm/dd/yyyy': 'dateMMDDYYYY',
       'dd/mm/yyyy': 'dateDDMMYYYY',
@@ -114,14 +73,27 @@ export default class BaseInput extends AuroElement {
       'dd/mm': 'dateDDMM',
       'mm/dd': 'dateMMDD'
     };
-
-    const idLength = 36;
-    const idSubstrEnd = 8;
-    const idSubstrStart = 2;
-
-    this.uniqueId = Math.random()
-      .toString(idLength)
-      .substring(idSubstrStart, idSubstrEnd);
+    this.domHandler = new DomHandler();
+    this.dvInputOnly = false;
+    this.hasValue = false;
+    this.inputIconName = undefined;
+    this.label = 'Input label is undefined';
+    this.noValidate = false;
+    this._rawMaskValue = undefined; // Used for storing raw values returned from input mask.
+    this.setSelectionInputTypes = [
+      "text",
+      "password",
+      "email"
+    ]; // Credit Card is not included as this caused cursor placement issues in Safari.
+    this.showPassword = false;
+    this.touched = false;
+    this.uniqueId = new UniqueId().create();
+    this.util = new AuroInputUtilities({
+      locale: this.locale,
+      format: this.format
+    });
+    this.validation = new AuroFormValidation();
+    this.validationCCLength = undefined;
   }
 
   // function to define props used within the scope of this component
@@ -294,6 +266,15 @@ export default class BaseInput extends AuroElement {
        * Defines the language of an element.
        */
       lang: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Defines the locale of an element.
+       * Used for locale-specific formatting, such as date formats.
+       */
+      locale: {
         type: String,
         reflect: true
       },
@@ -527,12 +508,7 @@ export default class BaseInput extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
-    notifyOnLangChange(this);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    stopNotifyingOnLangChange(this);
+    this.locale = this.domHandler.getLocale(this);
   }
 
   firstUpdated() {
@@ -552,10 +528,6 @@ export default class BaseInput extends AuroElement {
       this.setAttribute('auro-input', true);
     }
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
-
-    if (this.format) {
-      this.format = this.format.toLowerCase();
-    }
 
     // use validity message override if declared when initializing the component
     if (this.hasAttribute('setCustomValidity')) {
@@ -647,6 +619,13 @@ export default class BaseInput extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    if (changedProperties.has('locale') || changedProperties.has('format')) {
+      this.util = new AuroInputUtilities({
+        locale: this.locale,
+        format: this.format
+      });
+    }
+
     if (changedProperties.has('format')) {
       this.configureAutoFormatting();
     }
@@ -737,6 +716,14 @@ export default class BaseInput extends AuroElement {
     const maskOptions = this.util.getMaskOptions(this.type, this.format);
 
     if (this.inputElement && maskOptions.mask) {
+
+      // Stash and clear any existing value before IMask init.
+      // IMask's constructor processes the current input value which requires
+      // selection state — clearing first avoids that scenario entirely.
+      const existingValue = this.inputElement.value;
+      this.skipNextProgrammaticInputEvent = true;
+      this.inputElement.value = '';
+
       this.maskInstance = IMask(this.inputElement, maskOptions);
 
       this.maskInstance.on('accept', () => {
@@ -760,31 +747,12 @@ export default class BaseInput extends AuroElement {
           this.comparisonDate = formattedDates.dateForComparison;
         }
       });
+
+      // Restore the stashed value through IMask so it's properly masked
+      if (existingValue) {
+        this.maskInstance.value = existingValue;
+      }
     }
-  }
-
-  /**
-   * @private
-   * @returns {string}
-   */
-  definePattern() {
-    if (this.type === 'credit-card' && !this.noValidate && this.maxLength) {
-      return `.{${this.maxLength},${this.maxLength}}`;
-    }
-
-    return this.pattern;
-  }
-
-  /**
-   * Required to convert SVG icons from data to HTML string.
-   * @private
-   * @param {string} icon HTML string for requested icon.
-   * @returns {object} Appended HTML for SVG.
-   */
-  getIconAsHtml(icon) {
-    const dom = new DOMParser().parseFromString(icon.svg, 'text/html');
-
-    return dom.body.firstChild;
   }
 
   /**
@@ -979,54 +947,6 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
-   * @private
-   * @param {string} type Value entered into component prop.
-   * @returns {string} Iterates over allowed types array.
-   */
-  getInputType(type) {
-    if (this.allowedInputTypes.includes(type)) {
-      return type;
-    }
-
-    return "text";
-  }
-
-  /**
-   * Determines default help text string.
-   * @private
-   * @returns {string} Evaluates pre-determined help text.
-   */
-  getHelpText() {
-    const typeHelpText = [
-      'password',
-      'email',
-      'credit-card',
-      'tel'
-    ];
-
-    if (typeHelpText.includes(this.type)) {
-      return i18n(this.lang, this.type);
-    }
-
-    if (this.type === 'date') {
-      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
-    }
-
-    return '';
-  }
-
-  /**
-   * Function to support show-password feature.
-   * @private
-   * @returns {void}
-   */
-  handleClickShowPassword() {
-    this.showPassword = !this.showPassword;
-    this.focus();
-  }
-
-  /**
    * Support placeholder text.
    * @private
    * @returns {void}
@@ -1036,36 +956,6 @@ export default class BaseInput extends AuroElement {
       return this.format ? this.format.toUpperCase() : 'MM/DD/YYYY';
     }
     return this.placeholder || "";
-  }
-
-  /**
-   * Defines placement of input icon based on type, used with classMap.
-   * @private
-   * @returns {boolean}
-   */
-  defineInputIcon() {
-    if (this.icon && this.type === 'credit-card') {
-      return true;
-    } else if (this.type === 'date') {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Defines padding of input label based on type, used with classMap.
-   * @private
-   * @returns {boolean}
-   */
-  defineLabelPadding() {
-    if (this.icon && this.type === 'credit-card' && (this.value === "" || this.value === undefined)) {
-      return true;
-    } else if (this.type === 'date') {
-      return true;
-    }
-
-    return false;
   }
 
   // Functions specific to Credit Card component support
