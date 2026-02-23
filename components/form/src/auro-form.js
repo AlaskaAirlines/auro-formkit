@@ -30,7 +30,9 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  *
  * @slot default - The default slot for form elements.
  *
- * @event {Event} change - Fires when form state changes.
+ * @event change - Fires when form state changes.
+ * @event reset - Fires when the form is reset. The event detail contains the previous value of the form before reset.
+ * @event submit - Fires when the form is submitted. The event detail contains the current value of the form.
  */
 export class AuroForm extends LitElement {
   static get properties() {
@@ -170,7 +172,8 @@ export class AuroForm extends LitElement {
   /**
    * Reduce the form value into a key-value pair.
    *
-   * NOTE: form keys use `name` first, and `id` second if `name` is not available.
+   * @note
+   * Form keys use `name` first, and `id` second if `name` is not available.
    * This follows standard HTML5 form behavior - submission uses `name` by default when creating
    * the FormData object.
    *
@@ -386,6 +389,8 @@ export class AuroForm extends LitElement {
 
   /**
    * Submit fires an event called `submit` - just as you would expect from a normal form.
+   * 
+   * @note
    * Only dispatches the submit event if all form elements are valid.
    */
   async submit() {
@@ -411,7 +416,7 @@ export class AuroForm extends LitElement {
 
   /**
    * This will register this element with the browser.
-   * @param {string} [name="auro-form"] - The name of element that you want to register to.
+   * @type {string} The name of element that you want to register to.
    *
    * @example
    * AuroForm.register("custom-form") // this will register this element to <custom-form/>
@@ -476,8 +481,8 @@ export class AuroForm extends LitElement {
 
   /**
    * Handle Enter key press on form elements.
-   * @private
    * @param {KeyboardEvent} event - The keyboard event.
+   * @private
    */
   handleKeyDown(event) {
     if (event.key === 'Enter' && this.isFormElement(event.target)) {
