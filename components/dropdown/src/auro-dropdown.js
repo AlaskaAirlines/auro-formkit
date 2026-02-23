@@ -589,6 +589,14 @@ export class AuroDropdown extends AuroElement {
         this.bibElement.value.close();
       }
     }
+
+    // When fullscreen strategy changes while open, re-open dialog with correct mode
+    // (e.g. resizing from desktop → mobile while dropdown is open)
+    if (changedProperties.has('isBibFullscreen') && this.isPopoverVisible && this.bibElement.value) {
+      const useModal = this.isBibFullscreen && !this.disableFocusTrap;
+      this.bibElement.value.close();
+      this.bibElement.value.open(useModal);
+    }
   }
 
   /**
