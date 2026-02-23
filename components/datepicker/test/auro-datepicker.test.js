@@ -12,7 +12,7 @@ describe('auro-datepicker', () => {
       height: 800
     });
     const el = await fixture(html`
-      <auro-datepicker range cssclass="testClass"></auro-datepicker>
+      <auro-datepicker range></auro-datepicker>
     `);
 
     await expect(el).to.be.accessible({
