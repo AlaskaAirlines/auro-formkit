@@ -7,23 +7,22 @@ The `auro-form` element provides users a way to create and manage forms in a con
 
 ## Properties
 
-| Property                   | Attribute    | Modifiers | Type                                             | Default | Description                                      |
-|----------------------------|--------------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
-| [cssClass](#cssClass)                 | `cssClass`   |           | `boolean`                                        |         | Applies designated CSS class to demo element - you want to delete me! |
-| [fixed](#fixed)                    | `fixed`      |           | `boolean`                                        |         | If declared, use fixed pixel values for element shape. |
-| [formState](#formState)                |              |           | `FormState`                                      | {}      |                                                  |
-| [handleKeyDown](#handleKeyDown)            |              |           |                                                  |         |                                                  |
-| [isInitialState](#isInitialState)           |              | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
-| [mutationEventListener](#mutationEventListener)    |              |           |                                                  |         |                                                  |
-| [reset](#reset)                    |              |           |                                                  |         |                                                  |
-| [resetElements](#resetElements)            |              | readonly  | `HTMLButtonElement[]`                            |         | Returns a collection of elements that will reset the form. |
-| [sharedInputListener](#sharedInputListener)      |              |           |                                                  |         |                                                  |
-| [sharedValidationListener](#sharedValidationListener) |              |           |                                                  |         |                                                  |
-| [submit](#submit)                   |              |           |                                                  |         |                                                  |
-| [submitElements](#submitElements)           |              | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _submitElements.             |
-| [submitting](#submitting)               | `submitting` |           | `boolean`                                        | false   | When true, prevents form submission and disables the submit button. Use this to indicate that the form is being processed (e.g., during an API call). |
-| [validity](#validity)                 |              | readonly  | `"valid" \| "invalid"`                           |         | Current validity state of the form, based on form element events. |
-| [value](#value)                    |              | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` |         | Reduce the form value into a key-value pair.     |
+| Property                   | Attribute  | Modifiers | Type                                             | Default | Description                                      |
+|----------------------------|------------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
+| [cssClass](#cssClass)                 | `cssClass` |           | `boolean`                                        |         | Applies designated CSS class to demo element - you want to delete me! |
+| [fixed](#fixed)                    | `fixed`    |           | `boolean`                                        |         | If declared, use fixed pixel values for element shape. |
+| [formState](#formState)                |            |           | `FormState`                                      | {}      |                                                  |
+| [handleKeyDown](#handleKeyDown)            |            |           |                                                  |         |                                                  |
+| [isInitialState](#isInitialState)           |            | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
+| [mutationEventListener](#mutationEventListener)    |            |           |                                                  |         |                                                  |
+| [reset](#reset)                    |            |           |                                                  |         |                                                  |
+| [resetElements](#resetElements)            |            | readonly  | `HTMLButtonElement[]`                            |         | Returns a collection of elements that will reset the form. |
+| [sharedInputListener](#sharedInputListener)      |            |           |                                                  |         |                                                  |
+| [sharedValidationListener](#sharedValidationListener) |            |           |                                                  |         |                                                  |
+| [submit](#submit)                   |            |           |                                                  |         |                                                  |
+| [submitElements](#submitElements)           |            | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _submitElements.             |
+| [validity](#validity)                 |            | readonly  | `"valid" \| "invalid"`                           |         | Current validity state of the form, based on form element events. |
+| [value](#value)                    |            | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` |         | Reduce the form value into a key-value pair.     |
 
 ## Methods
 
@@ -327,89 +326,6 @@ Finally, a more complex form example with multiple form elements, including a da
     <auro-button type="submit">Submit</auro-button>
   </div>
 </auro-form>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-
-### Controlling form state with the submitting property
-
-Use the `submitting` property to prevent multiple form submissions during async operations like API calls. When set to `true`, the form automatically disables submit buttons and blocks additional submit attempts until you set it back to `false`.
-
-This example demonstrates setting `form.submitting = true` when starting an async operation, then setting it back to `false` when complete.
-
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/form-state.html) -->
-<!-- The below content is automatically added from ./../apiExamples/form-state.html -->
-<auro-form id="submitting-form">
-  <auro-input name="firstName" required>
-    <span slot="label">First Name</span>
-  </auro-input>
-  <br />
-  <auro-input name="lastName" required>
-    <span slot="label">Last Name</span>
-  </auro-input>
-  <br />
-  <div style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 1rem;">
-    <auro-button type="reset">Reset</auro-button>
-    <auro-button type="submit">Submit</auro-button>
-  </div>
-</auro-form>
-<script type="module">
-  customElements.whenDefined('auro-form').then(() => {
-    const form = document.getElementById('submitting-form');
-
-    form.addEventListener('submit', async (event) => {
-      console.log('Form submitted with value:', event.detail.value);
-      // Lock the form during submission
-      form.submitting = true;
-
-      // Simulate API call (2 seconds)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Unlock the form
-      form.submitting = false;
-    });
-  });
-</script>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/form-state.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/form-state.html -->
-
-```html
-<auro-form id="submitting-form">
-  <auro-input name="firstName" required>
-    <span slot="label">First Name</span>
-  </auro-input>
-  <br />
-  <auro-input name="lastName" required>
-    <span slot="label">Last Name</span>
-  </auro-input>
-  <br />
-  <div style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 1rem;">
-    <auro-button type="reset">Reset</auro-button>
-    <auro-button type="submit">Submit</auro-button>
-  </div>
-</auro-form>
-<script type="module">
-  customElements.whenDefined('auro-form').then(() => {
-    const form = document.getElementById('submitting-form');
-
-    form.addEventListener('submit', async (event) => {
-      console.log('Form submitted with value:', event.detail.value);
-      // Lock the form during submission
-      form.submitting = true;
-
-      // Simulate API call (2 seconds)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Unlock the form
-      form.submitting = false;
-    });
-  });
-</script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>

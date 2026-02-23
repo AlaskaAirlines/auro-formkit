@@ -58,29 +58,6 @@
 
   <h2>auro-form Testing</h2>
 
-  <!-- Control Panel -->
-  <div class="mb-4 p-3 rounded-lg bg-gray-100">
-    <label class="flex items-center gap-2 m-0">
-      <span class="font-semibold text-gray-700 mr-2">Simulated submission delay:</span>
-      <input 
-        type="range" 
-        min="0" 
-        max="5000" 
-        step="500" 
-        x-model="submissionDelay"
-        class="flex-1"
-      />
-      <span x-text="submissionDelay + 'ms'"></span>
-    </label>
-    <label class="flex items-center gap-2 m-0 mt-3">
-      <input 
-        type="checkbox" 
-        x-model="useSubmittingProp"
-      />
-      <span class="font-semibold text-gray-700 mr-2">Control form via 'submitting' property</span>
-    </label>
-  </div>
-
   <auro-form class="p-4 border border-gray-800 rounded-2xl space-y-6"">
     <h3 class="mt-0 mb-4 text-xl">Text Inputs</h3>
     <auro-input id="first-name" name="firstName" required>
@@ -192,9 +169,6 @@
   // Alpine.js component for form demo
   function formDemo() {
     return {
-      submissionDelay: 2000,
-      isSubmitting: false,
-      useSubmittingProp: false,
 
       init() {
         // Set up form submit listener
@@ -205,44 +179,27 @@
       },
 
       async handleSubmit(event) {
-        this.submitCount++;
-        this.isSubmitting = true;
         console.log(event.detail.value);
         
         const form = document.querySelector('auro-form');
 
-        // If using the submitting property, set it to true to lock the form during processing
-        if (this.useSubmittingProp && form) {
-          console.log('Setting form.submitting = true');
-          form.submitting = true;
-        }
-
         try {
           // Simulate async API call
-          await this.simulateApiCall(this.submissionDelay);
-          this.lastSubmitSuccess = true;
+          await this.simulateApiCall();
+
         } catch (error) {
           console.error(`Submit failed:`, error);
         } finally {
-          // Always unlock the form when done processing
-          if (this.useSubmittingProp && form) {
-            console.log('Setting form.submitting = false');
-            form.submitting = false;
-          }
           
-          this.isSubmitting = false;
           console.log('Submission complete');
         }
       },
 
-      simulateApiCall(delay) {
-        if (delay === 0) {
-          return Promise.resolve({ success: true });
-        }
+      simulateApiCall() {
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve({ success: true });
-          }, delay);
+          }, 0);
         });
       }
     };
