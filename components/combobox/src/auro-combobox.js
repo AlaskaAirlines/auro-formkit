@@ -1130,6 +1130,22 @@ export class AuroCombobox extends AuroElement {
       this.hideBib();
     }
 
+    // iOS virtual keyboard retention: when in fullscreen mode, ensure the
+    // dialog opens and the bib input is focused synchronously within the
+    // input event (user gesture) chain. Without this, Lit's async update
+    // cycle delays showModal() past the user activation window, causing
+    // iOS Safari to dismiss the virtual keyboard when the fullscreen
+    // dialog opens — the user then has to tap the input again to resume
+    // typing.
+    if (this.dropdown.isBibFullscreen && this.input.value && this.input.value.length > 0) {
+      if (!this.dropdown.isPopoverVisible) {
+        this.showBib();
+      }
+      if (this.dropdown.isPopoverVisible) {
+        this.setInputFocus();
+      }
+    }
+
     this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
   }
 

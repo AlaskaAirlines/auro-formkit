@@ -203,6 +203,18 @@ export class AuroDropdown extends AuroElement {
    */
   show() {
     this.floater.showBib();
+
+    // Open dialog synchronously so callers remain in the user gesture
+    // chain. This is critical for mobile browsers (iOS Safari) to keep
+    // the virtual keyboard open when transitioning from the trigger
+    // input to an input inside the fullscreen dialog. Without this,
+    // showModal() fires asynchronously via Lit's update cycle, which
+    // falls outside the user activation window and causes iOS to
+    // dismiss the keyboard.
+    if (this.isBibFullscreen && this.bibElement && this.bibElement.value) {
+      const useModal = !this.disableFocusTrap;
+      this.bibElement.value.open(useModal);
+    }
   }
 
   /**
