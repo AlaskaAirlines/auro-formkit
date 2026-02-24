@@ -1371,7 +1371,13 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      if ((this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
+      // dropdownOpen is set synchronously by the auroDropdown-toggled event
+      // handler during showBib() → floater.showBib() → dispatchEventDropdownToggle(),
+      // so it's already true by the time updated() runs. This prevents the else
+      // branch from calling hideBib() when the dropdown was just opened but
+      // :focus-within hasn't propagated through the top-layer dialog's nested
+      // shadow DOM boundaries.
+      if ((this.availableOptions.length > 0 && (this.componentHasFocus || this.dropdownOpen)) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
         this.showBib();
       } else {
         this.hideBib();
