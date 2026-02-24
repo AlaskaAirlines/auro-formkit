@@ -1531,6 +1531,7 @@ export class AuroCombobox extends AuroElement {
             <slot @slotchange="${this.handleSlotChange}"></slot>
             <${this.inputTag}
               id="inputInBib"
+              autofocus
               @input="${this.handleInputValueChange}"
               .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
               .a11yControls=${`${this.dropdownId}-floater-bib`}

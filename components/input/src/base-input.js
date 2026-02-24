@@ -23,6 +23,12 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  */
 export default class BaseInput extends AuroElement {
 
+  // Delegate focus to the native <input> inside the shadow root so that
+  // showModal()'s dialog focusing steps reach the input element.
+  // This keeps the mobile virtual keyboard open when the fullscreen dialog
+  // opens, because the browser sees an input-to-input focus transfer.
+  static shadowRootOptions = { ...AuroElement.shadowRootOptions, delegatesFocus: true };
+
   constructor() {
     super();
 
