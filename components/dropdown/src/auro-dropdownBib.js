@@ -197,10 +197,30 @@ export class AuroDropdownBib extends LitElement {
       }));
     });
 
-    // Re-dispatch navigation keyboard events so they cross the shadow DOM
-    // boundary and reach the combobox/select key handlers.
-    // Only intercept keys used for menu navigation — let all other keys
-    // (characters, Backspace, etc.) through so typing in inputs works.
+    // showModal() creates a closed focus scope — keyboard events inside
+    // the dialog's shadow DOM do NOT bubble out to the combobox/select
+    // keydown handlers in the parent shadow DOM. This handler bridges
+    // that gap by re-dispatching navigation keys so they cross the
+    // shadow boundary and reach the menu navigation logic in the parent
+    // component.
+    //
+    // The trade-off: intercepting these keys means native keyboard
+    // behaviors that would normally "just work" must be manually
+    // re-implemented here:
+    //
+    // - Enter on buttons: Custom elements (auro-button) don't get the
+    //   native Enter→click that <button> provides, so we call .click()
+    //   directly when Enter is pressed on a button-like element.
+    //
+    // - Tab: NOT intercepted — left to the browser's native focus trap
+    //   provided by showModal(), which cycles Tab between focusable
+    //   elements inside the dialog (e.g. the input and close button).
+    //   Intercepting Tab would kill the native focus trap and break
+    //   focus management inside the dialog.
+    //
+    // - Escape: The native <dialog> fires a `cancel` event on ESC
+    //   (handled above), so the re-dispatched Escape is a secondary
+    //   path for parent components that also listen for Escape keydown.
     const navKeys = new Set([
       'ArrowUp',
       'ArrowDown',
@@ -212,11 +232,16 @@ export class AuroDropdownBib extends LitElement {
         return;
       }
 
-      // Let Enter pass through on buttons so native click behavior works
-      // (e.g. clear button, close button inside the dialog).
+      // Custom elements (auro-button) don't get the native Enter→click
+      // behavior that <button> has. Find the button in the composed path
+      // and click it directly.
       if (event.key === 'Enter') {
-        const [target] = event.composedPath();
-        if (target && target.matches && target.matches('button, [role="button"], auro-button, [auro-button]')) {
+        const buttonSelector = 'button, [role="button"], auro-button, [auro-button]';
+        const btn = event.composedPath().find((el) => el.matches && el.matches(buttonSelector));
+        if (btn) {
+          event.preventDefault();
+          event.stopPropagation();
+          btn.click();
           return;
         }
       }
