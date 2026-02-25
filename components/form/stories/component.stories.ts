@@ -3,7 +3,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { userEvent, expect } from 'storybook/test';
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
-const { args, argTypes } = getStorybookHelpers("auro-form");
+const { args, argTypes, events } = getStorybookHelpers("auro-form");
 
 import { html } from 'lit';
 
@@ -25,7 +25,10 @@ const meta: Meta = {
   argTypes,
   parameters: {
     actions: {
-      handles: ['submit', 'reset', 'change'],
+      handles: events,
+    },
+    chromatic: {
+      disableSnapshot: true,
     },
   },
 };
