@@ -540,23 +540,6 @@ This example programmatically adds the `error` state when a user selects an opti
 
 </auro-accordion>
 
-### Max Height on Menu
-
-Setting a max height on the menu will cause the bib to become scrollable when the content exceeds the max height.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/max-height.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/max-height.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
 ### Select in Dialog
 
 The component can be in a dialog.
