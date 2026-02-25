@@ -556,6 +556,9 @@ export class AuroSelect extends AuroElement {
               this.menu.navigateOptions('down');
             }
           }
+
+          // Scroll the selected option into view when dropdown opens
+          this.scrollSelectedOptionIntoView();
         });
       }
     });
@@ -953,6 +956,30 @@ export class AuroSelect extends AuroElement {
   setMenuValue(value) {
     if (!this.menu) return;
     this.menu.value = value;
+  }
+
+  /**
+   * Scrolls the currently selected option into view.
+   * Respects user's motion preferences for accessibility.
+   * @private
+   */
+  scrollSelectedOptionIntoView() {
+    if (!this.menu || !this.menu.optionSelected) return;
+
+    const selectedOption = this.multiSelect && Array.isArray(this.menu.optionSelected)
+      ? this.menu.optionSelected[0]
+      : this.menu.optionSelected;
+
+    if (selectedOption) {
+      // Check if user prefers reduced motion for accessibility
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      selectedOption.scrollIntoView({
+        alignToTop: true,
+        block: "start",
+        behavior: prefersReducedMotion ? "auto" : "smooth"
+      });
+    }
   }
 
   updated(changedProperties) {
