@@ -1167,7 +1167,7 @@ export class AuroSelect extends AuroElement {
       this._updateNativeSelect();
       this.validate();
       this.hideBib();
-      this.focus();
+      this.dropdown.trigger.focus();
 
       // LEGACY EVENT
       this.dispatchEvent(new CustomEvent('auroSelect-valueSet', {
