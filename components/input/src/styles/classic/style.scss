@@ -42,7 +42,6 @@
     }
 
     input {
-      height: auto;
       transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
     }
 
@@ -55,11 +54,6 @@
   .mainContent:has(input.util_displayHiddenVisually) {
     label {
       justify-self: flex-start;
-    }
-
-    input {
-      height: 0;
-      padding-bottom: 0;
     }
   }
 

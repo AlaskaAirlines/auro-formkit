@@ -3,7 +3,7 @@
 
 // COMMON FOR ALL ---------------------------------------------------
 
-/* stylelint-disable selector-max-class, max-nesting-depth, selector-class-pattern, scss/selector-nest-combinators */
+/* stylelint-disable selector-max-class, max-nesting-depth, selector-class-pattern, scss/selector-nest-combinators, selector-no-qualifying-type, order/properties-order */
 
 :host {
   display: block;
@@ -38,6 +38,19 @@ input {
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
     // stylelint-disable-next-line property-no-vendor-prefix
     -webkit-appearance: none;
+  }
+
+  // Override util_displayHiddenVisually for autocomplete compatibility
+  &.util_displayHiddenVisually {
+    /* stylelint-disable-next-line property-no-deprecated */
+    clip: auto; /* Override deprecated clip property from external utility class */
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   /* stylelint-enable declaration-no-important */
