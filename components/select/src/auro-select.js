@@ -1042,6 +1042,7 @@ export class AuroSelect extends AuroElement {
    * @returns {void}
    */
   reset() {
+    this.menu.reset();
     this.validation.reset(this);
   }
 
