@@ -38,15 +38,22 @@ export class AuroForm extends LitElement {
   static get properties() {
     return {
 
-      /**
-       * If declared, use fixed pixel values for element shape.
-       */
-      fixed: { type: Boolean, reflect: true },
+      /** @private */
       formState: { type: Object, attribute: false },
+
+      /** @private */
       _validity: { type: Object, attribute: false },
+
+      /** @private */
       _isInitialState: { type: Boolean, attribute: false },
+
+      /** @private */
       _elements: { type: Array, attribute: false },
+
+      /** @private */
       _submitElements: { type: Array, attribute: false },
+
+      /** @private */
       _resetElements: { type: Array, attribute: false },
     };
   }
@@ -54,20 +61,37 @@ export class AuroForm extends LitElement {
   constructor() {
     super();
 
-    /** @type {FormState} */
+    /**
+     * @type {FormState}
+     * @private
+     */
     this.formState = {};
 
-    /** @type {"valid" | "invalid" | null} */
+    /**
+     * @type {"valid" | "invalid" | null}
+     * @private
+     */
     this._validity = null;
+
+    /** @private */
     this._isInitialState = true;
 
-    /** @type {(HTMLElement & {reset: () => void})[]} */
+    /**
+     * @type {(HTMLElement & {reset: () => void})[]}
+     * @private
+     */
     this._elements = [];
 
-    /** @type {HTMLButtonElement[]} */
+    /**
+     * @type {HTMLButtonElement[]}
+     * @private
+     */
     this._submitelements = [];
 
-    /** @type {HTMLButtonElement[]} */
+    /**
+     * @type {HTMLButtonElement[]}
+     * @private
+     */
     this._resetElements = [];
 
     /**
@@ -77,11 +101,22 @@ export class AuroForm extends LitElement {
     this.mutationObservers = [];
 
     // Bind listeners
+    /** @private */
     this.reset = this.reset.bind(this);
+
+    /** @private */
     this.submit = this.submit.bind(this);
+
+    /** @private */
     this.sharedInputListener = this.sharedInputListener.bind(this);
+
+    /** @private */
     this.sharedValidationListener = this.sharedValidationListener.bind(this);
+
+    /** @private */
     this.mutationEventListener = this.mutationEventListener.bind(this);
+
+    /** @private */
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
@@ -127,6 +162,7 @@ export class AuroForm extends LitElement {
    * Check if the tag name is a form element.
    * @param {HTMLElement} element - The element to check (attr or tag name).
    * @returns {boolean}
+   * @private
    */
   isFormElement(element) {
     return this._isInElementCollection(AuroForm.formElementTags, element);
@@ -155,6 +191,7 @@ export class AuroForm extends LitElement {
    * Check if the tag name is a button element.
    * @param {HTMLElement} element - The element to check.
    * @returns {boolean}
+   * @private
    */
   isButtonElement(element) {
     return this._isInElementCollection(AuroForm.buttonElementTags, element);
@@ -165,14 +202,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Reduce the form value into a key-value pair.
-   *
-   * @note
-   * Form keys use `name` first, and `id` second if `name` is not available.
-   * This follows standard HTML5 form behavior - submission uses `name` by default when creating
-   * the FormData object.
-   *
-   * @returns {Record<string, string | number | boolean | string[] | null>} The form value.
+   * Returns the current values of all named form elements as a key-value object, keyed by each element's `name` attribute.
+   * @returns {Record<string, string | number | boolean | string[] | null>} The current form values.
    */
   get value() {
     return Object.keys(this.formState).reduce((acc, key) => {
@@ -184,6 +215,7 @@ export class AuroForm extends LitElement {
   /**
    * Getter for internal _submitElements.
    * @returns {HTMLButtonElement[]}
+   * @private
    */
   get submitElements() {
     return this._submitelements;
@@ -192,6 +224,7 @@ export class AuroForm extends LitElement {
   /**
    * Returns a collection of elements that will reset the form.
    * @returns {HTMLButtonElement[]}
+   * @private
    */
   get resetElements() {
     return this._resetElements;
@@ -218,8 +251,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Current validity state of the form, based on form element events.
-   * @returns {"valid" | "invalid"}
+   * Returns `'valid'` if all required and interacted-with form elements are valid, `'invalid'` if any are not, or `null` if the form has not been interacted with yet.
+   * @returns {"valid" | "invalid" | null}
    */
   get validity() {
     // Force calculate, as sometimes validity won't reflect
@@ -228,6 +261,11 @@ export class AuroForm extends LitElement {
     return this._validity;
   }
 
+  /**
+   * Determines whether the form is in its initial (untouched) state and updates `_isInitialState` accordingly.
+   * @returns {void}
+   * @private
+   */
   _setInitialState() {
     const anyTainted = Object.keys(this.formState).some((key) => this.formState[key].validity !== null || this.formState[key].value !== null);
 
@@ -241,13 +279,18 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Mostly internal way to determine if a form is in the initial state.
+   * Returns `true` if no form element has been interacted with or had its value changed since the form was initialized or last reset.
    * @returns {boolean}
    */
   get isInitialState() {
     return this._isInitialState;
   }
 
+  /**
+   * Enables or disables submit and reset buttons based on the current form state and validity.
+   * @returns {void}
+   * @private
+   */
   setDisabledStateOnButtons() {
     this._resetElements.forEach((element) => {
       if (this.isInitialState) {
@@ -269,6 +312,7 @@ export class AuroForm extends LitElement {
   /**
    * Construct the query strings from elements, append them together, execute, and return the NodeList.
    * @returns {NodeList}
+   * @private
    */
   queryAuroElements() {
     const queries = [
@@ -315,6 +359,8 @@ export class AuroForm extends LitElement {
 
   /**
    * Initialize (or reinitialize) the form state.
+   * @returns {void}
+   * @private
    */
   initializeState() {
     this.formState = {};
@@ -355,7 +401,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Reset fires an event called `reset` - just as you would expect from a normal form.
+   * Resets all form elements to their initial state and fires a `reset` event. The event's `detail.previousValue` contains the form values captured immediately before the reset.
+   * @returns {void}
    */
   reset() {
     const previousValue = this.value;
@@ -383,10 +430,8 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Submit fires an event called `submit` - just as you would expect from a normal form.
-   * 
-   * @note
-   * Only dispatches the submit event if all form elements are valid.
+   * Validates all form elements. If all are valid, fires a `submit` event with `detail.value` containing the current form values. If any element is invalid, its error state is surfaced and the `submit` event is not fired.
+   * @returns {Promise<void>}
    */
   async submit() {
     // Force validation on ALL elements
@@ -410,12 +455,11 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * This will register this element with the browser.
-   * @type {string} The name of element that you want to register to.
+   * Registers the `auro-form` custom element with the browser under a given tag name.
+   * @param {string} [name="auro-form"] - The custom element tag name to register.
    *
    * @example
-   * AuroForm.register("custom-form") // this will register this element to <custom-form/>
-   *
+   * AuroForm.register("custom-form") // registers as <custom-form>
    */
   static register(name = "auro-form") {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroForm);
@@ -423,8 +467,8 @@ export class AuroForm extends LitElement {
 
   /**
    * Shared input listener for all form elements.
-   * @private
    * @param {Event} event - The event that is fired from the form element.
+   * @private
    */
   sharedInputListener(event) {
     const targetName = event.target.getAttribute("name");
@@ -456,8 +500,8 @@ export class AuroForm extends LitElement {
 
   /**
    * Shared validation listener for all form elements.
-   * @private
    * @param {Event} event - The event that is fired from the form element.
+   * @private
    */
   sharedValidationListener(event) {
     const targetName = event.target.getAttribute("name");
@@ -492,6 +536,12 @@ export class AuroForm extends LitElement {
     }
   }
 
+  /**
+   * Attaches input, validation, and keydown listeners to all tracked form and button elements.
+   * Removes existing listeners first to avoid duplicates on re-initialization.
+   * @returns {void}
+   * @private
+   */
   _attachEventListeners() {
     this.queryAuroElements().forEach((element) => {
       // remove any existing event listeners (in case of re-initialization)
@@ -506,12 +556,20 @@ export class AuroForm extends LitElement {
     });
   }
 
+  /**
+   * @param {import('lit').PropertyValues} _changedProperties - Map of changed properties with their previous values.
+   * @returns {void}
+   */
   firstUpdated(_changedProperties) {
     super.firstUpdated(_changedProperties);
 
     this._attachEventListeners();
   }
 
+  /**
+   * @param {import('lit').PropertyValues} _changedProperties - Map of changed properties with their previous values.
+   * @returns {void}
+   */
   updated(_changedProperties) {
     super.updated(_changedProperties);
 
@@ -532,8 +590,8 @@ export class AuroForm extends LitElement {
    * root-level elements are added/removed. This is a workaround to ensure
    * nested form elements are also observed.
    *
-   * @private
    * @returns {void}
+   * @private
    */
   mutationEventListener() {
     this.initializeState();
@@ -544,6 +602,7 @@ export class AuroForm extends LitElement {
    * Slot change event listener. This is the main entry point for the form element.
    * @param {Event} event - The slot change event.
    * @returns {void}
+   * @private
    */
   onSlotChange(event) {
     this.initializeState();
@@ -567,7 +626,9 @@ export class AuroForm extends LitElement {
     });
   }
 
-  // function that renders the HTML and CSS into the scope of the component
+  /**
+   * @returns {import('lit').TemplateResult}
+   */
   render() {
     return html`
         <form>

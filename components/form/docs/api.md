@@ -4,34 +4,18 @@ The `auro-form` element provides users a way to create and manage forms in a con
 
 ## Properties
 
-| Property                   | Attribute | Modifiers | Type                                             | Default | Description                                      |
-|----------------------------|-----------|-----------|--------------------------------------------------|---------|--------------------------------------------------|
-| `fixed`                    | `fixed`   |           | `boolean`                                        |         | If declared, use fixed pixel values for element shape. |
-| `formState`                |           |           | `FormState`                                      | {}      |                                                  |
-| `handleKeyDown`            |           |           |                                                  |         |                                                  |
-| `isInitialState`           |           | readonly  | `boolean`                                        |         | Mostly internal way to determine if a form is in the initial state. |
-| `mutationEventListener`    |           |           |                                                  |         |                                                  |
-| `reset`                    |           |           |                                                  |         |                                                  |
-| `resetElements`            |           | readonly  | `HTMLButtonElement[]`                            |         | Returns a collection of elements that will reset the form. |
-| `sharedInputListener`      |           |           |                                                  |         |                                                  |
-| `sharedValidationListener` |           |           |                                                  |         |                                                  |
-| `submit`                   |           |           |                                                  |         |                                                  |
-| `submitElements`           |           | readonly  | `HTMLButtonElement[]`                            |         | Getter for internal _submitElements.             |
-| `validity`                 |           | readonly  | `"valid" \| "invalid"`                           |         | Current validity state of the form, based on form element events. |
-| `value`                    |           | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` |         | Reduce the form value into a key-value pair.     |
+| Property         | Modifiers | Type                                             | Description                                      |
+|------------------|-----------|--------------------------------------------------|--------------------------------------------------|
+| `isInitialState` | readonly  | `boolean`                                        | Returns `true` if no form element has been interacted with or had its value changed since the form was initialized or last reset. |
+| `validity`       | readonly  | `"valid" \| "invalid" \| null`                   | Returns `'valid'` if all required and interacted-with form elements are valid, `'invalid'` if any are not, or `null` if the form has not been interacted with yet. |
+| `value`          | readonly  | `Record<string, string \| number \| boolean \| string[] \| null>` | Returns the current values of all named form elements as a key-value object, keyed by each element's `name` attribute. |
 
 ## Methods
 
-| Method                      | Type                              | Description                                      |
-|-----------------------------|-----------------------------------|--------------------------------------------------|
-| `initializeState`           | `(): void`                        | Initialize (or reinitialize) the form state.     |
-| `isButtonElement`           | `(element: HTMLElement): boolean` | Check if the tag name is a button element.<br /><br />**element**: The element to check. |
-| `isFormElement`             | `(element: HTMLElement): boolean` | Check if the tag name is a form element.<br /><br />**element**: The element to check (attr or tag name). |
-| `onSlotChange`              | `(event: Event): void`            | Slot change event listener. This is the main entry point for the form element.<br /><br />**event**: The slot change event. |
-| `queryAuroElements`         | `(): NodeList`                    | Construct the query strings from elements, append them together, execute, and return the NodeList. |
-| `reset`                     | `(): void`                        | Reset fires an event called `reset` - just as you would expect from a normal form. |
-| `setDisabledStateOnButtons` | `(): void`                        |                                                  |
-| `submit`                    | `(): Promise<void>`               | Submit fires an event called `submit` - just as you would expect from a normal form. |
+| Method   | Type                | Description                                      |
+|----------|---------------------|--------------------------------------------------|
+| `reset`  | `(): void`          | Resets all form elements to their initial state and fires a `reset` event. The event's `detail.previousValue` contains the form values captured immediately before the reset. |
+| `submit` | `(): Promise<void>` | Validates all form elements. If all are valid, fires a `submit` event with `detail.value` containing the current form values. If any element is invalid, its error state is surfaced and the `submit` event is not fired. |
 
 ## Events
 
