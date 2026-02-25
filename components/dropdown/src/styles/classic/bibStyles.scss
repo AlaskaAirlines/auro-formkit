@@ -82,6 +82,13 @@
     margin-top: 0;
     box-shadow: unset;
     overscroll-behavior: contain;
+
+    // Cover the page behind the keyboard on mobile.
+    // 100dvh shrinks when the keyboard is up, so the dialog doesn't
+    // reach the bottom of the viewport. The backdrop fills the gap.
+    &::backdrop {
+      background: var(--ds-color-background-primary, #fff);
+    }
  }
 }
 
