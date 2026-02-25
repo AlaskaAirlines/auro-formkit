@@ -269,9 +269,55 @@ export class AuroDropdownBib extends LitElement {
   }
 
   /**
-   * Opens the dialog using showModal() for accessibility.
-   * @param {boolean} modal - If true, uses showModal() (default). If false, uses show().
+   * Blocks touch-driven page scroll while a fullscreen modal dialog is open.
+   *
+   * The showModal() function places the dialog in the browser's **top layer**,
+   * which is a separate rendering layer above the normal DOM. On mobile, the
+   * compositor processes visual-viewport panning before top-layer touch
+   * handling. This means the entire viewport — including the top-layer dialog
+   * — can be panned by a touch gesture, causing the page behind the dialog to
+   * scroll into view. To prevent this, we add a touchmove listener that cancels
+   * the event if the touch started outside the dialog or any scrollable child within it.
+   *
+   * @private
    */
+  _lockTouchScroll() {
+    const dialog = this.shadowRoot.querySelector('dialog');
+
+    this._touchMoveHandler = (event) => {
+      // Walk the composed path (which crosses shadow DOM boundaries) to
+      // check whether the touch started inside a scrollable element that
+      // lives within the dialog.  If so, allow the scroll.
+      for (const el of event.composedPath()) {
+        if (el === dialog) {
+          // Reached the dialog boundary without finding a scrollable child.
+          break;
+        }
+        if (el instanceof HTMLElement && el.scrollHeight > el.clientHeight) {
+          const { overflowY } = getComputedStyle(el);
+          if (overflowY === 'auto' || overflowY === 'scroll') {
+            return;
+          }
+        }
+      }
+
+      event.preventDefault();
+    };
+
+    document.addEventListener('touchmove', this._touchMoveHandler, { passive: false });
+  }
+
+  /**
+   * Removes the touchmove listener added by _lockTouchScroll().
+   * @private
+   */
+  _unlockTouchScroll() {
+    if (this._touchMoveHandler) {
+      document.removeEventListener('touchmove', this._touchMoveHandler);
+      this._touchMoveHandler = undefined;
+    }
+  }
+
   open(modal = true) {
     const dialog = this.shadowRoot.querySelector('dialog');
     if (dialog && !dialog.open) {
@@ -288,6 +334,8 @@ export class AuroDropdownBib extends LitElement {
 
         documentElement.style.overflow = prevOverflow;
 
+        this._lockTouchScroll();
+
       } else {
         // Use setAttribute instead of dialog.show() to avoid the dialog
         // focusing steps which steal focus from the trigger and cause
@@ -303,6 +351,7 @@ export class AuroDropdownBib extends LitElement {
   close() {
     const dialog = this.shadowRoot.querySelector('dialog');
     if (dialog && dialog.open) {
+      this._unlockTouchScroll();
       dialog.close();
     }
   }
