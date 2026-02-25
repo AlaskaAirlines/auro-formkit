@@ -15,7 +15,7 @@ AuroInput.register("auro-input-two");
 
 AuroDatePicker.register(); // registering to `auro-datepicker`
 
-const { args, argTypes, template } = getStorybookHelpers("auro-form");
+const { args, argTypes, template, events } = getStorybookHelpers("auro-form");
 
 const meta: Meta<AuroForm> = {
   title: "Form/Playground",
@@ -24,7 +24,7 @@ const meta: Meta<AuroForm> = {
   argTypes,
   parameters: {
     actions: {
-      handles: ['submit', 'reset', 'change'],
+      handles: events,
     },
     chromatic: {
       disableSnapshot: true,
