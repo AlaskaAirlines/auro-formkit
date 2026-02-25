@@ -27,6 +27,7 @@ const config: StorybookConfig = {
     `${relativeComponentDirectory}/**/stories/**/*.mdx`,
     '../components/radio/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     `../components/counter/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
+    `../components/form/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
   ],
   addons: [{
     // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
