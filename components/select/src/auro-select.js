@@ -557,6 +557,18 @@ export class AuroSelect extends AuroElement {
 
         // Restore trigger accessibility when closing fullscreen
         this.dropdown.trigger.inert = false;
+
+        // Restore focus to the trigger after closing the fullscreen dialog.
+        // The browser's native dialog focus restoration fails because the
+        // trigger was set to inert before showModal().
+        // Use rAF to run after Lit's microtask update cycle calls dialog.close().
+        if (this.dropdown.isBibFullscreen) {
+          requestAnimationFrame(() => {
+            if (!this.dropdown.isPopoverVisible) {
+              this.dropdown.trigger.focus();
+            }
+          });
+        }
       }
 
       if (this.dropdown.isPopoverVisible) {
