@@ -1319,10 +1319,9 @@ Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` s
   <!-- The below content is automatically added from ./../apiExamples/reset-state.html -->
   <auro-button id="resetStateBtn">Reset</auro-button>
   <br/><br/>
-  <auro-select id="resetStateExample" value="price" placeholder="Placeholder Text">
+  <auro-select id="resetStateExample" value="price">
     <span slot="bib.fullscreen.headline">Bib Headline</span>
     <span slot="label">Label</span>
-    <span slot="label">Name</span>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -1342,10 +1341,9 @@ Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` s
 ```html
 <auro-button id="resetStateBtn">Reset</auro-button>
 <br/><br/>
-<auro-select id="resetStateExample" value="price" placeholder="Placeholder Text">
+<auro-select id="resetStateExample" value="price">
   <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Label</span>
-  <span slot="label">Name</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
     <auro-menuoption value="price">Price</auro-menuoption>
