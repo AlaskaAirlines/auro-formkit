@@ -11,6 +11,9 @@ const meta: Meta = {
   subcomponents: { AuroCounter: 'auro-counter' },
   title: 'Counter & Counter Group',
   tags: ['autodocs'],
+  parameters: {
+    rootSelector: 'auro-counter-button[part="controlPlus"]'
+  }
 };
 export default meta;
 
@@ -150,4 +153,18 @@ export const DropdownSnowflakeOpen: Story = {
   },
 };
 
-
+export const CounterWithHover: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-counter min="0" max="3">
+  Adults
+  <span slot="description">Max: 3</span>
+</auro-counter>
+  `,
+};
+CounterWithHover.parameters = { 
+  pseudo: { 
+    hover: true,
+    active: true,
+  }
+};
