@@ -39,9 +39,9 @@
 
 :host(:not([isfullscreen])) {
   dialog {
-    // Explicit positioning for non-modal show() - only needed for desktop mode
-    // Avoid setting position in fullscreen mode as it causes scroll jump with showModal()
-    position: absolute;
+    // Override 'dialog' element's default position: absolute
+    // so the bib host has dimensions for floating-ui to measure.
+    position: relative;
     inset: unset;
   }
 
