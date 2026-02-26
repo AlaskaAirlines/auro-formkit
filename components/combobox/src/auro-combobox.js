@@ -102,6 +102,7 @@ export class AuroCombobox extends AuroElement {
     this.dropdownOpen = false;
     this.triggerExpandedState = false;
     this._expandedTimeout = null;
+    this._inFullscreenTransition = false;
     this.errorMessage = null;
     this.isHiddenWhileLoading = false;
     this.largeFullscreenHeadline = false;
@@ -767,6 +768,19 @@ export class AuroCombobox extends AuroElement {
         this.updateBibDialogRole();
 
         if (this.dropdown.isBibFullscreen) {
+          // Guard against spurious validation during the focus transition
+          // from trigger to bib input. Setting trigger.inert = true removes
+          // focus, which fires focusout on the child auro-input before the
+          // bib input receives focus. That focusout triggers the input's own
+          // validate(), which dispatches a composed auroFormElement-validated
+          // event. Because composed events are retargetted at each shadow DOM
+          // boundary, the event appears to originate from the combobox itself
+          // and its listener unconditionally sets this.validity — causing
+          // premature validation. This flag suppresses all validation paths
+          // (focusout handler, handleInputValueChange, validate(), and the
+          // auroFormElement-validated listener) until focus settles in the bib.
+          this._inFullscreenTransition = true;
+
           // Hide the trigger from assistive technology so VoiceOver cannot reach it
           // behind the fullscreen dialog
           this.dropdown.trigger.inert = true;
@@ -798,6 +812,7 @@ export class AuroCombobox extends AuroElement {
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               this.setInputFocus();
+              this._inFullscreenTransition = false;
             });
           });
         } else {
@@ -1075,7 +1090,7 @@ export class AuroCombobox extends AuroElement {
      * Validate every time we remove focus from the combo box.
      */
     this.addEventListener('focusout', () => {
-      if (!this.componentHasFocus) {
+      if (!this.componentHasFocus && !this._inFullscreenTransition) {
         this.validate();
       }
     });
@@ -1126,8 +1141,11 @@ export class AuroCombobox extends AuroElement {
     }
     this.handleMenuOptions();
 
-    // Validate only if the value was set programmatically
-    if (!this.componentHasFocus) {
+    // Validate only if the value was set programmatically (not during user
+    // interaction). In fullscreen dialog mode, componentHasFocus returns false
+    // because focus is inside the top-layer dialog, so also check
+    // dropdownOpen and the fullscreen transition flag.
+    if (!this.componentHasFocus && !this.dropdownOpen && !this._inFullscreenTransition) {
       this.validate();
     }
 
@@ -1227,6 +1245,14 @@ export class AuroCombobox extends AuroElement {
     });
 
     this.addEventListener('auroFormElement-validated', (evt) => {
+      // During the fullscreen transition, child elements (auro-input) may fire
+      // their own validation events when the trigger becomes inert and loses
+      // focus. Those composed events bubble up through shadow DOM boundaries
+      // and would incorrectly set combobox validity. Ignore them.
+      if (this._inFullscreenTransition) {
+        return;
+      }
+
       this.input.validity = evt.detail.validity;
       this.input.errorMessage = evt.detail.message;
       this.validity = evt.detail.validity;
@@ -1330,6 +1356,9 @@ export class AuroCombobox extends AuroElement {
    * @param {boolean} [force=false] - Whether to force validation.
    */
   validate(force = false) {
+    if (this._inFullscreenTransition) {
+      return;
+    }
     this.validation.validate(this, force);
   }
 
