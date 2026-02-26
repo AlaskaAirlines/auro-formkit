@@ -175,6 +175,8 @@
         const form = document.querySelector('auro-form');
         if (form) {
           form.addEventListener('submit', (event) => this.handleSubmit(event));
+          form.addEventListener('input', (event) => console.log('Form input changed:', form.value));
+          form.addEventListener('reset', (event) => console.log('Form reset. Previous value:', event.detail.previousValue));
         }
       },
 
