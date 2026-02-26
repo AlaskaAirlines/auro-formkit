@@ -86,36 +86,6 @@ you can access the form data using the following methods:
 - `.formState` - This is the internal form state. It includes extra `required` and `validity` information for each form element.
 This key is not required for normal form usage, but can add additional context for more complex forms.
 
-
-## Important Note for Custom Elements
-
-This **only applies to custom-named elements**.
-
-When consuming custom-named Auro form elements (like `auro-input` registered as `my-custom-input`),
-these elements _must_ be registered BEFORE auro-form due to rendering order limitations.
-Auro form elements are automatically recognized based on their tag name (e.g. `auro-input`) or special auro attributes
-which are only assigned during the initial render.
-
-For example, the following is correct:
-
-```javascript
-import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
-import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
-
-AuroInput.register('my-custom-input'); // adds an internal identifier auro-form uses to recognize the custom element
-AuroForm.register(); // render looks for said identifier
-```
-
-The following is NOT correct and will result in forms not working as expected:
-
-```javascript
-import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
-import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
-
-AuroForm.register(); // forms start rendering, looking for auro inputs, or custom-named inputs
-AuroInput.register('my-custom-input'); // too late, form has already rendered and did not find the custom element
-```
-
 ### Basic Form Example
 
 The most basic form implementation requires an `auro-input` and an optional auro button with `type="submit"`.
