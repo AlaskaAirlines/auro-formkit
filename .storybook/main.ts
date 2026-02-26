@@ -38,7 +38,7 @@ const config: StorybookConfig = {
         },
       },
     },
-  }, getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook"), getAbsolutePath("@storybook/addon-designs"), getAbsolutePath("@storybook/addon-vitest"), getAbsolutePath("storybook-addon-tag-badges")],
+  }, getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook"), getAbsolutePath("@storybook/addon-designs"), getAbsolutePath("@storybook/addon-vitest"), getAbsolutePath("storybook-addon-tag-badges"), getAbsolutePath("storybook-addon-pseudo-states")],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},

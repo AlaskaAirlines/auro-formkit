@@ -131,6 +131,7 @@
     "semantic-release": "^25.0.1",
     "shadow-dom-testing-library": "^1.13.1",
     "storybook": "^10.2.0",
+    "storybook-addon-pseudo-states": "^10.2.13",
     "storybook-addon-tag-badges": "^3.0.5",
     "stylelint": "^16.25.0",
     "stylelint-config-idiomatic-order": "^10.0.0",

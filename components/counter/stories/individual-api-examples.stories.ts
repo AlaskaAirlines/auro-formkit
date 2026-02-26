@@ -3,6 +3,11 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
+import '../src/registered';
+import { AuroCounter, AuroCounterGroup } from '../src/index';
+
+AuroCounter.register('custom-counter');
+AuroCounterGroup.register('custom-counter-group');
 
 const { args, argTypes } = getStorybookHelpers('auro-counter-group');
 
