@@ -119,7 +119,9 @@ This will create a new custom element `<custom-form>` that behaves exactly like 
 
 ### Using Custom-Named Child Form Elements
 
-When using custom-named Auro form elements (like `auro-input` registered as `my-custom-input`) inside an `auro-form`, those child elements _must_ be registered **before** `auro-form`. Auro form elements are recognized based on their tag name (e.g. `auro-input`) or special auro attributes which are only assigned during the initial render.
+When consuming custom-named Auro form elements (like `auro-input` registered as `my-custom-input`),
+these elements _must_ be registered BEFORE auro-form due to rendering order limitations.
+Auro form elements are automatically recognized based on their tag name (e.g. `auro-input`) or special auro attributes which are only assigned during the initial render.
 
 For example, the following is correct:
 
