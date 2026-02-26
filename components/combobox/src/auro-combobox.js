@@ -123,7 +123,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default' | 'inverse'}
+       * @property {'default' | 'inverse'} appearance - The visual appearance of the component.
        * @default 'default'
        */
       appearance: {
