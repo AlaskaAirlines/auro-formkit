@@ -21,7 +21,9 @@
 
   dialog {
     // Reset dialog defaults for custom styling
+    width: auto;
     max-width: none;
+    height: auto;
     max-height: none;
     padding: 0;
     border: none;
