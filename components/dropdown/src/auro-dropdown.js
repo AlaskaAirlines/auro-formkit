@@ -631,6 +631,19 @@ export class AuroDropdown extends AuroElement {
   firstUpdated() {
     // Configure the floater to, this will generate the ID for the bib
     this.floater.configure(this, 'auroDropdown');
+
+    // Prevent `contain: layout` on the dropdown host. Layout containment
+    // creates a containing block for position:fixed descendants (the bib),
+    // which clips the bib inside ancestor overflow contexts such as a
+    // <dialog> element. Without it, the bib's position:fixed is relative
+    // to the viewport, letting Floating UI's flip middleware detect
+    // viewport boundaries and the bib escape overflow clipping.
+    const origConfigureBibStrategy = this.floater.configureBibStrategy.bind(this.floater);
+    this.floater.configureBibStrategy = (value) => {
+      origConfigureBibStrategy(value);
+      this.style.contain = '';
+    };
+
     this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
 
     // Handle ESC key from dialog's cancel event
