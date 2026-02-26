@@ -24,7 +24,8 @@ The `auro-form` element provides users a way to create and manage forms in a con
 
 | Event    | Type                                             | Description                                      |
 |----------|--------------------------------------------------|--------------------------------------------------|
-| [change](#change) |                                                  | Fires when form state changes.                   |
+| [change](#change) |                                                  |                                                  |
+| [input](#input)  |                                                  | Fires when form state changes.                   |
 | [reset](#reset)  | `CustomEvent<{ previousValue: Record<string, string \| number \| boolean \| string[] \| null>; }>` | Fires when the form is reset. The event detail contains the previous value of the form before reset. |
 | [submit](#submit) | `CustomEvent<{ value: Record<string, string \| number \| boolean \| string[] \| null>; }>` | Fires when the form is submitted. The event detail contains the current value of the form. |
 
