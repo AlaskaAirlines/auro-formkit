@@ -53,10 +53,27 @@ function runFulltest(mobileview) {
     // type in a value that matches an option
     setInputValue(el, 'pp');
     await elementUpdated(el);
+
+    if (mobileview) {
+      // Wait for the fullscreen dialog transition to settle —
+      // focus moves from trigger to inputInBib via requestAnimationFrame after the dialog is shown, so we wait until the inputInBib is focused before proceeding with the test.
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
     await expect(el.value).to.be.undefined;
     await expect(el.hasAttribute('error')).to.be.false;
     await expect(el.hasAttribute('validity')).to.be.false;
-    
+
+    if (mobileview) {
+      // Close the fullscreen dialog without selecting an option.
+      // After dialog.close(), a rAF callback restores focus to the trigger input.
+      el.hideBib();
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
+    }
+
     // blur the input to trigger validation
     el.shadowRoot.activeElement.blur();
     await elementUpdated(el);
