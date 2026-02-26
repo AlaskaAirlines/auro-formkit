@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------
 
 /* eslint-disable complexity, max-depth, no-extra-parens, no-magic-numbers, line-comment-position, no-inline-comments, prefer-destructuring */
-import { validDateStr, toNorthAmericanFormat, dateAndFormatMatch } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
+import { validDateStr, dateAndFormatMatch } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 export default class AuroFormValidation {
@@ -224,29 +224,25 @@ export default class AuroFormValidation {
         }
         
         // Validate that the date passed was the correct format
-        if (!dateAndFormatMatch(elem.value, elem.format)) {
+        if (!dateAndFormatMatch(elem.inputElement.value, elem.format)) {
           elem.validity = 'patternMismatch';
           elem.errorMessage = elem.setCustomValidityForType || elem.setCustomValidity || 'Invalid Date Format Entered';
           return;
         }
         
         // Validate that the date passed was a valid date
-        if (!validDateStr(elem.value, elem.format)) {
+        if (!validDateStr(elem.inputElement.value, elem.format)) {
           elem.validity = 'invalidDate';
           elem.errorMessage = elem.setCustomValidityInvalidDate || elem.setCustomValidity || 'Invalid Date Entered';
           return;
         }
 
         // Perform the rest of the validation
-        const formattedValue = toNorthAmericanFormat(elem.value, elem.format);
-        const valueDate = new Date(formattedValue);
 
         // // Validate max date
         if (elem.max?.length === elem.lengthForType) {
 
-          const maxDate = new Date(toNorthAmericanFormat(elem.max, elem.format));
-
-          if (valueDate > maxDate) {
+          if (elem.valueObject > elem.maxObject) {
             elem.validity = 'rangeOverflow';
             elem.errorMessage = elem.setCustomValidityRangeOverflow || elem.setCustomValidity || '';
             return;
@@ -255,9 +251,7 @@ export default class AuroFormValidation {
 
         // Validate min date
         if (elem.min?.length === elem.lengthForType) {
-          const minDate = new Date(toNorthAmericanFormat(elem.min, elem.format));
-
-          if (valueDate < minDate) {
+          if (elem.valueObject < elem.minObject) {
             elem.validity = 'rangeUnderflow';
             elem.errorMessage = elem.setCustomValidityRangeUnderflow || elem.setCustomValidity || '';
             return;
