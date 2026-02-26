@@ -1,4 +1,6 @@
+/* eslint-disable max-lines */
 import * as dateFns from 'date-fns';
+import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
 
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
@@ -269,5 +271,72 @@ export class AuroInputUtilities {
     }
 
     return dateFns.format(parsedDate, this.toDateFnsMask(maskForLocale));
+  }
+
+  /**
+   * Determines if the given type and format combination represents a full year/month/day date.
+   * @param {string} type - The input type.
+   * @param {string} format - The date format string.
+   * @returns {boolean}
+   */
+  isFullDateFormat(type, format) {
+    const normalizedFormat = format ? format.toLowerCase() : '';
+
+    return type === 'date' && normalizedFormat.includes('yy') && normalizedFormat.includes('mm') && normalizedFormat.includes('dd');
+  }
+
+  /**
+   * Converts a display string to its model value.
+   * For full date formats, converts the display string to an ISO date string.
+   * @param {string} inputValue - String from the rendered input.
+   * @param {string} format - The date format string.
+   * @returns {string}
+   */
+  toModelValue(inputValue, format) {
+    if (!this.isFullDateFormat('date', format) || !inputValue) {
+      return inputValue;
+    }
+
+    if (inputValue.length !== format.length) {
+      return inputValue;
+    }
+
+    const normalizedFormat = format ? format.toLowerCase() : '';
+    const parsedDate = this.parseDateByMask(inputValue, normalizedFormat);
+
+    if (!(parsedDate instanceof Date) || Number.isNaN(parsedDate.getTime())) {
+      return inputValue;
+    }
+
+    return dateFormatter.toISOFormatString(parsedDate);
+  }
+
+  /**
+   * Converts a model value to a display value for the input element.
+   * For full date formats, converts an ISO model value to the configured display format.
+   * @param {string} value - The model value (ISO string for date types).
+   * @param {Date|undefined} valueObject - Date object representation of value.
+   * @param {string} format - The date format string.
+   * @returns {string}
+   */
+  toDisplayValue(value, valueObject, format) {
+    if (!this.isFullDateFormat('date', format) || !value) {
+      return value;
+    }
+
+    if (!dateFormatter.isValidISODate(value)) {
+      // For ISO-pattern strings that fail range validation (e.g. '2024-99-99'),
+      // return '' so inputElement stays empty and format-based validation is not triggered.
+      return (/^\d{4}-\d{2}-\d{2}$/u).test(value) ? '' : value;
+    }
+
+    const normalizedFormat = format ? format.toLowerCase() : '';
+    const maskOptions = this.getMaskOptions('date', normalizedFormat);
+
+    if (!(valueObject instanceof Date) || Number.isNaN(valueObject.getTime()) || !maskOptions || typeof maskOptions.format !== 'function') {
+      return value;
+    }
+
+    return maskOptions.format(valueObject);
   }
 }
