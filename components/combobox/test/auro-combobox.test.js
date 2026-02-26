@@ -517,6 +517,18 @@ function runFulltest(mobileview) {
 
     setInputValue(el, 'pp');
     await elementUpdated(el);
+
+    if (mobileview) {
+      // Wait for the fullscreen dialog transition to settle,
+      // then close the dialog and wait for focus to return to trigger
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+      el.hideBib();
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
+    }
+
     el.shadowRoot.activeElement.blur();
     await elementUpdated(el);
 
