@@ -4,6 +4,7 @@ import { valueExtractionExample } from "../apiExamples/value-extraction";
 import { valueAlertExample } from "../apiExamples/value-alert";
 import { inDialogExample } from '../apiExamples/in-dialog';
 import { resetStateExample } from "../apiExamples/reset-state";
+import { updateActiveOptionExample } from "../apiExamples/update-active-option.js";
 // import { auroMenuLoadingExample } from "../apiExamples/loading";
 
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
@@ -23,6 +24,7 @@ export function initExamples(initCount) {
     valueAlertExample();
     inDialogExample();
     resetStateExample();
+    updateActiveOptionExample();
     // auroMenuLoadingExample();
   } catch (err) {
     if (initCount <= 20) {
