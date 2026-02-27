@@ -43,13 +43,14 @@ The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create
 
 ## Methods
 
-| Method         | Type                                   | Description                                      |
-|----------------|----------------------------------------|--------------------------------------------------|
-| [hideBib](#hideBib)      | `(): void`                             | Hides the dropdown bib if its open.              |
-| [reset](#reset)        | `(): void`                             | Resets component to initial state.               |
-| [setMenuValue](#setMenuValue) | `(value: any): void`                   |                                                  |
-| [showBib](#showBib)      | `(): void`                             | Shows the dropdown bib if there are options to show. |
-| [validate](#validate)     | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method               | Type                                   | Description                                      |
+|----------------------|----------------------------------------|--------------------------------------------------|
+| [hideBib](#hideBib)            | `(): void`                             | Hides the dropdown bib if its open.              |
+| [reset](#reset)              | `(): void`                             | Resets component to initial state.               |
+| [setMenuValue](#setMenuValue)       | `(value: any): void`                   |                                                  |
+| [showBib](#showBib)            | `(): void`                             | Shows the dropdown bib if there are options to show. |
+| [updateActiveOption](#updateActiveOption) | `(index: number): void`                | Updates the active option in the menu.<br /><br />**index**: Index of the option to make active. |
+| [validate](#validate)           | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
@@ -1364,6 +1365,67 @@ export function resetStateExample() {
 
   document.querySelector('#resetStateBtn').addEventListener('click', () => {
     elem.reset();
+  });
+}
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+### Update Active Option
+
+Use the `updateActiveOption(index)` method to programmatically set the active option in the menu.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/update-active-option.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/update-active-option.html -->
+  <auro-select id="updateActiveOptionExample">
+    <span slot="ariaLabel.bib.close">Close Popup</span>
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Select Example</span>
+    <auro-menu>
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="duration">Duration</auro-menuoption>
+      <auro-menuoption value="departure">Departure</auro-menuoption>
+      <auro-menuoption value="arrival">Arrival</auro-menuoption>
+      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/update-active-option.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/update-active-option.html -->
+
+```html
+<auro-select id="updateActiveOptionExample">
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Select Example</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+    <auro-menuoption value="arrival">Arrival</auro-menuoption>
+    <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
+  </auro-menu>
+</auro-select>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/update-active-option.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/update-active-option.js -->
+
+```js
+export function updateActiveOptionExample() {
+  const select = document.getElementById('updateActiveOptionExample');
+  const dropdown = select.dropdown;
+
+  dropdown.addEventListener('auroDropdown-toggled', () => {
+    if (dropdown.isPopoverVisible) {
+      select.updateActiveOption(2); // Set the active option to the third item (index 2)
+    }
   });
 }
 ```
