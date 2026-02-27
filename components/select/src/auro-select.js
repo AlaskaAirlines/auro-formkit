@@ -702,6 +702,11 @@ export class AuroSelect extends AuroElement {
 
     this.options = this.menu.options;
     this.menu.setAttribute('aria-hidden', 'true');
+    this.menu.addEventListener('auroMenu-activatedOption', () => {
+      if (this.dropdown.isPopoverVisible) {
+        this.scrollActiveOptionIntoView();
+      }
+    });
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
 
@@ -956,6 +961,24 @@ export class AuroSelect extends AuroElement {
   setMenuValue(value) {
     if (!this.menu) return;
     this.menu.value = value;
+  }
+
+  /**
+   * Scrolls the currently active option into view.
+   * Respects user's motion preferences for accessibility.
+   * @private
+   */
+  scrollActiveOptionIntoView() {
+    if (!this.menu || !this.menu.optionActive) return;
+
+      // Check if user prefers reduced motion for accessibility
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    this.menu.optionActive.scrollIntoView({
+      alignToTop: false,
+      block: "nearest",
+      behavior: prefersReducedMotion ? "auto" : "smooth"
+    });
   }
 
   /**
