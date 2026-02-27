@@ -840,10 +840,13 @@ export class AuroCombobox extends AuroElement {
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
 
+      // Check if user prefers reduced motion for accessibility
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       this.optionActive.scrollIntoView({
         alignToTop: false,
         block: "nearest",
-        behavior: "smooth"
+        behavior: prefersReducedMotion ? "auto" : "smooth"
       });
     });
 
