@@ -33,32 +33,33 @@
     <!-- Demo Specific Styles -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+    
+    <!-- Alpine.js for submission simulation -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="auro-markdown">
+<body class="auro-markdown" x-data="formDemo()">
 <main>
   <style>
-    .submitBlock {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-    }
-
-    .datepickerBlock {
-      margin-top: 1rem;
-    }
-
     auro-form {
       display: block;
-      width: 100%;
-      padding: 1rem;
-      border: 1px solid #2a2a2a;
-      border-radius: 1rem;
+    }
+
+    auro-checkbox-group,
+    auro-radio-group,
+    auro-select,
+    auro-combobox,
+    auro-counter-group {
+      margin-bottom: 1rem;
     }
   </style>
 
-  <h2>auro-form testing</h2>
-  <auro-form>
+  <h2>auro-form Testing</h2>
+
+  <auro-form class="p-4 border border-gray-800 rounded-2xl space-y-6"">
+    <h3 class="mt-0 mb-4 text-xl">Text Inputs</h3>
     <auro-input id="first-name" name="firstName" required>
       <span slot="label">First Name</span>
     </auro-input>
@@ -79,16 +80,74 @@
       <span slot="label">Cool Fact</span>
     </auro-input-two>
 
-    <div class="datepickerBlock">
-      <h4>Pick a cool date</h4>
+    <h3 class="mt-8 mb-4 text-xl">Checkboxes</h3>
+    <auro-checkbox-group name="interests" required setCustomValidityValueMissing="Please select an option">
+      <span slot="legend">Select your interests</span>
+      <auro-checkbox value="sports" name="interests" id="checkbox-sports">Sports</auro-checkbox>
+      <auro-checkbox value="music" name="interests" id="checkbox-music">Music</auro-checkbox>
+      <auro-checkbox value="reading" name="interests" id="checkbox-reading">Reading</auro-checkbox>
+      <auro-checkbox value="travel" name="interests" id="checkbox-travel">Travel</auro-checkbox>
+    </auro-checkbox-group>
+
+    <h3 class="mt-8 mb-4 text-xl">Radio Buttons</h3>
+    <auro-radio-group name="season" required setCustomValidityValueMissing="value missing">
+      <span slot="legend">Select your favorite season</span>
+      <auro-radio id="radio-spring" label="Spring" name="season" value="spring"></auro-radio>
+      <auro-radio id="radio-summer" label="Summer" name="season" value="summer"></auro-radio>
+      <auro-radio id="radio-fall" label="Fall" name="season" value="fall"></auro-radio>
+      <auro-radio id="radio-winter" label="Winter" name="season" value="winter"></auro-radio>
+    </auro-radio-group>
+
+    <h3 class="mt-8 mb-4 text-xl">Select Dropdown</h3>
+    <auro-select name="country" required>
+      <span slot="label">Select your country</span>
+      <auro-menu>
+        <auro-menuoption value="usa">United States</auro-menuoption>
+        <auro-menuoption value="canada">Canada</auro-menuoption>
+        <auro-menuoption value="mexico">Mexico</auro-menuoption>
+        <auro-menuoption value="uk">United Kingdom</auro-menuoption>
+        <auro-menuoption value="france">France</auro-menuoption>
+        <auro-menuoption value="germany">Germany</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+
+    <h3 class="mt-8 mb-4 text-xl">Combobox</h3>
+    <auro-combobox name="fruit" required>
+      <span slot="label">Select or type a fruit</span>
+      <auro-menu>
+        <auro-menuoption value="Apples" id="option-apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges" id="option-oranges">Oranges</auro-menuoption>
+        <auro-menuoption value="Peaches" id="option-peaches">Peaches</auro-menuoption>
+        <auro-menuoption value="Grapes" id="option-grapes">Grapes</auro-menuoption>
+        <auro-menuoption value="Cherries" id="option-cherries">Cherries</auro-menuoption>
+        <auro-menuoption value="Bananas" id="option-bananas">Bananas</auro-menuoption>
+        <auro-menuoption static nomatch>No matching option</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+
+    <h3 class="mt-8 mb-4 text-xl">Counter Group</h3>
+    <auro-counter-group name="travelers">
+      <auro-counter name="adults">
+        Adults (18+)
+      </auro-counter>
+      <auro-counter name="children">
+        Children (2-17)
+      </auro-counter>
+      <auro-counter name="infants">
+        Infants (under 2)
+      </auro-counter>
+    </auro-counter-group>
+
+    <div class="mt-4">
+      <h3 class="mt-8 mb-4 text-xl">Date Picker</h3>
       <auro-datepicker id="date-example" name="dateExample" required>
         <span slot="fromLabel">Choose a date</span>
         <span slot="bib.fullscreen.dateLabel">Choose a date</span>
       </auro-datepicker>
     </div>
 
-    <div class="datepickerBlock">
-      <h4>Pick a date range</h4>
+    <div class="mt-4">
+      <h3 class="mt-8 mb-4 text-xl">Date Range Picker</h3>
       <auro-datepicker id="date-range" name="dateRange" required range>
         <span slot="fromLabel">Start</span>
         <span slot="toLabel">End</span>
@@ -96,7 +155,7 @@
       </auro-datepicker>
     </div>
 
-    <div class="submitBlock">
+    <div class="mt-8 flex justify-end gap-4">
       <auro-button type="reset">Reset</auro-button>
       <auro-button type="submit">Submit</auro-button>
     </div>
@@ -104,17 +163,49 @@
 </main>
 
 <!-- Form elements MUST be registered BEFORE form if custom names are used -->
-<script type="module" data-demo-script="true" src="./registerDemoDeps.js"></script>
-<script type="module" data-demo-script="true" src="./index.js"></script>
-<!--<script type="module" data-demo-script="true" src="~@aurodesignsystem/auro-input/dist/index.min.js"></script>-->
+<script type="module" data-demo-script="true" src="./index.min.js"></script>
 
 <script>
-  const form = document.querySelector('auro-form');
-  form.addEventListener('submit', (event) => {
-    console.log(event)
+  // Alpine.js component for form demo
+  function formDemo() {
+    return {
 
-    console.log(event.target.value)
-  })
+      init() {
+        // Set up form submit listener
+        const form = document.querySelector('auro-form');
+        if (form) {
+          form.addEventListener('submit', (event) => this.handleSubmit(event));
+          form.addEventListener('input', (event) => console.log('Form input changed:', form.value));
+          form.addEventListener('reset', (event) => console.log('Form reset. Previous value:', event.detail.previousValue));
+        }
+      },
+
+      async handleSubmit(event) {
+        console.log(event.detail.value);
+        
+        const form = document.querySelector('auro-form');
+
+        try {
+          // Simulate async API call
+          await this.simulateApiCall();
+
+        } catch (error) {
+          console.error(`Submit failed:`, error);
+        } finally {
+          
+          console.log('Submission complete');
+        }
+      },
+
+      simulateApiCall() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ success: true });
+          }, 0);
+        });
+      }
+    };
+  }
 </script>
 
 <!-- If additional elements are needed for the demo, add them here. -->
