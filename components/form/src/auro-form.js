@@ -30,7 +30,8 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  *
  * @slot default - The default slot for form elements.
  *
- * @event input - Fires when form state changes.
+ * @event input - Fires when a child form element receives user input.
+ * @event change - Fires when a child form element's value changes or the form is initialized.
  * @event reset - Fires when the form is reset. The event detail contains the previous value of the form before reset.
  * @event submit - Fires when the form is submitted. The event detail contains the current value of the form.
  */
