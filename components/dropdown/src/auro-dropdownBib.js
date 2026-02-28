@@ -212,11 +212,15 @@ export class AuroDropdownBib extends LitElement {
     //   native Enter→click that <button> provides, so we call .click()
     //   directly when Enter is pressed on a button-like element.
     //
-    // - Tab: NOT intercepted — left to the browser's native focus trap
-    //   provided by showModal(), which cycles Tab between focusable
-    //   elements inside the dialog (e.g. the input and close button).
-    //   Intercepting Tab would kill the native focus trap and break
-    //   focus management inside the dialog.
+    // - Tab: Intercepted and re-dispatched so parent components
+    //   (select/combobox) can select the active option and close the
+    //   dialog. The <dialog> provides containment and isolation
+    //   (inert background, VoiceOver focus trapping, top layer), while
+    //   the content inside is a role="listbox" navigated via
+    //   aria-activedescendant (options are not focusable). Tab keyboard
+    //   behavior follows listbox conventions (select + close) because
+    //   the dialog's native Tab trap only cycles between the close
+    //   button and browser chrome.
     //
     // - Escape: The native <dialog> fires a `cancel` event on ESC
     //   (handled above), so the re-dispatched Escape is a secondary
@@ -225,7 +229,8 @@ export class AuroDropdownBib extends LitElement {
       'ArrowUp',
       'ArrowDown',
       'Enter',
-      'Escape'
+      'Escape',
+      'Tab'
     ]);
     dialog.addEventListener('keydown', (event) => {
       if (!navKeys.has(event.key)) {

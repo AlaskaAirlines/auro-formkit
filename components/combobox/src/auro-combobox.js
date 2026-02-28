@@ -1201,21 +1201,21 @@ export class AuroCombobox extends AuroElement {
       }
 
       if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        // Non-fullscreen (combobox pattern per WAI-ARIA APG):
-        // Tab accepts the focused option and closes the popup, moving focus
-        // to the next focusable element on the page.
+        // Tab accepts the focused option and closes the popup per the
+        // WAI-ARIA APG combobox / listbox pattern.
         // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
         //
-        // Fullscreen (dialog / modal pattern): Tab navigates between
-        // focusable elements inside the modal (e.g. the close button) via
-        // the native focus trap provided by showModal(). The dropdown is
-        // closed by the close button or Escape instead.
-        if (!this.dropdown.isBibFullscreen) {
-          if (this.menu.optionActive && this.menu.optionActive.value) {
-            this.menu.value = this.menu.optionActive.value;
-          }
-          this.hideBib();
+        // In fullscreen mode the popup is inside a <dialog> which provides
+        // containment (inert background, VoiceOver focus trapping), but
+        // the content is a role="listbox" navigated via
+        // aria-activedescendant, not Tab focus. The dialog's native Tab
+        // trap only reaches the close button, so Tab is overridden (via
+        // re-dispatch from auro-dropdownBib) to follow listbox keyboard
+        // conventions in both modes.
+        if (this.menu.optionActive && this.menu.optionActive.value) {
+          this.menu.value = this.menu.optionActive.value;
         }
+        this.hideBib();
       }
 
       /**
