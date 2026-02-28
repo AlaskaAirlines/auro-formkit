@@ -284,7 +284,7 @@ function runTest(mobileView) {
       await expect(dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('tabbing away from the element closes the bib in non-mobile view', async () => {
+    it('tabbing away from the element closes the bib', async () => {
       const el = await defaultFixture();
 
       const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -297,11 +297,7 @@ function runTest(mobileView) {
         'key': 'Tab'
       }));
 
-      if (mobileView) {
-        await expect(dropdown.isPopoverVisible).to.be.true;
-      } else {
-        await expect(dropdown.isPopoverVisible).to.be.false;
-      }
+      await expect(dropdown.isPopoverVisible).to.be.false;
     });
 
     it('Navigates the menu with arrow keys', async () => {
