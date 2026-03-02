@@ -525,7 +525,10 @@ export class AuroDropdown extends AuroElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.floater.disconnect();
+    if (this.floater) {
+      this.floater.hideBib('disconnect');
+      this.floater.disconnect();
+    }
     this.clearTriggerFocusEventBinding();
   }
 
@@ -569,7 +572,6 @@ export class AuroDropdown extends AuroElement {
   }
 
   firstUpdated() {
-
     // Configure the floater to, this will generate the ID for the bib
     this.floater.configure(this, 'auroDropdown');
     this.addEventListener('auroDropdown-toggled', this.handleDropdownToggle);
