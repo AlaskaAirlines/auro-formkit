@@ -614,6 +614,9 @@ export class AuroSelect extends AuroElement {
               } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
                 this.menu.updateActiveOption(this.optionSelected[0]);
               }
+
+              // Scroll the selected option into view when dropdown opens
+              this.scrollSelectedOptionIntoView();
             });
           });
         } else {
@@ -621,6 +624,9 @@ export class AuroSelect extends AuroElement {
           setTimeout(() => {
             // Keep focus on trigger so aria-activedescendant announces menu options
             this.dropdown.trigger.focus();
+
+            // Scroll the selected option into view when dropdown opens
+            this.scrollSelectedOptionIntoView();
           });
         }
       }
@@ -1122,7 +1128,7 @@ export class AuroSelect extends AuroElement {
   scrollActiveOptionIntoView() {
     if (!this.menu || !this.menu.optionActive) return;
 
-      // Check if user prefers reduced motion for accessibility
+    // Check if user prefers reduced motion for accessibility
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     this.menu.optionActive.scrollIntoView({
