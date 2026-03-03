@@ -256,6 +256,10 @@ export class AuroDropdownBib extends LitElement {
       const newEvent = new KeyboardEvent('keydown', {
         key: event.key,
         code: event.code,
+        shiftKey: event.shiftKey,
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        metaKey: event.metaKey,
         bubbles: true,
         composed: true,
         cancelable: true

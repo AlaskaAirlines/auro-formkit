@@ -18,6 +18,9 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
+import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
+import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
+
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
@@ -860,61 +863,7 @@ export class AuroSelect extends AuroElement {
   configureSelect() {
     this.nativeSelect = this.shadowRoot.querySelector('select');
 
-    this.addEventListener('keydown', (evt) => {
-
-      if (evt.key === 'ArrowUp') {
-        evt.preventDefault();
-
-        if (this.dropdown.isPopoverVisible) {
-          this.menu.navigateOptions('up');
-        } else {
-          this.dropdown.show();
-        }
-
-        return;
-      }
-
-      if (evt.key === 'ArrowDown') {
-        evt.preventDefault();
-
-        if (this.dropdown.isPopoverVisible) {
-          this.menu.navigateOptions('down');
-        } else {
-          this.dropdown.show();
-        }
-
-        return;
-      }
-
-      if (evt.key === 'Enter') {
-        evt.preventDefault();
-        this.menu.makeSelection();
-
-        return;
-      }
-
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        // Tab selects the focused option and closes the popup per the
-        // WAI-ARIA APG select-only combobox / listbox pattern.
-        // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
-        //
-        // In fullscreen mode the popup is inside a <dialog> which provides
-        // containment (inert background, VoiceOver focus trapping), but
-        // the content is a role="listbox" navigated via
-        // aria-activedescendant, not Tab focus. The dialog's native Tab
-        // trap only reaches the close button, so Tab is overridden (via
-        // re-dispatch from auro-dropdownBib) to follow listbox keyboard
-        // conventions in both modes.
-        if (this.optionActive && !this.multiSelect) {
-          this.menu.makeSelection();
-        }
-        this.dropdown.hide();
-        return;
-      }
-
-      // Handle all other key presses by updating the active option based on the key pressed
-      this.updateActiveOptionBasedOnKey(evt.key);
-    });
+    applyKeyboardStrategy(this, selectKeyboardStrategy);
 
     this.addEventListener('focusin', this.handleFocusin);
 
