@@ -14,6 +14,9 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
+import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
+import { comboboxKeyboardStrategy } from './comboboxKeyboardStrategy.js';
+
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
@@ -1126,8 +1129,33 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleInputValueChange(event) {
+    // When the event comes from the fullscreen bib input, sync the value to
+    // the trigger input. Setting trigger.value triggers Lit's updated()
+    // (async, microtask) which fires notifyValueChanged() → another 'input'
+    // event from the trigger. The _syncingBibValue guard persists across the
+    // async boundary and prevents that re-entrant event from running the
+    // non-fullscreen path (which would call clear() → hideBib()).
+    // When the event comes from the fullscreen bib input, sync the value to
+    // the trigger and run filtering, but suppress the re-entrant input event
+    // that the trigger fires (via Lit updated() → notifyValueChanged()) so
+    // the non-fullscreen hide/clear logic doesn't close the dialog.
     if (event.target === this.inputInBib) {
+      this._syncingBibValue = true;
       this.input.value = this.inputInBib.value;
+      this.input.updateComplete.then(() => {
+        this._syncingBibValue = false;
+      });
+
+      // Run filtering inline — the re-entrant event won't reach this code.
+      this.menu.matchWord = this.inputInBib.value;
+      this.optionActive = null;
+      this.handleMenuOptions();
+      this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
+      return;
+    }
+
+    // Ignore re-entrant input events caused by the bib→trigger sync above.
+    if (this._syncingBibValue) {
       return;
     }
 
@@ -1185,58 +1213,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   configureCombobox() {
-    this.addEventListener('keydown', async (evt) => {
-      if (evt.key === 'Enter') {
-        if (this.dropdown.isPopoverVisible && this.optionActive) {
-          this.menu.makeSelection();
-
-          await this.updateComplete;
-
-          evt.preventDefault();
-          evt.stopPropagation();
-          this.setClearBtnFocus();
-        } else {
-          this.showBib();
-        }
-      }
-
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        // Tab accepts the focused option and closes the popup per the
-        // WAI-ARIA APG combobox / listbox pattern.
-        // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
-        //
-        // In fullscreen mode the popup is inside a <dialog> which provides
-        // containment (inert background, VoiceOver focus trapping), but
-        // the content is a role="listbox" navigated via
-        // aria-activedescendant, not Tab focus. The dialog's native Tab
-        // trap only reaches the close button, so Tab is overridden (via
-        // re-dispatch from auro-dropdownBib) to follow listbox keyboard
-        // conventions in both modes.
-        if (this.menu.optionActive && this.menu.optionActive.value) {
-          this.menu.value = this.menu.optionActive.value;
-        }
-        this.hideBib();
-      }
-
-      /**
-       * Prevent moving the cursor position while navigating the menu options.
-       */
-      if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown') {
-        if (this.availableOptions.length > 0) {
-          this.showBib();
-        }
-
-        if (this.dropdown.isPopoverVisible) {
-          evt.preventDefault();
-
-          // navigate on menu only when the focus is on input
-          if (!this.dropdown.isBibFullscreen || this.dropdown.isPopoverVisible) {
-            const direction = evt.key.replace('Arrow', '').toLowerCase();
-            this.menu.navigateOptions(direction);
-          }
-        }
-      }
-    });
+    applyKeyboardStrategy(this, comboboxKeyboardStrategy);
 
     this.addEventListener('focusin', () => {
       this.touched = true;
