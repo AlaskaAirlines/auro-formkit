@@ -52,7 +52,7 @@ import { LitElement } from 'lit';
 /**
  * The `auro-datepicker` component provides users with a way to select a date or date range from a calendar popup or fullscreen calendar on mobile.
  * @customElement auro-datepicker
- * 
+ *
  * @slot helpText - Defines the content of the helpText.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
@@ -876,6 +876,12 @@ export class AuroDatePicker extends AuroElement {
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
+    // DEMO CODE REMOVE
+    // this.inputList.forEach(input => {
+    //   input.util.updateLocale("ja-JP");
+    // });
+    // DEMO CODE REMOVE
+
     this.handleReadOnly();
 
     this.inputList.forEach((input, index) => {
@@ -888,8 +894,10 @@ export class AuroDatePicker extends AuroElement {
 
       input.addEventListener('input', () => {
         if (index === 0) {
+          // NOTE: input.formattedDate is available here as well
           this.value = input.value;
         } else if (index === 1) {
+          // NOTE: input.formattedDate is available here as well
           this.valueEnd = input.value;
         }
 
@@ -928,10 +936,16 @@ export class AuroDatePicker extends AuroElement {
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
       if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
         this.inputList[0].value = this.convertWcTimeToDate(this.calendar.dateFrom);
+
+        // Below code demonstrates how to set the input value to a localized format
+        // this.inputList[0].value = this.inputList[0].util.toLocaleFormat(this.convertWcTimeToDate(this.calendar.dateFrom));
       }
 
       if (this.inputList[1] && this.calendar.dateTo && this.inputList[1].value !== this.calendar.dateTo) {
         this.inputList[1].value = this.convertWcTimeToDate(this.calendar.dateTo);
+
+        // Below code demonstrates how to set the input value to a localized format
+        // this.inputList[1].value = this.inputList[1].util.toLocaleFormat(this.convertWcTimeToDate(this.calendar.dateTo));
       }
     });
 
@@ -1640,7 +1654,6 @@ export class AuroDatePicker extends AuroElement {
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
-          .format="${this.format}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
           .placeholder="${this.placeholder}"
@@ -1683,7 +1696,6 @@ export class AuroDatePicker extends AuroElement {
             appearance="${this.onDark ? 'inverse' : this.appearance}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
-            .format="${this.format}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
