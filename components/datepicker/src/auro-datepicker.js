@@ -903,8 +903,18 @@ export class AuroDatePicker extends AuroElement {
             if (bibEl && this.dropdown.isPopoverVisible) {
               bibEl.close();
               bibEl.open(true);
+
+              // Double rAF is needed because a single frame is not enough
+              // for the bibtemplate's close button to be in the DOM and
+              // focusable after showModal(). The first frame lets the
+              // dialog render; the second waits for the bibtemplate's Lit
+              // update cycle to complete. Without this, focus sometimes
+              // stays on the trigger behind the dialog, leaving VoiceOver's
+              // cursor outline visible on top of the fullscreen calendar.
               requestAnimationFrame(() => {
-                this.calendar.focusCloseButton();
+                requestAnimationFrame(() => {
+                  this.calendar.focusCloseButton();
+                });
               });
             }
           });
@@ -974,8 +984,11 @@ export class AuroDatePicker extends AuroElement {
           if (bibEl && this.dropdown.isPopoverVisible) {
             bibEl.close();
             bibEl.open(true);
+            // Double rAF needed for reliable focus — see toggled handler comment.
             requestAnimationFrame(() => {
-              this.calendar.focusCloseButton();
+              requestAnimationFrame(() => {
+                this.calendar.focusCloseButton();
+              });
             });
           }
         });
