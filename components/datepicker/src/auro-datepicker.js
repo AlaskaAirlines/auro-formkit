@@ -57,7 +57,9 @@ import { LitElement } from 'lit';
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
  * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
- * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
+ * @slot bib.fullscreen.dateLabel - **DEPRECATED** - Use `bib.fullscreen.fromLabel` instead.
+ * @slot bib.fullscreen.fromLabel - Defines the content to display above the first input in the mobile layout.
+ * @slot bib.fullscreen.toLabel - Defines the content to display above the second input in the mobile layout when `range` is true.
  * @slot label - Defines the label content for the entire datepicker when `layout="snowflake"`.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
  * @slot fromLabel - Defines the label content for the first input.
@@ -1640,6 +1642,7 @@ export class AuroDatePicker extends AuroElement {
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
+          ?hideLabelVisually="${this.layout !== 'classic'}"
           .format="${this.format}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
@@ -1683,6 +1686,7 @@ export class AuroDatePicker extends AuroElement {
             appearance="${this.onDark ? 'inverse' : this.appearance}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
+            ?hideLabelVisually="${this.layout !== 'classic'}"
             .format="${this.format}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
@@ -1847,8 +1851,10 @@ export class AuroDatePicker extends AuroElement {
         <slot name="ariaLabel.bib.close" slot="ariaLabel.close" @slotchange="${this.handleSlotToSlot}">Close</slot>
         <slot slot="bib.fullscreen.headline" name="bib.fullscreen.headline" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
+        <slot slot="bib.fullscreen.toLabel" name="bib.fullscreen.toLabel" @slotchange="${this.handleSlotToSlot}"></slot>
+        <slot slot="bib.fullscreen.fromLabel" name="bib.fullscreen.fromLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
-        ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
+        ${this.range ? html`<span slot="bib.fullscreen.toStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
       </auro-formkit-calendar>
     `;
   }

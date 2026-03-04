@@ -214,7 +214,7 @@ export class AuroInput extends BaseInput {
     return {
       'is-disabled': this.disabled,
       'withValue': this.hasValue,
-      'util_displayHiddenVisually': this.labelHidden,
+      'util_displayHiddenVisually': this.labelHidden || this.hideLabelVisually,
       [this.labelFontClass]: true,
     };
   }
