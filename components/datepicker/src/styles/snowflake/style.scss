@@ -5,7 +5,6 @@
     flex: 1;
     text-align: center;
 
-    &::part(label),
     &::part(accent-left),
     &::part(accent-right) {
       display: none;

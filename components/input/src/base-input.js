@@ -40,6 +40,7 @@ export default class BaseInput extends AuroElement {
     this.icon = false;
     this.disabled = false;
     this.dvInputOnly = false;
+    this.hideLabelVisually = false;
     this.max = undefined;
     this.maxLength = undefined;
     this.min = undefined;
@@ -252,6 +253,16 @@ export default class BaseInput extends AuroElement {
         reflect: false,
         attribute: false
       },
+
+      /**
+       * If set, the label will be hidden visually but still accessible to assistive technologies.
+       * @private
+       */
+      hideLabelVisually: {
+        type: Boolean,
+        reflect: true
+      },
+
 
       /**
        * If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
