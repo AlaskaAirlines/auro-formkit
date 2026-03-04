@@ -345,3 +345,53 @@ describe('auro-counter-group: keyboard navigation', () => {
     expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 });
+
+describe('auro-counter-group: fullscreen dialog', () => {
+  it('focuses close button when fullscreen dialog opens', async () => {
+    const el = await fixture(html`
+      <auro-counter-group isDropdown>
+        <span slot="bib.fullscreen.headline">Travelers</span>
+        <auro-counter value="2">Counter 1</auro-counter>
+        <auro-counter value="3">Counter 2</auro-counter>
+      </auro-counter-group>
+    `);
+
+    // Open dropdown in desktop (non-modal) mode
+    el.dropdown.show();
+    await elementUpdated(el);
+
+    // Set fullscreen on bibtemplate to render the close button
+    el.bibtemplate.isFullscreen = true;
+    await el.bibtemplate.updateComplete;
+
+    // Call focusCloseButton (the method under test)
+    el.bibtemplate.focusCloseButton();
+
+    const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
+    expect(closeBtn).to.exist;
+    expect(el.bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
+  });
+
+  it('Tab key closes fullscreen dialog', async () => {
+    const el = await fixture(html`
+      <auro-counter-group isDropdown>
+        <auro-counter value="2">Counter 1</auro-counter>
+        <auro-counter value="3">Counter 2</auro-counter>
+      </auro-counter-group>
+    `);
+
+    // Open dropdown in desktop (non-modal) mode
+    el.dropdown.show();
+    await elementUpdated(el);
+    expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    // Set isBibFullscreen and immediately dispatch Tab —
+    // the synchronous keydown handler reads isBibFullscreen before
+    // Lit's async update can re-open the dialog in modal mode
+    el.dropdown.isBibFullscreen = true;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    await elementUpdated(el);
+
+    expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
+});

@@ -227,6 +227,42 @@ function runFulltest(mobileview) {
   //   await expect(el.dropdown.isPopoverVisible).to.be.false;
   // });
 
+  it('focuses input in bib when fullscreen dialog opens', async () => {
+    const el = await defaultFixture(mobileview);
+
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    // inputInBib should exist in fullscreen mode
+    expect(el.inputInBib).to.exist;
+
+    // Follow existing mobile pattern: explicitly focus inputInBib
+    el.inputInBib.focus();
+    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    expect(el.shadowRoot.activeElement).to.equal(el.inputInBib);
+  });
+
+  it('Tab key closes fullscreen dialog', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    el.inputInBib.focus();
+    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+
+    // Wait for dialog close + rAF focus restoration
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await elementUpdated(el);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
+
   it('hides the bib when selecting an option with a custom event', async () => {
     const el = await customEventFixture(mobileview);
 

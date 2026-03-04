@@ -300,6 +300,41 @@ function runTest(mobileView) {
       await expect(dropdown.isPopoverVisible).to.be.false;
     });
 
+    if (mobileView) {
+      it('focuses close button when fullscreen dialog opens', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for double-rAF focus cycle used by configureDropdown
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
+        expect(closeBtn).to.exist;
+        expect(el.bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
+      });
+
+      it('Tab key closes fullscreen dialog', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for fullscreen dialog to settle
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await elementUpdated(el);
+
+        await expect(dropdown.isPopoverVisible).to.be.false;
+      });
+    }
+
     it('Navigates the menu with arrow keys', async () => {
       const el = await defaultFixture();
 
