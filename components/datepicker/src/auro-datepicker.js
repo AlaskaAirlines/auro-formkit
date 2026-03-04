@@ -894,6 +894,9 @@ export class AuroDatePicker extends AuroElement {
             if (bibEl && this.dropdown.isPopoverVisible) {
               bibEl.close();
               bibEl.open(true);
+              requestAnimationFrame(() => {
+                this.calendar.focusCloseButton();
+              });
             }
           });
 
@@ -962,6 +965,9 @@ export class AuroDatePicker extends AuroElement {
           if (bibEl && this.dropdown.isPopoverVisible) {
             bibEl.close();
             bibEl.open(true);
+            requestAnimationFrame(() => {
+              this.calendar.focusCloseButton();
+            });
           }
         });
       } else if (!this.dropdown.isBibFullscreen) {

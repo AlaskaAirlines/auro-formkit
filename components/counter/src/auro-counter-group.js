@@ -493,6 +493,17 @@ export class AuroCounterGroup extends AuroElement {
         this.dropdown.hide();
       }
     });
+
+    // Focus close button when fullscreen dialog opens
+    this.dropdown.addEventListener('auroDropdown-toggled', () => {
+      if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            this.bibtemplate.focusCloseButton();
+          });
+        });
+      }
+    });
   }
 
   /**
