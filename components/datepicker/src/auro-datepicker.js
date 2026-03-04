@@ -853,6 +853,15 @@ export class AuroDatePicker extends AuroElement {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
 
+    // Tab closes the fullscreen dialog (same pattern as select).
+    // The dialog event bridge intercepts Tab and re-dispatches it as a
+    // composed keydown; this listener catches the re-dispatched event.
+    this.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
+        this.dropdown.hide();
+      }
+    });
+
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       if (!this.isPopoverVisible) {
         this.dropdown.show();
