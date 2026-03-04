@@ -608,7 +608,7 @@ export class AuroSelect extends AuroElement {
           // multiple Lit update cycles before moving focus into the bib
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-              this.dropdown.focus();
+              this.bibtemplate.focusCloseButton();
 
               // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
               // No selection → no highlight
@@ -638,11 +638,15 @@ export class AuroSelect extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       this.updateMenuShapeSize();
 
-      // When switching to fullscreen while open, move focus into the bib
+      // When switching to fullscreen while open, focus the close button
       // so it's not stuck on the trigger behind the dialog
       if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
         this.dropdown.trigger.inert = true;
-        this.dropdown.focus();
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            this.bibtemplate.focusCloseButton();
+          });
+        });
       } else if (!this.dropdown.isBibFullscreen) {
         this.dropdown.trigger.inert = false;
       }

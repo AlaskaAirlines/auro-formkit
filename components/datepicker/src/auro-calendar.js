@@ -321,6 +321,16 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
+   * Focuses the close button inside the calendar's bibtemplate.
+   * Used by datepicker to set initial focus when the fullscreen dialog opens.
+   * @returns {void}
+   */
+  focusCloseButton() {
+    const bibtemplate = this.shadowRoot.querySelector(this.bibtemplateTag._$litStatic$);
+    if (bibtemplate) bibtemplate.focusCloseButton();
+  }
+
+  /**
    * Request the calendar be scrolled to a given date.
    * @param {String} date - The date to scroll into view.
    * @returns {void}
