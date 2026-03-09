@@ -758,6 +758,24 @@ function runFulltest(mobileview) {
       expect(dialog.hasAttribute('role')).to.be.false;
     });
   });
+
+  describe('disconnectedCallback', () => {
+    it('resets _inFullscreenTransition so validation is not suppressed after reconnect', async () => {
+      const el = await defaultFixture(mobileview);
+      await elementUpdated(el);
+
+      // Simulate the flag being stuck mid-transition
+      el._inFullscreenTransition = true;
+
+      // Disconnect and reconnect
+      const parent = el.parentNode;
+      parent.removeChild(el);
+      parent.appendChild(el);
+      await elementUpdated(el);
+
+      expect(el._inFullscreenTransition).to.be.false;
+    });
+  });
 }
 
 /**
