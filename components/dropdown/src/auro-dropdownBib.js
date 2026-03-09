@@ -119,6 +119,17 @@ export class AuroDropdownBib extends LitElement {
        */
       dialogLabel: {
         type: String
+      },
+
+      /**
+       * Overrides the native role of the dialog element.
+       * For example, set to `"presentation"` on desktop combobox to prevent
+       * VoiceOver from announcing "listbox inside of a dialog".
+       * When `undefined`, the dialog keeps its native role.
+       * @private
+       */
+      dialogRole: {
+        type: String
       }
     };
   }
@@ -393,7 +404,7 @@ export class AuroDropdownBib extends LitElement {
     classes[`shape-${this.shape}`] = true;
 
     return html`
-      <dialog class="${classMap(classes)}" part="bibContainer" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
+      <dialog class="${classMap(classes)}" part="bibContainer" role="${ifDefined(this.dialogRole)}" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
         ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually" aria-hidden="true">${this.dialogLabel}</span>` : ''}
         <slot></slot>
       </dialog>

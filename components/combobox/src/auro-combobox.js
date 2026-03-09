@@ -881,16 +881,7 @@ export class AuroCombobox extends AuroElement {
       return;
     }
 
-    const dialog = bibEl.shadowRoot.querySelector('dialog');
-    if (!dialog) {
-      return;
-    }
-
-    if (this.dropdown.isBibFullscreen) {
-      dialog.removeAttribute('role');
-    } else {
-      dialog.setAttribute('role', 'presentation');
-    }
+    bibEl.dialogRole = this.dropdown.isBibFullscreen ? undefined : 'presentation';
   }
 
   /**
