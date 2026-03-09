@@ -14,7 +14,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
-import { announceToScreenReader } from '@aurodesignsystem/utils';
+import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
 import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
 import { comboboxKeyboardStrategy } from './comboboxKeyboardStrategy.js';
 
@@ -749,20 +749,7 @@ export class AuroCombobox extends AuroElement {
         // during fullscreen open to prevent touch pass-through.
         this.menu.style.pointerEvents = '';
 
-        // Restore trigger accessibility when closing fullscreen
-        this.dropdown.trigger.inert = false;
-
-        // Restore focus to the trigger input after closing the
-        // fullscreen dialog. The browser's native dialog focus restoration
-        // fails because the trigger was set to inert before showModal().
-        // Use rAF to run after Lit's microtask update cycle calls dialog.close().
-        if (this.dropdown.isBibFullscreen) {
-          requestAnimationFrame(() => {
-            if (!this.dropdown.isPopoverVisible) {
-              this.input.focus();
-            }
-          });
-        }
+        restoreTriggerAfterClose(this.dropdown, this.input);
       }
 
       if (this.dropdownOpen) {
@@ -789,35 +776,13 @@ export class AuroCombobox extends AuroElement {
           // behind the fullscreen dialog
           this.dropdown.trigger.inert = true;
 
-          // On touch devices the tap that opens the fullscreen dialog can
-          // "pass through" to the menu beneath the finger: the touchstart
-          // opens the dialog, but the finger is still on the screen, so the
-          // subsequent touchend / click lands on whatever menu option sits at
-          // those coordinates, selecting it unintentionally.
-          //
-          // This does NOT happen with mouse clicks because showModal()
-          // promotes the dialog to the top layer synchronously and the click
-          // has already completed — there is no lingering pointer contact.
-          //
-          // Guard: only on devices whose primary input is coarse (phones /
-          // tablets). Laptops with a touchscreen report `pointer: fine`
-          // (trackpad / mouse is primary) so they are unaffected.
-          // Re-enable on the next touchstart, which is the user's first
-          // deliberate gesture inside the dialog.
-          if (window.matchMedia('(pointer: coarse)').matches) {
-            this.menu.style.pointerEvents = 'none';
-            document.addEventListener('touchstart', () => {
-              this.menu.style.pointerEvents = '';
-            }, { once: true });
-          }
+          guardTouchPassthrough(this.menu);
 
           // Wait for the bibtemplate to fully render across
           // multiple Lit update cycles before moving focus into the bib
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              this.setInputFocus();
-              this._inFullscreenTransition = false;
-            });
+          doubleRaf(() => {
+            this.setInputFocus();
+            this._inFullscreenTransition = false;
           });
         } else {
           // wait a frame in case the bib gets hidden immediately after showing because there is no value
