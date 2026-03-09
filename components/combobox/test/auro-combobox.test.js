@@ -637,10 +637,54 @@ function runFulltest(mobileview) {
     // Should clear the customError state and return to valid
     await expect(el.getAttribute('validity')).to.be.equal('valid');
   });
+
+  describe('announceToScreenReader', () => {
+    it('populates the live region when an option is activated', async () => {
+      const el = await noFilterFixture(mobileview);
+      await elementUpdated(el);
+
+      // Open the dropdown and navigate to the first option
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      // Wait a frame for the rAF inside announceToScreenReader
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      expect(liveRegion).to.exist;
+      expect(liveRegion.textContent).to.not.equal('');
+    });
+
+    it('clears the live region after the announcement duration', async () => {
+      const el = await noFilterFixture(mobileview);
+      await elementUpdated(el);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      expect(liveRegion.textContent).to.not.equal('');
+
+      // Wait for the 1000ms cleanup timeout
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+      expect(liveRegion.textContent).to.equal('');
+    });
+  });
 }
 
 /**
- * 
+ *
  */
 async function persistInputFixture(mobileview) {
   if (mobileview) {

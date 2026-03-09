@@ -18,6 +18,7 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
+import { announceToScreenReader } from '@aurodesignsystem/utils';
 import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
 
@@ -829,7 +830,7 @@ export class AuroSelect extends AuroElement {
       if (this.optionActive) {
         const optionText = this.optionActive.textContent.trim();
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
-        this.announceToScreenReader(`${optionText}${selectedState}`);
+        announceToScreenReader(this.shadowRoot, `${optionText}${selectedState}`);
       }
 
       if (this.dropdown.isPopoverVisible) {
@@ -854,7 +855,7 @@ export class AuroSelect extends AuroElement {
       const selectedValue = event.detail.stringValue;
       const announcementDelay = 300;
       setTimeout(() => {
-        this.announceToScreenReader(`${selectedValue}, selected`);
+        announceToScreenReader(this.shadowRoot, `${selectedValue}, selected`);
       }, announcementDelay);
     });
   }
@@ -884,29 +885,6 @@ export class AuroSelect extends AuroElement {
   updateActiveOption(index) {
     if (this.menu) {
       this.menu.index = index;
-    }
-  }
-
-  /**
-   * Announces text to screen readers via the aria-live region.
-   * @private
-   * @param {string} text - The text to announce.
-   */
-  announceToScreenReader(text) {
-    const liveRegion = this.shadowRoot.querySelector('#srAnnouncement');
-    if (liveRegion) {
-      const announcementDuration = 1000;
-
-      // Clear and re-set to ensure the announcement fires even with same text
-      liveRegion.textContent = '';
-      requestAnimationFrame(() => {
-        liveRegion.textContent = text;
-
-        // Clear after the announcement so VoiceOver cannot swipe to stale text
-        setTimeout(() => {
-          liveRegion.textContent = '';
-        }, announcementDuration);
-      });
     }
   }
 
