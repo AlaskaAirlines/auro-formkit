@@ -1324,10 +1324,13 @@ Use the `ariaLabel.input.clear` slot to set the `aria-label` for the clear butto
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-### Fullscreen Bib Date Label and Headline
+### Fullscreen Bib Date Labels and Headline
 
-Use the `bib.fullscreen.dateLabel` and `bib.fullscreen.headline` slots to set the the label at the top of the bib and headline when viewed in the mobile layout.
+Use the `bib.fullscreen.fromLabel`, `bib.fullscreen.toLabel`, and `bib.fullscreen.headline` slots to set the the labels at the top of the bib and headline when viewed in the mobile layout.
+
 To view this demo, set your window to a mobile screen size.
+
+**Note**: The previously supported `bib.fullscreen.dateLabel` slot is deprecated and will continue to work for backwards compatibility, but it is recommended to use the new `bib.fullscreen.fromLabel` and `bib.fullscreen.toLabel` slots to apply a label for each input when in mobile layout.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
