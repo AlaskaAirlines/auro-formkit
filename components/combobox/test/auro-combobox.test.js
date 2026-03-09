@@ -776,6 +776,21 @@ function runFulltest(mobileview) {
       expect(el._inFullscreenTransition).to.be.false;
     });
   });
+
+  it('selects label slot content', async () => {
+    const el = await fixture(html`
+      <auro-combobox>
+        <div slot="label">Custom Label</div>
+        <auro-menu>
+          <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+        </auro-menu>
+      </auro-combobox>
+    `);
+
+    await elementUpdated(el);
+
+    expect(el.dropdown.bibDialogLabel).to.equal('Custom Label');
+  });
 }
 
 /**
