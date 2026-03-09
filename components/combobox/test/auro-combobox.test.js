@@ -705,6 +705,59 @@ function runFulltest(mobileview) {
       expect(liveRegion.textContent).to.equal('');
     });
   });
+
+  describe('updateBibDialogRole', () => {
+    it('sets bib dialogRole to presentation on desktop to suppress verbose announcements', async () => {
+      // Use a wide viewport so the bib does NOT go fullscreen
+      await setViewport({ width: 1024, height: 800 });
+
+      const el = await fixture(html`
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+
+      await elementUpdated(el);
+
+      // Open the bib by typing
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      const bibEl = el.dropdown.bibElement.value;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+
+      expect(bibEl.dialogRole).to.equal('presentation');
+      expect(dialog.getAttribute('role')).to.equal('presentation');
+    });
+
+    it('clears bib dialogRole in fullscreen mode to preserve native dialog semantics', async () => {
+      const el = await defaultFixture(mobileview);
+
+      await elementUpdated(el);
+
+      // Open the bib by typing
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      // Simulate fullscreen strategy change (resize observers don't fire in test env)
+      el.dropdown.isBibFullscreen = true;
+      el.updateBibDialogRole();
+      await elementUpdated(el);
+
+      const bibEl = el.dropdown.bibElement.value;
+      await elementUpdated(bibEl);
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+
+      expect(bibEl.dialogRole).to.be.undefined;
+      expect(dialog.hasAttribute('role')).to.be.false;
+    });
+  });
 }
 
 /**
