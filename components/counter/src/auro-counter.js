@@ -37,6 +37,13 @@ import formkitVersion from '@aurodesignsystem/version';
  * @slot description - Descriptive content for the counter.
  */
 export class AuroCounter extends LitElement {
+  static get shadowRootOptions() {
+    return {
+      ...LitElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
+  }
+
   constructor() {
     super();
 
@@ -83,14 +90,6 @@ export class AuroCounter extends LitElement {
      */
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
-    /**
-     * @private
-     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
-     */
-    this.constructor.shadowRootOptions = {
-      ...LitElement.shadowRootOptions,
-      delegatesFocus: true,
-    };
   }
 
   connectedCallback() {
