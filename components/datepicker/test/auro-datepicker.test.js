@@ -1003,6 +1003,33 @@ describe('auro-datepicker', () => {
     await expect(dropdown.isPopoverVisible).to.be.false;
   });
 
+  it('restores trigger inert and focus after fullscreen dialog closes', async () => {
+    await setViewport({ width: 500, height: 800 });
+
+    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const input = getInput(el, 0);
+
+    input.click();
+    await expect(dropdown.isPopoverVisible).to.be.true;
+
+    await el.dropdown.updateComplete;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    // Trigger should be inert while fullscreen is open
+    expect(dropdown.trigger.inert).to.be.true;
+
+    // Close the dialog
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    await elementUpdated(el);
+
+    // Wait for rAF focus restoration
+    await new Promise((r) => requestAnimationFrame(r));
+
+    expect(dropdown.trigger.inert).to.be.false;
+    expect(dropdown.isPopoverVisible).to.be.false;
+  });
+
   it('marks dates as reference dates when referenceDates attribute is set', async () => {
     const el = await fixture(html`
       <auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]' centralDate="10-10-2025"></auro-datepicker>

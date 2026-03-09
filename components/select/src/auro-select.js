@@ -18,7 +18,7 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import { announceToScreenReader } from '@aurodesignsystem/utils';
+import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
 import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
 
@@ -559,20 +559,7 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(null);
         this.optionActive = null;
 
-        // Restore trigger accessibility when closing fullscreen
-        this.dropdown.trigger.inert = false;
-
-        // Restore focus to the trigger after closing the fullscreen dialog.
-        // The browser's native dialog focus restoration fails because the
-        // trigger was set to inert before showModal().
-        // Use rAF to run after Lit's microtask update cycle calls dialog.close().
-        if (this.dropdown.isBibFullscreen) {
-          requestAnimationFrame(() => {
-            if (!this.dropdown.isPopoverVisible) {
-              this.dropdown.trigger.focus();
-            }
-          });
-        }
+        restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
       }
 
       if (this.dropdown.isPopoverVisible) {
@@ -583,45 +570,23 @@ export class AuroSelect extends AuroElement {
           // behind the fullscreen dialog
           this.dropdown.trigger.inert = true;
 
-          // On touch devices the tap that opens the fullscreen dialog can
-          // "pass through" to the menu beneath the finger: the touchstart
-          // opens the dialog, but the finger is still on the screen, so the
-          // subsequent touchend / click lands on whatever menu option sits at
-          // those coordinates, selecting it unintentionally.
-          //
-          // This does NOT happen with mouse clicks because showModal()
-          // promotes the dialog to the top layer synchronously and the click
-          // has already completed — there is no lingering pointer contact.
-          //
-          // Guard: only on devices whose primary input is coarse (phones /
-          // tablets). Laptops with a touchscreen report `pointer: fine`
-          // (trackpad / mouse is primary) so they are unaffected.
-          // Re-enable on the next touchstart, which is the user's first
-          // deliberate gesture inside the dialog.
-          if (window.matchMedia('(pointer: coarse)').matches) {
-            this.menu.style.pointerEvents = 'none';
-            document.addEventListener('touchstart', () => {
-              this.menu.style.pointerEvents = '';
-            }, { once: true });
-          }
+          guardTouchPassthrough(this.menu);
 
           // Wait for the bibtemplate to fully render (close button) across
           // multiple Lit update cycles before moving focus into the bib
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              this.bibtemplate.focusCloseButton();
+          doubleRaf(() => {
+            this.bibtemplate.focusCloseButton();
 
-              // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
-              // No selection → no highlight
-              if (this.optionSelected && !Array.isArray(this.optionSelected)) {
-                this.menu.updateActiveOption(this.optionSelected);
-              } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
-                this.menu.updateActiveOption(this.optionSelected[0]);
-              }
+            // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
+            // No selection → no highlight
+            if (this.optionSelected && !Array.isArray(this.optionSelected)) {
+              this.menu.updateActiveOption(this.optionSelected);
+            } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
+              this.menu.updateActiveOption(this.optionSelected[0]);
+            }
 
-              // Scroll the selected option into view when dropdown opens
-              this.scrollSelectedOptionIntoView();
-            });
+            // Scroll the selected option into view when dropdown opens
+            this.scrollSelectedOptionIntoView();
           });
         } else {
           // wait til the bib gets fully rendered
@@ -643,10 +608,8 @@ export class AuroSelect extends AuroElement {
       // so it's not stuck on the trigger behind the dialog
       if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
         this.dropdown.trigger.inert = true;
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            this.bibtemplate.focusCloseButton();
-          });
+        doubleRaf(() => {
+          this.bibtemplate.focusCloseButton();
         });
       } else if (!this.dropdown.isBibFullscreen) {
         this.dropdown.trigger.inert = false;

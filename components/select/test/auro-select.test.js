@@ -333,6 +333,31 @@ function runTest(mobileView) {
 
         await expect(dropdown.isPopoverVisible).to.be.false;
       });
+
+      it('restores trigger inert and focus after fullscreen dialog closes', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for fullscreen dialog to settle
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Trigger should be inert while fullscreen is open
+        expect(dropdown.trigger.inert).to.be.true;
+
+        // Close the dialog
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await elementUpdated(el);
+
+        // Wait for rAF focus restoration
+        await new Promise((r) => requestAnimationFrame(r));
+
+        expect(dropdown.trigger.inert).to.be.false;
+        expect(dropdown.isPopoverVisible).to.be.false;
+      });
     }
 
     it('Navigates the menu with arrow keys', async () => {

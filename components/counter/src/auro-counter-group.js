@@ -18,6 +18,8 @@ import AuroFormValidation from "@aurodesignsystem/form-validation";
 import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs";
 import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+
+import { doubleRaf } from '@aurodesignsystem/utils';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
@@ -497,10 +499,8 @@ export class AuroCounterGroup extends AuroElement {
     // Focus close button when fullscreen dialog opens
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            this.bibtemplate.focusCloseButton();
-          });
+        doubleRaf(() => {
+          this.bibtemplate.focusCloseButton();
         });
       }
     });

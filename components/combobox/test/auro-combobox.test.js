@@ -263,6 +263,30 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
+  it('restores trigger inert and focus after fullscreen dialog closes', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    el.inputInBib.focus();
+    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+
+    // Trigger should be inert while fullscreen is open
+    expect(el.dropdown.trigger.inert).to.be.true;
+
+    // Close the dialog
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await elementUpdated(el);
+
+    expect(el.dropdown.trigger.inert).to.be.false;
+    expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
+
   it('hides the bib when selecting an option with a custom event', async () => {
     const el = await customEventFixture(mobileview);
 

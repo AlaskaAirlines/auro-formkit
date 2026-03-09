@@ -46,6 +46,8 @@ import iconVersion from './iconVersion.js';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
+import { doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
+
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
@@ -901,55 +903,16 @@ export class AuroDatePicker extends AuroElement {
               bibEl.close();
               bibEl.open(true);
 
-              // Double rAF is needed because a single frame is not enough
-              // for the bibtemplate's close button to be in the DOM and
-              // focusable after showModal(). The first frame lets the
-              // dialog render; the second waits for the bibtemplate's Lit
-              // update cycle to complete. Without this, focus sometimes
-              // stays on the trigger behind the dialog, leaving VoiceOver's
-              // cursor outline visible on top of the fullscreen calendar.
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  this.calendar.focusCloseButton();
-                });
+              doubleRaf(() => {
+                this.calendar.focusCloseButton();
               });
             }
           });
 
-          // On touch devices the tap that opens the fullscreen dialog can
-          // "pass through" to the calendar beneath the finger: the touchstart
-          // opens the dialog, but the finger is still on the screen, so the
-          // subsequent touchend / click lands on whatever calendar cell sits at
-          // those coordinates, selecting it unintentionally.
-          //
-          // Guard: only on devices whose primary input is coarse (phones /
-          // tablets). Laptops with a touchscreen report `pointer: fine`
-          // (trackpad / mouse is primary) so they are unaffected.
-          // Re-enable on the next touchstart, which is the user's first
-          // deliberate gesture inside the dialog.
-          const calendarWrapper = this.shadowRoot.querySelector('.calendarWrapper');
-          if (calendarWrapper && window.matchMedia('(pointer: coarse)').matches) {
-            calendarWrapper.style.pointerEvents = 'none';
-            document.addEventListener('touchstart', () => {
-              calendarWrapper.style.pointerEvents = '';
-            }, { once: true });
-          }
+          guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
         }
       } else {
-        // Restore trigger accessibility when closing fullscreen
-        this.dropdown.trigger.inert = false;
-
-        // Restore focus to the trigger after closing the fullscreen dialog.
-        // The browser's native dialog focus restoration fails because the
-        // trigger was set to inert before showModal().
-        // Use rAF to run after Lit's microtask update cycle calls dialog.close().
-        if (this.dropdown.isBibFullscreen) {
-          requestAnimationFrame(() => {
-            if (!this.dropdown.isPopoverVisible) {
-              this.dropdown.trigger.focus();
-            }
-          });
-        }
+        restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
       }
 
       // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
@@ -981,11 +944,8 @@ export class AuroDatePicker extends AuroElement {
           if (bibEl && this.dropdown.isPopoverVisible) {
             bibEl.close();
             bibEl.open(true);
-            // Double rAF needed for reliable focus — see toggled handler comment.
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                this.calendar.focusCloseButton();
-              });
+            doubleRaf(() => {
+              this.calendar.focusCloseButton();
             });
           }
         });
