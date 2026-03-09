@@ -45,7 +45,6 @@ import iconVersion from './iconVersion.js';
 
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
-import { LitElement } from 'lit';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -79,6 +78,12 @@ import { LitElement } from 'lit';
  * @event auroDatePicker-newSlotContent - Notifies that new slot content has been added to the datepicker.
  */
 export class AuroDatePicker extends AuroElement {
+  static get shadowRootOptions() {
+    return {
+      ...AuroElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
+  }
   constructor() {
     super();
 
@@ -219,14 +224,6 @@ export class AuroDatePicker extends AuroElement {
     this.shape = 'classic';
     this.size = 'lg';
 
-    /**
-     * @private
-     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
-     */
-    this.constructor.shadowRootOptions = {
-      ...LitElement.shadowRootOptions,
-      delegatesFocus: true,
-    };
   }
 
   // This function is to define props used within the scope of this component

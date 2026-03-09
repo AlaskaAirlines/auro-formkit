@@ -7,7 +7,6 @@
 
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
-import { LitElement } from "lit";
 import { createRef, ref } from "lit/directives/ref.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -56,6 +55,13 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * @event auroDropdown-idAdded - Notifies consumers that the unique ID for the dropdown bib has been generated.
  */
 export class AuroDropdown extends AuroElement {
+  static get shadowRootOptions() {
+    return {
+      ...AuroElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
+  }
+
   constructor() {
     super();
 
@@ -120,15 +126,6 @@ export class AuroDropdown extends AuroElement {
     this.noFlip = false;
     this.shift = false;
     this.autoPlacement = false;
-
-    /**
-     * @private
-     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
-     */
-    this.constructor.shadowRootOptions = {
-      ...LitElement.shadowRootOptions,
-      delegatesFocus: true,
-    };
 
     /**
      * @private
