@@ -413,6 +413,58 @@ describe("auro-dropdown", () => {
     expectPopoverHidden(el);
   });
 
+  describe("dialog keyboard bridge", () => {
+    async function openFullscreenDropdown() {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      el.isBibFullscreen = true;
+      el.show();
+      await elementUpdated(el);
+
+      const bibEl = el.bibElement.value;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+
+      return { el, bibEl, dialog };
+    }
+
+    for (const key of ['ArrowUp', 'ArrowDown', 'Escape', 'Tab']) {
+      it(`re-dispatches ${key} from dialog to parent`, async () => {
+        const { el, dialog } = await openFullscreenDropdown();
+
+        const received = [];
+        el.addEventListener('keydown', (e) => received.push(e.key));
+
+        dialog.dispatchEvent(new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          cancelable: true
+        }));
+
+        expect(received.filter((k) => k === key)).to.have.lengthOf(1);
+      });
+    }
+
+    it('does not re-dispatch non-navigation keys to parent', async () => {
+      const { el, dialog } = await openFullscreenDropdown();
+
+      const received = [];
+      el.addEventListener('keydown', (e) => received.push(e.key));
+
+      dialog.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'a',
+        bubbles: true,
+        cancelable: true
+      }));
+
+      expect(received).to.deep.equal([]);
+    });
+  });
+
   it("auro-dropdown renders with emphasized layout", async () => {
     const el = await fixture(html`
       <auro-dropdown layout="emphasized" shape="pill">
