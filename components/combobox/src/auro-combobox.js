@@ -804,7 +804,7 @@ export class AuroCombobox extends AuroElement {
     this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
 
     // Pass label text to the dropdown bib for accessible dialog naming
-    const labelElement = this.querySelector('span[slot="label"]');
+    const labelElement = this.querySelector('[slot="label"]');
     if (labelElement) {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
