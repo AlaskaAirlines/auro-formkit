@@ -1190,6 +1190,11 @@ export class AuroCombobox extends AuroElement {
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._inFullscreenTransition = false;
+  }
+
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-combobox');
