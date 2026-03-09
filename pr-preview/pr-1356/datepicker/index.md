@@ -99,7 +99,7 @@ Use `layout="snowflake"`, with `shape="snowflake"` and `appearance="inverse"` to
     <span slot="label">Date</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.fromDateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -114,7 +114,7 @@ Use `layout="snowflake"`, with `shape="snowflake"` and `appearance="inverse"` to
   <span slot="label">Date</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.fromDateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
