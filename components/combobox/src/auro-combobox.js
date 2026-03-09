@@ -14,6 +14,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
+import { announceToScreenReader } from '@aurodesignsystem/utils';
 import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
 import { comboboxKeyboardStrategy } from './comboboxKeyboardStrategy.js';
 
@@ -928,29 +929,6 @@ export class AuroCombobox extends AuroElement {
   }
 
   /**
-   * Announces text to screen readers via the aria-live region.
-   * @private
-   * @param {string} text - The text to announce.
-   */
-  announceToScreenReader(text) {
-    const liveRegion = this.shadowRoot.querySelector('#srAnnouncement');
-    if (liveRegion) {
-      const announcementDuration = 1000;
-
-      // Clear and re-set to ensure the announcement fires even with same text
-      liveRegion.textContent = '';
-      requestAnimationFrame(() => {
-        liveRegion.textContent = text;
-
-        // Clear after the announcement so VoiceOver cannot swipe to stale text
-        setTimeout(() => {
-          liveRegion.textContent = '';
-        }, announcementDuration);
-      });
-    }
-  }
-
-  /**
    * Update menu to default for fullscreen bib, otherwise to this.size and this.shape.
    * @private
    */
@@ -1041,7 +1019,7 @@ export class AuroCombobox extends AuroElement {
         const selectedValue = event.detail.stringValue;
         const announcementDelay = 300;
         setTimeout(() => {
-          this.announceToScreenReader(`${selectedValue}, selected`);
+          announceToScreenReader(this.shadowRoot, `${selectedValue}, selected`);
         }, announcementDelay);
       }
     });
@@ -1065,7 +1043,7 @@ export class AuroCombobox extends AuroElement {
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
         const optionIndex = this.availableOptions.indexOf(this.optionActive) + 1;
         const optionCount = this.availableOptions.length;
-        this.announceToScreenReader(`${optionText}${selectedState}, ${optionIndex} of ${optionCount}`);
+        announceToScreenReader(this.shadowRoot, `${optionText}${selectedState}, ${optionIndex} of ${optionCount}`);
       }
 
       // Check if user prefers reduced motion for accessibility
