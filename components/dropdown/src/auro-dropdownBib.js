@@ -367,9 +367,11 @@ export class AuroDropdownBib extends LitElement {
         const prevOverflow = documentElement.style.overflow;
         documentElement.style.overflow = 'hidden';
 
-        dialog.showModal();
-
-        documentElement.style.overflow = prevOverflow;
+        try {
+          dialog.showModal();
+        } finally {
+          documentElement.style.overflow = prevOverflow;
+        }
 
         this._lockTouchScroll();
 
