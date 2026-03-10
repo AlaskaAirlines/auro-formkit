@@ -12,16 +12,20 @@
 
 const ANNOUNCEMENT_DURATION_MS = 1000;
 
+let pendingClearTimeout = 0;
+
 export function announceToScreenReader(shadowRoot, text) {
   const liveRegion = shadowRoot.querySelector('#srAnnouncement');
   if (liveRegion) {
+    clearTimeout(pendingClearTimeout);
+
     // Clear and re-set to ensure the announcement fires even with same text
     liveRegion.textContent = '';
     requestAnimationFrame(() => {
       liveRegion.textContent = text;
 
       // Clear after the announcement so VoiceOver cannot swipe to stale text
-      setTimeout(() => {
+      pendingClearTimeout = setTimeout(() => {
         liveRegion.textContent = '';
       }, ANNOUNCEMENT_DURATION_MS);
     });
