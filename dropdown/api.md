@@ -56,11 +56,11 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 
 ## Slots
 
-| Name       | Description                           |
-|------------|---------------------------------------|
-|            | Default slot for the popover content. |
-| [helpText](#helpText) | Defines the content of the helpText.  |
-| [trigger](#trigger)  | Defines the content of the trigger.   |
+| Name       | Description                                |
+|------------|--------------------------------------------|
+|            | Default slot for the dropdown bib content. |
+| [helpText](#helpText) | Defines the content of the helpText.       |
+| [trigger](#trigger)  | Defines the content of the trigger.        |
 
 ## CSS Shadow Parts
 
@@ -721,12 +721,11 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
   <!-- The below content is automatically added from ./../apiExamples/floater-config.html -->
   <style>
     .floaterConfigDropdown::part(size) {
-      width: 300px;
       max-height: 200px;
     }
   </style>
   <div aria-label="custom label">
-    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20" noFlip>
+    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20" noFlip>
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -745,7 +744,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
     </auro-dropdown>
   </div>
   <div aria-label="custom label">
-    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20">
+    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20">
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -766,7 +765,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
     </auro-dropdown>
   </div>
   <div aria-label="custom label">
-    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron autoPlacement noFlip placement="right" offset="20">
+    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="right" offset="20">
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -782,12 +781,12 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
         Trigger
       </div>
       <div slot="helpText">
-        Trigger for right bib with 20px offset, autoPlacement and noFlip
+        Trigger for right bib with 20px offset and noFlip
       </div>
     </auro-dropdown>
   </div>
   <div aria-label="custom label">
-    <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron noFlip placement="bottom-start" shift offset="20">
+    <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20">
       <div width="500px">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -817,12 +816,11 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
 ```html
 <style>
   .floaterConfigDropdown::part(size) {
-    width: 300px;
     max-height: 200px;
   }
 </style>
 <div aria-label="custom label">
-  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20" noFlip>
+  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20" noFlip>
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -841,7 +839,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
   </auro-dropdown>
 </div>
 <div aria-label="custom label">
-  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20">
+  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20">
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -862,7 +860,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
   </auro-dropdown>
 </div>
 <div aria-label="custom label">
-  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron autoPlacement noFlip placement="right" offset="20">
+  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="right" offset="20">
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -878,12 +876,12 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
       Trigger
     </div>
     <div slot="helpText">
-      Trigger for right bib with 20px offset, autoPlacement and noFlip
+      Trigger for right bib with 20px offset and noFlip
     </div>
   </auro-dropdown>
 </div>
 <div aria-label="custom label">
-  <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron noFlip placement="bottom-start" shift offset="20">
+  <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20">
     <div width="500px">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

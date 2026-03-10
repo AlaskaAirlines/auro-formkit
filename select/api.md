@@ -1060,10 +1060,10 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
         <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
       </auro-menu>
     </auro-select>
-    <auro-select offset="20" noFlip placement="right" autoPlacement noFlip >
+    <auro-select offset="20" noFlip placement="right">
       <span slot="bib.fullscreen.headline">Bib Headline</span>
       <span slot="label">Label</span>
-      <span slot="helpText">right bib with 20px offset, noFlip and autoPlacement</span>
+      <span slot="helpText">right bib with 20px offset and noFlip</span>
       <auro-menu>
         <auro-menuoption value="stops">Stops</auro-menuoption>
         <auro-menuoption value="price">Price</auro-menuoption>
@@ -1073,7 +1073,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
         <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
       </auro-menu>
     </auro-select>
-    <auro-select width="350px" offset="20" noFlip placement="bottom-start" shift noFlip >
+    <auro-select width="350px" offset="20" noFlip placement="bottom-start" shift>
       <span slot="bib.fullscreen.headline">Bib Headline</span>
       <span slot="label">Label</span>
       <span slot="helpText">bottom-start bib with 20px offset, noFlip and shift</span>
@@ -1122,10 +1122,10 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
       <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
     </auro-menu>
   </auro-select>
-  <auro-select offset="20" noFlip placement="right" autoPlacement noFlip >
+  <auro-select offset="20" noFlip placement="right">
     <span slot="bib.fullscreen.headline">Bib Headline</span>
     <span slot="label">Label</span>
-    <span slot="helpText">right bib with 20px offset, noFlip and autoPlacement</span>
+    <span slot="helpText">right bib with 20px offset and noFlip</span>
     <auro-menu>
       <auro-menuoption value="stops">Stops</auro-menuoption>
       <auro-menuoption value="price">Price</auro-menuoption>
@@ -1135,7 +1135,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
       <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
     </auro-menu>
   </auro-select>
-  <auro-select width="350px" offset="20" noFlip placement="bottom-start" shift noFlip >
+  <auro-select width="350px" offset="20" noFlip placement="bottom-start" shift>
     <span slot="bib.fullscreen.headline">Bib Headline</span>
     <span slot="label">Label</span>
     <span slot="helpText">bottom-start bib with 20px offset, noFlip and shift</span>
