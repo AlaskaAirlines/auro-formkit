@@ -15,6 +15,8 @@ export const comboboxKeyboardStrategy = {
       evt.stopPropagation();
       component.setClearBtnFocus();
     } else {
+      evt.preventDefault();
+      evt.stopPropagation();
       component.showBib();
     }
   },
