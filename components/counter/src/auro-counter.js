@@ -406,7 +406,7 @@ export class AuroCounter extends LitElement {
             aria-valuemax="${this.max}" 
             aria-valuemin="${this.min}" 
             aria-valuenow="${this.value}"
-            aria-valuetext="'${this.value !== undefined ? this.value : this.min}'"
+            aria-valuetext="${this.value !== undefined ? this.value : this.min}"
             role="spinbutton" 
             tabindex="${this.disabled ? '-1' : '0'}" 
           >
