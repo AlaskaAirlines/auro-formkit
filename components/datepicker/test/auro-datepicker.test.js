@@ -12,7 +12,7 @@ describe('auro-datepicker', () => {
       height: 800
     });
     const el = await fixture(html`
-      <auro-datepicker range cssclass="testClass"></auro-datepicker>
+      <auro-datepicker range></auro-datepicker>
     `);
 
     await expect(el).to.be.accessible({
@@ -960,6 +960,74 @@ describe('auro-datepicker', () => {
     await expect(el.hasAttribute('validity')).to.be.false;
     await expect(el.value).to.be.equal(undefined);
     await expect(el.valueEnd).to.be.equal(undefined);
+  });
+
+  it('focuses close button when fullscreen dialog opens', async () => {
+    await setViewport({ width: 500, height: 800 });
+
+    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const input = getInput(el, 0);
+
+    input.click();
+    await expect(dropdown.isPopoverVisible).to.be.true;
+
+    // Wait for updateComplete + rAF focus cycle used by configureDropdown
+    await el.dropdown.updateComplete;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+    // Calendar delegates focusCloseButton to its internal bibtemplate
+    const bibtemplate = calendar.shadowRoot.querySelector(calendar.bibtemplateTag._$litStatic$);
+    const closeBtn = bibtemplate.shadowRoot.querySelector('#closeButton');
+    expect(closeBtn).to.exist;
+    expect(bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
+  });
+
+  it('Tab key closes fullscreen dialog', async () => {
+    await setViewport({ width: 500, height: 800 });
+
+    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const input = getInput(el, 0);
+
+    input.click();
+    await expect(dropdown.isPopoverVisible).to.be.true;
+
+    await el.dropdown.updateComplete;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    await elementUpdated(el);
+
+    await expect(dropdown.isPopoverVisible).to.be.false;
+  });
+
+  it('restores trigger inert and focus after fullscreen dialog closes', async () => {
+    await setViewport({ width: 500, height: 800 });
+
+    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const input = getInput(el, 0);
+
+    input.click();
+    await expect(dropdown.isPopoverVisible).to.be.true;
+
+    await el.dropdown.updateComplete;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    // Trigger should be inert while fullscreen is open
+    expect(dropdown.trigger.inert).to.be.true;
+
+    // Close the dialog
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    await elementUpdated(el);
+
+    // Wait for rAF focus restoration
+    await new Promise((r) => requestAnimationFrame(r));
+
+    expect(dropdown.trigger.inert).to.be.false;
+    expect(dropdown.isPopoverVisible).to.be.false;
   });
 
   it('marks dates as reference dates when referenceDates attribute is set', async () => {

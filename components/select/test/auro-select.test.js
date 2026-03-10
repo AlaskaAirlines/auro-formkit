@@ -284,7 +284,7 @@ function runTest(mobileView) {
       await expect(dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('tabbing away from the element closes the bib in non-mobile view', async () => {
+    it('tabbing away from the element closes the bib', async () => {
       const el = await defaultFixture();
 
       const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -297,12 +297,68 @@ function runTest(mobileView) {
         'key': 'Tab'
       }));
 
-      if (mobileView) {
-        await expect(dropdown.isPopoverVisible).to.be.true;
-      } else {
-        await expect(dropdown.isPopoverVisible).to.be.false;
-      }
+      await expect(dropdown.isPopoverVisible).to.be.false;
     });
+
+    if (mobileView) {
+      it('focuses close button when fullscreen dialog opens', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for double-rAF focus cycle used by configureDropdown
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
+        expect(closeBtn).to.exist;
+        expect(el.bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
+      });
+
+      it('Tab key closes fullscreen dialog', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for fullscreen dialog to settle
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await elementUpdated(el);
+
+        await expect(dropdown.isPopoverVisible).to.be.false;
+      });
+
+      it('restores trigger inert and focus after fullscreen dialog closes', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for fullscreen dialog to settle
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Trigger should be inert while fullscreen is open
+        expect(dropdown.trigger.inert).to.be.true;
+
+        // Close the dialog
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        await elementUpdated(el);
+
+        // Wait for rAF focus restoration
+        await new Promise((r) => requestAnimationFrame(r));
+
+        expect(dropdown.trigger.inert).to.be.false;
+        expect(dropdown.isPopoverVisible).to.be.false;
+      });
+    }
 
     it('Navigates the menu with arrow keys', async () => {
       const el = await defaultFixture();
@@ -590,6 +646,40 @@ function runTest(mobileView) {
       await expect(el.menu.optionActive).to.exist;
       await expect(el.menu.optionActive.value).to.equal('apple');
       await expect(el.menu.optionActive.textContent.trim()).to.equal('Apple');
+    });
+  });
+
+  describe('announceToScreenReader', () => {
+    it('populates the live region when an option is activated', async () => {
+      const el = await defaultFixture();
+      await elementUpdated(el);
+
+      // Type-ahead activates an option, which triggers announceToScreenReader
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+      await elementUpdated(el);
+
+      // Wait a frame for the rAF inside announceToScreenReader
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      expect(liveRegion).to.exist;
+      expect(liveRegion.textContent).to.not.equal('');
+    });
+
+    it('clears the live region after the announcement duration', async () => {
+      const el = await defaultFixture();
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+      await elementUpdated(el);
+
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      expect(liveRegion.textContent).to.not.equal('');
+
+      // Wait for the 1000ms cleanup timeout
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+      expect(liveRegion.textContent).to.equal('');
     });
   });
 }

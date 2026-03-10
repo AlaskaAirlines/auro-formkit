@@ -25,6 +25,9 @@ const config: StorybookConfig = {
     `${relativeDocDirectory}/*.mdx`,
     `${relativeComponentDirectory}/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
     `${relativeComponentDirectory}/**/stories/**/*.mdx`,
+    '../components/radio/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    `../components/counter/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
+    `../components/form/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
   ],
   addons: [{
     // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
@@ -36,7 +39,7 @@ const config: StorybookConfig = {
         },
       },
     },
-  }, getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook"), getAbsolutePath("@storybook/addon-designs"), getAbsolutePath("@storybook/addon-vitest"), getAbsolutePath("storybook-addon-tag-badges")],
+  }, getAbsolutePath("@storybook/addon-themes"), getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@chromatic-com/storybook"), getAbsolutePath("@storybook/addon-designs"), getAbsolutePath("@storybook/addon-vitest"), getAbsolutePath("storybook-addon-tag-badges"), getAbsolutePath("storybook-addon-pseudo-states")],
   framework: {
     name: getAbsolutePath("@storybook/web-components-vite"),
     options: {},

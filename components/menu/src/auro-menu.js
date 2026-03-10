@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle, curly */
+/* eslint-disable no-underscore-dangle */
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -36,7 +36,7 @@ import { ContextProvider } from "@lit/context";
  * @slot - Slot for insertion of menu options.
  */
 
-/* eslint-disable no-magic-numbers, max-lines, no-extra-parens */
+/* eslint-disable max-lines */
 
 export class AuroMenu extends AuroElement {
 
@@ -493,6 +493,11 @@ export class AuroMenu extends AuroElement {
     if (this.rootMenu) {
       this.setAttribute('role', 'listbox');
       this.setAttribute('root', '');
+
+      if (this.multiSelect) {
+        this.setAttribute('aria-multiselectable', 'true');
+      }
+
       this.handleNestedMenus(this);
     }
   }

@@ -25,9 +25,18 @@
   --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
 }
 
-:host(:hover),
 :host(.active) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+}
+
+// Gate :hover behind @media (hover: hover) so touch-only devices (iOS Safari,
+// Chrome on iOS) don't get "sticky hover" — where a tap applies :hover and it
+// persists until the user taps elsewhere, causing stale highlights on
+// previously selected menu options in fullscreen combobox mode.
+@media (hover: hover) {
+  :host(:hover) {
+    --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+  }
 }
 
 :host(:focus) {
@@ -41,9 +50,14 @@
   --ds-auro-menuoption-icon-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
 }
 
-:host([selected]:hover),
 :host([selected].active) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+}
+
+@media (hover: hover) {
+  :host([selected]:hover) {
+    --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+  }
 }
 
 :host([selected]:focus) {
@@ -51,15 +65,27 @@
   --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
 }
 
-:host(:focus:hover),
 :host(:focus.active) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
   --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
 }
 
-:host([selected]:focus:hover),
+@media (hover: hover) {
+  :host(:focus:hover) {
+    --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+    --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+  }
+}
+
 :host([selected]:focus.active) {
   --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
   --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+}
+
+@media (hover: hover) {
+  :host([selected]:focus:hover) {
+    --ds-auro-menuoption-container-color: var(--ds-basic-color-surface-accent1-muted, #{v.$ds-basic-color-surface-accent1-muted});
+    --ds-auro-menuoption-container-border-color: var(--ds-basic-color-border-brand, #{v.$ds-basic-color-border-brand});
+  }
 }
 

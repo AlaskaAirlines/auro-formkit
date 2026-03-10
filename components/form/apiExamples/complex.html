@@ -12,14 +12,12 @@
 
   .complex-form {
     display: block;
-    width: 100%;
     padding: 1rem;
     border: 1px solid #2a2a2a;
     border-radius: 1rem;
   }
 </style>
 
-<h2>auro-form testing</h2>
 <auro-form class="complex-form">
   <auro-input id="first-name" name="firstName" required>
     <span slot="label">First Name</span>
@@ -47,7 +45,7 @@
     <h4>Pick a cool date</h4>
     <auro-datepicker id="date-example" name="dateExample" required>
       <span slot="fromLabel">Choose a date</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     </auro-datepicker>
   </div>
 
@@ -56,7 +54,8 @@
     <auro-datepicker id="date-range" name="dateRange" required range>
       <span slot="fromLabel">Start</span>
       <span slot="toLabel">End</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+      <span slot="bib.fullscreen.fromLabel">Start</span>
+      <span slot="bib.fullscreen.toLabel">End</span>
     </auro-datepicker>
   </div>
 

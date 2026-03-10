@@ -121,6 +121,18 @@ export class AuroBibtemplate extends LitElement {
     this.removeEventListener('touchmove', this.preventBodyScroll, { passive: false });
   }
 
+  /**
+   * Focuses the close button inside the bibtemplate's shadow DOM.
+   * Used by parent components to set initial focus when the fullscreen dialog opens.
+   * @returns {void}
+   */
+  focusCloseButton() {
+    const closeBtn = this.shadowRoot.querySelector('#closeButton');
+    if (closeBtn) {
+      closeBtn.focus();
+    }
+  }
+
   onCloseButtonClick() {
     this.dispatchEvent(new Event("close-click", { bubbles: true,
       composed: true }));

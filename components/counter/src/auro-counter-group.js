@@ -18,6 +18,8 @@ import AuroFormValidation from "@aurodesignsystem/form-validation";
 import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs";
 import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
+
+import { doubleRaf } from '@aurodesignsystem/utils';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
@@ -490,6 +492,24 @@ export class AuroCounterGroup extends AuroElement {
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.bibtemplate.addEventListener('close-click', () => {
       if (this.dropdown.isPopoverVisible) {
+        this.dropdown.hide();
+      }
+    });
+
+    // Focus close button when fullscreen dialog opens
+    this.dropdown.addEventListener('auroDropdown-toggled', () => {
+      if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
+        doubleRaf(() => {
+          this.bibtemplate.focusCloseButton();
+        });
+      }
+    });
+
+    // Tab closes the fullscreen dialog
+    // The dialog event bridge intercepts Tab and re-dispatches it as a
+    // composed keydown; this listener catches the re-dispatched event.
+    this.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
         this.dropdown.hide();
       }
     });

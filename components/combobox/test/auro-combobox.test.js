@@ -53,10 +53,27 @@ function runFulltest(mobileview) {
     // type in a value that matches an option
     setInputValue(el, 'pp');
     await elementUpdated(el);
+
+    if (mobileview) {
+      // Wait for the fullscreen dialog transition to settle —
+      // focus moves from trigger to inputInBib via requestAnimationFrame after the dialog is shown, so we wait until the inputInBib is focused before proceeding with the test.
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
     await expect(el.value).to.be.undefined;
     await expect(el.hasAttribute('error')).to.be.false;
     await expect(el.hasAttribute('validity')).to.be.false;
-    
+
+    if (mobileview) {
+      // Close the fullscreen dialog without selecting an option.
+      // After dialog.close(), a rAF callback restores focus to the trigger input.
+      el.hideBib();
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
+    }
+
     // blur the input to trigger validation
     el.shadowRoot.activeElement.blur();
     await elementUpdated(el);
@@ -68,8 +85,14 @@ function runFulltest(mobileview) {
     // select a value from the menu by setting the value of the combobox
     el.value = 'Apples';
 
-    // wait for the element to be updated
+    // wait for the combobox and dialog close to fully settle
     await elementUpdated(el);
+    await new Promise((r) => setTimeout(r, 0));
+    await elementUpdated(el);
+
+    // blur to move focus away (dialog.close() restores focus to the combobox,
+    // which prevents child input validation from running)
+    el.blur();
 
     // trigger validation
     el.validate(true);
@@ -203,6 +226,66 @@ function runFulltest(mobileview) {
 
   //   await expect(el.dropdown.isPopoverVisible).to.be.false;
   // });
+
+  it('focuses input in bib when fullscreen dialog opens', async () => {
+    const el = await defaultFixture(mobileview);
+
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    // inputInBib should exist in fullscreen mode
+    expect(el.inputInBib).to.exist;
+
+    // Follow existing mobile pattern: explicitly focus inputInBib
+    el.inputInBib.focus();
+    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    expect(el.shadowRoot.activeElement).to.equal(el.inputInBib);
+  });
+
+  it('Tab key closes fullscreen dialog', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    el.inputInBib.focus();
+    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+
+    // Wait for dialog close + rAF focus restoration
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await elementUpdated(el);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
+
+  it('restores trigger inert and focus after fullscreen dialog closes', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    el.inputInBib.focus();
+    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+
+    // Trigger should be inert while fullscreen is open
+    expect(el.dropdown.trigger.inert).to.be.true;
+
+    // Close the dialog
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await elementUpdated(el);
+
+    expect(el.dropdown.trigger.inert).to.be.false;
+    expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
 
   it('hides the bib when selecting an option with a custom event', async () => {
     const el = await customEventFixture(mobileview);
@@ -494,6 +577,18 @@ function runFulltest(mobileview) {
 
     setInputValue(el, 'pp');
     await elementUpdated(el);
+
+    if (mobileview) {
+      // Wait for the fullscreen dialog transition to settle,
+      // then close the dialog and wait for focus to return to trigger
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+      el.hideBib();
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
+    }
+
     el.shadowRoot.activeElement.blur();
     await elementUpdated(el);
 
@@ -566,10 +661,140 @@ function runFulltest(mobileview) {
     // Should clear the customError state and return to valid
     await expect(el.getAttribute('validity')).to.be.equal('valid');
   });
+
+  describe('announceToScreenReader', () => {
+    it('populates the live region when an option is activated', async () => {
+      const el = await noFilterFixture(mobileview);
+      await elementUpdated(el);
+
+      // Open the dropdown and navigate to the first option
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      // Wait a frame for the rAF inside announceToScreenReader
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      expect(liveRegion).to.exist;
+      expect(liveRegion.textContent).to.not.equal('');
+    });
+
+    it('clears the live region after the announcement duration', async () => {
+      const el = await noFilterFixture(mobileview);
+      await elementUpdated(el);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      expect(liveRegion.textContent).to.not.equal('');
+
+      // Wait for the 1000ms cleanup timeout
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+      expect(liveRegion.textContent).to.equal('');
+    });
+  });
+
+  describe('updateBibDialogRole', () => {
+    it('sets bib dialogRole to presentation on desktop to suppress verbose announcements', async () => {
+      // Use a wide viewport so the bib does NOT go fullscreen
+      await setViewport({ width: 1024, height: 800 });
+
+      const el = await fixture(html`
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+
+      await elementUpdated(el);
+
+      // Open the bib by typing
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      const bibEl = el.dropdown.bibElement.value;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+
+      expect(bibEl.dialogRole).to.equal('presentation');
+      expect(dialog.getAttribute('role')).to.equal('presentation');
+    });
+
+    it('clears bib dialogRole in fullscreen mode to preserve native dialog semantics', async () => {
+      const el = await defaultFixture(mobileview);
+
+      await elementUpdated(el);
+
+      // Open the bib by typing
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      await waitUntil(() => el.dropdown.isPopoverVisible);
+
+      // Simulate fullscreen strategy change (resize observers don't fire in test env)
+      el.dropdown.isBibFullscreen = true;
+      el.updateBibDialogRole();
+      await elementUpdated(el);
+
+      const bibEl = el.dropdown.bibElement.value;
+      await elementUpdated(bibEl);
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+
+      expect(bibEl.dialogRole).to.be.undefined;
+      expect(dialog.hasAttribute('role')).to.be.false;
+    });
+  });
+
+  describe('disconnectedCallback', () => {
+    it('resets _inFullscreenTransition so validation is not suppressed after reconnect', async () => {
+      const el = await defaultFixture(mobileview);
+      await elementUpdated(el);
+
+      // Simulate the flag being stuck mid-transition
+      el._inFullscreenTransition = true;
+
+      // Disconnect and reconnect
+      const parent = el.parentNode;
+      parent.removeChild(el);
+      parent.appendChild(el);
+      await elementUpdated(el);
+
+      expect(el._inFullscreenTransition).to.be.false;
+    });
+  });
+
+  it('selects label slot content', async () => {
+    const el = await fixture(html`
+      <auro-combobox>
+        <div slot="label">Custom Label</div>
+        <auro-menu>
+          <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+        </auro-menu>
+      </auro-combobox>
+    `);
+
+    await elementUpdated(el);
+
+    expect(el.dropdown.bibDialogLabel).to.equal('Custom Label');
+  });
 }
 
 /**
- * 
+ *
  */
 async function persistInputFixture(mobileview) {
   if (mobileview) {

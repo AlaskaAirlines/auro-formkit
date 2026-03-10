@@ -369,6 +369,26 @@ Use the `reset()` method to reset the `<auro-select>`'s `value` and `validity` s
 
 </auro-accordion>
 
+### Update Active Option
+
+Use the `updateActiveOption(index)` method to programmatically set the active option in the menu.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/update-active-option.html) -->
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/update-active-option.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/update-active-option.js) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+
+</auro-accordion>
+
 ## Slot Examples
 
 ### Custom Value Display
@@ -536,23 +556,6 @@ This example programmatically adds the `error` state when a user selects an opti
 <!-- AURO-GENERATED-CONTENT:END -->
 
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-error-validity.js) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-</auro-accordion>
-
-### Max Height on Menu
-
-Setting a max height on the menu will cause the bib to become scrollable when the content exceeds the max height.
-
-<div class="exampleWrapper">
-  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/max-height.html) -->
-  <!-- AURO-GENERATED-CONTENT:END -->
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/max-height.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 </auro-accordion>

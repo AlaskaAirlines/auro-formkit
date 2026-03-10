@@ -32,6 +32,8 @@ import { dispatchMenuEvent } from './auro-menu-utils.js';
  *
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
  */
+let menuOptionIdCounter = 0;
+
 export class AuroMenuOption extends AuroElement {
 
   /**
@@ -213,6 +215,12 @@ export class AuroMenuOption extends AuroElement {
   firstUpdated() {
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
+
+    // Generate unique ID if not already set (required for aria-activedescendant)
+    if (!this.id) {
+      menuOptionIdCounter += 1;
+      this.id = `menuoption-${menuOptionIdCounter}`;
+    }
 
     this.setAttribute('role', 'option');
     this.setAttribute('aria-selected', 'false');

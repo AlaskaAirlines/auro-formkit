@@ -45,7 +45,8 @@ import iconVersion from './iconVersion.js';
 
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
-import { LitElement } from 'lit';
+
+import { doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -57,7 +58,9 @@ import { LitElement } from 'lit';
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
  * @slot bib.fullscreen.headline - Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout.
- * @slot bib.fullscreen.dateLabel - Defines the content to display above selected dates in the mobile layout.
+ * @slot bib.fullscreen.dateLabel - **DEPRECATED** - Use `bib.fullscreen.fromLabel` instead.
+ * @slot bib.fullscreen.fromLabel - Defines the content to display above the first input in the mobile layout.
+ * @slot bib.fullscreen.toLabel - Defines the content to display above the second input in the mobile layout when `range` is true.
  * @slot label - Defines the label content for the entire datepicker when `layout="snowflake"`.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
  * @slot fromLabel - Defines the label content for the first input.
@@ -77,6 +80,12 @@ import { LitElement } from 'lit';
  * @event auroDatePicker-newSlotContent - Notifies that new slot content has been added to the datepicker.
  */
 export class AuroDatePicker extends AuroElement {
+  static get shadowRootOptions() {
+    return {
+      ...AuroElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
+  }
   constructor() {
     super();
 
@@ -217,14 +226,6 @@ export class AuroDatePicker extends AuroElement {
     this.shape = 'classic';
     this.size = 'lg';
 
-    /**
-     * @private
-     * @property {boolean} delegatesFocus - Whether the shadow root delegates focus.
-     */
-    this.constructor.shadowRootOptions = {
-      ...LitElement.shadowRootOptions,
-      delegatesFocus: true,
-    };
   }
 
   // This function is to define props used within the scope of this component
@@ -838,6 +839,30 @@ export class AuroDatePicker extends AuroElement {
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
 
+    // Prevent dropdown from closing on focus loss during fullscreen transitions.
+    // When trigger.inert is set to true (to hide the trigger from assistive
+    // technology behind the fullscreen dialog), focus leaves the trigger, which
+    // fires a focusout event. The floater's handleFocusLoss() would interpret
+    // this as "close the bib" without this flag.
+    this.dropdown.noHideOnThisFocusLoss = true;
+
+    // Pass label text to the dropdown bib for accessible dialog naming.
+    // Without this, the fullscreen <dialog> has no accessible name and
+    // screen readers announce it as just "dialog" with no context.
+    const labelElement = this.querySelector('[slot="fromLabel"]');
+    if (labelElement) {
+      this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
+    }
+
+    // Tab closes the fullscreen dialog (same pattern as select).
+    // The dialog event bridge intercepts Tab and re-dispatches it as a
+    // composed keydown; this listener catches the re-dispatched event.
+    this.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
+        this.dropdown.hide();
+      }
+    });
+
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       if (!this.isPopoverVisible) {
         this.dropdown.show();
@@ -851,6 +876,45 @@ export class AuroDatePicker extends AuroElement {
       // It is not rendered by default
       this.calendar.visible = this.dropdown.isPopoverVisible;
 
+      if (this.dropdown.isPopoverVisible) {
+        if (this.dropdown.isBibFullscreen) {
+          // Hide the trigger from assistive technology so VoiceOver cannot
+          // reach it behind the fullscreen dialog.
+          // Set this immediately (before updateComplete) so that the trigger
+          // is already inert when the modal opens. noHideOnThisFocusLoss
+          // prevents the floater from closing the bib when focus leaves.
+          this.dropdown.trigger.inert = true;
+
+          // The dropdown sets disableFocusTrap, so its own updated() lifecycle
+          // opens the dialog as non-modal (dialog.setAttribute('open', '')).
+          // Only showModal() promotes the dialog to the top layer and makes
+          // background content inert — which is what prevents VoiceOver from
+          // swiping to content behind the fullscreen calendar.
+          //
+          // We must wait for the dropdown's Lit update cycle to finish before
+          // re-opening as modal. Both isPopoverVisible and isBibFullscreen
+          // change in the same showBib() call; the dropdown's updated() handles
+          // the isBibFullscreen change by closing and re-opening the dialog
+          // as non-modal. Waiting for updateComplete ensures we act after that
+          // cycle, so our close() + open(true) is the final state.
+          this.dropdown.updateComplete.then(() => {
+            const bibEl = this.dropdown.bibElement?.value;
+            if (bibEl && this.dropdown.isPopoverVisible) {
+              bibEl.close();
+              bibEl.open(true);
+
+              doubleRaf(() => {
+                this.calendar.focusCloseButton();
+              });
+            }
+          });
+
+          guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
+        }
+      } else {
+        restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
+      }
+
       // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
       if (this.dropdown.isPopoverVisible && this.forceScrollOnNextMobileCalendarRender) {
 
@@ -862,6 +926,32 @@ export class AuroDatePicker extends AuroElement {
           this.calendar.scrollMonthIntoView(this.formattedFocusDate);
           this.forceScrollOnNextMobileCalendarRender = false;
         }, 0);
+      }
+    });
+
+    // Handle responsive strategy changes while the dropdown is open
+    // (e.g. resizing from desktop → mobile or vice versa).
+    // When the strategy changes to fullscreen, the dropdown's own updated()
+    // will close and reopen the dialog as non-modal (because disableFocusTrap
+    // is set). We wait for that cycle to complete via updateComplete, then
+    // re-open as modal so showModal() promotes the dialog to the top layer
+    // and makes background content inert for screen readers.
+    this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
+      if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
+        this.dropdown.trigger.inert = true;
+        this.dropdown.updateComplete.then(() => {
+          const bibEl = this.dropdown.bibElement?.value;
+          if (bibEl && this.dropdown.isPopoverVisible) {
+            bibEl.close();
+            bibEl.open(true);
+            doubleRaf(() => {
+              this.calendar.focusCloseButton();
+            });
+          }
+        });
+      } else if (!this.dropdown.isBibFullscreen) {
+        // Switching from fullscreen to floating — restore trigger accessibility
+        this.dropdown.trigger.inert = false;
       }
     });
   }
@@ -1640,6 +1730,7 @@ export class AuroDatePicker extends AuroElement {
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           ?disabled="${this.disabled}"
           ?required="${this.required}"
+          ?hideLabelVisually="${this.layout !== 'classic'}"
           .format="${this.format}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
@@ -1683,6 +1774,7 @@ export class AuroDatePicker extends AuroElement {
             appearance="${this.onDark ? 'inverse' : this.appearance}"
             ?disabled="${this.disabled}"
             ?required="${this.required}"
+            ?hideLabelVisually="${this.layout !== 'classic'}"
             .format="${this.format}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
@@ -1847,8 +1939,10 @@ export class AuroDatePicker extends AuroElement {
         <slot name="ariaLabel.bib.close" slot="ariaLabel.close" @slotchange="${this.handleSlotToSlot}">Close</slot>
         <slot slot="bib.fullscreen.headline" name="bib.fullscreen.headline" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
+        <slot slot="bib.fullscreen.toLabel" name="bib.fullscreen.toLabel" @slotchange="${this.handleSlotToSlot}"></slot>
+        <slot slot="bib.fullscreen.fromLabel" name="bib.fullscreen.fromLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
-        ${this.range ? html`<span slot="mobileDateToStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
+        ${this.range ? html`<span slot="bib.fullscreen.toStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
       </auro-formkit-calendar>
     `;
   }

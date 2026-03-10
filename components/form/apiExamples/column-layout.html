@@ -9,6 +9,7 @@
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    gap: 1rem;
   }
 
   .controls {
@@ -36,7 +37,8 @@
         <auro-datepicker id="date-range" name="dateRange" required range>
           <span slot="fromLabel">Start</span>
           <span slot="toLabel">End</span>
-          <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+          <span slot="bib.fullscreen.fromLabel">Start</span>
+          <span slot="bib.fullscreen.toLabel">End</span>
         </auro-datepicker>
       </div>
 

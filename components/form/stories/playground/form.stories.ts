@@ -1,28 +1,33 @@
-import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { Meta, StoryObj } from "@storybook/web-components-vite";
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
+import { html } from "lit";
 
-import { html } from 'lit-html';
-
-import { AuroForm } from '../src/auro-form';
-
+import { AuroForm } from "../../src/index";
+import { AuroInput } from '@aurodesignsystem/auro-input';
+import { AuroDatePicker } from '@aurodesignsystem/auro-datepicker';
 import '@aurodesignsystem/auro-button';
-import '@aurodesignsystem/auro-input';
 
 AuroForm.register(); // registering to `auro-form`
+AuroForm.register("custom-form");
 
-AuroForm.register('custom-form');
+AuroInput.register(); // registering to `auro-input`
+AuroInput.register("auro-input-two");
 
-const { events, args, argTypes, template } =
-  getStorybookHelpers("auro-form");
+AuroDatePicker.register(); // registering to `auro-datepicker`
+
+const { args, argTypes, template, events } = getStorybookHelpers("auro-form");
 
 const meta: Meta<AuroForm> = {
+  title: "Form/Playground",
   component: "auro-form",
-  title: 'Form',
   args,
   argTypes,
   parameters: {
     actions: {
       handles: events,
+    },
+    chromatic: {
+      disableSnapshot: true,
     },
   },
 };
@@ -43,17 +48,3 @@ export const Playground: Story = {
       `,
     )
 };
-
-// TODO: Confirm functionality
-export const Basic: Story = {
-  render: () => html`
-<auro-form>
-  <auro-input id="search-box" name="searchBox" required>
-    <span slot="label">Search flights</span>
-  </auro-input>
-
-  <auro-button type="submit">Submit</auro-button>
-</auro-form>
-  `
-};
-

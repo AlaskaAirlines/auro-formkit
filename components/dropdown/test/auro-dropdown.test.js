@@ -307,6 +307,246 @@ describe("auro-dropdown", () => {
     expectPopoverHidden(el);
   });
 
+  it("auro-dropdown opens dialog with show() when not fullscreen", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    el.isBibFullscreen = false;
+    el.show();
+    await elementUpdated(el);
+
+    expectPopoverShown(el);
+
+    // Verify the dialog was opened via bib element ref
+    const bibEl = el.bibElement.value;
+    const dialog = bibEl.shadowRoot.querySelector('dialog');
+    expect(dialog.open).to.be.true;
+  });
+
+  it("auro-dropdown opens dialog with showModal() when fullscreen", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    el.isBibFullscreen = true;
+    el.show();
+    await elementUpdated(el);
+
+    expectPopoverShown(el);
+
+    const bibEl = el.bibElement.value;
+    const dialog = bibEl.shadowRoot.querySelector('dialog');
+    expect(dialog.open).to.be.true;
+  });
+
+  it("auro-dropdown closes dialog on hide", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    el.show();
+    await elementUpdated(el);
+    expectPopoverShown(el);
+
+    el.hide();
+    await elementUpdated(el);
+    expectPopoverHidden(el);
+
+    const bibEl = el.bibElement.value;
+    const dialog = bibEl.shadowRoot.querySelector('dialog');
+    expect(dialog.open).to.be.false;
+  });
+
+  it("auro-dropdown returns focus to trigger on keydown close", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    const trigger = el.shadowRoot.querySelector("#trigger");
+    trigger.click();
+    expectPopoverShown(el);
+
+    // Simulate focus on element
+    el.hasFocus = true;
+
+    // Dispatch toggled event with keydown eventType (simulating ESC close)
+    el.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
+      detail: { expanded: false, eventType: 'keydown' }
+    }));
+
+    await elementUpdated(el);
+    expectPopoverHidden(el);
+  });
+
+  it("auro-dropdown handles auro-bib-cancel event", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    el.show();
+    await elementUpdated(el);
+    expectPopoverShown(el);
+
+    // Dispatch the cancel event that the dialog fires on ESC
+    el.dispatchEvent(new CustomEvent('auro-bib-cancel', {
+      bubbles: true,
+      composed: true
+    }));
+
+    await elementUpdated(el);
+    expectPopoverHidden(el);
+  });
+
+  describe("dialog keyboard bridge", () => {
+    async function openFullscreenDropdown() {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      el.isBibFullscreen = true;
+      el.show();
+      await elementUpdated(el);
+
+      const bibEl = el.bibElement.value;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+
+      return { el, bibEl, dialog };
+    }
+
+    for (const key of ['ArrowUp', 'ArrowDown', 'Escape', 'Tab']) {
+      it(`re-dispatches ${key} from dialog to parent`, async () => {
+        const { el, dialog } = await openFullscreenDropdown();
+
+        const received = [];
+        el.addEventListener('keydown', (e) => received.push(e.key));
+
+        dialog.dispatchEvent(new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          cancelable: true
+        }));
+
+        expect(received.filter((k) => k === key)).to.have.lengthOf(1);
+      });
+    }
+
+    it('does not re-dispatch non-navigation keys to parent', async () => {
+      const { el, dialog } = await openFullscreenDropdown();
+
+      const received = [];
+      el.addEventListener('keydown', (e) => received.push(e.key));
+
+      dialog.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'a',
+        bubbles: true,
+        cancelable: true
+      }));
+
+      expect(received).to.deep.equal([]);
+    });
+  });
+
+  it("auro-dropdown renders with emphasized layout", async () => {
+    const el = await fixture(html`
+      <auro-dropdown layout="emphasized" shape="pill">
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    const trigger = el.shadowRoot.querySelector("#trigger");
+    expect(trigger).to.exist;
+  });
+
+  it("auro-dropdown renders with snowflake layout", async () => {
+    const el = await fixture(html`
+      <auro-dropdown layout="snowflake">
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    const trigger = el.shadowRoot.querySelector("#trigger");
+    expect(trigger).to.exist;
+  });
+
+  it("auro-dropdown renders aria-expanded when a11yRole is combobox", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    el.a11yRole = 'combobox';
+    await elementUpdated(el);
+
+    const trigger = el.shadowRoot.querySelector("#trigger");
+    expect(trigger.getAttribute('role')).to.equal('combobox');
+    expect(trigger).to.have.attribute('aria-expanded');
+  });
+
+  it("auro-dropdown invokes onSlotChange callback when set", async () => {
+    let callbackCalled = false;
+
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+        <div>Bib content</div>
+      </auro-dropdown>
+    `);
+
+    el.onSlotChange = () => {
+      callbackCalled = true;
+    };
+
+    // Trigger default slot change by modifying bib content
+    const newContent = document.createElement('div');
+    newContent.textContent = 'New content';
+    el.appendChild(newContent);
+    await elementUpdated(el);
+
+    expect(callbackCalled).to.be.true;
+  });
+
+  it("auro-dropdown uses showModal for fullscreen bib", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    // Directly set isBibFullscreen and isPopoverVisible to trigger the modal path
+    el.isBibFullscreen = true;
+    el.isPopoverVisible = true;
+    await elementUpdated(el);
+
+    const bibEl = el.bibElement.value;
+    const dialog = bibEl.shadowRoot.querySelector('dialog');
+    expect(dialog.open).to.be.true;
+  });
+
   describe("when passing fullscreenBreakpoint", () => {
     it("passes a pixel value when selecting a valid breakpoint", async () => {
       const el = await fixture(html`

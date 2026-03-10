@@ -14,6 +14,10 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
+import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
+import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
+import { comboboxKeyboardStrategy } from './comboboxKeyboardStrategy.js';
+
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
@@ -100,6 +104,9 @@ export class AuroCombobox extends AuroElement {
     this.availableOptions = [];
     this.dropdownId = undefined;
     this.dropdownOpen = false;
+    this.triggerExpandedState = false;
+    this._expandedTimeout = null;
+    this._inFullscreenTransition = false;
     this.errorMessage = null;
     this.isHiddenWhileLoading = false;
     this.largeFullscreenHeadline = false;
@@ -120,7 +127,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default' | 'inverse'}
+       * @property {'default' | 'inverse'} appearance - The visual appearance of the component.
        * @default 'default'
        */
       appearance: {
@@ -456,6 +463,18 @@ export class AuroCombobox extends AuroElement {
         reflect: false,
         attribute: false
       },
+
+      /**
+       * Deferred aria-expanded state for the trigger input.
+       * Delays the "true" transition so VoiceOver finishes its character echo
+       * before announcing "expanded".
+       * @private
+       */
+      triggerExpandedState: {
+        type: Boolean,
+        reflect: false,
+        attribute: false
+      },
     };
   }
 
@@ -553,6 +572,8 @@ export class AuroCombobox extends AuroElement {
       } else if (!option.hasAttribute('persistent')) {
         // Hide all other non-persistent options
         option.setAttribute('hidden', '');
+        option.removeAttribute('aria-setsize');
+        option.removeAttribute('aria-posinset');
       }
     });
 
@@ -619,6 +640,15 @@ export class AuroCombobox extends AuroElement {
     this.availableOptions = [];
     this.updateFilter();
 
+    // Set aria-setsize/aria-posinset on each visible option so screen readers
+    // can announce position even when the listbox context is broken by
+    // shadow DOM boundaries in fullscreen dialog mode.
+    const optionCount = this.availableOptions.length;
+    this.availableOptions.forEach((option, index) => {
+      option.setAttribute('aria-setsize', optionCount);
+      option.setAttribute('aria-posinset', index + 1);
+    });
+
     if (this.value && this.input.value && !this.menu.value) {
       this.syncValuesAndStates();
     }
@@ -652,7 +682,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
-    if (!this.input.value) {
+    if (!this.input.value && !this.dropdown.isBibFullscreen) {
       this.dropdown.hide();
       return;
     }
@@ -675,6 +705,10 @@ export class AuroCombobox extends AuroElement {
   configureDropdown() {
     this.dropdown.a11yRole = "combobox";
 
+    // Prevent dropdown from closing on focus loss since menu content is slotted
+    // from combobox's light DOM and won't be detected by dropdown's contains() check.
+    this.dropdown.noHideOnThisFocusLoss = true;
+
     // Listen for the ID to be added to the dropdown so we can capture it and use it for accessibility.
     this.dropdown.addEventListener('auroDropdown-idAdded', (event) => {
       this.dropdownId = event.detail.id;
@@ -685,12 +719,80 @@ export class AuroCombobox extends AuroElement {
       this.dropdownOpen = ev.detail.expanded;
       this.updateMenuShapeSize();
 
-      // wait a frame in case the bib gets hide immediately after showing because there is no value
-      setTimeout(() => {
-        if (this.componentHasFocus) {
-          this.setInputFocus();
+      // Defer aria-expanded "true" so VoiceOver finishes character echo
+      // before announcing "expanded". Set "false" immediately on close.
+      clearTimeout(this._expandedTimeout);
+      if (this.dropdownOpen) {
+        const expandedDelay = 150;
+        this._expandedTimeout = setTimeout(() => {
+          this.triggerExpandedState = true;
+        }, expandedDelay);
+      } else {
+        this.triggerExpandedState = false;
+      }
+
+      // Clear aria-activedescendant when dropdown closes
+      if (!this.dropdownOpen && this.input) {
+        this.input.setActiveDescendant(null);
+        this.optionActive = null;
+
+        // Remove the highlighted state from all menu options so re-opening
+        // the dropdown doesn't show a stale highlight.
+        if (this.options) {
+          this.options.forEach((opt) => {
+            opt.active = false;
+            opt.classList.remove('active');
+          });
         }
-      }, 0);
+
+        // Restore pointer events on the menu in case they were disabled
+        // during fullscreen open to prevent touch pass-through.
+        this.menu.style.pointerEvents = '';
+
+        restoreTriggerAfterClose(this.dropdown, this.input);
+      }
+
+      if (this.dropdownOpen) {
+        // Suppress or restore dialog semantics based on mode.
+        // On desktop, VoiceOver verbosely announces "listbox inside of a dialog"
+        // which is disruptive for combobox usage. Fullscreen needs dialog semantics.
+        this.updateBibDialogRole();
+
+        if (this.dropdown.isBibFullscreen) {
+          // Guard against spurious validation during the focus transition
+          // from trigger to bib input. Setting trigger.inert = true removes
+          // focus, which fires focusout on the child auro-input before the
+          // bib input receives focus. That focusout triggers the input's own
+          // validate(), which dispatches a composed auroFormElement-validated
+          // event. Because composed events are retargetted at each shadow DOM
+          // boundary, the event appears to originate from the combobox itself
+          // and its listener unconditionally sets this.validity — causing
+          // premature validation. This flag suppresses all validation paths
+          // (focusout handler, handleInputValueChange, validate(), and the
+          // auroFormElement-validated listener) until focus settles in the bib.
+          this._inFullscreenTransition = true;
+
+          // Hide the trigger from assistive technology so VoiceOver cannot reach it
+          // behind the fullscreen dialog
+          this.dropdown.trigger.inert = true;
+
+          guardTouchPassthrough(this.menu);
+
+          // Wait for the bibtemplate to fully render across
+          // multiple Lit update cycles before moving focus into the bib
+          doubleRaf(() => {
+            this.setInputFocus();
+            this._inFullscreenTransition = false;
+          });
+        } else {
+          // wait a frame in case the bib gets hidden immediately after showing because there is no value
+          setTimeout(() => {
+            if (this.componentHasFocus) {
+              this.setInputFocus();
+            }
+          }, 0);
+        }
+      }
     });
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
@@ -700,6 +802,12 @@ export class AuroCombobox extends AuroElement {
     // setting up bibtemplate
     this.bibtemplate = this.dropdown.querySelector(this.bibtemplateTag._$litStatic$);
     this.inputInBib = this.bibtemplate.querySelector(this.inputTag._$litStatic$);
+
+    // Pass label text to the dropdown bib for accessible dialog naming
+    const labelElement = this.querySelector('[slot="label"]');
+    if (labelElement) {
+      this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
+    }
 
     // Exposes the CSS parts from the bibtemplate for styling
     this.bibtemplate.exposeCssParts();
@@ -711,6 +819,14 @@ export class AuroCombobox extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
       // event when the strategy(bib mode) is changed between fullscreen and floating
       this.updateMenuShapeSize();
+      this.updateBibDialogRole();
+
+      // When switching to fullscreen while open, hide trigger from assistive technology
+      if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
+        this.dropdown.trigger.inert = true;
+      } else if (!this.dropdown.isBibFullscreen) {
+        this.dropdown.trigger.inert = false;
+      }
 
       setTimeout(() => {
         this.setInputFocus();
@@ -734,6 +850,13 @@ export class AuroCombobox extends AuroElement {
   setInputFocus() {
     if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
       this.inputInBib.focus();
+
+      // Place cursor at end of existing text so the user can continue editing
+      const nativeInput = this.inputInBib.inputElement;
+      if (nativeInput && nativeInput.value) {
+        const len = nativeInput.value.length;
+        nativeInput.setSelectionRange(len, len);
+      }
     } else if (!this.input.componentHasFocus) {
       const focusedEl = this.querySelector(":focus");
       this.input.focus();
@@ -743,6 +866,22 @@ export class AuroCombobox extends AuroElement {
         this.validate(true);
       }
     }
+  }
+
+  /**
+   * Suppresses or restores dialog semantics on the bib's dialog element.
+   * On desktop (non-fullscreen), VoiceOver verbosely announces "listbox inside
+   * of a dialog" which disrupts combobox usage. Setting role="presentation"
+   * suppresses this. In fullscreen mode, dialog semantics are restored.
+   * @private
+   */
+  updateBibDialogRole() {
+    const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
+    if (!bibEl) {
+      return;
+    }
+
+    bibEl.dialogRole = this.dropdown.isBibFullscreen ? undefined : 'presentation';
   }
 
   /**
@@ -830,6 +969,14 @@ export class AuroCombobox extends AuroElement {
         setTimeout(() => {
           this.hideBib();
         }, 0);
+
+        // Announce the selection after the dropdown closes so it isn't
+        // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
+        const selectedValue = event.detail.stringValue;
+        const announcementDelay = 300;
+        setTimeout(() => {
+          announceToScreenReader(this.shadowRoot, `${selectedValue}, selected`);
+        }, announcementDelay);
       }
     });
 
@@ -840,10 +987,28 @@ export class AuroCombobox extends AuroElement {
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
 
+      if (this.input) {
+        this.input.setActiveDescendant(this.optionActive);
+      }
+
+      // Announce the active option for screen readers including position,
+      // since shadow DOM boundaries prevent native reading of
+      // aria-setsize/aria-posinset via aria-activedescendant.
+      if (this.optionActive) {
+        const optionText = this.optionActive.textContent.trim();
+        const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
+        const optionIndex = this.availableOptions.indexOf(this.optionActive) + 1;
+        const optionCount = this.availableOptions.length;
+        announceToScreenReader(this.shadowRoot, `${optionText}${selectedState}, ${optionIndex} of ${optionCount}`);
+      }
+
+      // Check if user prefers reduced motion for accessibility
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       this.optionActive.scrollIntoView({
         alignToTop: false,
         block: "nearest",
-        behavior: "smooth"
+        behavior: prefersReducedMotion ? "auto" : "smooth"
       });
     });
 
@@ -862,7 +1027,7 @@ export class AuroCombobox extends AuroElement {
      * Validate every time we remove focus from the combo box.
      */
     this.addEventListener('focusout', () => {
-      if (!this.componentHasFocus) {
+      if (!this.componentHasFocus && !this._inFullscreenTransition) {
         this.validate();
       }
     });
@@ -898,8 +1063,33 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleInputValueChange(event) {
+    // When the event comes from the fullscreen bib input, sync the value to
+    // the trigger input. Setting trigger.value triggers Lit's updated()
+    // (async, microtask) which fires notifyValueChanged() → another 'input'
+    // event from the trigger. The _syncingBibValue guard persists across the
+    // async boundary and prevents that re-entrant event from running the
+    // non-fullscreen path (which would call clear() → hideBib()).
+    // When the event comes from the fullscreen bib input, sync the value to
+    // the trigger and run filtering, but suppress the re-entrant input event
+    // that the trigger fires (via Lit updated() → notifyValueChanged()) so
+    // the non-fullscreen hide/clear logic doesn't close the dialog.
     if (event.target === this.inputInBib) {
+      this._syncingBibValue = true;
       this.input.value = this.inputInBib.value;
+      this.input.updateComplete.then(() => {
+        this._syncingBibValue = false;
+      });
+
+      // Run filtering inline — the re-entrant event won't reach this code.
+      this.menu.matchWord = this.inputInBib.value;
+      this.optionActive = null;
+      this.handleMenuOptions();
+      this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
+      return;
+    }
+
+    // Ignore re-entrant input events caused by the bib→trigger sync above.
+    if (this._syncingBibValue) {
       return;
     }
 
@@ -913,8 +1103,11 @@ export class AuroCombobox extends AuroElement {
     }
     this.handleMenuOptions();
 
-    // Validate only if the value was set programmatically
-    if (!this.componentHasFocus) {
+    // Validate only if the value was set programmatically (not during user
+    // interaction). In fullscreen dialog mode, componentHasFocus returns false
+    // because focus is inside the top-layer dialog, so also check
+    // dropdownOpen and the fullscreen transition flag.
+    if (!this.componentHasFocus && !this.dropdownOpen && !this._inFullscreenTransition) {
       this.validate();
     }
 
@@ -929,6 +1122,22 @@ export class AuroCombobox extends AuroElement {
       this.hideBib();
     }
 
+    // iOS virtual keyboard retention: when in fullscreen mode, ensure the
+    // dialog opens and the bib input is focused synchronously within the
+    // input event (user gesture) chain. Without this, Lit's async update
+    // cycle delays showModal() past the user activation window, causing
+    // iOS Safari to dismiss the virtual keyboard when the fullscreen
+    // dialog opens — the user then has to tap the input again to resume
+    // typing.
+    if (this.dropdown.isBibFullscreen && this.input.value && this.input.value.length > 0) {
+      if (!this.dropdown.isPopoverVisible) {
+        this.showBib();
+      }
+      if (this.dropdown.isPopoverVisible) {
+        this.setInputFocus();
+      }
+    }
+
     this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
   }
 
@@ -938,61 +1147,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   configureCombobox() {
-    this.addEventListener('keydown', async (evt) => {
-      if (evt.key === 'Enter') {
-        if (this.dropdown.isPopoverVisible && this.optionActive) {
-          this.menu.makeSelection();
-
-          await this.updateComplete;
-
-          evt.preventDefault();
-          evt.stopPropagation();
-          this.setClearBtnFocus();
-        } else {
-          this.showBib();
-        }
-      }
-
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible) {
-        if (this.dropdown.isBibFullscreen) {
-
-          // when focus is on the input, move focus back to close button with Tab key
-          if (document.activeElement.shadowRoot.activeElement === this.inputInBib) {
-            evt.preventDefault();
-            this.dropdown.focus();
-          }
-        } else {
-          if (this.menu.optionActive && this.menu.optionActive.value) {
-            this.menu.value = this.menu.optionActive.value;
-          }
-
-          setTimeout(() => {
-            if (!this.componentHasFocus) {
-              this.hideBib();
-            }
-          }, 0);
-        }
-      }
-
-      /**
-       * Prevent moving the cursor position while navigating the menu options.
-       */
-      if (evt.key === 'ArrowUp' || evt.key === 'ArrowDown') {
-        if (this.availableOptions.length > 0) {
-          this.showBib();
-        }
-
-        if (this.dropdown.isPopoverVisible) {
-          evt.preventDefault();
-
-          // navigate on menu only when the focus is on input
-          if (!this.dropdown.isBibFullscreen || this.dropdown.isPopoverVisible) {
-            const direction = evt.key.replace('Arrow', '').toLowerCase();
-            this.menu.navigateOptions(direction);
-          }
-        }
-      }
-    });
+    applyKeyboardStrategy(this, comboboxKeyboardStrategy);
 
     this.addEventListener('focusin', () => {
       this.touched = true;
@@ -1001,6 +1156,14 @@ export class AuroCombobox extends AuroElement {
     });
 
     this.addEventListener('auroFormElement-validated', (evt) => {
+      // During the fullscreen transition, child elements (auro-input) may fire
+      // their own validation events when the trigger becomes inert and loses
+      // focus. Those composed events bubble up through shadow DOM boundaries
+      // and would incorrectly set combobox validity. Ignore them.
+      if (this._inFullscreenTransition) {
+        return;
+      }
+
       this.input.validity = evt.detail.validity;
       this.input.errorMessage = evt.detail.message;
       this.validity = evt.detail.validity;
@@ -1025,6 +1188,11 @@ export class AuroCombobox extends AuroElement {
         this.menus[index].setAttribute('nocheckmark', '');
       }
     }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._inFullscreenTransition = false;
   }
 
   firstUpdated() {
@@ -1104,6 +1272,9 @@ export class AuroCombobox extends AuroElement {
    * @param {boolean} [force=false] - Whether to force validation.
    */
   validate(force = false) {
+    if (this._inFullscreenTransition) {
+      return;
+    }
     this.validation.validate(this, force);
   }
 
@@ -1157,7 +1328,13 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (changedProperties.has('availableOptions')) {
-      if ((this.availableOptions.length > 0 && this.componentHasFocus) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
+      // dropdownOpen is set synchronously by the auroDropdown-toggled event
+      // handler during showBib() → floater.showBib() → dispatchEventDropdownToggle(),
+      // so it's already true by the time updated() runs. This prevents the else
+      // branch from calling hideBib() when the dropdown was just opened but
+      // :focus-within hasn't propagated through the top-layer dialog's nested
+      // shadow DOM boundaries.
+      if ((this.availableOptions.length > 0 && (this.componentHasFocus || this.dropdownOpen)) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
         this.showBib();
       } else {
         this.hideBib();
@@ -1275,14 +1452,7 @@ export class AuroCombobox extends AuroElement {
 
     return html`
       <div>
-        <div aria-live="polite" class="util_displayHiddenVisually">
-          ${this.optionActive && this.availableOptions.length > 0
-        ? html`
-              ${`${this.optionActive.textContent}, selected, ${this.availableOptions.indexOf(this.optionActive) + 1} of ${this.availableOptions.length}`}
-            `
-        : undefined
-      }
-        </div>
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
         <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           .fullscreenBreakpoint="${this.fullscreenBreakpoint}"
@@ -1306,7 +1476,8 @@ export class AuroCombobox extends AuroElement {
             <${this.inputTag}
               @input="${this.handleInputValueChange}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
-              .a11yExpanded="${this.dropdownOpen}"
+              .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
+              .a11yExpanded="${this.triggerExpandedState}"
               .a11yControls="${this.dropdownId}"
               .autocomplete="${this.autocomplete}"
               .inputmode="${this.inputmode}"
@@ -1339,8 +1510,10 @@ export class AuroCombobox extends AuroElement {
             <slot @slotchange="${this.handleSlotChange}"></slot>
             <${this.inputTag}
               id="inputInBib"
+              autofocus
               @input="${this.handleInputValueChange}"
-              .a11yControls="${this.dropdownId}"
+              .a11yActivedescendant="${this.dropdownOpen && this.optionActive ? this.optionActive.id : undefined}"
+              .a11yControls=${`${this.dropdownId}-floater-bib`}
               .autocomplete="${this.autocomplete}"
               .format="${this.format}"
               .inputmode="${this.inputmode}"
@@ -1351,7 +1524,7 @@ export class AuroCombobox extends AuroElement {
               ?icon="${this.triggerIcon}"
               ?required="${this.required}"
               a11yRole="combobox"
-              a11yExpanded="true"
+              .a11yExpanded="${this.dropdownOpen}"
               layout="classic"
               noValidate="true"
               shape="classic"

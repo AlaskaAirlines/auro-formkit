@@ -350,7 +350,7 @@ export default class AuroFormValidation {
         }
       }
 
-      if (!hasValue && elem.required && elem.touched) {
+      if (!hasValue && elem.required && (force || elem.touched)) {
         elem.validity = 'valueMissing';
         elem.errorMessage = elem.setCustomValidityValueMissing || elem.setCustomValidity || '';
       } else if (hasValue && this.runtimeUtils.elementMatch(elem, 'auro-input')) {
@@ -374,7 +374,7 @@ export default class AuroFormValidation {
       if (!isCombobox || isCombobox && !elem.persistInput) {
 
         // run validation on all inputs since we're going to use them to set the validity of this component
-        this.auroInputElements.forEach(input => input.validate());
+        this.auroInputElements.forEach(input => input.validate(force));
 
         // Reset element validity to the validity of the input
         elem.validity = this.auroInputElements[0].validity;

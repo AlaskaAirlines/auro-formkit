@@ -214,7 +214,7 @@ export class AuroInput extends BaseInput {
     return {
       'is-disabled': this.disabled,
       'withValue': this.hasValue,
-      'util_displayHiddenVisually': this.labelHidden,
+      'util_displayHiddenVisually': this.labelHidden || this.hideLabelVisually,
       [this.labelFontClass]: true,
     };
   }
@@ -386,6 +386,7 @@ export class AuroInput extends BaseInput {
         ?activeLabel="${this.activeLabel}"
         ?disabled="${this.disabled}"
         ?required="${this.required}"
+        aria-activedescendant=${ifDefined(this.a11yActivedescendant)}
         aria-controls=${ifDefined(this.a11yControls)}
         aria-describedby="${this.uniqueId}"
         aria-expanded=${ifDefined(this.a11yExpanded)}

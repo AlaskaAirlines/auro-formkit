@@ -23,6 +23,17 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  */
 export default class BaseInput extends AuroElement {
 
+  // Delegate focus to the native <input> inside the shadow root so that
+  // showModal()'s dialog focusing steps reach the input element.
+  // This keeps the mobile virtual keyboard open when the fullscreen dialog
+  // opens, because the browser sees an input-to-input focus transfer.
+  static get shadowRootOptions() {
+    return {
+      ...AuroElement.shadowRootOptions,
+      delegatesFocus: true,
+    };
+  }
+
   constructor() {
     super();
 
@@ -40,6 +51,7 @@ export default class BaseInput extends AuroElement {
     this.icon = false;
     this.disabled = false;
     this.dvInputOnly = false;
+    this.hideLabelVisually = false;
     this.max = undefined;
     this.maxLength = undefined;
     this.min = undefined;
@@ -148,6 +160,15 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
+       * The value for the aria-activedescendant attribute.
+       * Points to the ID of the currently active/highlighted option in a listbox.
+       */
+      a11yActivedescendant: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * If set, the label will remain fixed in the active position.
        */
       activeLabel: {
@@ -252,6 +273,16 @@ export default class BaseInput extends AuroElement {
         reflect: false,
         attribute: false
       },
+
+      /**
+       * If set, the label will be hidden visually but still accessible to assistive technologies.
+       * @private
+       */
+      hideLabelVisually: {
+        type: Boolean,
+        reflect: true
+      },
+
 
       /**
        * If set, will render an icon inside the input to the left of the value. Support is limited to auro-input instances with credit card format.
@@ -830,31 +861,34 @@ export default class BaseInput extends AuroElement {
     // Process credit card type detection and formatting during input
     if (this.type === 'credit-card') {
       this.processCreditCard();
-    }
-
-    // Sets value property to value of element value (el.value).
-    this.value = this.inputElement.value;
-
-    // Determine if the value change was programmatic, including autofill.
-    const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
-
-    // Validation on input or programmatic value change (including autofill).
-    if (this.validateOnInput || inputWasProgrammatic) {
       this.touched = true;
       this.validation.validate(this);
-    }
+    } else {
 
-    // Prevents cursor jumping in Safari.
-    const { selectionStart } = this.inputElement;
+      // Sets value property to value of element value (el.value).
+      this.value = this.inputElement.value;
 
-    if (this.setSelectionInputTypes.includes(this.type)) {
-      this.updateComplete.then(() => {
-        try {
-          this.inputElement.setSelectionRange(selectionStart, selectionStart);
-        } catch (error) { // eslint-disable-line
-          // do nothing
-        }
-      });
+      // Determine if the value change was programmatic, including autofill.
+      const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
+
+      // Validation on input or programmatic value change (including autofill).
+      if (this.validateOnInput || inputWasProgrammatic) {
+        this.touched = true;
+        this.validation.validate(this);
+      }
+
+      // Prevents cursor jumping in Safari.
+      const { selectionStart } = this.inputElement;
+
+      if (this.setSelectionInputTypes.includes(this.type)) {
+        this.updateComplete.then(() => {
+          try {
+            this.inputElement.setSelectionRange(selectionStart, selectionStart);
+          } catch (error) { // eslint-disable-line
+            // do nothing
+          }
+        });
+      }
     }
   }
 
@@ -887,6 +921,11 @@ export default class BaseInput extends AuroElement {
     this.inputElement.scrollLeft = 100;
 
     if (!this.noValidate) {
+      // For credit card inputs with mask, ensure value is synced from mask instance
+      if (this.type === 'credit-card' && this.maskInstance) {
+        this.value = this.maskInstance.value;
+      }
+
       this.validation.validate(this);
     }
   }
@@ -909,6 +948,20 @@ export default class BaseInput extends AuroElement {
     }
 
     return activeEl;
+  }
+
+  /**
+   * Sets the active descendant element for accessibility.
+   * Uses ariaActiveDescendantElement to cross shadow DOM boundaries.
+   * This function is used in components that contain `auro-input` to set the active descendant.
+   * @private
+   * @param {HTMLElement|null} element - The element to set as the active descendant, or null to clear.
+   * @returns {void}
+   */
+  setActiveDescendant(element) {
+    if (this.inputElement) {
+      this.inputElement.ariaActiveDescendantElement = element;
+    }
   }
 
   /**

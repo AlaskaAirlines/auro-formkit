@@ -74,7 +74,8 @@
   flex-direction: row;
 }
 
-.headerDateFrom {
+.headerDateFrom,
+.headerDateTo {
   display: flex;
   height: var(--mobile-header-height);
 
@@ -88,37 +89,6 @@
 .mobileDateLabel {
   // padding to make up for body-xs line height
   padding: var(--ds-size-25, vac.$ds-size-25) 0;
-}
-
-.headerDateTo {
-  height: calc(var(--mobile-header-height) - var(--ds-size-300, vac.$ds-size-300));
-
-  padding: var(--ds-size-300, vac.$ds-size-300) var(--ds-size-100, vac.$ds-size-100) 0 var(--ds-size-200, vac.$ds-size-200);
-}
-
-:host(:not([noRange])) {
-  .headerDateTo {
-    position: relative;
-
-    display: flex;
-
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-
-    &:after {
-      position: absolute;
-      top: calc(50% + 10px);
-      left: 0;
-
-      display: block;
-      width: 1px;
-      height: var(--ds-size-300, vac.$ds-size-300);
-
-      content: '';
-      transform: translateY(-50%);
-    }
-  }
 }
 
 .mobileFooter {

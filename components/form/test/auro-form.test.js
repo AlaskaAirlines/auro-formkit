@@ -477,4 +477,67 @@ describe('auro-form', () => {
       await expect(el.value.testInput2).to.equal('prefilled-value');
     });
   });
+
+  describe('when Enter key is pressed on form elements', () => {
+    it('should submit the form when Enter is pressed on an input element', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="testInput" value="test value" required></auro-input>
+          <auro-input name="testInput2" value="test value 2" required></auro-input>
+        </auro-form>
+      `);
+
+      const [inputEl] = el._elements;
+      await elementUpdated(el);
+
+      const submitPromise = new Promise((res) => {
+        el.addEventListener('submit', (event) => {
+          res(event.target.value);
+        });
+      });
+
+      // Simulate Enter key press on the input
+      const enterEvent = new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        cancelable: true
+      });
+      inputEl.dispatchEvent(enterEvent);
+
+      const formSubmissionValue = await submitPromise;
+      await expect(formSubmissionValue).to.have.keys('testInput', 'testInput2');
+      await expect(formSubmissionValue.testInput).to.equal('test value');
+      await expect(formSubmissionValue.testInput2).to.equal('test value 2');
+    });
+
+    it('should prevent default behavior when Enter is pressed on input', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="testInput" value="test" required></auro-input>
+        </auro-form>
+      `);
+
+      const [inputEl] = el._elements;
+      await elementUpdated(el);
+
+      let defaultPrevented = false;
+      const enterEvent = new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        cancelable: true
+      });
+
+      // Override preventDefault to track if it was called
+      const originalPreventDefault = enterEvent.preventDefault.bind(enterEvent);
+      enterEvent.preventDefault = () => {
+        defaultPrevented = true;
+        originalPreventDefault();
+      };
+
+      inputEl.dispatchEvent(enterEvent);
+
+      await elementUpdated(el);
+      await expect(defaultPrevented).to.be.true;
+    });
+  });
 });

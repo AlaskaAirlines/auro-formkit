@@ -321,6 +321,16 @@ export class AuroCalendar extends RangeDatepicker {
   }
 
   /**
+   * Focuses the close button inside the calendar's bibtemplate.
+   * Used by datepicker to set initial focus when the fullscreen dialog opens.
+   * @returns {void}
+   */
+  focusCloseButton() {
+    const bibtemplate = this.shadowRoot.querySelector(this.bibtemplateTag._$litStatic$);
+    if (bibtemplate) bibtemplate.focusCloseButton();
+  }
+
+  /**
    * Request the calendar be scrolled to a given date.
    * @param {String} date - The date to scroll into view.
    * @returns {void}
@@ -384,31 +394,34 @@ export class AuroCalendar extends RangeDatepicker {
       @close-click="${this.utilCal.requestDismiss}">
       <span slot="ariaLabel.close">${this.slots["ariaLabel.bib.close"]}</span>
 
-      <span slot="header">${this.slots["bib.fullscreen.headline"]}</span>
+      ${this.slots["bib.fullscreen.headline"] ? html`<span slot="header">${this.slots["bib.fullscreen.headline"]}</span>` : ''}
 
       <div slot="subheader" class="mobileHeader">
         <div class="headerDateFrom">
-          <span class="mobileDateLabel body-xs">${this.slots["bib.fullscreen.dateLabel"]}</span>
+          ${this.slots["bib.fullscreen.dateLabel"] ? html`<span class="mobileDateLabel body-xs">${this.slots["bib.fullscreen.dateLabel"]}</span>` : ''}
+          ${this.slots["bib.fullscreen.fromLabel"] ? html`<span class="mobileDateLabel body-xs">${this.slots["bib.fullscreen.fromLabel"]}</span>` : ''}
           <slot name="bib.fullscreen.fromStr"></slot>
         </div>
-        <div class="headerDateTo"><slot name="mobileDateToStr"></slot></div>
+        <div class="headerDateTo">
+          ${this.slots["bib.fullscreen.toLabel"] ? html`<span class="mobileDateLabel body-xs">${this.slots["bib.fullscreen.toLabel"]}</span>` : ''}
+          <slot name="bib.fullscreen.toStr"></slot>
+        </div>
       </div>
 
       <div class="calendarWrapper">
-
         <div class="calendars">
           ${this.renderAllCalendars()}
         </div>
         <div class="calendarNavButtons">
           ${this.showPrevMonthBtn ? html`
-            <button class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
-              ${this.util.generateIconHtml(chevronLeft)}
-            </button>
+          <button class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
+            ${this.util.generateIconHtml(chevronLeft)}
+          </button>
           ` : undefined}
           ${this.showNextMonthBtn ? html`
-            <button class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
-              ${this.util.generateIconHtml(chevronRight)}
-            </button>
+          <button class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
+            ${this.util.generateIconHtml(chevronRight)}
+          </button>
           ` : undefined}
         </div>
       </div>

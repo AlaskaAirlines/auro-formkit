@@ -1117,3 +1117,48 @@ async function multiSelectFixture() {
     </div>
   `);
 }
+
+describe('auro-menuoption', () => {
+  describe('auto-generated IDs', () => {
+    it('generates an ID when none is provided', async () => {
+      const el = await fixture(html`
+        <auro-menu aria-label="test">
+          <auro-menuoption value="test">Test</auro-menuoption>
+        </auro-menu>
+      `);
+
+      const option = el.querySelector('auro-menuoption');
+
+      expect(option.id).to.not.be.empty;
+      expect(option.id).to.match(/^menuoption-/);
+    });
+
+    it('preserves an explicit ID when one is set', async () => {
+      const el = await fixture(html`
+        <auro-menu aria-label="test">
+          <auro-menuoption id="my-custom-id" value="test">Test</auro-menuoption>
+        </auro-menu>
+      `);
+
+      const option = el.querySelector('auro-menuoption');
+
+      expect(option.id).to.equal('my-custom-id');
+    });
+
+    it('generates unique IDs across multiple options', async () => {
+      const el = await fixture(html`
+        <auro-menu aria-label="test">
+          <auro-menuoption value="a">A</auro-menuoption>
+          <auro-menuoption value="b">B</auro-menuoption>
+          <auro-menuoption value="c">C</auro-menuoption>
+        </auro-menu>
+      `);
+
+      const options = el.querySelectorAll('auro-menuoption');
+      const ids = [...options].map((opt) => opt.id);
+      const uniqueIds = new Set(ids);
+
+      expect(uniqueIds.size).to.equal(ids.length, 'all generated IDs should be unique');
+    });
+  });
+});
