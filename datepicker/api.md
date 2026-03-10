@@ -82,8 +82,10 @@ The `auro-datepicker` component provides users with a way to select a date or da
 |----------------------------|--------------------------------------------------|
 | `ariaLabel.bib.close`      | Sets aria-label on close button in fullscreen bib |
 | `ariaLabel.input.clear`    | Sets aria-label on clear button                  |
-| `bib.fullscreen.dateLabel` | Defines the content to display above selected dates in the mobile layout. |
+| `bib.fullscreen.dateLabel` | **DEPRECATED** - Use `bib.fullscreen.fromLabel` instead. |
+| `bib.fullscreen.fromLabel` | Defines the content to display above the first input in the mobile layout. |
 | `bib.fullscreen.headline`  | Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout. |
+| `bib.fullscreen.toLabel`   | Defines the content to display above the second input in the mobile layout when `range` is true. |
 | `date_MM_DD_YYYY`          | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |
 | [fromLabel](#fromLabel)                | Defines the label content for the first input.   |
 | [helpText](#helpText)                 | Defines the content of the helpText.             |
@@ -113,7 +115,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -127,7 +129,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -145,7 +147,8 @@ The datepicker can also be used to select a range between two dates by adding th
     <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -160,7 +163,8 @@ The datepicker can also be used to select a range between two dates by adding th
   <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -179,7 +183,7 @@ Use `appearance="inverse"` to display the datepicker on dark backgrounds.
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -193,7 +197,7 @@ Use `appearance="inverse"` to display the datepicker on dark backgrounds.
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -205,7 +209,8 @@ Use `appearance="inverse"` to display the datepicker on dark backgrounds.
     <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -219,7 +224,8 @@ Use `appearance="inverse"` to display the datepicker on dark backgrounds.
   <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -242,19 +248,19 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
     <auro-datepicker offset="20" placement="bottom-start" noFlip>
       <span slot="bib.fullscreen.headline">Datepicker Headline</span>
       <span slot="fromLabel">bottom-start with 20px offset and noFlip</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     </auro-datepicker>
     <br/>
     <auro-datepicker offset="20" placement="bottom-start">
       <span slot="bib.fullscreen.headline">Datepicker Headline</span>
       <span slot="fromLabel">bottom-start with 20px offset and flip</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     </auro-datepicker>
     <br/>
     <auro-datepicker offset="20" placement="right" autoPlacement noFlip>
       <span slot="bib.fullscreen.headline">Datepicker Headline</span>
       <span slot="fromLabel">right with 20px offset, noFlip and autoPlacement</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     </auro-datepicker>
   </div>
   <div style="width: 600px; padding-top: 1em;">
@@ -264,7 +270,8 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
       <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
       <span slot="fromLabel">Departure</span>
       <span slot="toLabel">Return</span>
-      <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+      <span slot="bib.fullscreen.fromLabel">Departure</span>
+      <span slot="bib.fullscreen.toLabel">Return</span>
     </auro-datepicker>
   </div>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -279,19 +286,19 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
   <auro-datepicker offset="20" placement="bottom-start" noFlip>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">bottom-start with 20px offset and noFlip</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <br/>
   <auro-datepicker offset="20" placement="bottom-start">
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">bottom-start with 20px offset and flip</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <br/>
   <auro-datepicker offset="20" placement="right" autoPlacement noFlip>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">right with 20px offset, noFlip and autoPlacement</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
 </div>
 <div style="width: 600px; padding-top: 1em;">
@@ -301,7 +308,8 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
     <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
 </div>
 ```
@@ -326,7 +334,7 @@ Note: This does not restrict setting a value outside of those date constraints. 
   <auro-datepicker calendarStartDate="01/01/2022" calendarEndDate="06/01/2022">
     <span slot="bib.fullscreen.headline">calendarStartDate & calendarEndDate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -339,7 +347,7 @@ Note: This does not restrict setting a value outside of those date constraints. 
 <auro-datepicker calendarStartDate="01/01/2022" calendarEndDate="06/01/2022">
   <span slot="bib.fullscreen.headline">calendarStartDate & calendarEndDate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -359,7 +367,7 @@ In <strong>mobile</strong> layout, upon first opening the bib, the vertical list
   <auro-datepicker calendarStartDate="01/01/2022" calendarEndDate="12/01/2023" calendarFocusDate="11/01/2022">
     <span slot="bib.fullscreen.headline">calendarFocusDate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -372,7 +380,7 @@ In <strong>mobile</strong> layout, upon first opening the bib, the vertical list
 <auro-datepicker calendarStartDate="01/01/2022" calendarEndDate="12/01/2023" calendarFocusDate="11/01/2022">
   <span slot="bib.fullscreen.headline">calendarFocusDate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -388,7 +396,7 @@ The `centralDate` attribute can be used to force the calendar to navigate to a s
   <auro-datepicker centralDate="06/16/1980">
     <span slot="bib.fullscreen.headline">centralDate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -401,7 +409,7 @@ The `centralDate` attribute can be used to force the calendar to navigate to a s
 <auro-datepicker centralDate="06/16/1980">
   <span slot="bib.fullscreen.headline">centralDate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -416,7 +424,7 @@ Set the `disabled` attribute to disable all interaction with the datepicker.
   <!-- The below content is automatically added from ./../apiExamples/disabled.html -->
   <auro-datepicker disabled>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -428,7 +436,7 @@ Set the `disabled` attribute to disable all interaction with the datepicker.
 ```html
 <auro-datepicker disabled>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -449,7 +457,7 @@ A custom error message can be set using the `error` attribute, or it can be used
   <auro-datepicker error="Custom error message" id="errorExample">
     <span slot="bib.fullscreen.headline">Error Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -465,7 +473,7 @@ A custom error message can be set using the `error` attribute, or it can be used
 <auro-datepicker error="Custom error message" id="errorExample">
   <span slot="bib.fullscreen.headline">Error Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -498,7 +506,7 @@ The `format` attribute is used to define the date format used by the datepicker.
   <auro-datepicker format="yyyy/mm/dd">
     <span slot="bib.fullscreen.headline">Format Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -511,7 +519,7 @@ The `format` attribute is used to define the date format used by the datepicker.
 <auro-datepicker format="yyyy/mm/dd">
   <span slot="bib.fullscreen.headline">Format Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -534,7 +542,7 @@ To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMM
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -548,7 +556,7 @@ To support fullcreen bib, setting `bib.fullscreen.headline` is **STRONGLY RECOMM
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -564,7 +572,7 @@ You can manually set the input mode for the input with the `inputmode` attribute
   <auro-datepicker inputmode="numeric">
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -577,7 +585,7 @@ You can manually set the input mode for the input with the `inputmode` attribute
 <auro-datepicker inputmode="numeric">
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -593,7 +601,7 @@ To give a higher limit you can bind a date to the `maxDate` attribute. It is rec
   <auro-datepicker maxDate="03/25/2023" setCustomValidityRangeOverflow="Selected date is later than maximum date.">
     <span slot="bib.fullscreen.headline">maxDate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -606,7 +614,7 @@ To give a higher limit you can bind a date to the `maxDate` attribute. It is rec
 <auro-datepicker maxDate="03/25/2023" setCustomValidityRangeOverflow="Selected date is later than maximum date.">
   <span slot="bib.fullscreen.headline">maxDate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -630,7 +638,7 @@ This example demonstrates that behavior.
   <auro-datepicker id="maxDateExample" setCustomValidityRangeOverflow="Selected date is later than maximum date.">
     <span slot="bib.fullscreen.headline">maxDate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -646,7 +654,7 @@ This example demonstrates that behavior.
 <auro-datepicker id="maxDateExample" setCustomValidityRangeOverflow="Selected date is later than maximum date.">
   <span slot="bib.fullscreen.headline">maxDate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -703,7 +711,7 @@ To give a lower limit you can bind a date to the `minDate` attribute. It is reco
   <auro-datepicker minDate="03/25/2028" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date.">
     <span slot="bib.fullscreen.headline">minDate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -716,7 +724,7 @@ To give a lower limit you can bind a date to the `minDate` attribute. It is reco
 <auro-datepicker minDate="03/25/2028" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date.">
   <span slot="bib.fullscreen.headline">minDate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -740,7 +748,7 @@ This example demonstrates that behavior.
   <auro-datepicker id="minDateExample" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date.">
     <span slot="bib.fullscreen.headline">minDate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -756,7 +764,7 @@ This example demonstrates that behavior.
 <auro-datepicker id="minDateExample" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date.">
   <span slot="bib.fullscreen.headline">minDate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -816,7 +824,7 @@ This example demonstrates how to set the `monthNames` property to Korean month n
   <auro-datepicker format="yyyy/mm/dd" id="localizationExample">
     <span slot="bib.fullscreen.headline">Localization Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -829,7 +837,7 @@ This example demonstrates how to set the `monthNames` property to Korean month n
 <auro-datepicker format="yyyy/mm/dd" id="localizationExample">
   <span slot="bib.fullscreen.headline">Localization Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -856,7 +864,7 @@ Set `noValidate` to force the datepicker not to validate when navigating away fr
   <auro-datepicker required noValidate>
     <span slot="bib.fullscreen.headline">noValidate Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -869,7 +877,7 @@ Set `noValidate` to force the datepicker not to validate when navigating away fr
 <auro-datepicker required noValidate>
   <span slot="bib.fullscreen.headline">noValidate Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -891,7 +899,7 @@ Example:
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -905,7 +913,7 @@ Example:
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -923,14 +931,15 @@ When the validity check fails the validityState, equals `valueMissing`. The erro
   <auro-datepicker required setCustomValidityValueMissing="Custom value missing message.">
     <span slot="bib.fullscreen.headline">Required Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <br />
   <auro-datepicker required range setCustomValidityValueMissing="Custom value missing message.">
     <span slot="bib.fullscreen.headline">Required Example</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -943,14 +952,15 @@ When the validity check fails the validityState, equals `valueMissing`. The erro
 <auro-datepicker required setCustomValidityValueMissing="Custom value missing message.">
   <span slot="bib.fullscreen.headline">Required Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <br />
 <auro-datepicker required range setCustomValidityValueMissing="Custom value missing message.">
   <span slot="bib.fullscreen.headline">Required Example</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -966,7 +976,8 @@ Set the `stacked` attribute to make range datepicker stacked style.
   <auro-datepicker range stacked>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -979,7 +990,8 @@ Set the `stacked` attribute to make range datepicker stacked style.
 <auro-datepicker range stacked>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -997,7 +1009,7 @@ Specifies the `validityState` the element is in. Upon first interaction, or pres
   <auro-datepicker required id="validityExample">
     <span slot="bib.fullscreen.headline">validity Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1012,7 +1024,7 @@ Specifies the `validityState` the element is in. Upon first interaction, or pres
 <auro-datepicker required id="validityExample">
   <span slot="bib.fullscreen.headline">validity Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1043,7 +1055,7 @@ The `value` attribute represents the value selected for the datepicker. Can be u
   <auro-datepicker id="valueExample" value="02/02/2022">
     <span slot="bib.fullscreen.headline">value Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1056,7 +1068,7 @@ The `value` attribute represents the value selected for the datepicker. Can be u
 <auro-datepicker id="valueExample" value="02/02/2022">
   <span slot="bib.fullscreen.headline">value Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1073,7 +1085,8 @@ The `valueEnd` attribute represents the value of the second input (end date), se
     <span slot="bib.fullscreen.headline">valueEnd Example</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1087,7 +1100,8 @@ The `valueEnd` attribute represents the value of the second input (end date), se
   <span slot="bib.fullscreen.headline">valueEnd Example</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1109,7 +1123,8 @@ The `focus()` method will apply focus state to the datepicker's input field.
     <span slot="bib.fullscreen.headline">Focus Example</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+    <span slot="bib.fullscreen.toLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1126,7 +1141,8 @@ The `focus()` method will apply focus state to the datepicker's input field.
   <span slot="bib.fullscreen.headline">Focus Example</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+  <span slot="bib.fullscreen.toLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1164,7 +1180,8 @@ Use the `reset()` method to reset the `<auro-datepicker>`'s `value`, `valueEnd` 
     <span slot="bib.fullscreen.headline">Reset Example</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1180,7 +1197,8 @@ Use the `reset()` method to reset the `<auro-datepicker>`'s `value`, `valueEnd` 
   <span slot="bib.fullscreen.headline">Reset Example</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1211,7 +1229,7 @@ The following example listens for the `auroDatePicker-valueSet` event. Once trig
   <auro-datepicker id="datePickerValueAlert">
     <span slot="bib.fullscreen.headline">Alert Value Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1224,7 +1242,7 @@ The following example listens for the `auroDatePicker-valueSet` event. Once trig
 <auro-datepicker id="datePickerValueAlert">
   <span slot="bib.fullscreen.headline">Alert Value Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1257,7 +1275,7 @@ Use the `ariaLabel.input.clear` slot to set the `aria-label` for the clear butto
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     <span slot="ariaLabel.input.clear">Custom Clear Input Button</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -1270,7 +1288,7 @@ Use the `ariaLabel.input.clear` slot to set the `aria-label` for the clear butto
     <span slot="label">Date</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     <span slot="ariaLabel.input.clear">Snowflake Clear Input Button</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -1285,7 +1303,7 @@ Use the `ariaLabel.input.clear` slot to set the `aria-label` for the clear butto
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   <span slot="ariaLabel.input.clear">Custom Clear Input Button</span>
 </auro-datepicker>
 ```
@@ -1299,17 +1317,20 @@ Use the `ariaLabel.input.clear` slot to set the `aria-label` for the clear butto
   <span slot="label">Date</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   <span slot="ariaLabel.input.clear">Snowflake Clear Input Button</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
-### Fullscreen Bib Date Label and Headline
+### Fullscreen Bib Date Labels and Headline
 
-Use the `bib.fullscreen.dateLabel` and `bib.fullscreen.headline` slots to set the the label at the top of the bib and headline when viewed in the mobile layout.
+Use the `bib.fullscreen.fromLabel`, `bib.fullscreen.toLabel`, and `bib.fullscreen.headline` slots to set the the labels at the top of the bib and headline when viewed in the mobile layout.
+
 To view this demo, set your window to a mobile screen size.
+
+**Note**: The previously supported `bib.fullscreen.dateLabel` slot is deprecated and will continue to work for backwards compatibility, but it is recommended to use the new `bib.fullscreen.fromLabel` and `bib.fullscreen.toLabel` slots to apply a label for each input when in mobile layout.
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
@@ -1318,7 +1339,7 @@ To view this demo, set your window to a mobile screen size.
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1332,7 +1353,7 @@ To view this demo, set your window to a mobile screen size.
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1349,7 +1370,7 @@ The `fromLabel` slot sets the label used for the input. When the `range` attribu
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1363,7 +1384,7 @@ The `fromLabel` slot sets the label used for the input. When the `range` attribu
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1381,7 +1402,8 @@ The `toLabel` slot sets the label for the second input. Only for use with the `r
     <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1396,7 +1418,8 @@ The `toLabel` slot sets the label for the second input. Only for use with the `r
   <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -1412,7 +1435,7 @@ Sets the help text displayed below the trigger. The `helpText` slot can be used 
   <auro-datepicker>
     <span slot="bib.fullscreen.headline">helpText Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     <span slot="helpText">Choose a date must be today or earlier.</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
@@ -1426,7 +1449,7 @@ Sets the help text displayed below the trigger. The `helpText` slot can be used 
 <auro-datepicker>
   <span slot="bib.fullscreen.headline">helpText Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   <span slot="helpText">Choose a date must be today or earlier.</span>
 </auro-datepicker>
 ```
@@ -1449,7 +1472,7 @@ Slot content can be styled using [inline styles](https://www.codecademy.com/arti
   <auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023">
     <span slot="bib.fullscreen.headline">dateSlot Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     <span slot="date_12_03_2023">Sold</span>
     <span highlight slot="date_12_04_2023">$89</span>
     <span slot="date_12_05_2023">$100</span>
@@ -1469,7 +1492,7 @@ Slot content can be styled using [inline styles](https://www.codecademy.com/arti
 <auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023">
   <span slot="bib.fullscreen.headline">dateSlot Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   <span slot="date_12_03_2023">Sold</span>
   <span highlight slot="date_12_04_2023">$89</span>
   <span slot="date_12_05_2023">$100</span>
@@ -1494,7 +1517,7 @@ The popover slot is intended for use with calendar dates that are `disabled` (e.
   <auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023">
     <span slot="bib.fullscreen.headline">Popover Slot Example</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     <span slot="popover_12_03_2023">Tickets for this day are sold out</span>
     <span slot="popover_12_04_2023">Tickets for this day are $89</span>
     <span slot="popover_12_05_2023">Tickets for this day are $100</span>
@@ -1514,7 +1537,7 @@ The popover slot is intended for use with calendar dates that are `disabled` (e.
 <auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023">
   <span slot="bib.fullscreen.headline">Popover Slot Example</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   <span slot="popover_12_03_2023">Tickets for this day are sold out</span>
   <span slot="popover_12_04_2023">Tickets for this day are $89</span>
   <span slot="popover_12_05_2023">Tickets for this day are $100</span>
@@ -1540,7 +1563,7 @@ This example demonstrates data driven slot content for days in the calendar. In 
     <span slot="bib.fullscreen.headline">dynamic slot Example</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -1554,7 +1577,7 @@ This example demonstrates data driven slot content for days in the calendar. In 
   <span slot="bib.fullscreen.headline">dynamic slot Example</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->

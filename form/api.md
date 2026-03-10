@@ -119,7 +119,8 @@ This example shows that you can use advanced layouts with Auro Form, such as a c
         <auro-datepicker id="date-range" name="dateRange" required range>
           <span slot="fromLabel">Start</span>
           <span slot="toLabel">End</span>
-          <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+          <span slot="bib.fullscreen.fromLabel">Start</span>
+          <span slot="bib.fullscreen.toLabel">End</span>
         </auro-datepicker>
       </div>
       <div class="controls">
@@ -172,7 +173,8 @@ This example shows that you can use advanced layouts with Auro Form, such as a c
         <auro-datepicker id="date-range" name="dateRange" required range>
           <span slot="fromLabel">Start</span>
           <span slot="toLabel">End</span>
-          <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+          <span slot="bib.fullscreen.fromLabel">Start</span>
+          <span slot="bib.fullscreen.toLabel">End</span>
         </auro-datepicker>
       </div>
       <div class="controls">
@@ -231,7 +233,7 @@ Finally, a more complex form example with multiple form elements, including a da
     <h4>Pick a cool date</h4>
     <auro-datepicker id="date-example" name="dateExample" required>
       <span slot="fromLabel">Choose a date</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     </auro-datepicker>
   </div>
   <div class="datepickerBlock">
@@ -239,7 +241,8 @@ Finally, a more complex form example with multiple form elements, including a da
     <auro-datepicker id="date-range" name="dateRange" required range>
       <span slot="fromLabel">Start</span>
       <span slot="toLabel">End</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+      <span slot="bib.fullscreen.fromLabel">Start</span>
+      <span slot="bib.fullscreen.toLabel">End</span>
     </auro-datepicker>
   </div>
   <div class="submitBlock">
@@ -294,7 +297,7 @@ Finally, a more complex form example with multiple form elements, including a da
     <h4>Pick a cool date</h4>
     <auro-datepicker id="date-example" name="dateExample" required>
       <span slot="fromLabel">Choose a date</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+      <span slot="bib.fullscreen.fromLabel">Choose a date</span>
     </auro-datepicker>
   </div>
   <div class="datepickerBlock">
@@ -302,7 +305,8 @@ Finally, a more complex form example with multiple form elements, including a da
     <auro-datepicker id="date-range" name="dateRange" required range>
       <span slot="fromLabel">Start</span>
       <span slot="toLabel">End</span>
-      <span slot="bib.fullscreen.dateLabel">Choose a range</span>
+      <span slot="bib.fullscreen.fromLabel">Start</span>
+      <span slot="bib.fullscreen.toLabel">End</span>
     </auro-datepicker>
   </div>
   <div class="submitBlock">
