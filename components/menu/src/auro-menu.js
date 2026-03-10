@@ -457,6 +457,14 @@ export class AuroMenu extends AuroElement {
     if (changedProperties.has('loading')) {
       this.setLoadingState(this.loading);
     }
+
+    if (changedProperties.has('multiSelect') && this.rootMenu) {
+      if (this.multiSelect) {
+        this.setAttribute('aria-multiselectable', 'true');
+      } else {
+        this.removeAttribute('aria-multiselectable');
+      }
+    }
   }
 
   /**
