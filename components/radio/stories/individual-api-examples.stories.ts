@@ -2,7 +2,7 @@
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
-const { args, argTypes } = getStorybookHelpers("auro-checkbox-group");
+const { args, argTypes } = getStorybookHelpers("auro-radio-group");
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
 
 import '../src/registered';
