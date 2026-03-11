@@ -372,6 +372,20 @@ describe('auro-form', () => {
       await expect(button.hasAttribute("disabled")).to.be.false;
     });
 
+    it('uses the reactive _submitElements property declared in properties', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="tester" value="some value"></auro-input>
+          <auro-button type="submit">Submit</auro-button>
+        </auro-form>
+      `);
+
+      await elementUpdated(el);
+
+      // Verify submitElements returns the button via the reactive property
+      expect(el.submitElements).to.have.length(1);
+    });
+
     it('attaches submit click handler to submit elements', async () => {
       const el = await fixture(html`
         <auro-form>
