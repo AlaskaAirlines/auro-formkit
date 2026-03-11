@@ -649,7 +649,8 @@ function runTest(mobileView) {
     });
   });
 
-  describe('announceToScreenReader', () => {
+  describe('announceToScreenReader', function() {
+    this.timeout(5000);
     it('populates the live region when an option is activated', async () => {
       const el = await defaultFixture();
       await elementUpdated(el);
@@ -677,8 +678,10 @@ function runTest(mobileView) {
       const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
       expect(liveRegion.textContent).to.not.equal('');
 
-      // Wait for the 1000ms cleanup timeout
-      await new Promise((resolve) => setTimeout(resolve, 1100));
+      // Multiple announcements can chain (e.g., active-option followed by selection),
+      // each resetting the 1000ms cleanup timer. Wait long enough for the final
+      // announcement's timer to expire.
+      await new Promise((resolve) => setTimeout(resolve, 2200));
       expect(liveRegion.textContent).to.equal('');
     });
   });
