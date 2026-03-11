@@ -87,7 +87,7 @@ export class AuroForm extends LitElement {
      * @type {HTMLButtonElement[]}
      * @private
      */
-    this._submitelements = [];
+    this._submitElements = [];
 
     /**
      * @type {HTMLButtonElement[]}
@@ -219,7 +219,7 @@ export class AuroForm extends LitElement {
    * @private
    */
   get submitElements() {
-    return this._submitelements;
+    return this._submitElements;
   }
 
   /**
@@ -301,7 +301,7 @@ export class AuroForm extends LitElement {
       }
     });
 
-    this._submitelements.forEach((element) => {
+    this._submitElements.forEach((element) => {
       if (this.isInitialState || this.validity !== "valid") {
         element.setAttribute("disabled", "");
       } else {
@@ -365,7 +365,7 @@ export class AuroForm extends LitElement {
    */
   initializeState() {
     this.formState = {};
-    this._submitelements = [];
+    this._submitElements = [];
     this._resetElements = [];
     this._elements = [];
 
@@ -379,7 +379,7 @@ export class AuroForm extends LitElement {
         element.addEventListener('click', this.submit);
 
         // Keep record of this element, so we can enable/disable as needed
-        this._submitelements.push(element);
+        this._submitElements.push(element);
       }
 
       if (this.isButtonElement(element) && element.getAttribute('type') === 'reset') {
