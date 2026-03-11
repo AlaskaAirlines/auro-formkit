@@ -163,6 +163,26 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 
+  it('Enter key does not propagate when opening the bib', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+
+    let propagated = false;
+    const listener = () => { propagated = true; };
+    // Listen on the parent to detect if the event bubbles past the combobox
+    el.parentElement.addEventListener('keydown', listener);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    el.parentElement.removeEventListener('keydown', listener);
+
+    await expect(propagated).to.be.false;
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+  });
+
   it('hides the bib when there are no available options', async () => {
     const el = await defaultFixture(mobileview);
 
@@ -662,7 +682,9 @@ function runFulltest(mobileview) {
     await expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
-  describe('announceToScreenReader', () => {
+  describe('announceToScreenReader', function() {
+    this.timeout(5000);
+
     it('populates the live region when an option is activated', async () => {
       const el = await noFilterFixture(mobileview);
       await elementUpdated(el);
@@ -700,8 +722,10 @@ function runFulltest(mobileview) {
       const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
       expect(liveRegion.textContent).to.not.equal('');
 
-      // Wait for the 1000ms cleanup timeout
-      await new Promise((resolve) => setTimeout(resolve, 1100));
+      // Multiple announcements can chain (e.g., active-option followed by selection),
+      // each resetting the 1000ms cleanup timer. Wait long enough for the final
+      // announcement's timer to expire.
+      await new Promise((resolve) => setTimeout(resolve, 2200));
       expect(liveRegion.textContent).to.equal('');
     });
   });
