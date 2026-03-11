@@ -22,6 +22,6 @@ export default meta;
 
 type Story = StoryObj<AuroRadio & typeof args>;
 
-export const Checkbox: Story = {
+export const Radio: Story = {
   render: (args) => template(args)
 };
