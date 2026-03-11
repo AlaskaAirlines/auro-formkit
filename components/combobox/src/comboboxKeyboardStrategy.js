@@ -2,9 +2,11 @@ import { navigateArrow } from '../../dropdown/src/keyboardUtils.js';
 
 export const comboboxKeyboardStrategy = {
   async Enter(component, evt) {
-    // If the clear button has focus, let the browser activate it normally.
+    // If the clear button has focus, let the browser activate it normally
+    // but prevent the native form-submit behavior that Enter would trigger.
     const clearBtn = component.input.shadowRoot.querySelector('.clearBtn');
     if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
+      evt.preventDefault();
       return;
     }
 
