@@ -238,6 +238,25 @@ describe('auro-menu', () => {
 });
 
 describe('multiSelect', () => {
+  it('should set aria-multiselectable on the menu when multiSelect is enabled', async () => {
+    const el = await multiSelectFixture();
+    const menuEl = el.querySelector('auro-menu');
+
+    expect(menuEl.getAttribute('aria-multiselectable')).to.equal('true');
+  });
+
+  it('should remove aria-multiselectable when multiSelect is disabled', async () => {
+    const el = await multiSelectFixture();
+    const menuEl = el.querySelector('auro-menu');
+
+    expect(menuEl.getAttribute('aria-multiselectable')).to.equal('true');
+
+    menuEl.multiSelect = false;
+    await elementUpdated(menuEl);
+
+    expect(menuEl.hasAttribute('aria-multiselectable')).to.be.false;
+  });
+
   it('should allow multiple options to be selected', async () => {
     const el = await multiSelectFixture();
     const menuEl = el.querySelector('auro-menu');
