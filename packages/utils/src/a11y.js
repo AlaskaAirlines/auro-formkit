@@ -12,11 +12,14 @@
 
 const ANNOUNCEMENT_DURATION_MS = 1000;
 
+// Tracks the clear-after-announce timeout so rapid successive calls can cancel the previous one.
 let pendingClearTimeout = 0;
 
 export function announceToScreenReader(shadowRoot, text) {
   const liveRegion = shadowRoot.querySelector('#srAnnouncement');
   if (liveRegion) {
+    // Cancel any pending clear so a previous announcement's timeout
+    // doesn't blank this one before the screen reader can read it.
     clearTimeout(pendingClearTimeout);
 
     // Clear and re-set to ensure the announcement fires even with same text
