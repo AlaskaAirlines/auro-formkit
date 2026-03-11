@@ -15,6 +15,10 @@ export const comboboxKeyboardStrategy = {
       evt.stopPropagation();
       component.setClearBtnFocus();
     } else {
+      // Prevent the keypress from bubbling to parent containers (e.g., forms)
+      // which could interpret Enter as a submit or trigger other unintended behavior.
+      // This is safe because showBib() opens the dialog programmatically,
+      // not via event propagation.
       evt.preventDefault();
       evt.stopPropagation();
       component.showBib();
