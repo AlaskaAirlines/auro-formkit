@@ -4,10 +4,14 @@ import { setViewport } from '@web/test-runner-commands';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
 
-// describe('auro-combobox', () => {
-//   runFulltest(false);
-// });
+// Desktop Test Suite
+// "false" means mobileview = false
+describe('auro-combobox', () => {
+  runFulltest(false);
+});
 
+// Mobile Test Suite
+// "true" means mobileview = true (full screen dialog)
 describe('auro-combobox in mobile screen', () => {
   runFulltest(true);
 });
@@ -247,65 +251,68 @@ function runFulltest(mobileview) {
   //   await expect(el.dropdown.isPopoverVisible).to.be.false;
   // });
 
-  it('focuses input in bib when fullscreen dialog opens', async () => {
-    const el = await defaultFixture(mobileview);
+  // These tests require fullscreen (mobile) mode
+  if (mobileview) {
+    it('focuses input in bib when fullscreen dialog opens', async () => {
+      const el = await defaultFixture(mobileview);
 
-    setInputValue(el, 'a');
-    await elementUpdated(el);
+      setInputValue(el, 'a');
+      await elementUpdated(el);
 
-    // inputInBib should exist in fullscreen mode
-    expect(el.inputInBib).to.exist;
+      // inputInBib should exist in fullscreen mode
+      expect(el.inputInBib).to.exist;
 
-    // Follow existing mobile pattern: explicitly focus inputInBib
-    el.inputInBib.focus();
-    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-    expect(el.shadowRoot.activeElement).to.equal(el.inputInBib);
-  });
+      // Follow existing mobile pattern: explicitly focus inputInBib
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+      expect(el.shadowRoot.activeElement).to.equal(el.inputInBib);
+    });
 
-  it('Tab key closes fullscreen dialog', async () => {
-    const el = await defaultFixture(mobileview);
+    it('Tab key closes fullscreen dialog', async () => {
+      const el = await defaultFixture(mobileview);
 
-    el.focus();
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await elementUpdated(el);
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    el.inputInBib.focus();
-    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
 
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 
-    // Wait for dialog close + rAF focus restoration
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    await elementUpdated(el);
+      // Wait for dialog close + rAF focus restoration
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
 
-    await expect(el.dropdown.isPopoverVisible).to.be.false;
-  });
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
 
-  it('restores trigger inert and focus after fullscreen dialog closes', async () => {
-    const el = await defaultFixture(mobileview);
+    it('restores trigger inert and focus after fullscreen dialog closes', async () => {
+      const el = await defaultFixture(mobileview);
 
-    el.focus();
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await elementUpdated(el);
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-    el.inputInBib.focus();
-    await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
 
-    // Trigger should be inert while fullscreen is open
-    expect(el.dropdown.trigger.inert).to.be.true;
+      // Trigger should be inert while fullscreen is open
+      expect(el.dropdown.trigger.inert).to.be.true;
 
-    // Close the dialog
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    await elementUpdated(el);
+      // Close the dialog
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
 
-    expect(el.dropdown.trigger.inert).to.be.false;
-    expect(el.dropdown.isPopoverVisible).to.be.false;
-  });
+      expect(el.dropdown.trigger.inert).to.be.false;
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+  }
 
   it('hides the bib when selecting an option with a custom event', async () => {
     const el = await customEventFixture(mobileview);
@@ -800,6 +807,106 @@ function runFulltest(mobileview) {
       expect(el._inFullscreenTransition).to.be.false;
     });
   });
+
+  it('hitting Enter on clear button clears the input', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Navigate to the clear button via Tab
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    const activeInput = mobileview ? el.inputInBib : el.input;
+    const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
+    expect(clearBtn).to.exist;
+
+    // Hit Enter on the clear button
+    clearBtn.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    clearBtn.click();
+    await elementUpdated(el);
+
+    expect(activeInput.value).to.not.be.ok;
+  });
+
+  it('clicking clear button clears the input', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    const activeInput = mobileview ? el.inputInBib : el.input;
+    const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
+    expect(clearBtn).to.exist;
+
+    clearBtn.click();
+    await elementUpdated(el);
+
+    expect(activeInput.value).to.not.be.ok;
+  });
+
+  // The close button only exists in fullscreen (mobile) mode
+  if (mobileview) {
+    it('hitting Enter on close button closes the dialog', async () => {
+      const el = await defaultFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+
+      // Find the close button in the bibtemplate and activate it with Enter
+      const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
+      expect(closeBtn).to.exist;
+      closeBtn.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+      closeBtn.click();
+
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
+
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+
+    it('clicking close button closes the dialog', async () => {
+      const el = await defaultFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+
+      // Click the close button in the bibtemplate
+      const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
+      expect(closeBtn).to.exist;
+      closeBtn.click();
+
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await elementUpdated(el);
+
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+  }
 
   it('selects label slot content', async () => {
     const el = await fixture(html`
