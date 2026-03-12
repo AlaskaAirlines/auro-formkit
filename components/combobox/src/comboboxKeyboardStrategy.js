@@ -3,8 +3,12 @@ import { navigateArrow } from '../../dropdown/src/keyboardUtils.js';
 export const comboboxKeyboardStrategy = {
   async Enter(component, evt) {
     // If the clear button has focus, let the browser activate it normally.
+    // stopPropagation prevents parent containers (e.g., forms) from treating
+    // Enter as a submit, but we must NOT call preventDefault — that would
+    // block the browser's built-in "Enter activates focused button" behavior.
     const clearBtn = component.input.shadowRoot.querySelector('.clearBtn');
     if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
+      evt.stopPropagation();
       return;
     }
 
@@ -15,6 +19,12 @@ export const comboboxKeyboardStrategy = {
       evt.stopPropagation();
       component.setClearBtnFocus();
     } else {
+      // Prevent the keypress from bubbling to parent containers (e.g., forms)
+      // which could interpret Enter as a submit or trigger other unintended behavior.
+      // This is safe because showBib() opens the dialog programmatically,
+      // not via event propagation.
+      evt.preventDefault();
+      evt.stopPropagation();
       component.showBib();
     }
   },

@@ -367,9 +367,11 @@ export class AuroDropdownBib extends LitElement {
         const prevOverflow = documentElement.style.overflow;
         documentElement.style.overflow = 'hidden';
 
-        dialog.showModal();
-
-        documentElement.style.overflow = prevOverflow;
+        try {
+          dialog.showModal();
+        } finally {
+          documentElement.style.overflow = prevOverflow;
+        }
 
         this._lockTouchScroll();
 
@@ -405,7 +407,7 @@ export class AuroDropdownBib extends LitElement {
 
     return html`
       <dialog class="${classMap(classes)}" part="bibContainer" role="${ifDefined(this.dialogRole)}" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
-        ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually" aria-hidden="true">${this.dialogLabel}</span>` : ''}
+        ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually">${this.dialogLabel}</span>` : ''}
         <slot></slot>
       </dialog>
     `;
