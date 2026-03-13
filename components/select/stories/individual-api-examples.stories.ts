@@ -4,6 +4,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
 import '../src/registered';
+import '../../menu/src/registered';
 import { AuroSelect } from '../src/index';
 
 AuroSelect.register('custom-select');

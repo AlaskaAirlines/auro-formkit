@@ -131,6 +131,28 @@ The base dropdown component; all consumers inherit these behaviors.
 
 #### 1.1.4 Container-type containment escape — P0
 
+> **Root cause:** `container-type` creates a new containing block that traps `position: fixed`
+> elements relative to the container instead of the viewport. Floating UI positions the bib with
+> `position: fixed` + computed `top`/`left`, so without the popover escape the bib is mispositioned
+> or clipped. The bib host uses `popover="manual"` + `showPopover()` to promote itself to the
+> browser top layer, escaping any ancestor containing block.
+
+> **Visual Regression (Chromatic):** Six Storybook stories cover this scenario with
+> `chromatic-enabled` tags. Each story renders `<auro-dropdown>` inside a distinct container-query
+> CSS context and opens the dropdown before snapshot capture so any positioning regression is
+> visually detectable.
+>
+> | Story Export | Container Variant |
+> |---|---|
+> | `DropdownInContainerTypeInlineSize` | `container-type: inline-size` — 400 px, baseline |
+> | `DropdownInNarrowContainerType` | `container-type: inline-size` — 200 px narrow |
+> | `DropdownInNestedContainerTypes` | Two nested `inline-size` ancestors |
+> | `DropdownInClippingContainerType` | `inline-size` + `overflow: hidden` parent |
+> | `DropdownInScrollableContainerType` | `inline-size` + `overflow: auto` scroll parent |
+> | `DropdownInContainerTypeSize` | `container-type: size` (both axes constrained) |
+>
+> See [`component.stories.ts`](../components/dropdown/stories/component.stories.ts) §1.1.4a–f.
+
 - [ ] **Setup:** Place `<auro-dropdown>` inside an ancestor with `container-type: inline-size`.
 - [ ] **Action:** Open the dropdown.
 - [ ] **Expected:** Bib is positioned correctly below the trigger (not centered or clipped by the container). Floating UI `top`/`left` values are applied.
@@ -759,6 +781,7 @@ Maps each scenario section to existing automated test coverage and identifies ga
 | Scenario | Test File | Status |
 |---|---|---|
 | **1.1 Desktop popover lifecycle** | `components/dropdown/test/auro-dropdown.test.js` — "popover desktop mode" suite (9 tests) | **Covered** |
+| **1.1.4 Container-type containment escape** | `auro-dropdown.test.js` — "container-type containment escape" suite (functional); `component.stories.ts` — 6 `chromatic-enabled` stories: `DropdownInContainerTypeInlineSize`, `DropdownInNarrowContainerType`, `DropdownInNestedContainerTypes`, `DropdownInClippingContainerType`, `DropdownInScrollableContainerType`, `DropdownInContainerTypeSize` (Chromatic visual) | **Covered (functional + visual)** |
 | **1.2.1 showModal path** | `auro-dropdown.test.js` — "uses showModal for fullscreen bib" | **Covered** |
 | **1.2.3 ESC closes fullscreen** | `auro-dropdown.test.js` — "handles auro-bib-cancel event" | **Covered** |
 | **1.3 Trigger interaction** | `auro-dropdown.test.js` — toggle, spacebar, enter, noToggle, disableEventShow | **Covered** |
@@ -787,7 +810,6 @@ Maps each scenario section to existing automated test coverage and identifies ga
 
 | Scenario | Component | Priority | Suggested Test Location |
 |---|---|---|---|
-| **1.1.4 Container-type containment escape** | dropdown | P0 | `auro-dropdown.test.js` — fixture with `container-type: inline-size` wrapper; assert bib not clipped |
 | **1.2.4 Responsive mode switch while open** | dropdown | P1 | `auro-dropdown.test.js` — use `setViewport` to resize during open; assert mode transition |
 | **1.6.2 setActiveDescendant** | dropdown | P1 | `auro-dropdown.test.js` — call method, assert `ariaActiveDescendantElement` |
 | **2.1.2 Full keyboard nav (desktop)** | select | P0 | `auro-select.test.js` — ArrowDown/Up/Enter/Escape cycle in desktop mode |
@@ -807,6 +829,67 @@ Maps each scenario section to existing automated test coverage and identifies ga
 | **6.1 aria-activedescendant cross-shadow** | menu | P0 | Add integration test asserting `ariaActiveDescendantElement` resolves across shadow roots |
 | **6.3 No sticky hover** | menu | P1 | Manual only — requires real touch device |
 | **6.4 Popover no ARIA semantics** | dropdown | P1 | `auro-dropdown.test.js` — open desktop; assert no implicit ARIA role from popover |
+
+### Container-Type Story Replication Template
+
+When adding container-type visual regression coverage for a downstream dropdown consumer
+(`auro-select`, `auro-combobox`, `auro-datepicker`, `auro-counter-group`), follow this exact
+pattern so coverage is consistent across all components.
+
+#### Step 1 — Add stories to `components/{component}/stories/component.stories.ts`
+
+Add one story per container variant, each tagged `chromatic-enabled` and referencing the
+appropriate scenario ID from that component's section of this guideline
+(e.g. `§4.1.8` for datepicker, `§5.1.4` for counter-group):
+
+```typescript
+// ─── §X.Y  Container-type containment escape — P0 ──────────────────────────
+export const {PascalComponent}InContainerTypeInlineSize: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="container-type: inline-size; width: 400px; height: 300px; overflow: visible; border: 1px dashed #aaa; padding: 0.5rem;">
+  <auro-{component} chevron aria-label="...">
+    <!-- same props/content as the unit-test fixture for this scenario -->
+  </auro-{component}>
+</div>
+  `,
+  async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
+    const trigger = await canvas.findByShadowRole('button');
+    await userEvent.click(trigger);
+    const el = canvasElement.querySelector('auro-{component}');
+    await expect(el).toHaveAttribute('open');
+  },
+};
+```
+
+Repeat for each of the six container variants defined in §1.1.4:
+
+| Story suffix | Key `style` attributes |
+|---|---|
+| `InContainerTypeInlineSize` | `container-type: inline-size; width: 400px; overflow: visible` |
+| `InNarrowContainerType` | `container-type: inline-size; width: 200px; overflow: visible` |
+| `InNestedContainerTypes` | Two nested `container-type: inline-size` divs |
+| `InClippingContainerType` | `container-type: inline-size; overflow: hidden; height: 120px` |
+| `InScrollableContainerType` | `container-type: inline-size; overflow: auto; height: 250px` + tall inner div |
+| `InContainerTypeSize` | `container-type: size; width: 450px; height: 350px` |
+
+#### Step 2 — Update Automation Mapping in this guideline
+
+Add a row to **Existing Coverage**:
+
+```markdown
+| **X.Y Container-type containment escape** | `{component}.test.js` — containment fixture (functional); `component.stories.ts` — 6 `chromatic-enabled` stories (Chromatic visual) | **Covered (functional + visual)** |
+```
+
+Remove the corresponding row from **Gaps — New Tests Needed**.
+
+#### Step 3 — Naming convention
+
+- Export: `{PascalComponent}In{Variant}` — e.g. `SelectInContainerTypeInlineSize`.
+- Section comment: `§X.Y  Container-type containment escape — P0` (match guideline ID + priority).
+- Tags: always `['!autodocs', 'chromatic-enabled']` — no exceptions.
+
+---
 
 ### Running Automated Tests
 
