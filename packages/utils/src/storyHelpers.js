@@ -5,6 +5,7 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 export function fileNameToStoryName(fileName) {
   return fileName
     .replace('.html', '')
+    .replace(/_/g, '-')
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join('');
