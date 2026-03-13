@@ -357,6 +357,7 @@ export class AuroDropdownBib extends LitElement {
 
   open(modal = true) {
     const dialog = this.shadowRoot.querySelector('dialog');
+
     if (dialog && !dialog.open) {
       if (modal) {
         // Prevent showModal() from scrolling the page to bring the dialog
@@ -367,17 +368,29 @@ export class AuroDropdownBib extends LitElement {
         const prevOverflow = documentElement.style.overflow;
         documentElement.style.overflow = 'hidden';
 
-        dialog.showModal();
-
-        documentElement.style.overflow = prevOverflow;
+        try {
+          dialog.showModal();
+        } finally {
+          // Restore overflow immediately — the lock was only needed to
+          // suppress the browser's native scroll-into-view behavior
+          // triggered by showModal(). Keeping it locked would block
+          // scrolling inside the modal.
+          documentElement.style.overflow = prevOverflow;
+        }
 
         this._lockTouchScroll();
 
       } else {
-        // Use setAttribute instead of dialog.show() to avoid the dialog
-        // focusing steps which steal focus from the trigger and cause
-        // the floater's handleFocusLoss() to immediately hide the bib.
+        // Open the inner dialog so slotted content renders.
         dialog.setAttribute('open', '');
+
+        // Use popover on the host for top-layer placement without focus
+        // management or inertness. This escapes ancestor container-type
+        // containment that would trap position:fixed relative to the container.
+        // Set popover dynamically to avoid UA [popover]:not(:popover-open) { display: none }
+        // interfering with Floating UI measurement before showPopover().
+        this.setAttribute('popover', 'manual');
+        this.showPopover();
       }
     }
   }
@@ -387,9 +400,14 @@ export class AuroDropdownBib extends LitElement {
    */
   close() {
     const dialog = this.shadowRoot.querySelector('dialog');
+
     if (dialog && dialog.open) {
       this._unlockTouchScroll();
       dialog.close();
+    }
+    if (this.matches(':popover-open')) {
+      this.hidePopover();
+      this.removeAttribute('popover');
     }
   }
 
@@ -405,7 +423,7 @@ export class AuroDropdownBib extends LitElement {
 
     return html`
       <dialog class="${classMap(classes)}" part="bibContainer" role="${ifDefined(this.dialogRole)}" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
-        ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually" aria-hidden="true">${this.dialogLabel}</span>` : ''}
+        ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually">${this.dialogLabel}</span>` : ''}
         <slot></slot>
       </dialog>
     `;

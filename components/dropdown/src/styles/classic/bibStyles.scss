@@ -94,6 +94,20 @@
  }
 }
 
+:host(:popover-open) {
+  // Reset UA popover defaults that conflict with Floating UI positioning.
+  // Floating UI sets position:fixed + top/left on the host; UA defaults
+  // would center the element with inset:0 + margin:auto.
+  position: fixed;
+  overflow: visible;
+  padding: 0;
+  border: none;
+  margin: 0;
+  background: transparent;
+  inset: unset;
+  outline: none;
+}
+
 :host([data-show]) {
   display: flex;
 }
