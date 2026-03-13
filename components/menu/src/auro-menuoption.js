@@ -24,6 +24,8 @@ import { MenuContext } from './auro-menu.context.js';
 import { ContextConsumer } from '@lit/context';
 import { dispatchMenuEvent } from './auro-menu-utils.js';
 
+let menuOptionIdCounter = 0;
+
 /**
  * The `auro-menuoption` element provides users a way to define a menu option.
  * @customElement auro-menuoption
@@ -32,8 +34,6 @@ import { dispatchMenuEvent } from './auro-menu-utils.js';
  *
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
  */
-let menuOptionIdCounter = 0;
-
 export class AuroMenuOption extends AuroElement {
 
   /**

@@ -2,6 +2,7 @@
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { generateGroupedStory } from '@aurodesignsystem/utils';
+import '../../menu/src/registered';
 import '../src/registered';
 
 // Import all HTML files from apiExamples
