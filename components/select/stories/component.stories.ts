@@ -9,8 +9,8 @@ import '../src/registered';
 
 const meta: Meta = {
   component: 'auro-select',
-  title: 'Select/Playground',
-  tags: ['autodocs'],
+  title: 'Select/Interaction Tests',
+  tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-select'
   }
@@ -19,153 +19,236 @@ export default meta;
 
 type Story = StoryObj;
 
-// export const CounterAtMax: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter min="0" max="3">
-//   Adults
-//   <span slot="description">Max: 3</span>
-// </auro-counter>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const buttons = await canvas.findAllByShadowRole('button');
-//     const plusButton = buttons[1];
-//     await userEvent.click(plusButton);
-//     await userEvent.click(plusButton);
-//     await userEvent.click(plusButton);
-//     await expect(plusButton).toBeDisabled();
-//   },
-// };
+// ─── §2.1.1  Open dropdown and select an option (P0) ────────────────────────
+export const SelectOpenAndSelectOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
 
-// export const DropdownOpenWithCount: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">Select passengers</div>
-//   <auro-counter>
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter>
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Select passengers/i);
-//     await userEvent.click(trigger);
-//     const plusButtons = await canvas.findAllByShadowRole('button', { name: '+' });
-//     // Increment Adults (first plus button) twice
-//     await userEvent.click(plusButtons[0]);
-//     await userEvent.click(plusButtons[0]);
-//   },
-// };
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
 
-// export const GroupMaxReached: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group max="4" min="0">
-//   <div slot="label">Passengers</div>
-//   <div slot="helpText">Total must be 4 or fewer</div>
-//   <auro-counter> Adults </auro-counter>
-//   <auro-counter> Children </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const buttons = await canvas.findAllByShadowRole('button');
-//     const firstPlusButton = buttons[1];
-//     const secondPlusButton = buttons[3];
-//     await userEvent.click(firstPlusButton);
-//     await userEvent.click(firstPlusButton);
-//     await userEvent.click(secondPlusButton);
-//     await userEvent.click(secondPlusButton);
-//     await expect(firstPlusButton).toBeDisabled();
-//     await expect(secondPlusButton).toBeDisabled();
-//   },
-// };
+    // Select "Price" option
+    const option = el.querySelector('auro-menuoption[value="price"]');
+    await userEvent.click(option);
 
-// export const DropdownOpen: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">Open dropdown</div>
-//   <auro-counter>
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter>
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Open dropdown/i);
-//     await userEvent.click(trigger);
-//   },
-// };
+    await expect(el.value).toBe('price');
+    await expect(el.isPopoverVisible).toBe(false);
+  },
+};
 
-// export const DropdownOpenWithError: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="ariaLabel.bib.close">Close Popup</span>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">View errors</div>
-//   <auro-counter error="Custom error on Adults counter">
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter error="Custom error on Children counter">
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/View errors/i);
-//     await userEvent.click(trigger);
-//   },
-// };
+// ─── §2.1.2  Arrow keys navigate options; Enter confirms selection (P0) ─────
+export const SelectKeyboardNavAndEnter: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
 
-// export const DropdownSnowflakeOpen: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group max="10" min="2" isDropdown layout="snowflake">
-//   <span slot="ariaLabel.bib.close">Close Popup</span>
-//   <div slot="bib.fullscreen.headline">Group fullscreen label</div>
-//   <div slot="label">Snowflake Dropdown Group</div>
-//   <div slot="helpText">Total must be between 2-10</div>
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
 
-//   <auro-counter> Counter 1 </auro-counter>
-//   <auro-counter> Counter 2 </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Snowflake Dropdown Group/i);
-//     await userEvent.click(trigger);
-//   },
-// };
-//
-// export const CounterWithHover: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter min="0" max="3">
-//   Adults
-//   <span slot="description">Max: 3</span>
-// </auro-counter>
-//   `,
-// };
-//
-// CounterWithHover.parameters = { 
-//   pseudo: { 
-//     hover: true,
-//     active: true,
-//   }
-// };
+    // ArrowDown twice → "Price" is active
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+
+    // Wait for menu to reflect active state
+    await new Promise((r) => setTimeout(r, 50));
+    const priceOption = el.querySelector('auro-menuoption[value="price"]');
+    await expect(priceOption.classList.contains('active')).toBe(true);
+
+    // Enter confirms selection
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    await expect(el.value).toBe('price');
+    await expect(el.isPopoverVisible).toBe(false);
+  },
+};
+
+// ─── §2.1.3  Tab highlights then selects active option and closes (P0) ──────
+export const SelectTabSelectsOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+
+    // Arrow down once → first option active
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    // Tab → selects the active option and closes
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    await expect(el.value).toBe('stops');
+    await expect(el.isPopoverVisible).toBe(false);
+  },
+};
+
+// ─── §2.1.5  Escape closes bib without making a selection (P0) ──────────────
+export const SelectEscapeClosesWithoutSelect: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    // Escape via document-level dispatch (matches how auroFloatingUI listens)
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    await expect(el.isPopoverVisible).toBe(false);
+    await expect(el.value).toBeUndefined();
+  },
+};
+
+// ─── §2.1.6  Type-ahead activates the first option matching the key (P1) ────
+export const SelectTypeAhead: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+
+    // Press "p" without opening first — type-ahead should activate Price
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'p', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    const priceOption = el.querySelector('auro-menuoption[value="price"]');
+    await expect(priceOption.classList.contains('active')).toBe(true);
+  },
+};
+
+// ─── §2.3.1  Trigger combobox role and aria-expanded reflect open state (P0) ─
+export const SelectAriaComboboxAttributes: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    // Closed state assertions
+    await expect(trigger.getAttribute('role')).toBe('combobox');
+    await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    await expect(trigger.hasAttribute('aria-controls')).toBe(true);
+
+    // Open and re-check aria-expanded
+    await userEvent.click(trigger);
+    await expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+    // Close via Escape
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  },
+};
+
+// ─── §2.4.1  Emphasized layout: dropdown opens correctly (P2) ───────────────
+export const SelectEmphasizedOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select layout="emphasized" shape="pill" size="xl">
+  <span slot="ariaLabel.bib.close">Close</span>
+  <span slot="label">Travel type</span>
+  <auro-menu nocheckmark>
+    <auro-menuoption value="flights">Flights</auro-menuoption>
+    <auro-menuoption value="cars">Cars</auro-menuoption>
+    <auro-menuoption value="hotels">Hotels</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+  },
+};
+
+// ─── §2.4.2  Snowflake layout: dropdown opens correctly (P2) ────────────────
+export const SelectSnowflakeOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select layout="snowflake" shape="snowflake" placeholder="Choose one">
+  <span slot="ariaLabel.bib.close">Close</span>
+  <span slot="label">Travel type</span>
+  <auro-menu nocheckmark>
+    <auro-menuoption value="flights">Flights</auro-menuoption>
+    <auro-menuoption value="cars">Cars</auro-menuoption>
+    <auro-menuoption value="hotels">Hotels</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+  },
+};
+

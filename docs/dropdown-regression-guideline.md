@@ -916,3 +916,44 @@ npx turbo run test --filter=@aurodesignsystem/auro-counter
 - [Popover a11y assessment](../components/dropdown/popover-a11y-assessment.md)
 - [WAI-ARIA Select-Only Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/)
 - [WAI-ARIA Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+
+---
+
+## Deferred Work — Dialog Role Suppression in auro-select (§2.3.2 / §6.5)
+
+### What was attempted
+
+During the select regression test pass, unit tests were written for §2.3.2 and §6.5 — specifically asserting that `auro-select`'s inner `<dialog>` has `role="presentation"` in desktop (non-fullscreen) mode so VoiceOver does not announce "dialog" around the listbox content. Three unit tests were added:
+
+- **§6.4** — bib host has no `popover` attribute before first open
+- **§6.4** — bib host gets `popover="manual"` on desktop open and removes it on close
+- **§2.3.2 / §6.5** — inner dialog has `role="presentation"` when open on desktop
+
+### Why it was reverted
+
+Unlike `auro-combobox`, which already calls `updateBibDialogRole()` to set `dialogRole = 'presentation'` on the bib element, `auro-select` had no equivalent logic. The `dialogRole` property lives on `auro-dropdownBib` and is only set if the parent component explicitly assigns it. Without the component-level change the tests failed immediately — `dialog.getAttribute('role')` returned `null`.
+
+To make the tests pass, `auro-select.js` required the following additions:
+
+1. A new `updateBibDialogRole()` method mirroring combobox's implementation:
+   ```js
+   updateBibDialogRole() {
+     const bibEl = this.dropdown?.bibElement?.value;
+     if (!bibEl) return;
+     bibEl.dialogRole = this.dropdown.isBibFullscreen ? undefined : 'presentation';
+   }
+   ```
+2. Calls to that method in three places inside `configureDropdown()`: the `auroDropdown-toggled` listener, the `auroDropdown-strategy-change` listener, and once at the end for initial state.
+
+These changes were outside the agreed test-only scope of this work (regression tests should not require component runtime changes), so both the implementation and the dependent tests were reverted.
+
+### Why this should be fixed in a future PR
+
+`auro-combobox` already suppresses the VoiceOver "dialog" announcement on desktop via `dialogRole = 'presentation'`. `auro-select` does not. This is an inconsistency — VoiceOver users navigating a `<auro-select>` on desktop may hear an unexpected "dialog" announcement when the bib opens, which disrupts the combobox pattern and does not match the WAI-ARIA Select-Only Combobox spec.
+
+The fix is small and well-understood. When a dedicated component change PR is appropriate:
+
+1. Add `updateBibDialogRole()` to `auro-select.js` (identical pattern as combobox).
+2. Wire it into `configureDropdown()` as described above.
+3. Restore the three unit tests removed here (§6.4 popover lifecycle ×2, §2.3.2/6.5 dialog role).
+4. Update the **Automation Mapping → Existing Coverage** table to mark §2.3.2 and §6.5 as **Covered** for select.
