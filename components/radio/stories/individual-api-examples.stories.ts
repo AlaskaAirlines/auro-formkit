@@ -54,7 +54,7 @@ const ApiExamples: Meta = {
   component: 'auro-radio-group',
   subcomponents: { AuroRadio: 'auro-radio' },
   tags: ['autodocs'],
-  title: 'Radio & Radio Group',
+  title: 'Radio & Radio Group/Individual Examples',
   args,
   argTypes,
   parameters: {

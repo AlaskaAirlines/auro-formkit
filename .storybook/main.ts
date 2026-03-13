@@ -16,7 +16,7 @@ function getAbsolutePath(value: string): any {
   return dirname(require.resolve(join(value, "package.json")));
 }
 
-const relativeComponentDirectory = "../components/checkbox";
+const relativeComponentDirectory = "../components";
 const relativeDocDirectory = "../docs";
 
 const config: StorybookConfig = {
@@ -25,9 +25,6 @@ const config: StorybookConfig = {
     `${relativeDocDirectory}/*.mdx`,
     `${relativeComponentDirectory}/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
     `${relativeComponentDirectory}/**/stories/**/*.mdx`,
-    '../components/radio/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    `../components/counter/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
-    `../components/form/**/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
   ],
   addons: [{
     // This needs to match the name inside `addon-essentials`, so don't use `getAbsolutePath`
