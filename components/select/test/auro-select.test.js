@@ -156,6 +156,19 @@ async function multiSelectFixture() {
   `);
 }
 
+async function requiredFixture() {
+  return await fixture(html`
+  <auro-select required>
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+
 function runTest(mobileView) {
   describe(`auro-select${mobileView ? ' in mobile' : ''}`, () => {
     before(async () => {
@@ -360,9 +373,157 @@ function runTest(mobileView) {
       });
     }
 
+    // ─── §2.1.2  Enter key selects active option and closes bib (P0) ────────
+    it('Enter key selects the active option and closes the bib', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+
+      trigger.click();
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('Apples');
+      await expect(dropdown.isPopoverVisible).to.be.false;
+    });
+
+    // ─── §2.1.3  Tab selects active option and closes bib (P0) ──────────────
+    it('Tab selects the active option and closes the bib', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+
+      trigger.click();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('Apples');
+      await expect(dropdown.isPopoverVisible).to.be.false;
+    });
+
+    // ─── §2.1.4  Tab with no highlighted option closes without selecting (P1) ─
+    it('Tab with no highlighted option closes bib without selecting', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+
+      trigger.click();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      // Do NOT navigate to any option before Tab
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      await elementUpdated(el);
+
+      await expect(dropdown.isPopoverVisible).to.be.false;
+      await expect(el.value).to.be.undefined;
+    });
+
+    // ─── §2.1.5  Escape closes bib without making a selection (P0) ──────────
+    it('Escape closes the bib without making a selection', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+
+      trigger.click();
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      await elementUpdated(el);
+
+      await expect(dropdown.isPopoverVisible).to.be.false;
+      await expect(el.value).to.be.undefined;
+    });
+
+    // ─── §2.1.11  Required — valueMissing fired on blur without selection (P1) ─
+    it('required attribute results in valueMissing validity when blurred without selection', async () => {
+      const el = await requiredFixture();
+      await elementUpdated(el);
+
+      // Simulate focus and blur without choosing an option
+      el.dispatchEvent(new Event('focusin'));
+      await elementUpdated(el);
+
+      el.dispatchEvent(new Event('blur'));
+      await elementUpdated(el);
+
+      await expect(el.getAttribute('validity')).to.equal('valueMissing');
+    });
+
+    // ─── §2.3.1  Trigger combobox ARIA attributes (P0) ──────────────────────
+    it('dropdown trigger has role combobox with aria-expanded and aria-controls attributes', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.shadowRoot.querySelector('#trigger');
+
+      await expect(trigger.getAttribute('role')).to.equal('combobox');
+      await expect(trigger.hasAttribute('aria-expanded')).to.be.true;
+      await expect(trigger.getAttribute('aria-expanded')).to.equal('false');
+      await expect(trigger.hasAttribute('aria-controls')).to.be.true;
+
+      // aria-expanded reflects open state
+      el.showBib();
+      await elementUpdated(el);
+
+      await expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+    });
+
+    // ─── §2.3.4 / §6.1  ariaActiveDescendantElement binding across shadow DOM (P0) ─
+    it('ariaActiveDescendantElement on trigger references the activated menu option', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.shadowRoot.querySelector('#trigger');
+      const firstOption = el.querySelector('auro-menuoption[value="Apples"]');
+
+      el.showBib();
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      await expect(trigger.ariaActiveDescendantElement).to.equal(firstOption);
+    });
+
+    if (mobileView) {
+      // ─── §2.2.3  Option selection in fullscreen mode (P0) ───────────────────
+      it('selecting an option in fullscreen mode sets value and closes dialog', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for fullscreen dialog to settle (double-rAF used by focus migration)
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await elementUpdated(el);
+
+        await expect(el.value).to.equal('Apples');
+        await expect(dropdown.isPopoverVisible).to.be.false;
+      });
+    }
+
     it('Navigates the menu with arrow keys', async () => {
       const el = await defaultFixture();
-
       const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
       const trigger = dropdown.querySelector('[slot="trigger"]');
 
