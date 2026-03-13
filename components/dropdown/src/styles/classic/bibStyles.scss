@@ -96,8 +96,7 @@
 
 :host(:popover-open) {
   // Reset UA popover defaults that conflict with Floating UI positioning.
-  // Floating UI sets position:fixed + top/left on the host; UA defaults
-  // would center the element with inset:0 + margin:auto.
+  // Floating UI sets position:fixed + top/left on the host
   position: fixed;
   overflow: visible;
   padding: 0;

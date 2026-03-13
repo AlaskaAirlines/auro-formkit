@@ -405,6 +405,10 @@ export class AuroDropdownBib extends LitElement {
       this._unlockTouchScroll();
       dialog.close();
     }
+    // Clean up the popover used for desktop top-layer placement.
+    // Remove the attribute entirely so the UA rule
+    // [popover]:not(:popover-open) { display: none } doesn't hide
+    // the host while Floating UI measures it for the next open.
     if (this.matches(':popover-open')) {
       this.hidePopover();
       this.removeAttribute('popover');
