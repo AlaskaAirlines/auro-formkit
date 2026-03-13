@@ -22,11 +22,11 @@ export const LightExampleStories: Story = generateGroupedStory(apiExamples, apiE
   exclude: ['appearance-inverse']
 }) as Story;
 
-export const DarkExampleStories: Story = generateGroupedStory(apiExamples, apiExamplesJs, {
-  include: ['appearance-inverse'],
-  storyConfig: {
-    globals: {
-      backgrounds: { value: 'dark' },
-    }
-  }
-}) as Story;
+// export const DarkExampleStories: Story = generateGroupedStory(apiExamples, apiExamplesJs, {
+//   include: ['appearance-inverse'],
+//   storyConfig: {
+//     globals: {
+//       backgrounds: { value: 'dark' },
+//     }
+//   }
+// }) as Story;

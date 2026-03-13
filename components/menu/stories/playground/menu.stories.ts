@@ -17,7 +17,7 @@ const meta: Meta<AuroMenu> = {
   subcomponents: {
     'auro-menuoption': 'AuroMenuOption',
   },
-  title: 'Menu/Playground',
+  title: 'Menu & Menu Option/Playground',
   args,
   argTypes: argTypes,
   render: (args) => template(args),

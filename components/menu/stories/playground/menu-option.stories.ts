@@ -12,7 +12,7 @@ const { args, argTypes, template } =
 
 const meta: Meta<AuroMenuOption> = {
   component: 'auro-menuoption',
-  title: 'Menu Option/Playground',
+  title: 'Menu & Menu Option/Playground',
   args,
   argTypes: argTypes,
   render: (args) => template(args),

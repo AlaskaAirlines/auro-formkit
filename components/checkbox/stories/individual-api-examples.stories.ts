@@ -35,7 +35,7 @@ const ApiExamples: Meta = {
   component: 'auro-checkbox-group',
   subcomponents: { AuroCheckbox: 'auro-checkbox' },
   tags: ['autodocs'],
-  title: 'Checkbox & Checkbox Group',
+  title: 'Checkbox & Checkbox Group/Individual Examples',
   args,
   argTypes,
   parameters: {
