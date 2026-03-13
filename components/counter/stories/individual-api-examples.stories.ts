@@ -70,7 +70,7 @@ const ApiExamples: Meta = {
   component: 'auro-counter-group',
   subcomponents: { AuroCounter: 'auro-counter' },
   tags: ['autodocs'],
-  title: 'Counter & Counter Group',
+  title: 'Counter & Counter Group/Individual Examples',
   args,
   argTypes,
   parameters: {
