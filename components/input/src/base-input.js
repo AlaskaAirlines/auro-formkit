@@ -13,6 +13,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
 import { AuroInputUtilities } from "./utilities.js";
 import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
 import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler';
+import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
 
 /**
  * Base class for auro-input component that provides core input functionality.
@@ -29,14 +30,18 @@ export default class BaseInput extends AuroElement {
     this.layout = 'classic';
     this.locale = 'en-US';
     this.max = undefined;
+    this._maxObject = undefined;
     this.maxLength = undefined;
     this.min = undefined;
+    this._minObject = undefined;
     this.minLength = undefined;
     this.required = false;
     this.onDark = false;
     this.setCustomValidityForType = undefined;
     this.size = 'lg';
     this.shape = 'classic';
+    this.value = undefined;
+    this._valueObject = undefined;
 
     this._initializePrivateDefaults();
   }
@@ -280,7 +285,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The maximum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       * The maximum value allowed. This only applies for inputs with a type of `number` and ISO format.
        */
       max: {
         type: String
@@ -296,7 +301,7 @@ export default class BaseInput extends AuroElement {
       },
 
       /**
-       * The minimum value allowed. This only applies for inputs with a type of `number` and all date formats.
+       * The minimum value allowed. This only applies for inputs with a type of `number` and ISO date format.
        */
       min: {
         type: String
@@ -498,11 +503,55 @@ export default class BaseInput extends AuroElement {
 
       /**
        * Populates the `value` attribute on the input. Can also be read to retrieve the current value of the input.
+       * The format for this property should be ISO for `date` type inputs.
        */
       value: {
         type: String
       }
     };
+  }
+
+  /**
+   * Read-only Date object representation of `value` for full date formats.
+   * @returns {Date|undefined}
+   */
+  get valueObject() {
+    return this._valueObject;
+  }
+
+  /**
+   * Read-only Date object representation of `min` for full date formats.
+   * @returns {Date|undefined}
+   */
+  get minObject() {
+    return this._minObject;
+  }
+
+  /**
+   * Read-only Date object representation of `max` for full date formats.
+   * @returns {Date|undefined}
+   */
+  get maxObject() {
+    return this._maxObject;
+  }
+
+  /**
+   * Internal setter for readonly date object properties.
+   * @private
+   * @param {'valueObject'|'minObject'|'maxObject'} propertyName - Public object property name.
+   * @param {Date|undefined} propertyValue - Value to assign.
+   * @returns {void}
+   */
+  setDateObjectProperty(propertyName, propertyValue) {
+    const internalPropertyName = `_${propertyName}`;
+    const previousValue = this[internalPropertyName];
+
+    if (previousValue === propertyValue) {
+      return;
+    }
+
+    this[internalPropertyName] = propertyValue;
+    this.requestUpdate(propertyName, previousValue);
   }
 
   connectedCallback() {
@@ -536,6 +585,8 @@ export default class BaseInput extends AuroElement {
 
     this.setCustomHelpTextMessage();
     this.configureAutoFormatting();
+    this.configureDataForType();
+    this.syncDateValues();
   }
 
   /**
@@ -616,8 +667,26 @@ export default class BaseInput extends AuroElement {
    * @param {Map<string, any>} changedProperties - Keys are the names of changed properties, values are the corresponding previous values.
    * @returns {void}
    */
+  // eslint-disable-next-line complexity
   updated(changedProperties) {
     super.updated(changedProperties);
+
+    // When the locale changes, if the format was not explicitly set or was previously the default for the old locale,
+    // update to the new locale's default format.
+    if (changedProperties.has('locale') && !changedProperties.has('format') && this.type === 'date') {
+      const previousLocale = changedProperties.get('locale');
+      const previousLocaleUtil = new AuroInputUtilities({ locale: previousLocale });
+      const previousLocaleDefaultFormat = previousLocaleUtil.getDateMaskFromLocale().toLowerCase();
+
+      if (!this.format || this.format.toLowerCase() === previousLocaleDefaultFormat) {
+        const nextLocaleUtil = new AuroInputUtilities({ locale: this.locale });
+        const nextLocaleDefaultFormat = nextLocaleUtil.getDateMaskFromLocale().toLowerCase();
+
+        if (this.format !== nextLocaleDefaultFormat) {
+          this.format = nextLocaleDefaultFormat;
+        }
+      }
+    }
 
     if (changedProperties.has('locale') || changedProperties.has('format')) {
       this.util = new AuroInputUtilities({
@@ -656,6 +725,8 @@ export default class BaseInput extends AuroElement {
       this.configureDataForType();
     }
 
+    this.syncDateValues(changedProperties);
+
     if (changedProperties.has('value')) {
       if (this.value && this.value.length > 0) {
         this.hasValue = true;
@@ -663,16 +734,19 @@ export default class BaseInput extends AuroElement {
         this.hasValue = false;
       }
 
-      if (this.value !== this.inputElement.value) {
+      const inputDisplayValue = this.getInputDisplayValue();
+
+      if (inputDisplayValue !== this.inputElement.value) {
         this.skipNextProgrammaticInputEvent = true;
-        if (this.value) {
-          this.inputElement.value = this.value;
+        if (inputDisplayValue) {
+          this.inputElement.value = inputDisplayValue;
         } else {
           this.inputElement.value = '';
         }
 
         if (!this.shadowRoot.contains(this.getActiveElement())) {
           this.validation.validate(this);
+          this.normalizeDateValidityState();
         }
       }
 
@@ -689,6 +763,33 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
+   * Normalizes date validity state for full date formats.
+   * Converts `patternMismatch` to `invalidDate` when the date string is the expected length but fails date parsing.
+   * @private
+   * @returns {void}
+   */
+  normalizeDateValidityState() {
+    if (this.type !== 'date' || !this.hasFullDatePartsFormat() || this.validity !== 'patternMismatch') {
+      return;
+    }
+
+    if (!this.value || this.value.length !== this.lengthForType) {
+      return;
+    }
+
+    const normalizedFormat = this.format ? this.format.toLowerCase() : '';
+
+    try {
+      const parsedDate = this.util.parseDateByMask(this.value, normalizedFormat);
+      if (!(parsedDate instanceof Date) || Number.isNaN(parsedDate.getTime())) {
+        this.validity = 'invalidDate';
+      }
+    } catch (error) { // eslint-disable-line no-unused-vars
+      this.validity = 'invalidDate';
+    }
+  }
+
+  /**
    * @private
    * @returns {void} Notify validity state changed via event.
    */
@@ -698,6 +799,136 @@ export default class BaseInput extends AuroElement {
       cancelable: false,
       composed: true,
     }));
+  }
+
+
+  /**
+   * Synchronizes the ISO string values and Date object representations for date-related properties.
+   * This keeps the model and display values aligned when either side changes.
+   *
+   * When a full date format is in use, this method updates `value`, `min`, and `max` from their corresponding
+   * Date objects or vice versa, based on which properties have changed. It only runs when the current configuration
+   * represents a full year/month/day date format.
+   *
+   * @param {Map<string, unknown>|undefined} [changedProperties=undefined] - Optional map of changed properties used to limit which values are synchronized.
+   * @returns {void}
+   * @private
+   */
+  syncDateValues(changedProperties = undefined) {
+    if (!this.hasFullDatePartsFormat()) {
+      return;
+    }
+
+    this.syncSingleDateValue(changedProperties, 'valueObject', 'value');
+    this.syncSingleDateValue(changedProperties, 'minObject', 'min');
+    this.syncSingleDateValue(changedProperties, 'maxObject', 'max');
+  }
+
+  /**
+   * Synchronizes one date object/string property pair.
+   * @private
+   * @param {Map<string, unknown>|undefined} changedProperties - Map of changed properties from Lit.
+   * @param {string} objectProperty - Date object property name.
+   * @param {string} valueProperty - ISO string property name.
+   * @returns {void}
+   */
+  syncSingleDateValue(changedProperties, objectProperty, valueProperty) {
+    const objectPropertyChanged = !changedProperties || changedProperties.has(objectProperty);
+
+    // objectProperty wins over valueProperty when both changed
+    if (objectPropertyChanged) {
+      if (this[objectProperty]) {
+        this[valueProperty] = dateFormatter.toISOFormatString(this[objectProperty]);
+      } else if (changedProperties) { // only when objectProperty is changed to null|undefined, not on initial setup
+        this[valueProperty] = undefined;
+      }
+      return;
+    }
+
+    const valuePropertyChanged = !changedProperties || changedProperties.has(valueProperty);
+    if (!valuePropertyChanged) {
+      return;
+    }
+
+    if (
+      changedProperties &&
+      valueProperty === 'value' &&
+      changedProperties.get('value') === undefined &&
+      this[objectProperty] instanceof Date &&
+      this[valueProperty] === dateFormatter.toISOFormatString(this[objectProperty])
+    ) {
+      return;
+    }
+
+    if (this[valueProperty] && dateFormatter.isValidISODate(this[valueProperty])) {
+      this.setDateObjectProperty(objectProperty, dateFormatter.stringToDateInstance(this[valueProperty]));
+    } else if (changedProperties) { // only when valueProperty is changed to null|undefined, not on initial setup
+      this.setDateObjectProperty(objectProperty, undefined);
+    }
+  }
+
+  /**
+   * Determines if the current date format contains full year/month/day segments.
+   * @private
+   * @returns {boolean}
+   */
+  hasFullDatePartsFormat() {
+    const normalizedFormat = this.format ? this.format.toLowerCase() : '';
+
+    return this.type === 'date' && normalizedFormat.includes('y') && normalizedFormat.includes('mm') && normalizedFormat.includes('dd');
+  }
+
+  /**
+   * Converts a display date string to the model value.
+   * For full date formats, the model value is ISO.
+   * @private
+   * @param {string} inputValue Date string from the rendered input.
+   * @returns {string}
+   */
+  getModelValueFromInput(inputValue) {
+    if (!this.hasFullDatePartsFormat() || !inputValue) {
+      return inputValue;
+    }
+
+    if (inputValue.length !== this.lengthForType) {
+      return inputValue;
+    }
+
+    const normalizedFormat = this.format ? this.format.toLowerCase() : '';
+    const parsedDate = this.util.parseDateByMask(inputValue, normalizedFormat);
+
+    if (!(parsedDate instanceof Date) || Number.isNaN(parsedDate.getTime())) {
+      return inputValue;
+    }
+
+    return dateFormatter.toISOFormatString(parsedDate);
+  }
+
+  /**
+   * Converts a model value to display value for the input element.
+   * For full date formats, ISO model values are rendered using the configured format.
+   * @private
+   * @returns {string}
+   */
+  getInputDisplayValue() {
+    if (!this.hasFullDatePartsFormat() || !this.value) {
+      return this.value;
+    }
+
+    if (!dateFormatter.isValidISODate(this.value)) {
+      // For ISO-pattern strings that fail range validation (e.g. '2024-99-99'),
+      // return '' so inputElement stays empty and format-based validation is not triggered.
+      return (/^\d{4}-\d{2}-\d{2}$/u).test(this.value) ? '' : this.value;
+    }
+
+    const normalizedFormat = this.format ? this.format.toLowerCase() : '';
+    const maskOptions = this.util.getMaskOptions('date', normalizedFormat);
+
+    if (!(this.valueObject instanceof Date) || Number.isNaN(this.valueObject.getTime()) || !maskOptions || typeof maskOptions.format !== 'function') {
+      return this.value;
+    }
+
+    return maskOptions.format(this.valueObject);
   }
 
   /**
@@ -720,31 +951,38 @@ export default class BaseInput extends AuroElement {
       // Stash and clear any existing value before IMask init.
       // IMask's constructor processes the current input value which requires
       // selection state — clearing first avoids that scenario entirely.
-      const existingValue = this.inputElement.value;
+      // When the format changes (e.g. locale switch) and we have a valid ISO
+      // model value, compute the display string for the NEW format instead of
+      // re-using the old display string, which may be invalid in the new mask.
+      let existingValue = this.inputElement.value;
+      if (
+        this.type === 'date' &&
+        this.hasFullDatePartsFormat() &&
+        this.value &&
+        dateFormatter.isValidISODate(this.value) &&
+        this.valueObject instanceof Date &&
+        !Number.isNaN(this.valueObject.getTime()) &&
+        typeof maskOptions.format === 'function'
+      ) {
+        existingValue = maskOptions.format(this.valueObject) || this.inputElement.value;
+      }
+
       this.skipNextProgrammaticInputEvent = true;
       this.inputElement.value = '';
 
       this.maskInstance = IMask(this.inputElement, maskOptions);
 
       this.maskInstance.on('accept', () => {
-        this.value = this.maskInstance.value;
+        this.value = this.getModelValueFromInput(this.maskInstance.value);
         if (this.type === "date") {
           this._rawMaskValue = this.maskInstance.value;
         }
       });
 
       this.maskInstance.on('complete', () => {
-        this.value = this.maskInstance.value;
+        this.value = this.getModelValueFromInput(this.maskInstance.value);
         if (this.type === "date") {
           this._rawMaskValue = this.maskInstance.value;
-        }
-
-        // Format date to North American format
-        if (this.type === 'date' && this.value && this.value.length === this.lengthForType && this.util.toNorthAmericanFormat(this.value, this.format)) {
-          const formattedDates = this.util.toNorthAmericanFormat(this.value, this.format);
-
-          this.formattedDate = formattedDates.formattedDate;
-          this.comparisonDate = formattedDates.dateForComparison;
         }
       });
 
@@ -816,7 +1054,7 @@ export default class BaseInput extends AuroElement {
     }
 
     // Sets value property to value of element value (el.value).
-    this.value = this.inputElement.value;
+    this.value = this.getModelValueFromInput(this.inputElement.value);
 
     // Determine if the value change was programmatic, including autofill.
     const inputWasProgrammatic = !this.matches(":focus") || event.isProgrammatic;
@@ -908,6 +1146,7 @@ export default class BaseInput extends AuroElement {
    */
   reset() {
     this.value = undefined;
+    this.setDateObjectProperty('valueObject', undefined);
     this.validation.reset(this);
   }
 
@@ -916,6 +1155,7 @@ export default class BaseInput extends AuroElement {
    */
   clear() {
     this.value = undefined;
+    this.setDateObjectProperty('valueObject', undefined);
   }
 
   /**
