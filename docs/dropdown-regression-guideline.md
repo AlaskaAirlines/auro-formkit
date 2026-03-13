@@ -8,18 +8,52 @@ Master no-regression guideline for `auro-dropdown` and all components that consu
 
 ## Table of Contents
 
-1. [How to Use This Document](#how-to-use-this-document)
-2. [Architecture Summary](#architecture-summary)
-3. [Platform Coverage Matrix](#platform-coverage-matrix)
-4. [1 — auro-dropdown](#1--auro-dropdown)
-5. [2 — auro-select](#2--auro-select)
-6. [3 — auro-combobox](#3--auro-combobox)
-7. [4 — auro-datepicker](#4--auro-datepicker)
-8. [5 — auro-counter-group](#5--auro-counter-group)
-9. [6 — Cross-Component Accessibility](#6--cross-component-accessibility)
-10. [No-Regression Baseline (PR #1346)](#no-regression-baseline-pr-1346)
-11. [Known Pre-Existing Issues](#known-pre-existing-issues)
-12. [Automation Mapping](#automation-mapping)
+1. [Test Authoring Constraints](#test-authoring-constraints)
+2. [How to Use This Document](#how-to-use-this-document)
+3. [Architecture Summary](#architecture-summary)
+4. [Platform Coverage Matrix](#platform-coverage-matrix)
+5. [1 — auro-dropdown](#1--auro-dropdown)
+6. [2 — auro-select](#2--auro-select)
+7. [3 — auro-combobox](#3--auro-combobox)
+8. [4 — auro-datepicker](#4--auro-datepicker)
+9. [5 — auro-counter-group](#5--auro-counter-group)
+10. [6 — Cross-Component Accessibility](#6--cross-component-accessibility)
+11. [No-Regression Baseline (PR #1346)](#no-regression-baseline-pr-1346)
+12. [Known Pre-Existing Issues](#known-pre-existing-issues)
+13. [Automation Mapping](#automation-mapping)
+
+---
+
+## Test Authoring Constraints
+
+### Tests must never modify component source code
+
+Regression tests and new unit tests written against any formkit component — `auro-dropdown`, `auro-select`, `auro-combobox`, `auro-datepicker`, `auro-counter-group`, or any shared primitive (`auro-dropdownBib`, `auro-input`, `auro-menu`, etc.) — **must not require changes to that component's runtime source code in order to pass.**
+
+This means:
+- Do not add properties, methods, event listeners, or lifecycle hooks to a component solely to make a test observable or controllable.
+- Do not modify component behavior, rendering logic, or internal state management to satisfy a test assertion.
+- Test files (`.test.js`, `.stories.ts`) and test fixtures are the only files that may be created or edited as part of a test-authoring task.
+
+### What to do when a test cannot be written without a component change
+
+If a scenario in the **Gaps — New Tests Needed** table cannot be covered by a test that observes existing component behavior (public API, DOM output, emitted events, ARIA attributes), the scenario must be **deferred**:
+
+1. Do not write a failing test and do not modify the component.
+2. Leave the gap row in the **Gaps — New Tests Needed** table.
+3. Add a **Deferred Work** entry at the bottom of this document (following the pattern of the §2.3.2/6.5 entry below) that records:
+   - What observable state the test would need to assert.
+   - What component change would be required to expose it.
+   - Why the change is outside the test-only scope.
+   - What a future component-change PR should implement before the test is restored.
+
+### Rationale
+
+The dialog role suppression revert (§2.3.2 / §6.5, see Deferred Work below) is the canonical example of this rule being violated and corrected. Tests that silently depend on component changes conflate two separate concerns — component behavior and test coverage — and make it impossible to land tests independently of feature work. Keeping them strictly separated preserves a clean, reviewable boundary between PRs.
+
+### Ongoing maintenance
+
+If at any point during test authoring or code review you encounter a scenario, gap, or limitation that cannot be addressed within the test-only scope — for any reason — add an entry to the **Deferred Work** section at the bottom of this document. Do not leave undocumented exceptions or silent omissions.
 
 ---
 
