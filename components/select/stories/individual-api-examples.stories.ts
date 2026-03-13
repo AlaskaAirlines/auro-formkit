@@ -4,12 +4,12 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
 import '../src/registered';
-import { AuroCounter, AuroCounterGroup } from '../src/index';
+import '../../menu/src/registered';
+import { AuroSelect } from '../src/index';
 
-AuroCounter.register('custom-counter');
-AuroCounterGroup.register('custom-counter-group');
+AuroSelect.register('custom-select');
 
-const { args, argTypes } = getStorybookHelpers('auro-counter-group');
+const { args, argTypes } = getStorybookHelpers('auro-select');
 
 // Import all HTML files from apiExamples
 const apiExamples = import.meta.glob('../apiExamples/*.html', { query: '?raw', import: 'default', eager: true });
@@ -67,10 +67,9 @@ const specialConfigs = {
 };
 
 const ApiExamples: Meta = {
-  component: 'auro-counter-group',
-  subcomponents: { AuroCounter: 'auro-counter' },
+  component: 'auro-select',
   tags: ['autodocs'],
-  title: 'Counter & Counter Group/Individual Examples',
+  title: 'Select/Individual Examples',
   args,
   argTypes,
   parameters: {
@@ -86,33 +85,37 @@ type Story = StoryObj;
 
 const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialConfigs) as Record<string, Story>;
 
-export const ApiGroupProperties = stories.ApiGroupProperties;
-export const ApiProperties = stories.ApiProperties;
-export const ApiSlots = stories.ApiSlots;
-export const AppearanceInverse = stories.AppearanceInverse;
-export const AppearanceInverseDescription = stories.AppearanceInverseDescription;
+// Export all generated stories
+// eslint-disable-next-line @typescript-eslint/prefer-destructuring-assignment
+// sourcery skip: use-object-destructuring
 export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled;
-export const AppearanceInverseDropdown = stories.AppearanceInverseDropdown;
 export const AppearanceInverseError = stories.AppearanceInverseError;
-export const AppearanceInverseGroup = stories.AppearanceInverseGroup;
-export const AppearanceInverseHelptext = stories.AppearanceInverseHelptext;
-export const AppearanceInverseSnowflake = stories.AppearanceInverseSnowflake;
+export const AppearanceInverse = stories.AppearanceInverse;
+export const Autocomplete = stories.Autocomplete;
 export const Basic = stories.Basic;
-export const BasicStandalone = stories.BasicStandalone;
-export const CounterDisabled = stories.CounterDisabled;
-export const CounterError = stories.CounterError;
-export const CounterHelptext = stories.CounterHelptext;
-export const CounterMinmax = stories.CounterMinmax;
+export const CustomBibHeight = stories.CustomBibHeight;
+export const CustomErrorValidity  = stories.CustomErrorValidity;
 export const Custom = stories.Custom;
-export const Description = stories.Description;
 export const Disabled = stories.Disabled;
-export const Dropdown = stories.Dropdown;
-export const DropdownError = stories.DropdownError;
-export const DropdownErrorGroup = stories.DropdownErrorGroup;
-export const DropdownMobileProperties = stories.DropdownMobileProperties;
-export const DropdownSnowflake = stories.DropdownSnowflake;
-export const DropdownValueText = stories.DropdownValueText;
-export const Events = stories.Events;
+export const Error = stories.Error;
+export const FlexMenuWidth = stories.FlexMenuWidth;
 export const FloaterConfig = stories.FloaterConfig;
-export const GroupCounterMax = stories.GroupCounterMax;
-export const GroupMax = stories.GroupMax;
+export const FullscreenBreakpoint = stories.FullscreenBreakpoint;
+export const FullscreenDisabled = stories.FullscreenDisabled;
+export const HelpText = stories.HelpText;
+export const InDialog  = stories.InDialog;
+export const Label = stories.Label;
+export const Loading  = stories.Loading;
+export const MultiSelect = stories.MultiSelect;
+export const NestedSelect  = stories.NestedSelect;
+export const NoCheckmark = stories.NoCheckmark;
+export const OptionalLabel = stories.OptionalLabel;
+export const Placeholder = stories.Placeholder;
+export const Required = stories.Required;
+export const ResetState  = stories.ResetState;
+export const UpdateActiveOption  = stories.UpdateActiveOption;
+export const ValueAlert  = stories.ValueAlert;
+export const ValueExtraction  = stories.ValueExtraction;
+export const Value  = stories.Value;
+export const WithIcons = stories.WithIcons;
+export const WithSubmenus = stories.WithSubmenus;

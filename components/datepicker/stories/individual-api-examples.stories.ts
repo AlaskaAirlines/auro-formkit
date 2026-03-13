@@ -4,12 +4,11 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
 import '../src/registered';
-import { AuroCounter, AuroCounterGroup } from '../src/index';
+import { AuroDatePicker } from '../src/index';
 
-AuroCounter.register('custom-counter');
-AuroCounterGroup.register('custom-counter-group');
+AuroDatePicker.register('custom-datepicker');
 
-const { args, argTypes } = getStorybookHelpers('auro-counter-group');
+const { args, argTypes } = getStorybookHelpers('auro-datepicker');
 
 // Import all HTML files from apiExamples
 const apiExamples = import.meta.glob('../apiExamples/*.html', { query: '?raw', import: 'default', eager: true });
@@ -67,10 +66,9 @@ const specialConfigs = {
 };
 
 const ApiExamples: Meta = {
-  component: 'auro-counter-group',
-  subcomponents: { AuroCounter: 'auro-counter' },
+  component: 'auro-datepicker',
   tags: ['autodocs'],
-  title: 'Counter & Counter Group/Individual Examples',
+  title: 'DatePicker/Individual Examples',
   args,
   argTypes,
   parameters: {
@@ -86,33 +84,41 @@ type Story = StoryObj;
 
 const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialConfigs) as Record<string, Story>;
 
-export const ApiGroupProperties = stories.ApiGroupProperties;
-export const ApiProperties = stories.ApiProperties;
-export const ApiSlots = stories.ApiSlots;
+// Export all generated stories
+// eslint-disable-next-line @typescript-eslint/prefer-destructuring-assignment
+// sourcery skip: use-object-destructuring
+export const AlertValue = stories.AlertValue;
+export const AppearanceInverseRange = stories.AppearanceInverseRange;
 export const AppearanceInverse = stories.AppearanceInverse;
-export const AppearanceInverseDescription = stories.AppearanceInverseDescription;
-export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled;
-export const AppearanceInverseDropdown = stories.AppearanceInverseDropdown;
-export const AppearanceInverseError = stories.AppearanceInverseError;
-export const AppearanceInverseGroup = stories.AppearanceInverseGroup;
-export const AppearanceInverseHelptext = stories.AppearanceInverseHelptext;
-export const AppearanceInverseSnowflake = stories.AppearanceInverseSnowflake;
+export const AriaLabelInputClear = stories.AriaLabelInputClear;
 export const Basic = stories.Basic;
-export const BasicStandalone = stories.BasicStandalone;
-export const CounterDisabled = stories.CounterDisabled;
-export const CounterError = stories.CounterError;
-export const CounterHelptext = stories.CounterHelptext;
-export const CounterMinmax = stories.CounterMinmax;
+export const CalendarFocusDate = stories.CalendarFocusDate;
+export const CalendarStartAndEndDate = stories.CalendarStartAndEndDate;
+export const CentralDate = stories.CentralDate;
 export const Custom = stories.Custom;
-export const Description = stories.Description;
+export const DateSlot = stories.DateSlot;
 export const Disabled = stories.Disabled;
-export const Dropdown = stories.Dropdown;
-export const DropdownError = stories.DropdownError;
-export const DropdownErrorGroup = stories.DropdownErrorGroup;
-export const DropdownMobileProperties = stories.DropdownMobileProperties;
-export const DropdownSnowflake = stories.DropdownSnowflake;
-export const DropdownValueText = stories.DropdownValueText;
-export const Events = stories.Events;
+export const DynamicSlot = stories.DynamicSlot;
+export const Error = stories.Error;
 export const FloaterConfig = stories.FloaterConfig;
-export const GroupCounterMax = stories.GroupCounterMax;
-export const GroupMax = stories.GroupMax;
+export const Focus = stories.Focus;
+export const Format = stories.Format;
+export const FullscreenBreakpoint = stories.FullscreenBreakpoint;
+export const HelpText = stories.HelpText;
+export const InDialog = stories.InDialog;
+export const Inputmode = stories.Inputmode;
+export const Localization = stories.Localization;
+export const MaxDate = stories.MaxDate;
+export const MinDate = stories.MinDate;
+export const NoValidate = stories.NoValidate;
+export const PopoverSlot = stories.PopoverSlot;
+export const Range = stories.Range;
+export const ReferenceDates = stories.ReferenceDates;
+export const Required = stories.Required;
+export const ResetState = stories.ResetState;
+export const Stacked = stories.Stacked;
+export const UpdateMaxDate = stories.UpdateMaxDate;
+export const UpdateMinDate = stories.UpdateMinDate;
+export const Validity = stories.Validity;
+export const ValueEnd = stories.ValueEnd;
+export const Value = stories.Value;

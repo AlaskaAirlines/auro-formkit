@@ -3,13 +3,13 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
+import '../../menu/src/registered';
 import '../src/registered';
-import { AuroCounter, AuroCounterGroup } from '../src/index';
+import { AuroCombobox } from '../src/index';
 
-AuroCounter.register('custom-counter');
-AuroCounterGroup.register('custom-counter-group');
+AuroCombobox.register('custom-combobox');
 
-const { args, argTypes } = getStorybookHelpers('auro-counter-group');
+const { args, argTypes } = getStorybookHelpers('auro-combobox');
 
 // Import all HTML files from apiExamples
 const apiExamples = import.meta.glob('../apiExamples/*.html', { query: '?raw', import: 'default', eager: true });
@@ -67,10 +67,9 @@ const specialConfigs = {
 };
 
 const ApiExamples: Meta = {
-  component: 'auro-counter-group',
-  subcomponents: { AuroCounter: 'auro-counter' },
+  component: 'auro-combobox',
   tags: ['autodocs'],
-  title: 'Counter & Counter Group/Individual Examples',
+  title: 'Combobox/Individual Examples',
   args,
   argTypes,
   parameters: {
@@ -86,33 +85,41 @@ type Story = StoryObj;
 
 const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialConfigs) as Record<string, Story>;
 
-export const ApiGroupProperties = stories.ApiGroupProperties;
-export const ApiProperties = stories.ApiProperties;
-export const ApiSlots = stories.ApiSlots;
-export const AppearanceInverse = stories.AppearanceInverse;
-export const AppearanceInverseDescription = stories.AppearanceInverseDescription;
+// Export all generated stories
+// eslint-disable-next-line @typescript-eslint/prefer-destructuring-assignment
+// sourcery skip: use-object-destructuring
+export const Airports = stories.Airports;
 export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled;
-export const AppearanceInverseDropdown = stories.AppearanceInverseDropdown;
 export const AppearanceInverseError = stories.AppearanceInverseError;
-export const AppearanceInverseGroup = stories.AppearanceInverseGroup;
-export const AppearanceInverseHelptext = stories.AppearanceInverseHelptext;
-export const AppearanceInverseSnowflake = stories.AppearanceInverseSnowflake;
+export const AppearanceInverse = stories.AppearanceInverse;
 export const Basic = stories.Basic;
-export const BasicStandalone = stories.BasicStandalone;
-export const CounterDisabled = stories.CounterDisabled;
-export const CounterError = stories.CounterError;
-export const CounterHelptext = stories.CounterHelptext;
-export const CounterMinmax = stories.CounterMinmax;
+export const Checkmark = stories.Checkmark;
 export const Custom = stories.Custom;
-export const Description = stories.Description;
 export const Disabled = stories.Disabled;
-export const Dropdown = stories.Dropdown;
-export const DropdownError = stories.DropdownError;
-export const DropdownErrorGroup = stories.DropdownErrorGroup;
-export const DropdownMobileProperties = stories.DropdownMobileProperties;
-export const DropdownSnowflake = stories.DropdownSnowflake;
-export const DropdownValueText = stories.DropdownValueText;
-export const Events = stories.Events;
+export const DisplayValue = stories.DisplayValue;
+export const DynamicMenu = stories.DynamicMenu;
+export const Error = stories.Error;
+export const ExternalSelection = stories.ExternalSelection;
+export const Filter = stories.Filter;
 export const FloaterConfig = stories.FloaterConfig;
-export const GroupCounterMax = stories.GroupCounterMax;
-export const GroupMax = stories.GroupMax;
+export const Focus = stories.Focus;
+export const FullscreenBreakpoint = stories.FullscreenBreakpoint;
+export const HelpText = stories.HelpText;
+export const InDialog = stories.InDialog;
+export const Inputmode = stories.Inputmode;
+export const Loading = stories.Loading;
+export const MaxHeight = stories.MaxHeight;
+export const NoFilter = stories.NoFilter;
+export const NoMatch = stories.NoMatch;
+export const NoValidate = stories.NoValidate;
+export const OptionalLabel = stories.OptionalLabel;
+export const PersistInput = stories.PersistInput;
+export const Persistent = stories.Persistent;
+export const ProgrammaticValue = stories.ProgrammaticValue;
+export const Required = stories.Required;
+export const ResetState = stories.ResetState;
+export const Suggestion = stories.Suggestion;
+export const SwapValue = stories.SwapValue;
+export const TypeCreditCard = stories.TypeCreditCard;
+export const TypeMonthDayYear = stories.TypeMonthDayYear;
+export const Value = stories.Value;

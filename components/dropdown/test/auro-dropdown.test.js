@@ -547,6 +547,116 @@ describe("auro-dropdown", () => {
     expect(dialog.open).to.be.true;
   });
 
+  describe("popover desktop mode", () => {
+    async function openDesktopDropdown() {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+          <div>Bib content</div>
+        </auro-dropdown>
+      `);
+
+      el.isBibFullscreen = false;
+      el.show();
+      await elementUpdated(el);
+
+      const bibEl = el.bibElement.value;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+
+      return { el, bibEl, dialog };
+    }
+
+    it("sets popover attribute on bib host when opening in desktop mode", async () => {
+      const { bibEl } = await openDesktopDropdown();
+
+      expect(bibEl.getAttribute('popover')).to.equal('manual');
+    });
+
+    it("opens inner dialog via setAttribute when not fullscreen", async () => {
+      const { dialog } = await openDesktopDropdown();
+
+      expect(dialog.open).to.be.true;
+    });
+
+    it("bib host matches :popover-open when open in desktop mode", async () => {
+      const { bibEl } = await openDesktopDropdown();
+
+      expect(bibEl.matches(':popover-open')).to.be.true;
+    });
+
+    it("removes popover attribute on close", async () => {
+      const { el, bibEl } = await openDesktopDropdown();
+
+      el.hide();
+      await elementUpdated(el);
+
+      expect(bibEl.hasAttribute('popover')).to.be.false;
+    });
+
+    it("bib host does not match :popover-open after close", async () => {
+      const { el, bibEl } = await openDesktopDropdown();
+
+      el.hide();
+      await elementUpdated(el);
+
+      expect(bibEl.matches(':popover-open')).to.be.false;
+    });
+
+    it("closes inner dialog on close", async () => {
+      const { el, dialog } = await openDesktopDropdown();
+
+      el.hide();
+      await elementUpdated(el);
+
+      expect(dialog.open).to.be.false;
+    });
+
+    it("does not have popover attribute before first open", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      const bibEl = el.bibElement.value;
+      expect(bibEl.hasAttribute('popover')).to.be.false;
+    });
+
+    it("does not set popover attribute when opening via showModal", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      // Call open(true) directly on the bib to test the modal path
+      // (the floater overrides isBibFullscreen based on viewport width)
+      const bibEl = el.bibElement.value;
+      bibEl.open(true);
+
+      expect(bibEl.hasAttribute('popover')).to.be.false;
+
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+      expect(dialog.open).to.be.true;
+    });
+
+    it("sets and removes popover attribute across multiple open/close cycles", async () => {
+      const { el, bibEl } = await openDesktopDropdown();
+
+      el.hide();
+      await elementUpdated(el);
+      expect(bibEl.hasAttribute('popover')).to.be.false;
+
+      el.show();
+      await elementUpdated(el);
+      expect(bibEl.getAttribute('popover')).to.equal('manual');
+      expect(bibEl.matches(':popover-open')).to.be.true;
+    });
+  });
+
   describe("when passing fullscreenBreakpoint", () => {
     it("passes a pixel value when selecting a valid breakpoint", async () => {
       const el = await fixture(html`
@@ -569,6 +679,172 @@ describe("auro-dropdown", () => {
 
       expect(el.bibContent.mobileFullscreenBreakpoint).to.equal(undefined);
     });
+  });
+
+  // ─── §1.6.2 setActiveDescendant() public API (P1) ───────────────────────────
+  describe("setActiveDescendant()", () => {
+    it("sets ariaActiveDescendantElement on the trigger", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      // role="combobox" is required before setting ariaActiveDescendantElement;
+      // aria-activedescendant is not a valid attribute on role="button".
+      el.a11yRole = 'combobox';
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      const option = document.createElement('div');
+      option.id = 'test-option';
+      option.setAttribute('role', 'option');
+      document.body.appendChild(option);
+
+      el.setActiveDescendant(option);
+      expect(trigger.ariaActiveDescendantElement).to.equal(option);
+
+      el.setActiveDescendant(null);
+      document.body.removeChild(option);
+    });
+
+    it("clears ariaActiveDescendantElement and removes aria-activedescendant when passed null", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+        </auro-dropdown>
+      `);
+
+      el.a11yRole = 'combobox';
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      const option = document.createElement('div');
+      option.id = 'test-option';
+      option.setAttribute('role', 'option');
+      document.body.appendChild(option);
+
+      el.setActiveDescendant(option);
+      el.setActiveDescendant(null);
+
+      expect(trigger.ariaActiveDescendantElement).to.be.null;
+      expect(trigger.hasAttribute('aria-activedescendant')).to.be.false;
+
+      document.body.removeChild(option);
+    });
+  });
+
+  // ─── §1.1.4 Container-type containment escape (P0) ──────────────────────────
+  describe("container-type containment escape", () => {
+    it("opens bib in desktop mode when wrapped in a container-type: inline-size ancestor", async () => {
+      const wrapper = await fixture(html`
+        <div style="container-type: inline-size; width: 400px; height: 300px; overflow: visible;">
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+            <div>Bib content</div>
+          </auro-dropdown>
+        </div>
+      `);
+
+      const el = wrapper.querySelector('auro-dropdown');
+      el.isBibFullscreen = false;
+      el.show();
+      await elementUpdated(el);
+
+      // The dropdown host's contain style should be cleared to escape containment
+      expect(el.style.contain).to.equal('');
+
+      // The bib should be in the top layer via the Popover API
+      const bibEl = el.bibElement.value;
+      expect(bibEl.matches(':popover-open')).to.be.true;
+
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+      expect(dialog.open).to.be.true;
+    });
+  });
+
+  // ─── §1.2.4 Responsive mode switch while open (P1) ──────────────────────────
+  describe("responsive mode switch while open", () => {
+    it("transitions from desktop popover to fullscreen dialog mode while open", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+          <div>Bib content</div>
+        </auro-dropdown>
+      `);
+
+      // Start in desktop mode
+      el.isBibFullscreen = false;
+      el.show();
+      await elementUpdated(el);
+
+      const bibEl = el.bibElement.value;
+      expectPopoverShown(el);
+      expect(bibEl.getAttribute('popover')).to.equal('manual');
+      expect(bibEl.matches(':popover-open')).to.be.true;
+
+      // Switch to fullscreen while open (simulates viewport crossing the breakpoint)
+      el.isBibFullscreen = true;
+      await elementUpdated(el);
+
+      // Should still be visible, now in modal mode
+      expectPopoverShown(el);
+      expect(bibEl.hasAttribute('popover')).to.be.false;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+      expect(dialog.open).to.be.true;
+    });
+
+    it("transitions from fullscreen dialog back to desktop popover mode while open", async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+          <div>Bib content</div>
+        </auro-dropdown>
+      `);
+
+      // Start in fullscreen mode
+      el.isBibFullscreen = true;
+      el.show();
+      await elementUpdated(el);
+
+      const bibEl = el.bibElement.value;
+      expectPopoverShown(el);
+
+      // Switch back to desktop while open
+      el.isBibFullscreen = false;
+      await elementUpdated(el);
+
+      expectPopoverShown(el);
+      expect(bibEl.getAttribute('popover')).to.equal('manual');
+      expect(bibEl.matches(':popover-open')).to.be.true;
+    });
+  });
+
+  // ─── §6.4 Popover attribute adds no implicit ARIA role to bib host (P1) ─────
+  it("auro-dropdown popover attribute adds no implicit ARIA role to bib host", async () => {
+    const el = await fixture(html`
+      <auro-dropdown>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+        <div>Bib content</div>
+      </auro-dropdown>
+    `);
+
+    el.isBibFullscreen = false;
+    el.show();
+    await elementUpdated(el);
+
+    const bibEl = el.bibElement.value;
+    expect(bibEl.getAttribute('popover')).to.equal('manual');
+
+    // The bib host element should carry no explicit role introduced by the
+    // popover mechanism — ARIA semantics live on the inner <dialog> only.
+    expect(bibEl.getAttribute('role')).to.be.null;
   });
 });
 

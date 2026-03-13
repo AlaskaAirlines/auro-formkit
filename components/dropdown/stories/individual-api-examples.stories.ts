@@ -1,30 +1,39 @@
 /// <reference types="vite/client" />
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
-const { args, argTypes } = getStorybookHelpers("auro-checkbox-group");
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
-
 import '../src/registered';
-import { AuroRadio, AuroRadioGroup } from '../src/index';
-import '@aurodesignsystem/auro-button';
+import { AuroDropdown } from '../src/index';
 
-AuroRadio.register('custom-radio');
-AuroRadioGroup.register('custom-radio-group');
+AuroDropdown.register('custom-dropdown');
+
+const { args, argTypes } = getStorybookHelpers('auro-dropdown');
 
 // Import all HTML files from apiExamples
 const apiExamples = import.meta.glob('../apiExamples/*.html', { query: '?raw', import: 'default', eager: true });
 const apiExamplesJs = import.meta.glob('../apiExamples/*.js', { query: '?raw', import: 'default', eager: true });
 
-// Generate stories dynamically from apiExamples
 const specialConfigs = {
+  'appearance-inverse': {
+    globals: {
+      backgrounds: { value: 'dark' },
+    },
+    tags: ['!autodocs'],
+  },
+  'appearance-inverse-description': {
+    globals: {
+      backgrounds: { value: 'dark' },
+    },
+    tags: ['!autodocs'],
+  },
   'appearance-inverse-disabled': {
     globals: {
       backgrounds: { value: 'dark' },
     },
     tags: ['!autodocs'],
   },
-  'appearance-inverse': {
+  'appearance-inverse-dropdown': {
     globals: {
       backgrounds: { value: 'dark' },
     },
@@ -36,25 +45,30 @@ const specialConfigs = {
     },
     tags: ['!autodocs'],
   },
-  'appearance-inverse-checked': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
   'appearance-inverse-group': {
     globals: {
       backgrounds: { value: 'dark' },
     },
     tags: ['!autodocs'],
-  }
+  },
+  'appearance-inverse-helptext': {
+    globals: {
+      backgrounds: { value: 'dark' },
+    },
+    tags: ['!autodocs'],
+  },
+  'appearance-inverse-snowflake': {
+    globals: {
+      backgrounds: { value: 'dark' },
+    },
+    tags: ['!autodocs'],
+  },
 };
 
 const ApiExamples: Meta = {
-  component: 'auro-radio-group',
-  subcomponents: { AuroRadio: 'auro-radio' },
+  component: 'auro-dropdown',
   tags: ['autodocs'],
-  title: 'Radio & Radio Group/Individual Examples',
+  title: 'Dropdown/Individual Examples',
   args,
   argTypes,
   parameters: {
@@ -73,21 +87,23 @@ const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialC
 // Export all generated stories
 // eslint-disable-next-line @typescript-eslint/prefer-destructuring-assignment
 // sourcery skip: use-object-destructuring
-export const AccordionExample = stories.AccordionExample; 
 export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled; 
-export const AppearanceInverseChecked = stories.AppearanceInverseChecked; 
 export const AppearanceInverseError = stories.AppearanceInverseError; 
-export const AppearanceInverseGroup = stories.AppearanceInverseGroup; 
 export const AppearanceInverse = stories.AppearanceInverse; 
-export const BasicStandalone = stories.BasicStandalone; 
+export const BasicButton = stories.BasicButton; 
+export const BasicIcon = stories.BasicIcon; 
 export const Basic = stories.Basic; 
-export const Checked = stories.Checked; 
+export const Chevron = stories.Chevron; 
+export const CustomDimensions = stories.CustomDimensions; 
 export const Custom = stories.Custom; 
-export const Disabled = stories.Disabled;
-// export const ResetState = stories.ResetState;
-export const Required = stories.Required; 
-export const OptionalLabel = stories.OptionalLabel; 
-export const MultilineGroup = stories.MultilineGroup; 
+export const Disabled = stories.Disabled; 
 export const Error = stories.Error; 
-export const Horizontal = stories.Horizontal; 
-export const Dynamic = stories.Dynamic;
+export const FloaterConfig = stories.FloaterConfig; 
+export const FullscreenBreakpoint = stories.FullscreenBreakpoint; 
+export const HelpTextError = stories.HelpTextError; 
+export const HelpText = stories.HelpText; 
+export const InDialog = stories.InDialog; 
+export const MatchWidth = stories.MatchWidth; 
+export const NoToggle = stories.NoToggle; 
+export const ProgrammaticallyHide = stories.ProgrammaticallyHide; 
+export const ProgrammaticallyShow = stories.ProgrammaticallyShow; 
