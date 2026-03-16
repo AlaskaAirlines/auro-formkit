@@ -820,17 +820,31 @@ function runFulltest(mobileview) {
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
 
-    // Navigate to the clear button via Tab
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
-    await elementUpdated(el);
-
     const activeInput = mobileview ? el.inputInBib : el.input;
     const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
     expect(clearBtn).to.exist;
 
-    // Hit Enter on the clear button
-    clearBtn.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
-    clearBtn.click();
+    // Programmatically focus the native button inside auro-button's shadow root
+    // since synthetic Tab events don't reliably move focus through shadow DOM.
+    const nativeBtn = clearBtn.shadowRoot.querySelector('button');
+    expect(nativeBtn).to.exist;
+    nativeBtn.focus();
+    await elementUpdated(el);
+
+    // Verify clear button has focus
+    expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
+
+    // Dispatch Enter on the combobox — the keyboard strategy should not preventDefault,
+    // allowing the browser's native behavior to activate the focused clear button.
+    const enterEvt = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    el.dispatchEvent(enterEvt);
+    await elementUpdated(el);
+
+    // Verify the strategy did not prevent default (browser will natively click the focused button)
+    expect(enterEvt.defaultPrevented).to.be.false;
+
+    // Simulate the native button activation that the browser performs on Enter
+    nativeBtn.click();
     await elementUpdated(el);
 
     expect(activeInput.value).to.not.be.ok;
