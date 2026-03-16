@@ -6,7 +6,18 @@ export const comboboxKeyboardStrategy = {
     // stopPropagation prevents parent containers (e.g., forms) from treating
     // Enter as a submit, but we must NOT call preventDefault — that would
     // block the browser's built-in "Enter activates focused button" behavior.
-    const clearBtn = component.input.shadowRoot.querySelector('.clearBtn');
+    const isBibFullscreenActive =
+      component.dropdown &&
+      component.dropdown.isBibFullscreen &&
+      component.dropdown.isPopoverVisible;
+    const activeInput =
+      isBibFullscreenActive && component.inputInBib
+        ? component.inputInBib
+        : component.input;
+    const clearBtn =
+      activeInput && activeInput.shadowRoot
+        ? activeInput.shadowRoot.querySelector('.clearBtn')
+        : null;
     if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
       evt.stopPropagation();
       return;
