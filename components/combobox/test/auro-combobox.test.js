@@ -836,6 +836,46 @@ function runFulltest(mobileview) {
     expect(activeInput.value).to.not.be.ok;
   });
 
+  it('Enter on component while clear button is focused does not call preventDefault or showBib', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    const activeInput = mobileview ? el.inputInBib : el.input;
+    const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
+    expect(clearBtn).to.exist;
+
+    // Programmatically focus the native button inside auro-button's shadow root
+    // since synthetic Tab events don't reliably move focus through shadow DOM.
+    const nativeBtn = clearBtn.shadowRoot.querySelector('button');
+    expect(nativeBtn).to.exist;
+    nativeBtn.focus();
+    await elementUpdated(el);
+
+    // Verify clear button has focus
+    expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
+
+    const bibWasVisible = el.dropdown.isPopoverVisible;
+
+    // Dispatch Enter on the component — this goes through the keyboard strategy
+    const enterEvt = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    el.dispatchEvent(enterEvt);
+    await elementUpdated(el);
+
+    // The strategy should NOT have called preventDefault (allow browser to activate the button)
+    expect(enterEvt.defaultPrevented).to.be.false;
+
+    // The bib visibility should not have changed (showBib should not have been called)
+    expect(el.dropdown.isPopoverVisible).to.equal(bibWasVisible);
+  });
+
   it('clicking clear button clears the input', async () => {
     const el = await defaultFixture(mobileview);
 
