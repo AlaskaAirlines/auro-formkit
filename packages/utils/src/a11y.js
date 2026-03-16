@@ -18,7 +18,7 @@ const ANNOUNCEMENT_DURATION_MS = 1000;
 // ES modules are singletons — a shared variable would let a rapid call from
 // one component cancel another component's pending clear, leaving stale text
 // in the first component's live region.
-const pendingClearTimeouts = new Map();
+const pendingClearTimeouts = new WeakMap();
 
 export function announceToScreenReader(shadowRoot, text) {
   const liveRegion = shadowRoot.querySelector('#srAnnouncement');
