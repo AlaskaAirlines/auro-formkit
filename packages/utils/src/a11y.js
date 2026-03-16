@@ -14,7 +14,7 @@ const ANNOUNCEMENT_DURATION_MS = 1000;
 
 // Tracks the clear-after-announce timeout per shadowRoot so simultaneous
 // announcements from different components don't cancel each other.
-// A Map (rather than a single module-level variable) is needed because
+// A WeakMap (rather than a single module-level variable) is needed because
 // ES modules are singletons — a shared variable would let a rapid call from
 // one component cancel another component's pending clear, leaving stale text
 // in the first component's live region.
