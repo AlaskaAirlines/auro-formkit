@@ -4,17 +4,17 @@ The README.md file is a compiled document. No edits should be made directly to t
 README.md is created by running `npm run build:docs`.
 
 This file is generated based on a template fetched from
-`../../docs/templates/componentReadmeTemplate.md`
-and copied to `./componentDocs/README.md` each time the docs are compiled.
+`../../docs/templates/kitReadmeTemplate.md`
+and copied to `./kitDocs/README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
 | SECTION                | DESCRIPTION                                       | FILE LOCATION                       |
 |------------------------|---------------------------------------------------|-------------------------------------|
-| Description            | Description of the component                      | `./docs/partials/description.md`    |
-| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`       |
-| Additional Information | For use to add any component specific information | `./docs/partials/readmeAddlInfo.md` |
-| Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
+| Description            | Description of the kit                      | `./docs/partials/description.md`    |
+| Use Cases              | Examples for when to use this kit           | `./docs/partials/useCases.md`       |
+| Additional Information | For use to add any kit specific information | `./docs/partials/readmeAddlInfo.md` |
+| kit Example Code | HTML sample code of the kits use            | `./apiExamples/basic.html`          |
 -->
 
 # Formkit
