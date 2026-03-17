@@ -912,7 +912,7 @@ export class AuroDatePicker extends AuroElement {
           guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
         }
       } else {
-        restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
+        restoreTriggerAfterClose(this.dropdown, this.inputList[0]);
       }
 
       // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
@@ -966,12 +966,10 @@ export class AuroDatePicker extends AuroElement {
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
-    this.handleReadOnly();
-
     this.inputList.forEach((input, index) => {
       // auto-show bib when manually editing the input value
       input.addEventListener('keyup', (evt) => {
-        if (evt.key.length === 1 || evt.key === 'Delete' || evt.key === 'Backspace') {
+        if (evt.key === " ") {
           this.dropdown.show();
         }
       });
@@ -1100,28 +1098,6 @@ export class AuroDatePicker extends AuroElement {
     if (this.dropdown && !this.dropdown.isPopoverVisible) {
       this.dropdown.show();
     }
-  }
-
-  /**
-   * Sets the readonly attribute on the inputs based on the window width.
-   * @private
-   * @returns {void}
-   */
-  handleReadOnly() {
-    // --ds-grid-breakpoint-sm
-    const docStyle = getComputedStyle(document.documentElement);
-
-    // We need to store this so that we can pass it to calendar
-    this.mobileBreakpoint = Number(docStyle.getPropertyValue('--ds-grid-breakpoint-sm').replace("px", ""));
-    const isMobile = window.innerWidth < this.mobileBreakpoint;
-
-    this.inputList.forEach((input) => {
-      if (isMobile) {
-        input.setAttribute('readonly', true);
-      } else {
-        input.removeAttribute('readonly');
-      }
-    });
   }
 
   /**
@@ -1543,10 +1519,6 @@ export class AuroDatePicker extends AuroElement {
     this.configureCalendar();
     this.configureDatepicker();
     this.configureClickHandler();
-
-    window.addEventListener('resize', () => {
-      this.handleReadOnly();
-    });
   }
 
   connectedCallback() {
