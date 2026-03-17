@@ -1,4 +1,4 @@
-## Turborepo Overview
+### Turborepo Overview
 
 This monorepo is managed using [Turborepo](https://turborepo.org/).
 
@@ -64,7 +64,7 @@ The package's `package.json` will have every dependency that it needs. This is t
   }
   ```
 
-## Example: Component Dependencies
+### Example: Component Dependencies
 
 Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
 
