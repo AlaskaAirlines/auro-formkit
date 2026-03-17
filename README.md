@@ -1,7 +1,11 @@
 <!--
 The README.md file is a compiled document. No edits should be made directly to this file.
 
-README.md is created by running `npm run build:docs:kit`.
+README.md is created by running `npm run build:docs`.
+
+This file is generated based on a template fetched from
+`../../docs/templates/componentReadmeTemplate.md`
+and copied to `./componentDocs/README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
@@ -13,7 +17,7 @@ The following sections are editable by making changes to the following files:
 | Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
 -->
 
-# Auro Formkit
+# Formkit
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
@@ -40,8 +44,63 @@ It is a monorepo that contains the following components:
 - `auro-select`
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## Install
+## Use Cases
 
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
+<!-- The below content is automatically added from ./docs/partials/useCases.md -->
+
+### 1. User Accounts
+- Sign up and login forms  
+- Email and password validation  
+
+### 2. Checkout & Payments
+- Collect shipping and billing info  
+- Use autofill and validation to reduce errors  
+
+### 3. Booking & Scheduling
+- Select dates and times  
+- Prevent invalid selections (like past dates)  
+
+### 4. Search & Filters
+- Search inputs with suggestions  
+- Filters like price ranges or categories  
+
+### 5. File Uploads
+- Upload images, documents, or media  
+- Restrict file types and allow multiple files  
+
+### 6. Feedback & Surveys
+- Collect ratings, choices, and comments  
+- Require answers where needed  
+
+### 7. Calculators & Dynamic Forms
+- Show real-time results (e.g., pricing, totals)  
+
+### 8. Multi-Step Forms
+- Break long forms into smaller steps  
+
+### 9. Mobile-Friendly Input
+- Use input types that trigger the right keyboard  
+
+### 10. Accessible Forms
+- Proper labels and grouped inputs  
+- Built-in error handling  
+
+### 11. Built-in Validation
+- Use HTML5 rules instead of custom JavaScript
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Getting Started
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/kitInstall.md) -->
+<!-- The below content is automatically added from ./docs/partials/kitInstall.md -->
+
+#### NPM Installation
+
+```shell
+$ npm i @aurodesignsystem/
+```
+<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
 [![Build Status](https://img.shields.io/github/actions/workflow/status/AlaskaAirlines/auro-formkit/testPublish.yml?style=for-the-badge)](https://github.com/AlaskaAirlines/auro-formkit/actions/workflows/testPublish.yml)
 [![See it on NPM!](https://img.shields.io/npm/v/@aurodesignsystem/auro-formkit?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@aurodesignsystem/auro-formkit)
@@ -55,41 +114,10 @@ $ npm i @aurodesignsystem/auro-formkit
 Installing as a direct, dev or peer dependency is up to the user installing the package. If you are unsure as to what type of dependency you should use, consider reading this [stack overflow](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies) answer.
 
 <!-- AURO-GENERATED-CONTENT:END -->
-
-## Getting Started
-
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/gettingStarted.md -->
-To start using the Auro Formkit components, follow the instructions below:
 
-### Usage
-
-You can use Auro Formkit components in your project in two ways: automatic or custom registration.
-
-#### Automatic Registration
-
-For automatic registration, simply import the component:
-
-```javascript
-import "@aurodesignsystem/auro-formkit/auro-checkbox";
-```
-
-This will automatically register both the `<auro-checkbox>` and the included `<auro-checkbox-group>` component for use in your project. Note that not all Auro Formkit components have sub-components. Be sure to check the documentation for each component to understand its specific usage and registration requirements.
-
-#### Custom Registration
-
-If you prefer to register the component with a custom name, you can call the component class directly to create a custom registration:
-
-```javascript
-import { AuroCheckbox, AuroCheckboxGroup } from "@aurodesignsystem/auro-formkit/auro-checkbox/class";
-
-AuroCheckbox.register('custom-checkbox');
-AuroCheckbox.register('custom-checkbox-group');
-```
-
-This will register the component as `<custom-checkbox>` and `<custom-checkbox-group>`.
-
-#### TypeScript Module Resolution
+### TypeScript Module Resolution
 
 When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
 
@@ -102,93 +130,25 @@ When using TypeScript set `moduleResolution` to `bundler`, add the following to 
 ```
 
 This configuration enables proper module resolution for the component's TypeScript files.
+<!-- AURO-GENERATED-CONTENT:END -->
 
-### Basic HTML Example
+## Install from CDN
 
-Here is an example of how to use the Auro Checkbox component in your HTML:
-
-`index.html -> <head>`
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/bundleInstallDescription.md) -->
+<!-- The below content is automatically added from ./docs/partials/bundleInstallDescription.md -->
+In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
 ```html
-<script type="module">
-    import "@aurodesignsystem/auro-formkit/auro-checkbox";
-</script>
-```
-
-`index.html -> <body>`
-
-```html
-<auro-checkbox-group>
-    <span slot="legend">
-        Form label goes here
-    </span>
-    <auro-checkbox value="value1" name="basic" id="checkbox-basic1">
-        Checkbox option
-    </auro-checkbox>
-    <auro-checkbox value="value2" name="basic" id="checkbox-basic2" checked>
-        Checkbox option two
-    </auro-checkbox>
-</auro-checkbox-group>
-```
-
-By following these steps, you can easily integrate Auro Formkit components into your project.
-<!-- AURO-GENERATED-CONTENT:END -->
-
-### Design Token CSS Custom Property dependency
-
-<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/development/designTokens.md) -->
-The use of any Auro custom element has a dependency on the [Auro Design Tokens](https://auro.alaskaair.com/getting-started/developers/design-tokens).
-
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Development
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/developmentDescription.md) -->
-<!-- The below content is automatically added from ./docs/partials/developmentDescription.md -->
-
-### Filtering
-
-Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
-
-To only develop a single component, use the `--filter` flag:
-
-```shell
-npx turbo dev --filter=@aurodesignsystem/auro-input
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/@latest/auro-formkit/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
-### Start development environment
+## Additional Information
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/localhost.md) -->
-<!-- The below content is automatically added from ./docs/partials/localhost.md -->
-
-## Local Development
-<!-- AURO-GENERATED-CONTENT:END -->
-
-### Testing
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/testing.md) -->
-<!-- The below content is automatically added from ./docs/partials/testing.md -->
-```
-npm run test
-```
-
-#### Port configuration
-
-Turbo will attempt to test components in parallel which will lead to port conflicts.
-
-Setting the `concurrency` to `1` will prevent Turbo from running tests in parallel:
-
-```
-"test": "turbo run test --concurrency=1",
-```
-
-`turbo.json`does not support `--concurrency` yet. See [this issue](https://github.com/vercel/turborepo/discussions/7493).
-<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
 
-## Turborepo Overview
+### Turborepo Overview
 
 This monorepo is managed using [Turborepo](https://turborepo.org/).
 
@@ -254,7 +214,7 @@ The package's `package.json` will have every dependency that it needs. This is t
   }
   ```
 
-## Example: Component Dependencies
+### Example: Component Dependencies
 
 Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
 
@@ -311,4 +271,20 @@ The only dependencies that belong in the root `package.json` are **tools for man
 Some examples of dependencies that make sense to install in the root are `turbo`, `husky`, or `stylelint`.
 
 Conversely, dependencies Auro components rely on should be installed in their respective packages, such as `Lit`, `Rollup`, or other `auro-formkit` dependencies.
+<!-- AURO-GENERATED-CONTENT:END -->
+
+## Formkit Development
+
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/developmentDescription.md) -->
+<!-- The below content is automatically added from ./docs/partials/developmentDescription.md -->
+
+### Filtering
+
+Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
+
+To only develop a single component, use the `--filter` flag:
+
+```shell
+npx turbo dev --filter=@aurodesignsystem/auro-input
+```
 <!-- AURO-GENERATED-CONTENT:END -->
