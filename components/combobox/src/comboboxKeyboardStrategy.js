@@ -88,23 +88,25 @@ export const comboboxKeyboardStrategy = {
     component.hideBib();
   },
 
-  ArrowUp(component, evt, ctx) {
+  ArrowUp(component, evt) {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    if (ctx.isVisible) {
+    // Check live visibility: showBib() above may have just opened the dropdown.
+    if (component.dropdown.isPopoverVisible) {
       evt.preventDefault();
-      navigateArrow(component, 'up', { ctx });
+      navigateArrow(component, 'up');
     }
   },
 
-  ArrowDown(component, evt, ctx) {
+  ArrowDown(component, evt) {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    if (ctx.isVisible) {
+    // Check live visibility: showBib() above may have just opened the dropdown.
+    if (component.dropdown.isPopoverVisible) {
       evt.preventDefault();
-      navigateArrow(component, 'down', { ctx });
+      navigateArrow(component, 'down');
     }
   },
 };
