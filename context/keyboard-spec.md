@@ -61,8 +61,33 @@ keydown event
 
 ### Shared Utilities (`keyboardUtils.js`)
 
-- **`applyKeyboardStrategy(component, strategy)`** — Wires up the keydown listener. Called once in each component's `configure*()` method.
-- **`navigateArrow(component, direction, options)`** — Shared arrow-key logic: calls `menu.navigateOptions(direction)` when the dropdown is visible, or calls `options.showFn()` to open it when closed.
+- **`createDisplayContext(component, options)`** — Computes display state once per keydown event and returns a frozen context object (`ctx`). Properties: `isVisible` (dropdown is open), `isModal` (visible + fullscreen), `isPopover` (visible + not fullscreen), `activeInput` (resolved via `inputResolver` callback, or `null`). Called automatically by `applyKeyboardStrategy` — handlers receive `ctx` as their third argument.
+- **`applyKeyboardStrategy(component, strategy, options)`** — Wires up the keydown listener. Called once in each component's `configure*()` method. The optional `options` object is forwarded to `createDisplayContext` on every keydown, so per-component configuration (like `inputResolver`) is set once at registration time.
+- **`navigateArrow(component, direction, options)`** — Shared arrow-key logic: calls `menu.navigateOptions(direction)` when the dropdown is visible, or calls `options.showFn()` to open it when closed. Accepts an optional `options.ctx` to use the pre-computed visibility state instead of re-reading `dropdown.isPopoverVisible`.
+
+#### Display Context Pattern
+
+Every strategy handler receives `(component, evt, ctx)`. The `ctx` object centralizes null-safety checks and eliminates repeated property access into `component.dropdown`:
+
+```
+ctx.isVisible   — Boolean: dropdown is open
+ctx.isModal     — Boolean: open AND fullscreen (dialog mode)
+ctx.isPopover   — Boolean: open AND not fullscreen (popover mode)
+ctx.activeInput — HTMLElement|null: resolved by inputResolver callback
+```
+
+The `inputResolver` callback is component-specific. Combobox uses it to resolve the correct input element depending on mode:
+
+```js
+applyKeyboardStrategy(this, comboboxKeyboardStrategy, {
+  inputResolver: (comp, ctx) =>
+    ctx.isModal && comp.inputInBib ? comp.inputInBib : comp.input,
+});
+```
+
+Select does not pass an `inputResolver` (it has no input element), so `ctx.activeInput` is `null`.
+
+The three-layer branching convention for handlers: shared logic first (using `ctx.isVisible`), then `ctx.isModal` branch for fullscreen/dialog-specific behavior, then `ctx.isPopover` branch (or fall-through) for desktop popover behavior.
 
 ### Why Strategy Maps
 

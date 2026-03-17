@@ -1166,7 +1166,10 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   configureCombobox() {
-    applyKeyboardStrategy(this, comboboxKeyboardStrategy);
+    applyKeyboardStrategy(this, comboboxKeyboardStrategy, {
+      // In modal mode the input moves into the bib; route keyboard events to that element instead.
+      inputResolver: (comp, ctx) => (ctx.isModal && comp.inputInBib ? comp.inputInBib : comp.input),
+    });
 
     this.addEventListener('focusin', () => {
       this.touched = true;

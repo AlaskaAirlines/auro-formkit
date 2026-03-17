@@ -1,14 +1,43 @@
 /**
+ * Computes display state once per keydown event and returns a frozen context object.
+ * Centralizes null-safety checks and makes the shared/modal/popover branching explicit.
+ * @param {HTMLElement} component - The component with a dropdown reference.
+ * @param {Object} [options] - Optional config.
+ * @param {Function} [options.inputResolver] - Called with (component, ctx) to resolve the active input element.
+ * @returns {Readonly<{isVisible: boolean, isModal: boolean, isPopover: boolean, activeInput: HTMLElement|null}>}
+ */
+export function createDisplayContext(component, options = {}) {
+  const dd = component.dropdown;
+  const isVisible = Boolean(dd && dd.isPopoverVisible);
+  const isFullscreen = Boolean(dd && dd.isBibFullscreen);
+
+  const ctx = {
+    isVisible,
+    isModal: isVisible && isFullscreen,
+    isPopover: isVisible && !isFullscreen,
+    activeInput: null,
+  };
+
+  if (options.inputResolver) {
+    ctx.activeInput = options.inputResolver(component, ctx);
+  }
+
+  return Object.freeze(ctx);
+}
+
+/**
  * Wires up a keydown listener that dispatches to strategy[evt.key] or strategy.default.
  * Handles both sync and async handlers.
  * @param {HTMLElement} component - The component to attach the listener to.
  * @param {Object} strategy - Map of key names to handler functions.
+ * @param {Object} [options] - Optional config passed to createDisplayContext.
  */
-export function applyKeyboardStrategy(component, strategy) {
+export function applyKeyboardStrategy(component, strategy, options = {}) {
   component.addEventListener('keydown', async (evt) => {
     const handler = strategy[evt.key] || strategy.default;
     if (handler) {
-      await handler(component, evt);
+      const ctx = createDisplayContext(component, options);
+      await handler(component, evt, ctx);
     }
   });
 }
@@ -20,9 +49,11 @@ export function applyKeyboardStrategy(component, strategy) {
  * @param {string} direction - 'up' or 'down'.
  * @param {Object} [options] - Optional config.
  * @param {Function} [options.showFn] - Called to open the dropdown when closed.
+ * @param {Object} [options.ctx] - Display context to avoid re-checking visibility.
  */
 export function navigateArrow(component, direction, options = {}) {
-  if (component.dropdown.isPopoverVisible) {
+  const visible = options.ctx ? options.ctx.isVisible : component.dropdown.isPopoverVisible;
+  if (visible) {
     component.menu.navigateOptions(direction);
   } else if (options.showFn) {
     options.showFn();

@@ -1,29 +1,21 @@
 import { navigateArrow } from '../../dropdown/src/keyboardUtils.js';
 
 export const comboboxKeyboardStrategy = {
-  async Enter(component, evt) {
+  async Enter(component, evt, ctx) {
     // If the clear button has focus, let the browser activate it normally.
     // stopPropagation prevents parent containers (e.g., forms) from treating
     // Enter as a submit, but we must NOT call preventDefault — that would
     // block the browser's built-in "Enter activates focused button" behavior.
-    const isBibFullscreenActive =
-      component.dropdown &&
-      component.dropdown.isBibFullscreen &&
-      component.dropdown.isPopoverVisible;
-    const activeInput =
-      isBibFullscreenActive && component.inputInBib
-        ? component.inputInBib
-        : component.input;
     const clearBtn =
-      activeInput && activeInput.shadowRoot
-        ? activeInput.shadowRoot.querySelector('.clearBtn')
+      ctx.activeInput && ctx.activeInput.shadowRoot
+        ? ctx.activeInput.shadowRoot.querySelector('.clearBtn')
         : null;
     if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
       evt.stopPropagation();
       return;
     }
 
-    if (component.dropdown.isPopoverVisible && component.optionActive) {
+    if (ctx.isVisible && component.optionActive) {
       component.menu.makeSelection();
       await component.updateComplete;
       evt.preventDefault();
@@ -40,20 +32,20 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
-  Tab(component) {
-    if (!component.dropdown.isPopoverVisible) {
+  Tab(component, evt, ctx) {
+    if (!ctx.isVisible) {
       return;
     }
 
-    if (component.dropdown.isBibFullscreen) {
-      const clearBtn = component.inputInBib.shadowRoot.querySelector('.clearBtn');
+    if (ctx.isModal) {
+      const clearBtn = ctx.activeInput.shadowRoot.querySelector('.clearBtn');
 
       // Use shadowRoot.activeElement to detect focus inside auro-button,
       // since Safari does not propagate :focus-within through shadow DOM.
       const clearBtnHasFocus = clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null;
 
       // Tab from input: if clear button exists and doesn't have focus, focus it
-      if (clearBtn && !clearBtnHasFocus && component.inputInBib.value) {
+      if (clearBtn && !clearBtnHasFocus && ctx.activeInput.value) {
         // Force clear button container visible to work around Safari not
         // propagating :focus-within through shadow DOM boundaries, which
         // causes .wrapper:not(:focus-within) to hide .notification.clear.
@@ -96,33 +88,23 @@ export const comboboxKeyboardStrategy = {
     component.hideBib();
   },
 
-  ArrowUp(component, evt) {
-    // If the clear button has focus, let the browser handle ArrowUp normally
-    if (component.clearBtnFocused) {
-      return;
-    }
-
+  ArrowUp(component, evt, ctx) {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    if (component.dropdown.isPopoverVisible) {
+    if (ctx.isVisible) {
       evt.preventDefault();
-      navigateArrow(component, 'up');
+      navigateArrow(component, 'up', { ctx });
     }
   },
 
-  ArrowDown(component, evt) {
-    // If the clear button has focus, let the browser handle ArrowDown normally
-    if (component.clearBtnFocused) {
-      return;
-    }
-
+  ArrowDown(component, evt, ctx) {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    if (component.dropdown.isPopoverVisible) {
+    if (ctx.isVisible) {
       evt.preventDefault();
-      navigateArrow(component, 'down');
+      navigateArrow(component, 'down', { ctx });
     }
   },
 };
