@@ -101,11 +101,9 @@ export function guardTouchPassthrough(element) {
 export function restoreTriggerAfterClose(dropdown, focusTarget) {
   dropdown.trigger.inert = false;
 
-  if (dropdown.isBibFullscreen) {
-    requestAnimationFrame(() => {
-      if (!dropdown.isPopoverVisible) {
-        focusTarget.focus();
-      }
-    });
-  }
+  requestAnimationFrame(() => {
+    if (!dropdown.isPopoverVisible) {
+      focusTarget.focus();
+    }
+  });
 }

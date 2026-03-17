@@ -811,7 +811,7 @@ describe('auro-datepicker', () => {
     await expect(centralAfterAgain).to.contain('01/01/2024');
   });
 
-  it('shows dropdown when user is typing in input', async () => {
+  it('does not show dropdown when user is typing in input', async () => {
     const el = await fixture(html`
       <auro-datepicker></auro-datepicker>
     `);
@@ -819,6 +819,20 @@ describe('auro-datepicker', () => {
     const input = getInput(el, 0);
 
     input.dispatchEvent(new KeyboardEvent('keyup', { key: '0' }));
+
+    await elementUpdated(el);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
+
+  it('shows dropdown when user press space', async () => {
+    const el = await fixture(html`
+      <auro-datepicker></auro-datepicker>
+    `);
+
+    const input = getInput(el, 0);
+
+    input.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
 
     await elementUpdated(el);
 
