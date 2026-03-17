@@ -336,6 +336,9 @@ export class AuroDropdownBib extends LitElement {
             return;
           }
         }
+        if (el && el.tagName === "AURO-COUNTER-BUTTON") {
+          return;
+        }
       }
 
       event.preventDefault();
