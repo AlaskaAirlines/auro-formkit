@@ -38,6 +38,9 @@ export const comboboxKeyboardStrategy = {
     }
 
     if (ctx.isModal) {
+      if (!ctx.activeInput) {
+        return;
+      }
       const clearBtn = ctx.activeInput.shadowRoot.querySelector('.clearBtn');
 
       // Use shadowRoot.activeElement to detect focus inside auro-button,
