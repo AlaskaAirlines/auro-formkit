@@ -38,6 +38,11 @@ export const fileConfigs = (config) => [
     identifier: 'README.md',
     input: fromAuroComponentRoot(`docs/templates/kitReadmeTemplate.md`),
     output: fromAuroComponentRoot(`README.md`)
+  },
+  {
+    identifier: 'RELEASE_NOTES.md',
+    input: fromAuroComponentRoot(`docs/templates/RELEASE_NOTES.md`),
+    output: fromAuroComponentRoot(`RELEASE_NOTES.md`)
   }
 ];
 
