@@ -1,14 +1,20 @@
 import { navigateArrow } from '../../dropdown/src/keyboardUtils.js';
 
 export const selectKeyboardStrategy = {
-  ArrowUp(component, evt) {
+  ArrowUp(component, evt, ctx) {
     evt.preventDefault();
-    navigateArrow(component, 'up', { showFn: () => component.dropdown.show() });
+    navigateArrow(component, 'up', {
+      ctx,
+      showFn: () => component.dropdown.show(),
+    });
   },
 
-  ArrowDown(component, evt) {
+  ArrowDown(component, evt, ctx) {
     evt.preventDefault();
-    navigateArrow(component, 'down', { showFn: () => component.dropdown.show() });
+    navigateArrow(component, 'down', {
+      ctx,
+      showFn: () => component.dropdown.show(),
+    });
   },
 
   Enter(component, evt) {
@@ -16,8 +22,8 @@ export const selectKeyboardStrategy = {
     component.menu.makeSelection();
   },
 
-  Tab(component) {
-    if (!component.dropdown.isPopoverVisible) {
+  Tab(component, evt, ctx) {
+    if (!ctx.isVisible) {
       return;
     }
 
