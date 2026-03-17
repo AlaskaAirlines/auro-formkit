@@ -84,10 +84,16 @@ The `auro-menuoption` element provides users a way to define a menu option.
 
 ## Events
 
-| Event                      | Type                |
-|----------------------------|---------------------|
-| `auroMenuOption-click`     | `CustomEvent<this>` |
-| `auroMenuOption-mouseover` | `CustomEvent<this>` |
+| Event                      | Type                | Description                                      |
+|----------------------------|---------------------|--------------------------------------------------|
+| `auroMenuOption-click`     | `CustomEvent<this>` |                                                  |
+| `auroMenuOption-mouseover` | `CustomEvent<this>` | Notifies that this option has been hovered over. |
+
+## Slots
+
+| Name      | Description                                |
+|-----------|--------------------------------------------|
+| [default](#default) | The default slot for the menu option text. |
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Basic
