@@ -36,7 +36,7 @@
     "custom-elements.json"
   ],
   "scripts": {
-    "build": "npm run analyze && turbo run build",
+    "build": "npm run analyze && npm run build:docs:kit && turbo run build",
     "build:force": "npm run analyze && turbo run build --force",
     "sass": "turbo run sass",
     "build:version": "turbo run build:version",
