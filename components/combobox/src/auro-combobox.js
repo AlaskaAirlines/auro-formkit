@@ -725,6 +725,9 @@ export class AuroCombobox extends AuroElement {
       if (this.dropdownOpen) {
         const expandedDelay = 150;
         this._expandedTimeout = setTimeout(() => {
+          if (!this.value) {
+            this.updateActiveOption(0);
+          }
           this.triggerExpandedState = true;
         }, expandedDelay);
       } else {
