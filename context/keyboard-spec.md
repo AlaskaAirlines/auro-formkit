@@ -176,7 +176,7 @@ The dialog event bridge preserves all four modifier flags when re-dispatching ev
 ### Example: Shift+Tab
 
 ```js
-Tab(component, evt) {
+Tab(component, evt, ctx) {
   if (evt.shiftKey) {
     component.dropdown.hide();
     return;
