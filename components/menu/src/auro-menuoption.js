@@ -270,10 +270,13 @@ export class AuroMenuOption extends AuroElement {
     }
 
     // Set the key to be the passed value if no key is provided.
-    // Uses === null (strict equality) to catch only null (key was never
-    // set) and not undefined (both attributes were absent at connectedCallback time
-    // in older code paths or edge cases).
-    if (changedProperties.has('value') && this.key === null) {
+    // Loose equality (== null) is intentional: it catches both null AND
+    // undefined. When a framework (e.g. Svelte, React) inserts the element
+    // before setting its value property, connectedCallback skips key
+    // assignment because both attributes are null at that point. The Lit
+    // property default for `key` is undefined (not null), so strict
+    // === null would miss the case and the fallback would never run.
+    if (changedProperties.has('value') && this.key == null) { // eslint-disable-line eqeqeq, no-eq-null
       this.key = this.value;
     }
   }
