@@ -412,7 +412,6 @@ function runTest(mobileView) {
       await expect(dropdown.isPopoverVisible).to.be.false;
     });
 
-
     // ─── §2.1.4  Tab with no highlighted option closes without selecting (P1) ─
     it('Tab with no highlighted option closes bib without selecting', async () => {
       const el = await defaultFixture();
