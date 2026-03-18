@@ -11,11 +11,12 @@
  *
  * @param {HTMLElement} component - The component with a dropdown reference.
  * @param {Object} [options] - Optional config.
+ * @param {HTMLElement} [options.dropdown] - Explicit dropdown reference. Falls back to component.dropdown.
  * @param {Function} [options.inputResolver] - Called with (component, ctx) to resolve the active input element.
  * @returns {Readonly<{isVisible: boolean, isModal: boolean, isPopover: boolean, activeInput: HTMLElement|null}>}
  */
 export function createDisplayContext(component, options = {}) {
-  const dd = component.dropdown;
+  const dd = options.dropdown || component.dropdown;
   const isVisible = Boolean(dd && dd.isPopoverVisible);
   const isFullscreen = Boolean(dd && dd.isBibFullscreen);
 
