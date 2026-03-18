@@ -21,6 +21,7 @@
     "provenance": true
   },
   "workspaces": [
+    "apps/*",
     "components/*",
     "packages/*"
   ],
@@ -42,6 +43,8 @@
     "build:formkit-version": "turbo run build:formkit-version",
     "dev": "turbo run dev --parallel",
     "dev:closed": "turbo run dev:closed --parallel",
+    "dev:svelte": "concurrently \"npx turbo run build:watch --concurrency=20\" \"npm run dev:app --workspace=apps/svelte-framework\"",
+    "dev:react": "concurrently \"npx turbo run build:watch --concurrency=20\" \"npm run dev:app --workspace=apps/react-framework\"",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
@@ -59,7 +62,10 @@
     "analyze": "custom-elements-manifest analyze --config ./packages/config/src/custom-elements-manifest.config.mjs",
     "update-stories": "node ./packages/utils/update-stories.js",
     "storybook": "npm run analyze && storybook dev -p 6006",
-    "build-storybook": "npm run build && npm run analyze && storybook build"
+    "build-storybook": "npm run build && npm run analyze && storybook build",
+    "test:framework:react": "turbo run test:framework --filter=@aurodesignsystem/react-framework",
+    "test:framework:svelte": "turbo run test:framework --filter=@aurodesignsystem/svelte-framework",
+    "test:frameworks": "turbo run test:framework --filter=@aurodesignsystem/react-framework --filter=@aurodesignsystem/svelte-framework"
   },
   "dependencies": {
     "@lit/context": "^1.1.6",

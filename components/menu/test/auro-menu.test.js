@@ -694,6 +694,24 @@ describe('value states', () => {
     expect(menu.optionSelected).to.equal(undefined);
   });
 
+  it('should dispatch a single selectedOption event for one programmatic value update', async () => {
+    const el = await defaultFixture();
+    const menu = el.querySelector('auro-menu');
+    let selectedEventCount = 0;
+
+    menu.addEventListener('auroMenu-selectedOption', () => {
+      selectedEventCount += 1;
+    });
+
+    menu.value = 'option 2';
+    await elementUpdated(menu);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(menu.value).to.equal('option 2');
+    expect(menu.optionSelected?.value).to.equal('option 2');
+    expect(selectedEventCount).to.equal(1);
+  });
+
   // Verify selection persists in single-select
   it('should not allow deselection of selected option in single select mode without `allowDeselect` set.', async () => {
     const el = await defaultFixture();

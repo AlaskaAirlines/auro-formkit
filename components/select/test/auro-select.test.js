@@ -569,6 +569,65 @@ function runTest(mobileView) {
       await expect(el.optionSelected).to.equal(selectedOption);
     });
 
+    it('applies value from host attribute on initial render', async () => {
+      const el = await fixture(html`
+        <auro-select value="bar">
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="foo">Foo</auro-menuoption>
+            <auro-menuoption value="bar">Bar</auro-menuoption>
+            <auro-menuoption value="baz">Baz</auro-menuoption>
+          </auro-menu>
+        </auro-select>
+      `);
+
+      await elementUpdated(el);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('bar');
+      await expect(el.optionSelected?.value).to.equal('bar');
+      await expect(el.getAttribute('value')).to.equal('bar');
+    });
+
+    it('restores selection from value attribute after disconnect and reconnect', async () => {
+      const wrapper = await fixture(html`<div></div>`);
+
+      const mountSelect = () => {
+        wrapper.innerHTML = `
+          <auro-select value="bar">
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="foo">Foo</auro-menuoption>
+              <auro-menuoption value="bar">Bar</auro-menuoption>
+              <auro-menuoption value="baz">Baz</auro-menuoption>
+            </auro-menu>
+          </auro-select>
+        `;
+
+        return wrapper.querySelector('auro-select');
+      };
+
+      let el = mountSelect();
+      await elementUpdated(el);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('bar');
+      await expect(el.optionSelected?.value).to.equal('bar');
+
+      wrapper.innerHTML = '';
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      el = mountSelect();
+      await elementUpdated(el);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('bar');
+      await expect(el.optionSelected?.value).to.equal('bar');
+    });
+
     it('makes a selection programmatically in multiselect', async () => {
       const el = await multiSelectFixture();
       const menu = el.querySelector('auro-menu');
@@ -608,7 +667,7 @@ function runTest(mobileView) {
       await expect(el.isPopoverVisible).to.be.false;
     });
 
-    it('should clear selection when non-existent value is set programmatically', async () => {
+    it('should preserve host value and clear selected option when non-existent value is set programmatically', async () => {
       const el = await defaultFixture();
       const menu = el.querySelector('auro-menu');
 
@@ -616,6 +675,7 @@ function runTest(mobileView) {
       await elementUpdated(el);
       await elementUpdated(menu);
 
+      await expect(el.value).to.equal('Non-existent value');
       await expect(el.optionSelected).to.be.undefined;
     });
 
