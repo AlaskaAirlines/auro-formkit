@@ -8,8 +8,8 @@ import '../src/registered';
 
 const meta: Meta = {
   component: 'auro-input',
-  title: 'Input/Playground',
-  tags: ['autodocs'],
+  title: 'Input/Interaction Tests',
+  tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-input'
   }
@@ -18,153 +18,179 @@ export default meta;
 
 type Story = StoryObj;
 
-// export const CounterAtMax: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter min="0" max="3">
-//   Adults
-//   <span slot="description">Max: 3</span>
-// </auro-counter>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const buttons = await canvas.findAllByShadowRole('button');
-//     const plusButton = buttons[1];
-//     await userEvent.click(plusButton);
-//     await userEvent.click(plusButton);
-//     await userEvent.click(plusButton);
-//     await expect(plusButton).toBeDisabled();
-//   },
-// };
+// ─── Focused state — active label floats up ──────────────────────────────────
+export const InputFocused: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input>
+  <span slot="label">First name</span>
+  <span slot="helpText">Please enter your first name.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    const input = el.shadowRoot.querySelector('input');
+    input.focus();
+    await new Promise((r) => setTimeout(r, 50));
+  },
+};
 
-// export const DropdownOpenWithCount: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">Select passengers</div>
-//   <auro-counter>
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter>
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Select passengers/i);
-//     await userEvent.click(trigger);
-//     const plusButtons = await canvas.findAllByShadowRole('button', { name: '+' });
-//     // Increment Adults (first plus button) twice
-//     await userEvent.click(plusButtons[0]);
-//     await userEvent.click(plusButtons[0]);
-//   },
-// };
+// ─── Value typed — active label + clear button visible ───────────────────────
+export const InputWithValue: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input>
+  <span slot="label">First name</span>
+  <span slot="helpText">Please enter your first name.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    const input = el.shadowRoot.querySelector('input');
+    // Set value on the native input directly so the patched setter fires handleInput
+    // synchronously and sets el.value before the assertion runs.
+    input.value = 'foo';
+    input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    await el.updateComplete;
+    input.focus();
+    await el.updateComplete;
+    await expect(el.value).toBe('foo');
+  },
+};
 
-// export const GroupMaxReached: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group max="4" min="0">
-//   <div slot="label">Passengers</div>
-//   <div slot="helpText">Total must be 4 or fewer</div>
-//   <auro-counter> Adults </auro-counter>
-//   <auro-counter> Children </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const buttons = await canvas.findAllByShadowRole('button');
-//     const firstPlusButton = buttons[1];
-//     const secondPlusButton = buttons[3];
-//     await userEvent.click(firstPlusButton);
-//     await userEvent.click(firstPlusButton);
-//     await userEvent.click(secondPlusButton);
-//     await userEvent.click(secondPlusButton);
-//     await expect(firstPlusButton).toBeDisabled();
-//     await expect(secondPlusButton).toBeDisabled();
-//   },
-// };
+// ─── Clear button — value cleared and clear button hidden ────────────────────
+export const InputValueCleared: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input>
+  <span slot="label">First name</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    const input = el.shadowRoot.querySelector('input');
+    // Patched setter fires the input event automatically; no manual dispatch needed.
+    input.value = 'foo';
+    // First updateComplete: value → 'foo', hasValue set to true in updated().
+    // Second updateComplete: re-render with clearBtn now in the DOM.
+    await el.updateComplete;
+    await el.updateComplete;
 
-// export const DropdownOpen: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">Open dropdown</div>
-//   <auro-counter>
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter>
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Open dropdown/i);
-//     await userEvent.click(trigger);
-//   },
-// };
+    const clearBtn = el.shadowRoot.querySelector('.clearBtn');
+    clearBtn.click();
+    await el.updateComplete;
+    await el.updateComplete;
+    await expect(el.value).toBe('');
+  },
+};
 
-// export const DropdownOpenWithError: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="ariaLabel.bib.close">Close Popup</span>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">View errors</div>
-//   <auro-counter error="Custom error on Adults counter">
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter error="Custom error on Children counter">
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/View errors/i);
-//     await userEvent.click(trigger);
-//   },
-// };
+// ─── Password — value visible after show-password toggle ─────────────────────
+export const InputPasswordRevealed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input type="password" value="foo" required>
+  <span slot="label">Password</span>
+  <span slot="ariaLabel.clear">Clear All</span>
+  <span slot="ariaLabel.password.show">Show</span>
+  <span slot="ariaLabel.password.hide">Hide</span>
+  <span slot="helpText">Please enter a secure password.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    const input = el.shadowRoot.querySelector('input');
+    await el.updateComplete;
 
-// export const DropdownSnowflakeOpen: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group max="10" min="2" isDropdown layout="snowflake">
-//   <span slot="ariaLabel.bib.close">Close Popup</span>
-//   <div slot="bib.fullscreen.headline">Group fullscreen label</div>
-//   <div slot="label">Snowflake Dropdown Group</div>
-//   <div slot="helpText">Total must be between 2-10</div>
+    const toggle = el.shadowRoot.querySelector('.passwordBtn');
+    toggle.click();
+    await el.updateComplete;
+    await expect(input.type).toBe('text');
+  },
+};
 
-//   <auro-counter> Counter 1 </auro-counter>
-//   <auro-counter> Counter 2 </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Snowflake Dropdown Group/i);
-//     await userEvent.click(trigger);
-//   },
-// };
-//
-// export const CounterWithHover: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter min="0" max="3">
-//   Adults
-//   <span slot="description">Max: 3</span>
-// </auro-counter>
-//   `,
-// };
-//
-// CounterWithHover.parameters = { 
-//   pseudo: { 
-//     hover: true,
-//     active: true,
-//   }
-// };
+// ─── Required field — valueMissing error shown after blur ────────────────────
+export const InputRequiredValidationError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input required>
+  <span slot="label">Full name</span>
+  <span slot="helpText">This field is required.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    const input = el.shadowRoot.querySelector('input');
+    input.focus();
+    input.blur();
+    await new Promise((r) => setTimeout(r, 100));
+    await expect(el.getAttribute('validity')).toBe('valueMissing');
+  },
+};
+
+// ─── validateOnInput — pattern mismatch error shown while typing ─────────────
+export const InputValidateOnInputPatternMismatch: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input
+  validateOnInput
+  required
+  pattern="[a-zA-Z-.']+( +[a-zA-Z-.']+)+"
+  setCustomValidityPatternMismatch="Full name requires two or more names with at least one space.">
+  <span slot="label">Full Name</span>
+  <span slot="helpText">Please enter your full name as it appears on the card.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    const input = el.shadowRoot.querySelector('input');
+    input.focus();
+    input.value = 'foo';
+    input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 100));
+    await expect(el.getAttribute('validity')).toBe('patternMismatch');
+  },
+};
+
+// ─── validateOnInput — error clears after valid pattern entered ──────────────
+export const InputValidateOnInputValid: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input
+  validateOnInput
+  required
+  pattern="[a-zA-Z-.']+( +[a-zA-Z-.']+)+"
+  setCustomValidityPatternMismatch="Full name requires two or more names with at least one space.">
+  <span slot="label">Full Name</span>
+  <span slot="helpText">Please enter your full name as it appears on the card.</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    const input = el.shadowRoot.querySelector('input');
+    input.focus();
+    // Type invalid first, then correct
+    input.value = 'foo';
+    input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+    input.value = 'foo bar';
+    input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 100));
+    await expect(el.getAttribute('validity')).toBe('valid');
+  },
+};
+
+// ─── Default hover pseudo-state ──────────────────────────────────────────────
+export const InputHover: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input>
+  <span slot="label">First name</span>
+  <span slot="helpText">Please enter your first name.</span>
+</auro-input>
+  `,
+};
+InputHover.parameters = {
+  pseudo: {
+    hover: true,
+  }
+};
