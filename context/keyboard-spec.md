@@ -164,6 +164,41 @@ Same arrow key, Enter, and Escape behavior as select. Tab behavior differs becau
 
 ---
 
+## Key Combinations (Modifier Keys)
+
+Modifier keys like Shift, Alt, Ctrl, and Meta are not separate entries in the strategy map. They arrive as boolean flags on the same `KeyboardEvent` as the base key — so `Shift+Tab` and `Tab` both route to `strategy['Tab']`, and the handler reads `evt.shiftKey` to distinguish them.
+
+The dialog event bridge preserves all four modifier flags when re-dispatching events from inside the modal, so modifier-aware handlers work identically in fullscreen and desktop modes.
+
+### Example: Shift+Tab
+
+```js
+Tab(component, evt) {
+  if (evt.shiftKey) {
+    component.dropdown.hide();
+    return;
+  }
+
+  if (component.optionActive) {
+    component.menu.makeSelection();
+  }
+  component.dropdown.hide();
+},
+```
+
+No additional `navKeys` entry or bridge change is needed — `'Tab'` already covers both directions.
+
+### Available Modifier Flags
+
+| Flag | Key |
+|---|---|
+| `evt.shiftKey` | Shift |
+| `evt.altKey` | Alt / Option |
+| `evt.ctrlKey` | Control |
+| `evt.metaKey` | Cmd (Mac) / Win (Windows) |
+
+---
+
 ## Deviations from Spec and Rationale
 
 ### Tab: Select + Close Instead of Native Focus Trap (Select)
