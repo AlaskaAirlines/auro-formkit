@@ -73,8 +73,8 @@ Computes display state once per keydown event and returns a context object (`ctx
 | Property | Type | Meaning |
 |---|---|---|
 | `isExpanded` | Boolean | Dropdown is open (`dd.isPopoverVisible`) |
-| `isModal` | Boolean | Open AND fullscreen — the dialog path via `showModal()` |
-| `isPopover` | Boolean | Open AND not fullscreen — the popover/desktop path |
+| `isModal` | Boolean | Fullscreen — the dialog path via `showModal()` |
+| `isPopover` | Boolean | Not fullscreen — the popover/desktop path |
 | `activeInput` | HTMLElement \| null | The input element for the current mode, resolved via `inputResolver` |
 
 **Options:**
@@ -143,8 +143,8 @@ Every strategy handler receives `(component, evt, ctx)`. The `ctx` object centra
 
 ```
 ctx.isVisible   — Boolean: dropdown is open
-ctx.isModal     — Boolean: open AND fullscreen (dialog mode)
-ctx.isPopover   — Boolean: open AND not fullscreen (popover mode)
+ctx.isModal     — Boolean: fullscreen (dialog mode)
+ctx.isPopover   — Boolean: not fullscreen (popover mode)
 ctx.activeInput — HTMLElement|null: resolved by inputResolver callback
 ```
 

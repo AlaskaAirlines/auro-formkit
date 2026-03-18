@@ -7,6 +7,7 @@
  * @param {HTMLElement} [options.dropdown] - Explicit dropdown reference. Falls back to component.dropdown.
  * @param {Function} [options.inputResolver] - Called with (component, ctx) to resolve the active input element.
  * @returns {{isExpanded: boolean, isModal: boolean, isPopover: boolean, activeInput: HTMLElement|null}}
+ *   isModal and isPopover reflect the display mode (fullscreen vs not) regardless of expanded state.
  */
 export function createDisplayContext(component, options = {}) {
   const dd = options.dropdown || component.dropdown;
@@ -15,8 +16,8 @@ export function createDisplayContext(component, options = {}) {
 
   const ctx = {
     isExpanded,
-    isModal: isExpanded && isFullscreen,
-    isPopover: isExpanded && !isFullscreen,
+    isModal: isFullscreen,
+    isPopover: !isFullscreen,
     activeInput: null,
   };
 
