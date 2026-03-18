@@ -10,9 +10,15 @@ export default defineConfig({
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],
   webServer: {
-    command: 'npm run dev:app',
+    // Use `npm run dev:app -- --force` so Vite always invalidates its pre-bundle cache
+    // (`node_modules/.vite/`) before starting, ensuring tests run against
+    // freshly resolved dist files rather than a stale snapshot.
+    command: 'npm run dev:app -- --force',
     url: 'http://localhost:5181',
-    reuseExistingServer: true,
+    // Always launch a fresh server. `reuseExistingServer: true` would silently
+    // run tests against an already-running server that may be serving stale
+    // dist files, producing false positives.
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });
