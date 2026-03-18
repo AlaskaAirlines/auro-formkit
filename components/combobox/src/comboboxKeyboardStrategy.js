@@ -97,6 +97,11 @@ export const comboboxKeyboardStrategy = {
   },
 
   ArrowUp(component, evt) {
+    // If the clear button has focus, let the browser handle ArrowUp normally
+    if (component.clearBtnFocused) {
+      return;
+    }
+
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
@@ -107,6 +112,11 @@ export const comboboxKeyboardStrategy = {
   },
 
   ArrowDown(component, evt) {
+    // If the clear button has focus, let the browser handle ArrowDown normally
+    if (component.clearBtnFocused) {
+      return;
+    }
+
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
