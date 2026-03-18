@@ -18,8 +18,7 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
-import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
+import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';

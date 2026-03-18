@@ -1,4 +1,4 @@
-import { navigateArrow } from '../../dropdown/src/keyboardUtils.js';
+import { navigateArrow } from '@aurodesignsystem/utils';
 
 export const selectKeyboardStrategy = {
   ArrowUp(component, evt, ctx) {
