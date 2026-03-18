@@ -74,5 +74,49 @@ export function selectRemountSuite(framework: string, options?: SuiteOptions) {
         expect(parsed.length).toBeGreaterThan(0);
       }
     });
+
+    if (multiselect) {
+      test('setting an invalid value clears the selection', async ({ page }) => {
+        await waitForSelectValue(page, initialValue);
+
+        await page.locator('#set-invalid').click();
+
+        // Wait for value to be cleared
+        await page.waitForFunction(
+          () => (document.querySelector('auro-select') as any)?.value === undefined,
+          { timeout: 3000 },
+        );
+
+        const result = await page.locator('auro-select').evaluate((el: any) => ({
+          value: el.value,
+          optionSelectedLength: Array.isArray(el.optionSelected) ? el.optionSelected.length : -1,
+        }));
+
+        expect(result.value).toBeUndefined();
+        expect(result.optionSelectedLength).toBe(0);
+      });
+    }
+
+    if (!multiselect) {
+      test('setting an invalid value clears the selection', async ({ page }) => {
+        await waitForSelectValue(page, initialValue);
+
+        await page.locator('#set-invalid').click();
+
+        // Wait for value to be cleared
+        await page.waitForFunction(
+          () => (document.querySelector('auro-select') as any)?.value === undefined,
+          { timeout: 3000 },
+        );
+
+        const result = await page.locator('auro-select').evaluate((el: any) => ({
+          value: el.value,
+          optionSelected: el.optionSelected,
+        }));
+
+        expect(result.value).toBeUndefined();
+        expect(result.optionSelected).toBeUndefined();
+      });
+    }
   });
 }

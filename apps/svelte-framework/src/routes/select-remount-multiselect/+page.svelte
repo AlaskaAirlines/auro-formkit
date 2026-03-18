@@ -10,11 +10,17 @@
 
 	let selectValue = $state<string>('["foo","bar"]');
 	let showSelect = $state<boolean>(true);
+
+	function setInvalidValue() {
+		const el = document.querySelector('auro-select') as any;
+		if (el) el.value = '["invalid-option"]';
+	}
 </script>
 
 <button id="toggle" onclick={() => (showSelect = !showSelect)}>
 	{showSelect ? 'Hide' : 'Show'} Select
 </button>
+<button id="set-invalid" onclick={setInvalidValue}>Set Invalid Value</button>
 
 {#if showSelect}
 	<auro-select multiselect value={selectValue}>

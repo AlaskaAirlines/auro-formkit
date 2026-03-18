@@ -33,11 +33,17 @@ function SelectWrapper() {
 export default function SelectRemount() {
   const [show, setShow] = useState(true);
 
+  function setInvalidValue() {
+    const el = document.querySelector('auro-select') as any;
+    if (el) el.value = 'invalid-option';
+  }
+
   return (
     <div>
       <button id="toggle" onClick={() => setShow((s) => !s)}>
         {show ? 'Hide' : 'Show'} Select
       </button>
+      <button id="set-invalid" onClick={setInvalidValue}>Set Invalid Value</button>
       {show && <SelectWrapper />}
     </div>
   );
