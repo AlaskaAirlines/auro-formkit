@@ -102,7 +102,15 @@ export const comboboxKeyboardStrategy = {
     component.hideBib();
   },
 
-  ArrowUp(component, evt) {
+  ArrowUp(component, evt, ctx) {
+    // If the clear button has focus, let the browser handle ArrowUp normally.
+    const clearBtn = ctx && ctx.activeInput && ctx.activeInput.shadowRoot
+      ? ctx.activeInput.shadowRoot.querySelector('.clearBtn')
+      : null;
+    if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
+      return;
+    }
+
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
@@ -114,7 +122,15 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
-  ArrowDown(component, evt) {
+  ArrowDown(component, evt, ctx) {
+    // If the clear button has focus, let the browser handle ArrowDown normally.
+    const clearBtn = ctx && ctx.activeInput && ctx.activeInput.shadowRoot
+      ? ctx.activeInput.shadowRoot.querySelector('.clearBtn')
+      : null;
+    if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
+      return;
+    }
+
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
