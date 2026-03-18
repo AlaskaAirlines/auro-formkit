@@ -62,9 +62,80 @@ keydown event
 
 ### Shared Utilities (`packages/utils/src/keyboard.js`)
 
-- **`createDisplayContext(component, options)`** — Computes display state once per keydown event and returns a frozen context object (`ctx`). Properties: `isVisible` (dropdown is open), `isModal` (visible + fullscreen), `isPopover` (visible + not fullscreen), `activeInput` (resolved via `inputResolver` callback, or `null`). Called automatically by `applyKeyboardStrategy` — handlers receive `ctx` as their third argument.
-- **`applyKeyboardStrategy(component, strategy, options)`** — Wires up the keydown listener. Called once in each component's `configure*()` method. The optional `options` object is forwarded to `createDisplayContext` on every keydown, so per-component configuration (like `inputResolver`) is set once at registration time.
-- **`navigateArrow(component, direction, options)`** — Shared arrow-key logic: calls `menu.navigateOptions(direction)` when the dropdown is visible, or calls `options.showFn()` to open it when closed. Accepts an optional `options.ctx` to use the pre-computed visibility state instead of re-reading `dropdown.isPopoverVisible`.
+#### `createDisplayContext(component, options)`
+
+Computes display state once per keydown event and returns a frozen context object (`ctx`). Called automatically by `applyKeyboardStrategy` before every handler invocation — strategy handlers receive `ctx` as their third argument and never need to call this function directly.
+
+**Why it exists:** Without a centralized context, every handler would independently read `component.dropdown.isPopoverVisible` and `component.dropdown.isBibFullscreen`, repeating null-safety checks and risking inconsistent reads if state changes between checks. `createDisplayContext` computes all derived booleans once, guards against null `dropdown` references, and freezes the result so handlers share a single, consistent view of the display state at the moment the key was pressed.
+
+**Properties:**
+
+| Property | Type | Meaning |
+|---|---|---|
+| `isExpanded` | Boolean | Dropdown is open (`dd.isPopoverVisible`) |
+| `isModal` | Boolean | Open AND fullscreen — the dialog path via `showModal()` |
+| `isPopover` | Boolean | Open AND not fullscreen — the popover/desktop path |
+| `activeInput` | HTMLElement \| null | The input element for the current mode, resolved via `inputResolver` |
+
+**Options:**
+
+| Option | Type | Purpose |
+|---|---|---|
+| `dropdown` | HTMLElement | Explicit dropdown reference. Falls back to `component.dropdown`. |
+| `inputResolver` | Function | Callback `(component, ctx) => HTMLElement`. Resolves which input element is active for the current display mode. |
+
+The `inputResolver` callback receives the partially-built `ctx` (with `isExpanded`, `isModal`, and `isPopover` already set but `activeInput` still null) so it can branch on display mode. Combobox uses this to return `comp.inputInBib` in modal mode and `comp.input` in popover mode. Select does not pass an `inputResolver` because it has no input element, so `ctx.activeInput` is always `null`.
+
+**Snapshot caveat:** `ctx` is immutable — it reflects entry conditions, not post-mutation state. If a handler calls `showBib()` or `hide()`, the visibility flags in `ctx` are stale. Use `ctx` for branching on what was true when the user pressed the key; read `component.dropdown.isPopoverVisible` directly when you need to check state after a mutation the handler itself caused.
+
+#### `applyKeyboardStrategy(component, strategy, options)`
+
+Wires up a single `keydown` listener on the component that dispatches to the strategy map. Called once during component initialization (in `configureSelect()` or `configureCombobox()`).
+
+**Why it exists:** This function is the glue between DOM events and the strategy pattern. It ensures every keydown event goes through the same pipeline — compute context, look up handler, invoke — without each component reimplementing that dispatch loop. It also handles async handlers (awaiting the result) so strategies can use `await component.updateComplete` or other async operations without special plumbing.
+
+**How dispatch works:**
+
+1. A `keydown` event fires on the component.
+2. `applyKeyboardStrategy` calls `createDisplayContext(component, options)` to build a fresh `ctx` snapshot.
+3. It looks up `strategy[evt.key]` — if found, calls `handler(component, evt, ctx)`.
+4. If no specific key matches, it falls back to `strategy.default` (if defined).
+5. If neither exists, the event passes through unhandled.
+
+**The `options` object** is captured once at registration time and forwarded to `createDisplayContext` on every keydown. This is how per-component configuration like `inputResolver` works — set once, applied on every keystroke:
+
+```js
+// In configureCombobox():
+applyKeyboardStrategy(this, comboboxKeyboardStrategy, {
+  inputResolver: (comp, ctx) =>
+    ctx.isModal && comp.inputInBib ? comp.inputInBib : comp.input,
+});
+
+// In configureSelect():
+applyKeyboardStrategy(this, selectKeyboardStrategy);
+// No options — select has no input, so ctx.activeInput will be null.
+```
+
+#### `navigateArrow(component, direction, options)`
+
+Shared arrow-key navigation logic used by both select and combobox strategy handlers. Moves the active option highlight up or down when the dropdown is open, or opens the dropdown when it is closed.
+
+**Why it exists:** Arrow key behavior is identical across select and combobox when the dropdown is visible — both call `component.menu.navigateOptions(direction)` to move `aria-activedescendant` to the next or previous option. Extracting this into a shared function prevents duplication and ensures both components navigate identically.
+
+**How it works:**
+
+1. Checks visibility — uses `options.ctx.isExpanded` if a pre-computed context was passed, otherwise reads `component.dropdown.isPopoverVisible` directly.
+2. If visible: calls `component.menu.navigateOptions(direction)` where `direction` is `'up'` or `'down'`.
+3. If not visible and `options.showFn` is provided: calls `showFn()` to open the dropdown. This lets select open on ArrowUp/ArrowDown while combobox can choose whether to open (combobox calls `showBib()` directly before `navigateArrow` and omits `showFn`).
+
+**Options:**
+
+| Option | Type | Purpose |
+|---|---|---|
+| `ctx` | Object | Pre-computed display context. When provided, uses `ctx.isExpanded` for the visibility check instead of reading `component.dropdown.isPopoverVisible`. Avoids a redundant property access when the caller already has a context. |
+| `showFn` | Function | Called to open the dropdown when closed. Select passes `() => component.dropdown.show()`. Combobox does not use this — it opens the dropdown itself before calling `navigateArrow` because it needs to check `availableOptions.length` and read live visibility after the open. |
+
+**Select vs. combobox usage:** Select passes both `ctx` and `showFn`, letting `navigateArrow` handle the full open-or-navigate decision. Combobox manages opening separately because it must (1) guard on `availableOptions.length > 0` before opening, and (2) read live visibility after `showBib()` rather than relying on the pre-handler `ctx` snapshot, since `showBib()` mutates visibility synchronously.
 
 #### Display Context Pattern
 
