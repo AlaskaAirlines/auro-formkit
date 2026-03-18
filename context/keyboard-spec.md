@@ -43,12 +43,13 @@ Select and combobox share `auro-dropdown` infrastructure but need different keyb
 
 ### How It Works
 
-`applyKeyboardStrategy(component, strategy)` in `keyboardUtils.js` attaches a single `keydown` listener to the component. On each keydown, it looks up `strategy[evt.key]` — if a handler exists, it's called with `(component, evt)`. If no specific key handler matches, `strategy.default` is called (if defined). Handlers can be sync or async.
+`applyKeyboardStrategy(component, strategy, options)` in `keyboardUtils.js` attaches a single `keydown` listener to the component. On each keydown, it calls `createDisplayContext(component, options)` to compute a frozen `ctx` snapshot, then looks up `strategy[evt.key]` — if a handler exists, it's called with `(component, evt, ctx)`. If no specific key handler matches, `strategy.default` is called (if defined). Handlers can be sync or async.
 
 ```
 keydown event
-  → strategy[evt.key] found?  → call handler(component, evt)
-  → no match, strategy.default?  → call default(component, evt)
+  → createDisplayContext(component, options) → ctx
+  → strategy[evt.key] found?  → call handler(component, evt, ctx)
+  → no match, strategy.default?  → call default(component, evt, ctx)
   → neither?  → event passes through unhandled
 ```
 
