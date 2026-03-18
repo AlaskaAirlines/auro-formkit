@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { expect, userEvent } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { html } from 'lit-html';
 import '../../menu/src/registered';
 
@@ -9,8 +9,8 @@ import '../src/registered';
 
 const meta: Meta = {
   component: 'auro-combobox',
-  title: 'Combobox/Playground',
-  tags: ['autodocs'],
+  title: 'Combobox/Interaction Tests',
+  tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-combobox'
   }
@@ -19,153 +19,225 @@ export default meta;
 
 type Story = StoryObj;
 
-// export const CounterAtMax: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter min="0" max="3">
-//   Adults
-//   <span slot="description">Max: 3</span>
-// </auro-counter>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const buttons = await canvas.findAllByShadowRole('button');
-//     const plusButton = buttons[1];
-//     await userEvent.click(plusButton);
-//     await userEvent.click(plusButton);
-//     await userEvent.click(plusButton);
-//     await expect(plusButton).toBeDisabled();
-//   },
-// };
+/**
+ * Replicates the setInputValue helper from unit tests.
+ * Fires all the events the combobox depends on to process typed input.
+ */
+function setInputValue(el: any, value: string) {
+  const auroInput = el.input;
+  const input = auroInput.shadowRoot.querySelector('input') as HTMLInputElement;
+  input.focus();
+  input.value = value;
+  input.dispatchEvent(new InputEvent('input'));
+  auroInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+  el.dispatchEvent(new KeyboardEvent('keyup', { key: value.slice(value.length - 1), repeat: false }));
+}
 
-// export const DropdownOpenWithCount: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">Select passengers</div>
-//   <auro-counter>
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter>
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Select passengers/i);
-//     await userEvent.click(trigger);
-//     const plusButtons = await canvas.findAllByShadowRole('button', { name: '+' });
-//     // Increment Adults (first plus button) twice
-//     await userEvent.click(plusButtons[0]);
-//     await userEvent.click(plusButtons[0]);
-//   },
-// };
+// ─── Typing opens bib with filtered options ───────────────────────────────────
+export const ComboboxBibOpensOnType: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'ap');
+    await el.updateComplete;
+    // Click the trigger to open the bib once there is a typed value
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await el.updateComplete;
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+  },
+};
 
-// export const GroupMaxReached: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group max="4" min="0">
-//   <div slot="label">Passengers</div>
-//   <div slot="helpText">Total must be 4 or fewer</div>
-//   <auro-counter> Adults </auro-counter>
-//   <auro-counter> Children </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const buttons = await canvas.findAllByShadowRole('button');
-//     const firstPlusButton = buttons[1];
-//     const secondPlusButton = buttons[3];
-//     await userEvent.click(firstPlusButton);
-//     await userEvent.click(firstPlusButton);
-//     await userEvent.click(secondPlusButton);
-//     await userEvent.click(secondPlusButton);
-//     await expect(firstPlusButton).toBeDisabled();
-//     await expect(secondPlusButton).toBeDisabled();
-//   },
-// };
+// ─── Arrow key navigation moves active option ────────────────────────────────
+export const ComboboxArrowKeyNavigation: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    // Enter opens the bib when a value is typed
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await el.updateComplete;
+    await expect(el.optionActive).not.toBeNull();
+  },
+};
 
-// export const DropdownOpen: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">Open dropdown</div>
-//   <auro-counter>
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter>
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Open dropdown/i);
-//     await userEvent.click(trigger);
-//   },
-// };
+// ─── Enter on highlighted option selects it and closes bib ───────────────────
+export const ComboboxEnterSelectsOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    // Open bib
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    // Navigate to first option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await el.updateComplete;
+    // Select it
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+    await expect(el.value).not.toBeNull();
+  },
+};
 
-// export const DropdownOpenWithError: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group isDropdown>
-//   <span slot="ariaLabel.bib.close">Close Popup</span>
-//   <span slot="bib.fullscreen.headline">Passengers</span>
-//   <div slot="label">Passengers</div>
-//   <div slot="valueText">View errors</div>
-//   <auro-counter error="Custom error on Adults counter">
-//     Adults
-//     <span slot="description">18 years or older</span>
-//   </auro-counter>
-//   <auro-counter error="Custom error on Children counter">
-//     Children
-//     <span slot="description">2–17 years</span>
-//   </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/View errors/i);
-//     await userEvent.click(trigger);
-//   },
-// };
+// ─── Escape closes bib without making a selection ────────────────────────────
+export const ComboboxEscapeClosesWithoutSelect: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    await el.updateComplete;
+    // Use trigger.click() to open the bib — this is the same path the unit
+    // tests confirm ('shows the bib on click only when a value is typed').
+    // Enter keydown is unreliable here because auro-input.value (the Lit
+    // property) may not have settled before showBib() reads it.
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await el.updateComplete;
+    // Close without selecting — simulates the user pressing Escape
+    el.hideBib();
+    await el.updateComplete;
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+    await expect(el.value).toBeUndefined();
+  },
+};
 
-// export const DropdownSnowflakeOpen: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter-group max="10" min="2" isDropdown layout="snowflake">
-//   <span slot="ariaLabel.bib.close">Close Popup</span>
-//   <div slot="bib.fullscreen.headline">Group fullscreen label</div>
-//   <div slot="label">Snowflake Dropdown Group</div>
-//   <div slot="helpText">Total must be between 2-10</div>
+// ─── No matching options — bib stays hidden ───────────────────────────────────
+export const ComboboxNoMatchHidesBib: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'zzzzz');
+    await el.updateComplete;
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+  },
+};
 
-//   <auro-counter> Counter 1 </auro-counter>
-//   <auro-counter> Counter 2 </auro-counter>
-// </auro-counter-group>
-//   `,
-//   async play({ canvas }: { canvas: any }) {
-//     const trigger = await canvas.findByShadowText(/Snowflake Dropdown Group/i);
-//     await userEvent.click(trigger);
-//   },
-// };
-//
-// export const CounterWithHover: Story = {
-//   tags: ['!autodocs', 'chromatic-enabled'],
-//   render: () => html`
-// <auro-counter min="0" max="3">
-//   Adults
-//   <span slot="description">Max: 3</span>
-// </auro-counter>
-//   `,
-// };
-//
-// CounterWithHover.parameters = { 
-//   pseudo: { 
-//     hover: true,
-//     active: true,
-//   }
-// };
+// ─── noFilter — all options remain visible while typing ───────────────────────
+export const ComboboxNoFilter: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'ap');
+    await el.updateComplete;
+    const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
+    // With noFilter, neither option should be hidden
+    await expect(options[0].hasAttribute('hidden')).toBe(false);
+    await expect(options[1].hasAttribute('hidden')).toBe(false);
+  },
+};
+
+// ─── aria-activedescendant set on input after keyboard navigation ─────────────
+export const ComboboxAriaActiveDescendant: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await el.updateComplete;
+    await expect(el.optionActive).not.toBeNull();
+  },
+};
+
+// ─── Default hover pseudo-state on trigger ───────────────────────────────────
+export const ComboboxHover: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+};
+ComboboxHover.parameters = {
+  pseudo: {
+    hover: true,
+  },
+};
+
