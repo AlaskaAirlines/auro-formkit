@@ -116,6 +116,22 @@ async function presetValueFixture() {
   `);
 }
 
+async function presetMultiSelectFixture() {
+  return await fixture(html`
+  <auro-select multiselect value='["price","duration"]'>
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price" id="presetMultiOption-0">Price</auro-menuoption>
+      <auro-menuoption value="duration" id="presetMultiOption-1">Duration</auro-menuoption>
+      <auro-menuoption value="departure">Departure</auro-menuoption>
+      <auro-menuoption value="arrival">Arrival</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+
 async function noCheckmarkFixture() {
   return await fixture(html`
   <auro-select nocheckmark>
@@ -647,6 +663,39 @@ function runTest(mobileView) {
       await expect(el.optionSelected[1]).to.equal(selectedOption2);
     });
 
+    it('multiselect with preset values retains those values on initial render', async () => {
+      const el = await presetMultiSelectFixture();
+      const menu = el.querySelector('auro-menu');
+
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      // multiSelect and value both arrive in the first Lit update cycle together;
+      // clearSelection() must NOT fire because changedProperties also has 'value'.
+      const parsed = JSON.parse(el.value);
+      await expect(parsed).to.include('price');
+      await expect(parsed).to.include('duration');
+      await expect(Array.isArray(el.optionSelected)).to.be.true;
+      await expect(el.optionSelected.length).to.equal(2);
+    });
+
+    it('toggling multiSelect to true clears any existing single-select value', async () => {
+      const el = await presetValueFixture();
+      const menu = el.querySelector('auro-menu');
+
+      await elementUpdated(el);
+      await elementUpdated(menu);
+      await expect(el.value).to.eql('price');
+
+      // Dynamically toggle to multiselect — clearSelection() should fire because
+      // multiSelect changes (undefined → true) without a simultaneous value change.
+      el.multiSelect = true;
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      await expect(el.value).to.be.undefined;
+    });
+
 
     it('should close when selecting an option', async () => {
       const el = await defaultFixture();
@@ -667,7 +716,7 @@ function runTest(mobileView) {
       await expect(el.isPopoverVisible).to.be.false;
     });
 
-    it('should preserve host value and clear selected option when non-existent value is set programmatically', async () => {
+    it('when no prior selection exists, host value is retained and optionSelected is cleared when a non-existent value is set', async () => {
       const el = await defaultFixture();
       const menu = el.querySelector('auro-menu');
 
@@ -675,22 +724,47 @@ function runTest(mobileView) {
       await elementUpdated(el);
       await elementUpdated(menu);
 
+      // No prior selection → auroMenu-selectedOption never fires → host value unchanged
       await expect(el.value).to.equal('Non-existent value');
       await expect(el.optionSelected).to.be.undefined;
     });
 
-    // TODO: Remake this test, likely a false positive, and is no longer working after component updates
-    // it('making invalid selection programmatically results in resetting of component', async () => {
-    //   const el = await presetValueFixture();
-    //   await elementUpdated(el);
-    //   await expect(el.value).to.eql('price');
+    it('setting an invalid value when a selection already exists resets value and optionSelected', async () => {
+      const el = await presetValueFixture();
+      const menu = el.querySelector('auro-menu');
 
-    //   el.value = 'flight course';
-    //   await elementUpdated(el);
+      await elementUpdated(el);
+      await elementUpdated(menu);
+      await expect(el.value).to.eql('price');
 
-    //   await expect(el.optionSelected).to.be.equal(undefined);
-    //   await expect(el.getAttribute('validity')).to.equal('valid');
-    // });
+      el.value = 'flight course';
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      await expect(el.value).to.be.undefined;
+      await expect(el.optionSelected).to.be.equal(undefined);
+      await expect(el.getAttribute('validity')).to.equal('valid');
+    });
+
+    it('setting an invalid value on a multiselect with preset values clears the selection', async () => {
+      const el = await presetMultiSelectFixture();
+      const menu = el.querySelector('auro-menu');
+
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      const parsed = JSON.parse(el.value);
+      await expect(parsed).to.include('price');
+      await expect(parsed).to.include('duration');
+
+      el.value = '["flight course"]';
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      await expect(el.value).to.be.undefined;
+      await expect(Array.isArray(el.optionSelected)).to.be.true;
+      await expect(el.optionSelected.length).to.equal(0);
+    });
 
     it('reset selection value programmatically', async () => {
       const el = await presetValueFixture();
