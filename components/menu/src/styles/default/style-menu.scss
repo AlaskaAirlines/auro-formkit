@@ -14,7 +14,7 @@
 
 // container styles - defines the look of the outer custom component
 :host {
-  display: display;
+  display: block;
   line-height: 0; // prevents page from jumping when menu options are selected at the end of the list.
   overflow-y: auto;
 
