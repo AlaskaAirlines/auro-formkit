@@ -412,25 +412,6 @@ function runTest(mobileView) {
       await expect(dropdown.isPopoverVisible).to.be.false;
     });
 
-    // ─── §2.1.3a  Shift+Tab closes without selecting (P1) ───────────────────
-    it('Shift+Tab closes the bib without selecting the highlighted option', async () => {
-      const el = await defaultFixture();
-      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-      const trigger = dropdown.querySelector('[slot="trigger"]');
-
-      trigger.click();
-      await elementUpdated(el);
-      await expect(dropdown.isPopoverVisible).to.be.true;
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      await elementUpdated(el);
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-      await elementUpdated(el);
-
-      await expect(dropdown.isPopoverVisible).to.be.false;
-      await expect(el.value).to.be.undefined;
-    });
 
     // ─── §2.1.4  Tab with no highlighted option closes without selecting (P1) ─
     it('Tab with no highlighted option closes bib without selecting', async () => {

@@ -57,7 +57,7 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
-  Tab(component, evt, ctx) {
+  Tab(component, _evt, ctx) {
     if (!ctx.isVisible) {
       return;
     }
@@ -68,17 +68,6 @@ export const comboboxKeyboardStrategy = {
       }
       const clearBtn = getClearBtn(ctx);
       const clearBtnHasFocus = isClearBtnFocused(ctx, clearBtn);
-
-      if (evt.shiftKey) {
-        // Shift+Tab from clear button: move focus back to the input
-        if (clearBtnHasFocus) {
-          ctx.activeInput.focus();
-          return;
-        }
-        // Shift+Tab from input (or no clear button): close without selecting
-        component.hideBib();
-        return;
-      }
 
       // Tab from input: if clear button exists and doesn't have focus, focus it
       if (clearBtn && !clearBtnHasFocus && ctx.activeInput.value) {
@@ -117,8 +106,8 @@ export const comboboxKeyboardStrategy = {
       return;
     }
 
-    // Non-fullscreen: select + close (Shift+Tab closes without selecting)
-    if (!evt.shiftKey && component.menu.optionActive && component.menu.optionActive.value) {
+    // Non-fullscreen: select + close
+    if (component.menu.optionActive && component.menu.optionActive.value) {
       component.menu.value = component.menu.optionActive.value;
     }
     component.hideBib();

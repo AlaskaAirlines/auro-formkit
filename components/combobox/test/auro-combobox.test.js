@@ -236,22 +236,6 @@ function runFulltest(mobileview) {
     await expect(el.value === options[0].textContent);
   });
 
-  it('Shift+Tab closes the bib without selecting the highlighted option', async () => {
-    const el = await defaultFixture(mobileview);
-
-    el.focus();
-    setInputValue(el, 'a');
-    await elementUpdated(el);
-
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await elementUpdated(el);
-
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-    await elementUpdated(el);
-
-    await expect(el.dropdown.isPopoverVisible).to.be.false;
-    await expect(el.value).to.be.undefined;
-  });
 
   // it('hides the bib when tabbing away from combobox', async () => {
   //   const el = await defaultFixture(mobileview);
@@ -306,29 +290,6 @@ function runFulltest(mobileview) {
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('Shift+Tab from input closes fullscreen dialog without selecting', async () => {
-      const el = await defaultFixture(mobileview);
-
-      el.focus();
-      setInputValue(el, 'a');
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-      await elementUpdated(el);
-      await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-      el.inputInBib.focus();
-      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      await elementUpdated(el);
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-      await elementUpdated(el);
-
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-      await expect(el.value).to.be.undefined;
-    });
 
     it('restores trigger inert and focus after fullscreen dialog closes', async () => {
       const el = await defaultFixture(mobileview);
