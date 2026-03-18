@@ -325,3 +325,31 @@ Unchanged from iteration 1 baseline:
 `apps/svelte-framework/src/routes/+page.svelte` -- removed the `$effect` / `tick` / `setTimeout` workaround. Uses plain attribute binding: `<auro-select value={selectValue}>`.
 
 `apps/svelte-framework/tests/select-remount.spec.ts` -- asserts both `.value` property and `getAttribute('value')` on initial render and after remount.
+
+---
+
+## Post-Resolution: Key Fallback Regression
+
+### Problem
+
+After Iteration 5 was committed, the framework tests passed on the same session but failed after a branch switch and rebuild. The root cause was a regression introduced to satisfy the linter.
+
+### Code regression: `=== null` vs `== null` in `auro-menuoption.js`
+
+The `updated()` key fallback guard was changed from `== null` to `=== null` to satisfy the `eqeqeq` and `no-eq-null` rules in `@aurodesignsystem/eslint-config`. This broke the remount fix.
+
+When a framework (Svelte, React) inserts `<auro-menuoption>` into the DOM before setting its `value` property:
+
+1. `connectedCallback` fires with both `getAttribute('value')` and `getAttribute('key')` returning `null`.
+2. The guard `if (resolvedKey !== null)` in `connectedCallback` correctly skips the assignment, leaving the Lit property `key` at its **default value of `undefined`** (not `null`).
+3. When the framework later sets `value="bar"`, `updated()` fires.
+4. `this.key === null` evaluates to `false` because `undefined !== null`. The fallback is skipped.
+5. `this.key` stays `undefined`, so `selectByValue('bar')` can never match this option.
+
+**Fix:** restored `this.key == null` (loose equality) with an inline `// eslint-disable-line eqeqeq, no-eq-null` directive and a comment explaining why the exception is necessary.
+
+### Changes by file
+
+#### `components/menu/src/auro-menuoption.js`
+
+- `updated()` key fallback: `this.key === null` restored to `this.key == null` with `// eslint-disable-line eqeqeq, no-eq-null`. Comment updated to explain why loose equality is required and why strict equality breaks the framework mount-order scenario.
