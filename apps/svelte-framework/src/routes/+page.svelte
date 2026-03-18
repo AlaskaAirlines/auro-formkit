@@ -1,6 +1,7 @@
 <script lang="ts">
 	const suites: { label: string; path: string }[] = [
 		{ label: 'auro-select: remount', path: '/select-remount' },
+		{ label: 'auro-select: remount (multiselect)', path: '/select-remount-multiselect' },
 	];
 </script>
 

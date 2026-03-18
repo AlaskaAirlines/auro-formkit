@@ -18,7 +18,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 | `noCheckmark`              | `nocheckmark`              |           | `boolean`             | false       | When true, selected option will not show the checkmark. |
 | `optionActive`             | `optionactive`             |           | `object`              | "undefined" | Specifies the current active menuOption.         |
 | `optionSelected`           | `optionSelected`           |           | `object`              | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `options`                  |                            | readonly  | `array`               |             | Available menu options                           |
+| `options`                  |                            | readonly  | `array`               |             | Available menu options.                          |
 | `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`             | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
 | `selectedOption`           |                            | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
 | `selectedOptions`          |                            | readonly  | `HTMLElement[]`       |             | Gets the currently selected options.             |
