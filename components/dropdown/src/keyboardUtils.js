@@ -1,6 +1,14 @@
 /**
  * Computes display state once per keydown event and returns a frozen context object.
  * Centralizes null-safety checks and makes the shared/modal/popover branching explicit.
+ *
+ * ctx is an immutable snapshot of entry conditions — the state at the moment the key
+ * was pressed. This is intentional: every handler gets a consistent, frozen view of
+ * what was true when the user acted. ctx is for branching on entry conditions, not for
+ * reacting to mutations the handler itself causes. Any state mutations inside a handler
+ * (e.g. calling showBib()) are not reflected in ctx — read component state directly if
+ * you need post-mutation visibility.
+ *
  * @param {HTMLElement} component - The component with a dropdown reference.
  * @param {Object} [options] - Optional config.
  * @param {Function} [options.inputResolver] - Called with (component, ctx) to resolve the active input element.

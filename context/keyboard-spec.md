@@ -90,6 +90,8 @@ Select does not pass an `inputResolver` (it has no input element), so `ctx.activ
 
 The three-layer branching convention for handlers: shared logic first (using `ctx.isVisible`), then `ctx.isModal` branch for fullscreen/dialog-specific behavior, then `ctx.isPopover` branch (or fall-through) for desktop popover behavior.
 
+**Snapshot caveat:** `ctx` is an immutable snapshot of entry conditions — the state at the moment the key was pressed. This is intentional: every handler gets a consistent, frozen view of what was true when the user acted. Use `ctx` for branching on entry conditions; read `component.dropdown.isPopoverVisible` directly when reacting to mutations the handler itself caused (e.g. after calling `showBib()`).
+
 ### Why Strategy Maps
 
 1. **Isolation** — Select's Tab handler can select-on-tab for multi-select without touching combobox. Combobox can handle fullscreen-specific logic without affecting select.
