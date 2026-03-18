@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev:app": "vite",
+    "dev:app:open": "npm run dev:app -- --open",
     "build:app": "tsc -b && vite build",
     "preview": "vite preview",
+    "clean:cache": "rm -rf node_modules/.vite",
+    "pretest:framework": "npm run clean:cache",
     "test:framework": "playwright test"
   },
   "dependencies": {
