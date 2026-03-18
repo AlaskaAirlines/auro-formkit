@@ -43,7 +43,7 @@ Select and combobox share `auro-dropdown` infrastructure but need different keyb
 
 ### How It Works
 
-`applyKeyboardStrategy(component, strategy, options)` in `keyboardUtils.js` attaches a single `keydown` listener to the component. On each keydown, it calls `createDisplayContext(component, options)` to compute a frozen `ctx` snapshot, then looks up `strategy[evt.key]` — if a handler exists, it's called with `(component, evt, ctx)`. If no specific key handler matches, `strategy.default` is called (if defined). Handlers can be sync or async.
+`applyKeyboardStrategy(component, strategy, options)` in `@aurodesignsystem/utils` attaches a single `keydown` listener to the component. On each keydown, it calls `createDisplayContext(component, options)` to compute a frozen `ctx` snapshot, then looks up `strategy[evt.key]` — if a handler exists, it's called with `(component, evt, ctx)`. If no specific key handler matches, `strategy.default` is called (if defined). Handlers can be sync or async.
 
 ```
 keydown event
@@ -60,7 +60,7 @@ keydown event
 | `selectKeyboardStrategy.js` | `auro-select` | ArrowUp, ArrowDown, Enter, Tab | Type-ahead via `updateActiveOptionBasedOnKey()` |
 | `comboboxKeyboardStrategy.js` | `auro-combobox` | ArrowUp, ArrowDown, Enter, Tab | None — character keys go to the input naturally |
 
-### Shared Utilities (`keyboardUtils.js`)
+### Shared Utilities (`packages/utils/src/keyboard.js`)
 
 - **`createDisplayContext(component, options)`** — Computes display state once per keydown event and returns a frozen context object (`ctx`). Properties: `isVisible` (dropdown is open), `isModal` (visible + fullscreen), `isPopover` (visible + not fullscreen), `activeInput` (resolved via `inputResolver` callback, or `null`). Called automatically by `applyKeyboardStrategy` — handlers receive `ctx` as their third argument.
 - **`applyKeyboardStrategy(component, strategy, options)`** — Wires up the keydown listener. Called once in each component's `configure*()` method. The optional `options` object is forwarded to `createDisplayContext` on every keydown, so per-component configuration (like `inputResolver`) is set once at registration time.
@@ -251,7 +251,7 @@ These are defined in the APG combobox pattern for popup-open state. They are not
 
 ## Key Files
 
-- `components/dropdown/src/keyboardUtils.js` — `applyKeyboardStrategy()` and `navigateArrow()` shared utilities
+- `packages/utils/src/keyboard.js` — `applyKeyboardStrategy()`, `navigateArrow()`, and `createDisplayContext()` shared utilities (exported from `@aurodesignsystem/utils`)
 - `components/dropdown/src/auro-dropdownBib.js` — `navKeys` set and dialog keydown handler (re-dispatches Tab, Arrow, Enter, Escape with modifier keys)
 - `components/select/src/selectKeyboardStrategy.js` — Select keyboard strategy map
 - `components/select/src/auro-select.js` — Calls `applyKeyboardStrategy(this, selectKeyboardStrategy)` in `configureSelect()`

@@ -14,8 +14,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
-import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
-import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
+import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { comboboxKeyboardStrategy } from './comboboxKeyboardStrategy.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
