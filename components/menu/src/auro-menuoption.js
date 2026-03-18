@@ -206,10 +206,20 @@ export class AuroMenuOption extends AuroElement {
       subscribe: true
     });
 
-    // Establish the key property as early as possible
+    // Establish the key property as early as possible.
+    // When a framework (e.g. Svelte) inserts the element into the DOM before
+    // setting its `value` property, both `getAttribute('value')` and
+    // `getAttribute('key')` return null here. Setting `this.key = null`
+    // would block the fallback in `updated()` that assigns key from the
+    // value property (the guard checked `=== undefined`). Only assign key
+    // if at least one source attribute is actually present so that the
+    // `updated()` fallback can run when the value property arrives later.
     const valueAttr = this.getAttribute('value');
     const keyAttr = this.getAttribute('key');
-    this.key = keyAttr !== null ? keyAttr : valueAttr;
+    const resolvedKey = keyAttr !== null ? keyAttr : valueAttr;
+    if (resolvedKey !== null) {
+      this.key = resolvedKey;
+    }
   }
 
   firstUpdated() {
@@ -259,8 +269,11 @@ export class AuroMenuOption extends AuroElement {
       this.updateTextHighlight();
     }
 
-    // Set the key to be the passed value if no key is provided
-    if (changedProperties.has('value') && this.key === undefined) {
+    // Set the key to be the passed value if no key is provided.
+    // Uses === null (strict equality) to catch only null (key was never
+    // set) and not undefined (both attributes were absent at connectedCallback time
+    // in older code paths or edge cases).
+    if (changedProperties.has('value') && this.key === null) {
       this.key = this.value;
     }
   }

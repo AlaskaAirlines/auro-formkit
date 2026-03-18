@@ -805,8 +805,14 @@ export class AuroSelect extends AuroElement {
       // Update the displayed value
       this.updateDisplayedValue();
 
-      // Update the internal value to match
-      this.value = event.detail.stringValue;
+      // When a programmatic value has no matching option, preserve the host
+      // value so frameworks can set value via attribute even before options
+      // settle.  All other events (user clicks, reset, programmatic match)
+      // sync normally.
+      if (event.detail.reason !== 'no-match') {
+        this.value = event.detail.stringValue;
+      }
+
       this.optionSelected = this.multiSelect ? event.detail.options : event.detail.options[0];
 
       if (this.dropdown.isPopoverVisible) {
@@ -1057,7 +1063,11 @@ export class AuroSelect extends AuroElement {
   }
 
   updated(changedProperties) {
-    if (changedProperties.has('multiSelect') && !changedProperties.has('value')) {
+    if (
+      changedProperties.has('multiSelect') &&
+      changedProperties.get('multiSelect') !== undefined &&
+      !changedProperties.has('value')
+    ) {
       this.clearSelection();
     }
 

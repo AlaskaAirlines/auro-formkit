@@ -1,7 +1,7 @@
 import { readFile, mkdir, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
+//import { fileURLToPath } from 'url';
 
 /**
  * Writes a version file for the specified dependency package.
@@ -46,13 +46,11 @@ export async function writeDepVersionFile(pkg) {
 
     // Calculate paths
     const elemSubName = pkg.substring(pkg.indexOf('auro-') + auroSubNameIndex);
-    const callerPath = fileURLToPath(import.meta.url);
-    const pathParts = callerPath.split('/');
-    const componentsIndex = pathParts.indexOf('components');
-    const componentName = componentsIndex !== -1 ? pathParts[componentsIndex + 1] : null;
-    const basePath = componentName
-      ? `components/${componentName}/src`
-      : 'src';
+    //const callerPath = fileURLToPath(import.meta.url);
+    //const pathParts = callerPath.split('/');
+    //const componentsIndex = pathParts.indexOf('components');
+    //const componentName = componentsIndex !== -1 ? pathParts[componentsIndex + 1] : null;
+    const basePath = 'src';
     const versionFilePath = `./${basePath}/${elemSubName}Version.js`;
     
     console.log(`Writing version file to: ${versionFilePath}`);
