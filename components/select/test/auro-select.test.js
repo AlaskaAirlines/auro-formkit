@@ -716,7 +716,7 @@ function runTest(mobileView) {
       await expect(el.isPopoverVisible).to.be.false;
     });
 
-    it('when no prior selection exists, host value is retained and optionSelected is cleared when a non-existent value is set', async () => {
+    it('setting an invalid value when no prior selection exists clears the value and optionSelected', async () => {
       const el = await defaultFixture();
       const menu = el.querySelector('auro-menu');
 
@@ -724,9 +724,24 @@ function runTest(mobileView) {
       await elementUpdated(el);
       await elementUpdated(menu);
 
-      // No prior selection → auroMenu-selectedOption never fires → host value unchanged
-      await expect(el.value).to.equal('Non-existent value');
+      await expect(el.value).to.be.undefined;
       await expect(el.optionSelected).to.be.undefined;
+    });
+
+    it('setting an invalid value on a multiselect with no prior selection keeps value and optionSelected empty', async () => {
+      const el = await multiSelectFixture();
+      const menu = el.querySelector('auro-menu');
+
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      el.value = '["Non-existent value"]';
+      await elementUpdated(el);
+      await elementUpdated(menu);
+
+      await expect(el.value).to.be.undefined;
+      await expect(Array.isArray(el.optionSelected)).to.be.true;
+      await expect(el.optionSelected.length).to.equal(0);
     });
 
     it('setting an invalid value when a selection already exists resets value and optionSelected', async () => {
