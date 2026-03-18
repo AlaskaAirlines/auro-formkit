@@ -75,6 +75,7 @@ export class AuroCombobox extends AuroElement {
     this.value = undefined;
     this.typedValue = undefined;
     this.behavior = "suggestion";
+    this.clearBtnFocused = false;
 
     // Defaults that effect the overall layout of the combobox
     this.checkmark = false;
@@ -1032,6 +1033,21 @@ export class AuroCombobox extends AuroElement {
     this.addEventListener('focusout', () => {
       if (!this.componentHasFocus && !this._inFullscreenTransition) {
         this.validate();
+      }
+    });
+
+    /**
+     * Track focus on the clear button within the input.
+     * This is used to prevent unwanted interactions when the clear button is focused.
+     *
+     * Use event delegation on the shadow root so the listener works regardless
+     * of when .clearBtn is rendered (it only exists after a value is set).
+     */
+    this.input.shadowRoot.addEventListener('focusin', (event) => {
+      if (event.target.closest('.clearBtn')) {
+        this.clearBtnFocused = true;
+      } else {
+        this.clearBtnFocused = false;
       }
     });
   }
