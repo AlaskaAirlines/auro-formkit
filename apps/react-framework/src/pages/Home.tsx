@@ -2,6 +2,7 @@ import { Link } from '../router';
 
 const SUITES: { label: string; path: string }[] = [
   { label: 'auro-select: remount', path: '/select-remount' },
+  { label: 'auro-select: remount (multiselect)', path: '/select-remount-multiselect' },
 ];
 
 export default function Home() {
