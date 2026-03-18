@@ -11,6 +11,8 @@
  */
 export function createDisplayContext(component, options = {}) {
   const dd = options.dropdown || component.dropdown;
+  // isPopoverVisible reflects as the `open` attribute.
+  // It reports whether the bib is open in any mode (popover or modal).
   const isExpanded = Boolean(dd && dd.isPopoverVisible);
   const isFullscreen = Boolean(dd && dd.isBibFullscreen);
 
