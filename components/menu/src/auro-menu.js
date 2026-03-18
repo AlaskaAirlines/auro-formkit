@@ -199,7 +199,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Available menu options
+       * Available menu options.
        * @readonly
        */
       options: {
@@ -266,7 +266,7 @@ export class AuroMenu extends AuroElement {
   /**
    * @readonly
    * @returns {Array<HTMLElement>} - Returns the array of available menu options.
-   * @deprecated use `options` property instead.
+   * @deprecated Use `options` property instead.
    */
   get items() {
     return this.options;
@@ -374,7 +374,7 @@ export class AuroMenu extends AuroElement {
       const newValue = event.stringValue;
 
       // Check if the option or value has actually changed
-      if (newValue === undefined || (this.optionSelected !== newOption || this.stringValue !== newValue)) {
+      if (this.optionSelected !== newOption || this.stringValue !== newValue) {
         this.optionSelected = newOption;
         this.setInternalValue(newValue);
       }
@@ -448,8 +448,13 @@ export class AuroMenu extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    // Update menu service properties on host update
-    if (changedProperties.has('value')) {
+    // Apply value selection synchronously so that static-HTML fixtures
+    // resolve within a single update cycle.  The refactored selectByValue
+    // no longer calls reset() first, so the destructive intermediate-event
+    // cascade that originally required deferral is eliminated.  If option
+    // keys are not yet resolved (framework mount-order race), selectByValue
+    // queues a bounded retry automatically via queuePendingValue.
+    if (changedProperties.has('value') && !this.internalUpdateInProgress) {
       this.menuService.selectByValue(this.value);
     }
 
@@ -631,12 +636,13 @@ export class AuroMenu extends AuroElement {
    * @param {any} source - The source that triggers this event.
    * @private
    */
-  notifySelectionChange({value, stringValue, keys, options} = {}) {
+  notifySelectionChange({value, stringValue, keys, options, reason} = {}) {
     dispatchMenuEvent(this, 'auroMenu-selectedOption', {
       value,
       stringValue,
       keys,
-      options
+      options,
+      reason
     });
   }
 

@@ -114,6 +114,9 @@ export class MenuService {
     this._subscribers = [];
     this.internalUpdateInProgress = false;
     this.selectedOptions = [];
+    this._pendingValue = null;
+    this._pendingRetryScheduled = false;
+    this._pendingRetryCount = 0;
   }
 
   /**
@@ -153,6 +156,9 @@ export class MenuService {
   hostDisconnected() {
     this._subscribers = [];
     this._menuOptions = [];
+    this._pendingValue = null;
+    this._pendingRetryScheduled = false;
+    this._pendingRetryCount = 0;
   }
 
   /**
@@ -355,17 +361,22 @@ export class MenuService {
    * @param {string|number|Array<string|number>} value - The value(s) to select.
    */
   selectByValue(value) {
-    // Early exit for invalid/empty values or internal updates
-    if (this.internalUpdateInProgress ||
-        this.host.internalUpdateInProgress ||
-        value === undefined ||
+    const isEmptyValue = value === undefined ||
         value === null ||
         (Array.isArray(value) && value.length === 0) ||
-        (typeof value === 'string' && value.trim() === '')) {
+        (typeof value === 'string' && value.trim() === '');
+
+    // Early exit for invalid/empty values
+    if (isEmptyValue) {
       return;
     }
 
-    this.reset();
+    // If an internal update cycle is still in progress, defer value application
+    // rather than dropping it.
+    if (this.internalUpdateInProgress || this.host.internalUpdateInProgress) {
+      this.queuePendingValue(value);
+      return;
+    }
 
     // Normalize values to array of strings
     const normalizedValues = this._getNormalizedValues(value);
@@ -377,33 +388,98 @@ export class MenuService {
       validatedValues = [normalizedValues[0]];
     }
 
+    if (this._menuOptions.length === 0) {
+      this.queuePendingValue(value);
+      return;
+    }
+
     // Find matching options by comparing available options to validated values
     const trackedKeys = new Set();
     const optionsToSelect = this._menuOptions.filter(option => {
       const passesFilter = validatedValues.includes(option.key);
       const alreadyTracked = trackedKeys.has(option.key);
+      const isActive = option.isActive;
       
       trackedKeys.add(option.key);
 
       // Include the option in the options to be selected if it passes the filter check and
       // either hasn't been tracked yet or selectAllMatchingOptions is true
-      return passesFilter && (!alreadyTracked || (alreadyTracked && this.selectAllMatchingOptions));
+      return isActive && passesFilter && (!alreadyTracked || (alreadyTracked && this.selectAllMatchingOptions));
     });
 
-    // Handle selection result
-    if (optionsToSelect.length && !this.optionsArraysMatch(optionsToSelect, this.selectedOptions)) {
-      this.selectOptions(optionsToSelect);
-    } else {
-      this.stageUpdate();
+    // Handle no matches: clear existing selection, but do not dispatch an intermediate
+    // undefined value that can overwrite the host value in parent components.
+    if (!optionsToSelect.length) {
+      const hasUnresolvedKeys = this._menuOptions.some((option) => option.isActive && option.key == null);
+
+      if (hasUnresolvedKeys) {
+        this.queuePendingValue(value);
+        return;
+      }
+
+      this.clearPendingValue();
+      const hadSelection = this.selectedOptions.length > 0;
+
+      if (hadSelection) {
+        this.selectedOptions = [];
+        this.stageUpdate({ reason: 'no-match' });
+      }
+
+      // Dispatch failure event if no matches found
+      if (validatedValues.length) {
+        this.dispatchChangeEvent('auroMenu-selectValueFailure', {
+          message: 'No matching options found for the provided value(s).',
+          values: validatedValues
+        });
+      }
+
+      return;
     }
 
-    // Dispatch failure event if no matches found
-    if (!optionsToSelect.length && validatedValues.length) {
-      this.dispatchChangeEvent('auroMenu-selectValueFailure', {
-        message: 'No matching options found for the provided value(s).',
-        values: validatedValues
-      });
+    this.clearPendingValue();
+
+    if (this.optionsArraysMatch(optionsToSelect, this.selectedOptions)) {
+      return;
     }
+
+    // Apply programmatic selection as a single transaction and emit one final state.
+    this.selectedOptions = optionsToSelect;
+    this.stageUpdate();
+  }
+
+  /**
+   * Queues a pending value and schedules a bounded retry.
+   * @param {string|number|Array<string|number>} value - The value to retry.
+   */
+  queuePendingValue(value) {
+    this._pendingValue = value;
+
+    if (this._pendingRetryScheduled || this._pendingRetryCount >= 5) {
+      return;
+    }
+
+    this._pendingRetryScheduled = true;
+    this._pendingRetryCount += 1;
+
+    setTimeout(() => {
+      this._pendingRetryScheduled = false;
+
+      if (this._pendingValue == null) {
+        return;
+      }
+
+      const pendingValue = this._pendingValue;
+      this.selectByValue(pendingValue);
+    }, 0);
+  }
+
+  /**
+   * Clears pending retry state.
+   */
+  clearPendingValue() {
+    this._pendingValue = null;
+    this._pendingRetryScheduled = false;
+    this._pendingRetryCount = 0;
   }
 
   /**
@@ -442,9 +518,9 @@ export class MenuService {
   /**
    * Stages an update to notify subscribers of state and value changes.
    */
-  stageUpdate() {
-    this.notifyStateChange();
-    this.notifyValueChange();
+  stageUpdate(meta = {}) {
+    this.notifyStateChange(meta);
+    this.notifyValueChange(meta);
   }
 
   /**
@@ -459,14 +535,18 @@ export class MenuService {
   /**
    * Notifies subscribers of a state change (selected options has changed).
    */
-  notifyStateChange() {
-    this.notify({ type: 'stateChange', selectedOptions: this.selectedOptions });
+  notifyStateChange(meta = {}) {
+    this.notify({
+      type: 'stateChange',
+      selectedOptions: this.selectedOptions,
+      ...meta
+    });
   }
 
   /**
    * Notifies subscribers of a value change (current value has changed).
    */
-  notifyValueChange() {
+  notifyValueChange(meta = {}) {
 
     // Prepare details for the event
     const details = {
@@ -482,10 +562,9 @@ export class MenuService {
 
     this.notify({
       type: 'valueChange',
+      ...meta,
       ...details
     });
-
-    this.dispatchChangeEvent('auroMenu-selectedOption', details);
   }
 
   /**
@@ -513,6 +592,10 @@ export class MenuService {
   addMenuOption(option) {
     this._menuOptions.push(option);
     this.notify({ type: 'optionsChange', options: this._menuOptions });
+
+    if (this._pendingValue != null) {
+      this.queuePendingValue(this._pendingValue);
+    }
   }
 
   /**
@@ -522,6 +605,10 @@ export class MenuService {
   removeMenuOption(option) {
     this._menuOptions = this._menuOptions.filter(opt => opt !== option);
     this.notify({ type: 'optionsChange', options: this._menuOptions });
+
+    if (this._menuOptions.length === 0) {
+      this.clearPendingValue();
+    }
   }
 
   /**
