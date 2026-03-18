@@ -1,19 +1,32 @@
 import { navigateArrow } from '@aurodesignsystem/utils';
 
 /**
+ * Returns the clear button element from the active input's shadow
+ * DOM, if available.
+ * @param {Object} ctx - Display context with activeInput.
+ * @returns {Element|null}
+ */
+function getClearBtn(ctx) {
+  const root = ctx && ctx.activeInput && ctx.activeInput.shadowRoot;
+  if (!root) {
+    return null;
+  }
+  return root.querySelector('.clearBtn');
+}
+
+/**
  * Returns true when the clear button inside the active input's shadow DOM has focus.
  * Uses shadowRoot.activeElement to detect focus inside auro-button,
  * since Safari does not propagate :focus-within through shadow DOM.
  * @param {Object} ctx - Display context with activeInput.
+ * @param {Element} [clearBtn=getClearBtn(ctx)] - Pre-fetched clear button element.
  * @returns {boolean}
  */
-function isClearBtnFocused(ctx) {
-  const root = ctx && ctx.activeInput && ctx.activeInput.shadowRoot;
-  if (!root) {
+function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
+  if (!clearBtn) {
     return false;
   }
-  const clearBtn = root.querySelector('.clearBtn');
-  return Boolean(clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null);
+  return Boolean(clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null);
 }
 
 export const comboboxKeyboardStrategy = {
@@ -53,8 +66,8 @@ export const comboboxKeyboardStrategy = {
       if (!ctx.activeInput) {
         return;
       }
-      const clearBtn = ctx.activeInput.shadowRoot.querySelector('.clearBtn');
-      const clearBtnHasFocus = isClearBtnFocused(ctx);
+      const clearBtn = getClearBtn(ctx);
+      const clearBtnHasFocus = isClearBtnFocused(ctx, clearBtn);
 
       if (evt.shiftKey) {
         // Shift+Tab from clear button: move focus back to the input
