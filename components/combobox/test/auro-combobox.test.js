@@ -342,6 +342,23 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
+  it('sets first menu option as active when dropdown opens without a selection', async () => {
+    const el = await defaultFixture(mobileview);
+    const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
+
+    // Simulate dropdown opening with no value set
+    el.dropdown.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
+      detail: { expanded: true }
+    }));
+
+    // Wait for the 150ms expandedDelay to elapse
+    await new Promise((r) => setTimeout(r, 200));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(menuOptions[0]);
+    await expect(el.menu.index).to.equal(0);
+  });
+
   it('navigates menu with up and down arrow keys', async () => {
     const el = await defaultFixture(mobileview);
 
