@@ -110,6 +110,20 @@
       "dependsOn": [
         "@aurodesignsystem/auro-dropdown#build"
       ]
+    },
+    "test:framework": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "outputs": ["test-results/**", "playwright-report/**"]
+    },
+    "dev:app": {
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "cache": false
+    },
+    "build:app": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", ".svelte-kit/**"]
     }
   }
 }

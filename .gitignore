@@ -38,4 +38,9 @@ custom-elements.json
 storybook-static
 debug-storybook.log
 build-storybook.log
+
+## Playwright files
 .playwright-cli
+.playwright
+apps/svelte-framework/test-results/.last-run.json
+test-results
