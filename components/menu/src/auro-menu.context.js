@@ -418,12 +418,14 @@ export class MenuService {
       }
 
       this.clearPendingValue();
-      const hadSelection = this.selectedOptions.length > 0;
 
-      if (hadSelection) {
+      if (this.selectedOptions.length > 0) {
         this.selectedOptions = [];
-        this.stageUpdate({ reason: 'no-match' });
       }
+
+      // Always notify so the host resets any stale invalid value, even when
+      // selectedOptions was already empty (e.g. double-clicking set-invalid).
+      this.stageUpdate({ reason: 'no-match' });
 
       // Dispatch failure event if no matches found
       if (validatedValues.length) {
