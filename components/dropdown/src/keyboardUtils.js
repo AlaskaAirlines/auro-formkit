@@ -19,7 +19,9 @@ export function createDisplayContext(component, options = {}) {
   };
 
   if (options.inputResolver) {
-    ctx.activeInput = options.inputResolver(component, ctx);
+    const resolvedInput = options.inputResolver(component, ctx);
+    // Guard against resolvers returning undefined or non-HTMLElement values.
+    ctx.activeInput = resolvedInput instanceof HTMLElement ? resolvedInput : null;
   }
 
   return Object.freeze(ctx);
