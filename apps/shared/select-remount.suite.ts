@@ -95,6 +95,32 @@ export function selectRemountSuite(framework: string, options?: SuiteOptions) {
         expect(result.value).toBeUndefined();
         expect(result.optionSelectedLength).toBe(0);
       });
+
+      test('double-clicking set-invalid keeps value cleared', async ({ page }) => {
+        await waitForSelectValue(page, initialValue);
+
+        // First click - confirm the invalid value is cleared
+        await page.locator('#set-invalid').click();
+        await page.waitForFunction(
+          () => (document.querySelector('auro-select') as any)?.value === undefined,
+          { timeout: 3000 },
+        );
+
+        // Second click - value should still be cleared (bug: it was set to the invalid value)
+        await page.locator('#set-invalid').click();
+        await page.waitForFunction(
+          () => (document.querySelector('auro-select') as any)?.value === undefined,
+          { timeout: 3000 },
+        );
+
+        const result = await page.locator('auro-select').evaluate((el: any) => ({
+          value: el.value,
+          optionSelectedLength: Array.isArray(el.optionSelected) ? el.optionSelected.length : -1,
+        }));
+
+        expect(result.value).toBeUndefined();
+        expect(result.optionSelectedLength).toBe(0);
+      });
     }
 
     if (!multiselect) {
@@ -104,6 +130,32 @@ export function selectRemountSuite(framework: string, options?: SuiteOptions) {
         await page.locator('#set-invalid').click();
 
         // Wait for value to be cleared
+        await page.waitForFunction(
+          () => (document.querySelector('auro-select') as any)?.value === undefined,
+          { timeout: 3000 },
+        );
+
+        const result = await page.locator('auro-select').evaluate((el: any) => ({
+          value: el.value,
+          optionSelected: el.optionSelected,
+        }));
+
+        expect(result.value).toBeUndefined();
+        expect(result.optionSelected).toBeUndefined();
+      });
+
+      test('double-clicking set-invalid keeps value cleared', async ({ page }) => {
+        await waitForSelectValue(page, initialValue);
+
+        // First click - confirm the invalid value is cleared
+        await page.locator('#set-invalid').click();
+        await page.waitForFunction(
+          () => (document.querySelector('auro-select') as any)?.value === undefined,
+          { timeout: 3000 },
+        );
+
+        // Second click - value should still be cleared (bug: it was set to the invalid value)
+        await page.locator('#set-invalid').click();
         await page.waitForFunction(
           () => (document.querySelector('auro-select') as any)?.value === undefined,
           { timeout: 3000 },
