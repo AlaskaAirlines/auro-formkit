@@ -1,16 +1,28 @@
 import { navigateArrow } from '@aurodesignsystem/utils';
 
+/**
+ * Returns true when the clear button inside the active input's shadow DOM has focus.
+ * Uses shadowRoot.activeElement to detect focus inside auro-button,
+ * since Safari does not propagate :focus-within through shadow DOM.
+ * @param {Object} ctx - Display context with activeInput.
+ * @returns {boolean}
+ */
+function isClearBtnFocused(ctx) {
+  const root = ctx && ctx.activeInput && ctx.activeInput.shadowRoot;
+  if (!root) {
+    return false;
+  }
+  const clearBtn = root.querySelector('.clearBtn');
+  return Boolean(clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null);
+}
+
 export const comboboxKeyboardStrategy = {
   async Enter(component, evt, ctx) {
     // If the clear button has focus, let the browser activate it normally.
     // stopPropagation prevents parent containers (e.g., forms) from treating
     // Enter as a submit, but we must NOT call preventDefault — that would
     // block the browser's built-in "Enter activates focused button" behavior.
-    const clearBtn =
-      ctx.activeInput && ctx.activeInput.shadowRoot
-        ? ctx.activeInput.shadowRoot.querySelector('.clearBtn')
-        : null;
-    if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
+    if (isClearBtnFocused(ctx)) {
       evt.stopPropagation();
       return;
     }
@@ -42,10 +54,7 @@ export const comboboxKeyboardStrategy = {
         return;
       }
       const clearBtn = ctx.activeInput.shadowRoot.querySelector('.clearBtn');
-
-      // Use shadowRoot.activeElement to detect focus inside auro-button,
-      // since Safari does not propagate :focus-within through shadow DOM.
-      const clearBtnHasFocus = clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null;
+      const clearBtnHasFocus = isClearBtnFocused(ctx);
 
       if (evt.shiftKey) {
         // Shift+Tab from clear button: move focus back to the input
@@ -104,10 +113,7 @@ export const comboboxKeyboardStrategy = {
 
   ArrowUp(component, evt, ctx) {
     // If the clear button has focus, let the browser handle ArrowUp normally.
-    const clearBtn = ctx && ctx.activeInput && ctx.activeInput.shadowRoot
-      ? ctx.activeInput.shadowRoot.querySelector('.clearBtn')
-      : null;
-    if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
+    if (isClearBtnFocused(ctx)) {
       return;
     }
 
@@ -124,10 +130,7 @@ export const comboboxKeyboardStrategy = {
 
   ArrowDown(component, evt, ctx) {
     // If the clear button has focus, let the browser handle ArrowDown normally.
-    const clearBtn = ctx && ctx.activeInput && ctx.activeInput.shadowRoot
-      ? ctx.activeInput.shadowRoot.querySelector('.clearBtn')
-      : null;
-    if (clearBtn && clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null) {
+    if (isClearBtnFocused(ctx)) {
       return;
     }
 
