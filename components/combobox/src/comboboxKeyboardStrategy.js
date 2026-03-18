@@ -122,8 +122,8 @@ export const comboboxKeyboardStrategy = {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    // Read live visibility directly — ctx.isExpanded is a pre-handler snapshot and
-    // wouldn't reflect the state change from showBib() called above.
+    // Read live visibility — ctx.isExpanded was computed before showBib() above,
+    // so it wouldn't reflect the state change.
     if (component.dropdown.isPopoverVisible) {
       evt.preventDefault();
       navigateArrow(component, 'up');
@@ -139,8 +139,8 @@ export const comboboxKeyboardStrategy = {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    // Read live visibility directly — ctx.isExpanded is a pre-handler snapshot and
-    // wouldn't reflect the state change from showBib() called above.
+    // Read live visibility — ctx.isExpanded was computed before showBib() above,
+    // so it wouldn't reflect the state change.
     if (component.dropdown.isPopoverVisible) {
       evt.preventDefault();
       navigateArrow(component, 'down');

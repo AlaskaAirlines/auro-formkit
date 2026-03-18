@@ -43,7 +43,7 @@ Select and combobox share `auro-dropdown` infrastructure but need different keyb
 
 ### How It Works
 
-`applyKeyboardStrategy(component, strategy, options)` in `@aurodesignsystem/utils` attaches a single `keydown` listener to the component. On each keydown, it calls `createDisplayContext(component, options)` to compute a frozen `ctx` snapshot, then looks up `strategy[evt.key]` — if a handler exists, it's called with `(component, evt, ctx)`. If no specific key handler matches, `strategy.default` is called (if defined). Handlers can be sync or async.
+`applyKeyboardStrategy(component, strategy, options)` in `@aurodesignsystem/utils` attaches a single `keydown` listener to the component. On each keydown, it calls `createDisplayContext(component, options)` to compute a `ctx` object, then looks up `strategy[evt.key]` — if a handler exists, it's called with `(component, evt, ctx)`. If no specific key handler matches, `strategy.default` is called (if defined). Handlers can be sync or async.
 
 ```
 keydown event
@@ -64,9 +64,9 @@ keydown event
 
 #### `createDisplayContext(component, options)`
 
-Computes display state once per keydown event and returns a frozen context object (`ctx`). Called automatically by `applyKeyboardStrategy` before every handler invocation — strategy handlers receive `ctx` as their third argument and never need to call this function directly.
+Computes display state once per keydown event and returns a context object (`ctx`). Called automatically by `applyKeyboardStrategy` before every handler invocation — strategy handlers receive `ctx` as their third argument and never need to call this function directly.
 
-**Why it exists:** Without a centralized context, every handler would independently read `component.dropdown.isPopoverVisible` and `component.dropdown.isBibFullscreen`, repeating null-safety checks and risking inconsistent reads if state changes between checks. `createDisplayContext` computes all derived booleans once, guards against null `dropdown` references, and freezes the result so handlers share a single, consistent view of the display state at the moment the key was pressed.
+**Why it exists:** Without a centralized context, every handler would independently read `component.dropdown.isPopoverVisible` and `component.dropdown.isBibFullscreen`, repeating null-safety checks and risking inconsistent reads if state changes between checks. `createDisplayContext` computes all derived booleans once and guards against null `dropdown` references, so handlers share a single view of the display state at the moment the key was pressed.
 
 **Properties:**
 
@@ -86,7 +86,7 @@ Computes display state once per keydown event and returns a frozen context objec
 
 The `inputResolver` callback receives the partially-built `ctx` (with `isExpanded`, `isModal`, and `isPopover` already set but `activeInput` still null) so it can branch on display mode. Combobox uses this to return `comp.inputInBib` in modal mode and `comp.input` in popover mode. Select does not pass an `inputResolver` because it has no input element, so `ctx.activeInput` is always `null`.
 
-**Snapshot caveat:** `ctx` is immutable — it reflects entry conditions, not post-mutation state. If a handler calls `showBib()` or `hide()`, the visibility flags in `ctx` are stale. Use `ctx` for branching on what was true when the user pressed the key; read `component.dropdown.isPopoverVisible` directly when you need to check state after a mutation the handler itself caused.
+**Staleness caveat:** `ctx` is computed once before the handler runs, so it reflects entry conditions, not post-mutation state. If a handler calls `showBib()` or `hide()`, the visibility flags in `ctx` are stale. Use `ctx` for branching on what was true when the user pressed the key; read `component.dropdown.isPopoverVisible` directly when you need to check state after a mutation the handler itself caused.
 
 #### `applyKeyboardStrategy(component, strategy, options)`
 
@@ -97,7 +97,7 @@ Wires up a single `keydown` listener on the component that dispatches to the str
 **How dispatch works:**
 
 1. A `keydown` event fires on the component.
-2. `applyKeyboardStrategy` calls `createDisplayContext(component, options)` to build a fresh `ctx` snapshot.
+2. `applyKeyboardStrategy` calls `createDisplayContext(component, options)` to build a fresh `ctx`.
 3. It looks up `strategy[evt.key]` — if found, calls `handler(component, evt, ctx)`.
 4. If no specific key matches, it falls back to `strategy.default` (if defined).
 5. If neither exists, the event passes through unhandled.
@@ -135,7 +135,7 @@ Shared arrow-key navigation logic used by both select and combobox strategy hand
 | `ctx` | Object | Pre-computed display context. When provided, uses `ctx.isExpanded` for the visibility check instead of reading `component.dropdown.isPopoverVisible`. Avoids a redundant property access when the caller already has a context. |
 | `showFn` | Function | Called to open the dropdown when closed. Select passes `() => component.dropdown.show()`. Combobox does not use this — it opens the dropdown itself before calling `navigateArrow` because it needs to check `availableOptions.length` and read live visibility after the open. |
 
-**Select vs. combobox usage:** Select passes both `ctx` and `showFn`, letting `navigateArrow` handle the full open-or-navigate decision. Combobox manages opening separately because it must (1) guard on `availableOptions.length > 0` before opening, and (2) read live visibility after `showBib()` rather than relying on the pre-handler `ctx` snapshot, since `showBib()` mutates visibility synchronously.
+**Select vs. combobox usage:** Select passes both `ctx` and `showFn`, letting `navigateArrow` handle the full open-or-navigate decision. Combobox manages opening separately because it must (1) guard on `availableOptions.length > 0` before opening, and (2) read live visibility after `showBib()` rather than relying on `ctx`, since `showBib()` mutates visibility after `ctx` was computed.
 
 #### Display Context Pattern
 
@@ -161,7 +161,7 @@ Select does not pass an `inputResolver` (it has no input element), so `ctx.activ
 
 The three-layer branching convention for handlers: shared logic first (using `ctx.isVisible`), then `ctx.isModal` branch for fullscreen/dialog-specific behavior, then `ctx.isPopover` branch (or fall-through) for desktop popover behavior.
 
-**Snapshot caveat:** `ctx` is an immutable snapshot of entry conditions — the state at the moment the key was pressed. This is intentional: every handler gets a consistent, frozen view of what was true when the user acted. Use `ctx` for branching on entry conditions; read `component.dropdown.isPopoverVisible` directly when reacting to mutations the handler itself caused (e.g. after calling `showBib()`).
+**Staleness caveat:** `ctx` is computed once before the handler runs, so it reflects entry conditions — the state at the moment the key was pressed. If a handler mutates state (e.g. calling `showBib()`), the values in `ctx` are stale. Use `ctx` for branching on entry conditions; read `component.dropdown.isPopoverVisible` directly when reacting to mutations the handler itself caused.
 
 ### Why Strategy Maps
 
