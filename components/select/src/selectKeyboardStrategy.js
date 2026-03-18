@@ -23,7 +23,7 @@ export const selectKeyboardStrategy = {
   },
 
   Tab(component, _evt, ctx) {
-    if (!ctx.isVisible) {
+    if (!ctx.isExpanded) {
       return;
     }
 

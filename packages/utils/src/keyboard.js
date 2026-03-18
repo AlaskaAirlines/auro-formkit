@@ -13,17 +13,17 @@
  * @param {Object} [options] - Optional config.
  * @param {HTMLElement} [options.dropdown] - Explicit dropdown reference. Falls back to component.dropdown.
  * @param {Function} [options.inputResolver] - Called with (component, ctx) to resolve the active input element.
- * @returns {Readonly<{isVisible: boolean, isModal: boolean, isPopover: boolean, activeInput: HTMLElement|null}>}
+ * @returns {Readonly<{isExpanded: boolean, isModal: boolean, isPopover: boolean, activeInput: HTMLElement|null}>}
  */
 export function createDisplayContext(component, options = {}) {
   const dd = options.dropdown || component.dropdown;
-  const isVisible = Boolean(dd && dd.isPopoverVisible);
+  const isExpanded = Boolean(dd && dd.isPopoverVisible);
   const isFullscreen = Boolean(dd && dd.isBibFullscreen);
 
   const ctx = {
-    isVisible,
-    isModal: isVisible && isFullscreen,
-    isPopover: isVisible && !isFullscreen,
+    isExpanded,
+    isModal: isExpanded && isFullscreen,
+    isPopover: isExpanded && !isFullscreen,
     activeInput: null,
   };
 
@@ -63,7 +63,7 @@ export function applyKeyboardStrategy(component, strategy, options = {}) {
  * @param {Object} [options.ctx] - Display context to avoid re-checking visibility.
  */
 export function navigateArrow(component, direction, options = {}) {
-  const visible = options.ctx ? options.ctx.isVisible : component.dropdown.isPopoverVisible;
+  const visible = options.ctx ? options.ctx.isExpanded : component.dropdown.isPopoverVisible;
   if (visible) {
     component.menu.navigateOptions(direction);
   } else if (options.showFn) {

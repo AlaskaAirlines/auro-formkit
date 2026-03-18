@@ -40,7 +40,7 @@ export const comboboxKeyboardStrategy = {
       return;
     }
 
-    if (ctx.isVisible && component.optionActive) {
+    if (ctx.isExpanded && component.optionActive) {
       component.menu.makeSelection();
       await component.updateComplete;
       evt.preventDefault();
@@ -58,7 +58,7 @@ export const comboboxKeyboardStrategy = {
   },
 
   Tab(component, _evt, ctx) {
-    if (!ctx.isVisible) {
+    if (!ctx.isExpanded) {
       return;
     }
 
@@ -122,7 +122,7 @@ export const comboboxKeyboardStrategy = {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    // Read live visibility directly — ctx.isVisible is a pre-handler snapshot and
+    // Read live visibility directly — ctx.isExpanded is a pre-handler snapshot and
     // wouldn't reflect the state change from showBib() called above.
     if (component.dropdown.isPopoverVisible) {
       evt.preventDefault();
@@ -139,7 +139,7 @@ export const comboboxKeyboardStrategy = {
     if (component.availableOptions.length > 0) {
       component.showBib();
     }
-    // Read live visibility directly — ctx.isVisible is a pre-handler snapshot and
+    // Read live visibility directly — ctx.isExpanded is a pre-handler snapshot and
     // wouldn't reflect the state change from showBib() called above.
     if (component.dropdown.isPopoverVisible) {
       evt.preventDefault();
