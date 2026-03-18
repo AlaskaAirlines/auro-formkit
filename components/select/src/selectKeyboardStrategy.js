@@ -29,7 +29,8 @@ export const selectKeyboardStrategy = {
 
     // Tab selects the focused option and closes the popup per the
     // WAI-ARIA APG select-only combobox / listbox pattern.
-    if (component.optionActive && !component.multiSelect) {
+    // Shift+Tab closes without selecting (user is navigating backward).
+    if (!evt.shiftKey && component.optionActive && !component.multiSelect) {
       component.menu.makeSelection();
     }
     component.dropdown.hide();
