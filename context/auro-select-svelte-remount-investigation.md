@@ -353,3 +353,90 @@ When a framework (Svelte, React) inserts `<auro-menuoption>` into the DOM before
 #### `components/menu/src/auro-menuoption.js`
 
 - `updated()` key fallback: `this.key === null` restored to `this.key == null` with `// eslint-disable-line eqeqeq, no-eq-null`. Comment updated to explain why loose equality is required and why strict equality breaks the framework mount-order scenario.
+
+---
+
+## Post-Resolution: Refinement of Guards — Commits `b5aa194` and `94608a9`
+
+After Iteration 5 proved stable for the remount scenario, two guards in `auro-select.js` (added in `e4534fa`) were identified as over-protective. They prevented legitimate behaviors and were unnecessary given the lower-level fixes in MenuService.
+
+### Guard 1: `reason !== 'no-match'` in `auroMenu-selectedOption` listener
+
+**Original behavior:** The listener skipped host-value sync when `reason === 'no-match'`, preserving the host value when a programmatic value had no matching option.
+
+**Problem:** Setting a non-existent value programmatically should clear the host's `value` and `optionSelected`. The guard made invalid values silently stick instead of being cleared.
+
+**Resolution (commit `b5aa194`):** The guard was removed. The host always syncs with the menu's reported value. The lower-level fixes (no `reset()`, pending retry) already prevent the destructive cascade during remount.
+
+### Guard 2: `changedProperties.get('multiSelect') !== undefined` in `updated()`
+
+**Original behavior:** `clearSelection()` was skipped on first render when `multiSelect` changed from `undefined` (Lit default) to `true`.
+
+**Problem:** This also blocked dynamic toggling scenarios (switching between single- and multi-select mode) from clearing stale state.
+
+**Resolution (commit `b5aa194`):** The old-value check was removed. The existing `!changedProperties.has('value')` guard already prevents first-render clearing when `multiSelect` and `value` arrive together.
+
+### Bug discovered during revert testing (commit `94608a9`)
+
+When `selectByValue` found no matching options **and** `selectedOptions` was already empty, `stageUpdate` was not called. This caused two bugs:
+
+1. Setting an invalid value when **no prior selection exists** left the host `value` stuck at the invalid string.
+2. Double-clicking a "set invalid" button left the host `value` stuck on the second click.
+
+**Fix:** `stageUpdate({ reason: 'no-match' })` now always fires on a no-match result, regardless of prior selection state.
+
+### Tests added
+
+**Unit tests (`auro-select.test.js`):**
+- `multiselect with preset values retains those values on initial render`
+- `toggling multiSelect to true clears any existing single-select value`
+- `setting an invalid value when no prior selection exists clears the value and optionSelected`
+- `setting an invalid value on a multiselect with no prior selection keeps value and optionSelected empty`
+- `setting an invalid value when a selection already exists resets value and optionSelected`
+- `setting an invalid value on a multiselect with preset values clears the selection`
+- `double-clicking set-invalid keeps value cleared` (single-select and multiselect)
+
+**Framework tests (Playwright, both Svelte and React):**
+- `setting an invalid value clears the selection` (single-select and multiselect)
+- `double-clicking set-invalid keeps value cleared` (single-select and multiselect)
+
+---
+
+## Post-Resolution: Cross-Bundle Version Collision — Commit `100316a`
+
+### Problem
+
+In a Svelte 5 environment where `borealis-header` (which bundles its own older copy of `auro-menu`) is loaded alongside a newer version of formkit, `auro-select` crashes with:
+
+```
+Uncaught TypeError: Cannot read properties of undefined (reading '0')
+```
+
+The crash occurs at:
+
+```js
+this.optionSelected = this.multiSelect ? event.detail.options : event.detail.options[0];
+```
+
+### Root cause
+
+This is **not** a bug in formkit's internal event contract. Formkit's own `MenuService.notifyValueChange` always includes `options: this.selectedOptions` (an array, possibly empty) in the event detail.
+
+The crash occurs when a **different bundled version** of `auro-menu` (e.g., from `borealis-header`) wins the `customElements.define` race for the `auro-menu` tag name. That older version dispatches `auroMenu-selectedOption` **without** an `options` property in the event detail, making `event.detail.options` literally `undefined`.
+
+This is a tag-name collision caused by one or both packages not custom-registering their internal dependencies via `AuroDependencyVersioning`. When both packages properly custom-register all components, each select listens only on its own menu instance and the collision cannot occur.
+
+### Fix
+
+A minimal defensive guard was added to the `auroMenu-selectedOption` listener:
+
+```js
+const options = event.detail.options || [];
+
+this.value = event.detail.stringValue;
+this.optionSelected = this.multiSelect ? options : options[0];
+```
+
+The `|| []` fallback prevents a hard crash without masking the underlying version collision. The correct long-term fix is for all packages to custom-register their dependencies.
+
+Debug `console.log` statements from the investigation were also removed in this commit.
