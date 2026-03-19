@@ -42,7 +42,7 @@ export function createDisplayContext(component, options = {}) {
 export function applyKeyboardStrategy(component, strategy, options = {}) {
   component.addEventListener('keydown', async (evt) => {
     const handler = strategy[evt.key] || strategy.default;
-    if (handler) {
+    if (typeof handler === 'function') {
       const ctx = createDisplayContext(component, options);
       await handler(component, evt, ctx);
     }
