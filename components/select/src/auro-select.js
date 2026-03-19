@@ -805,9 +805,11 @@ export class AuroSelect extends AuroElement {
       // Update the displayed value
       this.updateDisplayedValue();
 
+      const options = event.detail.options || [];
+
       this.value = event.detail.stringValue;
 
-      this.optionSelected = this.multiSelect ? event.detail.options : event.detail.options[0];
+      this.optionSelected = this.multiSelect ? options : options[0];
 
       if (this.dropdown.isPopoverVisible) {
         this.dropdown.hide();
