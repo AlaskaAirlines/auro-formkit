@@ -341,6 +341,25 @@ export class AuroCounter extends LitElement {
     }
   }
 
+  /**
+   * Sets ariaDescribedByElements on the spinbutton to the slotted description elements,
+   * bridging the shadow DOM boundary for screen readers.
+   * @param {Event} event - The slotchange event.
+   * @private
+   */
+  onDescriptionSlotChange(event) {
+    const assignedNodes = event.target.assignedElements();
+    const spinbutton = this.shadowRoot.querySelector('[role="spinbutton"]');
+
+    if (spinbutton) {
+      if (assignedNodes.length > 0) {
+        spinbutton.ariaDescribedByElements = assignedNodes;
+      } else {
+        spinbutton.ariaDescribedByElements = [];
+      }
+    }
+  }
+
   updated(changedProperties) {
     if (changedProperties.has("value")) {
       this.validate();
@@ -396,11 +415,10 @@ export class AuroCounter extends LitElement {
             <label id="counter-label" class="label">
               <slot @slotchange="${this.onDefaultSlotChange}"></slot>
             </label>
-            <slot id="counter-description" name="description" class="body-xs"></slot>
+            <slot name="description" class="body-xs" @slotchange="${this.onDescriptionSlotChange}"></slot>
           </div>
           <div 
             part="counterControl" 
-            aria-describedby="counter-description" 
             aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}" 
             aria-labelledby="counter-label" 
             aria-valuemax="${this.max}" 
