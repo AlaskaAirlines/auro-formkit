@@ -3,6 +3,7 @@ import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plu
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
+import { selectKeyboardStrategy } from '../src/selectKeyboardStrategy.js';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
@@ -850,3 +851,27 @@ function runTest(mobileView) {
 
 runTest(false);
 runTest(true);
+
+// ─── selectKeyboardStrategy — edge branches ───────────────────────────────────
+
+describe('selectKeyboardStrategy — Tab multiselect', () => {
+  it('closes the dropdown without selecting when multiSelect is true and an option is highlighted', () => {
+    let hideCalled = false;
+    let selectionCalled = false;
+
+    const component = {
+      multiSelect: true,
+      optionActive: { value: 'Apples' },
+      menu: { makeSelection: () => { selectionCalled = true; } },
+      dropdown: { hide: () => { hideCalled = true; } },
+    };
+
+    const evt = new KeyboardEvent('keydown', { key: 'Tab' });
+    const ctx = { isExpanded: true, isModal: false, isPopover: true };
+
+    selectKeyboardStrategy.Tab(component, evt, ctx);
+
+    expect(selectionCalled).to.be.false;
+    expect(hideCalled).to.be.true;
+  });
+});
