@@ -60,25 +60,11 @@ The `auro-combobox` element provides users with a way to select an option from a
 
 ## Events
 
-| Event                       | Type                                             | Description                                      |
-|-----------------------------|--------------------------------------------------|--------------------------------------------------|
-| `auroCombobox-valueSet`     | `CustomEvent<any>`                               | (Deprecated) Notifies that the component has a new value set. |
-| `auroFormElement-validated` |                                                  | Notifies that the component value(s) have been validated. |
-| [input](#input)                     | `CustomEvent<{ optionSelected: any; value: any; }>` | Notifies that the component has a new value set. |
-| [inputValue](#inputValue)                | `CustomEvent<{ value: string \| undefined; }>`   | Notifies that the components internal HTML5 input value has changed. |
-
-## Slots
-
-| Name                      | Description                                      |
-|---------------------------|--------------------------------------------------|
-|                           | Default slot for the menu content.               |
-| `ariaLabel.bib.close`     | Sets aria-label on close button in fullscreen bib |
-| `ariaLabel.input.clear`   | Sets aria-label on clear button                  |
-| `bib.fullscreen.headline` | Defines the headline to display above menu-options |
-| [displayValue](#displayValue)            | Allows custom HTML content to display the selected value when the combobox is not focused. Only works with `snowflake` and `emphasized` layouts. |
-| [helpText](#helpText)                | Defines the content of the helpText.             |
-| [label](#label)                   | Defines the content of the label.                |
-| [optionalLabel](#optionalLabel)           | Allows overriding the optional display text "(optional)", which appears next to the label. |
+| Event                   | Type                                             |
+|-------------------------|--------------------------------------------------|
+| `auroCombobox-valueSet` | `CustomEvent<any>`                               |
+| [input](#input)                 | `CustomEvent<{ optionSelected: any; value: any; }>` |
+| [inputValue](#inputValue)            | `CustomEvent<{ value: string \| undefined; }>`   |
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Basic
