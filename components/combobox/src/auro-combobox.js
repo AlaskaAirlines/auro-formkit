@@ -49,6 +49,20 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @event inputValue - Notifies that the components internal HTML5 input value has changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
+
+/**
+ * Strips only trailing whitespace from an input value so residual spaces
+ * from cursor editing don't break filtering or highlighting.  Whitespace-only
+ * values are preserved as-is to prevent a lone space from being treated as
+ * empty input.
+ * @param {string} value - Raw input value.
+ * @returns {string} Normalized value.
+ */
+function normalizeFilterValue(value) {
+  const raw = value || '';
+  return raw.trim() ? raw.trimEnd() : raw;
+}
+
 export class AuroCombobox extends AuroElement {
 
   constructor() {
@@ -544,12 +558,7 @@ export class AuroCombobox extends AuroElement {
 
     this.noMatchOption = undefined;
 
-    // Remove trailing whitespace only when the input contains
-    // non-whitespace characters, so residual spaces from cursor
-    // editing don't break matching. Whitespace-only input is
-    // preserved as-is so a lone space doesn't show all options.
-    const raw = this.input.value || '';
-    const filterValue = (raw.trim() ? raw.trimEnd() : raw).toLowerCase();
+    const filterValue = normalizeFilterValue(this.input.value).toLowerCase();
 
     this.options.forEach((option) => {
       let matchString = option.textContent.toLowerCase();
@@ -603,7 +612,7 @@ export class AuroCombobox extends AuroElement {
   syncValuesAndStates() {
     // Only sync matchWord, don't set menu.value here since setMenuValue should handle that
     if (this.menu) {
-      this.menu.matchWord = (this.input.value || '').trimEnd();
+      this.menu.matchWord = normalizeFilterValue(this.input.value);
     }
     const label = this.menu.currentLabel;
     this.updateTriggerTextDisplay(label || this.value);
@@ -967,7 +976,7 @@ export class AuroCombobox extends AuroElement {
       this.updateTriggerTextDisplay(event.detail.label || event.detail.value);
 
       // Update match word for filtering
-      const trimmedInput = (this.input.value || '').trimEnd();
+      const trimmedInput = normalizeFilterValue(this.input.value);
       if (this.menu.matchWord !== trimmedInput) {
         this.menu.matchWord = trimmedInput;
       }
@@ -1107,7 +1116,7 @@ export class AuroCombobox extends AuroElement {
       });
 
       // Run filtering inline — the re-entrant event won't reach this code.
-      this.menu.matchWord = (this.inputInBib.value || '').trimEnd();
+      this.menu.matchWord = normalizeFilterValue(this.inputInBib.value);
       this.optionActive = null;
       this.handleMenuOptions();
       this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
@@ -1121,7 +1130,7 @@ export class AuroCombobox extends AuroElement {
 
     this.inputInBib.value = this.input.value;
 
-    this.menu.matchWord = (this.input.value || '').trimEnd();
+    this.menu.matchWord = normalizeFilterValue(this.input.value);
     this.optionActive = null;
 
     if (!this.input.value) {
@@ -1335,7 +1344,7 @@ export class AuroCombobox extends AuroElement {
 
       // Sync the input and match word, but don't directly set menu.value again
       if (this.menu) {
-        this.menu.matchWord = (this.input.value || '').trimEnd();
+        this.menu.matchWord = normalizeFilterValue(this.input.value);
       }
 
       this.dispatchEvent(new CustomEvent('input', {
