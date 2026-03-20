@@ -424,6 +424,107 @@ function runFulltest(mobileview) {
     await expect(visibleMenuOptions[0].querySelector("strong")).to.exist;
   });
 
+  it('typing "a" matches options containing "a" with bold highlighting', async () => {
+    const el = await defaultFixture(mobileview);
+    const menu = el.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
+
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+    await elementUpdated(menu);
+
+    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+
+    await expect(visibleMenuOptions.length).to.be.greaterThan(0);
+    for (const opt of visibleMenuOptions) {
+      expect(opt.textContent.toLowerCase()).to.include('a');
+      expect(opt.querySelector('strong')).to.exist;
+    }
+  });
+
+  it('trailing space is stripped — "a " matches same options as "a"', async () => {
+    const el = await defaultFixture(mobileview);
+    const menu = el.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
+
+    // First get baseline with "a"
+    setInputValue(el, 'a');
+    const baselineVisible = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+    const baselineValues = baselineVisible.map((o) => o.getAttribute('value'));
+
+    // Reset
+    setInputValue(el, '');
+    await elementUpdated(el);
+
+    // Now test "a " (trailing space)
+    setInputValue(el, 'a ');
+    const trailingSpaceVisible = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+    const trailingSpaceValues = trailingSpaceVisible.map((o) => o.getAttribute('value'));
+
+    await expect(trailingSpaceValues).to.deep.equal(baselineValues);
+  });
+
+  it('space alone does not match any options', async () => {
+    const el = await defaultFixture(mobileview);
+    const menu = el.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
+
+    setInputValue(el, ' ');
+
+    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+
+    await expect(visibleMenuOptions.length).to.be.equal(0);
+  });
+
+  it('space alone filters options by space substring', async () => {
+    const el = await noMatchFixture(mobileview);
+    const menu = el.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
+
+    setInputValue(el, ' ');
+
+    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+
+    // Options whose text contains a space will match (e.g. "No Matching Option").
+    // Options without spaces in their text will be hidden.
+    for (const opt of visibleMenuOptions) {
+      expect(opt.textContent).to.include(' ');
+    }
+  });
+
+  it('leading space is preserved — " a" does not match options', async () => {
+    const el = await defaultFixture(mobileview);
+    const menu = el.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
+
+    setInputValue(el, ' a');
+
+    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+
+    await expect(visibleMenuOptions.length).to.be.equal(0);
+  });
+
+  it('cursor-editing sequence with residual trailing space still matches "a"', async () => {
+    const el = await defaultFixture(mobileview);
+    const menu = el.querySelector('auro-menu');
+    const menuOptions = menu.querySelectorAll('auro-menuoption');
+
+    // Simulate the end result of the cursor-editing sequence:
+    // space, a, space, ←, ←, backspace, →, backspace, a
+    // which produces "a " (a with trailing space)
+    setInputValue(el, 'a ');
+    await elementUpdated(el);
+    await elementUpdated(menu);
+
+    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+
+    await expect(visibleMenuOptions.length).to.be.greaterThan(0);
+    for (const opt of visibleMenuOptions) {
+      expect(opt.textContent.toLowerCase()).to.include('a');
+      expect(opt.querySelector('strong')).to.exist;
+    }
+  });
+
   it('fired `auroCombobox-valueSet` event on value update', async () => {
     const el = await defaultFixture(mobileview);
 
