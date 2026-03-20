@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { fixture, html, expect, waitUntil, elementUpdated, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
+import { comboboxKeyboardStrategy } from '../src/comboboxKeyboardStrategy.js';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
 
@@ -1305,3 +1306,75 @@ function setInputValue(el, value) {
     repeat: false
   }));
 }
+
+// ─── comboboxKeyboardStrategy — edge branches ─────────────────────────────────
+
+/**
+ * Builds a minimal shadow-DOM structure that satisfies the isClearBtnFocused
+ * check inside comboboxKeyboardStrategy:
+ *
+ *   activeInput (shadow root)
+ *     └── .clearBtn (shadow root)
+ *           └── <button>   ← focused element
+ *
+ * Returns { activeInput, cleanup } where cleanup() removes the element from
+ * the document so focus state is restored between tests.
+ */
+function buildFocusedClearBtnCtx() {
+  const activeInput = document.createElement('div');
+  activeInput.attachShadow({ mode: 'open' });
+
+  // Use div — <button> does not support attachShadow.
+  const clearBtn = document.createElement('div');
+  clearBtn.className = 'clearBtn';
+  clearBtn.attachShadow({ mode: 'open' });
+
+  const nativeBtn = document.createElement('button');
+  clearBtn.shadowRoot.appendChild(nativeBtn);
+  activeInput.shadowRoot.appendChild(clearBtn);
+
+  // Must be in the document for focus to register on shadowRoot.activeElement.
+  document.body.appendChild(activeInput);
+  nativeBtn.focus();
+
+  return {
+    activeInput,
+    cleanup: () => document.body.removeChild(activeInput),
+  };
+}
+
+describe('comboboxKeyboardStrategy — arrow keys when clear button has focus', () => {
+  ['ArrowDown', 'ArrowUp'].forEach((key) => {
+    it(`${key}: returns early without calling showBib or navigateOptions`, () => {
+      const { activeInput, cleanup } = buildFocusedClearBtnCtx();
+
+      try {
+        let showBibCalled = false;
+        let navigateCalled = false;
+
+        const component = {
+          availableOptions: ['opt1', 'opt2'],
+          showBib: () => { showBibCalled = true; },
+          dropdown: { isPopoverVisible: false },
+          menu: { navigateOptions: () => { navigateCalled = true; } },
+        };
+
+        const evt = new KeyboardEvent('keydown', { key, cancelable: true });
+        const ctx = {
+          activeInput,
+          isExpanded: false,
+          isModal: false,
+          isPopover: true,
+        };
+
+        comboboxKeyboardStrategy[key](component, evt, ctx);
+
+        expect(showBibCalled).to.be.false;
+        expect(navigateCalled).to.be.false;
+        expect(evt.defaultPrevented).to.be.false;
+      } finally {
+        cleanup();
+      }
+    });
+  });
+});
