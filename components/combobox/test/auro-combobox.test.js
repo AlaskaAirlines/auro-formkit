@@ -449,15 +449,20 @@ function runFulltest(mobileview) {
 
     // First get baseline with "a"
     setInputValue(el, 'a');
+    await elementUpdated(el);
+    await elementUpdated(menu);
     const baselineVisible = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
     const baselineValues = baselineVisible.map((o) => o.getAttribute('value'));
 
     // Reset
     setInputValue(el, '');
     await elementUpdated(el);
+    await elementUpdated(menu);
 
     // Now test "a " (trailing space)
     setInputValue(el, 'a ');
+    await elementUpdated(el);
+    await elementUpdated(menu);
     const trailingSpaceVisible = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
     const trailingSpaceValues = trailingSpaceVisible.map((o) => o.getAttribute('value'));
 
@@ -470,6 +475,8 @@ function runFulltest(mobileview) {
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     setInputValue(el, ' ');
+    await elementUpdated(el);
+    await elementUpdated(menu);
 
     const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
 
@@ -482,6 +489,8 @@ function runFulltest(mobileview) {
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     setInputValue(el, ' ');
+    await elementUpdated(el);
+    await elementUpdated(menu);
 
     const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
 
@@ -498,6 +507,8 @@ function runFulltest(mobileview) {
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     setInputValue(el, ' a');
+    await elementUpdated(el);
+    await elementUpdated(menu);
 
     const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
 
