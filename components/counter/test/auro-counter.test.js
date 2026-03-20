@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions, no-undef, no-magic-numbers */
 
-import { fixture, html, expect } from '@open-wc/testing';
+import { fixture, html, expect, oneEvent } from '@open-wc/testing';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import '../src/registered.js';
 
@@ -85,5 +85,73 @@ describe('auro-counter: isIncrementDisabled', () => {
   it('returns true when value is equal to max', async () => {
     const el = await fixture(html`<auro-counter value="10" max="10">Counter 1</auro-counter>`);
     expect(el.isIncrementDisabled(el.max)).to.be.true;
+  });
+});
+
+describe('auro-counter: description slot / ariaDescribedByElements', () => {
+  it('sets ariaDescribedByElements on the spinbutton when a description element is slotted', async () => {
+    const el = await fixture(html`
+      <auro-counter>
+        Counter
+        <span slot="description">Description text</span>
+      </auro-counter>
+    `);
+
+    const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
+    const descriptionEl = el.querySelector('[slot="description"]');
+
+    expect(spinbutton.ariaDescribedByElements).to.deep.equal([descriptionEl]);
+  });
+
+  it('clears ariaDescribedByElements on the spinbutton when the description element is removed', async () => {
+    const el = await fixture(html`
+      <auro-counter>
+        Counter
+        <span slot="description">Description text</span>
+      </auro-counter>
+    `);
+
+    const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
+    const descriptionEl = el.querySelector('[slot="description"]');
+
+    expect(spinbutton.ariaDescribedByElements).to.deep.equal([descriptionEl]);
+
+    const descSlot = el.shadowRoot.querySelector('slot[name="description"]');
+    const slotChangePromise = oneEvent(descSlot, 'slotchange');
+    el.removeChild(descriptionEl);
+    await slotChangePromise;
+
+    // Per spec, setting ariaDescribedByElements to an empty sequence unsets it (returns null)
+    expect(spinbutton.ariaDescribedByElements.length).to.equal(0);
+  });
+
+  it('sets ariaDescribedByElements when a description element is added dynamically', async () => {
+    const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+
+    const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
+    const descSlot = el.shadowRoot.querySelector('slot[name="description"]');
+
+    const desc = document.createElement('span');
+    desc.setAttribute('slot', 'description');
+    desc.textContent = 'Added description';
+
+    const slotChangePromise = oneEvent(descSlot, 'slotchange');
+    el.appendChild(desc);
+    await slotChangePromise;
+
+    expect(spinbutton.ariaDescribedByElements).to.deep.equal([desc]);
+  });
+
+  it('does not use the aria-describedby attribute on the spinbutton', async () => {
+    const el = await fixture(html`
+      <auro-counter>
+        Counter
+        <span slot="description">Description text</span>
+      </auro-counter>
+    `);
+
+    const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
+
+    expect(spinbutton.getAttribute('aria-describedby') === "" || !spinbutton.hasAttribute('aria-describedby')).to.be.true;
   });
 });
