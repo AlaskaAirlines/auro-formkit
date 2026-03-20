@@ -31,6 +31,19 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
 import { ifDefined } from "lit/directives/if-defined.js";
 
+/**
+ * Strips only trailing whitespace from an input value so residual spaces
+ * from cursor editing don't break filtering or highlighting.  Whitespace-only
+ * values are preserved as-is to prevent a lone space from being treated as
+ * empty input.
+ * @param {string} value - Raw input value.
+ * @returns {string} Normalized value.
+ */
+function normalizeFilterValue(value) {
+  const raw = value || '';
+  return raw.trim() ? raw.trimEnd() : raw;
+}
+
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The `auro-combobox` element provides users with a way to select an option from a list of filtered or suggested options based on user input.
@@ -49,20 +62,6 @@ import { ifDefined } from "lit/directives/if-defined.js";
  * @event inputValue - Notifies that the components internal HTML5 input value has changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
  */
-
-/**
- * Strips only trailing whitespace from an input value so residual spaces
- * from cursor editing don't break filtering or highlighting.  Whitespace-only
- * values are preserved as-is to prevent a lone space from being treated as
- * empty input.
- * @param {string} value - Raw input value.
- * @returns {string} Normalized value.
- */
-function normalizeFilterValue(value) {
-  const raw = value || '';
-  return raw.trim() ? raw.trimEnd() : raw;
-}
-
 export class AuroCombobox extends AuroElement {
 
   constructor() {
