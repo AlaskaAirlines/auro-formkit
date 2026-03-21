@@ -41,6 +41,7 @@ export const DropdownOpenWithCount: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-counter-group isDropdown>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
   <span slot="bib.fullscreen.headline">Passengers</span>
   <div slot="label">Passengers</div>
   <div slot="valueText">Select passengers</div>
@@ -91,6 +92,7 @@ export const DropdownOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-counter-group isDropdown>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
   <span slot="bib.fullscreen.headline">Passengers</span>
   <div slot="label">Passengers</div>
   <div slot="valueText">Open dropdown</div>

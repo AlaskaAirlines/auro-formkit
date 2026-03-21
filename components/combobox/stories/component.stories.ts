@@ -9,7 +9,7 @@ import '../src/registered';
 
 const meta: Meta = {
   component: 'auro-combobox',
-  title: 'Combobox/Interaction Tests',
+  title: 'Combobox',
   tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-combobox'
@@ -38,6 +38,9 @@ export const ComboboxBibOpensOnType: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -50,11 +53,11 @@ export const ComboboxBibOpensOnType: Story = {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     setInputValue(el, 'ap');
-    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
     // Click the trigger to open the bib once there is a typed value
     const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
     trigger.click();
-    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 50));
     await expect(el.dropdown.isPopoverVisible).toBe(true);
   },
 };
@@ -64,6 +67,9 @@ export const ComboboxArrowKeyNavigation: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -78,7 +84,7 @@ export const ComboboxArrowKeyNavigation: Story = {
     setInputValue(el, 'a');
     // Enter opens the bib when a value is typed
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await el.updateComplete;
     await expect(el.optionActive).not.toBeNull();
@@ -90,6 +96,9 @@ export const ComboboxEnterSelectsOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -122,6 +131,9 @@ export const ComboboxEscapeClosesWithoutSelect: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -155,6 +167,9 @@ export const ComboboxNoMatchHidesBib: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -177,6 +192,9 @@ export const ComboboxNoFilter: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox noFilter>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -201,6 +219,9 @@ export const ComboboxAriaActiveDescendant: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -214,7 +235,7 @@ export const ComboboxAriaActiveDescendant: Story = {
     await el.updateComplete;
     setInputValue(el, 'a');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await el.updateComplete;
     await expect(el.optionActive).not.toBeNull();
@@ -226,6 +247,9 @@ export const ComboboxHover: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
     <auro-menuoption value="Apples">Apples</auro-menuoption>
@@ -238,6 +262,92 @@ export const ComboboxHover: Story = {
 ComboboxHover.parameters = {
   pseudo: {
     hover: true,
+  },
+};
+
+// ─── Bib open — filtered results visible (Chromatic open-state snapshot) ─────
+export const ComboboxBibOpenFiltered: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+    <auro-menuoption value="Cherries">Cherries</auro-menuoption>
+    <auro-menuoption static nomatch>No matching option</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'gr');
+    await new Promise((r) => setTimeout(r, 100));
+    el.showBib();
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+  },
+};
+
+// ─── Bib open — all options visible with noFilter ────────────────────────────
+export const ComboboxBibOpenNoFilter: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+    <auro-menuoption value="Cherries">Cherries</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'ap');
+    await new Promise((r) => setTimeout(r, 100));
+    el.showBib();
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+  },
+};
+
+// ─── Bib open — option highlighted via arrow key ─────────────────────────────
+export const ComboboxBibOpenOptionHighlighted: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await new Promise((r) => setTimeout(r, 100));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await el.updateComplete;
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+    await expect(el.optionActive).not.toBeNull();
   },
 };
 

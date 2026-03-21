@@ -8,7 +8,7 @@ import '../src/registered';
 
 const meta: Meta = {
   component: 'auro-datepicker',
-  title: 'DatePicker/Interaction Tests',
+  title: 'DatePicker',
   tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-datepicker'
@@ -43,7 +43,10 @@ export const DatepickerBibOpensOnClick: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-datepicker centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure date</span>
 </auro-datepicker>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
@@ -63,7 +66,10 @@ export const DatepickerCalendarSelectsDate: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-datepicker centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure date</span>
 </auro-datepicker>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
@@ -83,8 +89,12 @@ export const DatepickerRangeSelectsBothDates: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-datepicker range centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
@@ -111,7 +121,10 @@ export const DatepickerRequiredValidationError: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-datepicker required>
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure date</span>
   <span slot="helpText">Select a departure date.</span>
 </auro-datepicker>
   `,
@@ -133,7 +146,10 @@ export const DatepickerPresetValue: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-datepicker value="03/15/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure date</span>
 </auro-datepicker>
   `,
 };
@@ -143,7 +159,10 @@ export const DatepickerHover: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-datepicker>
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Departure date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure date</span>
 </auro-datepicker>
   `,
 };
@@ -151,4 +170,94 @@ DatepickerHover.parameters = {
   pseudo: {
     hover: true,
   }
+};
+
+// ─── fromLabel slot renders with correct text content ────────────────────────
+export const DatepickerFromLabelSlot: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-datepicker centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+  <span slot="fromLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+</auro-datepicker>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-datepicker') as any;
+    await el.updateComplete;
+
+    const fromLabel = el.querySelector('[slot="fromLabel"]');
+    await expect(fromLabel).toBeTruthy();
+    await expect(fromLabel.textContent.trim()).toBe('Choose a date');
+  },
+};
+
+// ─── helpText slot renders with correct text content ─────────────────────────
+export const DatepickerHelpTextSlot: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-datepicker centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+  <span slot="fromLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+  <span slot="helpText">Choose a date must be today or earlier.</span>
+</auro-datepicker>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-datepicker') as any;
+    await el.updateComplete;
+
+    const helpText = el.querySelector('[slot="helpText"]');
+    await expect(helpText).toBeTruthy();
+    await expect(helpText.textContent.trim()).toBe('Choose a date must be today or earlier.');
+  },
+};
+
+// ─── Range — all label slots render with correct text content ─────────────────
+export const DatepickerRangeAllLabelsSlot: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-datepicker range centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
+  <span slot="fromLabel">Departure</span>
+  <span slot="toLabel">Return</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
+</auro-datepicker>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-datepicker') as any;
+    await el.updateComplete;
+
+    const fromLabel = el.querySelector('[slot="fromLabel"]');
+    const toLabel = el.querySelector('[slot="toLabel"]');
+    await expect(fromLabel).toBeTruthy();
+    await expect(fromLabel.textContent.trim()).toBe('Departure');
+    await expect(toLabel).toBeTruthy();
+    await expect(toLabel.textContent.trim()).toBe('Return');
+  },
+};
+
+// ─── ariaLabel.bib.close slot is present in the light DOM ────────────────────
+export const DatepickerBibCloseAriaLabel: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-datepicker centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+  <span slot="fromLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+</auro-datepicker>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-datepicker') as any;
+    await el.updateComplete;
+
+    const bibCloseLabel = el.querySelector('[slot="ariaLabel.bib.close"]');
+    await expect(bibCloseLabel).toBeTruthy();
+    await expect(bibCloseLabel.textContent.trim()).toBe('Close Calendar');
+  },
 };
