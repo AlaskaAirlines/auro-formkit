@@ -8,7 +8,7 @@ import '../src/registered';
 
 const meta: Meta = {
   component: 'auro-input',
-  title: 'Input/Interaction Tests',
+  title: 'Input',
   tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-input'

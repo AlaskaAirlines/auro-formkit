@@ -9,7 +9,7 @@ import '../src/registered';
 
 const meta: Meta = {
   component: 'auro-select',
-  title: 'Select/Interaction Tests',
+  title: 'Select',
   tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-select'
@@ -24,6 +24,8 @@ export const SelectOpenAndSelectOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Sort by</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -53,6 +55,8 @@ export const SelectKeyboardNavAndEnter: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Sort by</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -91,6 +95,8 @@ export const SelectTabSelectsOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Sort by</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -123,6 +129,8 @@ export const SelectEscapeClosesWithoutSelect: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Sort by</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -154,6 +162,8 @@ export const SelectTypeAhead: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Sort by</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -179,6 +189,8 @@ export const SelectAriaComboboxAttributes: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Sort by</span>
   <auro-menu>
     <auro-menuoption value="stops">Stops</auro-menuoption>
@@ -212,6 +224,7 @@ export const SelectEmphasizedOpen: Story = {
   render: () => html`
 <auro-select layout="emphasized" shape="pill" size="xl">
   <span slot="ariaLabel.bib.close">Close</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Travel type</span>
   <auro-menu nocheckmark>
     <auro-menuoption value="flights">Flights</auro-menuoption>
@@ -235,6 +248,7 @@ export const SelectSnowflakeOpen: Story = {
   render: () => html`
 <auro-select layout="snowflake" shape="snowflake" placeholder="Choose one">
   <span slot="ariaLabel.bib.close">Close</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
   <span slot="label">Travel type</span>
   <auro-menu nocheckmark>
     <auro-menuoption value="flights">Flights</auro-menuoption>

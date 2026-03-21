@@ -38,3 +38,4 @@ custom-elements.json
 storybook-static
 debug-storybook.log
 build-storybook.log
+.playwright-cli

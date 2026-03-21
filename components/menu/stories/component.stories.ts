@@ -11,7 +11,7 @@ const meta: Meta = {
   subcomponents: {
     'auro-menuoption': 'AuroMenuOption',
   },
-  title: 'Menu & Menu Option/Interaction Tests',
+  title: 'Menu & Menu Option',
   tags: ['!autodocs'],
   parameters: {
     rootSelector: 'auro-menu'
