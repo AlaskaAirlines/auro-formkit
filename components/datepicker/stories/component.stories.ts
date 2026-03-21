@@ -18,6 +18,10 @@ export default meta;
 
 type Story = StoryObj;
 
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 // Helper: open the bib and return an array of enabled (non-disabled) cell buttons.
 // Awaits the full shadow DOM rendering chain before querying.
 async function openBibAndGetEnabledCellBtns(el: any): Promise<HTMLButtonElement[]> {
@@ -41,6 +45,11 @@ async function openBibAndGetEnabledCellBtns(el: any): Promise<HTMLButtonElement[
 // ─── Bib opens when clicking the date input ──────────────────────────────────
 export const DatepickerBibOpensOnClick: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-datepicker centralDate="03/01/2025">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
@@ -56,6 +65,9 @@ export const DatepickerBibOpensOnClick: Story = {
     el.inputList[0].click();
     await el.updateComplete;
     await el.dropdown.updateComplete;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await wait(100);
+    await wait(50);
 
     await expect(el.dropdown.isPopoverVisible).toBe(true);
   },
