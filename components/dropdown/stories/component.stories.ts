@@ -18,9 +18,18 @@ export default meta;
 
 type Story = StoryObj;
 
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 // ─── §1.3.1  Click opens the bib (P0) ───────────────────────────────────────
 export const DropdownOpenViaClick: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-dropdown chevron aria-label="dropdown example">
   <span slot="label">Select option</span>
@@ -31,6 +40,8 @@ export const DropdownOpenViaClick: Story = {
   async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
     const trigger = await canvas.findByShadowRole('button');
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
     const el = canvasElement.querySelector('auro-dropdown');
     await expect(el).toHaveAttribute('open');
   },
@@ -154,6 +165,11 @@ export const DropdownDisableEventShow: Story = {
 // ─── §1.7.1  Emphasized layout renders and opens correctly (P2) ─────────────
 export const DropdownEmphasizedLayoutOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-dropdown layout="emphasized" shape="pill" chevron aria-label="emphasized dropdown">
   <span slot="label">Select option</span>
@@ -164,6 +180,8 @@ export const DropdownEmphasizedLayoutOpen: Story = {
   async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
     const trigger = await canvas.findByShadowRole('button');
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
     const el = canvasElement.querySelector('auro-dropdown');
     await expect(el).toHaveAttribute('open');
   },
@@ -172,6 +190,11 @@ export const DropdownEmphasizedLayoutOpen: Story = {
 // ─── §1.7.2  Snowflake layout renders and opens correctly (P2) ──────────────
 export const DropdownSnowflakeLayoutOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-dropdown layout="snowflake" chevron aria-label="snowflake dropdown">
   <span slot="label">Select option</span>
@@ -182,6 +205,8 @@ export const DropdownSnowflakeLayoutOpen: Story = {
   async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
     const trigger = await canvas.findByShadowRole('button');
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
     const el = canvasElement.querySelector('auro-dropdown');
     await expect(el).toHaveAttribute('open');
   },

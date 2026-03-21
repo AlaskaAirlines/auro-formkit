@@ -268,6 +268,11 @@ ComboboxHover.parameters = {
 // ─── Bib open — filtered results visible (Chromatic open-state snapshot) ─────
 export const ComboboxBibOpenFiltered: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-combobox>
   <span slot="ariaLabel.bib.close">Close combobox</span>
@@ -297,6 +302,11 @@ export const ComboboxBibOpenFiltered: Story = {
 // ─── Bib open — all options visible with noFilter ────────────────────────────
 export const ComboboxBibOpenNoFilter: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-combobox noFilter>
   <span slot="ariaLabel.bib.close">Close combobox</span>
@@ -325,6 +335,11 @@ export const ComboboxBibOpenNoFilter: Story = {
 // ─── Bib open — option highlighted via arrow key ─────────────────────────────
 export const ComboboxBibOpenOptionHighlighted: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-combobox>
   <span slot="ariaLabel.bib.close">Close combobox</span>

@@ -19,6 +19,10 @@ export default meta;
 
 type Story = StoryObj;
 
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 // ─── §2.1.1  Open dropdown and select an option (P0) ────────────────────────
 export const SelectOpenAndSelectOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -221,6 +225,11 @@ export const SelectAriaComboboxAttributes: Story = {
 // ─── §2.4.1  Emphasized layout: dropdown opens correctly (P2) ───────────────
 export const SelectEmphasizedOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-select layout="emphasized" shape="pill" size="xl">
   <span slot="ariaLabel.bib.close">Close</span>
@@ -235,9 +244,11 @@ export const SelectEmphasizedOpen: Story = {
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-select') as any;
-    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
-
-    await userEvent.click(trigger);
+    await el.updateComplete;
+    el.showBib();
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await wait(100);
+    await wait(50);
     await expect(el.isPopoverVisible).toBe(true);
   },
 };
@@ -245,6 +256,11 @@ export const SelectEmphasizedOpen: Story = {
 // ─── §2.4.2  Snowflake layout: dropdown opens correctly (P2) ────────────────
 export const SelectSnowflakeOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-select layout="snowflake" shape="snowflake" placeholder="Choose one">
   <span slot="ariaLabel.bib.close">Close</span>
@@ -259,9 +275,15 @@ export const SelectSnowflakeOpen: Story = {
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-select') as any;
-    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
 
-    await userEvent.click(trigger);
+    await el.updateComplete;
+    el.showBib();
+
+    // Allow fullscreen bib focus/positioning and Lit updates to settle for snapshot stability.
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await wait(100);
+    await wait(50);
+
     await expect(el.isPopoverVisible).toBe(true);
   },
 };

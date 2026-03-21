@@ -19,6 +19,10 @@ export default meta;
 
 type Story = StoryObj;
 
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export const CounterAtMax: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
@@ -39,6 +43,11 @@ export const CounterAtMax: Story = {
 
 export const DropdownOpenWithCount: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group isDropdown>
   <span slot="ariaLabel.bib.close">Close Popup</span>
@@ -58,10 +67,12 @@ export const DropdownOpenWithCount: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/Select passengers/i);
     await userEvent.click(trigger);
+    await wait(100);
     const plusButtons = await canvas.findAllByShadowRole('button', { name: '+' });
     // Increment Adults (first plus button) twice
     await userEvent.click(plusButtons[0]);
     await userEvent.click(plusButtons[0]);
+    await wait(50);
   },
 };
 
@@ -90,6 +101,11 @@ export const GroupMaxReached: Story = {
 
 export const DropdownOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group isDropdown>
   <span slot="ariaLabel.bib.close">Close Popup</span>
@@ -109,11 +125,18 @@ export const DropdownOpen: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/Open dropdown/i);
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
   },
 };
 
 export const DropdownOpenWithError: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group isDropdown>
   <span slot="ariaLabel.bib.close">Close Popup</span>
@@ -133,11 +156,18 @@ export const DropdownOpenWithError: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/View errors/i);
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
   },
 };
 
 export const DropdownSnowflakeOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group max="10" min="2" isDropdown layout="snowflake">
   <span slot="ariaLabel.bib.close">Close Popup</span>
@@ -152,6 +182,8 @@ export const DropdownSnowflakeOpen: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/Snowflake Dropdown Group/i);
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
   },
 };
 
