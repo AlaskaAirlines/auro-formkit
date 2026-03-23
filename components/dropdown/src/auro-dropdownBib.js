@@ -213,7 +213,7 @@ export class AuroDropdownBib extends LitElement {
   /**
    * Forwards the dialog's native `cancel` event (fired on ESC) as
    * an `auro-bib-cancel` custom event so parent components can close.
-   * @param {HTMLDialogElement} dialog
+   * @param {HTMLDialogElement} dialog - The dialog element to attach the cancel listener to.
    * @private
    */
   _setupCancelHandler(dialog) {
@@ -257,7 +257,7 @@ export class AuroDropdownBib extends LitElement {
    *   is a secondary path for parent components that also listen for
    *   Escape keydown.
    *
-   * @param {HTMLDialogElement} dialog
+   * @param {HTMLDialogElement} dialog - The dialog element to attach the keyboard bridge to.
    * @private
    */
   _setupKeyboardBridge(dialog) {
