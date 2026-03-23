@@ -407,6 +407,8 @@ export class AuroDropdownBib extends LitElement {
    * Closes the dialog.
    */
   close() {
+    this.hasActiveDescendant = false;
+
     const dialog = this.shadowRoot.querySelector('dialog');
 
     if (dialog && dialog.open) {
