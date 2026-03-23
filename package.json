@@ -46,7 +46,7 @@
     "dev:svelte": "concurrently \"npx turbo run build:watch --concurrency=20\" \"npm run dev:app:open --workspace=apps/svelte-framework\"",
     "dev:react": "concurrently \"npx turbo run build:watch --concurrency=20\" \"npm run dev:app:open --workspace=apps/react-framework\"",
     "lint": "turbo run lint",
-    "test": "turbo run test",
+    "test": "turbo run test && npm run test:frameworks",
     "test:watch": "turbo run test:watch",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
