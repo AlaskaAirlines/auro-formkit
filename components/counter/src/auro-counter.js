@@ -314,6 +314,11 @@ export class AuroCounter extends LitElement {
   firstUpdated() {
     this.initValue();
     this.setTagAttribute("auro-counter");
+    const spinbutton = this.shadowRoot.querySelector('[role="spinbutton"]');
+
+    this.shadowRoot.querySelectorAll("[data-spinbutton-operation]").forEach((button) => {
+      button.ariaControlsElements = [spinbutton];
+    });
   }
 
   /**
@@ -338,25 +343,6 @@ export class AuroCounter extends LitElement {
     const assignedNodes = event.target.assignedNodes();
     if (assignedNodes.length > 0) {
       this.defaultSlot = assignedNodes[0].textContent.trim();
-    }
-  }
-
-  /**
-   * Sets ariaDescribedByElements on the spinbutton to the slotted description elements,
-   * bridging the shadow DOM boundary for screen readers.
-   * @param {Event} event - The slotchange event.
-   * @private
-   */
-  onDescriptionSlotChange(event) {
-    const assignedNodes = event.target.assignedElements();
-    const spinbutton = this.shadowRoot.querySelector('[role="spinbutton"]');
-
-    if (spinbutton) {
-      if (assignedNodes.length > 0) {
-        spinbutton.ariaDescribedByElements = assignedNodes;
-      } else {
-        spinbutton.ariaDescribedByElements = [];
-      }
     }
   }
 
@@ -411,46 +397,56 @@ export class AuroCounter extends LitElement {
 
       <div class="counterWrapper">
         <div class="counter">
-          <div class="content" >
-            <label id="counter-label" class="label">
+          <div id="counter-label" class="content">
+            <label class="label">
               <slot @slotchange="${this.onDefaultSlotChange}"></slot>
             </label>
-            <slot name="description" class="body-xs" @slotchange="${this.onDescriptionSlotChange}"></slot>
+            <slot name="description" class="body-xs"></slot>
           </div>
           <div 
             part="counterControl" 
-            aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}" 
-            aria-labelledby="counter-label" 
-            aria-valuemax="${this.max}" 
-            aria-valuemin="${this.min}" 
-            aria-valuenow="${this.value}"
-            aria-valuetext="${this.value !== undefined ? this.value : this.min}"
-            role="spinbutton" 
-            tabindex="${this.disabled ? '-1' : '0'}" 
           >
             <auro-counter-button
               aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.minus') || '−'}"
               .tabindex="${'-1'}"
+              data-spinbutton-operation="decrement" 
               appearance="${this.onDark ? 'inverse' : this.appearance}"
               part="controlMinus"
               @click="${() => this.decrement()}"
+              ?aria-disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min) ? 'true' : undefined}"
               ?disabled="${this.disabled || this.disableMin || this.isIncrementDisabled(this.min)}"
             >
-              <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
+              <${this.iconTag} class="controlIcon" customSvg aria-hidden="true"> ${IconUtil.generateSvgHtml(minusIcon)} </${this.iconTag}>
             </auro-counter-button>
 
             <div class="quantityWrapper body-lg">
-              <div>${this.value !== undefined ? this.value : this.min}</div>
+              <!-- adding quote characters in aria-valuetext to ensure that screen readers read the value as a string, preventing mispronunciation of numbers -->
+              <input
+                aria-labelledby="counter-label"
+                readonly
+                aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}"
+                aria-valuemax="${this.max}" 
+                aria-valuemin="${this.min}" 
+                aria-valuenow="${this.value}"
+                aria-valuetext="'${this.value !== undefined ? this.value : this.min}'"
+                role="spinbutton" 
+                tabindex="${this.disabled ? '-1' : '0'}" 
+                value="${this.value !== undefined ? this.value : this.min}"
+                autocomplete="off"
+                >
+            </input>
             </div>
             <auro-counter-button
               aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.plus') || '+'}"
               .tabindex="${'-1'}"
               appearance="${this.onDark ? 'inverse' : this.appearance}"
+              data-spinbutton-operation="increment" 
               part="controlPlus"
               @click="${() => this.increment()}"
+              ?aria-disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max) ? 'true' : undefined}"
               ?disabled="${this.disabled || this.disableMax || this.isIncrementDisabled(this.max)}"
             >
-              <${this.iconTag} class="controlIcon" customSvg> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
+              <${this.iconTag} class="controlIcon" customSvg aria-hidden="true"> ${IconUtil.generateSvgHtml(plusIcon)} </${this.iconTag}>
             </auro-counter-button>
           </div>
         </div>
