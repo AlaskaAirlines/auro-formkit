@@ -12,7 +12,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"clean:cache": "rm -rf .svelte-kit node_modules/.vite",
-		"pretest:framework": "npm run clean:cache",
+		"pretest:framework": "npm run clean:cache && npx playwright install chromium",
 		"test:framework": "playwright test"
 	},
 	"dependencies": {
