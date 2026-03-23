@@ -44,6 +44,7 @@ export class AuroDropdownBib extends LitElement {
 
     this.shape = "rounded";
     this.matchWidth = false;
+    this.hasActiveDescendant = false;
   }
 
   static get styles() {
@@ -130,6 +131,17 @@ export class AuroDropdownBib extends LitElement {
        */
       dialogRole: {
         type: String
+      },
+
+      /**
+       * Set by auro-dropdown when a menu option is highlighted via
+       * aria-activedescendant. The dialog keyboard bridge checks this
+       * flag so that Enter selects the highlighted option instead of
+       * clicking the trigger button.
+       * @private
+       */
+      hasActiveDescendant: {
+        type: Boolean
       }
     };
   }
