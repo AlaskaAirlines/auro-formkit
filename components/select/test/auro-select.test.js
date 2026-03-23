@@ -538,7 +538,8 @@ function runTest(mobileView) {
         await expect(dropdown.isPopoverVisible).to.be.false;
       });
 
-      it('pressing Enter in fullscreen selects the highlighted option instead of closing the bib — dropdown mirrors active-descendant state to bib', async () => {
+      // ─── §2.2.4  Active-descendant state propagation to bib (P1) ─────────
+      it('dropdown mirrors hasActiveDescendant to bib so keyboard bridge distinguishes Enter-select from Enter-close', async () => {
         const el = await defaultFixture();
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
         const trigger = dropdown.querySelector('[slot="trigger"]');
