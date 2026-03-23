@@ -248,6 +248,15 @@ export class AuroDropdown extends AuroElement {
       this.trigger.ariaActiveDescendantElement = null;
       this.trigger.removeAttribute('aria-activedescendant');
     }
+
+    // In fullscreen, focus stays on the close button while arrow keys
+    // highlight options via active-descendant. Without this flag the
+    // keyboard bridge clicks the close button on Enter (closing the
+    // bib without selecting). When true, the bridge skips the button
+    // click and forwards Enter to the parent to make the selection.
+    if (this.bibContent) {
+      this.bibContent.hasActiveDescendant = Boolean(element);
+    }
   }
 
   // function to define props used within the scope of this component
