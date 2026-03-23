@@ -73,7 +73,8 @@
     "lit": "^3.3.1"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "*"
+    "@rollup/rollup-linux-x64-gnu": "*",
+    "@rolldown/binding-linux-x64-gnu": "*"
   },
   "devDependencies": {
     "@aurodesignsystem/auro-accordion": "^6.1.1",
