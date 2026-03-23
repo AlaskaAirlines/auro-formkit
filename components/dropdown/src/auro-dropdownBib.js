@@ -276,15 +276,23 @@ export class AuroDropdownBib extends LitElement {
 
       // Custom elements (auro-button) don't get the native Enter→click
       // behavior that <button> has. Find the button in the composed path
-      // and click it directly.
+      // and click it directly — but only when no menu option is
+      // highlighted. In fullscreen mode focus stays on the close button
+      // while arrow keys move the active-descendant highlight through
+      // the listbox. If the user presses Enter with an option
+      // highlighted, the intent is to select that option, not to click
+      // the close button. In that case we fall through and bridge the
+      // Enter key to the parent component's keyboard strategy.
       if (event.key === 'Enter') {
-        const buttonSelector = 'button, [role="button"], auro-button, [auro-button]';
-        const btn = event.composedPath().find((el) => el.matches && el.matches(buttonSelector));
-        if (btn) {
-          event.preventDefault();
-          event.stopPropagation();
-          btn.click();
-          return;
+        if (!this.hasActiveDescendant) {
+          const buttonSelector = 'button, [role="button"], auro-button, [auro-button]';
+          const btn = event.composedPath().find((el) => el.matches && el.matches(buttonSelector));
+          if (btn) {
+            event.preventDefault();
+            event.stopPropagation();
+            btn.click();
+            return;
+          }
         }
       }
 
