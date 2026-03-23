@@ -537,6 +537,30 @@ function runTest(mobileView) {
         await expect(el.value).to.equal('Apples');
         await expect(dropdown.isPopoverVisible).to.be.false;
       });
+
+      it('pressing Enter in fullscreen selects the highlighted option instead of closing the bib — dropdown mirrors active-descendant state to bib', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+        const bib = dropdown.bibContent;
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for fullscreen dialog to settle (double-rAF used by focus migration)
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // No active descendant before navigation
+        expect(bib.hasActiveDescendant).to.not.be.true;
+
+        // Navigate to first option
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        // The dropdown should mirror active-descendant state to the bib
+        // so the keyboard bridge knows Enter should select, not close.
+        expect(bib.hasActiveDescendant).to.be.true;
+      });
     }
 
     it('Navigates the menu with arrow keys', async () => {
