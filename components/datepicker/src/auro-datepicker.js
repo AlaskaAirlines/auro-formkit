@@ -46,14 +46,15 @@ import iconVersion from './iconVersion.js';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
-import { doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
+import { doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
+import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The `auro-datepicker` component provides users with a way to select a date or date range from a calendar popup or fullscreen calendar on mobile.
  * @customElement auro-datepicker
- * 
+ *
  * @slot helpText - Defines the content of the helpText.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
@@ -857,11 +858,8 @@ export class AuroDatePicker extends AuroElement {
     // Tab closes the fullscreen dialog (same pattern as select).
     // The dialog event bridge intercepts Tab and re-dispatches it as a
     // composed keydown; this listener catches the re-dispatched event.
-    this.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-        this.dropdown.hide();
-      }
-    });
+    // Enter opens the bib when it is closed.
+    applyKeyboardStrategy(this, datepickerKeyboardStrategy);
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       if (!this.isPopoverVisible) {

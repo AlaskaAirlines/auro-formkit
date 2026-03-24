@@ -273,3 +273,35 @@ export const DatepickerBibCloseAriaLabel: Story = {
     await expect(bibCloseLabel.textContent.trim()).toBe('Close Calendar');
   },
 };
+
+// ─── Bib opens when Enter key is pressed ─────────────────────────────────────
+export const DatepickerBibOpensOnEnter: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
+  render: () => html`
+<auro-datepicker centralDate="03/01/2025">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+  <span slot="fromLabel">Departure date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a departure date</span>
+</auro-datepicker>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-datepicker') as any;
+    await el.updateComplete;
+
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await el.updateComplete;
+    await el.dropdown.updateComplete;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await wait(100);
+
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+  },
+};
