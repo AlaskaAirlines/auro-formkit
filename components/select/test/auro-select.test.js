@@ -561,6 +561,23 @@ function runTest(mobileView) {
         // The dropdown should mirror active-descendant state to the bib
         // so the keyboard bridge knows Enter should select, not close.
         expect(bib.hasActiveDescendant).to.be.true;
+
+        // Simulate Enter originating from inside the fullscreen dialog while
+        // focus is on the close button, exercising the regression path.
+        const closeButton = el.bibtemplate.shadowRoot.querySelector('#closeButton');
+        expect(closeButton).to.exist;
+
+        closeButton.focus();
+        closeButton.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Enter',
+          bubbles: true,
+          composed: true
+        }));
+        await elementUpdated(el);
+
+        // On first Enter, the focused option should be selected and the bib closed.
+        await expect(el.value).to.equal('Apples');
+        await expect(dropdown.isPopoverVisible).to.be.false;
       });
     }
 
