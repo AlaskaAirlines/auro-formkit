@@ -1088,6 +1088,43 @@ describe('auro-datepicker', () => {
       'Wednesday, October 22nd, 2025'
     ]);
   });
+
+  it('opens the bib when Enter key is pressed and bib is closed', async () => {
+    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+  });
+
+  it('does not close the bib when Enter key is pressed and bib is already open', async () => {
+    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+
+    const input = el.shadowRoot.querySelector('[auro-input]');
+    input.click();
+    await elementUpdated(el);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+  });
+
+  it('does not open the bib when a key other than Enter is pressed', async () => {
+    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space', bubbles: true }));
+
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
 });
 
 describe('auro-datepicker with format', () => {

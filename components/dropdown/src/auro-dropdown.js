@@ -255,7 +255,7 @@ export class AuroDropdown extends AuroElement {
     // bib without selecting). When true, the bridge skips the button
     // click and forwards Enter to the parent to make the selection.
     if (this.bibContent) {
-      this.bibContent.hasActiveDescendant = this.isBibFullscreen && Boolean(element);
+      this.bibContent.hasActiveDescendant = Boolean(element);
     }
   }
 
