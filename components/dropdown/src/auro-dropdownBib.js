@@ -137,7 +137,8 @@ export class AuroDropdownBib extends LitElement {
        * Set by auro-dropdown when a menu option is highlighted via
        * aria-activedescendant. The dialog keyboard bridge checks this
        * flag so that Enter selects the highlighted option instead of
-       * clicking the trigger button.
+       * activating the focused interactive element (e.g. the trigger
+       * button, or the bibtemplate close button in fullscreen).
        * @private
        */
       hasActiveDescendant: {
