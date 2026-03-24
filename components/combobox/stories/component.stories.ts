@@ -415,3 +415,64 @@ export const ComboboxBibOpenOptionHighlighted: Story = {
   },
 };
 
+// ─── Arrow keys do not open bib when clear button is focused ─────────────────
+export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
+  tags: ['!autodocs'],
+  render: () => html`
+<auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // Type a value and select the first option so the clear button appears
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await new Promise((r) => setTimeout(r, 100));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
+
+    // Bib should be closed after selection
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+
+    // Focus the native button inside the clear button's shadow DOM.
+    // The clear button is hidden (width:0/opacity:0) unless the wrapper has
+    // :focus-within, which doesn't propagate through shadow DOM in all browsers.
+    // Force the container visible the same way the Tab handler does.
+    const clearBtn = el.input.shadowRoot.querySelector('.clearBtn') as any;
+    await expect(clearBtn).not.toBeNull();
+    const clearContainer = clearBtn.closest('.clear') as HTMLElement;
+    if (clearContainer) {
+      clearContainer.style.display = 'flex';
+    }
+    const nativeBtn = clearBtn.shadowRoot?.querySelector('button') as HTMLElement;
+    nativeBtn.focus();
+    await new Promise((r) => setTimeout(r, 100));
+
+    // Verify focus landed inside the clear button
+    await expect(clearBtn.shadowRoot.activeElement).not.toBeNull();
+
+    // Press ArrowDown — bib should NOT open
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await new Promise((r) => setTimeout(r, 100));
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+
+    // Press ArrowUp — bib should NOT open
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await new Promise((r) => setTimeout(r, 100));
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+  },
+};
