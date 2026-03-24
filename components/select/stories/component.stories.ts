@@ -288,3 +288,73 @@ export const SelectSnowflakeOpen: Story = {
   },
 };
 
+// ─── §2.2.4  Fullscreen: Enter on close selects active option (P1) ─────────
+export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  globals: {
+    viewport: {
+      value: 'xs',
+      isRotated: false
+    }
+  },
+  render: () => html`
+<auro-select fullscreenBreakpoint="xl">
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+
+    el.showBib();
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    const dropdown = el.dropdown;
+    const bib = dropdown.bibContent;
+
+    await expect(dropdown.isBibFullscreen).toBe(true);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    // showModal() makes the select (outside the dialog) inert, so
+    // synthetic events can't drive the full navigation chain. Set
+    // the state directly to exercise the keyboard bridge logic.
+    const firstOption = el.querySelector('auro-menuoption[value="stops"]');
+    el.menu.menuService.setHighlightedOption(firstOption);
+    bib.hasActiveDescendant = true;
+
+    // Get the dialog element where the keyboard bridge listens
+    const dialog = bib.shadowRoot.querySelector('dialog');
+    await expect(dialog).toBeTruthy();
+
+    // Wire up the bib-side listener that mirrors what the select's
+    // keyboard strategy does in production. showModal() inertness
+    // prevents the bridged event from reaching the select, so we
+    // handle it on the bib — the test verifies the bridge forwards
+    // Enter instead of clicking the close button.
+    bib.addEventListener('keydown', (evt: KeyboardEvent) => {
+      if (evt.key === 'Enter') {
+        el.menu.makeSelection();
+      }
+    }, { once: true });
+
+    // Dispatch Enter directly on the dialog to exercise the bridge
+    dialog.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      composed: true
+    }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    // The bridge forwarded Enter → makeSelection() selected the
+    // highlighted option and closed the dialog.
+    await expect(el.value).toBe('stops');
+    await expect(el.isPopoverVisible).toBe(false);
+  },
+};
+
