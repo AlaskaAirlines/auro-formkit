@@ -143,6 +143,17 @@ export class AuroDropdownBib extends LitElement {
        */
       hasActiveDescendant: {
         type: Boolean
+      },
+
+      /**
+       * When true, the keyboard bridge allows native Tab behavior
+       * instead of intercepting it. Set this for bib consumers
+       * (e.g. counter) whose content contains real focusable elements
+       * that need native Tab navigation.
+       * @private
+       */
+      nativeFocusableContent: {
+        type: Boolean
       }
     };
   }
@@ -307,6 +318,12 @@ export class AuroDropdownBib extends LitElement {
             return;
           }
         }
+      }
+
+      // Allow native Tab when the bib contains focusable content
+      // (e.g. counter buttons) that needs normal Tab navigation.
+      if (event.key === 'Tab' && this.nativeFocusableContent) {
+        return;
       }
 
       event.preventDefault();

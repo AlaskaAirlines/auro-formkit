@@ -498,19 +498,15 @@ export class AuroCounterGroup extends AuroElement {
 
     // Focus close button when fullscreen dialog opens
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
+      // Tell the bib's keyboard bridge to allow native Tab so focus
+      // moves between the real focusable counter elements in the bib.
+      if (this.dropdown.bibContent) {
+        this.dropdown.bibContent.nativeFocusableContent = true;
+      }
       if (this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
         doubleRaf(() => {
           this.bibtemplate.focusCloseButton();
         });
-      }
-    });
-
-    // Tab closes the fullscreen dialog
-    // The dialog event bridge intercepts Tab and re-dispatches it as a
-    // composed keydown; this listener catches the re-dispatched event.
-    this.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-        this.dropdown.hide();
       }
     });
   }
@@ -702,7 +698,7 @@ export class AuroCounterGroup extends AuroElement {
    */
   renderCounterDropdown() {
     return html`
-      <${this.dropdownTag} 
+      <${this.dropdownTag}
         noHideOnThisFocusLoss
         chevron
         part="dropdown"
