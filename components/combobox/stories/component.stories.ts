@@ -431,6 +431,12 @@ async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20
 
 export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
   tags: ['!autodocs'],
+  parameters: {
+    chromatic: {
+      // Run only the desktop mode. Input clear button is not visible in the mobile viewport.
+      modes: { 'XL-Alaska-1232px': { viewport: 'xl', theme: 'Alaska' } },
+    },
+  },
   render: () => html`
 <auro-combobox>
   <span slot="ariaLabel.bib.close">Close combobox</span>
