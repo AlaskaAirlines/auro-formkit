@@ -20,7 +20,7 @@
       <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
       <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
       <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
-      <auro-anchorlink fluid href="#viewport" class="level2 body-xs">View Port Size</auro-anchorlink>
+      <auro-anchorlink fluid href="#viewport" class="level2 body-xs">Viewport Size</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -203,4 +203,4 @@
       </section>
     </div>
   </div>
-</div class="wrapper">
+</div>

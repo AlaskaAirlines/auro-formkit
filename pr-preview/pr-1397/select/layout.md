@@ -226,7 +226,7 @@ The `emphasized` layout supports the following sizes:
 
 ### Snowflake Layout
 
-The `snowflake` layout is a unique, one off layout that does not follow the normal pattern. There is only one way to use snowflake as shown in the following example.
+The `snowflake` layout is a unique, one-off layout that does not follow the normal pattern. There is only one way to use snowflake as shown in the following example.
 
 The `snowflake` layout is only expected to be used on dark backgrounds, in conjunction with `appearance="inverse"`.
 
