@@ -142,7 +142,6 @@
         <div class="stepDetails"><strong>Important caveat:</strong> Multi-select is notoriously difficult for all users, including screen reader users — WCAG and usability research generally recommend avoiding <code>&lt;auro-select multiSelect></code> in favor of checkboxes or other patterns that make multi-selection more discoverable.</div>
         <auro-header level="3" id="autocomplete">Autocomplete</auro-header>
         <p>The component supports the use of <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> configuration through HTML attributes.</p>
-        <p class="authorTodo">TODO: Outline the step by step process to execute autocomplete within the browser</p>
         <auro-header level="3" id="skipSelection">Close the list of options without making a selection</auro-header>
         <ol>
           <li>Move focus to the auro-select element</li>
