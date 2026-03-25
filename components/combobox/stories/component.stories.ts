@@ -431,12 +431,6 @@ async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20
 
 export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
   tags: ['!autodocs'],
-  parameters: {
-    chromatic: {
-      // Run only the desktop mode. Input clear button is not visible in the mobile viewport.
-      modes: { 'XL-Alaska-1232px': { viewport: 'xl', theme: 'Alaska' } },
-    },
-  },
   render: () => html`
 <auro-combobox>
   <span slot="ariaLabel.bib.close">Close combobox</span>
@@ -451,6 +445,13 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
 </auro-combobox>
   `,
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    // The clear button focus path is not reachable in fullscreen/modal mode
+    // (320px viewport). The combobox opens fullscreen at that width, moving
+    // the input into the bib where the Tab strategy differs. Skip mobile.
+    if (window.innerWidth <= 320) {
+      return;
+    }
+
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
 
