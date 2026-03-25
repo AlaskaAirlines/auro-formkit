@@ -11,6 +11,11 @@
       <auro-anchorlink fluid href="#options" class="level2 body-xs">Options</auro-anchorlink>
       <auro-anchorlink fluid href="#helpText" class="level2 body-xs">Help Text</auro-anchorlink>
       <auro-anchorlink fluid href="#initialState">Initial State</auro-anchorlink>
+      <auro-anchorlink fluid href="#ux">UX</auro-anchorlink>
+      <auro-anchorlink fluid href="#uxOpen" class="level2 body-xs">Open | Expand</auro-anchorlink>
+      <auro-anchorlink fluid href="#uxClose" class="level2 body-xs">Close | Collapse</auro-anchorlink>
+      <auro-anchorlink fluid href="#uxSelect" class="level2 body-xs">Select Option</auro-anchorlink>
+      <auro-anchorlink fluid href="#uxSelect" class="level2 body-xs">Viewport Size</auro-anchorlink>
       <auro-anchorlink fluid href="#usersStories">User Stories</auro-anchorlink>
       <auro-anchorlink fluid href="#select" class="level2 body-xs">Select A Value</auro-anchorlink>
       <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
@@ -73,6 +78,7 @@
         <p>The trigger includes the component label, a flag marking the component optional/required and the current value. This label is required in order to ensure correct behavior when a guest is using accessibility tools such as screen readers and VoiceOver utilities. The invalid state will also announce to accessibility tools when applied.</p>
         <p>The optional/required flag content may be customized.</p>
         <p>When rendering the value of a selected option, the entire text content of the option will render in the trigger, including any icons.</p>
+        <p>The trigger is a focusable element and will visually respond to common UI states - <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, <strong>Disabled</strong> <em>(:disabled)</em>. The component does not have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
         <auro-header level="3" id="options">List Options</auro-header>
         <p>The component will render a list of options that may be selected. Each option may be in one of the following states when rendered:</p>
         <ul>
@@ -91,9 +97,34 @@
         <p>If the component fails validation, the help text will change to show a validation help message instead of the default help text.</p>
       </section>
       <section>
-        <auro-header level="2" id="initialState">Initial Render state</auro-header>
+        <auro-header level="2" id="initialState">Initial Render State</auro-header>
         <p>
           When the component first renders in it's default use case the value is <code>undefined</code> and the first enabled option is marked <code>active</code>. The component will initially render with the option list collapsed.
+        </p>
+      </section>
+      <section>
+        <auro-header level="2" id="ux">UX</auro-header>
+        <auro-header level="3" id="uxOpen">Open | Expand</auro-header>
+        <p>
+          The option list may be <strong>opened</strong> | <strong>expanded</strong> by activating the trigger element (e.g. <strong>Click</strong>, <strong>Tap</strong>).
+        </p>
+        <auro-header level="3" id="uxClose">Close | Collapse</auro-header>
+        <auro-header level="4" id="gestureCloseScrimTab">Background Tap</auro-header>
+        <p>
+          <strong>Click or Tap:</strong> while <strong>Open</strong> | <strong>Expanded</strong> performing this action on the background scrim that is behind and surrounds the component will <strong>Close</strong> | <strong>Collapse</strong> the bib.
+        </p>
+        <auro-header level="4" id="gestureCloseScrimTab">Gesture</auro-header>
+        <p>
+          Mobile users, not using VoiceOver expect to <strong>swipe down</strong> on the modal to close it.
+        </p>
+        <p class="authorTodo">TODO: Seems easy to do... any reason not to do this? Looks like we can use <code>if (window.matchMedia('(speech)').matches)</code> to support custom behavior when VoiceOver is on or off.<br/><br/> Some excelent info about improving touch / gesture / mouse support here we should seriously consider: <a href="https://web.dev/articles/add-touch-to-your-site">https://web.dev/articles/add-touch-to-your-site</a></p>
+        <auro-header level="3" id="uxSelect">Make Selection</auro-header>
+        <p>
+          An option from the list may be <strong>selected</strong> by activating it (e.g. <strong>Click</strong>, <strong>Tap</strong>).
+        </p>
+        <auro-header level="3" id="uxSelect">Viewport Size</auro-header>
+        <p>
+          The component will render the option list differently based on the browser client viewport size. On a large viewport (e.g., desktop browser, large tablet) the option list will be displayed as a popover / dropdown bib. On a small viewport (e.g., mobile phone, very narrow browser window) the option list will be displayed in a fullscreen modal dialog.
         </p>
       </section>
       <section>
