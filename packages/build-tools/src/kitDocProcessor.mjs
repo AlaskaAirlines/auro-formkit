@@ -35,10 +35,15 @@ export const defaultDocsProcessorConfig = {
  */
 export const fileConfigs = (config) => [
   // README.md
+  // {
+  //   identifier: 'README.md',
+  //   input: fromAuroComponentRoot(`docs/templates/componentReadmeTemplate.md`),
+  //   output: fromAuroComponentRoot(`README.md`)
+  // },
   {
-    identifier: 'README.md',
-    input: fromAuroComponentRoot(`docs/templates/componentReadmeTemplate.md`),
-    output: fromAuroComponentRoot(`README.md`)
+    identifier: 'keyboardBehavior.md',
+    input: fromAuroComponentRoot(`docs/templates/keyboardBehavior.md`),
+    output: fromAuroComponentRoot(`docs/keyboardBehavior.md`)
   }
 ];
 

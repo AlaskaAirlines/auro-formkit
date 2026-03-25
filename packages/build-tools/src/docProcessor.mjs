@@ -103,6 +103,48 @@ export const fileConfigs = (config) => [
     input: fromAuroComponentRoot(`components/${config.component}/docs/partials/api.md`),
     output: fromAuroComponentRoot(`components/${config.component}/demo/api.md`),
     preProcessors: [templateFiller.formatApiTable],
+  },
+  // keyboardBehavior.md
+  {
+    identifier: 'keyboardBehavior.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/keyboardBehavior.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/keyboardBehavior.md`),
+    preProcessors: [templateFiller.formatApiTable],
+  },
+  // ux.md
+  {
+    identifier: 'ux.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/ux.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/ux.md`),
+    preProcessors: [templateFiller.formatApiTable],
+  },
+  // a11y.md
+  {
+    identifier: 'a11y.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/a11y.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/a11y.md`),
+    preProcessors: [templateFiller.formatApiTable],
+  },
+  // layout.md
+  {
+    identifier: 'layout.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/layout.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/layout.md`),
+    preProcessors: [templateFiller.formatApiTable],
+  },
+  // install.md
+  {
+    identifier: 'install.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/install.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/install.md`),
+    preProcessors: [templateFiller.formatApiTable],
+  },
+  // contribute.md
+  {
+    identifier: 'contribute.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/contribute.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/contribute.md`),
+    preProcessors: [templateFiller.formatApiTable],
   }
 ];
 
