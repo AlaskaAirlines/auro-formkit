@@ -16,7 +16,7 @@
     <p>The <code>&lt;auro-select></code> component inherits the default tabindex behavior of <code>&lt;auro-dropdown></code> with no modifications.</p>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/tabindex.md) -->
     <!-- The below content is automatically added from ./../../dropdown/docs/partials/tabindex.md -->
-    <p>The trigger is a focusable element and participates in the standard tab order, responding to <code>Tab</code> and <code>Shift+Tab</code> key events per <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">native browser behavior.<auro-hyperlink></p>
+    <p>The trigger is a focusable element and participates in the standard tab order, responding to <code>Tab</code> and <code>Shift+Tab</code> key events per <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">native browser behavior.</auro-hyperlink></p>
     <p> When the component is <code>disabled</code> it is removed from the tab order by the browser. VoiceOver's virtual cursor (swipe navigation) can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
     <p>When the bib is collapsed, the bib content is excluded from the tab sequence. When expanded, focusable elements within the bib content are included in the natural tab order. In fullscreen mode, focus is trapped within the bib, and the tab sequence cycles through the bib content focusable elements until the bib is closed or the viewport no longer meets the fullscreen condition.</p>
     <!-- AURO-GENERATED-CONTENT:END -->
