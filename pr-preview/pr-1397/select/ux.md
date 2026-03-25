@@ -35,6 +35,7 @@
         <li>Enable multi-select</li>
         <li>Separate options into groups with dividers</li>
         <li>Group options into nested levels</li>
+        <li>Autocomplete</li>
       </ul>
       <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
