@@ -21,6 +21,13 @@
     <p>When the bib is collapsed, the bib content is excluded from the tab sequence. When expanded, focusable elements within the bib content are included in the natural tab order. In fullscreen mode, focus is trapped within the bib, and the tab sequence cycles through the bib content focusable elements until the bib is closed or the viewport no longer meets the fullscreen condition.</p>
     <!-- AURO-GENERATED-CONTENT:END -->
     <p>There are no focusable elements inside the <code>&lt;auro-select></code> bib content.</p>
+    <div class="stepDetails">
+      <strong>Note:</strong> The following HTML5 select element keyboard behavior is unsupported in <code>&lt;auro-select multiSelect></code>:
+      <ul>
+        <li><strong>Extending selection (Shift+Arrow)</strong></li>
+        <li><strong>Select all (Cmd+A):</strong> Select all options</li>
+      </ul>
+    </div>
     <auro-header level="2" id="keyEvents">Key Events</auro-header>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
     <!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
