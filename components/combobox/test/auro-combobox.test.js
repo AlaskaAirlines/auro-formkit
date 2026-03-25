@@ -237,6 +237,86 @@ function runFulltest(mobileview) {
     await expect(el.value === options[0].textContent);
   });
 
+  // ─── Shift+Tab moves active option to first non-disabled option ────────────────
+  it('Shift+Tab moves active option to first option and keeps bib open', async () => {
+    const el = await shiftTabFixture(mobileview);
+    const options = el.querySelectorAll('auro-menuoption');
+
+    // Open the bib by typing and pressing Enter
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Navigate down past the first option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    // Active should now be options[1] (Oranges or index 1)
+    await expect(el.optionActive).to.not.equal(options[0]);
+
+    // Shift+Tab should move to first option without selecting or closing
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(options[0]);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+    await expect(el.value).to.be.undefined;
+  });
+
+  it('Shift+Tab skips disabled first option when moving to first active option', async () => {
+    const el = await shiftTabDisabledFirstFixture(mobileview);
+    const options = el.querySelectorAll('auro-menuoption');
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Navigate down to last option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    // Shift+Tab should land on options[1] — first non-disabled option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(options[1]);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+    await expect(el.value).to.be.undefined;
+
+    // Close bib so the disabled option is not visible during the post-test
+    // a11y check — disabled text color does not meet contrast ratios.
+    el.hideBib();
+    await elementUpdated(el);
+  });
+
+  it('Shift+Tab with bib closed does nothing', async () => {
+    const el = await shiftTabFixture(mobileview);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+    await elementUpdated(el);
+
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+    await expect(el.optionActive).to.be.null;
+  });
 
   // it('hides the bib when tabbing away from combobox', async () => {
   //   const el = await defaultFixture(mobileview);
@@ -1140,6 +1220,42 @@ async function persistInputFixture(mobileview) {
 /**
  *
  */
+async function shiftTabFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({ width: 500, height: 800 });
+  } else {
+    await setViewport({ width: 800, height: 800 });
+  }
+  return fixture(html`
+  <auro-combobox>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="sh-option-0">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="sh-option-1">Oranges</auro-menuoption>
+      <auro-menuoption value="Grapes" id="sh-option-2">Grapes</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+  `);
+}
+
+async function shiftTabDisabledFirstFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({ width: 500, height: 800 });
+  } else {
+    await setViewport({ width: 800, height: 800 });
+  }
+  return fixture(html`
+  <auro-combobox>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="sh-dis-option-0" disabled>Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="sh-dis-option-1">Oranges</auro-menuoption>
+      <auro-menuoption value="Grapes" id="sh-dis-option-2">Grapes</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+  `);
+}
+
 async function defaultFixture(mobileview) {
   if (mobileview) {
     await setViewport({
