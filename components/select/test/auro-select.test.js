@@ -186,6 +186,34 @@ async function requiredFixture() {
   `);
 }
 
+async function shiftTabFixture() {
+  return await fixture(html`
+  <auro-select>
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Stops" id="sh-option-0">Stops</auro-menuoption>
+      <auro-menuoption value="Price" id="sh-option-1">Price</auro-menuoption>
+      <auro-menuoption value="Duration" id="sh-option-2">Duration</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+
+async function shiftTabDisabledFirstFixture() {
+  return await fixture(html`
+  <auro-select>
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Stops" id="sh-dis-option-0" disabled>Stops</auro-menuoption>
+      <auro-menuoption value="Price" id="sh-dis-option-1">Price</auro-menuoption>
+      <auro-menuoption value="Duration" id="sh-dis-option-2">Duration</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+
 function runTest(mobileView) {
   describe(`auro-select${mobileView ? ' in mobile' : ''}`, () => {
     before(async () => {
@@ -445,6 +473,79 @@ function runTest(mobileView) {
 
       await expect(dropdown.isPopoverVisible).to.be.false;
       await expect(el.value).to.be.undefined;
+    });
+
+    // ─── §2.1.X  Shift+Tab moves active option to first non-disabled option (P0) ─
+    it('Shift+Tab moves active option to first option and keeps bib open', async () => {
+      const el = await shiftTabFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+      const options = el.querySelectorAll('auro-menuoption');
+
+      trigger.click();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      // Navigate to the last option so active is NOT the first
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      await expect(el.optionActive).to.equal(options[2]);
+
+      // Shift+Tab should move to the first option without selecting or closing
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+      await elementUpdated(el);
+
+      await expect(el.optionActive).to.equal(options[0]);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+      await expect(el.value).to.be.undefined;
+    });
+
+    it('Shift+Tab skips disabled first option when moving to first active option', async () => {
+      const el = await shiftTabDisabledFirstFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+      const options = el.querySelectorAll('auro-menuoption');
+
+      trigger.click();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      // Navigate to last option
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      // Shift+Tab should land on options[1] (first non-disabled)
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+      await elementUpdated(el);
+
+      // options[0] is disabled so the first enabled option is options[1]
+      await expect(el.optionActive).to.equal(options[1]);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+      await expect(el.value).to.be.undefined;
+
+      // Close bib so the disabled option is not visible during the post-test
+      // a11y check — disabled text color does not meet contrast ratios.
+      dropdown.hide();
+      await elementUpdated(el);
+    });
+
+    it('Shift+Tab with bib closed does nothing', async () => {
+      const el = await shiftTabFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+      await expect(dropdown.isPopoverVisible).to.be.false;
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+      await elementUpdated(el);
+
+      await expect(dropdown.isPopoverVisible).to.be.false;
+      await expect(el.optionActive).to.be.undefined;
     });
 
     // ─── §2.1.5  Escape closes bib without making a selection (P0) ──────────
