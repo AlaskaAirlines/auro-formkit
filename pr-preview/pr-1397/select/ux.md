@@ -13,11 +13,11 @@
       <auro-anchorlink fluid href="#initialState">Initial State</auro-anchorlink>
       <auro-anchorlink fluid href="#usersStories">User Stories</auro-anchorlink>
       <auro-anchorlink fluid href="#select" class="level2 body-xs">Select A Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-select</auro-anchorlink>
       <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
       <auro-anchorlink fluid href="#autocomplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
       <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
       <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
+      <auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-select</auro-anchorlink>
       <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
       <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
       <auro-anchorlink fluid href="#viewport" class="level2 body-xs">Viewport Size</auro-anchorlink>
@@ -131,8 +131,6 @@
             </div>
           </li>
         </ol>
-        <auro-header level="3" id="multiselect">Supporting multi-select</auro-header>
-        <p>In certain cases it may be valid to allow more than one option to be selected. When the component is configured to support multi-select only one option is still able to be marked <code>active</code>. However, multiple options may be <code>selected</code> via click, tap or keyboard events on each option. A second click, tap or keyboard event on an already selected option will de-select it.</p>
         <auro-header level="3" id="presetValue">Preset the value</auro-header>
         <p>In some cases it is necessary to preset the value of the component as part of the initial render.</p>
         <auro-header level="4" id="us3a">Single Select</auro-header>
@@ -178,6 +176,8 @@
             </div>
           </li>
         </ol>
+        <auro-header level="3" id="multiselect">Supporting multi-select</auro-header>
+        <p>In certain cases it may be valid to allow more than one option to be selected. When the component is configured to support multi-select only one option is still able to be marked <code>active</code>. However, multiple options may be <code>selected</code> via click, tap or keyboard events on each option. A second click, tap or keyboard event on an already selected option will de-select it.</p>
         <auro-header level="3" id="disableOptions">Disable Option(s)</auro-header>
         <p>The component may be rendered with one or more <code>disabled</code> options. When navigating the list of options with the keyboard or assistive technology to mark the next or previous option as active, disabled options will skipped, jumping to the next enabled option.</p>
         <p>While using the pointer to mark options as active, hovering over disabled options will be ignored and the previous active option will remain active.</p>
