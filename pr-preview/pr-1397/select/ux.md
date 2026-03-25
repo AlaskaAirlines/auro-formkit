@@ -21,9 +21,6 @@
       <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
       <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
       <auro-anchorlink fluid href="#viewport" class="level2 body-xs">View Port Size</auro-anchorlink>
-      <auro-anchorlink fluid href="#keyboard">Keyboard Behavior</auro-anchorlink>
-      <auro-anchorlink fluid href="#tabBehavior" class="level2 body-xs">Tab Behavior</auro-anchorlink>
-      <auro-anchorlink fluid href="#keyEvents" class="level2 body-xs">Key Events</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
