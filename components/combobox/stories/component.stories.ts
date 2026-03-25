@@ -460,6 +460,13 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     await waitUntil(() => !el.dropdown.isPopoverVisible);
     await expect(el.dropdown.isPopoverVisible).toBe(false);
 
+    // Wait two animation frames so that the restoreTriggerAfterClose rAF
+    // (scheduled when the bib closes) fires before we take focus. Without
+    // this, the rAF can steal focus from nativeBtn after we set it, making
+    // the isClearBtnFocused guard return false on cloud/CI runners where the
+    // rAF fires slightly later than the 20 ms waitUntil poll interval.
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
     // Focus the native button inside the clear button's shadow DOM.
     // The clear button is hidden (width:0/opacity:0) unless the wrapper has
     // :focus-within, which doesn't propagate through shadow DOM in all browsers.
