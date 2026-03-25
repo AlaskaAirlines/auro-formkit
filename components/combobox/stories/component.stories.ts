@@ -416,6 +416,19 @@ export const ComboboxBibOpenOptionHighlighted: Story = {
 };
 
 // ─── Arrow keys do not open bib when clear button is focused ─────────────────
+
+/**
+ * Polls a predicate until it returns true or the timeout expires.
+ * More accurate than fixed setTimeout delays — resolves as soon as
+ * the condition is met rather than always waiting a fixed duration.
+ */
+async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20) {
+  const deadline = Date.now() + timeout;
+  while (!predicate() && Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, interval));
+  }
+}
+
 export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
   tags: ['!autodocs'],
   render: () => html`
@@ -435,17 +448,16 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
 
-    // Type a value and select the first option so the clear button appears
+    // Type a value and open the bib
     setInputValue(el, 'a');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await new Promise((r) => setTimeout(r, 100));
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
+    // Navigate to first option and select it
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await el.updateComplete;
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await el.updateComplete;
-    await new Promise((r) => setTimeout(r, 100));
-
-    // Bib should be closed after selection
+    await waitUntil(() => !el.dropdown.isPopoverVisible);
     await expect(el.dropdown.isPopoverVisible).toBe(false);
 
     // Focus the native button inside the clear button's shadow DOM.
@@ -460,19 +472,17 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     }
     const nativeBtn = clearBtn.shadowRoot?.querySelector('button') as HTMLElement;
     nativeBtn.focus();
-    await new Promise((r) => setTimeout(r, 100));
-
-    // Verify focus landed inside the clear button
+    await waitUntil(() => clearBtn.shadowRoot.activeElement !== null);
     await expect(clearBtn.shadowRoot.activeElement).not.toBeNull();
 
     // Press ArrowDown — bib should NOT open
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await new Promise((r) => setTimeout(r, 100));
+    await el.updateComplete;
     await expect(el.dropdown.isPopoverVisible).toBe(false);
 
     // Press ArrowUp — bib should NOT open
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-    await new Promise((r) => setTimeout(r, 100));
+    await el.updateComplete;
     await expect(el.dropdown.isPopoverVisible).toBe(false);
   },
 };
