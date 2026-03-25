@@ -57,8 +57,19 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
-  Tab(component, _evt, ctx) {
+  Tab(component, evt, ctx) {
     if (!ctx.isExpanded) {
+      return;
+    }
+
+    // Shift+Tab moves the highlight to the first non-disabled option
+    // without making a selection or closing the bib.
+    if (evt.shiftKey) {
+      evt.preventDefault();
+      const firstActive = component.menu.menuService.menuOptions.find((option) => option.isActive);
+      if (firstActive) {
+        component.menu.updateActiveOption(firstActive);
+      }
       return;
     }
 

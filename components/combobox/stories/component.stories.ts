@@ -259,6 +259,55 @@ export const ComboboxHover: Story = {
 </auro-combobox>
   `,
 };
+
+// ─── Shift+Tab moves active option to first option, keeps bib open ───────────
+export const ComboboxShiftTabMovesToFirstOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    const firstOption = el.querySelector('auro-menuoption[value="Apples"]');
+
+    // Type to filter options. Wait 100ms before clicking the trigger so the
+    // full Lit update chain settles (auro-input value → combobox processes
+    // input event → availableOptions updates). Using el.input.updateComplete
+    // is too fast — it resolves before auro-combobox finishes its own update.
+    // This matches the ComboboxBibOpensOnType pattern.
+    setInputValue(el, 'a');
+    await new Promise((r) => setTimeout(r, 100));
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+
+    // Navigate away from first option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    // Shift+Tab: should move to first option without selecting or closing
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
+    await el.updateComplete;
+
+    await expect(firstOption.classList.contains('active')).toBe(true);
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+    await expect(el.value).toBeUndefined();
+  },
+};
 ComboboxHover.parameters = {
   pseudo: {
     hover: true,

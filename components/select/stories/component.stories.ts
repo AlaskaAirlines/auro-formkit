@@ -222,6 +222,45 @@ export const SelectAriaComboboxAttributes: Story = {
   },
 };
 
+// ─── §2.1.X  Shift+Tab moves active option to first option, keeps bib open ──
+export const SelectShiftTabMovesToFirstOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+    const firstOption = el.querySelector('auro-menuoption[value="stops"]');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    // Navigate to the last option so first is not currently active
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    // Shift+Tab: should move active to first option without selecting or closing
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    await expect(firstOption.classList.contains('active')).toBe(true);
+    await expect(el.isPopoverVisible).toBe(true);
+    await expect(el.value).toBeUndefined();
+  },
+};
+
 // ─── §2.4.1  Emphasized layout: dropdown opens correctly (P2) ───────────────
 export const SelectEmphasizedOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],

@@ -204,6 +204,7 @@ The trade-off: intercepted keys must have their native behaviors manually re-imp
 | **Escape** | Closes the popup without selecting, returns focus to trigger | APG select-only combobox |
 | **Tab** (no option highlighted) | Closes the popup, moves focus to next focusable element on the page | APG select-only combobox |
 | **Tab** (option highlighted) | Selects the highlighted option, closes the popup, moves focus to next focusable element | APG select-only combobox |
+| **Shift+Tab** | Moves visual focus to first non-disabled option, keeps popup open, no selection | Design decision |
 | **Home** | Moves visual focus to first option | APG select-only combobox |
 | **End** | Moves visual focus to last option | APG select-only combobox |
 | **Type-ahead** | Moves visual focus to next option starting with typed character | APG select-only combobox |
@@ -220,6 +221,7 @@ Menu options are **not in the Tab order**. They use `aria-activedescendant` for 
 | **Escape** | Closes the dialog without selecting, returns focus to trigger | Native `<dialog>` `cancel` event | Browsers handle this natively for `<dialog>` |
 | **Tab** (no option highlighted) | Closes the dialog, returns focus to trigger | Design decision (see below) | |
 | **Tab** (option highlighted) | Selects the highlighted option, closes the dialog, returns focus to trigger | Design decision (see below) | |
+| **Shift+Tab** | Moves visual focus to first non-disabled option, keeps dialog open, no selection | Design decision | Bridge re-dispatches Shift+Tab so behavior is identical in fullscreen and desktop |
 
 ### Fullscreen (Mobile) — Combobox Dialog Open
 
@@ -235,6 +237,7 @@ Same arrow key, Enter, and Escape behavior as select. Tab behavior differs becau
 | **Tab** (focus on clear button, option highlighted) | Selects the highlighted option, closes the dialog, returns focus to trigger | Design decision | Consistent with select's Tab behavior |
 | **Tab** (focus on clear button, no option highlighted) | Closes the dialog, returns focus to trigger | Design decision | Tabbing past the last focusable element closes the dialog |
 | **Tab** (no clear button / no value) | Closes the dialog, returns focus to trigger | Design decision | Same as select behavior |
+| **Shift+Tab** | Moves visual focus to first non-disabled option, keeps dialog open, no selection | Design decision | Available regardless of clear button state; bridge re-dispatches Shift+Tab with `shiftKey` preserved |
 
 ---
 
@@ -248,8 +251,17 @@ The dialog event bridge preserves all four modifier flags when re-dispatching ev
 
 ```js
 Tab(component, evt, ctx) {
+  if (!ctx.isExpanded) {
+    return;
+  }
+
+  // Shift+Tab moves the highlight to the first non-disabled option
+  // without making a selection or closing the bib.
   if (evt.shiftKey) {
-    component.dropdown.hide();
+    const firstActive = component.menu.menuService.menuOptions.find(o => o.isActive);
+    if (firstActive) {
+      component.menu.updateActiveOption(firstActive);
+    }
     return;
   }
 
