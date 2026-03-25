@@ -33,7 +33,9 @@ All four components listen for the `auroDropdown-toggled` event (or equivalent v
 
 ### Tab Closes Fullscreen Dialog
 
-In addition to initial focus, all four components close the fullscreen dialog when Tab is pressed. Select and combobox handle this in their keyboard strategy files. Datepicker and counter-group use a direct `keydown` listener that checks `evt.key === 'Tab' && dropdown.isPopoverVisible && dropdown.isBibFullscreen` before calling `dropdown.hide()`. The dialog event bridge re-dispatches Tab from inside the modal so it reaches these listeners.
+In addition to initial focus, select, combobox, and datepicker close the fullscreen dialog when Tab is pressed. Select and combobox handle this in their keyboard strategy files. Datepicker uses a direct `keydown` listener that checks `evt.key === 'Tab' && dropdown.isPopoverVisible && dropdown.isBibFullscreen` before calling `dropdown.hide()`. The dialog event bridge re-dispatches Tab from inside the modal so it reaches these listeners.
+
+Counter-group is the exception — see [Native Focusable Content](#native-focusable-content-nativefocusablecontent) below.
 
 ---
 
@@ -179,6 +181,27 @@ The trade-off: intercepted keys must have their native behaviors manually re-imp
 - **Tab:** `preventDefault()` stops native Tab cycling inside the dialog. The re-dispatched Tab reaches the component strategy, which runs select-and-close logic. The dialog's native Tab trap only cycles between the close button and browser chrome — not useful for listbox navigation.
 - **Escape:** The native `<dialog>` fires a `cancel` event on ESC (handled separately). The re-dispatched Escape is a secondary path for parent components that also listen for Escape keydown.
 
+#### Native Focusable Content (`nativeFocusableContent`)
+
+The bridge's blanket `preventDefault()` + `stopPropagation()` on Tab assumed all bib consumers use a listbox navigated via `aria-activedescendant`, where nothing inside is directly focusable and Tab means "select + close." This assumption is incorrect for `auro-counter-group`, whose bib contains real focusable elements (increment/decrement buttons on each counter) that need native Tab navigation.
+
+The `nativeFocusableContent` boolean property on `AuroDropdownBib` solves this. When `true`, the bridge skips Tab interception entirely — `preventDefault()` and `stopPropagation()` are not called, and the native Tab event proceeds normally. This allows:
+
+- **Desktop:** The `FocusTrap` (created by `auro-dropdown`) manages Tab wrap-around between the focusable counter elements inside the bib.
+- **Fullscreen:** The `<dialog>`'s native focus trap (from `showModal()`) keeps Tab cycling within the dialog's focusable content.
+
+**How it's set:** The consumer component sets the property on the bib element during configuration. Counter-group sets it in `configureBibtemplate()`:
+
+```js
+if (this.dropdown.bibContent) {
+  this.dropdown.bibContent.nativeFocusableContent = true;
+}
+```
+
+**Effect on other keys:** Only Tab is affected. Arrow keys, Enter, and Escape continue to be intercepted and re-dispatched as before, regardless of `nativeFocusableContent`. Counter doesn't need these keys bridged — its buttons handle clicks natively and there is no listbox or `aria-activedescendant` navigation.
+
+**When to use:** Set `nativeFocusableContent = true` on any bib consumer whose content contains real focusable elements that need native Tab navigation. Do not set it for listbox-based consumers (select, combobox) where Tab means "select + close."
+
 ---
 
 ## Keyboard Interactions
@@ -235,6 +258,25 @@ Same arrow key, Enter, and Escape behavior as select. Tab behavior differs becau
 | **Tab** (focus on clear button, option highlighted) | Selects the highlighted option, closes the dialog, returns focus to trigger | Design decision | Consistent with select's Tab behavior |
 | **Tab** (focus on clear button, no option highlighted) | Closes the dialog, returns focus to trigger | Design decision | Tabbing past the last focusable element closes the dialog |
 | **Tab** (no clear button / no value) | Closes the dialog, returns focus to trigger | Design decision | Same as select behavior |
+
+### Fullscreen (Mobile) — Counter Dialog Open
+
+Unlike select and combobox, the counter dialog contains **real focusable elements** — increment and decrement buttons on each counter. There is no listbox or `aria-activedescendant` navigation. The `nativeFocusableContent` flag on the bib tells the keyboard bridge to skip Tab interception, so native Tab behavior is preserved.
+
+| Key | Behavior | Spec Basis | Notes |
+|---|---|---|---|
+| **Tab** | Moves focus to next focusable element in the dialog (close button, counter buttons) | Native `<dialog>` focus trap | Bridge does not intercept Tab due to `nativeFocusableContent` |
+| **Shift+Tab** | Moves focus to previous focusable element in the dialog | Native `<dialog>` focus trap | Same as above |
+| **Escape** | Closes the dialog, returns focus to trigger | Native `<dialog>` `cancel` event | Handled by `_setupCancelHandler` |
+| **Enter** | Clicks the focused button (close, increment, or decrement) | Bridge Enter→click on buttons | Bridge still intercepts Enter for custom element click behavior |
+
+### Desktop — Counter Popup Open
+
+| Key | Behavior | Notes |
+|---|---|---|
+| **Tab** | Moves focus to next focusable counter element; wraps around at ends | `FocusTrap` manages wrap-around |
+| **Shift+Tab** | Moves focus to previous focusable counter element; wraps around at ends | `FocusTrap` manages wrap-around |
+| **Escape** | Closes the popup, returns focus to trigger | Re-dispatched by bridge |
 
 ---
 
@@ -311,12 +353,12 @@ These are defined in the APG combobox pattern for popup-open state. They are not
 
 ## Components Affected
 
-| Component | Strategy File | Tab Handler | Effect |
-|---|---|---|---|
-| `auro-select` | `selectKeyboardStrategy.js` | Yes (strategy) | Selects active option + closes |
-| `auro-combobox` | `comboboxKeyboardStrategy.js` | Yes (strategy) | Input → clear button → closes |
-| `auro-datepicker` | None | Yes (direct listener) | Closes fullscreen dialog |
-| `auro-counter-group` | None | Yes (direct listener) | Closes fullscreen dialog |
+| Component | Strategy File | Tab Handler | `nativeFocusableContent` | Effect |
+|---|---|---|---|---|
+| `auro-select` | `selectKeyboardStrategy.js` | Yes (strategy) | `false` (default) | Selects active option + closes |
+| `auro-combobox` | `comboboxKeyboardStrategy.js` | Yes (strategy) | `false` (default) | Input → clear button → closes |
+| `auro-datepicker` | None | Yes (direct listener) | `false` (default) | Closes fullscreen dialog |
+| `auro-counter-group` | None | Native Tab | `true` | Tab moves focus between counters in bib |
 
 ---
 
