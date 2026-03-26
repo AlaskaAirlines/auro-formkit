@@ -4,6 +4,7 @@ const SUITES: { label: string; path: string }[] = [
   { label: 'auro-select: remount', path: '/select-remount' },
   { label: 'auro-select: remount (multiselect)', path: '/select-remount-multiselect' },
   { label: 'auro-combobox: remount', path: '/combobox-remount' },
+  { label: 'auro-counter-group: dropdown keyboard', path: '/counter-dropdown' },
 ];
 
 export default function Home() {

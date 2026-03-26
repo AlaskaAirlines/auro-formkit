@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "clean:cache": "rm -rf node_modules/.vite",
     "pretest:framework": "npm run clean:cache && npx playwright install chromium",
-    "test:framework": "playwright test"
+    "test:framework": "playwright test",
+    "pretest:framework:report": "npm run clean:cache && npx playwright install chromium",
+    "test:framework:report": "playwright test --config=playwright.report.config.ts"
   },
   "dependencies": {
     "@aurodesignsystem/auro-formkit": "file:../../",

@@ -44,3 +44,4 @@ build-storybook.log
 .playwright
 apps/svelte-framework/test-results/.last-run.json
 test-results
+/apps/**/playwright-report
