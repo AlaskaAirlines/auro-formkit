@@ -454,3 +454,44 @@ export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
   },
 };
 
+// ─── Fullscreen: live region announcements route to bib ─────────────────────
+export const SelectFullscreenLiveRegionInBib: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops" id="option-0">Stops</auro-menuoption>
+    <auro-menuoption value="price" id="option-1">Price</auro-menuoption>
+    <auro-menuoption value="duration" id="option-2">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    // Simulate fullscreen
+    el.dropdown.isBibFullscreen = true;
+    await el.updateComplete;
+
+    // Navigate to an option via the menu directly (dialog bridge
+    // doesn't fire in Storybook's play function environment)
+    el.menu.navigateOptions('down');
+    await el.updateComplete;
+
+    // Wait a frame for the rAF inside announceToScreenReader
+    await new Promise((r) => requestAnimationFrame(r));
+
+    const bibEl = el.dropdown.bibElement.value;
+    const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
+    await expect(bibLiveRegion).not.toBeNull();
+    await expect(bibLiveRegion.textContent).not.toBe('');
+  },
+};
+

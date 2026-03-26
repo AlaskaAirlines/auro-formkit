@@ -486,6 +486,140 @@ export const ComboboxBibOpenOptionHighlighted: Story = {
 // ─── Arrow keys do not open bib when clear button is focused ─────────────────
 
 
+// ─── Fullscreen: live region announcements route to bib ─────────────────────
+export const ComboboxFullscreenLiveRegionInBib: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-2">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // Open the dropdown
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
+    // Simulate fullscreen
+    el.dropdown.isBibFullscreen = true;
+    await el.updateComplete;
+
+    // Navigate to an option via the menu directly (dialog bridge
+    // doesn't fire in Storybook's play function environment)
+    el.menu.navigateOptions('down');
+    await el.updateComplete;
+
+    // Wait a frame for the rAF inside announceToScreenReader
+    await new Promise((r) => requestAnimationFrame(r));
+
+    const bibEl = el.dropdown.bibElement.value;
+    const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
+    await expect(bibLiveRegion).not.toBeNull();
+    await expect(bibLiveRegion.textContent).not.toBe('');
+  },
+};
+
+// ─── Fullscreen: aria-activedescendant set on inputInBib ────────────────────
+export const ComboboxFullscreenActiveDescendantOnInputInBib: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-2">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // Open the dropdown
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
+    // Simulate fullscreen
+    el.dropdown.isBibFullscreen = true;
+    await el.updateComplete;
+    await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
+
+    // Navigate to an option
+    el.menu.navigateOptions('down');
+    await el.updateComplete;
+    await el.inputInBib.updateComplete;
+
+    await expect(el.optionActive).not.toBeNull();
+
+    const nativeInput = el.inputInBib.inputElement;
+    await expect(nativeInput.getAttribute('aria-activedescendant')).not.toBeNull();
+  },
+};
+
+// ─── Fullscreen: aria-activedescendant cleared on close ─────────────────────
+export const ComboboxFullscreenActiveDescendantClearedOnClose: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes" id="option-2">Grapes</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // Open the dropdown
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await el.updateComplete;
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
+    // Simulate fullscreen
+    el.dropdown.isBibFullscreen = true;
+    await el.updateComplete;
+    await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
+
+    // Navigate to set activedescendant
+    el.menu.navigateOptions('down');
+    await el.updateComplete;
+
+    // Close the dropdown
+    el.hideBib();
+    await el.updateComplete;
+    await waitUntil(() => !el.dropdown.isPopoverVisible);
+    await el.inputInBib.updateComplete;
+
+    const nativeInput = el.inputInBib.inputElement;
+    await expect(nativeInput.hasAttribute('aria-activedescendant')).toBe(false);
+  },
+};
+
 export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
   tags: ['!autodocs'],
   render: () => html`
