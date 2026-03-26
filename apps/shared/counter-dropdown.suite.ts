@@ -15,7 +15,7 @@ export function counterDropdownSuite(framework: string) {
     });
 
     test('dropdown opens and all counter controls are visible', async ({ page }) => {
-      await page.getByText('Open passengers').click();
+      await page.locator('#triggerFocus').click();
       await expect(page.getByRole('button', { name: '+' }).first()).toBeVisible({ timeout: 3_000 });
       await expect(page.getByRole('button', { name: '+' })).toHaveCount(3);
     });
@@ -23,7 +23,7 @@ export function counterDropdownSuite(framework: string) {
     // Regression for PR #1398 — nativeFocusableContent=true must let Tab pass through
     // instead of the keyboard bridge intercepting it and closing the dropdown.
     test('Tab moves focus to second counter and keeps dropdown open', async ({ page }) => {
-      await page.getByText('Open passengers').click();
+      await page.locator('#triggerFocus').click();
 
       const plusButtons = page.getByRole('button', { name: '+' });
       await expect(plusButtons).toHaveCount(3, { timeout: 3_000 });
@@ -47,7 +47,7 @@ export function counterDropdownSuite(framework: string) {
     });
 
     test('Shift+Tab moves focus backward and keeps dropdown open', async ({ page }) => {
-      await page.getByText('Open passengers').click();
+      await page.locator('#triggerFocus').click();
 
       const plusButtons = page.getByRole('button', { name: '+' });
       await expect(plusButtons).toHaveCount(3, { timeout: 3_000 });
