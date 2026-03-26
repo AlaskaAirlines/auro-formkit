@@ -758,6 +758,11 @@ export class AuroCombobox extends AuroElement {
       // Clear aria-activedescendant when dropdown closes
       if (!this.dropdownOpen && this.input) {
         this.input.setActiveDescendant(null);
+        // Also clear on inputInBib since fullscreen mode sets
+        // aria-activedescendant on both inputs.
+        if (this.inputInBib) {
+          this.inputInBib.setActiveDescendant(null);
+        }
         this.optionActive = null;
 
         // Remove the highlighted state from all menu options so re-opening
@@ -1073,6 +1078,13 @@ export class AuroCombobox extends AuroElement {
         this.input.setActiveDescendant(this.optionActive);
       }
 
+      // In fullscreen mode, focus is on inputInBib inside the dialog, so
+      // aria-activedescendant must also be set there for screen readers to
+      // follow the active option from the focused element.
+      if (this.inputInBib && this.dropdown.isBibFullscreen) {
+        this.inputInBib.setActiveDescendant(this.optionActive);
+      }
+
       // Announce the active option for screen readers including position,
       // since shadow DOM boundaries prevent native reading of
       // aria-setsize/aria-posinset via aria-activedescendant.
@@ -1081,7 +1093,17 @@ export class AuroCombobox extends AuroElement {
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
         const optionIndex = this.availableOptions.indexOf(this.optionActive) + 1;
         const optionCount = this.availableOptions.length;
-        announceToScreenReader(this.shadowRoot, `${optionText}${selectedState}, ${optionIndex} of ${optionCount}`);
+
+        // In fullscreen mode the combobox's live region is outside the modal
+        // dialog and inert, so route announcements to the bib's live region
+        // which is inside the dialog.
+        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
+        const bibShadowRoot = bibEl && bibEl.shadowRoot;
+        const announcementRoot = this.dropdown.isBibFullscreen && bibShadowRoot
+          ? bibShadowRoot
+          : this.shadowRoot;
+
+        announceToScreenReader(announcementRoot, `${optionText}${selectedState}, ${optionIndex} of ${optionCount}`);
       }
 
       // Check if user prefers reduced motion for accessibility

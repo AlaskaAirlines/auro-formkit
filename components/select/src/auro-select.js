@@ -790,11 +790,20 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(this.optionActive);
       }
 
-      // Announce the active option for screen readers
+      // Announce the active option for screen readers.
+      // In fullscreen mode the select's live region is outside the modal
+      // dialog and inert, so route announcements to the bib's live region
+      // which is inside the dialog.
       if (this.optionActive) {
         const optionText = this.optionActive.textContent.trim();
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
-        announceToScreenReader(this.shadowRoot, `${optionText}${selectedState}`);
+        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
+        const bibShadowRoot = bibEl && bibEl.shadowRoot;
+        const announcementRoot = this.dropdown.isBibFullscreen && bibShadowRoot
+          ? bibShadowRoot
+          : this.shadowRoot;
+
+        announceToScreenReader(announcementRoot, `${optionText}${selectedState}`);
       }
 
       if (this.dropdown.isPopoverVisible) {
