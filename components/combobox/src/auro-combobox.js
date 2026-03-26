@@ -901,7 +901,10 @@ export class AuroCombobox extends AuroElement {
       // the CSS rule `.wrapper:not(:focus-within) .notification.clear`
       // hides the container with display:none, preventing focus.
       const clearContainer = clearBtn.closest('.clear');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 53d8fdee (fix(combobox): fix tab behavior to select option and focus clear button)
       if (clearContainer) {
         clearContainer.style.display = 'flex';
         clearBtn.addEventListener('focusout', () => {
