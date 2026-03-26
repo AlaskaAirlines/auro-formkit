@@ -4,6 +4,8 @@
 		{ label: 'auro-select: remount (multiselect)', path: '/select-remount-multiselect' },
 		{ label: 'auro-combobox: remount', path: '/combobox-remount' },
 		{ label: 'auro-counter-group: dropdown keyboard', path: '/counter-dropdown' },
+		{ label: 'auro-counter-group: remount', path: '/counter-remount' },
+		{ label: 'auro-counter: remount (single)', path: '/single-counter-remount' },
 	];
 </script>
 

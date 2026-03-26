@@ -14,7 +14,6 @@
 		<span slot="ariaLabel.bib.close">Close</span>
 		<span slot="bib.fullscreen.headline">Passengers</span>
 		<div slot="label">Passengers</div>
-		<div slot="valueText">Open passengers</div>
 		<auro-counter name="adults" value={String(initialValues[0])}>
 			Adults
 			<span slot="description">18 years or older</span>
