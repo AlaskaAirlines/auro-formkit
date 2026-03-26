@@ -1,7 +1,7 @@
 /* eslint-disable max-lines, jsdoc/require-jsdoc, no-return-await, no-undef */
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, waitUntil } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import { selectKeyboardStrategy } from '../src/selectKeyboardStrategy.js';
 import '@aurodesignsystem/auro-dropdown';
@@ -1154,7 +1154,12 @@ function runTest(mobileView) {
       // Wait a frame for the rAF inside announceToScreenReader
       await new Promise((resolve) => requestAnimationFrame(resolve));
 
-      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      // In fullscreen mode, announcements route to the bib's live region
+      // inside the dialog; in desktop mode, to the component's own shadow root.
+      const announcementRoot = el.dropdown.isBibFullscreen
+        ? el.dropdown.bibElement.value.shadowRoot
+        : el.shadowRoot;
+      const liveRegion = announcementRoot.querySelector('#srAnnouncement');
       expect(liveRegion).to.exist;
       expect(liveRegion.textContent).to.not.equal('');
     });
@@ -1167,7 +1172,13 @@ function runTest(mobileView) {
       await elementUpdated(el);
 
       await new Promise((resolve) => requestAnimationFrame(resolve));
-      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+
+      // In fullscreen mode, announcements route to the bib's live region
+      // inside the dialog; in desktop mode, to the component's own shadow root.
+      const announcementRoot = el.dropdown.isBibFullscreen
+        ? el.dropdown.bibElement.value.shadowRoot
+        : el.shadowRoot;
+      const liveRegion = announcementRoot.querySelector('#srAnnouncement');
       expect(liveRegion.textContent).to.not.equal('');
 
       // Multiple announcements can chain (e.g., active-option followed by selection),
@@ -1176,6 +1187,35 @@ function runTest(mobileView) {
       await new Promise((resolve) => setTimeout(resolve, 2200));
       expect(liveRegion.textContent).to.equal('');
     });
+
+    if (mobileView) {
+      it('routes announcements to the bib live region in fullscreen mode', async () => {
+        const el = await defaultFixture();
+        await setScreenSize(mobileView);
+        await elementUpdated(el);
+
+        // Open the dropdown
+        el.dropdown.show();
+        await elementUpdated(el);
+        await waitUntil(() => el.dropdown.isPopoverVisible);
+
+        // Simulate fullscreen (resize observers don't fire in test env)
+        el.dropdown.isBibFullscreen = true;
+        await elementUpdated(el);
+
+        // Navigate to an option
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        // Wait a frame for the rAF inside announceToScreenReader
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const bibEl = el.dropdown.bibElement.value;
+        const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
+        expect(bibLiveRegion).to.exist;
+        expect(bibLiveRegion.textContent).to.not.equal('');
+      });
+    }
   });
 }
 

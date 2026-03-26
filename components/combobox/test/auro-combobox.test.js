@@ -1021,7 +1021,12 @@ function runFulltest(mobileview) {
       // Wait a frame for the rAF inside announceToScreenReader
       await new Promise((resolve) => requestAnimationFrame(resolve));
 
-      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      // In fullscreen mode, announcements route to the bib's live region
+      // inside the dialog; in desktop mode, to the component's own shadow root.
+      const announcementRoot = el.dropdown.isBibFullscreen
+        ? el.dropdown.bibElement.value.shadowRoot
+        : el.shadowRoot;
+      const liveRegion = announcementRoot.querySelector('#srAnnouncement');
       expect(liveRegion).to.exist;
       expect(liveRegion.textContent).to.not.equal('');
     });
@@ -1039,7 +1044,13 @@ function runFulltest(mobileview) {
       await elementUpdated(el);
 
       await new Promise((resolve) => requestAnimationFrame(resolve));
-      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+
+      // In fullscreen mode, announcements route to the bib's live region
+      // inside the dialog; in desktop mode, to the component's own shadow root.
+      const announcementRoot = el.dropdown.isBibFullscreen
+        ? el.dropdown.bibElement.value.shadowRoot
+        : el.shadowRoot;
+      const liveRegion = announcementRoot.querySelector('#srAnnouncement');
       expect(liveRegion.textContent).to.not.equal('');
 
       // Multiple announcements can chain (e.g., active-option followed by selection),
@@ -1048,6 +1059,102 @@ function runFulltest(mobileview) {
       await new Promise((resolve) => setTimeout(resolve, 2200));
       expect(liveRegion.textContent).to.equal('');
     });
+
+    if (mobileview) {
+      it('routes announcements to the bib live region in fullscreen mode', async () => {
+        const el = await noFilterFixture(mobileview);
+        await elementUpdated(el);
+
+        // Open the dropdown
+        el.focus();
+        setInputValue(el, 'a');
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await elementUpdated(el);
+        await waitUntil(() => el.dropdown.isPopoverVisible);
+
+        // Simulate fullscreen (resize observers don't fire in test env)
+        el.dropdown.isBibFullscreen = true;
+        await elementUpdated(el);
+
+        // Navigate to an option
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        // Wait a frame for the rAF inside announceToScreenReader
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const bibEl = el.dropdown.bibElement.value;
+        const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
+        expect(bibLiveRegion).to.exist;
+        expect(bibLiveRegion.textContent).to.not.equal('');
+      });
+
+      it('sets aria-activedescendant on inputInBib in fullscreen mode', async () => {
+        const el = await noFilterFixture(mobileview);
+        await elementUpdated(el);
+
+        // Open the dropdown
+        el.focus();
+        setInputValue(el, 'a');
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await elementUpdated(el);
+        await waitUntil(() => el.dropdown.isPopoverVisible);
+
+        // Simulate fullscreen (resize observers don't fire in test env)
+        el.dropdown.isBibFullscreen = true;
+        await elementUpdated(el);
+
+        // Wait for inputInBib's inner input to render
+        await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
+
+        // Navigate directly via the menu to trigger auroMenu-activatedOption,
+        // bypassing the dialog keyboard bridge which doesn't fire in test env.
+        el.menu.navigateOptions('down');
+        await elementUpdated(el);
+        // Wait for Lit to propagate optionActive to inputInBib's template
+        await elementUpdated(el.inputInBib);
+
+        expect(el.optionActive).to.exist;
+
+        // The Lit template binding sets a11yActivedescendant on inputInBib
+        // when optionActive is set, which renders as aria-activedescendant
+        // on the native input.
+        const nativeInput = el.inputInBib.inputElement;
+        expect(nativeInput.getAttribute('aria-activedescendant')).to.exist;
+      });
+
+      it('clears aria-activedescendant on inputInBib when dropdown closes', async () => {
+        const el = await noFilterFixture(mobileview);
+        await elementUpdated(el);
+
+        // Open the dropdown
+        el.focus();
+        setInputValue(el, 'a');
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await elementUpdated(el);
+        await waitUntil(() => el.dropdown.isPopoverVisible);
+
+        // Simulate fullscreen (resize observers don't fire in test env)
+        el.dropdown.isBibFullscreen = true;
+        await elementUpdated(el);
+
+        // Wait for inputInBib's inner input to render
+        await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
+
+        // Navigate directly via the menu to set activedescendant
+        el.menu.navigateOptions('down');
+        await elementUpdated(el);
+
+        // Close the dropdown
+        el.hideBib();
+        await elementUpdated(el);
+        await waitUntil(() => !el.dropdown.isPopoverVisible);
+        await elementUpdated(el.inputInBib);
+
+        const nativeInput = el.inputInBib.inputElement;
+        expect(nativeInput.hasAttribute('aria-activedescendant')).to.be.false;
+      });
+    }
   });
 
   describe('updateBibDialogRole', () => {
