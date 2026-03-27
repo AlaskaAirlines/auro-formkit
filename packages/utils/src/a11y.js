@@ -85,6 +85,27 @@ export function guardTouchPassthrough(element) {
 }
 
 /**
+ * Closes the fullscreen dialog element synchronously.
+ *
+ * When a dropdown closes, Lit's async update cycle may call `dialog.close()`
+ * too late — the browser's native focus restoration (back to `document.body`)
+ * can race with the `requestAnimationFrame` in {@link restoreTriggerAfterClose},
+ * stealing focus back to `body` after it was already placed on the trigger.
+ *
+ * Calling this *before* `restoreTriggerAfterClose` ensures the dialog's native
+ * focus restore fires first, so the rAF wins the race.
+ *
+ * @param {HTMLElement} dropdown - The `auro-dropdown` element whose bib may
+ *   contain a `<dialog>`.
+ */
+export function closeFullscreenDialog(dropdown) {
+  const bibEl = dropdown.bibElement && dropdown.bibElement.value;
+  if (bibEl) {
+    bibEl.close();
+  }
+}
+
+/**
  * Restores the dropdown trigger after a fullscreen dialog closes.
  *
  * Removes the `inert` attribute from the trigger so it is accessible again,

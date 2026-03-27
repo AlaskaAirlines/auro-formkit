@@ -18,7 +18,7 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
+import { announceToScreenReader, closeFullscreenDialog, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -558,12 +558,7 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(null);
         this.optionActive = null;
 
-        // Close the fullscreen dialog synchronously so the browser's native
-        // focus restoration happens before restoreTriggerAfterClose's rAF.
-        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
-        if (bibEl) {
-          bibEl.close();
-        }
+        closeFullscreenDialog(this.dropdown);
 
         restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
       }
