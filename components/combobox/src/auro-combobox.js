@@ -14,7 +14,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
-import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
+import { announceToScreenReader, closeFullscreenDialog, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { comboboxKeyboardStrategy } from './comboboxKeyboardStrategy.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
@@ -773,16 +773,7 @@ export class AuroCombobox extends AuroElement {
         // during fullscreen open to prevent touch pass-through.
         this.menu.style.pointerEvents = '';
 
-        // Close the fullscreen dialog synchronously so the browser's native
-        // focus restoration (back to document.body) happens NOW, before the
-        // rAF in restoreTriggerAfterClose. Without this, dialog.close() runs
-        // in Lit's async update cycle and can race with the rAF — in some
-        // browsers the dialog steals focus back to body AFTER the rAF has
-        // already placed it on the trigger input.
-        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
-        if (bibEl) {
-          bibEl.close();
-        }
+        closeFullscreenDialog(this.dropdown);
 
         const shouldFocusClearBtn = this._focusClearBtnAfterClose;
         this._focusClearBtnAfterClose = false;
