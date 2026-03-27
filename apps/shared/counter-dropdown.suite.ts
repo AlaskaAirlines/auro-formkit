@@ -32,12 +32,10 @@ export function counterDropdownSuite(framework: string) {
       // counterControl part with tabindex=0; the inner +/- buttons have
       // tabindex="-1" and are not in the Tab sequence. First Tab lands on counter 1.
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(100);
       await expect(page.locator('auro-counter').nth(0)).toBeFocused();
 
       // Second Tab moves focus to counter 2, keeping the dropdown open.
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(100);
 
       // After two Tabs, document.activeElement is the second auro-counter host element.
       await expect(page.locator('auro-counter').nth(1)).toBeFocused();
@@ -54,16 +52,13 @@ export function counterDropdownSuite(framework: string) {
 
       // Tab into the bib twice so focus lands on counter 2 natively.
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(100);
       await expect(page.locator('auro-counter').nth(0)).toBeFocused();
 
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(100);
       await expect(page.locator('auro-counter').nth(1)).toBeFocused();
 
       // Shift+Tab moves focus back to counter 1, keeping the dropdown open.
       await page.keyboard.press('Shift+Tab');
-      await page.waitForTimeout(100);
       await expect(page.locator('auro-counter').nth(0)).toBeFocused();
 
       // Dropdown must still be open — all 3 plus buttons still reachable
