@@ -208,16 +208,70 @@ function runFulltest(mobileview) {
     await expect(el.dropdown.isPopoverVisible).to.be.true;
 
     const options = el.querySelectorAll('auro-menuoption');
+
+    // Pre-register both listeners before dispatching — hideBib() now fires
+    // auroDropdown-toggled synchronously during the Enter handler, so
+    // registering it after awaiting auroMenu-selectedOption would miss it.
+    const selectedPromise = oneEvent(el, 'auroMenu-selectedOption');
+    const closedPromise = oneEvent(el, 'auroDropdown-toggled');
+
     setTimeout(() => {
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     });
 
-    await oneEvent(el, 'auroMenu-selectedOption');
+    await selectedPromise;
     await expect(el.value === options[0].textContent);
 
-    await oneEvent(el, 'auroDropdown-toggled');
+    await closedPromise;
     await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
+
+  it('Enter selects highlighted option and focuses trigger clear button', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    if (mobileview) {
+      // Wait for the fullscreen dialog to settle and focus to move to inputInBib.
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Highlight the first option.
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    const options = el.querySelectorAll('auro-menuoption');
+    await expect(el.optionActive).to.equal(options[0]);
+
+    // Register the close-event listener before dispatching Enter because hideBib()
+    // fires auroDropdown-toggled synchronously during the Enter handler.
+    const bibClosedPromise = oneEvent(el, 'auroDropdown-toggled');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+
+    await bibClosedPromise;
+
+    // Drain the rAF chain that restores the trigger and focuses the clear button.
+    // Desktop:  rAF (restoreTriggerAfterClose) + rAF (setClearBtnFocus, componentHasFocus path)
+    // Mobile:   rAF (input.focus via restoreTriggerAfterClose) → focusin → rAF (setClearBtnFocus)
+    // Both paths resolve within two sequential animation frames.
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await elementUpdated(el);
+
+    // The highlighted option should be selected and the bib closed.
+    await expect(el.value).to.equal('Apples');
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+    // The trigger input's clear button should now have focus.
+    const clearBtn = el.input.shadowRoot.querySelector('.clearBtn');
+    expect(clearBtn).to.exist;
+    const nativeBtn = clearBtn.shadowRoot.querySelector('button');
+    expect(nativeBtn).to.exist;
+    expect(clearBtn.shadowRoot.activeElement).to.equal(nativeBtn);
   });
 
   it(`selects the current active option when hitting Tab key`, async () => {

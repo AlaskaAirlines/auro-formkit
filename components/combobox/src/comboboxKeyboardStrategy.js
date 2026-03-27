@@ -31,7 +31,7 @@ function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
 }
 
 export const comboboxKeyboardStrategy = {
-  async Enter(component, evt, ctx) {
+  Enter(component, evt, ctx) {
     // If the clear button has focus, let the browser activate it normally.
     // stopPropagation prevents parent containers (e.g., forms) from treating
     // Enter as a submit, but we must NOT call preventDefault — that would
@@ -42,11 +42,15 @@ export const comboboxKeyboardStrategy = {
     }
 
     if (ctx.isExpanded && component.optionActive) {
-      component.menu.makeSelection();
-      await component.updateComplete;
       evt.preventDefault();
       evt.stopPropagation();
-      component.setClearBtnFocus();
+      // Set flags before makeSelection so the showBib guard and the
+      // auroDropdown-toggled close handler both see them when the value
+      // change propagates through Lit's microtask update cycle.
+      component._focusClearBtnAfterClose = true;
+      component._clearBtnFocusPending = true;
+      component.menu.makeSelection();
+      component.hideBib();
     } else {
       // Prevent the keypress from bubbling to parent containers (e.g., forms)
       // which could interpret Enter as a submit or trigger other unintended behavior.
