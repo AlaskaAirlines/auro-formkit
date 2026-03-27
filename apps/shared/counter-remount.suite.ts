@@ -77,6 +77,16 @@ export function counterRemountSuite(framework: string, options?: SuiteOptions) {
       await page.locator('#toggle').click();
       await page.waitForSelector('auro-counter-group', { state: 'attached' });
 
+      // Wait for the custom element to finish upgrading after remount before
+      // polling for values — mirrors the beforeEach guard on first render.
+      await page.waitForFunction(
+        () => {
+          const group = document.querySelector('auro-counter-group') as any;
+          return group != null && typeof group.value === 'object' && group.value !== null;
+        },
+        { timeout: 10_000 },
+      );
+
       await waitForGroupValue(page, initialValues);
 
       // Verify group-level computed value object is restored
