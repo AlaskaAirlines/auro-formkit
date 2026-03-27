@@ -50,7 +50,7 @@ function runFulltest(mobileview) {
   it('enforces menu selection when behavior is set to filter', async () => {
     const el = await filterFixture(mobileview);
     const {menu} = el;
-    
+
     // initial state
     await expect(el.value).to.be.undefined;
     await expect(el.hasAttribute('error')).to.be.false;
@@ -483,6 +483,43 @@ function runFulltest(mobileview) {
     await expect(menuOptions[1].classList.contains('active')).to.be.false;
   });
 
+  it('navigates nested menu with up and down arrow keys', async () => {
+    const el = await nestedMenuFixture(mobileview);
+
+    setInputValue(el, 'option');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    const rootOptions = [...el.querySelectorAll(':scope > auro-menu > auro-menuoption')];
+    const nestedMenu = el.querySelector('auro-menu auro-menu');
+    const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.equal(rootOptions[0]);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.equal(nestedOptions[0]);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.equal(nestedOptions[1]);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.equal(rootOptions[1]);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.equal(nestedOptions[1]);
+  });
+
   it('typing filters list of options', async () => {
     const el = await defaultFixture(mobileview);
 
@@ -635,10 +672,10 @@ function runFulltest(mobileview) {
 
     // Set up the event listener before triggering the input change
     const inputEventPromise = oneEvent(el, 'input');
-    
+
     // Trigger input change
     setInputValue(el, 'a');
-    
+
     // Wait for the input event to be fired
     await inputEventPromise;
   });
@@ -1279,6 +1316,34 @@ async function defaultFixture(mobileview) {
   `);
 }
 
+async function nestedMenuFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
+
+  return fixture(html`
+  <auro-combobox>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="option 1" id="nested-option-0">option 1</auro-menuoption>
+      <auro-menu>
+        <auro-menuoption value="option a" id="nested-option-1">option a</auro-menuoption>
+        <auro-menuoption value="option b" id="nested-option-2">option b</auro-menuoption>
+      </auro-menu>
+      <auro-menuoption value="option 2" id="nested-option-3">option 2</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+  `);
+}
+
 /**
  *
  */
@@ -1439,7 +1504,7 @@ async function persistentFixture(mobileview) {
 }
 
 /**
- * 
+ *
  */
 async function filterFixture(mobileview) {
   if (mobileview) {

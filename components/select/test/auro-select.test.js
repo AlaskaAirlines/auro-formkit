@@ -214,6 +214,23 @@ async function shiftTabDisabledFirstFixture() {
   `);
 }
 
+async function nestedMenuFixture() {
+  return await fixture(html`
+  <auro-select>
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="option 1" id="nested-option-0">option 1</auro-menuoption>
+      <auro-menu>
+        <auro-menuoption value="option a" id="nested-option-1">option a</auro-menuoption>
+        <auro-menuoption value="option b" id="nested-option-2">option b</auro-menuoption>
+      </auro-menu>
+      <auro-menuoption value="option 2" id="nested-option-3">option 2</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+  `);
+}
+
 function runTest(mobileView) {
   describe(`auro-select${mobileView ? ' in mobile' : ''}`, () => {
     before(async () => {
@@ -712,6 +729,39 @@ function runTest(mobileView) {
 
       await expect(menuOptions[0].classList.contains('active')).to.be.true;
       await expect(menuOptions[1].classList.contains('active')).to.be.false;
+    });
+
+    it('navigates nested menu with up and down arrow keys', async () => {
+      const el = await nestedMenuFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+      const rootOptions = [...el.querySelectorAll(':scope > auro-menu > auro-menuoption')];
+      const nestedMenu = el.querySelector('auro-menu auro-menu');
+      const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
+
+      trigger.click();
+      await elementUpdated(el);
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      await expect(el.optionActive).to.equal(rootOptions[0]);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      await expect(el.optionActive).to.equal(nestedOptions[0]);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      await expect(el.optionActive).to.equal(nestedOptions[1]);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      await expect(el.optionActive).to.equal(rootOptions[1]);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      await elementUpdated(el);
+      await expect(el.optionActive).to.equal(nestedOptions[1]);
     });
 
     it('makes a selection programmatically', async () => {
