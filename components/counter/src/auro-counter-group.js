@@ -349,6 +349,7 @@ export class AuroCounterGroup extends AuroElement {
       counter.addEventListener("input", this.updateValue);
       counter.addEventListener("auroFormElement-validated", this.updateValidity);
     });
+    this.updateValue();
   }
 
   /**
@@ -478,6 +479,8 @@ export class AuroCounterGroup extends AuroElement {
       counter.addEventListener("input", this.updateValue);
       counter.addEventListener("auroFormElement-validated", this.updateValidity);
     });
+
+    this.updateValue();
 
     if (this.isDropdown) {
       this.configureBibtemplate();
