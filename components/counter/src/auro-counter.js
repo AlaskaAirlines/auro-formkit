@@ -104,6 +104,29 @@ export class AuroCounter extends LitElement {
   }
 
   /**
+   * Gets the current value of the counter.
+   * @returns {number|undefined} The current value of the counter, or undefined if the value is not set or invalid.
+   */
+  get value() {
+    return this._value;
+  }
+
+  /**
+   * Sets the value of the counter. If the provided value is undefined, null, or cannot be converted to a number, the internal value will be set to undefined.
+   * @param {number|string|undefined|null} val - The value to set for the counter. Can be a number, a string that can be converted to a number, undefined, or null.
+   */
+  set value(val) {
+    const old = this._value;
+    if (val === undefined || val === null) {
+      this._value = undefined;
+    } else {
+      const num = Number(val);
+      this._value = Number.isNaN(num) ? undefined : num;
+    }
+    this.requestUpdate('value', old);
+  }
+
+  /**
    * Defines reactive properties for the component.
    * @returns {Object} Property configuration.
    */
