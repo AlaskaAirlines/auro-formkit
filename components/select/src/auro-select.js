@@ -558,6 +558,13 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(null);
         this.optionActive = null;
 
+        // Close the fullscreen dialog synchronously so the browser's native
+        // focus restoration happens before restoreTriggerAfterClose's rAF.
+        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
+        if (bibEl) {
+          bibEl.close();
+        }
+
         restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
       }
 

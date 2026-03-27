@@ -1273,6 +1273,50 @@ function runFulltest(mobileview) {
 
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
+
+    it('closes fullscreen dialog synchronously so focus restores to input', async () => {
+      const el = await defaultFixture(mobileview);
+      const nativeInput = el.input.shadowRoot.querySelector('input');
+
+      // --- First cycle: type → fullscreen → close ---
+      el.focus();
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+      el.hideBib();
+
+      // The dialog must already be closed synchronously — before Lit's
+      // async updated() would have closed it. Without the synchronous
+      // bibEl.close() in the toggle handler, dialog.open is still true
+      // here because Lit hasn't run its update cycle yet.
+      const bibEl = el.dropdown.bibElement.value;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+      expect(dialog.open).to.be.false;
+
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+      expect(el.input.componentHasFocus).to.be.true;
+
+      // --- Second cycle: type again → fullscreen → close ---
+      nativeInput.focus();
+      nativeInput.value = 'o';
+      nativeInput.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+      el.input.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+      el.hideBib();
+
+      // Same synchronous-close assertion on the second cycle
+      expect(dialog.open).to.be.false;
+
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      // Focus must be on the trigger input after the second close
+      expect(el.input.componentHasFocus).to.be.true;
+    });
   }
 
   it('selects label slot content', async () => {

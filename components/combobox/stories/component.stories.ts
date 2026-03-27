@@ -415,6 +415,72 @@ export const ComboboxBibOpenOptionHighlighted: Story = {
   },
 };
 
+// ─── Fullscreen: dialog closes synchronously so focus restores to input ──────
+export const ComboboxFullscreenSyncCloseRestoresFocus: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  globals: {
+    viewport: {
+      value: 'xs',
+      isRotated: false
+    }
+  },
+  render: () => html`
+<auro-combobox>
+  <span slot="ariaLabel.bib.close">Close combobox</span>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    const dropdown = el.dropdown;
+
+    // Type a value so the combobox has availableOptions and will keep
+    // the bib open. Must be done before opening fullscreen because
+    // showModal() makes outer elements inert.
+    setInputValue(el, 'a');
+    await new Promise((r) => setTimeout(r, 100));
+
+    // --- First cycle: open fullscreen → close ---
+    dropdown.show();
+    await new Promise((r) => setTimeout(r, 100));
+    await expect(dropdown.isBibFullscreen).toBe(true);
+    await expect(dropdown.isPopoverVisible).toBe(true);
+
+    el.hideBib();
+
+    // The dialog must already be closed synchronously — before Lit's
+    // async updated() closes it. Without the synchronous bibEl.close()
+    // in the toggle handler, dialog.open would still be true here.
+    const bibEl = dropdown.bibElement.value;
+    const dialog = bibEl.shadowRoot.querySelector('dialog') as HTMLDialogElement;
+    await expect(dialog.open).toBe(false);
+
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await expect(dropdown.isPopoverVisible).toBe(false);
+
+    // --- Second cycle: open fullscreen again → close ---
+    dropdown.show();
+    await new Promise((r) => setTimeout(r, 100));
+    await expect(dropdown.isPopoverVisible).toBe(true);
+
+    el.hideBib();
+
+    // Same synchronous-close assertion on the second cycle
+    await expect(dialog.open).toBe(false);
+
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await expect(dropdown.isPopoverVisible).toBe(false);
+  },
+};
+
 // ─── Arrow keys do not open bib when clear button is focused ─────────────────
 
 /**
