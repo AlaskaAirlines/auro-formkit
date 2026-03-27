@@ -21,7 +21,7 @@ export class MenuService {
    * @returns {AuroMenuOption|null}
    */
   get highlightedOption() {
-    return this._menuOptions[this.highlightedIndex] || null;
+    return this._highlightedOption;
   }
 
   /**
@@ -109,6 +109,7 @@ export class MenuService {
     this.selectAllMatchingOptions = undefined;
 
     this.highlightedIndex = -1;
+    this._highlightedOption = null;
 
     this._menuOptions = [];
     this._subscribers = [];
@@ -159,6 +160,7 @@ export class MenuService {
     this._pendingValue = null;
     this._pendingRetryScheduled = false;
     this._pendingRetryCount = 0;
+    this._highlightedOption = null;
   }
 
   /**
@@ -216,8 +218,12 @@ export class MenuService {
    */
   moveHighlightedOption(direction) {
 
-    // Get the active options
-    const activeOptions = this._menuOptions.filter(option => option.isActive);
+    // Build a flattened list of all active options from the full menu subtree in
+    // DOM order so that nested <auro-menu> options participate in traversal.
+    // querySelectorAll walks the entire light-DOM subtree and is not limited to
+    // direct children, which is what caused nested options to be unreachable.
+    const allOptions = Array.from(this.host.querySelectorAll('auro-menuoption, [auro-menuoption]'));
+    const activeOptions = allOptions.filter(option => option.isActive);
 
     // Get the currently active option
     const currentActiveOption = activeOptions[activeOptions.indexOf(this.highlightedOption)];
@@ -247,14 +253,38 @@ export class MenuService {
 
     if (!option) return;
 
-    // Get the index of the option to highlight
+    // If the previously highlighted option belongs to a nested menu's own
+    // MenuService (i.e. not in this._menuOptions), notify() won't reach it —
+    // subscribers are per-service. Deactivate it directly so it loses its
+    // highlighted CSS class before we move on.
+    const prevOption = this._highlightedOption;
+    if (prevOption && !this._menuOptions.includes(prevOption)) {
+      prevOption.active = false;
+      prevOption.updateActiveClasses();
+    }
+
+    // Track by direct reference so nested options (not in _menuOptions) are
+    // correctly remembered for the next navigation call.
+    this._highlightedOption = option;
+
+    // highlightedIndex reflects position within the registered _menuOptions array.
+    // For options that live in a nested menu's own MenuService this will be -1,
+    // which is acceptable — the index is informational only.
     const index = this._menuOptions.indexOf(option);
 
     // Update highlighted index
     this.highlightedIndex = index;
 
-    // Notify subscribers of highlight change
+    // Notify root-level subscribers of the highlight change. This correctly
+    // activates/deactivates options that subscribed to THIS service.
     this.notify({ type: 'highlightChange', option, index: this.highlightedIndex });
+
+    // If the new option is nested (not in this._menuOptions), notify() won't
+    // reach it either. Activate it directly so it gains the highlighted class.
+    if (!this._menuOptions.includes(option)) {
+      option.active = true;
+      option.updateActiveClasses();
+    }
 
     // Dispatch the change event
     this.dispatchChangeEvent('auroMenu-activatedOption', option);
@@ -267,6 +297,20 @@ export class MenuService {
   setHighlightedIndex(index) {
     const option = this._menuOptions[index] || null;
     this.setHighlightedOption(option);
+  }
+
+  /**
+   * Clears the highlighted option and removes its active CSS class.
+   * Call this when the dropdown closes so the next open starts from a clean state.
+   */
+  clearHighlight() {
+    const prev = this._highlightedOption;
+    if (prev) {
+      prev.active = false;
+      prev.updateActiveClasses();
+    }
+    this._highlightedOption = null;
+    this.highlightedIndex = -1;
   }
 
   /**
@@ -417,6 +461,26 @@ export class MenuService {
         return;
       }
 
+      // Before treating this as a hard miss, scan the full DOM subtree for
+      // nested menuoptions whose keys match. Nested options register with
+      // their own MenuService instance (context isolation), so they never
+      // appear in this._menuOptions.
+      const allOptions = Array.from(this.host.querySelectorAll('auro-menuoption, [auro-menuoption]'));
+      const nestedMatches = allOptions.filter(option =>
+        !this._menuOptions.includes(option) &&
+        option.isActive &&
+        validatedValues.includes(option.key)
+      );
+
+      if (nestedMatches.length) {
+        this.clearPendingValue();
+        const selected = this.multiSelect ? nestedMatches : [nestedMatches[nestedMatches.length - 1]];
+        if (this.optionsArraysMatch(selected, this.selectedOptions)) return;
+        this.selectedOptions = selected;
+        this.stageUpdate();
+        return;
+      }
+
       this.clearPendingValue();
 
       if (this.selectedOptions.length > 0) {
@@ -542,6 +606,16 @@ export class MenuService {
       type: 'stateChange',
       selectedOptions: this.selectedOptions,
       ...meta
+    });
+
+    // Options subscribed to a nested menu's own service never receive the
+    // notify() broadcast above. Sync their selected state directly so the
+    // DOM attribute stays accurate and dual-selection cannot occur.
+    const allOptions = Array.from(this.host.querySelectorAll('auro-menuoption, [auro-menuoption]'));
+    allOptions.forEach(option => {
+      if (!this._menuOptions.includes(option)) {
+        option.setInternalSelected(this.selectedOptions.includes(option));
+      }
     });
   }
 

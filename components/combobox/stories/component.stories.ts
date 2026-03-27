@@ -430,7 +430,7 @@ async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20
 }
 
 export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-combobox>
   <span slot="ariaLabel.bib.close">Close combobox</span>
@@ -498,5 +498,338 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
     await el.updateComplete;
     await expect(el.dropdown.isPopoverVisible).toBe(false);
+  },
+};
+
+// ─── Nested menu: ArrowDown reaches options inside a nested auro-menu ────────
+export const ComboboxNestedMenuKeyboardNav: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="label">Nested Menu</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // Set a value so showBib() passes its input.value guard
+    setInputValue(el, 'a');
+    await new Promise((r) => setTimeout(r, 100));
+
+    // Open the bib via trigger click — same reliable pattern as ComboboxBibOpensOnType
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+
+    // Wait > 150 ms for the auroDropdown-toggled handler's `updateActiveOption(0)`
+    // setTimeout to fire and settle. That call snaps the highlight to stops 150 ms
+    // after the bib opens — navigating before it fires causes it to override the
+    // destination and revert to the first option.
+    await new Promise((r) => setTimeout(r, 200));
+
+    // ArrowDown twice: stops (already highlighted by updateActiveOption) → price → apples (nested).
+    // Three presses would overshoot to oranges since stops is pre-highlighted after the 200ms wait.
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    // Nested option must have the active CSS class — regression guard for the
+    // Lit-context isolation bug where cross-service notify() never reached
+    // nested options, leaving them without the highlighted state.
+    const applesOption = el.querySelector('auro-menuoption[value="apples"]');
+    await expect(applesOption.classList.contains('active')).toBe(true);
+  },
+};
+
+// ─── Nested menu: Enter selects, then reopen keeps keyboard flow stable ─────
+export const ComboboxNestedEnterSelectThenReopen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="label">Nested Menu</span>
+  <auro-menu>
+    <auro-menuoption value="Stops">Stops</auro-menuoption>
+    <auro-menuoption value="Price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="NestedApple">Nested Apple</auro-menuoption>
+      <auro-menuoption value="NestedOrange">Nested Orange</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="Departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    setInputValue(el, 'st');
+    await new Promise((r) => setTimeout(r, 100));
+
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await el.updateComplete;
+
+    await expect(el.value).toBe('Stops');
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+
+    setInputValue(el, 'de');
+    await new Promise((r) => setTimeout(r, 100));
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+    await expect(el.availableOptions.some((option: any) => option?.value === 'Departure')).toBe(true);
+  },
+};
+
+// ─── Nested menu: preserve original value case on selection ─────────────────
+export const ComboboxNestedSelectionPreservesCase: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="label">Nested Menu Case</span>
+  <auro-menu>
+    <auro-menuoption value="Alpha">Alpha</auro-menuoption>
+    <auro-menuoption value="Bravo">Bravo</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="MixedCaseValue">Mixed Case Value</auro-menuoption>
+      <auro-menuoption value="AnotherNestedValue">Another Nested Value</auro-menuoption>
+    </auro-menu>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    setInputValue(el, 'mi');
+    await new Promise((r) => setTimeout(r, 100));
+
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    // ArrowDown: Alpha -> Bravo -> MixedCaseValue
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await el.updateComplete;
+
+    await expect(el.value).toBe('MixedCaseValue');
+    await expect(el.optionSelected?.value).toBe('MixedCaseValue');
+  },
+};
+
+// ─── Nested menu: Enter selects nested option, then bib re-opens cleanly ──────
+export const ComboboxNestedEnterSelectNestedThenReopen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="label">Nested Menu</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    setInputValue(el, 'ap');
+    await new Promise((r) => setTimeout(r, 100));
+
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    // 3x ArrowDown: null → stops → price → apples (nested)
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    await expect(el.optionActive.value).toBe('apples');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    await expect(el.value).toBe('apples');
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+
+    // Reopen with a different input — bib must open again cleanly
+    setInputValue(el, 'de');
+    await new Promise((r) => setTimeout(r, 100));
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+  },
+};
+
+// ─── Nested menu: nested selection then main leaves only main selected ────────
+export const ComboboxNestedSelectNestedThenMain: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="label">Nested Menu</span>
+  <auro-menu>
+    <auro-menuoption value="Stops">Stops</auro-menuoption>
+    <auro-menuoption value="Price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="NestedApple">Nested Apple</auro-menuoption>
+      <auro-menuoption value="NestedOrange">Nested Orange</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="Departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // Select the nested option first
+    setInputValue(el, 'a');
+    await new Promise((r) => setTimeout(r, 100));
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    // 3x ArrowDown: null → Stops → Price → NestedApple
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    await expect(el.optionActive.value).toBe('NestedApple');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    await expect(el.value).toBe('NestedApple');
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+
+    // Reopen and select the main (top-level) option
+    setInputValue(el, 'st');
+    await new Promise((r) => setTimeout(r, 100));
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    // 1x ArrowDown: null → Stops
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    await expect(el.optionActive.value).toBe('Stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    await expect(el.value).toBe('Stops');
+    await expect(el.optionSelected?.value).toBe('Stops');
+
+    // Only Stops should be selected — guards against the dual-selection bug
+    const selectedOptions = [...canvasElement.querySelectorAll('auro-menuoption')].filter((opt: any) => opt.selected);
+    await expect(selectedOptions.length).toBe(1);
+    await expect((selectedOptions[0] as any).value).toBe('Stops');
+  },
+};
+
+// ─── Nested menu: main selection then nested leaves only nested selected ──────
+export const ComboboxNestedSingleSelectExclusivityMainToNested: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox noFilter>
+  <span slot="label">Nested Menu</span>
+  <auro-menu>
+    <auro-menuoption value="Stops">Stops</auro-menuoption>
+    <auro-menuoption value="Price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="NestedApple">Nested Apple</auro-menuoption>
+      <auro-menuoption value="NestedOrange">Nested Orange</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="Departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+
+    // Select the main option first
+    setInputValue(el, 'a');
+    await new Promise((r) => setTimeout(r, 100));
+    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    // 1x ArrowDown: null → Stops
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    await expect(el.optionActive.value).toBe('Stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    await expect(el.value).toBe('Stops');
+    await expect(el.dropdown.isPopoverVisible).toBe(false);
+
+    // Reopen and select the nested option
+    setInputValue(el, 'a');
+    await new Promise((r) => setTimeout(r, 100));
+    trigger.click();
+    await new Promise((r) => setTimeout(r, 50));
+
+    // 3x ArrowDown: null → Stops → Price → NestedApple
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await el.updateComplete;
+
+    await expect(el.optionActive.value).toBe('NestedApple');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    await expect(el.value).toBe('NestedApple');
+    await expect(el.optionSelected?.value).toBe('NestedApple');
+
+    // Only NestedApple should be selected — guards against the dual-selection bug
+    const selectedOptions = [...canvasElement.querySelectorAll('auro-menuoption')].filter((opt: any) => opt.selected);
+    await expect(selectedOptions.length).toBe(1);
+    await expect((selectedOptions[0] as any).value).toBe('NestedApple');
   },
 };

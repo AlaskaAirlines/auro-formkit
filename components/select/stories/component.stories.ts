@@ -397,3 +397,355 @@ export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
   },
 };
 
+// ─── Nested menu: ArrowDown reaches options inside a nested auro-menu ────────
+export const SelectNestedMenuKeyboardNav: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    // ArrowDown three times: stops → price → apples (nested)
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+
+    // Nested option must be reached — regression guard for the Lit-context
+    // isolation bug where options inside a child auro-menu were unreachable.
+    const applesOption = el.querySelector('auro-menuoption[value="apples"]');
+    await expect(applesOption.classList.contains('active')).toBe(true);
+  },
+};
+
+// ─── Nested menu: select nested then main in single-select mode ─────────────
+export const SelectNestedThenMainSingleSelect: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    const nestedOption = el.querySelector('auro-menuoption[value="apples"]');
+    await userEvent.click(nestedOption);
+    await wait(50);
+
+    await expect(el.value).toBe('apples');
+    await expect(el.isPopoverVisible).toBe(false);
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    const mainOption = el.querySelector('auro-menuoption[value="stops"]');
+    await userEvent.click(mainOption);
+    await wait(50);
+
+    const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter((option: any) => option.selected);
+    await expect(el.value).toBe('stops');
+    await expect(el.optionSelected?.value).toBe('stops');
+    await expect(selectedOptions.length).toBe(1);
+  },
+};
+
+// ─── Nested menu: Enter selection then reopen remains selectable ─────────────
+export const SelectNestedEnterThenReopen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await wait(50);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await wait(50);
+
+    await expect(el.value).toBe('apples');
+    await expect(el.isPopoverVisible).toBe(false);
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await wait(50);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await wait(50);
+
+    await expect(el.value).toBe('stops');
+    await expect(el.optionSelected?.value).toBe('stops');
+  },
+};
+
+// ─── Nested menu with multiselect: nested and main options can coexist ──────
+export const SelectNestedMultiselectMixedSelection: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select multiselect>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    const nestedOption = el.querySelector('auro-menuoption[value="apples"]');
+    await userEvent.click(nestedOption);
+    await wait(50);
+
+    const mainOption = el.querySelector('auro-menuoption[value="stops"]');
+    await userEvent.click(mainOption);
+    await wait(50);
+
+    const parsed = JSON.parse(el.value);
+    await expect(parsed).toContain('apples');
+    await expect(parsed).toContain('stops');
+    await expect(Array.isArray(el.optionSelected)).toBe(true);
+    await expect(el.optionSelected.length).toBe(2);
+  },
+};
+
+// ─── Nested menu: main selection then nested leaves only nested selected ──────
+export const SelectNestedMainThenNestedSingleSelect: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    const stopsOption = el.querySelector('auro-menuoption[value="stops"]');
+    await userEvent.click(stopsOption);
+    await wait(50);
+
+    await expect(el.value).toBe('stops');
+    await expect(el.isPopoverVisible).toBe(false);
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    const applesOption = el.querySelector('auro-menuoption[value="apples"]');
+    await userEvent.click(applesOption);
+    await wait(50);
+
+    await expect(el.value).toBe('apples');
+    await expect(el.optionSelected?.value).toBe('apples');
+    // Only apples should be selected — guards against the dual-selection bug
+    const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter((opt: any) => opt.selected);
+    await expect(selectedOptions.length).toBe(1);
+  },
+};
+
+// ─── Nested menu: keyboard-only main then nested leaves only nested selected ──
+export const SelectNestedKeyboardExclusivityBothDirections: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+    <auro-menuoption value="departure">Departure</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    // 1x ArrowDown → stops; Enter selects and closes bib
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await wait(50);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await wait(50);
+
+    await expect(el.value).toBe('stops');
+    await expect(el.isPopoverVisible).toBe(false);
+
+    // Reopen and navigate 3x to apples (nested); Enter selects apples
+    await userEvent.click(trigger);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await wait(50);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await wait(50);
+
+    await expect(el.value).toBe('apples');
+    await expect(el.optionSelected?.value).toBe('apples');
+    // Only apples should be selected — guards against the dual-selection bug
+    const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter((opt: any) => opt.selected);
+    await expect(selectedOptions.length).toBe(1);
+    const stopsOption = el.querySelector('auro-menuoption[value="stops"]') as any;
+    await expect(stopsOption.selected).toBe(false);
+  },
+};
+
+// ─── Nested menu with multiselect: deselecting a nested option removes it ────
+export const SelectNestedMultiselectDeselect: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select multiselect>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    const applesOption = el.querySelector('auro-menuoption[value="apples"]') as any;
+    await userEvent.click(applesOption);
+    await wait(50);
+
+    await expect(applesOption.selected).toBe(true);
+
+    // Reopen and click apples again to deselect it
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    await userEvent.click(applesOption);
+    await wait(50);
+
+    await expect(applesOption.selected).toBe(false);
+    await expect(el.value).toBeFalsy();
+  },
+};
+
+// ─── Nested menu with multiselect: keyboard selects nested and main ───────────
+export const SelectNestedMultiselectKeyboard: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select multiselect>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menu>
+      <auro-menuoption value="apples">Apples</auro-menuoption>
+      <auro-menuoption value="oranges">Oranges</auro-menuoption>
+    </auro-menu>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    const trigger = el.dropdown.shadowRoot.querySelector('#trigger');
+
+    await userEvent.click(trigger);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    // 3x ArrowDown → apples (nested); Enter selects
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await wait(50);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await wait(50);
+
+    // Reopen and keyboard-select stops (main)
+    await userEvent.click(trigger);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await wait(50);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await wait(50);
+
+    const parsed = JSON.parse(el.value);
+    await expect(parsed).toContain('apples');
+    await expect(parsed).toContain('stops');
+    await expect(Array.isArray(el.optionSelected)).toBe(true);
+    await expect(el.optionSelected.length).toBe(2);
+  },
+};
+

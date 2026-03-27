@@ -557,6 +557,7 @@ export class AuroSelect extends AuroElement {
       if (!this.dropdown.isPopoverVisible) {
         this.dropdown.setActiveDescendant(null);
         this.optionActive = null;
+        this.menu.menuService.clearHighlight();
 
         restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
       }

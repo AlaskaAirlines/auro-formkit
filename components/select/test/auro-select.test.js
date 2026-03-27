@@ -1167,3 +1167,494 @@ describe('selectKeyboardStrategy — Tab multiselect', () => {
     expect(hideCalled).to.be.true;
   });
 });
+
+// ─── Nested menu keyboard navigation ─────────────────────────────────────────
+// Tests dispatch directly on `el` and check el.menu.optionActive after each
+// elementUpdated — no oneEvent/waitUntil so these fail fast with wrong-value
+// assertions rather than hanging on a timeout.
+
+async function nestedSelectMenuFixture() {
+  return await fixture(html`
+    <auro-select>
+      <span slot="label">Nested Menu</span>
+      <auro-menu>
+        <auro-menuoption value="stops">Stops</auro-menuoption>
+        <auro-menuoption value="price">Price</auro-menuoption>
+        <auro-menu>
+          <auro-menuoption value="apples">Apples</auro-menuoption>
+          <auro-menuoption value="oranges">Oranges</auro-menuoption>
+        </auro-menu>
+        <auro-menuoption value="departure">Departure</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  `);
+}
+
+describe('nested menu keyboard navigation', () => {
+  it('ArrowDown enters the nested submenu after the last pre-nested option', async () => {
+    await setScreenSize(false);
+    const el = await nestedSelectMenuFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('price');
+
+    // Fails until fix is in — currently wraps back to stops instead of entering nested menu
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('apples');
+  });
+
+  it('ArrowDown traverses all options across nesting levels in DOM order', async () => {
+    await setScreenSize(false);
+    const el = await nestedSelectMenuFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    const expectedOrder = ['stops', 'price', 'apples', 'oranges', 'departure'];
+    for (const value of expectedOrder) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      expect(el.menu.optionActive.value).to.equal(value);
+    }
+  });
+
+  it('ArrowDown wraps from the last post-nested option to the first option', async () => {
+    await setScreenSize(false);
+    const el = await nestedSelectMenuFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // Navigate past all 5 options
+    for (let i = 0; i < 5; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+
+    // 6th press should wrap to stops
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+  });
+
+  it('ArrowUp navigates backwards from a nested option into the pre-nested options', async () => {
+    await setScreenSize(false);
+    const el = await nestedSelectMenuFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // Navigate forward to apples (3 presses)
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+
+    // ArrowUp from apples should go back to price
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('price');
+  });
+
+  it('ArrowUp wraps from the first option to the last post-nested option', async () => {
+    await setScreenSize(false);
+    const el = await nestedSelectMenuFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // Navigate to the first option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    // ArrowUp from first should wrap to departure (last option)
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('departure');
+  });
+});
+
+// ─── Nested menu selection behavior ──────────────────────────────────────────
+
+async function nestedMixedSelectFixture() {
+  return await fixture(html`
+    <auro-select>
+      <span slot="label">Sort by</span>
+      <auro-menu>
+        <auro-menuoption value="stops">Stops</auro-menuoption>
+        <auro-menuoption value="price">Price</auro-menuoption>
+        <auro-menu>
+          <auro-menuoption value="apples">Apples</auro-menuoption>
+          <auro-menuoption value="oranges">Oranges</auro-menuoption>
+        </auro-menu>
+        <auro-menuoption value="departure">Departure</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  `);
+}
+
+async function nestedMultiselectFixture() {
+  return await fixture(html`
+    <auro-select multiselect>
+      <span slot="label">Sort by</span>
+      <auro-menu>
+        <auro-menuoption value="stops">Stops</auro-menuoption>
+        <auro-menuoption value="price">Price</auro-menuoption>
+        <auro-menu>
+          <auro-menuoption value="apples">Apples</auro-menuoption>
+          <auro-menuoption value="oranges">Oranges</auro-menuoption>
+        </auro-menu>
+      </auro-menu>
+    </auro-select>
+  `);
+}
+
+describe('nested menu selection behavior (single-select)', () => {
+  it('selecting a nested option then a top-level option leaves only one selection', async () => {
+    await setScreenSize(false);
+    const el = await nestedMixedSelectFixture();
+    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    // Use programmatic value to pre-select the nested option without touching
+    // optionActive. Keyboard-nav then select-Enter would leave optionActive
+    // pointing at apples, causing ArrowDown counts to shift on reopen.
+    el.value = 'apples';
+    await elementUpdated(el);
+    await elementUpdated(menu);
+
+    expect(el.value).to.equal('apples');
+    expect(el.optionSelected?.value).to.equal('apples');
+
+    // Open and navigate to stops from clean null-active state
+    trigger.click();
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('stops');
+    expect(el.optionSelected?.value).to.equal('stops');
+
+    // Only one option must hold the selected state — the new selection
+    const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter(
+      (option) => option.selected
+    );
+    expect(selectedOptions.length).to.equal(1);
+    expect(selectedOptions[0].value).to.equal('stops');
+  });
+
+  it('selecting a top-level option then a nested option leaves only one selection', async () => {
+    await setScreenSize(false);
+    const el = await nestedMixedSelectFixture();
+    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    el.value = 'stops';
+    await elementUpdated(el);
+    await elementUpdated(menu);
+
+    expect(el.value).to.equal('stops');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // 3 ArrowDowns from null active → stops(1) → price(2) → apples(3)
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('apples');
+    expect(el.optionSelected?.value).to.equal('apples');
+
+    const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter(
+      (option) => option.selected
+    );
+    expect(selectedOptions.length).to.equal(1);
+    expect(selectedOptions[0].value).to.equal('apples');
+  });
+
+  it('programmatic nested selection then reopen and navigate to main option cleanly', async () => {
+    await setScreenSize(false);
+    const el = await nestedMixedSelectFixture();
+    const menu = el.querySelector('auro-menu');
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    el.value = 'apples';
+    await elementUpdated(el);
+    await elementUpdated(menu);
+
+    expect(el.value).to.equal('apples');
+    expect(el.isPopoverVisible).to.be.false;
+
+    trigger.click();
+    await elementUpdated(el);
+    expect(el.isPopoverVisible).to.be.true;
+
+    // From null active state: 1 ArrowDown → stops
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('stops');
+    expect(el.optionSelected?.value).to.equal('stops');
+    expect(el.isPopoverVisible).to.be.false;
+  });
+
+  it('selecting main option then nested via keyboard leaves only nested selected', async () => {
+    await setScreenSize(false);
+    const el = await nestedMixedSelectFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // 1x ArrowDown → stops; Enter selects and closes bib
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('stops');
+    expect(el.isPopoverVisible).to.be.false;
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // 3x ArrowDown → apples (nested); Enter selects apples
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('apples');
+    expect(el.optionSelected?.value).to.equal('apples');
+
+    // Only apples should be selected — guards against the dual-selection bug
+    const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter(
+      (option) => option.selected
+    );
+    expect(selectedOptions.length).to.equal(1);
+    expect(selectedOptions[0].value).to.equal('apples');
+  });
+
+  it('pure keyboard: selecting nested then main leaves only main selected', async () => {
+    await setScreenSize(false);
+    const el = await nestedMixedSelectFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // 3x ArrowDown → apples (nested); Enter selects apples
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('apples');
+    expect(el.isPopoverVisible).to.be.false;
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // 1x ArrowDown → stops; Enter selects stops
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(el.value).to.equal('stops');
+    expect(el.optionSelected?.value).to.equal('stops');
+
+    // Only stops should be selected — guards against the dual-selection bug
+    const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter(
+      (option) => option.selected
+    );
+    expect(selectedOptions.length).to.equal(1);
+    expect(selectedOptions[0].value).to.equal('stops');
+  });
+});
+
+describe('nested menu selection behavior (multiselect)', () => {
+  it('can select both a nested option and a top-level option simultaneously', async () => {
+    await setScreenSize(false);
+    const el = await nestedMultiselectFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // Select stops (first ArrowDown)
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    // Reopen and select apples (nested)
+    trigger.click();
+    await elementUpdated(el);
+
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    const parsed = JSON.parse(el.value);
+    expect(parsed).to.include('stops');
+    expect(parsed).to.include('apples');
+    expect(Array.isArray(el.optionSelected)).to.be.true;
+    expect(el.optionSelected.length).to.equal(2);
+  });
+
+  it('Tab closes multiselect without making a selection when bib is open', async () => {
+    await setScreenSize(false);
+    const el = await nestedMultiselectFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    // Tab on multiselect should close without selecting
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+    await elementUpdated(el);
+
+    expect(el.isPopoverVisible).to.be.false;
+    expect(el.value).to.be.undefined;
+  });
+
+  it('deselecting a nested option in multiselect removes it from value', async () => {
+    await setScreenSize(false);
+    const el = await nestedMultiselectFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // 3x ArrowDown → apples (nested); Enter selects
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    const applesOption = el.querySelector('auro-menuoption[value="apples"]');
+    expect(applesOption.selected).to.be.true;
+
+    // Reopen and navigate back to apples to deselect it
+    trigger.click();
+    await elementUpdated(el);
+
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    expect(applesOption.selected).to.be.false;
+    expect(el.value).to.be.undefined;
+  });
+
+  it('keyboard selects nested and main options in multiselect simultaneously', async () => {
+    await setScreenSize(false);
+    const el = await nestedMultiselectFixture();
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    const trigger = dropdown.querySelector('[slot="trigger"]');
+
+    trigger.click();
+    await elementUpdated(el);
+
+    // 3x ArrowDown → apples (nested); Enter selects
+    for (let i = 0; i < 3; i++) {
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+    }
+    expect(el.menu.optionActive.value).to.equal('apples');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    // Reopen and keyboard-select stops (main)
+    trigger.click();
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    expect(el.menu.optionActive.value).to.equal('stops');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    const parsed = JSON.parse(el.value);
+    expect(parsed).to.include('apples');
+    expect(parsed).to.include('stops');
+    expect(Array.isArray(el.optionSelected)).to.be.true;
+    expect(el.optionSelected.length).to.equal(2);
+  });
+});

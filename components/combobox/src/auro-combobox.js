@@ -753,6 +753,7 @@ export class AuroCombobox extends AuroElement {
       if (!this.dropdownOpen && this.input) {
         this.input.setActiveDescendant(null);
         this.optionActive = null;
+        this.menu.menuService.clearHighlight();
 
         // Remove the highlighted state from all menu options so re-opening
         // the dropdown doesn't show a stale highlight.

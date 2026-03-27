@@ -1571,6 +1571,347 @@ function buildFocusedClearBtnCtx() {
   };
 }
 
+// ─── Nested menu keyboard navigation ─────────────────────────────────────────
+// Uses nofilter so all nested options remain visible regardless of input text.
+// Tests dispatch directly on `el` with elementUpdated — no oneEvent/waitUntil
+// so these fail fast with wrong-value assertions rather than hanging.
+
+async function nestedComboboxMenuFixture(mobileview = false) {
+  if (mobileview) {
+    await setViewport({ width: 500, height: 800 });
+  } else {
+    await setViewport({ width: 800, height: 800 });
+  }
+  return await fixture(html`
+    <auro-combobox nofilter>
+      <span slot="label">Nested Menu</span>
+      <auro-menu>
+        <auro-menuoption value="stops">Stops</auro-menuoption>
+        <auro-menuoption value="price">Price</auro-menuoption>
+        <auro-menu>
+          <auro-menuoption value="apples">Apples</auro-menuoption>
+          <auro-menuoption value="oranges">Oranges</auro-menuoption>
+        </auro-menu>
+        <auro-menuoption value="departure">Departure</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  `);
+}
+
+[false, true].forEach((mobileview) => {
+  const label = mobileview ? '(fullscreen)' : '(desktop)';
+
+  describe(`nested menu keyboard navigation ${label}`, () => {
+    it(`ArrowDown enters the nested submenu after the last pre-nested option ${label}`, async () => {
+      const el = await nestedComboboxMenuFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      expect(el.optionActive.value).to.equal('stops');
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      expect(el.optionActive.value).to.equal('price');
+
+      // Fails until fix is in — currently wraps back to stops instead of entering nested menu
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      expect(el.optionActive.value).to.equal('apples');
+    });
+
+    it(`ArrowDown traverses all options across nesting levels in DOM order ${label}`, async () => {
+      const el = await nestedComboboxMenuFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      const expectedOrder = ['stops', 'price', 'apples', 'oranges', 'departure'];
+      for (const value of expectedOrder) {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+        expect(el.optionActive.value).to.equal(value);
+      }
+    });
+
+    it(`ArrowUp navigates backwards from a nested option into the pre-nested options ${label}`, async () => {
+      const el = await nestedComboboxMenuFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      // Navigate forward to apples (3 presses)
+      for (let i = 0; i < 3; i++) {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+      }
+      expect(el.optionActive.value).to.equal('apples');
+
+      // ArrowUp from apples should go back to price
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      await elementUpdated(el);
+      expect(el.optionActive.value).to.equal('price');
+    });
+  });
+});
+
+async function nestedCaseComboboxFixture(mobileview = false) {
+  if (mobileview) {
+    await setViewport({ width: 500, height: 800 });
+  } else {
+    await setViewport({ width: 800, height: 800 });
+  }
+  return await fixture(html`
+    <auro-combobox nofilter>
+      <span slot="label">Nested Menu Case</span>
+      <auro-menu>
+        <auro-menuoption value="Alpha">Alpha</auro-menuoption>
+        <auro-menuoption value="Bravo">Bravo</auro-menuoption>
+        <auro-menu>
+          <auro-menuoption value="MixedCaseValue">Mixed Case Value</auro-menuoption>
+          <auro-menuoption value="AnotherNestedValue">Another Nested Value</auro-menuoption>
+        </auro-menu>
+      </auro-menu>
+    </auro-combobox>
+  `);
+}
+
+[false, true].forEach((mobileview) => {
+  const label = mobileview ? '(fullscreen)' : '(desktop)';
+
+  describe(`nested menu selection behavior ${label}`, () => {
+    it(`selects with Enter, then supports reopening and selecting again ${label}`, async () => {
+      const el = await nestedComboboxMenuFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'st');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      // makeSelection fires an event that triggers hideBib() asynchronously;
+      // wait a frame for the popover to close before asserting visibility.
+      await new Promise((r) => setTimeout(r, 100));
+
+      expect(el.value).to.equal('stops');
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      setInputValue(el, 'de');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      expect(el.dropdown.isPopoverVisible).to.be.true;
+      expect(el.availableOptions.some((option) => option?.value === 'departure')).to.be.true;
+    });
+
+    it(`preserves original case for nested option values when selected ${label}`, async () => {
+      const el = await nestedCaseComboboxFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'mi');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      // ArrowDown: Alpha -> Bravo -> MixedCaseValue
+      for (let i = 0; i < 3; i++) {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+      }
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('MixedCaseValue');
+      expect(el.optionSelected?.value).to.equal('MixedCaseValue');
+    });
+
+    it(`selects nested option with Enter, then bib re-opens cleanly ${label}`, async () => {
+      const el = await nestedComboboxMenuFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'ap');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      // 3x ArrowDown: null → stops → price → apples (nested)
+      for (let i = 0; i < 3; i++) {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+      }
+      expect(el.optionActive.value).to.equal('apples');
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await new Promise((r) => setTimeout(r, 100));
+
+      expect(el.value).to.equal('apples');
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      setInputValue(el, 'de');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      expect(el.dropdown.isPopoverVisible).to.be.true;
+    });
+
+    it(`selecting nested option then main option leaves only main selected ${label}`, async () => {
+      const el = await nestedComboboxMenuFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      // 3x ArrowDown: null → stops → price → apples (nested)
+      for (let i = 0; i < 3; i++) {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+      }
+      expect(el.optionActive.value).to.equal('apples');
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await new Promise((r) => setTimeout(r, 100));
+
+      expect(el.value).to.equal('apples');
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      setInputValue(el, 'st');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      // After reopen, optionActive should be null; 1x ArrowDown reaches stops.
+      // This WILL FAIL until the bug is fixed that leaves active pointing at the
+      // previously-selected nested option instead of resetting cleanly.
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      expect(el.optionActive.value).to.equal('stops');
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await new Promise((r) => setTimeout(r, 100));
+
+      expect(el.value).to.equal('stops');
+      expect(el.optionSelected?.value).to.equal('stops');
+
+      // Only stops should be selected — guards against the dual-selection bug
+      const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter(
+        (option) => option.selected
+      );
+      expect(selectedOptions.length).to.equal(1);
+      expect(selectedOptions[0].value).to.equal('stops');
+    });
+
+    it(`selecting main option then nested option leaves only nested selected ${label}`, async () => {
+      const el = await nestedComboboxMenuFixture(mobileview);
+
+      el.focus();
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      // 1x ArrowDown: null → stops
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      expect(el.optionActive.value).to.equal('stops');
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await new Promise((r) => setTimeout(r, 100));
+
+      expect(el.value).to.equal('stops');
+      expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      setInputValue(el, 'a');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+
+      if (mobileview) {
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+
+      // After reopen, optionActive should be null; 3x ArrowDown reaches apples.
+      // This WILL FAIL until the bug is fixed that offsets navigation by
+      // leaving active on the previously-selected option instead of null.
+      for (let i = 0; i < 3; i++) {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+      }
+      expect(el.optionActive.value).to.equal('apples');
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
+      await new Promise((r) => setTimeout(r, 100));
+
+      expect(el.value).to.equal('apples');
+      expect(el.optionSelected?.value).to.equal('apples');
+
+      // Only apples should be selected — guards against the dual-selection bug
+      const selectedOptions = [...el.querySelectorAll('auro-menuoption')].filter(
+        (option) => option.selected
+      );
+      expect(selectedOptions.length).to.equal(1);
+      expect(selectedOptions[0].value).to.equal('apples');
+    });
+  });
+});
+
 describe('comboboxKeyboardStrategy — arrow keys when clear button has focus', () => {
   ['ArrowDown', 'ArrowUp'].forEach((key) => {
     it(`${key}: returns early without calling showBib or navigateOptions`, () => {

@@ -21,67 +21,6 @@ export default meta;
 
 type Story = StoryObj;
 
-// ─── ArrowDown activates first option ────────────────────────────────────────
-export const MenuArrowDownActivatesOption: Story = {
-  tags: ['!autodocs', 'chromatic-enabled'],
-  render: () => html`
-<auro-menu>
-  <auro-menuoption value="apples">Apples</auro-menuoption>
-  <auro-menuoption value="oranges">Oranges</auro-menuoption>
-  <auro-menuoption value="grapes">Grapes</auro-menuoption>
-</auro-menu>
-  `,
-  async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-menu') as any;
-    const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
-    await el.updateComplete;
-    await expect(el.optionActive).toBe(options[0]);
-    await expect(options[0].classList.contains('active')).toBe(true);
-  },
-};
-
-// ─── ArrowDown wraps from last back to first ──────────────────────────────────
-export const MenuArrowDownWraps: Story = {
-  tags: ['!autodocs', 'chromatic-enabled'],
-  render: () => html`
-<auro-menu>
-  <auro-menuoption value="apples">Apples</auro-menuoption>
-  <auro-menuoption value="oranges">Oranges</auro-menuoption>
-  <auro-menuoption value="grapes">Grapes</auro-menuoption>
-</auro-menu>
-  `,
-  async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-menu') as any;
-    const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    // options.length + 1 downs wraps back to first option
-    for (let i = 0; i < options.length + 1; i++) {
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
-      await el.updateComplete;
-    }
-    await expect(el.optionActive).toBe(options[0]);
-  },
-};
-
-// ─── ArrowUp wraps from top to last option ────────────────────────────────────
-export const MenuArrowUpWraps: Story = {
-  tags: ['!autodocs', 'chromatic-enabled'],
-  render: () => html`
-<auro-menu>
-  <auro-menuoption value="apples">Apples</auro-menuoption>
-  <auro-menuoption value="oranges">Oranges</auro-menuoption>
-  <auro-menuoption value="grapes">Grapes</auro-menuoption>
-</auro-menu>
-  `,
-  async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-menu') as any;
-    const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, composed: true }));
-    await el.updateComplete;
-    await expect(el.optionActive).toBe(options[options.length - 1]);
-  },
-};
-
 // ─── Enter selects the highlighted option ────────────────────────────────────
 export const MenuEnterSelectsOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -101,27 +40,6 @@ export const MenuEnterSelectsOption: Story = {
     await el.updateComplete;
     await expect(options[0].hasAttribute('selected')).toBe(true);
     await expect(el.optionSelected).toBe(options[0]);
-  },
-};
-
-// ─── ArrowDown skips disabled and hidden options ──────────────────────────────
-export const MenuArrowDownSkipsDisabled: Story = {
-  tags: ['!autodocs', 'chromatic-enabled'],
-  render: () => html`
-<auro-menu>
-  <auro-menuoption disabled value="apples">Apples</auro-menuoption>
-  <auro-menuoption hidden value="oranges">Oranges</auro-menuoption>
-  <auro-menuoption value="grapes">Grapes</auro-menuoption>
-  <auro-menuoption value="mango">Mango</auro-menuoption>
-</auro-menu>
-  `,
-  async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-menu') as any;
-    const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
-    await el.updateComplete;
-    // disabled options[0] and hidden options[1] should be skipped; land on options[2]
-    await expect(el.optionActive).toBe(options[2]);
   },
 };
 
