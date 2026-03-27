@@ -1031,6 +1031,96 @@ describe('arrayConverter', () => {
   });
 });
 
+describe('nested menu: arrow key navigation', () => {
+  // The nestedMenuFixture layout (flat navigation order):
+  //   [0] option 1  (root)
+  //   [1] option a  (nested)
+  //   [2] option b  (nested)
+  //   [3] option 2  (root)
+
+  it('ArrowDown moves from root option into nested options', async () => {
+    const el = await nestedMenuFixture();
+    const rootMenu = el.querySelector('auro-menu');
+    const nestedMenu = el.querySelector('auro-menu auro-menu');
+    const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
+
+    // First ArrowDown → highlights option 1 (root)
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    await elementUpdated(rootMenu);
+
+    // Second ArrowDown → highlights option a (first nested option)
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    await elementUpdated(rootMenu);
+
+    expect(rootMenu.optionActive).to.equal(nestedOptions[0]);
+  });
+
+  it('ArrowDown moves from last nested option to next root option', async () => {
+    const el = await nestedMenuFixture();
+    const rootMenu = el.querySelector('auro-menu');
+    const rootOptions = [...el.querySelectorAll(':scope > auro-menu > auro-menuoption')];
+
+    // Navigate to option 1 → option a → option b → option 2
+    for (let i = 0; i < 4; i++) {
+      rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+      await elementUpdated(rootMenu);
+    }
+
+    expect(rootMenu.optionActive).to.equal(rootOptions[1]);
+  });
+
+  it('ArrowUp moves from first nested option back to the preceding root option', async () => {
+    const el = await nestedMenuFixture();
+    const rootMenu = el.querySelector('auro-menu');
+    const rootOptions = [...el.querySelectorAll(':scope > auro-menu > auro-menuoption')];
+
+    // Navigate down to the first nested option (option a)
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    await elementUpdated(rootMenu);
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    await elementUpdated(rootMenu);
+
+    // ArrowUp should go back to option 1 (root)
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowUp' }));
+    await elementUpdated(rootMenu);
+
+    expect(rootMenu.optionActive).to.equal(rootOptions[0]);
+  });
+
+  it('ArrowUp from top of nested menu wraps to last option', async () => {
+    const el = await nestedMenuFixture();
+    const rootMenu = el.querySelector('auro-menu');
+    const allOptions = [...el.querySelectorAll('auro-menuoption')];
+
+    // ArrowUp with no active option wraps to the last option
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowUp' }));
+    await elementUpdated(rootMenu);
+
+    expect(rootMenu.optionActive).to.equal(allOptions[allOptions.length - 1]);
+  });
+
+  it('Enter selects a nested option', async () => {
+    const el = await nestedMenuFixture();
+    const rootMenu = el.querySelector('auro-menu');
+    const nestedMenu = el.querySelector('auro-menu auro-menu');
+    const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
+
+    // Navigate to first nested option (option a)
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    await elementUpdated(rootMenu);
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    await elementUpdated(rootMenu);
+
+    // Select it
+    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'Enter' }));
+    await elementUpdated(rootMenu);
+
+    expect(rootMenu.optionSelected).to.equal(nestedOptions[0]);
+    expect(nestedOptions[0].hasAttribute('selected')).to.be.true;
+    expect(rootMenu.value).to.equal('option a');
+  });
+});
+
 function getOptions(menu) {
   let options = menu.shadowRoot.querySelector('slot').assignedNodes();
 

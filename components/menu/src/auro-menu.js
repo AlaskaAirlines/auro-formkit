@@ -328,6 +328,13 @@ export class AuroMenu extends AuroElement {
    * @protected
    */
   provideContext() {
+    if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
+      this.rootMenu = false;
+      this.menuService = this.parentElement.menuService;
+      this._contextProvider = this.parentElement._contextProvider;
+      return;
+    }
+
     this.menuService = new MenuService({host: this});
     this.menuService.setProperties(this.propertyValues);
     this.menuService.subscribe(this.handleMenuChange.bind(this));
@@ -510,9 +517,9 @@ export class AuroMenu extends AuroElement {
       if (this.multiSelect) {
         this.setAttribute('aria-multiselectable', 'true');
       }
-
-      this.handleNestedMenus(this);
     }
+
+    this.handleNestedMenus(this);
   }
 
   /**
@@ -611,10 +618,6 @@ export class AuroMenu extends AuroElement {
    * @private
    */
   handleSlotChange() {
-    if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
-      this.rootMenu = false;
-    }
-
     if (this.rootMenu) {
       this.initializeMenu();
     }
