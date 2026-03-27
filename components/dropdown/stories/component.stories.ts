@@ -3,6 +3,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
+import { wait } from '../../../.storybook/test-helpers';
 
 import '../src/registered';
 
@@ -17,10 +18,6 @@ const meta: Meta = {
 export default meta;
 
 type Story = StoryObj;
-
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 // ─── §1.3.1  Click opens the bib (P0) ───────────────────────────────────────
 export const DropdownOpenViaClick: Story = {
@@ -106,7 +103,7 @@ export const DropdownOpenViaSpace: Story = {
     // immediately toggle the bib closed. dispatchEvent fires only the keydown.
     trigger.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, composed: true }));
     // Wait one tick for Lit's microtask update to reflect the `open` attribute.
-    await new Promise((r) => setTimeout(r, 0));
+    await wait(0);
     const el = canvasElement.querySelector('auro-dropdown');
     await expect(el).toHaveAttribute('open');
   },
@@ -157,7 +154,7 @@ export const DropdownDisableEventShow: Story = {
     // show() updates isPopoverVisible through Lit's microtask update cycle;
     // wait one tick for the `open` attribute to be reflected to the DOM.
     el.show();
-    await new Promise((r) => setTimeout(r, 0));
+    await wait(0);
     await expect(el).toHaveAttribute('open');
   },
 };

@@ -3,6 +3,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
+import { wait, waitForDoubleFrame } from '../../../.storybook/test-helpers';
 
 import '../src/registered';
 
@@ -18,10 +19,6 @@ export default meta;
 
 type Story = StoryObj;
 
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 // Helper: open the bib and return an array of enabled (non-disabled) cell buttons.
 // Awaits the full shadow DOM rendering chain before querying.
 async function openBibAndGetEnabledCellBtns(el: any): Promise<HTMLButtonElement[]> {
@@ -31,7 +28,7 @@ async function openBibAndGetEnabledCellBtns(el: any): Promise<HTMLButtonElement[
   // Wait for the calendar to become visible and finish rendering
   const calendar: any = el.calendar;
   await calendar.updateComplete;
-  await new Promise((r) => setTimeout(r, 50));
+  await wait(50);
 
   const calendarMonth: any = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
   await calendarMonth.updateComplete;
@@ -65,7 +62,7 @@ export const DatepickerBibOpensOnClick: Story = {
     el.inputList[0].click();
     await el.updateComplete;
     await el.dropdown.updateComplete;
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await wait(100);
     await wait(50);
 
@@ -147,7 +144,7 @@ export const DatepickerRequiredValidationError: Story = {
     el.focus();
     el.blur();
     await el.updateComplete;
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     await expect(el.getAttribute('validity')).toBe('valueMissing');
   },
@@ -299,7 +296,7 @@ export const DatepickerBibOpensOnEnter: Story = {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     await el.updateComplete;
     await el.dropdown.updateComplete;
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await wait(100);
 
     await expect(el.dropdown.isPopoverVisible).toBe(true);

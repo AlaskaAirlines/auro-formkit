@@ -2,6 +2,7 @@
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
+import { wait } from '../../../.storybook/test-helpers';
 import { getStorybookHelpers } from "@wc-toolkit/storybook-helpers";
 const { args, argTypes, template } = getStorybookHelpers("auro-radio-group");
 
@@ -137,7 +138,7 @@ export const RadioRequiredValidationError: Story = {
     // Dispatching blur directly on the host triggers handleBlur → auroRadio-blur
     // → handleRadioBlur on group → validation.validate().
     radio1.dispatchEvent(new Event('blur'));
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     await el.updateComplete;
     await expect(el.validity).toBe('valueMissing');
   },

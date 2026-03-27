@@ -4,6 +4,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect } from 'storybook/test';
 import { html } from 'lit-html';
 import '../../menu/src/registered';
+import { wait, waitForDoubleFrame, waitUntil } from '../../../.storybook/test-helpers';
 
 import '../src/registered';
 
@@ -53,11 +54,11 @@ export const ComboboxBibOpensOnType: Story = {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     setInputValue(el, 'ap');
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     // Click the trigger to open the bib once there is a typed value
     const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
     trigger.click();
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     await expect(el.dropdown.isPopoverVisible).toBe(true);
   },
 };
@@ -84,7 +85,7 @@ export const ComboboxArrowKeyNavigation: Story = {
     setInputValue(el, 'a');
     // Enter opens the bib when a value is typed
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await el.updateComplete;
     await expect(el.optionActive).not.toBeNull();
@@ -120,7 +121,7 @@ export const ComboboxEnterSelectsOption: Story = {
     // Select it
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await el.updateComplete;
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     await expect(el.dropdown.isPopoverVisible).toBe(false);
     await expect(el.value).not.toBeNull();
   },
@@ -235,7 +236,7 @@ export const ComboboxAriaActiveDescendant: Story = {
     await el.updateComplete;
     setInputValue(el, 'a');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await el.updateComplete;
     await expect(el.optionActive).not.toBeNull();
@@ -287,10 +288,10 @@ export const ComboboxShiftTabMovesToFirstOption: Story = {
     // is too fast — it resolves before auro-combobox finishes its own update.
     // This matches the ComboboxBibOpensOnType pattern.
     setInputValue(el, 'a');
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
     trigger.click();
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     await expect(el.dropdown.isPopoverVisible).toBe(true);
 
     // Navigate away from first option
@@ -341,9 +342,9 @@ export const ComboboxBibOpenFiltered: Story = {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     setInputValue(el, 'gr');
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     el.showBib();
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     await expect(el.dropdown.isPopoverVisible).toBe(true);
   },
 };
@@ -374,9 +375,9 @@ export const ComboboxBibOpenNoFilter: Story = {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     setInputValue(el, 'ap');
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     el.showBib();
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     await expect(el.dropdown.isPopoverVisible).toBe(true);
   },
 };
@@ -407,7 +408,7 @@ export const ComboboxBibOpenOptionHighlighted: Story = {
     await el.updateComplete;
     setInputValue(el, 'a');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await el.updateComplete;
     await expect(el.dropdown.isPopoverVisible).toBe(true);
@@ -446,11 +447,11 @@ export const ComboboxFullscreenSyncCloseRestoresFocus: Story = {
     // the bib open. Must be done before opening fullscreen because
     // showModal() makes outer elements inert.
     setInputValue(el, 'a');
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
 
     // --- First cycle: open fullscreen → close ---
     dropdown.show();
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     await expect(dropdown.isBibFullscreen).toBe(true);
     await expect(dropdown.isPopoverVisible).toBe(true);
 
@@ -463,12 +464,12 @@ export const ComboboxFullscreenSyncCloseRestoresFocus: Story = {
     const dialog = bibEl.shadowRoot.querySelector('dialog') as HTMLDialogElement;
     await expect(dialog.open).toBe(false);
 
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await expect(dropdown.isPopoverVisible).toBe(false);
 
     // --- Second cycle: open fullscreen again → close ---
     dropdown.show();
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     await expect(dropdown.isPopoverVisible).toBe(true);
 
     el.hideBib();
@@ -476,24 +477,13 @@ export const ComboboxFullscreenSyncCloseRestoresFocus: Story = {
     // Same synchronous-close assertion on the second cycle
     await expect(dialog.open).toBe(false);
 
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await expect(dropdown.isPopoverVisible).toBe(false);
   },
 };
 
 // ─── Arrow keys do not open bib when clear button is focused ─────────────────
 
-/**
- * Polls a predicate until it returns true or the timeout expires.
- * More accurate than fixed setTimeout delays — resolves as soon as
- * the condition is met rather than always waiting a fixed duration.
- */
-async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20) {
-  const deadline = Date.now() + timeout;
-  while (!predicate() && Date.now() < deadline) {
-    await new Promise((r) => setTimeout(r, interval));
-  }
-}
 
 export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
   tags: ['!autodocs'],
@@ -538,7 +528,7 @@ export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
     // this, the rAF can steal focus from nativeBtn after we set it, making
     // the isClearBtnFocused guard return false on cloud/CI runners where the
     // rAF fires slightly later than the 20 ms waitUntil poll interval.
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
 
     // Focus the native button inside the clear button's shadow DOM.
     // The clear button is hidden (width:0/opacity:0) unless the wrapper has
