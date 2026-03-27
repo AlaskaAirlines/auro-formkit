@@ -18,7 +18,7 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import { announceToScreenReader, closeFullscreenDialog, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
+import { announceToScreenReader, getAnnouncementRoot, closeFullscreenDialog, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -791,17 +791,10 @@ export class AuroSelect extends AuroElement {
       }
 
       // Announce the active option for screen readers.
-      // In fullscreen mode the select's live region is outside the modal
-      // dialog and inert, so route announcements to the bib's live region
-      // which is inside the dialog.
       if (this.optionActive) {
         const optionText = this.optionActive.textContent.trim();
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
-        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
-        const bibShadowRoot = bibEl && bibEl.shadowRoot;
-        const announcementRoot = this.dropdown.isBibFullscreen && bibShadowRoot
-          ? bibShadowRoot
-          : this.shadowRoot;
+        const announcementRoot = getAnnouncementRoot(this.dropdown, this.shadowRoot);
 
         announceToScreenReader(announcementRoot, `${optionText}${selectedState}`);
       }

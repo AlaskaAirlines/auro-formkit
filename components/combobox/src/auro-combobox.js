@@ -14,7 +14,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 
-import { announceToScreenReader, closeFullscreenDialog, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
+import { announceToScreenReader, getAnnouncementRoot, closeFullscreenDialog, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { comboboxKeyboardStrategy } from './comboboxKeyboardStrategy.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
@@ -1091,14 +1091,7 @@ export class AuroCombobox extends AuroElement {
         const optionIndex = this.availableOptions.indexOf(this.optionActive) + 1;
         const optionCount = this.availableOptions.length;
 
-        // In fullscreen mode the combobox's live region is outside the modal
-        // dialog and inert, so route announcements to the bib's live region
-        // which is inside the dialog.
-        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
-        const bibShadowRoot = bibEl && bibEl.shadowRoot;
-        const announcementRoot = this.dropdown.isBibFullscreen && bibShadowRoot
-          ? bibShadowRoot
-          : this.shadowRoot;
+        const announcementRoot = getAnnouncementRoot(this.dropdown, this.shadowRoot);
 
         announceToScreenReader(announcementRoot, `${optionText}${selectedState}, ${optionIndex} of ${optionCount}`);
       }

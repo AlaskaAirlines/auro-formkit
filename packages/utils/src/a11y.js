@@ -20,6 +20,25 @@ const ANNOUNCEMENT_DURATION_MS = 1000;
 // in the first component's live region.
 const pendingClearTimeouts = new WeakMap();
 
+/**
+ * Returns the shadow root where live-region announcements should be routed.
+ *
+ * In fullscreen mode the component's own live region sits outside the modal
+ * dialog and is inert, so announcements must go to the bib's live region
+ * (inside the dialog) instead.
+ *
+ * @param {HTMLElement} dropdown - The `auro-dropdown` element.
+ * @param {ShadowRoot} fallbackRoot - The component's own shadow root (used in desktop mode).
+ * @returns {ShadowRoot} The shadow root containing the target `#srAnnouncement` element.
+ */
+export function getAnnouncementRoot(dropdown, fallbackRoot) {
+  const bibEl = dropdown.bibElement && dropdown.bibElement.value;
+  const bibShadowRoot = bibEl && bibEl.shadowRoot;
+  return dropdown.isBibFullscreen && bibShadowRoot
+    ? bibShadowRoot
+    : fallbackRoot;
+}
+
 export function announceToScreenReader(shadowRoot, text) {
   const liveRegion = shadowRoot.querySelector('#srAnnouncement');
   if (liveRegion) {

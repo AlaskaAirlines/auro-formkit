@@ -2,6 +2,7 @@
 import { fixture, html, expect, waitUntil, elementUpdated, oneEvent } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import { comboboxKeyboardStrategy } from '../src/comboboxKeyboardStrategy.js';
+import { getAnnouncementRoot } from '@aurodesignsystem/utils';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
 
@@ -1021,12 +1022,7 @@ function runFulltest(mobileview) {
       // Wait a frame for the rAF inside announceToScreenReader
       await new Promise((resolve) => requestAnimationFrame(resolve));
 
-      // In fullscreen mode, announcements route to the bib's live region
-      // inside the dialog; in desktop mode, to the component's own shadow root.
-      const announcementRoot = el.dropdown.isBibFullscreen
-        ? el.dropdown.bibElement.value.shadowRoot
-        : el.shadowRoot;
-      const liveRegion = announcementRoot.querySelector('#srAnnouncement');
+      const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
       expect(liveRegion).to.exist;
       expect(liveRegion.textContent).to.not.equal('');
     });
@@ -1045,12 +1041,7 @@ function runFulltest(mobileview) {
 
       await new Promise((resolve) => requestAnimationFrame(resolve));
 
-      // In fullscreen mode, announcements route to the bib's live region
-      // inside the dialog; in desktop mode, to the component's own shadow root.
-      const announcementRoot = el.dropdown.isBibFullscreen
-        ? el.dropdown.bibElement.value.shadowRoot
-        : el.shadowRoot;
-      const liveRegion = announcementRoot.querySelector('#srAnnouncement');
+      const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
       expect(liveRegion.textContent).to.not.equal('');
 
       // Multiple announcements can chain (e.g., active-option followed by selection),
