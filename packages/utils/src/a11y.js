@@ -29,17 +29,20 @@ const pendingClearTimeouts = new WeakMap();
  *
  * @param {HTMLElement} dropdown - The `auro-dropdown` element.
  * @param {ShadowRoot} fallbackRoot - The component's own shadow root (used in desktop mode).
- * @returns {ShadowRoot} The shadow root containing the target `#srAnnouncement` element.
+ * @returns {ShadowRoot|null} The shadow root containing the target `#srAnnouncement` element,
+ *   or `null` when fullscreen mode is active but the bib shadow root is not yet available
+ *   (the announcement is silently skipped rather than sent to the inert host shadow root).
  */
 export function getAnnouncementRoot(dropdown, fallbackRoot) {
-  const bibEl = dropdown.bibElement && dropdown.bibElement.value;
-  const bibShadowRoot = bibEl && bibEl.shadowRoot;
-  return dropdown.isBibFullscreen && bibShadowRoot
-    ? bibShadowRoot
-    : fallbackRoot;
+  if (dropdown.isBibFullscreen) {
+    const bibEl = dropdown.bibElement && dropdown.bibElement.value;
+    return (bibEl && bibEl.shadowRoot) || null;
+  }
+  return fallbackRoot;
 }
 
 export function announceToScreenReader(shadowRoot, text) {
+  if (!shadowRoot) return;
   const liveRegion = shadowRoot.querySelector('#srAnnouncement');
   if (liveRegion) {
     // Cancel any pending clear so a previous announcement's timeout
