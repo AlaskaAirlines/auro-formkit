@@ -225,17 +225,17 @@ Menu options are **not in the Tab order**. They use `aria-activedescendant` for 
 
 ### Fullscreen (Mobile) — Combobox Dialog Open
 
-Same arrow key, Enter, and Escape behavior as select. Tab behavior differs because the combobox has an input with a clear button inside the dialog.
+Same arrow key, Enter, and Escape behavior as select. Tab behavior differs because the combobox has an input with a clear button inside the dialog. When an option is highlighted, Tab always selects immediately and closes — it does not cycle to the dialog's clear button first. The clear button tab stop only applies when no option is highlighted.
 
 | Key | Behavior | Spec Basis | Notes |
 |---|---|---|---|
 | **Down Arrow** | Moves visual focus to next option (wraps to first at end) | APG listbox | Same as desktop |
 | **Up Arrow** | Moves visual focus to previous option (wraps to last at start) | APG listbox | Same as desktop |
-| **Enter** | Selects the highlighted option, closes the dialog, returns focus to trigger | APG listbox + dialog close convention | Same as desktop |
+| **Enter** | Selects the highlighted option, closes the dialog, returns focus to trigger's clear button | APG listbox + dialog close convention | Same as desktop |
 | **Escape** | Closes the dialog without selecting, returns focus to trigger | Native `<dialog>` `cancel` event | Browsers handle this natively for `<dialog>` |
-| **Tab** (focus on input, clear button visible) | Moves focus to the clear button | Design decision | Clear button is the only focusable element besides the input |
-| **Tab** (focus on clear button, option highlighted) | Selects the highlighted option, closes the dialog, returns focus to trigger | Design decision | Consistent with select's Tab behavior |
-| **Tab** (focus on clear button, no option highlighted) | Closes the dialog, returns focus to trigger | Design decision | Tabbing past the last focusable element closes the dialog |
+| **Tab** (option highlighted) | Selects the highlighted option, closes the dialog, returns focus to trigger's clear button | Design decision | Active option takes priority — selection is immediate regardless of clear button state |
+| **Tab** (no option highlighted, clear button visible) | Moves focus to the dialog's clear button | Design decision | Clear button is the only focusable element besides the input |
+| **Tab** (from clear button, no option highlighted) | Closes the dialog, returns focus to trigger | Design decision | Tabbing past the last focusable element closes the dialog |
 | **Tab** (no clear button / no value) | Closes the dialog, returns focus to trigger | Design decision | Same as select behavior |
 | **Shift+Tab** | Moves visual focus to first non-disabled option, keeps dialog open, no selection | Design decision | Available regardless of clear button state; bridge re-dispatches Shift+Tab with `shiftKey` preserved |
 
@@ -300,16 +300,18 @@ No additional `navKeys` entry or bridge change is needed — `'Tab'` already cov
 2. Returning focus to the trigger (instead of the next focusable element) follows standard dialog convention — when a dialog closes, focus returns to the element that invoked it.
 3. This makes Tab consistent with Enter and Escape, which all close the dialog and return focus to the trigger.
 
-### Tab: Input → Clear Button → Close (Combobox)
+### Tab: Select Immediately, Then Clear Button Focus (Combobox)
 
-**What we do:** In fullscreen, Tab cycles through the interactive elements in the dialog before closing: input → clear button → close dialog. Clicking the clear button clears the input without closing the dialog so the user can continue searching.
+**What we do:** In both desktop and fullscreen, if an option is highlighted when Tab is pressed, it is selected immediately and the bib/dialog closes. Focus moves to the **trigger's clear button** (not the trigger input). If no option is highlighted, Tab cycles to the dialog's clear button (fullscreen only) before closing.
 
 **Why:**
-1. The combobox dialog has an input with a clear button — a genuinely focusable interactive element beyond the input itself, unlike select which has no input.
-2. Tabbing to the clear button before closing gives keyboard users the same clearing ability that touch/mouse users get by tapping/clicking it.
-3. Tabbing past the last focusable element (the clear button) closes the dialog and returns focus to the trigger, consistent with select's Tab-to-close behavior.
+1. Immediate selection on Tab prioritizes the user's intent — they highlighted an option and are moving on. Cycling to the dialog's clear button first would add an unnecessary intermediate step.
+2. Focusing the trigger's clear button after selection gives keyboard users direct access to undo the selection without additional Tab presses, matching the expected workflow of select → review → optionally clear.
+3. When no option is highlighted, the dialog's clear button tab stop is preserved so keyboard users can clear the input without closing the dialog.
 
-**Safari workaround:** Safari does not propagate `:focus-within` through shadow DOM boundaries. When focus moves from the native `<input>` to the `auro-button` (clear button), `.wrapper:not(:focus-within)` applies and hides the clear button container. The strategy handler forces `display: flex` on the container via inline style and cleans it up on `focusout`.
+**Safari workaround:** Safari does not propagate `:focus-within` through shadow DOM boundaries. When focus moves to the `auro-button` (clear button), `.wrapper:not(:focus-within)` applies and hides the clear button container. Both the dialog tab handler and `setClearBtnFocus()` force `display: flex` on the container via inline style and clean it up on `focusout`.
+
+**showBib suppression:** Setting the menu value during Tab selection triggers Lit's `updated()` lifecycle, which detects `availableOptions` changes and calls `showBib()` — reopening the dropdown after it was just closed. The `_clearBtnFocusPending` flag is set before `makeSelection()` to suppress `showBib()` during this window, and cleared after the clear button receives focus.
 
 ### Space: Not Yet Implemented in Fullscreen
 

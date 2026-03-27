@@ -697,6 +697,12 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
+    // Suppress reopening the bib when a Tab selection is in progress —
+    // the value change from makeSelection triggers availableOptions update
+    // which calls showBib from updated(), but the bib should stay closed.
+    if (this._clearBtnFocusPending) {
+      return;
+    }
     if (!this.input.value && !this.dropdown.isBibFullscreen) {
       this.dropdown.hide();
       return;
@@ -767,7 +773,38 @@ export class AuroCombobox extends AuroElement {
         // during fullscreen open to prevent touch pass-through.
         this.menu.style.pointerEvents = '';
 
-        restoreTriggerAfterClose(this.dropdown, this.input);
+        const shouldFocusClearBtn = this._focusClearBtnAfterClose;
+        this._focusClearBtnAfterClose = false;
+
+        if (shouldFocusClearBtn) {
+          // Set a guard so duplicate toggle events don't call
+          // restoreTriggerAfterClose and steal focus from the clear button.
+          this._clearBtnFocusPending = true;
+
+          restoreTriggerAfterClose(this.dropdown, this.input);
+
+          if (this.input.componentHasFocus) {
+            // Desktop: input already has focus, redirect to clear button
+            // after restoreTriggerAfterClose's rAF settles.
+            requestAnimationFrame(() => {
+              this.setClearBtnFocus();
+              this._clearBtnFocusPending = false;
+            });
+          } else {
+            // Fullscreen: input will receive focus after dialog.close().
+            // Listen for that focus event then redirect to clear button.
+            const onFocus = () => {
+              this.input.removeEventListener('focusin', onFocus);
+              requestAnimationFrame(() => {
+                this.setClearBtnFocus();
+                this._clearBtnFocusPending = false;
+              });
+            };
+            this.input.addEventListener('focusin', onFocus);
+          }
+        } else if (!this._clearBtnFocusPending) {
+          restoreTriggerAfterClose(this.dropdown, this.input);
+        }
       }
 
       if (this.dropdownOpen) {
@@ -858,7 +895,28 @@ export class AuroCombobox extends AuroElement {
   setClearBtnFocus() {
     const clearBtn = this.input.shadowRoot.querySelector('.clearBtn');
     if (clearBtn) {
-      clearBtn.focus();
+      // Force the clear button container visible — without :focus-within
+      // the CSS rule `.wrapper:not(:focus-within) .notification.clear`
+      // hides the container with display:none, preventing focus.
+      const clearContainer = clearBtn.closest('.clear');
+
+      if (clearContainer) {
+        clearContainer.style.display = 'flex';
+        clearBtn.addEventListener('focusout', () => {
+          requestAnimationFrame(() => {
+            clearContainer.style.display = '';
+          });
+        }, { once: true });
+      }
+
+      // Focus the native button inside auro-button so the browser
+      // treats it as a real focusable element.
+      const nativeBtn = clearBtn.shadowRoot && clearBtn.shadowRoot.querySelector('button');
+      if (nativeBtn) {
+        nativeBtn.focus();
+      } else {
+        clearBtn.focus();
+      }
     }
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { navigateArrow } from '@aurodesignsystem/utils';
 
 /**
@@ -77,15 +78,32 @@ export const comboboxKeyboardStrategy = {
       if (!ctx.activeInput) {
         return;
       }
+
+      // Active option → select immediately and close the dialog.
+      // Flag the component so the close handler focuses the trigger's
+      // clear button instead of the input. Set flags before makeSelection
+      // because the value change triggers showBib via Lit's updated().
+      if (component.optionActive) {
+        evt.preventDefault();
+        component._focusClearBtnAfterClose = true;
+        component._clearBtnFocusPending = true;
+        component.menu.makeSelection();
+        component.hideBib();
+        return;
+      }
+
       const clearBtn = getClearBtn(ctx);
       const clearBtnHasFocus = isClearBtnFocused(ctx, clearBtn);
 
-      // Tab from input: if clear button exists and doesn't have focus, focus it
+      // No active option, input has a value, clear button not focused →
+      // move focus to the dialog's clear button.
       if (clearBtn && !clearBtnHasFocus && ctx.activeInput.value) {
+
         // Force clear button container visible to work around Safari not
         // propagating :focus-within through shadow DOM boundaries, which
         // causes .wrapper:not(:focus-within) to hide .notification.clear.
         const clearContainer = clearBtn.closest('.clear');
+
         if (clearContainer) {
           clearContainer.style.display = 'flex';
           clearBtn.addEventListener('focusout', () => {
@@ -108,18 +126,17 @@ export const comboboxKeyboardStrategy = {
         return;
       }
 
-      // Tab from clear button (or no clear button / no value) →
-      // select the highlighted option if any, then close
-      if (component.optionActive) {
-        component.menu.makeSelection();
-      }
+      // No active option, no clear button (or already focused) → just close.
       component.hideBib();
       return;
     }
 
     // Non-fullscreen: select + close
-    if (component.menu.optionActive && component.menu.optionActive.value) {
-      component.menu.value = component.menu.optionActive.value;
+    if (component.optionActive) {
+      evt.preventDefault();
+      component._focusClearBtnAfterClose = true;
+      component._clearBtnFocusPending = true;
+      component.menu.makeSelection();
     }
     component.hideBib();
   },
