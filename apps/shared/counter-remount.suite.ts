@@ -41,6 +41,11 @@ export function counterRemountSuite(framework: string, options?: SuiteOptions) {
   test.describe(`auro-counter-group (remount) in ${framework}`, () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(route);
+      // Wait for all framework JS (including SvelteKit's dynamic page imports) to
+      // finish executing before interacting with the page. Without this, the onclick
+      // handler on #toggle may not yet be attached on slower CI machines (Node 20),
+      // causing waitForSelector('detached') to time out.
+      await page.waitForLoadState('networkidle');
       await page.waitForFunction(
         () => customElements.get('auro-counter-group') !== undefined,
         { timeout: 10_000 },
