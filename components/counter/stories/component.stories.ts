@@ -3,6 +3,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
+import { wait } from '../../../.storybook/test-helpers';
 
 import '../src/registered';
 
@@ -18,10 +19,6 @@ const meta: Meta = {
 export default meta;
 
 type Story = StoryObj;
-
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export const CounterAtMax: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],

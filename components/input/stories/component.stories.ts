@@ -3,6 +3,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
+import { wait } from '../../../.storybook/test-helpers';
 
 import '../src/registered';
 
@@ -31,7 +32,7 @@ export const InputFocused: Story = {
     const el = canvasElement.querySelector('auro-input') as any;
     const input = el.shadowRoot.querySelector('input');
     input.focus();
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
   },
 };
 
@@ -122,7 +123,7 @@ export const InputRequiredValidationError: Story = {
     const input = el.shadowRoot.querySelector('input');
     input.focus();
     input.blur();
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     await expect(el.getAttribute('validity')).toBe('valueMissing');
   },
 };
@@ -146,7 +147,7 @@ export const InputValidateOnInputPatternMismatch: Story = {
     input.focus();
     input.value = 'foo';
     input.dispatchEvent(new InputEvent('input', { bubbles: true }));
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     await expect(el.getAttribute('validity')).toBe('patternMismatch');
   },
 };
@@ -171,10 +172,10 @@ export const InputValidateOnInputValid: Story = {
     // Type invalid first, then correct
     input.value = 'foo';
     input.dispatchEvent(new InputEvent('input', { bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     input.value = 'foo bar';
     input.dispatchEvent(new InputEvent('input', { bubbles: true }));
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
     await expect(el.getAttribute('validity')).toBe('valid');
   },
 };

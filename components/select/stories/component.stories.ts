@@ -4,6 +4,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
 import '../../menu/src/registered';
+import { wait, waitForDoubleFrame } from '../../../.storybook/test-helpers';
 
 import '../src/registered';
 
@@ -18,10 +19,6 @@ const meta: Meta = {
 export default meta;
 
 type Story = StoryObj;
-
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 // ─── §2.1.1  Open dropdown and select an option (P0) ────────────────────────
 export const SelectOpenAndSelectOption: Story = {
@@ -81,13 +78,13 @@ export const SelectKeyboardNavAndEnter: Story = {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 
     // Wait for menu to reflect active state
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     const priceOption = el.querySelector('auro-menuoption[value="price"]');
     await expect(priceOption.classList.contains('active')).toBe(true);
 
     // Enter confirms selection
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     await expect(el.value).toBe('price');
     await expect(el.isPopoverVisible).toBe(false);
@@ -117,11 +114,11 @@ export const SelectTabSelectsOption: Story = {
 
     // Arrow down once → first option active
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     // Tab → selects the active option and closes
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     await expect(el.value).toBe('stops');
     await expect(el.isPopoverVisible).toBe(false);
@@ -150,11 +147,11 @@ export const SelectEscapeClosesWithoutSelect: Story = {
     await expect(el.isPopoverVisible).toBe(true);
 
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     // Escape via document-level dispatch (matches how auroFloatingUI listens)
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     await expect(el.isPopoverVisible).toBe(false);
     await expect(el.value).toBeUndefined();
@@ -181,7 +178,7 @@ export const SelectTypeAhead: Story = {
 
     // Press "p" without opening first — type-ahead should activate Price
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'p', bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     const priceOption = el.querySelector('auro-menuoption[value="price"]');
     await expect(priceOption.classList.contains('active')).toBe(true);
@@ -217,7 +214,7 @@ export const SelectAriaComboboxAttributes: Story = {
 
     // Close via Escape
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
     await expect(trigger.getAttribute('aria-expanded')).toBe('false');
   },
 };
@@ -249,11 +246,11 @@ export const SelectShiftTabMovesToFirstOption: Story = {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     // Shift+Tab: should move active to first option without selecting or closing
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
-    await new Promise((r) => setTimeout(r, 50));
+    await wait(50);
 
     await expect(firstOption.classList.contains('active')).toBe(true);
     await expect(el.isPopoverVisible).toBe(true);
@@ -285,7 +282,7 @@ export const SelectEmphasizedOpen: Story = {
     const el = canvasElement.querySelector('auro-select') as any;
     await el.updateComplete;
     el.showBib();
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await wait(100);
     await wait(50);
     await expect(el.isPopoverVisible).toBe(true);
@@ -319,7 +316,7 @@ export const SelectSnowflakeOpen: Story = {
     el.showBib();
 
     // Allow fullscreen bib focus/positioning and Lit updates to settle for snapshot stability.
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await wait(100);
     await wait(50);
 
@@ -355,7 +352,7 @@ export const SelectFullscreenSyncCloseRestoresFocus: Story = {
 
     // --- First cycle: open fullscreen → close ---
     el.showBib();
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await expect(dropdown.isBibFullscreen).toBe(true);
     await expect(el.isPopoverVisible).toBe(true);
 
@@ -368,12 +365,12 @@ export const SelectFullscreenSyncCloseRestoresFocus: Story = {
     const dialog = bibEl.shadowRoot.querySelector('dialog') as HTMLDialogElement;
     await expect(dialog.open).toBe(false);
 
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await expect(el.isPopoverVisible).toBe(false);
 
     // --- Second cycle: open fullscreen again → close ---
     el.showBib();
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await expect(el.isPopoverVisible).toBe(true);
 
     el.hideBib();
@@ -381,7 +378,7 @@ export const SelectFullscreenSyncCloseRestoresFocus: Story = {
     // Same synchronous-close assertion on the second cycle
     await expect(dialog.open).toBe(false);
 
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
     await expect(el.isPopoverVisible).toBe(false);
   },
 };
@@ -411,7 +408,7 @@ export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
     await el.updateComplete;
 
     el.showBib();
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await waitForDoubleFrame();
 
     const dropdown = el.dropdown;
     const bib = dropdown.bibContent;
@@ -447,7 +444,7 @@ export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
       bubbles: true,
       composed: true
     }));
-    await new Promise((r) => setTimeout(r, 100));
+    await wait(100);
 
     // The bridge forwarded Enter → makeSelection() selected the
     // highlighted option and closed the dialog.
