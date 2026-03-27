@@ -68,8 +68,7 @@
     "test:framework:svelte": "turbo run test:framework --filter=@aurodesignsystem/svelte-framework",
     "test:frameworks": "turbo run test:framework --filter=@aurodesignsystem/react-framework --filter=@aurodesignsystem/svelte-framework",
     "test:framework:report:react": "npm run test:framework:report -w apps/react-framework",
-    "test:framework:report:svelte": "npm run test:framework:report -w apps/svelte-framework",
-    "test:frameworks:report": "rm -rf framework-blobs && mkdir framework-blobs; npm run test:framework:report -w apps/react-framework -- --reporter=blob; npm run test:framework:report -w apps/svelte-framework -- --reporter=blob; cp apps/react-framework/blob-report/*.zip framework-blobs/ 2>/dev/null; cp apps/svelte-framework/blob-report/*.zip framework-blobs/ 2>/dev/null; npx playwright merge-reports --reporter html framework-blobs && npx playwright show-report"
+    "test:framework:report:svelte": "npm run test:framework:report -w apps/svelte-framework"
   },
   "dependencies": {
     "@lit/context": "^1.1.6",
