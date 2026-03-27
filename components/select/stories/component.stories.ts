@@ -327,6 +327,65 @@ export const SelectSnowflakeOpen: Story = {
   },
 };
 
+// ─── §2.2.5  Fullscreen: dialog closes synchronously so focus restores to trigger ─
+export const SelectFullscreenSyncCloseRestoresFocus: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  globals: {
+    viewport: {
+      value: 'xs',
+      isRotated: false
+    }
+  },
+  render: () => html`
+<auro-select fullscreenBreakpoint="xl">
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+
+    const dropdown = el.dropdown;
+
+    // --- First cycle: open fullscreen → close ---
+    el.showBib();
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await expect(dropdown.isBibFullscreen).toBe(true);
+    await expect(el.isPopoverVisible).toBe(true);
+
+    el.hideBib();
+
+    // The dialog must already be closed synchronously — before Lit's
+    // async updated() closes it. Without the synchronous bibEl.close()
+    // in the toggle handler, dialog.open would still be true here.
+    const bibEl = dropdown.bibElement.value;
+    const dialog = bibEl.shadowRoot.querySelector('dialog') as HTMLDialogElement;
+    await expect(dialog.open).toBe(false);
+
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await expect(el.isPopoverVisible).toBe(false);
+
+    // --- Second cycle: open fullscreen again → close ---
+    el.showBib();
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await expect(el.isPopoverVisible).toBe(true);
+
+    el.hideBib();
+
+    // Same synchronous-close assertion on the second cycle
+    await expect(dialog.open).toBe(false);
+
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await expect(el.isPopoverVisible).toBe(false);
+  },
+};
+
 // ─── §2.2.4  Fullscreen: Enter on close selects active option (P1) ─────────
 export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],

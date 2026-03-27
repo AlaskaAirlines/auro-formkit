@@ -773,6 +773,17 @@ export class AuroCombobox extends AuroElement {
         // during fullscreen open to prevent touch pass-through.
         this.menu.style.pointerEvents = '';
 
+        // Close the fullscreen dialog synchronously so the browser's native
+        // focus restoration (back to document.body) happens NOW, before the
+        // rAF in restoreTriggerAfterClose. Without this, dialog.close() runs
+        // in Lit's async update cycle and can race with the rAF — in some
+        // browsers the dialog steals focus back to body AFTER the rAF has
+        // already placed it on the trigger input.
+        const bibEl = this.dropdown.bibElement && this.dropdown.bibElement.value;
+        if (bibEl) {
+          bibEl.close();
+        }
+
         const shouldFocusClearBtn = this._focusClearBtnAfterClose;
         this._focusClearBtnAfterClose = false;
 

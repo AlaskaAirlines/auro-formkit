@@ -680,6 +680,44 @@ function runTest(mobileView) {
         await expect(el.value).to.equal('Apples');
         await expect(dropdown.isPopoverVisible).to.be.false;
       });
+
+      it('closes fullscreen dialog synchronously so focus restores to trigger', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        // --- First cycle: open fullscreen → close ---
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        el.hideBib();
+
+        // The dialog must already be closed synchronously — before Lit's
+        // async updated() would have closed it. Without the synchronous
+        // bibEl.close() in the toggle handler, dialog.open is still true
+        // here because Lit hasn't run its update cycle yet.
+        const bibEl = dropdown.bibElement.value;
+        const dialog = bibEl.shadowRoot.querySelector('dialog');
+        expect(dialog.open).to.be.false;
+
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await expect(dropdown.isPopoverVisible).to.be.false;
+
+        // --- Second cycle: open fullscreen again → close ---
+        trigger.click();
+        await elementUpdated(el);
+        await expect(dropdown.isPopoverVisible).to.be.true;
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        el.hideBib();
+
+        // Same synchronous-close assertion on the second cycle
+        expect(dialog.open).to.be.false;
+
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await expect(dropdown.isPopoverVisible).to.be.false;
+      });
     }
 
     it('Navigates the menu with arrow keys', async () => {
