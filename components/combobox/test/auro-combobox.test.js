@@ -237,6 +237,53 @@ function runFulltest(mobileview) {
     await expect(el.value === options[0].textContent);
   });
 
+  it('Tab selects highlighted option and focuses trigger clear button', async () => {
+    const el = await defaultFixture(mobileview);
+
+    el.focus();
+    setInputValue(el, 'a');
+    await elementUpdated(el);
+
+    if (mobileview) {
+      // Wait for the fullscreen dialog to settle and focus to move to inputInBib.
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Highlight the first option.
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    const options = el.querySelectorAll('auro-menuoption');
+    await expect(el.optionActive).to.equal(options[0]);
+
+    // Register the close-event listener before dispatching Tab because hideBib()
+    // fires auroDropdown-toggled synchronously during the Tab handler.
+    const bibClosedPromise = oneEvent(el, 'auroDropdown-toggled');
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+
+    await bibClosedPromise;
+
+    // Drain the rAF chain that restores the trigger and focuses the clear button.
+    // Desktop:  rAF (restoreTriggerAfterClose) + rAF (setClearBtnFocus, componentHasFocus path)
+    // Mobile:   rAF (input.focus via restoreTriggerAfterClose) → focusin → rAF (setClearBtnFocus)
+    // Both paths resolve within two sequential animation frames.
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await elementUpdated(el);
+
+    // The highlighted option should be selected and the bib closed.
+    await expect(el.value).to.equal('Apples');
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+    // The trigger input's clear button should now have focus.
+    const clearBtn = el.input.shadowRoot.querySelector('.clearBtn');
+    expect(clearBtn).to.exist;
+    const nativeBtn = clearBtn.shadowRoot.querySelector('button');
+    expect(nativeBtn).to.exist;
+    expect(clearBtn.shadowRoot.activeElement).to.equal(nativeBtn);
+  });
+
   // ─── Shift+Tab moves active option to first non-disabled option ────────────────
   it('Shift+Tab moves active option to first option and keeps bib open', async () => {
     const el = await shiftTabFixture(mobileview);
@@ -318,20 +365,20 @@ function runFulltest(mobileview) {
     await expect(el.optionActive).to.be.null;
   });
 
-  // it('hides the bib when tabbing away from combobox', async () => {
-  //   const el = await defaultFixture(mobileview);
-  //   const trigger = el.dropdown.querySelector('[slot="trigger"]');
+  it('hides the bib when tabbing away from combobox', async () => {
+    const el = await defaultFixture(mobileview);
+    const trigger = el.dropdown.querySelector('[slot="trigger"]');
 
-  //   setInputValue(el, 'p');
-  //   trigger.click();
-  //   await expect(el.dropdown.isPopoverVisible).to.be.true;
+    setInputValue(el, 'p');
+    trigger.click();
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-  //   document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
-  //     'key': 'Tab'
-  //   }));
+    document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
+      'key': 'Tab'
+    }));
 
-  //   await expect(el.dropdown.isPopoverVisible).to.be.false;
-  // });
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
 
   // These tests require fullscreen (mobile) mode
   if (mobileview) {
