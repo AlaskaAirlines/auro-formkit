@@ -480,15 +480,23 @@ export const SelectFullscreenLiveRegionInBib: Story = {
     el.dropdown.isBibFullscreen = true;
     await el.dropdown.updateComplete;
 
+    const bibEl = el.dropdown.bibElement.value;
+
+    if (bibEl?.updateComplete) {
+      await bibEl.updateComplete;
+    }
+
     // Navigate to an option via the menu directly (dialog bridge
     // doesn't fire in Storybook's play function environment)
     el.menu.navigateOptions('down');
-    await el.updateComplete;
+    await el.dropdown.updateComplete;
+
+    if (bibEl?.updateComplete) {
+      await bibEl.updateComplete;
+    }
 
     // Wait a frame for the rAF inside announceToScreenReader
     await new Promise((r) => requestAnimationFrame(r));
-
-    const bibEl = el.dropdown.bibElement.value;
     const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
     await expect(bibLiveRegion).not.toBeNull();
     await expect(bibLiveRegion.textContent).not.toBe('');
