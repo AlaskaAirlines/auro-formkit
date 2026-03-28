@@ -478,7 +478,7 @@ export const SelectFullscreenLiveRegionInBib: Story = {
 
     // Simulate fullscreen
     el.dropdown.isBibFullscreen = true;
-    await el.updateComplete;
+    await el.dropdown.updateComplete;
 
     // Navigate to an option via the menu directly (dialog bridge
     // doesn't fire in Storybook's play function environment)

@@ -514,7 +514,7 @@ export const ComboboxFullscreenLiveRegionInBib: Story = {
 
     // Simulate fullscreen
     el.dropdown.isBibFullscreen = true;
-    await el.updateComplete;
+    await el.dropdown.updateComplete;
 
     // Navigate to an option via the menu directly (dialog bridge
     // doesn't fire in Storybook's play function environment)
@@ -559,7 +559,7 @@ export const ComboboxFullscreenActiveDescendantOnInputInBib: Story = {
 
     // Simulate fullscreen
     el.dropdown.isBibFullscreen = true;
-    await el.updateComplete;
+    await el.dropdown.updateComplete;
     await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
 
     // Navigate to an option
@@ -602,7 +602,7 @@ export const ComboboxFullscreenActiveDescendantClearedOnClose: Story = {
 
     // Simulate fullscreen
     el.dropdown.isBibFullscreen = true;
-    await el.updateComplete;
+    await el.dropdown.updateComplete;
     await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
 
     // Navigate to set activedescendant
