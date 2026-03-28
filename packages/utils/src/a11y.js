@@ -6,7 +6,7 @@
  * repeated identical announcements still fire, and is cleared again after
  * {@link ANNOUNCEMENT_DURATION_MS} so VoiceOver cannot swipe to stale text.
  *
- * @param {ShadowRoot} shadowRoot - The shadow root containing the live region.
+ * @param {ShadowRoot|null} shadowRoot - The shadow root containing the live region, or `null` (in which case the call is a no-op).
  * @param {string} text - The text to announce.
  */
 
