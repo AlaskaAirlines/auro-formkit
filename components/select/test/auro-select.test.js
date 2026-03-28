@@ -1192,7 +1192,7 @@ function runTest(mobileView) {
 
         // Simulate fullscreen (resize observers don't fire in test env)
         el.dropdown.isBibFullscreen = true;
-        await elementUpdated(el);
+        await elementUpdated(el.dropdown);
 
         // Navigate to an option
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));

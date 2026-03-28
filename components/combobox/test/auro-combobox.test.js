@@ -1065,7 +1065,7 @@ function runFulltest(mobileview) {
 
         // Simulate fullscreen (resize observers don't fire in test env)
         el.dropdown.isBibFullscreen = true;
-        await elementUpdated(el);
+        await elementUpdated(el.dropdown);
 
         // Navigate to an option
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -1093,7 +1093,7 @@ function runFulltest(mobileview) {
 
         // Simulate fullscreen (resize observers don't fire in test env)
         el.dropdown.isBibFullscreen = true;
-        await elementUpdated(el);
+        await elementUpdated(el.dropdown);
 
         // Wait for inputInBib's inner input to render
         await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
@@ -1127,7 +1127,7 @@ function runFulltest(mobileview) {
 
         // Simulate fullscreen (resize observers don't fire in test env)
         el.dropdown.isBibFullscreen = true;
-        await elementUpdated(el);
+        await elementUpdated(el.dropdown);
 
         // Wait for inputInBib's inner input to render
         await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
