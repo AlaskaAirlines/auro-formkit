@@ -220,7 +220,7 @@
             </td>
           </tr>
           <tr>
-            <td>Esc</td>
+            <td>Escape</td>
             <td>-</td>
             <td>Expanded</td>
             <td>
