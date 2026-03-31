@@ -16,7 +16,7 @@ import { AuroIcon } from "@aurodesignsystem/auro-icon/class";
 import iconVersion from "./iconVersion.js";
 import AuroFormValidation from "@aurodesignsystem/form-validation";
 
-import { IconUtil } from "@aurodesignsystem/utils";
+import { applyKeyboardStrategy, IconUtil } from "@aurodesignsystem/utils";
 import plusIcon from '@alaskaairux/icons/dist/icons/interface/plus-lg.mjs';
 import minusIcon from '@alaskaairux/icons/dist/icons/interface/minus-lg.mjs';
 
@@ -25,6 +25,8 @@ import colorCss from "./styles/color-css.js";
 import styleCss from "./styles/style-css.js";
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
 import formkitVersion from '@aurodesignsystem/version';
+
+import { keyboardStrategy } from './keyboardStrategy.js';
 
 /**
  * The `auro-counter` element provides a flexible counter interface with increment and decrement buttons, supporting optional sub-labels and disabled states.
@@ -94,11 +96,10 @@ export class AuroCounter extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('keydown', this.handleKeyDown);
+    applyKeyboardStrategy(this, keyboardStrategy);
   }
 
   disconnectedCallback() {
-    this.removeEventListener('keydown', this.handleKeyDown);
     super.disconnectedCallback();
   }
 
@@ -284,31 +285,6 @@ export class AuroCounter extends LitElement {
    */
   validate(force = false) {
     this.validation.validate(this, force);
-  }
-
-  /**
-   * Handles the keydown event for the counter component.
-   * @param {KeyboardEvent} event - The keyboard event object.
-   * @returns {void}
-   * @private
-   */
-  handleKeyDown(event) {
-    if (this.disabled) {
-      return;
-    }
-
-    switch (event.key) {
-      case 'ArrowUp':
-        event.preventDefault();
-        this.increment();
-        break;
-      case 'ArrowDown':
-        event.preventDefault();
-        this.decrement();
-        break;
-      default:
-        break;
-    }
   }
 
   firstUpdated() {
