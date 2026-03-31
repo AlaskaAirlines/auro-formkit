@@ -110,7 +110,7 @@ export class AuroDropdown extends AuroElement {
     this.appearance = 'default';
     this.chevron = false;
     this.disabled = false;
-    this.disableFocusTrap = false;
+    this.disableFocusTrap = true;
     this.error = false;
     this.tabIndex = 0;
     this.noToggle = false;
