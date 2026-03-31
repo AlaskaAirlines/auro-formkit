@@ -3,9 +3,9 @@
   <div class="mainContent">
   <div class="scrollWrapper">
     <auro-header level="2" id="tabBehavior">Tab Behavior</auro-header>
-    <auro-header level="3" id="tabBehavior">Counter</auro-header>
+    <auro-header level="3" id="tabBehaviorCounter">Counter</auro-header>
     <p>The counter component is itself a focusable element. There are no sub-parts that are separately focusable.</p>
-    <auro-header level="3" id="tabBehavior">Counter Group</auro-header>
+    <auro-header level="3" id="tabBehaviorCounterGroup">Counter Group</auro-header>
     <p>When multiple counters are placed inside a counter group the component behaves as an auro-dropdown. The trigger element renders a counter group label and a summary of all counter labels and current values. The dropdown bib renders all counters inside of the group.</p>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/tabindex.md) -->
     <!-- The below content is automatically added from ./../../dropdown/docs/partials/tabindex.md -->

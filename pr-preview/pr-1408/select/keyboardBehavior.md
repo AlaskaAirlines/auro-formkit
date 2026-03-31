@@ -9,7 +9,7 @@
     <p> When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
     <p>When the bib is collapsed, the bib content is excluded from the tab sequence. When <strong>expanded</strong>, focusable elements within the bib content are included in the natural tab order. In fullscreen mode, focus is trapped within the bib, and the tab sequence cycles through the bib content focusable elements until the bib is closed or the viewport no longer meets the fullscreen condition and is rendered as a popover.</p>
     <!-- AURO-GENERATED-CONTENT:END -->
-    <p>There are no focusable elements inside the components bib content.</p>
+    <p>There are no focusable elements inside the component's bib content.</p>
     <div class="note">
       <p><strong>Note:</strong> The following HTML5 select element keyboard behavior is unsupported at this time:</p>
       <ul>
