@@ -76,10 +76,10 @@ export class AuroMenu extends AuroElement {
 
     // Event Bindings
 
-    /**
-     * @private
-     */
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    // /**
+    //  * @private
+    //  */
+    // this.handleKeyDown = this.handleKeyDown.bind(this);
 
 
     /**
@@ -428,7 +428,7 @@ export class AuroMenu extends AuroElement {
 
     this.provideContext();
 
-    this.addEventListener('keydown', this.handleKeyDown);
+    // this.addEventListener('keydown', this.handleKeyDown);
     this.addEventListener('auroMenuOption-click', this.handleMouseSelect);
     this.addEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.addEventListener('slotchange', this.handleSlotChange);
@@ -436,7 +436,7 @@ export class AuroMenu extends AuroElement {
   }
 
   disconnectedCallback() {
-    this.removeEventListener('keydown', this.handleKeyDown);
+    // this.removeEventListener('keydown', this.handleKeyDown);
     this.removeEventListener('auroMenuOption-click', this.handleMouseSelect);
     this.removeEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.removeEventListener('slotchange', this.handleSlotChange);
@@ -577,28 +577,33 @@ export class AuroMenu extends AuroElement {
 
   // Event Handlers
 
-  /**
-   * Handles keyboard navigation.
-   * @private
-   * @param {KeyboardEvent} event - Event object from the browser.
-   */
-  handleKeyDown(event) {
-    event.preventDefault();
-    switch (event.key) {
-      case "ArrowDown":
-        this.menuService.highlightNext();
-        break;
-      case "ArrowUp":
-        this.menuService.highlightPrevious();
-        break;
-      case "Tab":
-      case "Enter":
-        this.menuService.selectHighlightedOption();
-        break;
-      default:
-        break;
-    }
-  }
+  // /**
+  //  * Handles keyboard navigation.
+  //  * @private
+  //  * @param {KeyboardEvent} event - Event object from the browser.
+  //  */
+  // handleKeyDown(event) {
+  //   // Update to Chris keyboard handler
+  //   // We have a new "navigateArrow" function in that handler, maybe that replaces those keys here?
+  //   event.preventDefault();
+  //   switch (event.key) {
+  //     case "ArrowDown":
+  //       console.warn("ArrowDown key is pressed and heard from menu");
+  //       this.menuService.highlightNext();
+  //       break;
+  //     case "ArrowUp":
+  //       console.warn("ArrowUp key is pressed and heard from menu");
+  //       this.menuService.highlightPrevious();
+  //       break;
+  //     case "Tab":
+  //     case "Enter":
+  //       this.menuService.selectHighlightedOption();
+  //       // Does this need to get separated into two cases to handle the different expected behavior of tab vs enter?
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
 
   /**
    * Navigates the menu options in the specified direction.
