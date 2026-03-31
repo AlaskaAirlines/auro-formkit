@@ -196,10 +196,10 @@
           </tr>
           <tr>
             <td>
-              Trigger input element, <strong>NOT</strong> the trigger input clear button
+              Trigger input close button, <strong>NOT</strong> the trigger input 
             </td>
             <td>
-              The current <code>focused</code> option is selected, closes the bib and <strong>focus</strong> is returned to the trigger input element.
+              The input value is cleared and <strong>focus</strong> is moved to the trigger input element.
             </td>
           </tr>
           <tr>
