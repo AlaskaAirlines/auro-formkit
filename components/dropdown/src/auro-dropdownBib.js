@@ -11,10 +11,12 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { applyKeyboardStrategy } from '@aurodesignsystem/utils';
 
 import styleCss from "./styles/classic/bibStyles-css.js";
 import colorCss from "./styles/classic/bibColors-css.js";
 import tokensCss from "./styles/tokens-css.js";
+import { createDropdownBibKeyboardStrategy } from './dropdownBibKeyboardStrategy.js';
 
 const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
 const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
@@ -134,11 +136,7 @@ export class AuroDropdownBib extends LitElement {
       },
 
       /**
-       * Set by auro-dropdown when a menu option is highlighted via
-       * aria-activedescendant. The dialog keyboard bridge checks this
-       * flag so that Enter selects the highlighted option instead of
-       * activating the focused interactive element (e.g. the trigger
-       * button, or the bibtemplate close button in fullscreen).
+       * Tracks whether a menu option is currently highlighted.
        * @private
        */
       hasActiveDescendant: {
@@ -212,7 +210,7 @@ export class AuroDropdownBib extends LitElement {
 
     const dialog = this.shadowRoot.querySelector('dialog');
     this._setupCancelHandler(dialog);
-    this._setupKeyboardBridge(dialog);
+    applyKeyboardStrategy(dialog, createDropdownBibKeyboardStrategy(this));
 
     this.dispatchEvent(new CustomEvent('auro-dropdownbib-connected', {
       bubbles: true,
@@ -239,92 +237,6 @@ export class AuroDropdownBib extends LitElement {
     });
   }
 
-  /**
-   * showModal() creates a closed focus scope — keyboard events inside
-   * the dialog's shadow DOM do NOT bubble out to the combobox/select
-   * keydown handlers in the parent shadow DOM. This handler bridges
-   * that gap by re-dispatching navigation keys so they cross the
-   * shadow boundary and reach the menu navigation logic in the parent
-   * component.
-   *
-   * The trade-off: intercepting these keys means native keyboard
-   * behaviors that would normally "just work" must be manually
-   * re-implemented here:
-   *
-   * - Enter on buttons: Custom elements (auro-button) don't get the
-   *   native Enter→click that <button> provides, so we call .click()
-   *   directly when Enter is pressed on a button-like element.
-   *
-   * - Tab: Intercepted and re-dispatched so parent components
-   *   (select/combobox) can select the active option and close the
-   *   dialog. The <dialog> provides containment and isolation
-   *   (inert background, VoiceOver focus trapping, top layer), while
-   *   the content inside is a role="listbox" navigated via
-   *   aria-activedescendant (options are not focusable). Tab keyboard
-   *   behavior follows listbox conventions (select + close) because
-   *   the dialog's native Tab trap only cycles between the close
-   *   button and browser chrome.
-   *
-   * - Escape: The native <dialog> fires a `cancel` event on ESC
-   *   (handled by _setupCancelHandler), so the re-dispatched Escape
-   *   is a secondary path for parent components that also listen for
-   *   Escape keydown.
-   *
-   * @param {HTMLDialogElement} dialog - The dialog element to attach the keyboard bridge to.
-   * @private
-   */
-  _setupKeyboardBridge(dialog) {
-    const navKeys = new Set([
-      'ArrowUp',
-      'ArrowDown',
-      'Enter',
-      'Escape',
-      'Tab'
-    ]);
-
-    dialog.addEventListener('keydown', (event) => {
-      if (!navKeys.has(event.key)) {
-        return;
-      }
-
-      // Custom elements (auro-button) don't get the native Enter→click
-      // behavior that <button> has. Find the button in the composed path
-      // and click it directly — but only when no menu option is
-      // highlighted. In fullscreen mode focus stays on the close button
-      // while arrow keys move the active-descendant highlight through
-      // the listbox. If the user presses Enter with an option
-      // highlighted, the intent is to select that option, not to click
-      // the close button. In that case we fall through and bridge the
-      // Enter key to the parent component's keyboard strategy.
-      if (event.key === 'Enter') {
-        if (!this.hasActiveDescendant) {
-          const buttonSelector = 'button, [role="button"], auro-button, [auro-button]';
-          const btn = event.composedPath().find((el) => el.matches && el.matches(buttonSelector));
-          if (btn) {
-            event.preventDefault();
-            event.stopPropagation();
-            btn.click();
-            return;
-          }
-        }
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-      const newEvent = new KeyboardEvent('keydown', {
-        key: event.key,
-        code: event.code,
-        shiftKey: event.shiftKey,
-        altKey: event.altKey,
-        ctrlKey: event.ctrlKey,
-        metaKey: event.metaKey,
-        bubbles: true,
-        composed: true,
-        cancelable: true
-      });
-      this.dispatchEvent(newEvent);
-    });
-  }
 
   /**
    * Blocks touch-driven page scroll while a fullscreen modal dialog is open.
