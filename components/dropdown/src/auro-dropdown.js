@@ -110,7 +110,6 @@ export class AuroDropdown extends AuroElement {
     this.appearance = 'default';
     this.chevron = false;
     this.disabled = false;
-    this.disableFocusTrap = true;
     this.error = false;
     this.tabIndex = 0;
     this.noToggle = false;
@@ -208,9 +207,8 @@ export class AuroDropdown extends AuroElement {
     // showModal() fires asynchronously via Lit's update cycle, which
     // falls outside the user activation window and causes iOS to
     // dismiss the keyboard.
-    if (this.isBibFullscreen && this.bibElement && this.bibElement.value) {
-      const useModal = !this.disableFocusTrap;
-      this.bibElement.value.open(useModal);
+    if (this.bibElement && this.bibElement.value) {
+      this.bibElement.value.open(this.isBibFullscreen);
     }
   }
 
@@ -319,14 +317,6 @@ export class AuroDropdown extends AuroElement {
        * If declared, the dropdown is not interactive.
        */
       disabled: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * If declared, the focus trap inside of bib will be turned off.
-       */
-      disableFocusTrap: {
         type: Boolean,
         reflect: true
       },
@@ -604,7 +594,7 @@ export class AuroDropdown extends AuroElement {
       if (this.isPopoverVisible) {
         // Fullscreen: use showModal() for native accessibility (inert outside, focus trap)
         // Desktop: use show() for Floating UI positioning + FocusTrap for focus management
-        const useModal = this.isBibFullscreen && !this.disableFocusTrap;
+        const useModal = this.isBibFullscreen;
         this.bibElement.value.open(useModal);
       } else {
         this.bibElement.value.close();
@@ -614,7 +604,7 @@ export class AuroDropdown extends AuroElement {
     // When fullscreen strategy changes while open, re-open dialog with correct mode
     // (e.g. resizing from desktop → mobile while dropdown is open)
     if (changedProperties.has('isBibFullscreen') && this.isPopoverVisible && this.bibElement.value) {
-      const useModal = this.isBibFullscreen && !this.disableFocusTrap;
+      const useModal = this.isBibFullscreen;
       this.bibElement.value.close();
       this.bibElement.value.open(useModal);
     }
@@ -728,7 +718,7 @@ export class AuroDropdown extends AuroElement {
    * @private
    */
   updateFocusTrap() {
-    if (this.isPopoverVisible && !this.disableFocusTrap) {
+    if (this.isPopoverVisible) {
       if (!this.isBibFullscreen) {
         // Desktop: show() doesn't trap focus, so use FocusTrap
         this.focusTrap = new FocusTrap(this.bibContent);

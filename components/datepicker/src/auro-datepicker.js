@@ -1944,7 +1944,6 @@ export class AuroDatePicker extends AuroElement {
           .size="${this.size}"
           class="${classMap(dropdownElementClassMap)}"
           disableEventShow
-          disableFocusTrap
           for="dropdownMenu"
           part="dropdown"
         >
