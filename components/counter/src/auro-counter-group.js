@@ -504,15 +504,6 @@ export class AuroCounterGroup extends AuroElement {
         });
       }
     });
-
-    // Tab closes the fullscreen dialog
-    // The dialog event bridge intercepts Tab and re-dispatches it as a
-    // composed keydown; this listener catches the re-dispatched event.
-    this.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-        this.dropdown.hide();
-      }
-    });
   }
 
   /**
@@ -702,8 +693,7 @@ export class AuroCounterGroup extends AuroElement {
    */
   renderCounterDropdown() {
     return html`
-      <${this.dropdownTag} 
-        noHideOnThisFocusLoss
+      <${this.dropdownTag}
         chevron
         part="dropdown"
         appearance="${this.onDark ? 'inverse' : this.appearance}"
