@@ -105,7 +105,7 @@ auro-dropdown
 - `showModal()` promotes dialog to top layer, makes background inert, provides native focus trap.
 - `document.documentElement.style.overflow` locked during modal to prevent scroll-to-dialog.
 - Touch scroll locked via `_lockTouchScroll()`.
-- ESC fires native `cancel` event → re-dispatched as `auro-bib-cancel` → dropdown closes.
+- `Escape` fires native `cancel` event → re-dispatched as `auro-bib-cancel` → dropdown closes.
 - Keyboard bridge still active for arrow/Tab/Enter propagation across shadow boundary.
 
 ---
@@ -212,10 +212,10 @@ The base dropdown component; all consumers inherit these behaviors.
 - [ ] **Action:** Close the dropdown.
 - [ ] **Expected:** Scroll lock removed; page scrolls normally.
 
-#### 1.2.3 ESC closes fullscreen dialog — P0
+#### 1.2.3 Escape key closes fullscreen dialog — P0
 
 - [ ] **Setup:** Open dropdown in fullscreen mode.
-- [ ] **Action:** Press Escape.
+- [ ] **Action:** Press `Escape`.
 - [ ] **Expected:** Dialog closes. `auro-bib-cancel` event fired. `isPopoverVisible` is `false`.
 
 #### 1.2.4 Responsive mode switch while open — P1
@@ -766,7 +766,7 @@ These behaviors were introduced or verified in PR #1346 and **must remain unchan
 | `dialog.showModal()` for fullscreen mode | All consumers | Dialog opens; background inert; focus trapped |
 | `dialog.setAttribute('open', '')` for desktop, preventing focus steal | All consumers | Desktop open doesn't move focus from trigger |
 | `ariaActiveDescendantElement` cross-shadow binding | select, combobox | Option highlighted → trigger/input `ariaActiveDescendantElement` set |
-| Native `cancel` event → `auro-bib-cancel` | dropdown | ESC in modal fires cancel; dropdown catches and hides |
+| Native `cancel` event → `auro-bib-cancel` | dropdown | `Escape` in modal fires cancel; dropdown catches and hides |
 | `noHideOnThisFocusLoss` prevents premature close | combobox, select, datepicker | Slotted content from light DOM doesn't trigger focusout close |
 | `bibDialogLabel` for accessible dialog naming | combobox, select | Dialog has accessible name via visually hidden label |
 | Deferred `aria-expanded` (150ms) | combobox | VoiceOver finishes character echo before "expanded" |
@@ -817,7 +817,7 @@ Maps each scenario section to existing automated test coverage and identifies ga
 | **1.1 Desktop popover lifecycle** | `components/dropdown/test/auro-dropdown.test.js` — "popover desktop mode" suite (9 tests) | **Covered** |
 | **1.1.4 Container-type containment escape** | `auro-dropdown.test.js` — "container-type containment escape" suite (functional); `component.stories.ts` — 6 `chromatic-enabled` stories: `DropdownInContainerTypeInlineSize`, `DropdownInNarrowContainerType`, `DropdownInNestedContainerTypes`, `DropdownInClippingContainerType`, `DropdownInScrollableContainerType`, `DropdownInContainerTypeSize` (Chromatic visual) | **Covered (functional + visual)** |
 | **1.2.1 showModal path** | `auro-dropdown.test.js` — "uses showModal for fullscreen bib" | **Covered** |
-| **1.2.3 ESC closes fullscreen** | `auro-dropdown.test.js` — "handles auro-bib-cancel event" | **Covered** |
+| **1.2.3 Escape key closes fullscreen** | `auro-dropdown.test.js` — "handles auro-bib-cancel event" | **Covered** |
 | **1.3 Trigger interaction** | `auro-dropdown.test.js` — toggle, spacebar, enter, noToggle, disableEventShow | **Covered** |
 | **1.4 Keyboard bridge** | `auro-dropdown.test.js` — "dialog keyboard bridge" suite (6 tests) | **Covered** |
 | **1.5 Events** | `auro-dropdown.test.js` — triggerClick, toggled | **Covered** |
