@@ -14,7 +14,7 @@
     <p>When the bib is collapsed, the bib content is excluded from the tab sequence. When <strong>expanded</strong>, focusable elements within the bib content are included in the natural tab order. In fullscreen mode, focus is trapped within the bib, and the tab sequence cycles through the bib content focusable elements until the bib is closed or the viewport no longer meets the fullscreen condition and is rendered as a popover.</p>
     <!-- AURO-GENERATED-CONTENT:END -->
     <auro-header level="2" id="keyEvents">Key Events</auro-header>
-    <auro-header level="3" id="keyEvents">Counter</auro-header>
+    <auro-header level="3" id="keyEventsCounter">Counter</auro-header>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents-counter.md) -->
     <!-- The below content is automatically added from ./../docs/partials/keyEvents-counter.md -->
     <table>
@@ -58,7 +58,7 @@
         <li><strong>PageDown:</strong> (optional) Decreases the value by a larger step than Down Arrow.</li>
       </ul>
     </div>
-    <auro-header level="3" id="keyEvents">Counter Group</auro-header>
+    <auro-header level="3" id="keyEventsCounterGroup">Counter Group</auro-header>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents-counterGroup.md) -->
     <!-- The below content is automatically added from ./../docs/partials/keyEvents-counterGroup.md -->
     <p>The counter group itself does not have any key event handlers other than those inherited from the dropdown component. However, when the counter group is <strong>expanded</strong> | <strong>opened</strong> the first counter in the bib receives <strong>focus</strong>. When the counter group is <strong>collapsed</strong> | <strong>closed</strong> by any method other than the <code>Tab</code> key (e.g., the <strong>Esc</strong> key), <strong>focus</strong> moves to the trigger element.</p>
