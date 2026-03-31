@@ -558,7 +558,9 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(null);
         this.optionActive = null;
 
-        restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
+        if (this.dropdown.isBibFullscreen) {
+          restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
+        }
       }
 
       if (this.dropdown.isPopoverVisible) {
