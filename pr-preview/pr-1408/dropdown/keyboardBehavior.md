@@ -1,4 +1,4 @@
-## Auro-Dropdown Keyboard Behavior
+## Dropdown Keyboard Behavior
 
 ### Tab Behavior
 
