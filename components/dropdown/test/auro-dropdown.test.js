@@ -284,7 +284,7 @@ describe("auro-dropdown", () => {
     expectPopoverShown(el);
   });
 
-  it("auro-dropdown hides with esc key", async () => {
+  it("auro-dropdown hides with `Escape` key", async () => {
     const el = await fixture(html`
       <auro-dropdown>
         <span slot="label"> label text </span>
@@ -382,7 +382,7 @@ describe("auro-dropdown", () => {
     // Simulate focus on element
     el.hasFocus = true;
 
-    // Dispatch toggled event with keydown eventType (simulating ESC close)
+    // Dispatch toggled event with keydown eventType (simulating `Escape` key close)
     el.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
       detail: { expanded: false, eventType: 'keydown' }
     }));

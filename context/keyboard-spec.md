@@ -177,7 +177,7 @@ The trade-off: intercepted keys must have their native behaviors manually re-imp
 
 - **Enter on buttons:** Custom elements (auro-button) don't get native Enter→click, so the handler calls `.click()` directly when Enter is pressed on a button-like element.
 - **Tab:** `preventDefault()` stops native Tab cycling inside the dialog. The re-dispatched Tab reaches the component strategy, which runs select-and-close logic. The dialog's native Tab trap only cycles between the close button and browser chrome — not useful for listbox navigation.
-- **Escape:** The native `<dialog>` fires a `cancel` event on ESC (handled separately). The re-dispatched Escape is a secondary path for parent components that also listen for Escape keydown.
+- **Escape:** The native `<dialog>` fires a `cancel` event on `Escape` key (handled separately). The re-dispatched `Escape` is a secondary path for parent components that also listen for `Escape` keydown.
 
 ---
 

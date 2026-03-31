@@ -545,7 +545,7 @@ export class AuroSelect extends AuroElement {
 
     // Prevent dropdown from closing on focus loss since menu content is slotted
     // from select's light DOM and won't be detected by dropdown's contains() check.
-    // Select handles Tab key closing explicitly, ESC via dialog cancel, and
+    // Select handles Tab key closing explicitly, `Escape` key via dialog cancel, and
     // click outside works correctly via composedPath().
     this.dropdown.noHideOnThisFocusLoss = true;
 

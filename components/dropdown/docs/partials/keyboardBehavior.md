@@ -9,8 +9,3 @@
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-
-## DEVELOPER NOTES / CODE ACTION ITEMS / TODO ITEMS
-1. Remove the bridge for keyboard event bubbling out of the bib
-1. Strip out event listers not listed in this document (e.g. arrow keys)
-1. do not prevent any event bubbling beyond the focus trap of a fullscreen bib
