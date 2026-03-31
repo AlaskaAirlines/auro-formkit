@@ -33,7 +33,7 @@
           <td>-</td>
           <td>*</td>
           <td>
-            Trigger or any <strong>focusable</strong> element within the trigger.
+            Trigger element.
           </td>
           <td>Decrements the counter value by 1.</td>
         </tr>
