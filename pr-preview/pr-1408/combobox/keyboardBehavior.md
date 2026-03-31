@@ -43,7 +43,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs depending on viewport size.
+                <strong>Note:</strong> Includes both trigger and bib content inputs depending on viewport size.
               </div>
             </td>
             <td>
@@ -63,7 +63,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -83,7 +83,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -104,7 +104,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -124,7 +124,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -144,7 +144,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -158,7 +158,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -226,7 +226,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -240,7 +240,7 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
@@ -254,11 +254,11 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
-              The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the <strong>clear button</strong> in the component trigger.</i>
+              The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the <strong>clear button</strong> in the component trigger.
               </div>
             </td>
           </tr>
@@ -266,11 +266,11 @@
             <td>
               Input clear button, <strong>NOT</strong> the input element
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content input clear buttons.
+                <strong>Note:</strong> Includes both trigger and bib content input clear buttons.
               </div>
             </td>
             <td>
-              <span style="background-color: pink; color: red;">&nbsp;????&nbsp;&nbsp;</span>
+              <span style="background-color: pink; color: red;">&nbsp;What do we do here?&nbsp;&nbsp;</span>
             </td>
           </tr>
           <tr>
@@ -279,13 +279,13 @@
             <td>
               Input element, <strong>NOT</strong> the input clear button
               <div class="note">
-                <i><strong>Note:</strong> Includes both trigger and bib content inputs.
+                <strong>Note:</strong> Includes both trigger and bib content inputs.
               </div>
             </td>
             <td>
               Advances the <code>focused</code> option to the first enabled option in the list.
               <div class="note">
-                <i><strong>Note:</strong> the bib will <strong>NOT</strong> close and the page will <strong>NOT</strong> navigate to the previous focusable element in the tabindex order.</i>
+                <strong>Note:</strong> the bib will <strong>NOT</strong> close and the page will <strong>NOT</strong> navigate to the previous focusable element in the tabindex order.</i>
               </div>
             </td>
           </tr>
@@ -295,8 +295,8 @@
       <div class="note">
         <p><strong>Note:</strong> The following keyboard behavior is unsupported at this time:</p>
         <ul>
-          <li><strong>PageUp:</strong> The browser advances the <code>focused</code> option by approximately one <strong>page</strong> of visible options (typically equal to the number of rendered rows). The scroll position updates in tandem so that the newly focused option is brought into view, usually aligning near the bottom of the visible list.</li>
-          <li><strong>PageDown:</strong> The browser moves the <code>focused</code> option up by approximately one <strong>page</strong> of visible items (typically equal to the number of rendered rows). The scroll position updates accordingly so the newly focused option is brought into view, often aligning near the top of the visible list.</li>
+          <li><strong>PageUp:</strong> The browser moves the <code>focused</code> option up by approximately one <strong>page</strong> of visible options (typically equal to the number of rendered rows). The scroll position updates in tandem so that the newly focused option is brought into view, usually aligning near the top of the visible list.</li>
+          <li><strong>PageDown:</strong> The browser advances the <code>focused</code> option down by approximately one <strong>page</strong> of visible items (typically equal to the number of rendered rows). The scroll position updates accordingly so the newly focused option is brought into view, often aligning near the bottom of the visible list.</li>
         </ul>
       </div>
     </div>
