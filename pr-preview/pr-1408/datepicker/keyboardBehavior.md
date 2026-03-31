@@ -8,7 +8,7 @@
       <li><strong>Input</strong></li>
       <li><strong>Clear button:</strong> only shown when the input has a value.</li>
     </ol>
-    <p>Each focusable element <em>(when shown)</em> participates in the browser windows default <code>tabindex</code> sequence.</p>
+    <p>Each focusable element <em>(when shown)</em> participates in the browser window's default <code>tabindex</code> sequence.</p>
     <p>When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
     <div class="note">
       <p><strong>Note:</strong> The current implementation <strong>DOES</strong> support full interaction of the bib content and calendar with touch, click and VoiceOver interactions.</p>

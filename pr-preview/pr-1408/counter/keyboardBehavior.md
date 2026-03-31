@@ -61,7 +61,7 @@
     <auro-header level="3" id="keyEventsCounterGroup">Counter Group</auro-header>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents-counterGroup.md) -->
     <!-- The below content is automatically added from ./../docs/partials/keyEvents-counterGroup.md -->
-    <p>The counter group itself does not have any key event handlers other than those inherited from the dropdown component. However, when the counter group is <strong>expanded</strong> | <strong>opened</strong> the first counter in the bib receives <strong>focus</strong>. When the counter group is <strong>collapsed</strong> | <strong>closed</strong> by any method other than the <code>Tab</code> key (e.g., the <strong>Esc</strong> key), <strong>focus</strong> moves to the trigger element.</p>
+    <p>The counter group itself does not have any key event handlers other than those inherited from the dropdown component. However, when the counter group is <strong>expanded</strong> or <strong>opened</strong> the first counter in the bib receives <strong>focus</strong>. When the counter group is <strong>collapsed</strong> or <strong>closed</strong> by any method other than the <code>Tab</code> key (e.g., the <strong>Esc</strong> key), <strong>focus</strong> moves to the trigger element.</p>
     <!-- AURO-GENERATED-CONTENT:END -->
     <auro-header level="4" id="keyEventsDropdown">Key Events inherited from Auro-Dropdown</auro-header>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/keyEvents.md) -->

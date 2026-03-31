@@ -8,7 +8,7 @@
         <li><strong>Input</strong></li>
         <li><strong>Clear button:</strong> only shown when the input has a value.</li>
       </ol>
-      <p>Each focusable element <em>(when shown)</em> participates in the browser windows default <code>tabindex</code> sequence.</p>
+      <p>Each focusable element <em>(when shown)</em> participates in the browser window's default <code>tabindex</code> sequence.</p>
       <p>When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
       <p>On <strong>large viewport devices</strong> (e.g., desktop browser, tablet) there is no focusable content inside the component bib.</p>
       <p>On <strong>small viewport devices</strong> (e.g., phone) the bib opens a modal dialog with a focusable <strong>input</strong> and <strong>clear button</strong> which may be tabbed through naturally.</p>
@@ -16,7 +16,7 @@
       <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
       <!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
       <div class="note">
-        <p><i><strong>Static vs Dynamic Option List:</strong> The <strong>expanded</strong> state can never be applied without list options rendered into the DOM. Since the component supports dynamic option lists generated <em>after</em> a value is typed into the <strong>input</strong>, certain key events (as noted in the <strong>Current State</strong> column of the table below) only function with the option list rendered into the DOM.</p>
+        <p><strong>Static vs Dynamic Option List:</strong> The <strong>expanded</strong> state can never be applied without list options rendered into the DOM. Since the component supports dynamic option lists generated <em>after</em> a value is typed into the <strong>input</strong>, certain key events (as noted in the <strong>Current State</strong> column of the table below) only function with the option list rendered into the DOM.</p>
       </div>
       <table>
         <thead>
