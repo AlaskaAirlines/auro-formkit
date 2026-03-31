@@ -80,7 +80,7 @@
   "devDependencies": {
     "@aurodesignsystem/auro-accordion": "^6.1.1",
     "@aurodesignsystem/auro-button": "^12.3.2",
-    "@aurodesignsystem/auro-library": "^5.11.2",
+    "@aurodesignsystem/auro-library": "^5.11.3",
     "@aurodesignsystem/build-tools": "*",
     "@aurodesignsystem/config": "*",
     "@aurodesignsystem/design-tokens": "^8.15.1",
