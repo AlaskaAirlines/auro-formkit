@@ -1,9 +1,20 @@
 import { Logger } from "@aurodesignsystem/auro-library/scripts/utils/logger.mjs";
+import fs from "node:fs/promises";
 import {
   fromAuroComponentRoot,
   processContentForFile,
   templateFiller
 } from "@aurodesignsystem/auro-library/scripts/utils/sharedFileProcessorUtils.mjs";
+
+// Read the scoped package name (e.g. "@aurodesignsystem/auro-formkit") from the
+// root package.json so monorepoName never needs to be hardcoded here.
+const { name } = JSON.parse(await fs.readFile(fromAuroComponentRoot('package.json'), 'utf8'));
+
+// Strip the npm scope prefix ("@scope/") to get the bare package name used in
+// template variables such as {{ monorepoName }} (e.g. "auro-formkit").
+export const monorepoVars = {
+  'monorepoName': name.replace(/^@[^/]+\//, ''),
+};
 
 /**
  * Processor config object.
@@ -58,7 +69,7 @@ export async function processDocFiles(config = defaultDocsProcessorConfig) {
   for (const fileConfig of fileConfigs(config)) {
     try {
       // eslint-disable-next-line no-await-in-loop
-      await processContentForFile(fileConfig);
+      await processContentForFile({ ...fileConfig, extraVars: monorepoVars });
     } catch (err) {
       Logger.error(`Error processing ${fileConfig.identifier}: ${err.message}`);
     }
