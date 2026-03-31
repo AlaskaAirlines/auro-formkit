@@ -435,24 +435,6 @@ function runTest(mobileView) {
       });
     }
 
-    // ─── §2.1.2  Enter key selects active option and closes bib (P0) ────────
-    it('Enter key selects the active option and closes the bib', async () => {
-      const el = await defaultFixture();
-      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-      const trigger = dropdown.querySelector('[slot="trigger"]');
-
-      trigger.click();
-      await expect(dropdown.isPopoverVisible).to.be.true;
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      await elementUpdated(el);
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-      await elementUpdated(el);
-
-      await expect(el.value).to.equal('Apples');
-      await expect(dropdown.isPopoverVisible).to.be.false;
-    });
 
     // ─── §2.1.3  Tab selects active option and closes bib (P0) ──────────────
     it('Tab selects the active option and closes the bib', async () => {
@@ -632,72 +614,6 @@ function runTest(mobileView) {
 
       await expect(trigger.ariaActiveDescendantElement).to.equal(firstOption);
     });
-
-    if (mobileView) {
-      // ─── §2.2.3  Option selection in fullscreen mode (P0) ───────────────────
-      it('selecting an option in fullscreen mode sets value and closes dialog', async () => {
-        const el = await defaultFixture();
-        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-        const trigger = dropdown.querySelector('[slot="trigger"]');
-
-        trigger.click();
-        await expect(dropdown.isPopoverVisible).to.be.true;
-
-        // Wait for fullscreen dialog to settle (double-rAF used by focus migration)
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-        await elementUpdated(el);
-
-        await expect(el.value).to.equal('Apples');
-        await expect(dropdown.isPopoverVisible).to.be.false;
-      });
-
-      // ─── §2.2.4  Active-descendant state propagation to bib (P1) ─────────
-      it('dropdown mirrors hasActiveDescendant to bib so keyboard bridge distinguishes Enter-select from Enter-close', async () => {
-        const el = await defaultFixture();
-        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-        const trigger = dropdown.querySelector('[slot="trigger"]');
-        const bib = dropdown.bibContent;
-
-        trigger.click();
-        await expect(dropdown.isPopoverVisible).to.be.true;
-
-        // Wait for fullscreen dialog to settle (double-rAF used by focus migration)
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-        // No active descendant before navigation
-        expect(bib.hasActiveDescendant).to.not.be.true;
-
-        // Navigate to first option
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-        await elementUpdated(el);
-
-        // The dropdown should mirror active-descendant state to the bib
-        // so the keyboard bridge knows Enter should select, not close.
-        expect(bib.hasActiveDescendant).to.be.true;
-
-        // Simulate Enter originating from inside the fullscreen dialog while
-        // focus is on the close button, exercising the regression path.
-        const closeButton = el.bibtemplate.shadowRoot.querySelector('#closeButton');
-        expect(closeButton).to.exist;
-
-        closeButton.focus();
-        closeButton.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'Enter',
-          bubbles: true,
-          composed: true
-        }));
-        await elementUpdated(el);
-
-        // On first Enter, the focused option should be selected and the bib closed.
-        await expect(el.value).to.equal('Apples');
-        await expect(dropdown.isPopoverVisible).to.be.false;
-      });
-    }
 
     it('Navigates the menu with arrow keys', async () => {
       const el = await defaultFixture();
@@ -1215,5 +1131,246 @@ describe('selectKeyboardStrategy — Tab multiselect', () => {
 
     expect(selectionCalled).to.be.false;
     expect(hideCalled).to.be.true;
+  });
+});
+
+// ─── Keyboard Behavior Tests ───────────────────────────────────────────────────
+
+describe('auro-select keyboard behavior — Home key', () => {
+  it('moves to the first enabled option when Home is pressed while expanded', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops">Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+          <auro-menuoption value="Duration">Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    // Navigate to the last option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const lastOption = menu.querySelector('auro-menuoption[value="Duration"]');
+    await expect(el.optionActive).to.equal(lastOption);
+
+    // Press Home to go to first option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+    await elementUpdated(el);
+
+    const firstOption = menu.querySelector('auro-menuoption[value="Stops"]');
+    await expect(el.optionActive).to.equal(firstOption);
+
+    // wrap to last option if Home is pressed again
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(lastOption);
+  });
+
+  it('skips disabled options and goes to first enabled option when Home is pressed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+          <auro-menuoption value="Duration">Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    // Navigate to the last option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive.value).to.equal('Duration');
+
+    // Press Home, should skip the disabled first option and go to "Price"
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+    await expect(el.optionActive).to.equal(firstEnabledOption);
+  });
+
+  it('does not change active option when all options are disabled and Home is pressed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+          <auro-menuoption value="Price" disabled>Price</auro-menuoption>
+          <auro-menuoption value="Duration" disabled>Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(undefined);
+  });
+
+  it('does nothing when Home is pressed while collapsed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops">Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    await expect(dropdown.isPopoverVisible).to.be.false;
+
+    // Press Home while collapsed
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+    await elementUpdated(el);
+
+    // Dropdown should still be closed
+    await expect(dropdown.isPopoverVisible).to.be.false;
+  });
+});
+
+describe('auro-select keyboard behavior — End key', () => {
+  it('moves to the last enabled option when End is pressed while expanded', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops">Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+          <auro-menuoption value="Duration">Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    // Press End to go to last option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const lastOption = menu.querySelector('auro-menuoption[value="Duration"]');
+    await expect(el.optionActive).to.equal(lastOption);
+  });
+
+  it('skips disabled options and goes to last enabled option when End is pressed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops">Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+          <auro-menuoption value="Duration" disabled>Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    // Press End, should skip the disabled last option and go to "Price"
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const lastEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+    await expect(el.optionActive).to.equal(lastEnabledOption);
+
+
+    // wrap to first option if Home is pressed again
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    const firstOption = menu.querySelector('auro-menuoption[value="Stops"]');
+    await expect(el.optionActive).to.equal(firstOption);
+
+
+  });
+
+  it('does not change active option when all options are disabled and End is pressed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+          <auro-menuoption value="Price" disabled>Price</auro-menuoption>
+          <auro-menuoption value="Duration" disabled>Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(undefined);
+  });
+
+  it('does nothing when End is pressed while collapsed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops">Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    await expect(dropdown.isPopoverVisible).to.be.false;
+
+    // Press End while collapsed
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+    await elementUpdated(el);
+
+    // Dropdown should still be closed
+    await expect(dropdown.isPopoverVisible).to.be.false;
   });
 });

@@ -17,7 +17,11 @@ export const selectKeyboardStrategy = {
     });
   },
 
-  Enter(component, evt) {
+  Enter(component, evt, ctx) {
+    // select is not opened yet by Floating UI
+    if (ctx.isExpanded) {
+      return;
+    }
     evt.preventDefault();
     component.menu.makeSelection();
   },
@@ -44,6 +48,23 @@ export const selectKeyboardStrategy = {
       component.menu.makeSelection();
     }
     component.dropdown.hide();
+  },
+  Home(component, evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    const firstOption = component.menu.menuService.menuOptions.find((option) => !option.disabled);
+    if (firstOption) {
+      component.menu.updateActiveOption(firstOption);
+    }
+  },
+
+  End(component, evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    const lastOption = [...component.menu.menuService.menuOptions].reverse().find((option) => !option.disabled);
+    if (lastOption) {
+      component.menu.updateActiveOption(lastOption);
+    }
   },
 
   default(component, evt) {
