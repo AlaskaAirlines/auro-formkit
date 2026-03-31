@@ -521,7 +521,7 @@ export class AuroMenuOption extends AuroElement {
     });
 
     return html`
-      <div class="${classes}">
+      <div class="${classes}" aria-disabled="${this.disabled ? 'true' : 'false'}">
         ${this.selected && !this.noCheckmark
         ? this.generateIconHtml(checkmarkIcon.svg)
         : undefined}
