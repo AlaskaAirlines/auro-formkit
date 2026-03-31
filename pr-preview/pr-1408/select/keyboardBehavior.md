@@ -6,7 +6,7 @@
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/tabindex.md) -->
     <!-- The below content is automatically added from ./../../dropdown/docs/partials/tabindex.md -->
     <p>The trigger is a focusable element and participates in the standard tab order, responding to <code>Tab</code> and <code>Shift+Tab</code> key events per <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">native browser behavior, i.e., these keys step through the browser tabindex sequence.</auro-hyperlink></p>
-    <p> When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
+    <p>When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
     <p>When the bib is collapsed, the bib content is excluded from the tab sequence. When <strong>expanded</strong>, focusable elements within the bib content are included in the natural tab order. In fullscreen mode, focus is trapped within the bib, and the tab sequence cycles through the bib content focusable elements until the bib is closed or the viewport no longer meets the fullscreen condition and is rendered as a popover.</p>
     <!-- AURO-GENERATED-CONTENT:END -->
     <p>There are no focusable elements inside the component's bib content.</p>
@@ -16,7 +16,7 @@
         <li><strong>PageUp:</strong> The browser advances the <code>focused</code> option by approximately one <strong>page</strong> of visible options (typically equal to the number of rendered rows). The scroll position updates in tandem so that the newly focused option is brought into view, usually aligning near the bottom of the visible list.</li>
         <li><strong>PageDown:</strong> The browser moves the <code>focused</code> option up by approximately one <strong>page</strong> of visible items (typically equal to the number of rendered rows). The scroll position updates accordingly so the newly focused option is brought into view, often aligning near the top of the visible list.</li>
       </ul>
-      <p>This additional <code>multiSelect</code> functionality is not supported at this time.<p>
+      <p>This additional <code>multiSelect</code> functionality is not supported at this time.</p>
       <ul>
         <li><strong>Extending selection (Shift+Arrow)</strong></li>
         <li><strong>Select all (Cmd+A):</strong> Select all options</li>
@@ -40,12 +40,12 @@
           <td rowspan="6">ArrowDown</td>
           <td rowspan="2">-</td>
           <td>Collapsed</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>Opens the bib.</td>
         </tr>
         <tr>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the next enabled option in the list. If the current <code>focused</code> option is the last enabled option, selection wraps to the first enabled option.
           </td>
@@ -53,12 +53,12 @@
         <tr>
           <td rowspan="2">Command</td>
           <td>Collapsed</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>Opens the bib.</td>
         </tr>
         <tr>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the last enabled option in the list.
           </td>
@@ -66,12 +66,12 @@
         <tr>
           <td rowspan="2">Option</td>
           <td>Collapsed</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>Opens the bib.</td>
         </tr>
         <tr>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the last enabled option in the list.
           </td>
@@ -80,12 +80,12 @@
           <td rowspan="6">ArrowUp</td>
           <td rowspan="2">-</td>
           <td>Collapsed</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>Opens the bib.</td>
         </tr>
         <tr>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the previous enabled option in the list. If the current <code>focused</code> option is the first enabled option, selection wraps to the last enabled option.
           </td>
@@ -93,12 +93,12 @@
         <tr>
           <td rowspan="2">Command</td>
           <td>Collapsed</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>Opens the bib.</td>
         </tr>
         <tr>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the first enabled option in the list.
           </td>
@@ -106,12 +106,12 @@
         <tr>
           <td rowspan="2">Option</td>
           <td>Collapsed</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>Opens the bib.</td>
         </tr>
         <tr>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the first enabled option in the list.
           </td>
@@ -120,7 +120,7 @@
           <td>End</td>
           <td>-</td>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the last enabled option in the list.
           </td>
@@ -131,7 +131,7 @@
           <td>
             Expanded, without <code>multiselect</code>
           </td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             The current <code>focused</code> option is selected, closes the bib.
           </td>
@@ -140,7 +140,7 @@
           <td>
             Expanded, with <code>multiselect</code>
           </td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             The current <code>focused</code> option is toggled, does not close the bib.
             <p style="background-color: pink; color: red;">&nbsp;DEVELOPER NOTE: need to prevent default dropdown event behavior&nbsp;&nbsp;</p>
@@ -150,7 +150,7 @@
           <td>Home</td>
           <td>-</td>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the first enabled option in the list.
           </td>
@@ -159,7 +159,7 @@
           <td rowspan="2">Tab</td>
           <td>-</td>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             The current <code>focused</code> option is selected.
             <div class="note">
@@ -170,7 +170,7 @@
         <tr>
           <td>Shift</td>
           <td>Expanded</td>
-          <td>*<sup><a href="#fn_1">1</a></sup></td>
+          <td>Trigger element</td>
           <td>
             Advances the <code>focused</code> option to the first enabled option in the list.
             <div class="note">
