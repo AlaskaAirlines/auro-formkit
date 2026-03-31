@@ -3,7 +3,7 @@
   <div class="mainContent">
     <div class="scrollWrapper">
       <auro-header level="2" id="tabBehavior">Tab Behavior</auro-header>
-      <p>The component trigger contains an <code>&lt;auro-input></code> which has two focusable elements:</p>
+      <p>The component trigger contains an <code>&lt;auro-input&gt;</code> which has two focusable elements:</p>
       <ol>
         <li><strong>Input</strong></li>
         <li><strong>Clear button:</strong> only shown when the input has a value.</li>
