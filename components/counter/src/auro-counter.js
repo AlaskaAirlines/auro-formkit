@@ -16,7 +16,7 @@ import { AuroIcon } from "@aurodesignsystem/auro-icon/class";
 import iconVersion from "./iconVersion.js";
 import AuroFormValidation from "@aurodesignsystem/form-validation";
 
-import { applyKeyboardStrategy, IconUtil } from "@aurodesignsystem/utils";
+import { IconUtil } from "@aurodesignsystem/utils";
 import plusIcon from '@alaskaairux/icons/dist/icons/interface/plus-lg.mjs';
 import minusIcon from '@alaskaairux/icons/dist/icons/interface/minus-lg.mjs';
 
@@ -26,7 +26,7 @@ import styleCss from "./styles/style-css.js";
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
 import formkitVersion from '@aurodesignsystem/version';
 
-import { keyboardStrategy } from './keyboardStrategy.js';
+// import { keyboardStrategy } from './keyboardStrategy.js';
 
 /**
  * The `auro-counter` element provides a flexible counter interface with increment and decrement buttons, supporting optional sub-labels and disabled states.
@@ -96,7 +96,7 @@ export class AuroCounter extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    applyKeyboardStrategy(this, keyboardStrategy);
+    // applyKeyboardStrategy(this, keyboardStrategy);
   }
 
   disconnectedCallback() {
