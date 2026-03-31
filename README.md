@@ -1,11 +1,11 @@
 <!--
 The README.md file is a compiled document. No edits should be made directly to this file.
 
-README.md is created by running `npm run build:docs`.
+README.md is created by running `npm run build:docs:kit`.
 
-This file is generated based on a template fetched from
-`../../docs/templates/kitReadmeTemplate.md`
-and copied to `./kitDocs/README.md` each time the docs are compiled.
+This file is generated based on the template at
+`./docs/templates/kitReadmeTemplate.md`
+and compiled to `./README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
@@ -94,25 +94,16 @@ It is a monorepo that contains the following components:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/kitInstall.md) -->
 <!-- The below content is automatically added from ./docs/partials/kitInstall.md -->
-
-#### NPM Installation
-
-```shell
-$ npm i @aurodesignsystem/
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
 [![Build Status](https://img.shields.io/github/actions/workflow/status/AlaskaAirlines/auro-formkit/testPublish.yml?style=for-the-badge)](https://github.com/AlaskaAirlines/auro-formkit/actions/workflows/testPublish.yml)
 [![See it on NPM!](https://img.shields.io/npm/v/@aurodesignsystem/auro-formkit?style=for-the-badge&color=orange)](https://www.npmjs.com/package/@aurodesignsystem/auro-formkit)
 [![License](https://img.shields.io/npm/l/@aurodesignsystem/auro-formkit?color=blue&style=for-the-badge)](https://www.apache.org/licenses/LICENSE-2.0)
 ![ESM supported](https://img.shields.io/badge/ESM-compatible-FFE900?style=for-the-badge)
 
+#### NPM Installation
+
 ```shell
 $ npm i @aurodesignsystem/auro-formkit
 ```
-
-Installing as a direct, dev or peer dependency is up to the user installing the package. If you are unsure as to what type of dependency you should use, consider reading this [stack overflow](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies) answer.
-
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/gettingStarted.md -->
@@ -138,8 +129,12 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below content is automatically added from ./docs/partials/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
+Each component is imported individually by its export path:
+
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/@latest/auro-formkit/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-checkbox/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-input/+esm"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-select/+esm"></script>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -182,21 +177,7 @@ The package's `package.json` will have every dependency that it needs. This is t
   ```json
   {
     "dependencies": {
-      "lit.js": "^3.0.0",                    // External dependency
-      "@aurodesignsystem/input": "workspace:*"  // Internal dependency
-    }
-  }
-  ```
-
-#### Peer Dependencies (`peerDependencies`)
-- Packages that your library expects the consuming application to provide
-- Common for plugins or UI component libraries
-- Example:
-  ```json
-  {
-    "peerDependencies": {
-      "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
-      "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+      "lit": "^3.0.0"
     }
   }
   ```
@@ -208,36 +189,30 @@ The package's `package.json` will have every dependency that it needs. This is t
   ```json
   {
     "devDependencies": {
-      "typescript": "^5.0.0",
-      "@open-wc/testing": "^4.0.0"  // Internal dev dependency
+      "@aurodesignsystem/auro-dropdown": "*",
+      "@aurodesignsystem/build-tools": "*",
+      "rollup": "^4.24.4"
     }
   }
   ```
 
 ### Example: Component Dependencies
 
-Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
+Let's use `@aurodesignsystem/combobox` as an example to illustrate these concepts:
 
 ```json
 {
   "name": "@aurodesignsystem/combobox",
   "dependencies": {
-    // Internal dependencies
-    "@aurodesignsystem/auro-dropdown": "*",     // Required UI component
-    "@aurodesignsystem/auro-input": "*",        // Required UI component
-
-    // External dependencies
-    "@alaskaairux/icons": "^5.3.0",  // Required UI component
-    "lit": "^3.2.1"                   // Framework
-  },
-  "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.12.1",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+    "lit": "^3.2.1"
   },
   "devDependencies": {
+    // Internal component dependencies
+    "@aurodesignsystem/auro-dropdown": "*",
+    "@aurodesignsystem/auro-input": "*",
     // Build utilities
     "rollup": "^4.24.4",
-    "@aurodesignsystem/build-tools": "*",
+    "@aurodesignsystem/build-tools": "*"
   }
 }
 ```
@@ -246,7 +221,6 @@ This structure ensures that:
 1. The package explicitly declares all its dependencies
 2. Internal dependencies are properly tracked and versioned
 3. Development tools are separated from production dependencies
-4. Peer dependencies are clearly communicated to consumers
 
 - External dependencies come from the `npm` registry.
 

@@ -1,11 +1,11 @@
 <!--
 The README.md file is a compiled document. No edits should be made directly to this file.
 
-README.md is created by running `npm run build:docs`.
+README.md is created by running `npm run build:docs:kit`.
 
-This file is generated based on a template fetched from
-`../../docs/templates/kitReadmeTemplate.md`
-and copied to `./kitDocs/README.md` each time the docs are compiled.
+This file is generated based on the template at
+`./docs/templates/kitReadmeTemplate.md`
+and compiled to `./README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
@@ -30,9 +30,6 @@ The following sections are editable by making changes to the following files:
 ## Getting Started
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/kitInstall.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (REMOTE:url=https://raw.githubusercontent.com/AlaskaAirlines/WC-Generator/master/componentDocs/partials/usage/componentInstall_esm.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->

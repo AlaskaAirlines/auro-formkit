@@ -32,21 +32,7 @@ The package's `package.json` will have every dependency that it needs. This is t
   ```json
   {
     "dependencies": {
-      "lit.js": "^3.0.0",                    // External dependency
-      "@aurodesignsystem/input": "workspace:*"  // Internal dependency
-    }
-  }
-  ```
-
-#### Peer Dependencies (`peerDependencies`)
-- Packages that your library expects the consuming application to provide
-- Common for plugins or UI component libraries
-- Example:
-  ```json
-  {
-    "peerDependencies": {
-      "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
-      "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+      "lit": "^3.0.0"
     }
   }
   ```
@@ -58,36 +44,30 @@ The package's `package.json` will have every dependency that it needs. This is t
   ```json
   {
     "devDependencies": {
-      "typescript": "^5.0.0",
-      "@open-wc/testing": "^4.0.0"  // Internal dev dependency
+      "@aurodesignsystem/auro-dropdown": "*",
+      "@aurodesignsystem/build-tools": "*",
+      "rollup": "^4.24.4"
     }
   }
   ```
 
 ### Example: Component Dependencies
 
-Let's use `@auro-formki/combobox` as an example to illustrate these concepts:
+Let's use `@aurodesignsystem/combobox` as an example to illustrate these concepts:
 
 ```json
 {
   "name": "@aurodesignsystem/combobox",
   "dependencies": {
-    // Internal dependencies
-    "@aurodesignsystem/auro-dropdown": "*",     // Required UI component
-    "@aurodesignsystem/auro-input": "*",        // Required UI component
-    
-    // External dependencies
-    "@alaskaairux/icons": "^5.3.0",  // Required UI component
-    "lit": "^3.2.1"                   // Framework
-  },
-  "peerDependencies": {
-    "@aurodesignsystem/design-tokens": "^4.12.1",
-    "@aurodesignsystem/webcorestylesheets": "^5.1.2"
+    "lit": "^3.2.1"
   },
   "devDependencies": {
+    // Internal component dependencies
+    "@aurodesignsystem/auro-dropdown": "*",
+    "@aurodesignsystem/auro-input": "*",
     // Build utilities
     "rollup": "^4.24.4",
-    "@aurodesignsystem/build-tools": "*",
+    "@aurodesignsystem/build-tools": "*"
   }
 }
 ```
@@ -96,7 +76,6 @@ This structure ensures that:
 1. The package explicitly declares all its dependencies
 2. Internal dependencies are properly tracked and versioned
 3. Development tools are separated from production dependencies
-4. Peer dependencies are clearly communicated to consumers
 
 - External dependencies come from the `npm` registry.
 
