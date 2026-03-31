@@ -36,4 +36,4 @@
 - Built-in error handling  
 
 ### 11. Built-in Validation
-- Use HTML5 rules instead of custom JavaScript  
+- Use HTML5 rules instead of custom JavaScript
