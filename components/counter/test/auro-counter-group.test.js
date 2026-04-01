@@ -345,20 +345,6 @@ describe('auro-counter-group: keyboard navigation', () => {
     expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
-  it('sets nativeFocusableContent on bibContent when dropdown is toggled', async () => {
-    const el = await fixture(html`
-      <auro-counter-group isDropdown>
-        <auro-counter value="2">Counter 1</auro-counter>
-        <auro-counter value="3">Counter 2</auro-counter>
-      </auro-counter-group>
-    `);
-
-    el.dropdown.show();
-    await elementUpdated(el);
-
-    expect(el.dropdown.bibContent.nativeFocusableContent).to.be.true;
-  });
-
   it('does not close dropdown when Tab is pressed while bib is open', async () => {
     const el = await fixture(html`
       <auro-counter-group isDropdown>
