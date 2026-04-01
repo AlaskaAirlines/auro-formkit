@@ -741,7 +741,10 @@ export class AuroCombobox extends AuroElement {
         const expandedDelay = 150;
         this._expandedTimeout = setTimeout(() => {
           if (!this.value) {
-            this.updateActiveOption(0);
+            const firstActive = this.menu.menuService.menuOptions.find((opt) => !opt.disabled);
+            if (firstActive) {
+              this.menu.updateActiveOption(firstActive);
+            }
           }
           this.triggerExpandedState = true;
         }, expandedDelay);
