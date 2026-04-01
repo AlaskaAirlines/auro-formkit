@@ -18,27 +18,17 @@ export const selectKeyboardStrategy = {
   },
 
   Enter(component, evt, ctx) {
-    // select is not opened yet by Floating UI
-    if (ctx.isExpanded) {
-      return;
+    if (!ctx.isExpanded && ctx.isPopover) {
+      component.menu.makeSelection();
+    } else if (ctx.isModal && !evt.defaultPrevented) {
+      // for modal, isExpanded is always true
+      // defaultPrevented will be true if Floating UI has already handled the event to open the dropdown
+      component.menu.makeSelection();
     }
-    evt.preventDefault();
-    component.menu.makeSelection();
   },
 
   Tab(component, evt, ctx) {
     if (!ctx.isExpanded) {
-      return;
-    }
-
-    // Shift+Tab moves the highlight to the first non-disabled option
-    // without making a selection or closing the bib.
-    if (evt.shiftKey) {
-      evt.preventDefault();
-      const firstActive = component.menu.menuService.menuOptions.find((option) => option.isActive);
-      if (firstActive) {
-        component.menu.updateActiveOption(firstActive);
-      }
       return;
     }
 
