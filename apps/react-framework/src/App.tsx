@@ -6,6 +6,7 @@ import ComboboxRemount from './pages/ComboboxRemount';
 import CounterDropdown from './pages/CounterDropdown';
 import CounterRemount from './pages/CounterRemount';
 import SingleCounterRemount from './pages/SingleCounterRemount';
+import DatepickerFullscreen from './pages/DatepickerFullscreen';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       <Route path="/counter-dropdown" component={CounterDropdown} />
       <Route path="/counter-remount" component={CounterRemount} />
       <Route path="/single-counter-remount" component={SingleCounterRemount} />
+      <Route path="/datepicker-fullscreen" component={DatepickerFullscreen} />
     </Router>
   );
 }
