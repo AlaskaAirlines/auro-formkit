@@ -14,7 +14,6 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 | [autoPlacement](#autoPlacement)         | `autoPlacement`         | `boolean`                                        |                  | If declared, bib's position will be automatically calculated where to appear. |
 | [chevron](#chevron)               | `chevron`               | `boolean`                                        |                  | If declared, the dropdown displays a chevron on the right. |
 | [disableEventShow](#disableEventShow)      | `disableEventShow`      | `boolean`                                        |                  | If declared, the dropdown will only show by calling the API .show() public method. |
-| [disableFocusTrap](#disableFocusTrap)      | `disableFocusTrap`      | `boolean`                                        |                  | If declared, the focus trap inside of bib will be turned off. |
 | [disabled](#disabled)              | `disabled`              | `boolean`                                        |                  | If declared, the dropdown is not interactive.    |
 | [error](#error)                 | `error`                 | `boolean`                                        |                  | If declared, will apply error UI to the dropdown. |
 | [errorMessage](#errorMessage)          | `errorMessage`          | `string`                                         | "undefined"      | Contains the help text message for the current validity error. |
