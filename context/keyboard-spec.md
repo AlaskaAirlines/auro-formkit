@@ -33,7 +33,9 @@ All four components listen for the `auroDropdown-toggled` event (or equivalent v
 
 ### Tab Closes Fullscreen Dialog
 
-In addition to initial focus, all four components close the fullscreen dialog when Tab is pressed. Select and combobox handle this in their keyboard strategy files. Datepicker and counter-group use a direct `keydown` listener that checks `evt.key === 'Tab' && dropdown.isPopoverVisible && dropdown.isBibFullscreen` before calling `dropdown.hide()`. The dialog event bridge re-dispatches Tab from inside the modal so it reaches these listeners.
+In addition to initial focus, `auro-select` and `auro-combobox` close the fullscreen dialog when Tab is pressed (via their keyboard strategy files). `auro-counter-group` also closes on Tab via a direct `keydown` listener.
+
+**`auro-datepicker` is an exception during this transition period.** Tab does not close the datepicker fullscreen dialog. Tab cycles through focusable elements within the dialog using the browser's native `<dialog>` focus containment. The canonical datepicker keyboard behavior — including planned future bib keyboard navigation — is owned by `components/datepicker/docs/partials/keyboardBehavior.md`.
 
 ---
 
@@ -327,7 +329,7 @@ These are defined in the APG combobox pattern for popup-open state. They are not
 |---|---|---|---|
 | `auro-select` | `selectKeyboardStrategy.js` | Yes (strategy) | Selects active option + closes |
 | `auro-combobox` | `comboboxKeyboardStrategy.js` | Yes (strategy) | Input → clear button → closes |
-| `auro-datepicker` | None | Yes (direct listener) | Closes fullscreen dialog |
+| `auro-datepicker` | `datepickerKeyboardStrategy.js` (dormant placeholder) | No — see `components/datepicker/docs/partials/keyboardBehavior.md` | Escape only (native `<dialog>` cancel event) |
 | `auro-counter-group` | None | Yes (direct listener) | Closes fullscreen dialog |
 
 ---
@@ -340,7 +342,8 @@ These are defined in the APG combobox pattern for popup-open state. They are not
 - `components/select/src/auro-select.js` — Calls `applyKeyboardStrategy(this, selectKeyboardStrategy)` in `configureSelect()`
 - `components/combobox/src/comboboxKeyboardStrategy.js` — Combobox keyboard strategy map
 - `components/combobox/src/auro-combobox.js` — Calls `applyKeyboardStrategy(this, comboboxKeyboardStrategy)` in `configureCombobox()`
-- `components/datepicker/src/auro-datepicker.js` — Direct Tab keydown listener + `calendar.focusCloseButton()` on dialog open
+- `components/datepicker/src/auro-datepicker.js` — `calendar.focusCloseButton()` on fullscreen dialog open; keyboard behavior intentionally limited during transition (see `components/datepicker/docs/partials/keyboardBehavior.md`)
+- `components/datepicker/src/datepickerKeyboardStrategy.js` — dormant placeholder; no key handlers registered yet; intended home for future bib keyboard navigation
 - `components/datepicker/src/auro-calendar.js` — `focusCloseButton()` delegates to internal bibtemplate
 - `components/counter/src/auro-counter-group.js` — Direct Tab keydown listener + `bibtemplate.focusCloseButton()` on dialog open
 - `components/bibtemplate/src/auro-bibtemplate.js` — `focusCloseButton()` focuses `#closeButton` in shadow DOM

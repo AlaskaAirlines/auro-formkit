@@ -414,12 +414,12 @@ export class AuroCalendar extends RangeDatepicker {
         </div>
         <div class="calendarNavButtons">
           ${this.showPrevMonthBtn ? html`
-          <button class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
+          <button tabIndex="-1" class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
             ${this.util.generateIconHtml(chevronLeft)}
           </button>
           ` : undefined}
           ${this.showNextMonthBtn ? html`
-          <button class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
+          <button tabIndex="-1" class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
             ${this.util.generateIconHtml(chevronRight)}
           </button>
           ` : undefined}
