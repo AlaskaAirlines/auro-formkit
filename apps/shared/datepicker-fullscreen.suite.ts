@@ -21,6 +21,29 @@ function isBibVisible(page: Page) {
   });
 }
 
+/**
+ * Waits until the datepicker bib is open in fullscreen mode AND the
+ * focus-loss policy flag is already synchronized.  Under slower CI timing
+ * (Svelte lazy-loads the component on route mount) the `auroDropdown-toggled`
+ * event fires before FloatingUI has finished the strategy-change cycle, so
+ * `noHideOnThisFocusLoss` may still be false for a frame or two after the bib
+ * becomes visible.  Polling here avoids the race without adding an arbitrary
+ * fixed-timeout sleep.
+ */
+async function waitForFullscreenReady(page: Page) {
+  await page.waitForFunction(
+    () => {
+      const el = document.querySelector('auro-datepicker') as any;
+      return (
+        el?.dropdown?.isPopoverVisible === true &&
+        el?.dropdown?.isBibFullscreen === true &&
+        el?.dropdown?.noHideOnThisFocusLoss === true
+      );
+    },
+    { timeout: 5_000 },
+  );
+}
+
 export function datepickerFullscreenSuite(framework: string) {
   test.describe(`auro-datepicker fullscreen focus-loss in ${framework}`, () => {
     test.use({ viewport: { width: 390, height: 844 } }); // iPhone 14 — triggers fullscreen bib
@@ -33,7 +56,10 @@ export function datepickerFullscreenSuite(framework: string) {
     test('bib stays open when focus moves outside in fullscreen mode', async ({ page }) => {
       await openBib(page);
 
-      await expect.poll(() => isBibVisible(page)).toBe(true);
+      // Wait for fullscreen mode to settle and for noHideOnThisFocusLoss to be
+      // synchronized before moving focus.  Under slower CI timing (Svelte
+      // lazy-loads on route mount) the flag may lag a frame behind bib open.
+      await waitForFullscreenReady(page);
 
       // Move real browser focus to the button outside the datepicker.
       // In fullscreen mode noHideOnThisFocusLoss is true, so the bib must stay open.
@@ -45,8 +71,7 @@ export function datepickerFullscreenSuite(framework: string) {
 
     test('bib closes when explicitly dismissed in fullscreen mode', async ({ page }) => {
       await openBib(page);
-
-      await expect.poll(() => isBibVisible(page)).toBe(true);
+      await waitForFullscreenReady(page);
 
       await page.keyboard.press('Escape');
 
@@ -125,7 +150,7 @@ export function datepickerFullscreenSuite(framework: string) {
 
     test('Tab does not close the fullscreen bib', async ({ page }) => {
       await openBib(page);
-      await expect.poll(() => isBibVisible(page)).toBe(true);
+      await waitForFullscreenReady(page);
 
       // Tab cycles within the fullscreen <dialog> via native focus containment.
       // Unlike the old implementation, there is no keydown redirect that closes the bib.
