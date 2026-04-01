@@ -21,8 +21,8 @@ export default meta;
 
 type Story = StoryObj;
 
-// ─── ArrowDown activates first option ────────────────────────────────────────
-export const MenuArrowDownActivatesOption: Story = {
+// ─── navigateOptions('down') activates first option ────────────────────────────────────────
+export const MenuNavigateDownActivatesOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-menu>
@@ -34,15 +34,15 @@ export const MenuArrowDownActivatesOption: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-menu') as any;
     const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+    el.navigateOptions('down');
     await el.updateComplete;
     await expect(el.optionActive).toBe(options[0]);
     await expect(options[0].classList.contains('active')).toBe(true);
   },
 };
 
-// ─── ArrowDown wraps from last back to first ──────────────────────────────────
-export const MenuArrowDownWraps: Story = {
+// ─── navigateOptions('down') wraps from last back to first ──────────────────────────────────
+export const MenuNavigateDownWraps: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-menu>
@@ -56,15 +56,15 @@ export const MenuArrowDownWraps: Story = {
     const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
     // options.length + 1 downs wraps back to first option
     for (let i = 0; i < options.length + 1; i++) {
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+      el.navigateOptions('down');
       await el.updateComplete;
     }
     await expect(el.optionActive).toBe(options[0]);
   },
 };
 
-// ─── ArrowUp wraps from top to last option ────────────────────────────────────
-export const MenuArrowUpWraps: Story = {
+// ─── navigateOptions('up') wraps from top to last option ────────────────────────────────────
+export const MenuNavigateUpWraps: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-menu>
@@ -76,14 +76,14 @@ export const MenuArrowUpWraps: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-menu') as any;
     const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, composed: true }));
+    el.navigateOptions('up');
     await el.updateComplete;
     await expect(el.optionActive).toBe(options[options.length - 1]);
   },
 };
 
-// ─── Enter selects the highlighted option ────────────────────────────────────
-export const MenuEnterSelectsOption: Story = {
+// ─── makeSelection selects the highlighted option ────────────────────────────────────
+export const MenuMakeSelectionSelectsOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-menu>
@@ -95,17 +95,17 @@ export const MenuEnterSelectsOption: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-menu') as any;
     const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+    el.navigateOptions('down');
     await el.updateComplete;
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true }));
+    el.makeSelection();
     await el.updateComplete;
     await expect(options[0].hasAttribute('selected')).toBe(true);
     await expect(el.optionSelected).toBe(options[0]);
   },
 };
 
-// ─── ArrowDown skips disabled and hidden options ──────────────────────────────
-export const MenuArrowDownSkipsDisabled: Story = {
+// ─── navigateOptions('down') skips disabled and hidden options ──────────────────────────────
+export const MenuNavigateDownSkipsDisabled: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-menu>
@@ -118,15 +118,15 @@ export const MenuArrowDownSkipsDisabled: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-menu') as any;
     const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+    el.navigateOptions('down');
     await el.updateComplete;
     // disabled options[0] and hidden options[1] should be skipped; land on options[2]
     await expect(el.optionActive).toBe(options[2]);
   },
 };
 
-// ─── Click selects the clicked option ────────────────────────────────────────
-export const MenuClickSelectsOption: Story = {
+// ─── navigateOptions + makeSelection selects the option ────────────────────────────────────
+export const MenuNavigateThenMakeSelection: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
 <auro-menu>
@@ -138,13 +138,11 @@ export const MenuClickSelectsOption: Story = {
   async play({ canvasElement }: { canvasElement: HTMLElement }) {
     const el = canvasElement.querySelector('auro-menu') as any;
     const options = [...canvasElement.querySelectorAll('auro-menuoption')] as HTMLElement[];
-    // Navigate to options[1] then select via Enter — the same path unit tests use,
-    // which reliably triggers the full menuService selection pipeline.
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+    el.navigateOptions('down');
     await el.updateComplete;
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+    el.navigateOptions('down');
     await el.updateComplete;
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true }));
+    el.makeSelection();
     await el.updateComplete;
     await expect(el.optionSelected).toBe(options[1]);
     await expect(options[1].hasAttribute('selected')).toBe(true);
