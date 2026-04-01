@@ -149,8 +149,8 @@
       </td>
     </tr>
     <tr>
-      <td rowspan="6">Enter</td>
-      <td rowspan="6">-</td>
+      <td rowspan="5">Enter</td>
+      <td rowspan="5">-</td>
       <td>Collapsed, list options have been populated</td>
       <td>
         Trigger input, <strong>NOT</strong> the input clear button
@@ -179,27 +179,19 @@
     </tr>
     <tr>
       <td>
-        Trigger input close button, <strong>NOT</strong> the trigger input 
+        Trigger input clear button, <strong>NOT</strong> the trigger input 
       </td>
       <td>
         The input value is cleared and <strong>focus</strong> is moved to the trigger input element.
       </td>
     </tr>
     <tr>
-      <td rowspan="2">Expanded, small viewport device</td>
+      <td>Expanded, small viewport device</td>
       <td>
         Dialog input element, <strong>NOT</strong> the dialog input clear button
       </td>
       <td>
         The current <code>focused</code> option is selected, closes the bib and <strong>focus</strong> is returned to the trigger input element.
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Dialog input clear button, <strong>NOT</strong> the dialog input element
-      </td>
-      <td>
-        The <strong>input</strong> value is cleared, <strong>focus</strong> moves to the dialog input element.
       </td>
     </tr>
     <tr>
@@ -231,9 +223,9 @@
       </td>
     </tr>
     <tr>
-      <td rowspan="3">Tab</td>
-      <td rowspan="2">-</td>
-      <td rowspan="2">Expanded</td>
+      <td rowspan="2">Tab</td>
+      <td>-</td>
+      <td>Expanded</td>
       <td>
         Input element, <strong>NOT</strong> the input clear button
         <div class="note">
@@ -242,17 +234,6 @@
       </td>
       <td>
         The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the <strong>clear button</strong> in the component trigger.
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Input clear button, <strong>NOT</strong> the input element
-        <div class="note">
-          <strong>Note:</strong> Includes both trigger and bib content input clear buttons.
-        </div>
-      </td>
-      <td>
-        <span style="background-color: pink; color: red;">&nbsp;What do we do here?&nbsp;&nbsp;</span>
       </td>
     </tr>
     <tr>
@@ -265,10 +246,7 @@
         </div>
       </td>
       <td>
-        Advances the <code>focused</code> option to the first enabled option in the list.
-        <div class="note">
-          <strong>Note:</strong> the bib will <strong>NOT</strong> close and the page will <strong>NOT</strong> navigate to the previous focusable element in the tabindex order.
-        </div>
+        The current <code>focused</code> option is selected, the bib is closed and <strong>focus</strong> is moved to the previous focusable element.
       </td>
     </tr>
   </tbody>
