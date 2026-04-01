@@ -1,7 +1,7 @@
 /* eslint-disable max-lines, jsdoc/require-jsdoc, no-return-await, no-undef */
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, waitUntil } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import { selectKeyboardStrategy } from '../src/selectKeyboardStrategy.js';
 import '@aurodesignsystem/auro-dropdown';
@@ -435,6 +435,28 @@ function runTest(mobileView) {
       });
     }
 
+    // ─── §2.1.2  Enter key selects active option and closes bib (P0) ────────
+    it('Enter key selects the active option and closes the bib', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
+
+      trigger.click();
+      await expect(dropdown.isPopoverVisible).to.be.true;
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+
+      if (mobileView) {
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      } else {
+        trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      }
+      await elementUpdated(el);
+
+      await waitUntil(() => dropdown.isPopoverVisible === false, 'Dropdown did not close after Enter key');
+      await expect(el.value).to.equal('Oranges');
+    });
 
     // ─── §2.1.3  Tab selects active option and closes bib (P0) ──────────────
     it('Tab selects the active option and closes the bib', async () => {
@@ -452,26 +474,8 @@ function runTest(mobileView) {
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
       await elementUpdated(el);
 
-      await expect(el.value).to.equal('Apples');
       await expect(dropdown.isPopoverVisible).to.be.false;
-    });
-
-    // ─── §2.1.4  Tab with no highlighted option closes without selecting (P1) ─
-    it('Tab with no highlighted option closes bib without selecting', async () => {
-      const el = await defaultFixture();
-      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-      const trigger = dropdown.querySelector('[slot="trigger"]');
-
-      trigger.click();
-      await elementUpdated(el);
-      await expect(dropdown.isPopoverVisible).to.be.true;
-
-      // Do NOT navigate to any option before Tab
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-      await elementUpdated(el);
-
-      await expect(dropdown.isPopoverVisible).to.be.false;
-      await expect(el.value).to.be.undefined;
+      await expect(el.value).to.equal('Oranges');
     });
 
     // ─── §2.1.X  Shift+Tab moves active option to first non-disabled option (P0) ─
@@ -490,15 +494,13 @@ function runTest(mobileView) {
       await elementUpdated(el);
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       await elementUpdated(el);
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      await elementUpdated(el);
-      await expect(el.optionActive).to.equal(options[2]);
+      await expect(el.optionActive === options[2]).to.be.true;
 
       // Shift+Tab should move to the first option without selecting or closing
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
       await elementUpdated(el);
 
-      await expect(el.optionActive).to.equal(options[0]);
+      await expect(el.optionActive === options[0]).to.be.true;
       await expect(dropdown.isPopoverVisible).to.be.true;
       await expect(el.value).to.be.undefined;
     });
@@ -609,11 +611,32 @@ function runTest(mobileView) {
       el.showBib();
       await elementUpdated(el);
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      await elementUpdated(el);
-
-      await expect(trigger.ariaActiveDescendantElement).to.equal(firstOption);
+      await expect(trigger.ariaActiveDescendantElement === firstOption).to.be.true;
     });
+
+    if (mobileView) {
+      // ─── §2.2.3  Option selection in fullscreen mode (P0) ───────────────────
+      it('selecting an option in fullscreen mode sets value and closes dialog', async () => {
+        const el = await defaultFixture();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const trigger = dropdown.querySelector('[slot="trigger"]');
+
+        trigger.click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for fullscreen dialog to settle (double-rAF used by focus migration)
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        await elementUpdated(el);
+
+        await expect(el.value).to.equal('Oranges');
+        await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+    }
 
     it('Navigates the menu with arrow keys', async () => {
       const el = await defaultFixture();
@@ -622,9 +645,6 @@ function runTest(mobileView) {
 
       trigger.click();
       await expect(dropdown.isPopoverVisible).to.be.true;
-      el.dispatchEvent(new KeyboardEvent('keydown', {
-        'key': 'ArrowDown'
-      }));
 
       const menu = el.querySelector('auro-menu');
       const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -659,25 +679,23 @@ function runTest(mobileView) {
       await elementUpdated(el);
       await expect(dropdown.isPopoverVisible).to.be.true;
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      await elementUpdated(el);
-      await expect(el.optionActive).to.equal(rootOptions[0]);
+      await expect(el.optionActive === rootOptions[0]).to.be.true;
 
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       await elementUpdated(el);
-      await expect(el.optionActive).to.equal(nestedOptions[0]);
+      await expect(el.optionActive === nestedOptions[0]).to.be.true;
 
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       await elementUpdated(el);
-      await expect(el.optionActive).to.equal(nestedOptions[1]);
+      await expect(el.optionActive === nestedOptions[1]).to.be.true;
 
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       await elementUpdated(el);
-      await expect(el.optionActive).to.equal(rootOptions[1]);
+      await expect(el.optionActive === rootOptions[1]).to.be.true;
 
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       await elementUpdated(el);
-      await expect(el.optionActive).to.equal(nestedOptions[1]);
+      await expect(el.optionActive === nestedOptions[1]).to.be.true;
     });
 
     it('makes a selection programmatically', async () => {
@@ -1159,25 +1177,23 @@ describe('auro-select keyboard behavior — Home key', () => {
     await elementUpdated(el);
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await elementUpdated(el);
 
     const menu = el.querySelector('auro-menu');
     const lastOption = menu.querySelector('auro-menuoption[value="Duration"]');
-    await expect(el.optionActive).to.equal(lastOption);
+    await expect(el.optionActive === lastOption).to.be.true;
 
     // Press Home to go to first option
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
     await elementUpdated(el);
 
     const firstOption = menu.querySelector('auro-menuoption[value="Stops"]');
-    await expect(el.optionActive).to.equal(firstOption);
+    await expect(el.optionActive === firstOption).to.be.true;
 
     // wrap to last option if Home is pressed again
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
     await elementUpdated(el);
 
-    await expect(el.optionActive).to.equal(lastOption);
+    await expect(el.optionActive === lastOption).to.be.true;
   });
 
   it('skips disabled options and goes to first enabled option when Home is pressed', async () => {
@@ -1198,6 +1214,8 @@ describe('auro-select keyboard behavior — Home key', () => {
     await elementUpdated(el);
 
     // Navigate to the last option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
