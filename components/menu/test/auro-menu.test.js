@@ -17,26 +17,18 @@ describe('auro-menu', () => {
     await expect(el).to.be.accessible();
   });
 
-  it('Enter keyboardEvent marks option as selected', async () => {
+  it('makeSelection marks option as selected', async () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
     const index = 0;
 
     // Navigate to first option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    // Select with Enter
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    // Select active option
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Verify selection
@@ -45,33 +37,21 @@ describe('auro-menu', () => {
     expect(menuEl.optionSelected).to.equal(options[index]);
   });
 
-  it('Enter ArrowDown marks option as selected', async () => {
+  it('navigate down then makeSelection marks option as selected', async () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
 
     // Navigate down
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
     // Another down to get to second option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    // Select with Enter
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    // Select active option
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     expect(menuEl.optionSelected).to.equal(options[1]);
@@ -84,11 +64,7 @@ describe('auro-menu', () => {
 
     // Press down repeatedly to reach last option
     for (let i = 0; i < options.length + 1; i++) {
-      menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-        bubbles: true,
-        composed: true,
-        'key': 'ArrowDown'
-      }));
+      menuEl.navigateOptions('down');
       await elementUpdated(menuEl);
     }
 
@@ -103,35 +79,23 @@ describe('auro-menu', () => {
     const lastIndex = options.length - 1;
 
     // Then move up to trigger wrapping behavior
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowUp'
-    }));
+    menuEl.navigateOptions('up');
     await elementUpdated(menuEl);
 
     expect(menuEl.optionActive).to.equal(options[lastIndex]);
   });
 
-  it('Enter ArrowUp marks option as active', async () => {
+  it('navigate down then up marks option as active', async () => {
     const el = await defaultFixture();
     const menuEl = el.querySelector('auro-menu');
     const options = getOptions(menuEl);
 
     // Initialize state by moving down first
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
     // Move up
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowUp'
-    }));
+    menuEl.navigateOptions('up');
     await elementUpdated(menuEl);
 
     const selectedOption = options.find(opt => opt.classList.contains('active'));
@@ -144,11 +108,7 @@ describe('auro-menu', () => {
     const options = getOptions(menuEl);
 
     // Navigate down - should skip disabled and hidden options
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
     // Should have skipped to option 3 (index 2) since first two are non-interactive
@@ -192,18 +152,10 @@ describe('auro-menu', () => {
   it('test empty items handler', async () => {
     const el = await emptyItemsFixture();
     const menuEl = el.querySelector('auro-menu');
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
 
     const menuChild = menuEl.querySelector('[test-id=test-child]');
-    menuChild.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuChild.makeSelection();
 
     expect(menuEl.items).to.equal(undefined);
     expect(menuChild.items).to.equal(undefined);
@@ -263,33 +215,17 @@ describe('multiSelect', () => {
     const options = getOptions(menuEl);
 
     // Select first option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Select second option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Verify both options are selected
@@ -522,48 +458,24 @@ describe('multiSelect', () => {
     const options = getOptions(menuEl);
 
     // Select first option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Select second option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Deselect first option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowUp'
-    }));
+    menuEl.navigateOptions('up');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Verify only second option remains selected
@@ -579,40 +491,20 @@ describe('multiSelect', () => {
     const options = getOptions(menuEl);
 
     // Select first option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Select third option
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Verify aria-selected states
@@ -708,7 +600,7 @@ describe('value states', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(menu.value).to.equal('option 2');
-    expect(menu.optionSelected?.value).to.equal('option 2');
+    expect(menu.optionSelected && menu.optionSelected.value).to.equal('option 2');
     expect(selectedEventCount).to.equal(1);
   });
 
@@ -718,29 +610,17 @@ describe('value states', () => {
     const menu = el.querySelector('auro-menu');
 
     // Select first option
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menu.navigateOptions('down');
     await elementUpdated(menu);
 
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // Verify selection results in array
     expect(menu.value).to.eql('option 1');
 
     // Try to deselect by clicking again
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // Selection should persist
@@ -760,16 +640,8 @@ describe('value states', () => {
     expect(menu.value).to.eql('option 1');
 
     // Deselect by clicking again
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.navigateOptions('down');
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // Should be undefined after deselection
@@ -787,18 +659,10 @@ describe('value states', () => {
     expect(menu.optionSelected).to.equal(undefined);
 
     // Select an option
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menu.navigateOptions('down');
     await elementUpdated(menu);
 
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // Verify selection
@@ -822,29 +686,17 @@ describe('value states', () => {
     expect(menu.optionSelected).to.equal(undefined);
 
     // Select and verify
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menu.navigateOptions('down');
     await elementUpdated(menu);
 
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // Verify array after selection
     expect(menu.value).to.eql('option 1');
 
     // Try to deselect - should have no effect
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // Selection should persist
@@ -867,18 +719,10 @@ describe('value states', () => {
     expect(menu.value).to.equal(undefined);
 
     // Select in multiselect
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menu.navigateOptions('down');
     await elementUpdated(menu);
 
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // After selection, should be array
@@ -887,11 +731,7 @@ describe('value states', () => {
     expect(jsonValue).to.eql(['option1']);
 
     // Deselect
-    menu.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menu.makeSelection();
     await elementUpdated(menu);
 
     // After deselection, should be undefined
@@ -942,18 +782,10 @@ describe('multiSelect initial state', () => {
     const menuEl = el.querySelector('auro-menu');
 
     // Navigate without selecting
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'ArrowDown'
-    }));
+    menuEl.navigateOptions('down');
     await elementUpdated(menuEl);
 
     // Verify value remains undefined
@@ -961,11 +793,7 @@ describe('multiSelect initial state', () => {
     expect(menuEl.optionSelected).to.equal(undefined);
 
     // Make first selection
-    menuEl.dispatchEvent(new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      'key': 'Enter'
-    }));
+    menuEl.makeSelection();
     await elementUpdated(menuEl);
 
     // Verify value is now an array
@@ -1045,11 +873,11 @@ describe('nested menu: arrow key navigation', () => {
     const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
 
     // First ArrowDown → highlights option 1 (root)
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    rootMenu.navigateOptions('down');
     await elementUpdated(rootMenu);
 
     // Second ArrowDown → highlights option a (first nested option)
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    rootMenu.navigateOptions('down');
     await elementUpdated(rootMenu);
 
     expect(rootMenu.optionActive).to.equal(nestedOptions[0]);
@@ -1062,7 +890,7 @@ describe('nested menu: arrow key navigation', () => {
 
     // Navigate to option 1 → option a → option b → option 2
     for (let i = 0; i < 4; i++) {
-      rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+      rootMenu.navigateOptions('down');
       await elementUpdated(rootMenu);
     }
 
@@ -1075,13 +903,13 @@ describe('nested menu: arrow key navigation', () => {
     const rootOptions = [...el.querySelectorAll(':scope > auro-menu > auro-menuoption')];
 
     // Navigate down to the first nested option (option a)
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    rootMenu.navigateOptions('down');
     await elementUpdated(rootMenu);
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    rootMenu.navigateOptions('down');
     await elementUpdated(rootMenu);
 
     // ArrowUp should go back to option 1 (root)
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowUp' }));
+    rootMenu.navigateOptions('up');
     await elementUpdated(rootMenu);
 
     expect(rootMenu.optionActive).to.equal(rootOptions[0]);
@@ -1093,26 +921,26 @@ describe('nested menu: arrow key navigation', () => {
     const allOptions = [...el.querySelectorAll('auro-menuoption')];
 
     // ArrowUp with no active option wraps to the last option
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowUp' }));
+    rootMenu.navigateOptions('up');
     await elementUpdated(rootMenu);
 
     expect(rootMenu.optionActive).to.equal(allOptions[allOptions.length - 1]);
   });
 
-  it('Enter selects a nested option', async () => {
+  it('makeSelection selects a nested option', async () => {
     const el = await nestedMenuFixture();
     const rootMenu = el.querySelector('auro-menu');
     const nestedMenu = el.querySelector('auro-menu auro-menu');
     const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
 
     // Navigate to first nested option (option a)
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    rootMenu.navigateOptions('down');
     await elementUpdated(rootMenu);
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'ArrowDown' }));
+    rootMenu.navigateOptions('down');
     await elementUpdated(rootMenu);
 
     // Select it
-    rootMenu.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'Enter' }));
+    rootMenu.makeSelection();
     await elementUpdated(rootMenu);
 
     expect(rootMenu.optionSelected).to.equal(nestedOptions[0]);
