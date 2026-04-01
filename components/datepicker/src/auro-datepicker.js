@@ -46,8 +46,7 @@ import iconVersion from './iconVersion.js';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
-import { doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
-import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
+import { doubleRaf, guardTouchPassthrough } from '@aurodesignsystem/utils';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -840,13 +839,6 @@ export class AuroDatePicker extends AuroElement {
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
 
-    // Prevent dropdown from closing on focus loss during fullscreen transitions.
-    // When trigger.inert is set to true (to hide the trigger from assistive
-    // technology behind the fullscreen dialog), focus leaves the trigger, which
-    // fires a focusout event. The floater's handleFocusLoss() would interpret
-    // this as "close the bib" without this flag.
-    this.dropdown.noHideOnThisFocusLoss = true;
-
     // Pass label text to the dropdown bib for accessible dialog naming.
     // Without this, the fullscreen <dialog> has no accessible name and
     // screen readers announce it as just "dialog" with no context.
@@ -855,12 +847,6 @@ export class AuroDatePicker extends AuroElement {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
 
-    // Tab closes the fullscreen dialog (same pattern as select).
-    // The dialog event bridge intercepts Tab and re-dispatches it as a
-    // composed keydown; this listener catches the re-dispatched event.
-    // Enter opens the bib when it is closed.
-    applyKeyboardStrategy(this, datepickerKeyboardStrategy);
-
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       if (!this.isPopoverVisible) {
         this.dropdown.show();
@@ -868,6 +854,7 @@ export class AuroDatePicker extends AuroElement {
     });
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
+      this.syncFocusLossPolicy();
       this.notifyDatepickerToggled();
 
       // This forces the calendar to render when the dropdown is opened.
@@ -910,7 +897,17 @@ export class AuroDatePicker extends AuroElement {
           guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
         }
       } else {
-        restoreTriggerAfterClose(this.dropdown, this.inputList[0]);
+        // Always clear the inert flag. Only restore focus to the input when the datepicker
+        // still has focus (e.g. Escape, date selected) — not when the user tabbed away,
+        // which would pull them back and require extra Tab presses to escape.
+        this.dropdown.trigger.inert = false;
+        if (this.hasFocus) {
+          requestAnimationFrame(() => {
+            if (!this.dropdown.isPopoverVisible) {
+              this.inputList[0].focus();
+            }
+          });
+        }
       }
 
       // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
@@ -935,6 +932,7 @@ export class AuroDatePicker extends AuroElement {
     // re-open as modal so showModal() promotes the dialog to the top layer
     // and makes background content inert for screen readers.
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
+      this.syncFocusLossPolicy();
       if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
         this.dropdown.trigger.inert = true;
         this.dropdown.updateComplete.then(() => {
@@ -952,6 +950,19 @@ export class AuroDatePicker extends AuroElement {
         this.dropdown.trigger.inert = false;
       }
     });
+
+  }
+
+  /**
+   * Keeps dropdown.noHideOnThisFocusLoss in sync with the current bib mode.
+   * Fullscreen: the modal dialog handles its own focus containment, so the
+   * floater must not close the bib when focus leaves the trigger.
+   * Non-fullscreen: focus loss should hide the bib normally.
+   * @private
+   * @returns {void}
+   */
+  syncFocusLossPolicy() {
+    this.dropdown.noHideOnThisFocusLoss = this.dropdown.isBibFullscreen;
   }
 
   /**
@@ -965,13 +976,6 @@ export class AuroDatePicker extends AuroElement {
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
     this.inputList.forEach((input, index) => {
-      // auto-show bib when manually editing the input value
-      input.addEventListener('keyup', (evt) => {
-        if (evt.key === " ") {
-          this.dropdown.show();
-        }
-      });
-
       input.addEventListener('input', () => {
         if (index === 0) {
           this.value = input.value;
