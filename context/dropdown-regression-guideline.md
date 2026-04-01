@@ -652,11 +652,13 @@ The base dropdown component; all consumers inherit these behaviors.
 - [ ] **Action:** Open the datepicker.
 - [ ] **Expected:** Fullscreen dialog opens. Focus moves to the close button via `calendar.focusCloseButton()`.
 
-#### 4.2.2 Tab closes fullscreen dialog — P0
+#### 4.2.2 Tab does not close fullscreen dialog — P1
+
+> **Note:** Tab-closes-fullscreen was removed from `auro-datepicker` during a transition period while full bib keyboard navigation is being designed. See `components/datepicker/docs/partials/keyboardBehavior.md` for the current authoritative contract.
 
 - [ ] **Setup:** Open datepicker in fullscreen mode.
 - [ ] **Action:** Press Tab.
-- [ ] **Expected:** Dialog closes. Focus returns to trigger.
+- [ ] **Expected:** Dialog stays open. Tab cycles through focusable elements within the dialog.
 
 #### 4.2.3 Date selection in fullscreen — P0
 
@@ -856,7 +858,7 @@ Maps each scenario section to existing automated test coverage and identifies ga
 | **3.3.3 aria-activedescendant on input** | combobox | P0 | `auro-combobox.test.js` — navigate option; assert `inputElement.ariaActiveDescendantElement` |
 | **4.1.8 Container-type containment** | datepicker | P0 | `auro-datepicker.test.js` — fixture with containment ancestor |
 | **4.2.1 Focus → close button** | datepicker | P0 | `auro-datepicker.test.js` — mobile viewport; open; assert focus on close button |
-| **4.2.2 Tab closes fullscreen** | datepicker | P0 | `auro-datepicker.test.js` — Tab keydown in fullscreen; assert dialog closed |
+| **4.2.2 Tab does not close fullscreen** | datepicker | P1 | `auro-datepicker.test.js` — Tab keydown in fullscreen; assert dialog stays open |
 | **5.1.4 Container-type containment** | counter | P1 | `auro-counter-group.test.js` — fixture with containment ancestor |
 | **5.2.1 Focus → close button (fullscreen)** | counter | P0 | `auro-counter-group.test.js` — mobile viewport; open; assert focus |
 | **5.2.2 Tab closes fullscreen** | counter | P0 | `auro-counter-group.test.js` — Tab in fullscreen; assert close |
