@@ -1,9 +1,26 @@
 import { test, expect, type Page } from '@playwright/test';
 
-/** Wait for auro-datepicker to be defined and upgraded in the page. */
+/** Wait for auro-datepicker to be defined and for its internal dropdown to
+ * be fully initialized.  Checking only customElements.get() is not
+ * sufficient: in Svelte the component is lazy-loaded on route mount, so
+ * the element instance's Lit lifecycle (firstUpdated → updated) may not
+ * complete until a microtask after the class registration is observable.
+ * We additionally gate on dropdown.bibContent, which is set at the end of
+ * the dropdown's firstUpdated().  By that point the dropdown's updated()  
+ * has also run and propagated fullscreenBreakpoint to the bib — the value
+ * FloatingUI reads in getPositioningStrategy() to decide whether to use
+ * fullscreen mode.  Without this guard, openBib() can fire before the
+ * breakpoint is wired up, causing FloatingUI to fall back to floating mode
+ * and leaving noHideOnThisFocusLoss false even on a mobile viewport. */
 async function waitForDatepicker(page: Page) {
   await page.waitForFunction(
-    () => customElements.get('auro-datepicker') !== undefined,
+    () => {
+      const el = document.querySelector('auro-datepicker') as any;
+      return (
+        customElements.get('auro-datepicker') !== undefined &&
+        el?.dropdown?.bibContent != null
+      );
+    },
     { timeout: 10_000 },
   );
 }
@@ -21,22 +38,17 @@ function isBibVisible(page: Page) {
   });
 }
 
-/**
- * Waits until the datepicker bib is open in fullscreen mode AND the
- * focus-loss policy flag is already synchronized.  Under slower CI timing
- * (Svelte lazy-loads the component on route mount) the `auroDropdown-toggled`
- * event fires before FloatingUI has finished the strategy-change cycle, so
- * `noHideOnThisFocusLoss` may still be false for a frame or two after the bib
- * becomes visible.  Polling here avoids the race without adding an arbitrary
- * fixed-timeout sleep.
- */
-async function waitForFullscreenReady(page: Page) {
+/** After openBib(), waits for the bib to be visible AND for the
+ * focus-loss policy to be synchronized.  Once waitForDatepicker() has
+ * passed, the fullscreen breakpoint is wired up so both flags are set
+ * synchronously during the bib-open sequence; this poll just lets the
+ * browser event loop flush before the test acts on the open state. */
+async function waitForBibReady(page: Page) {
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-datepicker') as any;
       return (
         el?.dropdown?.isPopoverVisible === true &&
-        el?.dropdown?.isBibFullscreen === true &&
         el?.dropdown?.noHideOnThisFocusLoss === true
       );
     },
@@ -59,7 +71,7 @@ export function datepickerFullscreenSuite(framework: string) {
       // Wait for fullscreen mode to settle and for noHideOnThisFocusLoss to be
       // synchronized before moving focus.  Under slower CI timing (Svelte
       // lazy-loads on route mount) the flag may lag a frame behind bib open.
-      await waitForFullscreenReady(page);
+      await waitForBibReady(page);
 
       // Move real browser focus to the button outside the datepicker.
       // In fullscreen mode noHideOnThisFocusLoss is true, so the bib must stay open.
@@ -71,7 +83,7 @@ export function datepickerFullscreenSuite(framework: string) {
 
     test('bib closes when explicitly dismissed in fullscreen mode', async ({ page }) => {
       await openBib(page);
-      await waitForFullscreenReady(page);
+      await waitForBibReady(page);
 
       await page.keyboard.press('Escape');
 
@@ -150,7 +162,7 @@ export function datepickerFullscreenSuite(framework: string) {
 
     test('Tab does not close the fullscreen bib', async ({ page }) => {
       await openBib(page);
-      await waitForFullscreenReady(page);
+      await waitForBibReady(page);
 
       // Tab cycles within the fullscreen <dialog> via native focus containment.
       // Unlike the old implementation, there is no keydown redirect that closes the bib.
