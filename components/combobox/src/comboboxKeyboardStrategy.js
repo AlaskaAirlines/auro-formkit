@@ -157,4 +157,26 @@ export const comboboxKeyboardStrategy = {
       navigateArrow(component, 'down');
     }
   },
+
+  Home(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      evt.preventDefault();
+
+      const activeOpts = component.menu.menuService.menuOptions.filter((option) => option.isActive && !option.disabled);
+      if (activeOpts.length > 0) {
+        component.menu.menuService.setHighlightedOption(activeOpts[0]);
+      }
+    }
+  },
+
+  End(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      evt.preventDefault();
+
+      const activeOpts = component.menu.menuService.menuOptions.filter((option) => option.isActive && !option.disabled);
+      if (activeOpts.length > 0) {
+        component.menu.menuService.setHighlightedOption(activeOpts[activeOpts.length - 1]);
+      }
+    }
+  }
 };

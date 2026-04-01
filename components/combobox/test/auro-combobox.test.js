@@ -272,7 +272,7 @@ function runFulltest(mobileview) {
   });
 
   it('Shift+Tab skips disabled first option when moving to first active option', async () => {
-    const el = await shiftTabDisabledFirstFixture(mobileview);
+    const el = await disabledFirstOptionFixture(mobileview);
     const options = el.querySelectorAll('auro-menuoption');
 
     el.focus();
@@ -316,6 +316,132 @@ function runFulltest(mobileview) {
 
     await expect(el.dropdown.isPopoverVisible).to.be.false;
     await expect(el.optionActive).to.be.null;
+  });
+
+  // ─── Home / End keyboard navigation ────────────────────────────────────────
+  it('Home key moves active option to first option', async () => {
+    const el = await shiftTabFixture(mobileview);
+    const options = el.querySelectorAll('auro-menuoption');
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Navigate past the first option so Home has somewhere to jump from
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.not.equal(options[0]);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(options[0]);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+    await expect(el.value).to.be.undefined;
+  });
+
+  it('End key moves active option to last option', async () => {
+    const el = await shiftTabFixture(mobileview);
+    const options = el.querySelectorAll('auro-menuoption');
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Start at the first option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.equal(options[0]);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive).to.equal(options[options.length - 1]);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+    await expect(el.value).to.be.undefined;
+  });
+
+  it('Home key skips disabled first option', async () => {
+    const el = await disabledFirstOptionFixture(mobileview);
+    const options = el.querySelectorAll('auro-menuoption');
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Navigate to the last option so Home has to jump over the disabled first one
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    // options[0] is disabled — should land on options[1], first non-disabled option
+    await expect(el.optionActive).to.equal(options[1]);
+    await expect(el.optionActive).to.not.equal(options[0]);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    // Close bib: disabled options fail a11y contrast checks when visible
+    el.hideBib();
+    await elementUpdated(el);
+  });
+
+  it('End key skips disabled last option', async () => {
+    const el = await disabledLastOptionFixture(mobileview);
+    const options = el.querySelectorAll('auro-menuoption');
+
+    el.focus();
+    setInputValue(el, 'a');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    if (mobileview) {
+      el.inputInBib.focus();
+      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+    }
+
+    // Start at the first option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive).to.equal(options[0]);
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true, cancelable: true }));
+    await elementUpdated(el);
+
+    // options[2] is disabled — should land on options[1], last non-disabled option
+    await expect(el.optionActive).to.equal(options[1]);
+    await expect(el.optionActive).to.not.equal(options[2]);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+    // Close bib: disabled options fail a11y contrast checks when visible
+    el.hideBib();
+    await elementUpdated(el);
   });
 
   // it('hides the bib when tabbing away from combobox', async () => {
@@ -440,6 +566,28 @@ function runFulltest(mobileview) {
 
     await expect(el.optionActive).to.equal(menuOptions[0]);
     await expect(el.menu.index).to.equal(0);
+  });
+
+  it('skips disabled first option when dropdown opens without a selection', async () => {
+    const el = await disabledFirstOptionFixture(mobileview);
+    const menuOptions = el.querySelectorAll('auro-menuoption');
+
+    // Simulate dropdown opening with no value set
+    el.dropdown.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
+      detail: { expanded: true }
+    }));
+
+    // Wait for the 150ms expandedDelay to elapse
+    await new Promise((r) => setTimeout(r, 200));
+    await elementUpdated(el);
+
+    // options[0] is disabled — should auto-highlight options[1]
+    await expect(el.optionActive).to.equal(menuOptions[1]);
+    await expect(el.optionActive).to.not.equal(menuOptions[0]);
+
+    // Close bib: disabled options fail a11y contrast checks when visible
+    el.hideBib();
+    await elementUpdated(el);
   });
 
   it('navigates menu with up and down arrow keys', async () => {
@@ -1275,7 +1423,7 @@ async function shiftTabFixture(mobileview) {
   `);
 }
 
-async function shiftTabDisabledFirstFixture(mobileview) {
+async function disabledFirstOptionFixture(mobileview) {
   if (mobileview) {
     await setViewport({ width: 500, height: 800 });
   } else {
@@ -1288,6 +1436,24 @@ async function shiftTabDisabledFirstFixture(mobileview) {
       <auro-menuoption value="Apples" id="sh-dis-option-0" disabled>Apples</auro-menuoption>
       <auro-menuoption value="Oranges" id="sh-dis-option-1">Oranges</auro-menuoption>
       <auro-menuoption value="Grapes" id="sh-dis-option-2">Grapes</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+  `);
+}
+
+async function disabledLastOptionFixture(mobileview) {
+  if (mobileview) {
+    await setViewport({ width: 500, height: 800 });
+  } else {
+    await setViewport({ width: 800, height: 800 });
+  }
+  return fixture(html`
+  <auro-combobox>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples" id="hend-option-0">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges" id="hend-option-1">Oranges</auro-menuoption>
+      <auro-menuoption value="Grapes" id="hend-option-2" disabled>Grapes</auro-menuoption>
     </auro-menu>
   </auro-combobox>
   `);
