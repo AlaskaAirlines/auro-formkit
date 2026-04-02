@@ -572,7 +572,8 @@ export class AuroSelect extends AuroElement {
           this.menu.updateActiveOption(this.optionSelected);
         } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
           this.menu.updateActiveOption(this.optionSelected[0]);
-        } else {
+        } else if (!this.menu.optionActive) {
+          // If no activeOption has yet to be set, then make the first enabled option active by default
           const firstActive = this.menu.menuService.menuOptions.find((option) => !option.disabled);
           this.menu.updateActiveOption(firstActive);
         }

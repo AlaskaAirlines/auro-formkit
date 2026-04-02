@@ -2,19 +2,33 @@ import { navigateArrow } from '@aurodesignsystem/utils';
 
 export const selectKeyboardStrategy = {
   ArrowUp(component, evt, ctx) {
+    // Navigate menu only if the bib is open, otherwise open the bib
     evt.preventDefault();
-    navigateArrow(component, 'up', {
-      ctx,
-      showFn: () => component.dropdown.show(),
-    });
+    if (evt.altKey || evt.metaKey) {
+      // navigate to first enabled option
+    } else if (component.dropdown.isPopoverVisible) {
+      navigateArrow(component, 'up', {
+        ctx,
+        showFn: () => component.dropdown.show(),
+      });
+    } else {
+      component.dropdown.show();
+    }
   },
 
   ArrowDown(component, evt, ctx) {
+    // Navigate menu only if the bib is open, otherwise open the bib
     evt.preventDefault();
-    navigateArrow(component, 'down', {
-      ctx,
-      showFn: () => component.dropdown.show(),
-    });
+    if (evt.altKey || evt.metaKey) {
+      // navigate to last enabled option
+    } else if (component.dropdown.isPopoverVisible) {
+      navigateArrow(component, 'down', {
+        ctx,
+        showFn: () => component.dropdown.show(),
+      });
+    } else {
+      component.dropdown.show();
+    }
   },
 
   Enter(component, evt, ctx) {
