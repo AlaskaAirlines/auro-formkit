@@ -29,6 +29,8 @@ export const selectKeyboardStrategy = {
   },
 
   Enter(component, evt, ctx) {
+    evt.preventDefault();
+    evt.stopPropagation();
     if (!ctx.isExpanded) {
       component.dropdown.show();
       return;
