@@ -130,6 +130,21 @@ describe("auro-dropdown", () => {
     expectPopoverHidden(el);
   });
 
+  it("auro-dropdown does not open when disabled and clicked", async () => {
+    const el = await fixture(html`
+      <auro-dropdown disabled>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    const trigger = el.shadowRoot.querySelector("#trigger");
+    expectPopoverHidden(el);
+
+    trigger.click();
+    expectPopoverHidden(el);
+  });
+
   it("auro-dropdown programmatically hide", async () => {
     const el = await fixture(html`
       <auro-dropdown toggle chevron>
@@ -282,6 +297,24 @@ describe("auro-dropdown", () => {
     );
 
     expectPopoverShown(el);
+  });
+
+  it("auro-dropdown does not open with keyboard when disableKeyboardHandling is set", async () => {
+    const el = await fixture(html`
+      <auro-dropdown disableKeyboardHandling>
+        <span slot="label"> label text </span>
+        <div slot="trigger">Trigger</div>
+      </auro-dropdown>
+    `);
+
+    const trigger = el.shadowRoot.querySelector("#trigger");
+    expectPopoverHidden(el);
+
+    trigger.dispatchEvent(new KeyboardEvent("keydown", { key: " " }));
+    expectPopoverHidden(el);
+
+    trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+    expectPopoverHidden(el);
   });
 
   it("auro-dropdown hides with `Escape` key", async () => {

@@ -945,6 +945,7 @@ export class AuroDropdown extends AuroElement {
           aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
           aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
           aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+          aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}"
           @focusin="${this.handleFocusin}"
           @blur="${this.handleFocusOut}">
           <div class="triggerContentWrapper" id="triggerLabel">
