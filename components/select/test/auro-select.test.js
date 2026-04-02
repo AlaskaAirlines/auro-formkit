@@ -1402,7 +1402,6 @@ describe('auro-select keyboard behavior — Space key', () => {
   it('does nothing when Space is pressed on a disabled component', async () => {
     const el = await defaultFixture();
     el.disabled = true;
-    el.ariaDisabled = 'true';
 
     await elementUpdated(el);
 
