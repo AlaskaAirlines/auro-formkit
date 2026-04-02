@@ -38,16 +38,20 @@ function isBibVisible(page: Page) {
   });
 }
 
-/** After openBib(), waits for the bib to be visible and in fullscreen mode. */
+/** After openBib(), waits for the bib to be visible and in fullscreen mode.
+ * Split into two sequential polls so each condition gets its own timeout
+ * budget.  The two flags are set in separate Lit update cycles — ANDing them
+ * in a single waitForFunction creates a race where the combined condition may
+ * never be true within the window, especially under CI's slower JS engine. */
 async function waitForBibReady(page: Page) {
+  // Step 1: bib must be open
   await page.waitForFunction(
-    () => {
-      const el = document.querySelector('auro-datepicker') as any;
-      return (
-        el?.dropdown?.isPopoverVisible === true &&
-        el?.dropdown?.isBibFullscreen === true
-      );
-    },
+    () => (document.querySelector('auro-datepicker') as any)?.dropdown?.isPopoverVisible === true,
+    { timeout: 8_000 },
+  );
+  // Step 2: positioning strategy must have resolved to fullscreen (next Lit cycle)
+  await page.waitForFunction(
+    () => (document.querySelector('auro-datepicker') as any)?.dropdown?.isBibFullscreen === true,
     { timeout: 5_000 },
   );
 }
