@@ -1276,6 +1276,7 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          disableKeyboardHandling
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"
@@ -1355,6 +1356,7 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          disableKeyboardHandling
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"
@@ -1440,6 +1442,7 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          disableKeyboardHandling
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"

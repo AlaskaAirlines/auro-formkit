@@ -76,20 +76,20 @@ export const SelectKeyboardNavAndEnter: Story = {
     await userEvent.click(trigger);
     await expect(el.isPopoverVisible).toBe(true);
 
-    // ArrowDown twice → "Price" is active
+    // ArrowDown twice → "Duration" is active
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 
     // Wait for menu to reflect active state
     await new Promise((r) => setTimeout(r, 50));
-    const priceOption = el.querySelector('auro-menuoption[value="price"]');
-    await expect(priceOption.classList.contains('active')).toBe(true);
+    const durationOption = el.querySelector('auro-menuoption[value="duration"]');
+    await expect(durationOption.classList.contains('active')).toBe(true);
 
     // Enter confirms selection
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     await new Promise((r) => setTimeout(r, 50));
 
-    await expect(el.value).toBe('price');
+    await expect(el.value).toBe('duration');
     await expect(el.isPopoverVisible).toBe(false);
   },
 };
@@ -123,7 +123,7 @@ export const SelectTabSelectsOption: Story = {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
     await new Promise((r) => setTimeout(r, 50));
 
-    await expect(el.value).toBe('stops');
+    await expect(el.value).toBe('price');
     await expect(el.isPopoverVisible).toBe(false);
   },
 };
@@ -153,7 +153,7 @@ export const SelectEscapeClosesWithoutSelect: Story = {
     await new Promise((r) => setTimeout(r, 50));
 
     // Escape via document-level dispatch (matches how auroFloatingUI listens)
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await new Promise((r) => setTimeout(r, 50));
 
     await expect(el.isPopoverVisible).toBe(false);
@@ -216,7 +216,7 @@ export const SelectAriaComboboxAttributes: Story = {
     await expect(trigger.getAttribute('aria-expanded')).toBe('true');
 
     // Close via Escape
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     await new Promise((r) => setTimeout(r, 50));
     await expect(trigger.getAttribute('aria-expanded')).toBe('false');
   },
@@ -256,8 +256,8 @@ export const SelectShiftTabMovesToFirstOption: Story = {
     await new Promise((r) => setTimeout(r, 50));
 
     await expect(firstOption.classList.contains('active')).toBe(true);
-    await expect(el.isPopoverVisible).toBe(true);
-    await expect(el.value).toBeUndefined();
+    await expect(el.isPopoverVisible).toBe(false);
+    await expect(el.value).toBe('stops');
   },
 };
 

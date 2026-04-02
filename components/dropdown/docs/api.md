@@ -4,34 +4,35 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 
 ## Properties
 
-| Property                | Attribute               | Type                                             | Default          | Description                                      |
-|-------------------------|-------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
-| `a11yRole`              |                         | `string`                                         |                  | The value for the role attribute of the trigger element. |
-| `appearance`            | `appearance`            | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
-| `autoPlacement`         | `autoPlacement`         | `boolean`                                        |                  | If declared, bib's position will be automatically calculated where to appear. |
-| `chevron`               | `chevron`               | `boolean`                                        |                  | If declared, the dropdown displays a chevron on the right. |
-| `disableEventShow`      | `disableEventShow`      | `boolean`                                        |                  | If declared, the dropdown will only show by calling the API .show() public method. |
-| `disabled`              | `disabled`              | `boolean`                                        |                  | If declared, the dropdown is not interactive.    |
-| `error`                 | `error`                 | `boolean`                                        |                  | If declared, will apply error UI to the dropdown. |
-| `errorMessage`          | `errorMessage`          | `string`                                         | "undefined"      | Contains the help text message for the current validity error. |
-| `focusShow`             | `focusShow`             | `boolean`                                        |                  | If declared, the bib will display when focus is applied to the trigger. |
-| `fullscreenBreakpoint`  | `fullscreenBreakpoint`  | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
-| `hoverToggle`           | `hoverToggle`           | `boolean`                                        |                  | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
-| `isBibFullscreen`       | `isBibFullscreen`       | `boolean`                                        | false            | If true, the dropdown bib is taking the fullscreen when it's open. |
-| `isPopoverVisible`      | `open`                  | `boolean`                                        | false            | If true, the dropdown bib is displayed.          |
-| `layout`                | `layout`                | `'classic' \| 'emphasized' \| 'snowflake'`       | "'classic'"      | Sets the layout of the dropdown.                 |
-| `matchWidth`            | `matchWidth`            | `boolean`                                        | false            | If declared, the popover and trigger will be set to the same width. |
-| `noFlip`                | `noFlip`                | `boolean`                                        |                  | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
-| `noHideOnThisFocusLoss` | `noHideOnThisFocusLoss` | `boolean`                                        | false            | If declared, the dropdown will not hide when moving focus outside the element. |
-| `noToggle`              | `noToggle`              | `boolean`                                        |                  | If declared, the trigger will only show the dropdown bib. |
-| `offset`                | `offset`                | `number`                                         | "0"              | Gap between the trigger element and bib.         |
-| `onDark`                | `onDark`                | `boolean`                                        |                  | DEPRECATED - use `appearance="inverse"` instead. |
-| `onSlotChange`          | `onSlotChange`          |                                                  |                  | If declared, and a function is set, that function will execute when the slot content is updated. |
-| `placement`             | `placement`             | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
-| `shape`                 |                         |                                                  | "undefined"      |                                                  |
-| `shift`                 | `shift`                 | `boolean`                                        |                  | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
-| `simple`                | `simple`                | `boolean`                                        |                  | If declared, applies a border around the trigger slot. |
-| `size`                  |                         |                                                  | "undefined"      |                                                  |
+| Property                  | Attribute                 | Type                                             | Default          | Description                                      |
+|---------------------------|---------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
+| `a11yRole`                |                           | `string`                                         |                  | The value for the role attribute of the trigger element. |
+| `appearance`              | `appearance`              | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
+| `autoPlacement`           | `autoPlacement`           | `boolean`                                        |                  | If declared, bib's position will be automatically calculated where to appear. |
+| `chevron`                 | `chevron`                 | `boolean`                                        |                  | If declared, the dropdown displays a chevron on the right. |
+| `disableEventShow`        | `disableEventShow`        | `boolean`                                        |                  | If declared, the dropdown will only show by calling the API .show() public method. |
+| `disableKeyboardHandling` | `disableKeyboardHandling` | `boolean`                                        |                  | If declared, the dropdown will not handle keyboard events and will require the consumer to manage this behavior. |
+| `disabled`                | `disabled`                | `boolean`                                        |                  | If declared, the dropdown is not interactive.    |
+| `error`                   | `error`                   | `boolean`                                        |                  | If declared, will apply error UI to the dropdown. |
+| `errorMessage`            | `errorMessage`            | `string`                                         | "undefined"      | Contains the help text message for the current validity error. |
+| `focusShow`               | `focusShow`               | `boolean`                                        |                  | If declared, the bib will display when focus is applied to the trigger. |
+| `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
+| `hoverToggle`             | `hoverToggle`             | `boolean`                                        |                  | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
+| `isBibFullscreen`         | `isBibFullscreen`         | `boolean`                                        | false            | If true, the dropdown bib is taking the fullscreen when it's open. |
+| `isPopoverVisible`        | `open`                    | `boolean`                                        | false            | If true, the dropdown bib is displayed.          |
+| `layout`                  | `layout`                  | `'classic' \| 'emphasized' \| 'snowflake'`       | "'classic'"      | Sets the layout of the dropdown.                 |
+| `matchWidth`              | `matchWidth`              | `boolean`                                        | false            | If declared, the popover and trigger will be set to the same width. |
+| `noFlip`                  | `noFlip`                  | `boolean`                                        |                  | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
+| `noHideOnThisFocusLoss`   | `noHideOnThisFocusLoss`   | `boolean`                                        | false            | If declared, the dropdown will not hide when moving focus outside the element. |
+| `noToggle`                | `noToggle`                | `boolean`                                        |                  | If declared, the trigger will only show the dropdown bib. |
+| `offset`                  | `offset`                  | `number`                                         | "0"              | Gap between the trigger element and bib.         |
+| `onDark`                  | `onDark`                  | `boolean`                                        |                  | DEPRECATED - use `appearance="inverse"` instead. |
+| `onSlotChange`            | `onSlotChange`            |                                                  |                  | If declared, and a function is set, that function will execute when the slot content is updated. |
+| `placement`               | `placement`               | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
+| `shape`                   |                           |                                                  | "undefined"      |                                                  |
+| `shift`                   | `shift`                   | `boolean`                                        |                  | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
+| `simple`                  | `simple`                  | `boolean`                                        |                  | If declared, applies a border around the trigger slot. |
+| `size`                    |                           |                                                  | "undefined"      |                                                  |
 
 ## Methods
 
