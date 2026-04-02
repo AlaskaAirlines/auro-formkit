@@ -38,18 +38,14 @@ function isBibVisible(page: Page) {
   });
 }
 
-/** After openBib(), waits for the bib to be visible AND for the
- * focus-loss policy to be synchronized.  Once waitForDatepicker() has
- * passed, the fullscreen breakpoint is wired up so both flags are set
- * synchronously during the bib-open sequence; this poll just lets the
- * browser event loop flush before the test acts on the open state. */
+/** After openBib(), waits for the bib to be visible and in fullscreen mode. */
 async function waitForBibReady(page: Page) {
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-datepicker') as any;
       return (
         el?.dropdown?.isPopoverVisible === true &&
-        el?.dropdown?.noHideOnThisFocusLoss === true
+        el?.dropdown?.isBibFullscreen === true
       );
     },
     { timeout: 5_000 },
