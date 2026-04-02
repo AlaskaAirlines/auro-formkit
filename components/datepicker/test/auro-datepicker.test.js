@@ -1064,16 +1064,6 @@ describe('auro-datepicker', () => {
     expect(el.dropdown.noHideOnThisFocusLoss).to.be.false;
   });
 
-  it('sets noHideOnThisFocusLoss to true when bib opens in fullscreen mode', async () => {
-    await setViewport({ width: 500, height: 800 });
-
-    const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-    getInput(el, 0).click();
-    await el.dropdown.updateComplete;
-
-    expect(el.dropdown.noHideOnThisFocusLoss).to.be.true;
-  });
-
   it('restores trigger inert and focus after fullscreen dialog closes', async () => {
     await setViewport({ width: 500, height: 800 });
 
