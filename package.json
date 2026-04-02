@@ -76,13 +76,14 @@
     "lit": "^3.3.1"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "*",
-    "@rolldown/binding-linux-x64-gnu": "*"
+    "@rolldown/binding-linux-x64-gnu": "*",
+    "@rollup/rollup-linux-x64-gnu": "*"
   },
   "devDependencies": {
     "@aurodesignsystem/auro-accordion": "^6.1.1",
     "@aurodesignsystem/auro-button": "^12.3.2",
-    "@aurodesignsystem/auro-library": "^5.11.3",
+    "@aurodesignsystem/auro-library": "^5.12.0",
+    "@aurodesignsystem/auro-loader": "^6.2.0",
     "@aurodesignsystem/build-tools": "*",
     "@aurodesignsystem/config": "*",
     "@aurodesignsystem/design-tokens": "^8.15.1",
@@ -92,7 +93,6 @@
     "@aurodesignsystem/utils": "*",
     "@aurodesignsystem/version": "*",
     "@aurodesignsystem/webcorestylesheets": "^10.1.4",
-    "@aurodesignsystem/auro-loader": "^6.2.0",
     "@chromatic-com/storybook": "^5.0.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
