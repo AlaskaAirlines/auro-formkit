@@ -951,6 +951,9 @@ export class AuroDatePicker extends AuroElement {
       }
     });
 
+    // Catch any isBibFullscreen state that was set before listeners were registered.
+    this.syncFocusLossPolicy();
+
   }
 
   /**
