@@ -32,6 +32,8 @@ async function defaultFixture() {
     <auro-menu>
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
       <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+      <auro-menuoption value="Bananas" id="option-2">Bananas</auro-menuoption>
+      <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
     </auro-menu>
   </auro-select>
   `);
@@ -181,36 +183,6 @@ async function requiredFixture() {
     <auro-menu>
       <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
       <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
-    </auro-menu>
-  </auro-select>
-  `);
-}
-
-// WHAT IS THIS ONE USED FOR?
-async function shiftTabFixture() {
-  return await fixture(html`
-  <auro-select>
-    <span slot="bib.fullscreen.headline">Bib Headline</span>
-    <span slot="label">Name</span>
-    <auro-menu>
-      <auro-menuoption value="Stops" id="sh-option-0">Stops</auro-menuoption>
-      <auro-menuoption value="Price" id="sh-option-1">Price</auro-menuoption>
-      <auro-menuoption value="Duration" id="sh-option-2">Duration</auro-menuoption>
-    </auro-menu>
-  </auro-select>
-  `);
-}
-
-// THIS IS PROBABLY NOT NECESSARY ANY MORE?
-async function shiftTabDisabledFirstFixture() {
-  return await fixture(html`
-  <auro-select>
-    <span slot="bib.fullscreen.headline">Bib Headline</span>
-    <span slot="label">Name</span>
-    <auro-menu>
-      <auro-menuoption value="Stops" id="sh-dis-option-0" disabled>Stops</auro-menuoption>
-      <auro-menuoption value="Price" id="sh-dis-option-1">Price</auro-menuoption>
-      <auro-menuoption value="Duration" id="sh-dis-option-2">Duration</auro-menuoption>
     </auro-menu>
   </auro-select>
   `);
@@ -437,23 +409,23 @@ function runTest(mobileView) {
       });
     }
 
-    // // ─── §2.1.2  Enter key selects active option and closes bib (P0) ────────
-    // it('Enter key selects the active option and closes the bib', async () => {
-    //   const el = await defaultFixture();
-    //   const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    //   const trigger = dropdown.querySelector('[slot="trigger"]');
+    // ─── §2.1.2  Enter key selects active option and closes bib (P0) ────────
+    it('Enter key selects the active option and closes the bib', async () => {
+      const el = await defaultFixture();
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector('[slot="trigger"]');
 
-    //   trigger.click();
-    //   await expect(dropdown.isPopoverVisible).to.be.true;
+      trigger.click();
+      await expect(dropdown.isPopoverVisible).to.be.true;
 
-    //   el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    //   await elementUpdated(el);
-    //   el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    //   await elementUpdated(el);
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await elementUpdated(el);
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await elementUpdated(el);
 
-    //   await expect(el.value).to.equal('Oranges');
-    //   await expect(dropdown.isPopoverVisible).to.be.false;
-    // });
+      await expect(el.value).to.equal('Oranges');
+      await expect(dropdown.isPopoverVisible).to.be.false;
+    });
 
     // ─── §2.1.3  Tab selects active option and closes bib (P0) ──────────────
     it('Tab selects the active option and closes the bib', async () => {
@@ -497,7 +469,7 @@ function runTest(mobileView) {
     });
 
     it('Shift+Tab with bib closed does nothing', async () => {
-      const el = await shiftTabFixture();
+      const el = await defaultFixture();
       const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
 
       await expect(dropdown.isPopoverVisible).to.be.false;
@@ -521,7 +493,7 @@ function runTest(mobileView) {
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       await elementUpdated(el);
 
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       await elementUpdated(el);
 
       await expect(dropdown.isPopoverVisible).to.be.false;
@@ -1116,38 +1088,24 @@ describe('selectKeyboardStrategy — Tab multiselect', () => {
 
 describe('auro-select keyboard behavior — Home key', () => {
   it('moves to the first enabled option when Home is pressed while expanded', async () => {
-    // just use default fixture
-    const el = await fixture(html`
-      <auro-select>
-        <span slot="bib.fullscreen.headline">Bib Headline</span>
-        <span slot="label">Name</span>
-        <auro-menu>
-          <auro-menuoption value="Stops">Stops</auro-menuoption>
-          <auro-menuoption value="Price">Price</auro-menuoption>
-          <auro-menuoption value="Duration">Duration</auro-menuoption>
-        </auro-menu>
-      </auro-select>
-    `);
+    const el = await defaultFixture();
 
-    await elementUpdated(el);
     el.showBib();
     await elementUpdated(el);
 
     // Navigate to the last option
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await elementUpdated(el);
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
     await elementUpdated(el);
 
     const menu = el.querySelector('auro-menu');
-    const lastOption = menu.querySelector('auro-menuoption[value="Duration"]');
+    const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
     await expect(el.optionActive === lastOption).to.be.true;
 
     // Press Home to go to first option
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
     await elementUpdated(el);
 
-    const firstOption = menu.querySelector('auro-menuoption[value="Stops"]');
+    const firstOption = menu.querySelector('auro-menuoption[value="Apples"]');
     await expect(el.optionActive === firstOption).to.be.true;
 
     // wrap to last option if Home is pressed again
@@ -1158,18 +1116,9 @@ describe('auro-select keyboard behavior — Home key', () => {
   });
 
   it('skips disabled options and goes to first enabled option when Home is pressed', async () => {
-    // just use default fixture
-    const el = await fixture(html`
-      <auro-select>
-        <span slot="bib.fullscreen.headline">Bib Headline</span>
-        <span slot="label">Name</span>
-        <auro-menu>
-          <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
-          <auro-menuoption value="Price">Price</auro-menuoption>
-          <auro-menuoption value="Duration">Duration</auro-menuoption>
-        </auro-menu>
-      </auro-select>
-    `);
+    const el = await defaultFixture();
+    const menu = el.querySelector('auro-menu');
+    menu.querySelector('auro-menuoption').setAttribute('disabled', '');
 
     await elementUpdated(el);
     el.showBib();
@@ -1183,14 +1132,13 @@ describe('auro-select keyboard behavior — Home key', () => {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
 
-    await expect(el.optionActive.value).to.equal('Duration');
+    await expect(el.optionActive.value).to.equal('Oranges');
 
     // Press Home, should skip the disabled first option and go to "Price"
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
     await elementUpdated(el);
 
-    const menu = el.querySelector('auro-menu');
-    const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+    const firstEnabledOption = menu.querySelector('auro-menuoption[value="Oranges"]');
     await expect(el.optionActive).to.equal(firstEnabledOption);
   });
 
@@ -1218,17 +1166,7 @@ describe('auro-select keyboard behavior — Home key', () => {
   });
 
   it('does nothing when Home is pressed while collapsed', async () => {
-    // just use default fixture
-    const el = await fixture(html`
-      <auro-select>
-        <span slot="bib.fullscreen.headline">Bib Headline</span>
-        <span slot="label">Name</span>
-        <auro-menu>
-          <auro-menuoption value="Stops">Stops</auro-menuoption>
-          <auro-menuoption value="Price">Price</auro-menuoption>
-        </auro-menu>
-      </auro-select>
-    `);
+    const el = await defaultFixture();
 
     await elementUpdated(el);
 
@@ -1246,18 +1184,7 @@ describe('auro-select keyboard behavior — Home key', () => {
 
 describe('auro-select keyboard behavior — End key', () => {
   it('moves to the last enabled option when End is pressed while expanded', async () => {
-    // just use default fixture
-    const el = await fixture(html`
-      <auro-select>
-        <span slot="bib.fullscreen.headline">Bib Headline</span>
-        <span slot="label">Name</span>
-        <auro-menu>
-          <auro-menuoption value="Stops">Stops</auro-menuoption>
-          <auro-menuoption value="Price">Price</auro-menuoption>
-          <auro-menuoption value="Duration">Duration</auro-menuoption>
-        </auro-menu>
-      </auro-select>
-    `);
+    const el = await defaultFixture();
 
     await elementUpdated(el);
     el.showBib();
@@ -1268,7 +1195,7 @@ describe('auro-select keyboard behavior — End key', () => {
     await elementUpdated(el);
 
     const menu = el.querySelector('auro-menu');
-    const lastOption = menu.querySelector('auro-menuoption[value="Duration"]');
+    const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
     await expect(el.optionActive).to.equal(lastOption);
   });
 
@@ -1332,16 +1259,7 @@ describe('auro-select keyboard behavior — End key', () => {
   });
 
   it('does nothing when End is pressed while collapsed', async () => {
-    const el = await fixture(html`
-      <auro-select>
-        <span slot="bib.fullscreen.headline">Bib Headline</span>
-        <span slot="label">Name</span>
-        <auro-menu>
-          <auro-menuoption value="Stops">Stops</auro-menuoption>
-          <auro-menuoption value="Price">Price</auro-menuoption>
-        </auro-menu>
-      </auro-select>
-    `);
+    const el = await defaultFixture();
 
     await elementUpdated(el);
 
@@ -1357,76 +1275,177 @@ describe('auro-select keyboard behavior — End key', () => {
   });
 });
 
+describe('auro-select keyboard behavior — Command key', () => {
+  it('advances to the last enabled option when Command is pressed while expanded', async () => {
+    const el = await defaultFixture();
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
+
+    // Press Command to jump to last option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive === lastOption).to.equal(true);
+  });
+
+  it('skips disabled options and goes to last enabled option when Command is pressed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops">Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+          <auro-menuoption value="Duration" disabled>Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const lastEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+
+    // Press Command, should skip the disabled last option and go to "Price"
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive === lastEnabledOption).to.equal(true);
+  });
+});
+
+describe('auro-select keyboard behavior — Option key', () => {
+  it('advances to the last enabled option when Option is pressed while expanded', async () => {
+    const el = await defaultFixture();
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const lastOption = menu.querySelector('auro-menuoption[value="Grapes"]');
+
+    // Press Option (Alt) to jump to last option
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive === lastOption).to.equal(true);
+  });
+
+  it('skips disabled options and goes to last enabled option when Option is pressed', async () => {
+    const el = await fixture(html`
+      <auro-select>
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Stops">Stops</auro-menuoption>
+          <auro-menuoption value="Price">Price</auro-menuoption>
+          <auro-menuoption value="Duration" disabled>Duration</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    `);
+
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
+
+    const menu = el.querySelector('auro-menu');
+    const lastEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+
+    // Press Option (Alt), should skip the disabled last option and go to "Price"
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+    await elementUpdated(el);
+
+    await expect(el.optionActive === lastEnabledOption).to.equal(true);
+  });
+});
+
 describe('auro-select keyboard behavior — Space key', () => {
-//   it('expands the bib when Space is pressed while collapsed and enabled', async () => {
-//     const el = await fixture(html`
-//       <auro-select>
-//         <span slot="bib.fullscreen.headline">Bib Headline</span>
-//         <span slot="label">Name</span>
-//         <auro-menu>
-//           <auro-menuoption value="Stops">Stops</auro-menuoption>
-//           <auro-menuoption value="Price">Price</auro-menuoption>
-//         </auro-menu>
-//       </auro-select>
-//     `);
+  it('expands the bib when Space is pressed while collapsed and enabled', async () => {
+    const el = await defaultFixture();
 
-//     await elementUpdated(el);
+    await elementUpdated(el);
 
-//     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-//     await expect(dropdown.isPopoverVisible).to.be.false;
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    await expect(dropdown.isPopoverVisible).to.be.false;
 
-//     el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
-//     await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+    await elementUpdated(el);
 
-//     await expect(dropdown.isPopoverVisible).to.be.true;
-//   });
+    await expect(dropdown.isPopoverVisible).to.be.true;
+  });
 
-  // it('collapses the bib when Space is pressed while expanded and enabled', async () => {
-  //   const el = await fixture(html`
-  //     <auro-select>
-  //       <span slot="bib.fullscreen.headline">Bib Headline</span>
-  //       <span slot="label">Name</span>
-  //       <auro-menu>
-  //         <auro-menuoption value="Stops">Stops</auro-menuoption>
-  //         <auro-menuoption value="Price">Price</auro-menuoption>
-  //       </auro-menu>
-  //     </auro-select>
-  //   `);
+  it('collapses the bib when Space is pressed while expanded and enabled', async () => {
+    const el = await defaultFixture();
 
-  //   await elementUpdated(el);
-  //   el.showBib();
-  //   await elementUpdated(el);
+    await elementUpdated(el);
+    el.showBib();
+    await elementUpdated(el);
 
-  //   const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-  //   await expect(dropdown.isPopoverVisible).to.be.true;
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    await expect(dropdown.isPopoverVisible).to.be.true;
 
-  //   el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
-  //   await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+    await elementUpdated(el);
 
-  //   await expect(dropdown.isPopoverVisible).to.be.false;
-  //   await expect(el.value).to.be.undefined;
-  // });
+    await expect(dropdown.isPopoverVisible).to.be.false;
+    await expect(el.value).to.be.undefined;
+  });
 
-  // it('does nothing when Space is pressed on a disabled component', async () => {
-  //   const el = await fixture(html`
-  //     <auro-select disabled>
-  //       <span slot="bib.fullscreen.headline">Bib Headline</span>
-  //       <span slot="label">Name</span>
-  //       <auro-menu>
-  //         <auro-menuoption value="Stops">Stops</auro-menuoption>
-  //         <auro-menuoption value="Price">Price</auro-menuoption>
-  //       </auro-menu>
-  //     </auro-select>
-  //   `);
+  it('does nothing when Space is pressed on a disabled component', async () => {
+    const el = await defaultFixture();
+    el.disabled = true;
+    el.ariaDisabled = 'true';
 
-  //   await elementUpdated(el);
+    await elementUpdated(el);
 
-  //   const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-  //   await expect(dropdown.isPopoverVisible).to.be.false;
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    await expect(dropdown.isPopoverVisible).to.be.false;
 
-  //   el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
-  //   await elementUpdated(el);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+    await elementUpdated(el);
 
-  //   await expect(dropdown.isPopoverVisible).to.be.false;
-  // });
+    await expect(dropdown.isPopoverVisible).to.be.false;
+  });
+});
+
+describe('auro-select keyboard behavior — ArrowDown when collapsed', () => {
+  it('opens the bib when ArrowDown is pressed while collapsed', async () => {
+    const el = await defaultFixture();
+
+    await elementUpdated(el);
+
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    await expect(dropdown.isPopoverVisible).to.be.false;
+
+    // Press ArrowDown while collapsed
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
+    // Dropdown should now be open
+    await expect(dropdown.isPopoverVisible).to.be.true;
+  });
+});
+
+describe('auro-select keyboard behavior — ArrowUp when collapsed', () => {
+  it('opens the bib when ArrowUp is pressed while collapsed', async () => {
+    const el = await defaultFixture();
+
+    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+    await expect(dropdown.isPopoverVisible).to.be.false;
+
+    // Press ArrowUp while collapsed
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await elementUpdated(el);
+
+    // Dropdown should now be open
+    await expect(dropdown.isPopoverVisible).to.be.true;
+  });
 });

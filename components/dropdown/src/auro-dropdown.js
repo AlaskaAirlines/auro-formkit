@@ -110,6 +110,7 @@ export class AuroDropdown extends AuroElement {
     this.appearance = 'default';
     this.chevron = false;
     this.disabled = false;
+    this.disableKeyboardHandling = false;
     this.error = false;
     this.tabIndex = 0;
     this.noToggle = false;
@@ -317,6 +318,14 @@ export class AuroDropdown extends AuroElement {
        * If declared, the dropdown is not interactive.
        */
       disabled: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will not handle keyboard events and will require the consumer to manage this behavior.
+       */
+      disableKeyboardHandling: {
         type: Boolean,
         reflect: true
       },
@@ -626,7 +635,7 @@ export class AuroDropdown extends AuroElement {
 
   firstUpdated() {
     // Configure the floater to, this will generate the ID for the bib
-    this.floater.configure(this, 'auroDropdown');
+    this.floater.configure(this, 'auroDropdown', !this.disableKeyboardHandling);
 
     // Prevent `contain: layout` on the dropdown host. Layout containment
     // creates a containing block for position:fixed descendants (the bib),
