@@ -854,7 +854,6 @@ export class AuroDatePicker extends AuroElement {
     });
 
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
-      this.syncFocusLossPolicy();
       this.notifyDatepickerToggled();
 
       // This forces the calendar to render when the dropdown is opened.
@@ -932,7 +931,6 @@ export class AuroDatePicker extends AuroElement {
     // re-open as modal so showModal() promotes the dialog to the top layer
     // and makes background content inert for screen readers.
     this.dropdown.addEventListener('auroDropdown-strategy-change', () => {
-      this.syncFocusLossPolicy();
       if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible) {
         this.dropdown.trigger.inert = true;
         this.dropdown.updateComplete.then(() => {
@@ -950,24 +948,8 @@ export class AuroDatePicker extends AuroElement {
         this.dropdown.trigger.inert = false;
       }
     });
-
-    // Catch any isBibFullscreen state that was set before listeners were registered.
-    this.syncFocusLossPolicy();
-
   }
-
-  /**
-   * Keeps dropdown.noHideOnThisFocusLoss in sync with the current bib mode.
-   * Fullscreen: the modal dialog handles its own focus containment, so the
-   * floater must not close the bib when focus leaves the trigger.
-   * Non-fullscreen: focus loss should hide the bib normally.
-   * @private
-   * @returns {void}
-   */
-  syncFocusLossPolicy() {
-    this.dropdown.noHideOnThisFocusLoss = this.dropdown.isBibFullscreen;
-  }
-
+  
   /**
    * Binds all behavior needed to the input after rendering.
    * @private
