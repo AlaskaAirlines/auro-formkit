@@ -1,44 +1,46 @@
+/* eslint-disable new-cap */
 import { navigateArrow } from '@aurodesignsystem/utils';
 
 export const selectKeyboardStrategy = {
   ArrowUp(component, evt, ctx) {
-    // Navigate menu only if the bib is open, otherwise open the bib
     evt.preventDefault();
     if (evt.altKey || evt.metaKey) {
       // navigate to first enabled option
-    } else if (component.dropdown.isPopoverVisible) {
-      navigateArrow(component, 'up', {
-        ctx,
-        showFn: () => component.dropdown.show(),
-      });
-    } else {
-      component.dropdown.show();
+      selectKeyboardStrategy.Home(component, evt, ctx);
+      return;
     }
+    navigateArrow(component, 'up', {
+      ctx,
+      showFn: () => component.dropdown.show(),
+    });
   },
 
   ArrowDown(component, evt, ctx) {
-    // Navigate menu only if the bib is open, otherwise open the bib
     evt.preventDefault();
     if (evt.altKey || evt.metaKey) {
       // navigate to last enabled option
-    } else if (component.dropdown.isPopoverVisible) {
-      navigateArrow(component, 'down', {
-        ctx,
-        showFn: () => component.dropdown.show(),
-      });
-    } else {
-      component.dropdown.show();
+      selectKeyboardStrategy.End(component, evt, ctx);
+      return;
     }
+    navigateArrow(component, 'down', {
+      ctx,
+      showFn: () => component.dropdown.show(),
+    });
   },
 
   Enter(component, evt, ctx) {
-    if (!ctx.isExpanded && ctx.isPopover) {
-      component.menu.makeSelection();
-    } else if (ctx.isModal && !evt.defaultPrevented) {
-      // for modal, isExpanded is always true
-      // defaultPrevented will be true if Floating UI has already handled the event to open the dropdown
-      component.menu.makeSelection();
+    if (!ctx.isExpanded) {
+      component.dropdown.show();
+      return;
     }
+    component.menu.makeSelection();
+  },
+
+  Escape(component, evt, ctx) {
+    if (!ctx.isExpanded) {
+      return;
+    }
+    component.dropdown.hide();
   },
 
   Tab(component, evt, ctx) {
@@ -53,7 +55,10 @@ export const selectKeyboardStrategy = {
     }
     component.dropdown.hide();
   },
-  Home(component, evt) {
+  Home(component, evt, ctx) {
+    if (!ctx.isExpanded) {
+      return;
+    }
     evt.preventDefault();
     evt.stopPropagation();
     const firstOption = component.menu.menuService.menuOptions.find((option) => !option.disabled);
@@ -62,7 +67,10 @@ export const selectKeyboardStrategy = {
     }
   },
 
-  End(component, evt) {
+  End(component, evt, ctx) {
+    if (!ctx.isExpanded) {
+      return;
+    }
     evt.preventDefault();
     evt.stopPropagation();
     const lastOption = [...component.menu.menuService.menuOptions].reverse().find((option) => !option.disabled);
@@ -71,7 +79,16 @@ export const selectKeyboardStrategy = {
     }
   },
 
-  default(component, evt) {
+  default(component, evt, ctx) {
     component.updateActiveOptionBasedOnKey(evt.key);
+    if (evt.key === ' ') {
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (ctx.isExpanded) {
+        component.dropdown.hide();
+        return;
+      }
+      component.dropdown.show();
+    }
   },
 };
