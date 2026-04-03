@@ -23,6 +23,13 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20) {
+  const deadline = Date.now() + timeout;
+  while (!predicate() && Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, interval));
+  }
+}
+
 // ─── §2.1.1  Open dropdown and select an option (P0) ────────────────────────
 export const SelectOpenAndSelectOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -394,6 +401,69 @@ export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
     // highlighted option and closed the dialog.
     await expect(el.value).toBe('stops');
     await expect(el.isPopoverVisible).toBe(false);
+  },
+};
+
+// ─── Fullscreen: live region announcements route to bib ─────────────────────
+export const SelectFullscreenLiveRegionInBib: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+
+    // Open the dropdown
+    el.showBib();
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+
+    // Simulate fullscreen (resize observers don't fire in Storybook)
+    el.dropdown.isBibFullscreen = true;
+    await el.dropdown.updateComplete;
+
+    // Navigate directly via the menu (dialog bridge doesn't fire in Storybook)
+    el.menu.navigateOptions('down');
+    await el.updateComplete;
+
+    // Wait a frame for the rAF inside announceToScreenReader
+    await new Promise((r) => requestAnimationFrame(r));
+
+    const bibEl = el.dropdown.bibElement.value;
+    const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
+    await expect(bibLiveRegion).not.toBeNull();
+    await expect(bibLiveRegion.textContent).not.toBe('');
+  },
+};
+
+// ─── Emphasized layout contains the live region span ────────────────────────
+export const SelectEmphasizedLayoutHasLiveRegion: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select layout="emphasized" shape="pill">
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+
+    const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+    await expect(liveRegion).not.toBeNull();
   },
 };
 
