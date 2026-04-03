@@ -1,7 +1,7 @@
 /* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
 
 import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
+import { setViewport, sendKeys } from '@web/test-runner-commands';
 import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import '../src/registered.js';
 
@@ -1013,6 +1013,24 @@ describe('auro-datepicker', () => {
     await expect(el.valueEnd).to.be.equal(undefined);
   });
 
+  for (const key of ['Enter', 'Space']) {
+    it(`keypress ${key} on clear button does not open the bib`, async () => {
+      const el = await fixture(html`
+        <auro-datepicker value="02/14/2028"></auro-datepicker>
+      `);
+      await elementUpdated(el);
+      await el.focus();
+
+      await new Promise((r) => setTimeout(r, 500));
+      await sendKeys({ press: 'Tab' });
+      await new Promise((r) => setTimeout(r, 500));
+      await sendKeys({ press: key });
+      await new Promise((r) => setTimeout(r, 500));
+      await expect(el.value).to.be.equal('');
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+  }
+
   it('focuses close button when fullscreen dialog opens', async () => {
     await setViewport({ width: 500, height: 800 });
 
@@ -1382,4 +1400,13 @@ function setInputValue(auroInput, value) {
  */
 function getInput(el, index) {
   return el.inputList[index];
+}
+
+/**
+ * Gets the clear button host element from the datepicker.
+ * @param {HTMLElement} el - The datepicker element.
+ * @returns {HTMLElement} The clear button element.
+ */
+function getClearButton(el) {
+  return el.shadowRoot.querySelector('.clearBtn');
 }

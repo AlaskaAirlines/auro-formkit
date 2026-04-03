@@ -218,8 +218,15 @@ export class AuroDatePicker extends AuroElement {
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
-    /** @private */
+    /**
+     * @private
+     */
     this.handleClick = this.handleClick.bind(this);
+
+    /**
+     * @private
+     */
+    this.handleClearClick = this.handleClearClick.bind(this);
 
     // Layout Config
     this.layout = 'classic';
@@ -460,7 +467,7 @@ export class AuroDatePicker extends AuroElement {
       /**
        * Optional placeholder text to display in the second input when using date range.
        * By default, datepicker will use `placeholder` for both inputs if placeholder is
-       * specified, but placeholderendDate is not.
+       * specified, but placeholderEndDate is not.
        */
       placeholderEndDate: {
         type: String,
@@ -1154,18 +1161,6 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Handle enter/space keydown on the reset button.
-   * @private
-   * @param {KeyboardEvent} event - The keydown event.
-   */
-  handleKeydownReset(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      this.resetInputs();
-      this.focus();
-    }
-  }
-
-  /**
    * Resets values without resetting validation.
    */
   resetInputs() {
@@ -1775,6 +1770,18 @@ export class AuroDatePicker extends AuroElement {
   // ------------------------------------
 
   /**
+   * Handles click on the clear button.
+   * @private
+   * @param {MouseEvent} event
+   * @returns {void}
+   */
+  handleClearClick(event) {
+    event.stopPropagation();
+    this.resetInputs();
+    this.focus();
+  }
+
+  /**
    * Renders the clear action button.
    * @private
    * @returns {import('lit').TemplateResult}
@@ -1788,8 +1795,7 @@ export class AuroDatePicker extends AuroElement {
     return html`
       <div class="${classMap(clearActionClassMap)}">
         <${this.buttonTag}
-          @click="${this.resetInputs}"
-          @keydown="${this.handleKeydownReset}"
+          @click="${this.handleClearClick}"
           ?onDark="${this.onDark}"
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}"
