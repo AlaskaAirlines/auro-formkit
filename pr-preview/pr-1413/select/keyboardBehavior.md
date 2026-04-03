@@ -163,7 +163,7 @@
             <td>
               The current <code>focused</code> option is selected.
               <div class="note">
-                <strong>Note:</strong> the page will also navigate to the next focusable element in the tabindex order.
+                <strong>Note:</strong> the page will also navigate to the next focusable element in the tabindex sequence.
               </div>
             </td>
           </tr>
@@ -172,9 +172,9 @@
             <td>Expanded</td>
             <td>Trigger element</td>
             <td>
-              Advances the <code>focused</code> option to the first enabled option in the list.
+              The current <code>focused</code> option is selected.
               <div class="note">
-                <strong>Note:</strong> the page will <strong>NOT</strong> navigate to the previous focusable element in the tabindex order.
+                <strong>Note:</strong> the page will also navigate to the previous focusable element in the tabindex sequence.
               </div>
             </td>
           </tr>
