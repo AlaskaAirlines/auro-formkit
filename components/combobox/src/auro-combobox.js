@@ -1181,6 +1181,10 @@ export class AuroCombobox extends AuroElement {
     this.menu.matchWord = normalizeFilterValue(this.input.value);
     this.optionActive = null;
 
+    if (this.behavior === 'suggestion') {
+      this.value = this.input.value;
+    }
+
     if (!this.input.value) {
       this.clear();
     }
@@ -1377,9 +1381,18 @@ export class AuroCombobox extends AuroElement {
         this.input.value = this.value;
       }
 
-      // Use setMenuValue like select does instead of direct assignment
-      this.setMenuValue(this.value);
-
+      if (this.behavior === 'suggestion') {
+        // if menu has an option that has matched value, then select it,
+        // otherwise clear the menu value since the input value doesn't match any option
+        if (this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
+          this.setMenuValue(this.value);
+        } else {
+          this.menu.value = undefined;
+        }
+      } else {
+        // Use setMenuValue like select does instead of direct assignment
+        this.setMenuValue(this.value);
+      }
       if (this.value) {
         // If the value got set programmatically make sure we hide the bib
         // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
