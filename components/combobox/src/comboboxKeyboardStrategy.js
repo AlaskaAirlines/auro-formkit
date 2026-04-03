@@ -40,7 +40,11 @@ export const comboboxKeyboardStrategy = {
       evt.stopPropagation();
     } else if (ctx.isExpanded && component.menu.optionActive) {
       component.menu.makeSelection();
-      component.setClearBtnFocus();
+
+      if (ctx.isModal) {
+        component.setTriggerInputFocus();
+      }
+
       evt.preventDefault();
       evt.stopPropagation();
     } else {
@@ -54,11 +58,25 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
-  Tab(component, _evt, ctx) {
+  Tab(component, evt, ctx) {
     if (ctx.isExpanded && !isClearBtnFocused(ctx)) {
       // ClearBtn will not bubble up tab key events when it's focused, so need to manage it here when focused
       component.menu.makeSelection();
       component.hideBib();
+
+      // In fullscreen modal mode, closing the dialog does not
+      // automatically restores focus to the input. In the tab case,
+      // Explicitly move focus to the trigger's clear button so the
+      // user can continues tabbing through the page normally.
+      if (ctx.isModal && !evt.shiftKey) {
+        component.setClearBtnFocus();
+      }
+    }
+  },
+
+  Escape(component, _evt, ctx) {
+    if (ctx.isExpanded && ctx.isModal) {
+      component.setTriggerInputFocus();
     }
   },
 
