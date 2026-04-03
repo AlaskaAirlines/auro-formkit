@@ -85,7 +85,13 @@ export function guardTouchPassthrough(element) {
 }
 
 /**
- * Restores the dropdown trigger after a fullscreen dialog closes.
+ * Restores the dropdown trigger after a fullscreen dialog closes
+ * when focus doesn't leave the component (e.g. using Esc or Enter keys).
+ * When leaving the component (e.g., tabbing out of the combobox after closing
+ * the fullscreen dialog), focus restoration is handled by the browser's native
+ * dialog focus restoration behavior, so this function only restores focus
+ * when focus remains inside the component after the dialog closes.
+
  *
  * Removes the `inert` attribute from the trigger so it is accessible again,
  * and restores focus to the given target after one animation frame. The rAF
@@ -101,8 +107,11 @@ export function guardTouchPassthrough(element) {
 export function restoreTriggerAfterClose(dropdown, focusTarget) {
   dropdown.trigger.inert = false;
 
+  // Wait a frame so that dialog.close() has completed and the browser's
+  // native focus restoration has run before we attempt to focus the
+  // trigger / input programmatically.
   requestAnimationFrame(() => {
-    if (!dropdown.isPopoverVisible) {
+    if (!dropdown.isPopoverVisible && dropdown.trigger.contains(document.activeElement)) {
       focusTarget.focus();
     }
   });
