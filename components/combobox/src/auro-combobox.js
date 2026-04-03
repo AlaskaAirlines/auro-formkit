@@ -544,7 +544,6 @@ export class AuroCombobox extends AuroElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroCombobox);
   }
 
-  // NOTE: MUST TEST IN PLANBOOK
   /**
    * Mark the first available (non-hidden), enabled option as `active`.
    * @private
@@ -553,6 +552,25 @@ export class AuroCombobox extends AuroElement {
   activateFirstEnabledAvailableOption() {
     const firstEnabledOptionIndex = this.availableOptions.findIndex((opt) => !opt.disabled);
     this.updateActiveOption(firstEnabledOptionIndex);
+  }
+
+  /**
+   * Mark the last available (non-hidden), enabled option as `active`.
+   * @private
+   * @returns {void}
+   */
+  activateLastEnabledAvailableOption() {
+    let lastEnabledOptionIndex = -1;
+
+    // Work backwards through the available options array to find the last enabled option
+    for (let index = this.availableOptions.length - 1; index >= 0; index -= 1) {
+      if (!this.availableOptions[index].disabled) {
+        lastEnabledOptionIndex = index;
+        break;
+      }
+    }
+
+    this.updateActiveOption(lastEnabledOptionIndex);
   }
 
   /**

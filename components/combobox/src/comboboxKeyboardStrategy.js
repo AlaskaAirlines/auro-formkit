@@ -31,22 +31,18 @@ function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
 }
 
 export const comboboxKeyboardStrategy = {
-  async Enter(component, evt, ctx) {
-    // If the clear button has focus, let the browser activate it normally.
-    // stopPropagation prevents parent containers (e.g., forms) from treating
-    // Enter as a submit, but we must NOT call preventDefault — that would
-    // block the browser's built-in "Enter activates focused button" behavior.
+  Enter(component, evt, ctx) {
     if (isClearBtnFocused(ctx)) {
+      // If the clear button has focus, let the browser activate it normally.
+      // stopPropagation prevents parent containers (e.g., forms) from treating
+      // Enter as a submit, but we must NOT call preventDefault — that would
+      // block the browser's built-in "Enter activates focused button" behavior.
       evt.stopPropagation();
-      return;
-    }
-
-    if (ctx.isExpanded && component.menu.optionActive) {
+    } else if (ctx.isExpanded && component.menu.optionActive) {
       component.menu.makeSelection();
-      await component.updateComplete;
+      component.setClearBtnFocus();
       evt.preventDefault();
       evt.stopPropagation();
-      component.setClearBtnFocus();
     } else {
       // Prevent the keypress from bubbling to parent containers (e.g., forms)
       // which could interpret Enter as a submit or trigger other unintended behavior.
@@ -59,10 +55,26 @@ export const comboboxKeyboardStrategy = {
   },
 
   Tab(component, _evt, ctx) {
-    if (ctx.isExpanded) {
+    if (ctx.isExpanded && !isClearBtnFocused(ctx)) {
       // ClearBtn will not bubble up tab key events when it's focused, so need to manage it here when focused
       component.menu.makeSelection();
       component.hideBib();
+    }
+  },
+
+  Home(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      component.activateFirstEnabledAvailableOption();
+    }
+  },
+
+  End(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      component.activateLastEnabledAvailableOption();
     }
   },
 
@@ -71,15 +83,16 @@ export const comboboxKeyboardStrategy = {
     if (isClearBtnFocused(ctx)) {
       return;
     }
-    // Read live visibility — ctx.isExpanded was computed before showBib() above,
-    // so it wouldn't reflect the state change.
-    if (component.availableOptions.length > 0 && component.dropdown.isPopoverVisible) {
-      evt.preventDefault();
-      navigateArrow(component, 'up');
-    }
 
-    if (component.availableOptions.length > 0 && !component.dropdown.isPopoverVisible) {
-      component.showBib();
+    // option display and navigation are prevented if there are no available options
+    if (component.availableOptions.length > 0) {
+      // navigate if bib is open otherwise open it
+      if (component.dropdown.isPopoverVisible) {
+        evt.preventDefault();
+        navigateArrow(component, 'up');
+      } else {
+        component.showBib();
+      }
     }
   },
 
@@ -89,15 +102,15 @@ export const comboboxKeyboardStrategy = {
       return;
     }
 
-    // Read live visibility — ctx.isExpanded was computed before showBib() above,
-    // so it wouldn't reflect the state change.
-    if (component.availableOptions.length > 0 && component.dropdown.isPopoverVisible) {
-      evt.preventDefault();
-      navigateArrow(component, 'down');
+    // option display and navigation are prevented if there are no available options
+    if (component.availableOptions.length > 0) {
+      // navigate if bib is open otherwise open it
+      if (component.dropdown.isPopoverVisible) {
+        evt.preventDefault();
+        navigateArrow(component, 'down');
+      } else {
+        component.showBib();
+      }
     }
-
-    if (component.availableOptions.length > 0 && !component.dropdown.isPopoverVisible) {
-      component.showBib();
-    }
-  },
+  }
 };
