@@ -39,9 +39,10 @@ export const comboboxKeyboardStrategy = {
 
     // option display and navigation are prevented if there are no available options
     if (component.availableOptions.length > 0) {
+      evt.preventDefault();
+
       // navigate if bib is open otherwise open it
       if (component.dropdown.isPopoverVisible) {
-        evt.preventDefault();
 
         if (evt.altKey || evt.metaKey) {
           component.activateLastEnabledAvailableOption();
@@ -62,10 +63,10 @@ export const comboboxKeyboardStrategy = {
 
     // option display and navigation are prevented if there are no available options
     if (component.availableOptions.length > 0) {
+      evt.preventDefault();
+
       // navigate if bib is open otherwise open it
       if (component.dropdown.isPopoverVisible) {
-        evt.preventDefault();
-
         if (evt.altKey || evt.metaKey) {
           component.activateFirstEnabledAvailableOption();
         } else {
