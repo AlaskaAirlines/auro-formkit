@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, no-extra-parens */
+/* eslint-disable no-param-reassign, complexity, max-lines, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, no-extra-parens */
 
 // If using litElement base class
 import { css } from "lit";
@@ -787,7 +787,11 @@ export class AuroCombobox extends AuroElement {
         // during fullscreen open to prevent touch pass-through.
         this.menu.style.pointerEvents = '';
 
-        restoreTriggerAfterClose(this.dropdown, this.input);
+        // When closing a fullscreen bib, restore focus to the trigger so that
+        // keyboard navigation continues from the correct place in the page
+        if (this.dropdown.isBibFullscreen) {
+          restoreTriggerAfterClose(this.dropdown, this.input);
+        }
       }
 
       if (this.dropdownOpen) {
@@ -871,7 +875,25 @@ export class AuroCombobox extends AuroElement {
   setClearBtnFocus() {
     const clearBtn = this.input.shadowRoot.querySelector('.clearBtn');
     if (clearBtn) {
-      clearBtn.focus();
+      // Wait for the element to fully render across
+      // multiple Lit update cycles before moving focus
+      doubleRaf(() => {
+        clearBtn.focus();
+      });
+    }
+  }
+
+  /**
+   * @private
+   */
+  setTriggerInputFocus() {
+    const input = this.input.shadowRoot.querySelector('input');
+    if (input) {
+      // Wait for the element to fully render across
+      // multiple Lit update cycles before moving focus
+      doubleRaf(() => {
+        input.focus();
+      });
     }
   }
 
