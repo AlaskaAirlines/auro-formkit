@@ -572,6 +572,10 @@ export default class BaseInput extends AuroElement {
       evt.stopPropagation();
     });
 
+    this.clearBtn.addEventListener('click', (evt) => {
+      evt.stopPropagation();
+    });
+
     this.patchInputEvent(this.inputElement);
 
     if (this.wrapperElement) {
