@@ -166,6 +166,7 @@ export class AuroCombobox extends AuroElement {
 
       /**
        * Array of available options to display in the dropdown.
+       * This array contains all non-hidden options (e.g., hidden by filtering on input value).
        * @private
        */
       availableOptions: {
@@ -543,12 +544,22 @@ export class AuroCombobox extends AuroElement {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroCombobox);
   }
 
+  // NOTE: MUST TEST IN PLANBOOK
+  /**
+   * Mark the first available (non-hidden), enabled option as `active`.
+   * @private
+   * @returns {void}
+   */
+  activateFirstEnabledAvailableOption() {
+    const firstEnabledOptionIndex = this.availableOptions.findIndex((opt) => !opt.disabled);
+    this.updateActiveOption(firstEnabledOptionIndex);
+  }
+
   /**
    * Updates the filter for the available options based on the input value.
    * @private
    */
   updateFilter() {
-
     // Reset available options if noFilter is set to false after being true.
     if (this.noFilter) {
       this.availableOptions = [...this.options];
@@ -667,6 +678,10 @@ export class AuroCombobox extends AuroElement {
     if (this.value && this.input.value && !this.menu.value) {
       this.syncValuesAndStates();
     }
+
+    if (!this.availableOptions.includes(this.menu.optionActive)) {
+      this.activateFirstEnabledAvailableOption();
+    }
   }
 
   /**
@@ -740,9 +755,6 @@ export class AuroCombobox extends AuroElement {
       if (this.dropdownOpen) {
         const expandedDelay = 150;
         this._expandedTimeout = setTimeout(() => {
-          if (!this.value) {
-            this.updateActiveOption(0);
-          }
           this.triggerExpandedState = true;
         }, expandedDelay);
       } else {
@@ -752,16 +764,6 @@ export class AuroCombobox extends AuroElement {
       // Clear aria-activedescendant when dropdown closes
       if (!this.dropdownOpen && this.input) {
         this.input.setActiveDescendant(null);
-        this.optionActive = null;
-
-        // Remove the highlighted state from all menu options so re-opening
-        // the dropdown doesn't show a stale highlight.
-        if (this.options) {
-          this.options.forEach((opt) => {
-            opt.active = false;
-            opt.classList.remove('active');
-          });
-        }
 
         // Restore pointer events on the menu in case they were disabled
         // during fullscreen open to prevent touch pass-through.
@@ -802,13 +804,6 @@ export class AuroCombobox extends AuroElement {
             this.setInputFocus();
             this._inFullscreenTransition = false;
           });
-        } else {
-          // wait a frame in case the bib gets hidden immediately after showing because there is no value
-          setTimeout(() => {
-            if (this.componentHasFocus) {
-              this.setInputFocus();
-            }
-          }, 0);
         }
       }
     });
