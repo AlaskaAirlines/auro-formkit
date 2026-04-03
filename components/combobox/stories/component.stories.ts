@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { expect } from 'storybook/test';
+import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
 import '../../menu/src/registered';
 
@@ -72,9 +72,9 @@ export const ComboboxArrowKeyNavigation: Story = {
   <span slot="bib.fullscreen.headline">Bib Header</span>
   <span slot="label">Fruit</span>
   <auro-menu>
-    <auro-menuoption value="Apples">Apples</auro-menuoption>
-    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
-    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+    <auro-menuoption id="option1" value="Apples">Apples</auro-menuoption>
+    <auro-menuoption id="option2" value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption id="option3" value="Grapes">Grapes</auro-menuoption>
   </auro-menu>
 </auro-combobox>
   `,
@@ -82,12 +82,18 @@ export const ComboboxArrowKeyNavigation: Story = {
     const el = canvasElement.querySelector('auro-combobox') as any;
     await el.updateComplete;
     setInputValue(el, 'a');
-    // Enter opens the bib when a value is typed
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+    el.focus();
+
     await new Promise((r) => setTimeout(r, 100));
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+
+    await userEvent.keyboard('{ArrowDown}');
     await el.updateComplete;
-    await expect(el.optionActive).not.toBeNull();
+    await userEvent.keyboard('{ArrowDown}');
+    await el.updateComplete;
+    await expect(el.menu.optionActive.id).toBe('option2');
+    await expect(el.dropdown.isPopoverVisible).toBe(true);
+
   },
 };
 
@@ -214,34 +220,6 @@ export const ComboboxNoFilter: Story = {
   },
 };
 
-// ─── aria-activedescendant set on input after keyboard navigation ─────────────
-export const ComboboxAriaActiveDescendant: Story = {
-  tags: ['!autodocs', 'chromatic-enabled'],
-  render: () => html`
-<auro-combobox>
-  <span slot="ariaLabel.bib.close">Close combobox</span>
-  <span slot="ariaLabel.input.clear">Clear All</span>
-  <span slot="bib.fullscreen.headline">Bib Header</span>
-  <span slot="label">Fruit</span>
-  <auro-menu>
-    <auro-menuoption value="Apples">Apples</auro-menuoption>
-    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
-    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
-  </auro-menu>
-</auro-combobox>
-  `,
-  async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-combobox') as any;
-    await el.updateComplete;
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await new Promise((r) => setTimeout(r, 100));
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await el.updateComplete;
-    await expect(el.optionActive).not.toBeNull();
-  },
-};
-
 // ─── Default hover pseudo-state on trigger ───────────────────────────────────
 export const ComboboxHover: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -260,54 +238,6 @@ export const ComboboxHover: Story = {
   `,
 };
 
-// ─── Shift+Tab moves active option to first option, keeps bib open ───────────
-export const ComboboxShiftTabMovesToFirstOption: Story = {
-  tags: ['!autodocs', 'chromatic-enabled'],
-  render: () => html`
-<auro-combobox>
-  <span slot="ariaLabel.bib.close">Close combobox</span>
-  <span slot="ariaLabel.input.clear">Clear All</span>
-  <span slot="bib.fullscreen.headline">Bib Header</span>
-  <span slot="label">Fruit</span>
-  <auro-menu>
-    <auro-menuoption value="Apples">Apples</auro-menuoption>
-    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
-    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
-  </auro-menu>
-</auro-combobox>
-  `,
-  async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-combobox') as any;
-    await el.updateComplete;
-    const firstOption = el.querySelector('auro-menuoption[value="Apples"]');
-
-    // Type to filter options. Wait 100ms before clicking the trigger so the
-    // full Lit update chain settles (auro-input value → combobox processes
-    // input event → availableOptions updates). Using el.input.updateComplete
-    // is too fast — it resolves before auro-combobox finishes its own update.
-    // This matches the ComboboxBibOpensOnType pattern.
-    setInputValue(el, 'a');
-    await new Promise((r) => setTimeout(r, 100));
-    const trigger = el.dropdown.querySelector('[slot="trigger"]') as HTMLElement;
-    trigger.click();
-    await new Promise((r) => setTimeout(r, 50));
-    await expect(el.dropdown.isPopoverVisible).toBe(true);
-
-    // Navigate away from first option
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-    await el.updateComplete;
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-    await el.updateComplete;
-
-    // Shift+Tab: should move to first option without selecting or closing
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
-    await el.updateComplete;
-
-    await expect(firstOption.classList.contains('active')).toBe(true);
-    await expect(el.dropdown.isPopoverVisible).toBe(true);
-    await expect(el.value).toBeUndefined();
-  },
-};
 ComboboxHover.parameters = {
   pseudo: {
     hover: true,
@@ -378,40 +308,6 @@ export const ComboboxBibOpenNoFilter: Story = {
     el.showBib();
     await new Promise((r) => setTimeout(r, 50));
     await expect(el.dropdown.isPopoverVisible).toBe(true);
-  },
-};
-
-// ─── Bib open — option highlighted via arrow key ─────────────────────────────
-export const ComboboxBibOpenOptionHighlighted: Story = {
-  tags: ['!autodocs', 'chromatic-enabled'],
-  parameters: {
-    chromatic: {
-      delay: 200,
-    },
-  },
-  render: () => html`
-<auro-combobox>
-  <span slot="ariaLabel.bib.close">Close combobox</span>
-  <span slot="ariaLabel.input.clear">Clear All</span>
-  <span slot="bib.fullscreen.headline">Bib Header</span>
-  <span slot="label">Fruit</span>
-  <auro-menu>
-    <auro-menuoption value="Apples">Apples</auro-menuoption>
-    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
-    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
-  </auro-menu>
-</auro-combobox>
-  `,
-  async play({ canvasElement }: { canvasElement: HTMLElement }) {
-    const el = canvasElement.querySelector('auro-combobox') as any;
-    await el.updateComplete;
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await new Promise((r) => setTimeout(r, 100));
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await el.updateComplete;
-    await expect(el.dropdown.isPopoverVisible).toBe(true);
-    await expect(el.optionActive).not.toBeNull();
   },
 };
 

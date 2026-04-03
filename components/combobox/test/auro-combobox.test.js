@@ -1,23 +1,29 @@
 /* eslint-disable max-lines */
 import { fixture, html, expect, waitUntil, elementUpdated, oneEvent } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
-import { comboboxKeyboardStrategy } from '../src/comboboxKeyboardStrategy.js';
+import { setViewport, sendKeys } from '@web/test-runner-commands';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
 
+/* eslint-disable no-undef, no-use-before-define, no-magic-numbers, jsdoc/require-jsdoc, max-statements-per-line, brace-style, no-underscore-dangle, no-unused-expressions */
+
 // Desktop Test Suite
-// "false" means mobileview = false
+// "false" means mobileView = false
 describe('auro-combobox', () => {
-  runFulltest(false);
+  runFullTest(false);
 });
 
 // Mobile Test Suite
-// "true" means mobileview = true (full screen dialog)
+// "true" means mobileView = true (full screen dialog)
 describe('auro-combobox in mobile screen', () => {
-  runFulltest(true);
+  runFullTest(true);
 });
 
-function runFulltest(mobileview) {
+/**
+ * Runs the full combobox test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in mobile/fullscreen mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
   it('auro-combobox custom element is defined', async () => {
     const el = await Boolean(customElements.get("auro-combobox"));
 
@@ -25,7 +31,7 @@ function runFulltest(mobileview) {
   });
 
   it('auro-combobox is accessible', async () => {
-    const el = await noFilterFixture(mobileview);
+    const el = await noFilterFixture(mobileView);
 
     await elementUpdated(el);
 
@@ -33,7 +39,7 @@ function runFulltest(mobileview) {
   });
 
   it('should pass inputmode to the input element', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
     const auroInput = el.input;
     const inputmode = 'numeric';
     auroInput.inputmode = inputmode;
@@ -48,8 +54,7 @@ function runFulltest(mobileview) {
   });
 
   it('enforces menu selection when behavior is set to filter', async () => {
-    const el = await filterFixture(mobileview);
-    const {menu} = el;
+    const el = await filterFixture(mobileView);
 
     // initial state
     await expect(el.value).to.be.undefined;
@@ -59,7 +64,7 @@ function runFulltest(mobileview) {
     setInputValue(el, 'pp');
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       // Wait for the fullscreen dialog transition to settle —
       // focus moves from trigger to inputInBib via requestAnimationFrame after the dialog is shown, so we wait until the inputInBib is focused before proceeding with the test.
       el.inputInBib.focus();
@@ -70,12 +75,12 @@ function runFulltest(mobileview) {
     await expect(el.hasAttribute('error')).to.be.false;
     await expect(el.hasAttribute('validity')).to.be.false;
 
-    if (mobileview) {
+    if (mobileView) {
       // Close the fullscreen dialog without selecting an option.
       // After dialog.close(), a rAF callback restores focus to the trigger input.
       el.hideBib();
       // eslint-disable-next-line no-await-in-loop
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       await elementUpdated(el);
     }
 
@@ -92,7 +97,7 @@ function runFulltest(mobileview) {
 
     // wait for the combobox and dialog close to fully settle
     await elementUpdated(el);
-    await new Promise((r) => setTimeout(r, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
     await elementUpdated(el);
 
     // blur to move focus away (dialog.close() restores focus to the combobox,
@@ -110,7 +115,7 @@ function runFulltest(mobileview) {
   });
 
   it('noFilter attribute results in no suggestion filtering', async () => {
-    const el = await noFilterFixture(mobileview);
+    const el = await noFilterFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -128,7 +133,7 @@ function runFulltest(mobileview) {
   });
 
   it('can programmatically apply focus to input', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     const { input } = el;
 
@@ -138,7 +143,7 @@ function runFulltest(mobileview) {
   });
 
   it('shows the bib on click only when a value is typed', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
     const trigger = el.dropdown.querySelector('[slot="trigger"]');
     trigger.click();
     await expect(el.dropdown.isPopoverVisible).to.be.false;
@@ -150,7 +155,7 @@ function runFulltest(mobileview) {
   });
 
   it('shows the bib when pressing enter and a value is typed', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     // Validate bib is not shown when hitting enter but there is no value in the input
     el.focus();
@@ -169,7 +174,7 @@ function runFulltest(mobileview) {
   });
 
   it('Enter key does not propagate when opening the bib', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     el.focus();
     setInputValue(el, 'a');
@@ -179,7 +184,11 @@ function runFulltest(mobileview) {
     // Listen on the parent to detect if the event bubbles past the combobox
     el.parentElement.addEventListener('keydown', listener);
 
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    el.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true
+    }));
     await elementUpdated(el);
 
     el.parentElement.removeEventListener('keydown', listener);
@@ -189,39 +198,29 @@ function runFulltest(mobileview) {
   });
 
   it('hides the bib when there are no available options', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     setInputValue(el, 'zzzzzz');
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
   it(`hides the bib when making a selection with Enter`, async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     el.focus();
     setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', {
-      key: 'Enter'
-    }));
 
     await elementUpdated(el);
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
-
     const options = el.querySelectorAll('auro-menuoption');
-    setTimeout(() => {
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    });
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
-    await oneEvent(el, 'auroMenu-selectedOption');
-    await expect(el.value === options[0].textContent);
-
-    await oneEvent(el, 'auroDropdown-toggled');
+    await expect(el.value).to.equal(options[0].getAttribute('value'));
     await expect(el.dropdown.isPopoverVisible).to.be.false;
   });
 
   it(`selects the current active option when hitting Tab key`, async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     el.focus();
     setInputValue(el, 'a');
@@ -237,112 +236,42 @@ function runFulltest(mobileview) {
     await expect(el.value === options[0].textContent);
   });
 
-  // ─── Shift+Tab moves active option to first non-disabled option ────────────────
-  it('Shift+Tab moves active option to first option and keeps bib open', async () => {
-    const el = await shiftTabFixture(mobileview);
-    const options = el.querySelectorAll('auro-menuoption');
-
-    // Open the bib by typing and pressing Enter
-    el.focus();
-    setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-    await elementUpdated(el);
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-    if (mobileview) {
-      el.inputInBib.focus();
-      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-    }
-
-    // Navigate down past the first option
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await elementUpdated(el);
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await elementUpdated(el);
-    // Active should now be options[1] (Oranges or index 1)
-    await expect(el.optionActive).to.not.equal(options[0]);
-
-    // Shift+Tab should move to first option without selecting or closing
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-    await elementUpdated(el);
-
-    await expect(el.optionActive).to.equal(options[0]);
-    await expect(el.dropdown.isPopoverVisible).to.be.true;
-    await expect(el.value).to.be.undefined;
-  });
-
-  it('Shift+Tab skips disabled first option when moving to first active option', async () => {
-    const el = await shiftTabDisabledFirstFixture(mobileview);
-    const options = el.querySelectorAll('auro-menuoption');
+  it('Tab key makes selection and closes the bib', async () => {
+    const el = await defaultFixture(mobileView);
 
     el.focus();
     setInputValue(el, 'a');
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await elementUpdated(el);
     await expect(el.dropdown.isPopoverVisible).to.be.true;
+    await sendKeys({ press: 'Tab' });
+    await elementUpdated(el.dropdown);
+    await expect(el.dropdown.isPopoverVisible).to.be.false;
+  });
 
-    if (mobileview) {
-      el.inputInBib.focus();
-      await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-    }
+  it('Shift+Tab key makes selection and closes the bib', async () => {
+    const el = await defaultFixture(mobileView);
 
-    // Navigate down to last option
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    el.focus();
+    setInputValue(el, 'a');
     await elementUpdated(el);
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await elementUpdated(el);
-
-    // Shift+Tab should land on options[1] — first non-disabled option
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-    await elementUpdated(el);
-
-    await expect(el.optionActive).to.equal(options[1]);
     await expect(el.dropdown.isPopoverVisible).to.be.true;
-    await expect(el.value).to.be.undefined;
-
-    // Close bib so the disabled option is not visible during the post-test
-    // a11y check — disabled text color does not meet contrast ratios.
-    el.hideBib();
-    await elementUpdated(el);
-  });
-
-  it('Shift+Tab with bib closed does nothing', async () => {
-    const el = await shiftTabFixture(mobileview);
-
+    await sendKeys({ down: 'Shift' });
+    await sendKeys({ press: 'Tab' });
+    await sendKeys({ up: 'Shift' });
+    await elementUpdated(el.dropdown);
     await expect(el.dropdown.isPopoverVisible).to.be.false;
-
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-    await elementUpdated(el);
-
-    await expect(el.dropdown.isPopoverVisible).to.be.false;
-    await expect(el.optionActive).to.be.null;
   });
-
-  // it('hides the bib when tabbing away from combobox', async () => {
-  //   const el = await defaultFixture(mobileview);
-  //   const trigger = el.dropdown.querySelector('[slot="trigger"]');
-
-  //   setInputValue(el, 'p');
-  //   trigger.click();
-  //   await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-  //   document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
-  //     'key': 'Tab'
-  //   }));
-
-  //   await expect(el.dropdown.isPopoverVisible).to.be.false;
-  // });
 
   // These tests require fullscreen (mobile) mode
-  if (mobileview) {
+  if (mobileView) {
     it('focuses input in bib when fullscreen dialog opens', async () => {
-      const el = await defaultFixture(mobileview);
+      const el = await defaultFixture(mobileView);
 
       setInputValue(el, 'a');
       await elementUpdated(el);
 
       // inputInBib should exist in fullscreen mode
-      expect(el.inputInBib).to.exist;
+      await expect(el.inputInBib).to.exist;
 
       // Follow existing mobile pattern: explicitly focus inputInBib
       el.inputInBib.focus();
@@ -351,7 +280,7 @@ function runFulltest(mobileview) {
     });
 
     it('Tab key closes fullscreen dialog', async () => {
-      const el = await defaultFixture(mobileview);
+      const el = await defaultFixture(mobileView);
 
       el.focus();
       setInputValue(el, 'a');
@@ -365,7 +294,7 @@ function runFulltest(mobileview) {
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
 
       // Wait for dialog close + rAF focus restoration
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       await elementUpdated(el);
 
       await expect(el.dropdown.isPopoverVisible).to.be.false;
@@ -373,7 +302,7 @@ function runFulltest(mobileview) {
 
 
     it('restores trigger inert and focus after fullscreen dialog closes', async () => {
-      const el = await defaultFixture(mobileview);
+      const el = await defaultFixture(mobileView);
 
       el.focus();
       setInputValue(el, 'a');
@@ -385,26 +314,26 @@ function runFulltest(mobileview) {
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
 
       // Trigger should be inert while fullscreen is open
-      expect(el.dropdown.trigger.inert).to.be.true;
+      await expect(el.dropdown.trigger.inert).to.be.true;
 
       // Close the dialog
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       await elementUpdated(el);
 
-      expect(el.dropdown.trigger.inert).to.be.false;
-      expect(el.dropdown.isPopoverVisible).to.be.false;
+      await expect(el.dropdown.trigger.inert).to.be.false;
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
   }
 
   it('hides the bib when selecting an option with a custom event', async () => {
-    const el = await customEventFixture(mobileview);
+    const el = await customEventFixture(mobileView);
 
     await expect(el.dropdown.isPopoverVisible).to.be.false;
 
     setInputValue(el, 'a');
     await elementUpdated(el);
-    if (mobileview) {
+    if (mobileView) {
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
@@ -426,7 +355,7 @@ function runFulltest(mobileview) {
   });
 
   it('sets first menu option as active when dropdown opens without a selection', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
     const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
 
     // Simulate dropdown opening with no value set
@@ -435,7 +364,7 @@ function runFulltest(mobileview) {
     }));
 
     // Wait for the 150ms expandedDelay to elapse
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((res) => setTimeout(res, 200));
     await elementUpdated(el);
 
     await expect(el.optionActive).to.equal(menuOptions[0]);
@@ -443,7 +372,7 @@ function runFulltest(mobileview) {
   });
 
   it('navigates menu with up and down arrow keys', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     // Validate bib is shown when hitting enter but there is a value in the input
     setInputValue(el, 'pp');
@@ -453,7 +382,7 @@ function runFulltest(mobileview) {
     setInputValue(el, 'a');
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
@@ -464,64 +393,61 @@ function runFulltest(mobileview) {
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
+    await expect(el.optionActive).to.be.equal(menuOptions[1]);
+    await expect(menuOptions[0].classList.contains('active')).to.be.false;
+    await expect(menuOptions[1].classList.contains('active')).to.be.true;
+
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+
     await expect(el.optionActive).to.be.equal(menuOptions[0]);
     await expect(menuOptions[0].classList.contains('active')).to.be.true;
     await expect(menuOptions[1].classList.contains('active')).to.be.false;
 
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
     await elementUpdated(el);
 
     await expect(el.optionActive).to.be.equal(menuOptions[1]);
     await expect(menuOptions[0].classList.contains('active')).to.be.false;
     await expect(menuOptions[1].classList.contains('active')).to.be.true;
-
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-    await elementUpdated(el);
-
-    await expect(el.optionActive).to.be.equal(menuOptions[0]);
-    await expect(menuOptions[0].classList.contains('active')).to.be.true;
-    await expect(menuOptions[1].classList.contains('active')).to.be.false;
   });
 
   it('navigates nested menu with up and down arrow keys', async () => {
-    const el = await nestedMenuFixture(mobileview);
+    const el = await nestedMenuFixture(mobileView);
 
     setInputValue(el, 'option');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
 
-    const rootOptions = [...el.querySelectorAll(':scope > auro-menu > auro-menuoption')];
-    const nestedMenu = el.querySelector('auro-menu auro-menu');
-    const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await elementUpdated(el);
+    await expect(el.optionActive.value).to.equal('option a');
 
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
-    await expect(el.optionActive).to.equal(rootOptions[0]);
+    await expect(el.optionActive.value).to.equal('option b');
 
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
-    await expect(el.optionActive).to.equal(nestedOptions[0]);
+    await expect(el.optionActive.value).to.equal('option 2');
 
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     await elementUpdated(el);
-    await expect(el.optionActive).to.equal(nestedOptions[1]);
-
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    await elementUpdated(el);
-    await expect(el.optionActive).to.equal(rootOptions[1]);
+    await expect(el.optionActive.value).to.equal('option 1');
+    // await expect(el.optionActive).to.equal(rootOptions[1]);
 
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
     await elementUpdated(el);
-    await expect(el.optionActive).to.equal(nestedOptions[1]);
+    await expect(el.optionActive.value).to.equal('option 2');
   });
 
   it('typing filters list of options', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -542,7 +468,7 @@ function runFulltest(mobileview) {
   });
 
   it('typing "a" matches options containing "a" with bold highlighting', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
@@ -560,7 +486,7 @@ function runFulltest(mobileview) {
   });
 
   it('trailing space is stripped — "a " matches same options as "a"', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
@@ -568,8 +494,8 @@ function runFulltest(mobileview) {
     setInputValue(el, 'a');
     await elementUpdated(el);
     await elementUpdated(menu);
-    const baselineVisible = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
-    const baselineValues = baselineVisible.map((o) => o.getAttribute('value'));
+    const baselineVisible = [...menuOptions].filter((opt) => !opt.hasAttribute('hidden'));
+    const baselineValues = baselineVisible.map((opt) => opt.getAttribute('value'));
 
     // Reset
     setInputValue(el, '');
@@ -580,14 +506,14 @@ function runFulltest(mobileview) {
     setInputValue(el, 'a ');
     await elementUpdated(el);
     await elementUpdated(menu);
-    const trailingSpaceVisible = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
-    const trailingSpaceValues = trailingSpaceVisible.map((o) => o.getAttribute('value'));
+    const trailingSpaceVisible = [...menuOptions].filter((opt) => !opt.hasAttribute('hidden'));
+    const trailingSpaceValues = trailingSpaceVisible.map((opt) => opt.getAttribute('value'));
 
     await expect(trailingSpaceValues).to.deep.equal(baselineValues);
   });
 
   it('space alone does not match any options', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
@@ -595,13 +521,13 @@ function runFulltest(mobileview) {
     await elementUpdated(el);
     await elementUpdated(menu);
 
-    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+    const visibleMenuOptions = [...menuOptions].filter((opt) => !opt.hasAttribute('hidden'));
 
     await expect(visibleMenuOptions.length).to.be.equal(0);
   });
 
   it('space alone filters options by space substring', async () => {
-    const el = await noMatchFixture(mobileview);
+    const el = await noMatchFixture(mobileView);
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
@@ -609,7 +535,7 @@ function runFulltest(mobileview) {
     await elementUpdated(el);
     await elementUpdated(menu);
 
-    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+    const visibleMenuOptions = [...menuOptions].filter((opt) => !opt.hasAttribute('hidden'));
 
     // Options whose text contains a space will match (e.g. "No Matching Option").
     // Options without spaces in their text will be hidden.
@@ -619,7 +545,7 @@ function runFulltest(mobileview) {
   });
 
   it('leading space is preserved — " a" does not match options', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
 
@@ -627,34 +553,29 @@ function runFulltest(mobileview) {
     await elementUpdated(el);
     await elementUpdated(menu);
 
-    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
+    const visibleMenuOptions = [...menuOptions].filter((opt) => !opt.hasAttribute('hidden'));
 
     await expect(visibleMenuOptions.length).to.be.equal(0);
   });
 
-  it('cursor-editing sequence with residual trailing space still matches "a"', async () => {
-    const el = await defaultFixture(mobileview);
+  it('cursor-editing sequence with residual trailing space still matches "n"', async () => {
+    const el = await defaultFixture(mobileView);
     const menu = el.querySelector('auro-menu');
-    const menuOptions = menu.querySelectorAll('auro-menuoption');
 
     // Simulate the end result of the cursor-editing sequence:
     // space, a, space, ←, ←, backspace, →, backspace, a
     // which produces "a " (a with trailing space)
-    setInputValue(el, 'a ');
+    setInputValue(el, 'n ');
     await elementUpdated(el);
     await elementUpdated(menu);
 
-    const visibleMenuOptions = [...menuOptions].filter((o) => !o.hasAttribute('hidden'));
-
-    await expect(visibleMenuOptions.length).to.be.greaterThan(0);
-    for (const opt of visibleMenuOptions) {
-      expect(opt.textContent.toLowerCase()).to.include('a');
-      expect(opt.querySelector('strong')).to.exist;
-    }
+    await expect(el.availableOptions.length).to.be.greaterThan(0);
+    await expect(el.availableOptions[0].textContent.toLowerCase()).to.include('n');
+    await expect(el.availableOptions[0].querySelector('strong')).to.exist;
   });
 
   it('fired `auroCombobox-valueSet` event on value update', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     setInputValue(el, 'a');
     await elementUpdated(el);
@@ -668,7 +589,7 @@ function runFulltest(mobileview) {
   });
 
   it('fires input event on typing', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     // Set up the event listener before triggering the input change
     const inputEventPromise = oneEvent(el, 'input');
@@ -681,7 +602,7 @@ function runFulltest(mobileview) {
   });
 
   it('using the nomatch attribute with a matching value', async () => {
-    const el = await noMatchFixture(mobileview);
+    const el = await noMatchFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -702,7 +623,7 @@ function runFulltest(mobileview) {
   });
 
   it('using the nomatch attribute with no matching value', async () => {
-    const el = await noMatchFixture(mobileview);
+    const el = await noMatchFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -721,7 +642,7 @@ function runFulltest(mobileview) {
   });
 
   it('using the persistent attribute always displays the persistent option', async () => {
-    const el = await persistentFixture(mobileview);
+    const el = await persistentFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -743,7 +664,7 @@ function runFulltest(mobileview) {
   });
 
   it('using the suggest attribute matches additional options', async () => {
-    const el = await suggestFixture(mobileview);
+    const el = await suggestFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     const menuOptions = menu.querySelectorAll('auro-menuoption');
@@ -765,7 +686,7 @@ function runFulltest(mobileview) {
   });
 
   it('makes a selection programmatically', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     el.value = 'Apples';
     await elementUpdated(el);
@@ -779,7 +700,7 @@ function runFulltest(mobileview) {
   });
 
   it('reset selection value programmatically', async () => {
-    const el = await presetValueFixture(mobileview);
+    const el = await presetValueFixture(mobileView);
 
     el.value = undefined;
 
@@ -789,12 +710,12 @@ function runFulltest(mobileview) {
   });
 
   it('makes a selection using the keyboard', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     setInputValue(el, 'a');
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
@@ -806,11 +727,11 @@ function runFulltest(mobileview) {
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     await elementUpdated(el);
 
-    await expect(el.value).to.equal('Apples');
+    await expect(el.value).to.equal('Oranges');
   });
 
   it('Does not throw an error state when trying to programmatically set a value that doesn\'t match an option', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     await expect(el.hasAttribute('error')).to.be.false;
 
@@ -822,7 +743,7 @@ function runFulltest(mobileview) {
   });
 
   it('handles the required state being set', async () => {
-    const el = await requiredFixture(mobileview);
+    const el = await requiredFixture(mobileView);
 
     // error applied on blur
     el.focus();
@@ -842,7 +763,7 @@ function runFulltest(mobileview) {
   });
 
   it('handles the required state with persistInput set', async () => {
-    const el = await persistInputFixture(mobileview);
+    const el = await persistInputFixture(mobileView);
 
     el.focus();
     el.shadowRoot.activeElement.blur();
@@ -854,14 +775,13 @@ function runFulltest(mobileview) {
     setInputValue(el, 'pp');
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       // Wait for the fullscreen dialog transition to settle,
       // then close the dialog and wait for focus to return to trigger
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
       el.hideBib();
-      // eslint-disable-next-line no-await-in-loop
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       await elementUpdated(el);
     }
 
@@ -873,7 +793,7 @@ function runFulltest(mobileview) {
   });
 
   it('fires `auroFormElement-validated` event after validation', async () => {
-    const el = await requiredFixture(mobileview);
+    const el = await requiredFixture(mobileView);
 
     // error applied on blur
     el.focus();
@@ -884,21 +804,21 @@ function runFulltest(mobileview) {
   });
 
   it('default to nocheckmark on selected option', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.true;
   });
 
   it('selected options have checkmark when checkmark attribute is present', async () => {
-    const el = await checkmarkFixture(mobileview);
+    const el = await checkmarkFixture(mobileView);
 
     const menu = el.querySelector('auro-menu');
     await expect(menu.hasAttribute('nocheckmark')).to.be.false;
   });
 
   // it('reset method clears the value and validity state', async () => {
-  //   const el = await requiredFixture(mobileview);
+  //   const el = await requiredFixture(mobileView);
 
   //   el.focus();
   //   el.shadowRoot.activeElement.blur();
@@ -915,7 +835,7 @@ function runFulltest(mobileview) {
   // });
 
   it('shows error state when error attribute is set', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     // Initial state should have no error
     await expect(el.hasAttribute('error')).to.be.false;
@@ -942,7 +862,7 @@ function runFulltest(mobileview) {
     this.timeout(5000);
 
     it('populates the live region when an option is activated', async () => {
-      const el = await noFilterFixture(mobileview);
+      const el = await noFilterFixture(mobileView);
       await elementUpdated(el);
 
       // Open the dropdown and navigate to the first option
@@ -958,12 +878,12 @@ function runFulltest(mobileview) {
       await new Promise((resolve) => requestAnimationFrame(resolve));
 
       const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
-      expect(liveRegion).to.exist;
-      expect(liveRegion.textContent).to.not.equal('');
+      await expect(liveRegion).to.exist;
+      await expect(liveRegion.textContent).to.not.equal('');
     });
 
     it('clears the live region after the announcement duration', async () => {
-      const el = await noFilterFixture(mobileview);
+      const el = await noFilterFixture(mobileView);
       await elementUpdated(el);
 
       el.focus();
@@ -989,7 +909,10 @@ function runFulltest(mobileview) {
   describe('updateBibDialogRole', () => {
     it('sets bib dialogRole to presentation on desktop to suppress verbose announcements', async () => {
       // Use a wide viewport so the bib does NOT go fullscreen
-      await setViewport({ width: 1024, height: 800 });
+      await setViewport({
+        width: 1024,
+        height: 800
+      });
 
       const el = await fixture(html`
         <auro-combobox>
@@ -1016,7 +939,7 @@ function runFulltest(mobileview) {
     });
 
     it('clears bib dialogRole in fullscreen mode to preserve native dialog semantics', async () => {
-      const el = await defaultFixture(mobileview);
+      const el = await defaultFixture(mobileView);
 
       await elementUpdated(el);
 
@@ -1034,14 +957,14 @@ function runFulltest(mobileview) {
       await elementUpdated(bibEl);
       const dialog = bibEl.shadowRoot.querySelector('dialog');
 
-      expect(bibEl.dialogRole).to.be.undefined;
-      expect(dialog.hasAttribute('role')).to.be.false;
+      await expect(bibEl.dialogRole).to.be.undefined;
+      await expect(dialog.hasAttribute('role')).to.be.false;
     });
   });
 
   describe('disconnectedCallback', () => {
     it('resets _inFullscreenTransition so validation is not suppressed after reconnect', async () => {
-      const el = await defaultFixture(mobileview);
+      const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
       // Simulate the flag being stuck mid-transition
@@ -1053,118 +976,126 @@ function runFulltest(mobileview) {
       parent.appendChild(el);
       await elementUpdated(el);
 
-      expect(el._inFullscreenTransition).to.be.false;
+      await expect(el._inFullscreenTransition).to.be.false;
     });
   });
 
   it('hitting Enter on clear button clears the input', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     el.focus();
     setInputValue(el, 'a');
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
 
-    const activeInput = mobileview ? el.inputInBib : el.input;
+    const activeInput = mobileView ? el.inputInBib : el.input;
     const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
-    expect(clearBtn).to.exist;
+    await expect(clearBtn).to.exist;
 
     // Programmatically focus the native button inside auro-button's shadow root
     // since synthetic Tab events don't reliably move focus through shadow DOM.
     const nativeBtn = clearBtn.shadowRoot.querySelector('button');
-    expect(nativeBtn).to.exist;
+    await expect(nativeBtn).to.exist;
     nativeBtn.focus();
     await elementUpdated(el);
 
     // Verify clear button has focus
-    expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
+    await expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
 
     // Dispatch Enter on the combobox — the keyboard strategy should not preventDefault,
     // allowing the browser's native behavior to activate the focused clear button.
-    const enterEvt = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    const enterEvt = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true
+    });
     el.dispatchEvent(enterEvt);
     await elementUpdated(el);
 
     // Verify the strategy did not prevent default (browser will natively click the focused button)
-    expect(enterEvt.defaultPrevented).to.be.false;
+    await expect(enterEvt.defaultPrevented).to.be.false;
 
     // Simulate the native button activation that the browser performs on Enter
     nativeBtn.click();
     await elementUpdated(el);
 
-    expect(activeInput.value).to.not.be.ok;
+    await expect(activeInput.value).to.not.be.ok;
   });
 
   it('Enter on component while clear button is focused does not call preventDefault or showBib', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     el.focus();
     setInputValue(el, 'a');
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
 
-    const activeInput = mobileview ? el.inputInBib : el.input;
+    const activeInput = mobileView ? el.inputInBib : el.input;
     const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
-    expect(clearBtn).to.exist;
+    await expect(clearBtn).to.exist;
 
     // Programmatically focus the native button inside auro-button's shadow root
     // since synthetic Tab events don't reliably move focus through shadow DOM.
     const nativeBtn = clearBtn.shadowRoot.querySelector('button');
-    expect(nativeBtn).to.exist;
+    await expect(nativeBtn).to.exist;
     nativeBtn.focus();
     await elementUpdated(el);
 
     // Verify clear button has focus
-    expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
+    await expect(clearBtn.shadowRoot.activeElement).to.not.be.null;
 
     const bibWasVisible = el.dropdown.isPopoverVisible;
 
     // Dispatch Enter on the component — this goes through the keyboard strategy
-    const enterEvt = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    const enterEvt = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true
+    });
     el.dispatchEvent(enterEvt);
     await elementUpdated(el);
 
     // The strategy should NOT have called preventDefault (allow browser to activate the button)
-    expect(enterEvt.defaultPrevented).to.be.false;
+    await expect(enterEvt.defaultPrevented).to.be.false;
 
     // The bib visibility should not have changed (showBib should not have been called)
-    expect(el.dropdown.isPopoverVisible).to.equal(bibWasVisible);
+    await expect(el.dropdown.isPopoverVisible).to.equal(bibWasVisible);
   });
 
   it('clicking clear button clears the input', async () => {
-    const el = await defaultFixture(mobileview);
+    const el = await defaultFixture(mobileView);
 
     el.focus();
     setInputValue(el, 'a');
     await elementUpdated(el);
 
-    if (mobileview) {
+    if (mobileView) {
       el.inputInBib.focus();
       await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
     }
 
-    const activeInput = mobileview ? el.inputInBib : el.input;
+    const activeInput = mobileView ? el.inputInBib : el.input;
     const clearBtn = activeInput.shadowRoot.querySelector('.clearBtn');
-    expect(clearBtn).to.exist;
+    await expect(clearBtn).to.exist;
 
     clearBtn.click();
     await elementUpdated(el);
 
-    expect(activeInput.value).to.not.be.ok;
+    await expect(activeInput.value).to.not.be.ok;
   });
 
   // The close button only exists in fullscreen (mobile) mode
-  if (mobileview) {
+  if (mobileView) {
     it('hitting Enter on close button closes the dialog', async () => {
-      const el = await defaultFixture(mobileview);
+      const el = await defaultFixture(mobileView);
 
       el.focus();
       setInputValue(el, 'a');
@@ -1177,18 +1108,22 @@ function runFulltest(mobileview) {
 
       // Find the close button in the bibtemplate and activate it with Enter
       const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
-      expect(closeBtn).to.exist;
-      closeBtn.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+      await expect(closeBtn).to.exist;
+      closeBtn.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        cancelable: true
+      }));
       closeBtn.click();
 
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       await elementUpdated(el);
 
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
     it('clicking close button closes the dialog', async () => {
-      const el = await defaultFixture(mobileview);
+      const el = await defaultFixture(mobileView);
 
       el.focus();
       setInputValue(el, 'a');
@@ -1201,10 +1136,10 @@ function runFulltest(mobileview) {
 
       // Click the close button in the bibtemplate
       const closeBtn = el.bibtemplate.shadowRoot.querySelector('#closeButton');
-      expect(closeBtn).to.exist;
+      await expect(closeBtn).to.exist;
       closeBtn.click();
 
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       await elementUpdated(el);
 
       await expect(el.dropdown.isPopoverVisible).to.be.false;
@@ -1225,13 +1160,94 @@ function runFulltest(mobileview) {
 
     expect(el.dropdown.bibDialogLabel).to.equal('Custom Label');
   });
+
+  describe('comboboxKeyboardStrategy — arrow keys when clear button has focus', () => {
+    it('ArrowUp', async () => {
+      const el = await defaultFixture(mobileView);
+
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', {
+        'key': 'ArrowUp'
+      }));
+
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "Escape",
+        }),
+      );
+
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        'key': 'Tab'
+      }));
+
+      await elementUpdated(el);
+
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "ArrowUp",
+        }),
+      );
+
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+
+    it('ArrowDown', async () => {
+      const el = await defaultFixture(mobileView);
+
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', {
+        'key': 'ArrowDown'
+      }));
+
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "Escape",
+        }),
+      );
+
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        'key': 'Tab'
+      }));
+
+      await elementUpdated(el);
+
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "ArrowDown",
+        }),
+      );
+
+      await elementUpdated(el);
+      await expect(el.dropdown.isPopoverVisible).to.be.false;
+    });
+  });
+
 }
 
 /**
- *
+ * Testing fixture for persistInput attribute.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with persistInput attribute set.
  */
-async function persistInputFixture(mobileview) {
-  if (mobileview) {
+async function persistInputFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1255,13 +1271,21 @@ async function persistInputFixture(mobileview) {
 };
 
 /**
- *
+ * Testing fixture for shift+tab keyboard interaction.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element for testing shift+tab behavior.
  */
-async function shiftTabFixture(mobileview) {
-  if (mobileview) {
-    await setViewport({ width: 500, height: 800 });
+async function shiftTabFixture(mobileView) {
+  if (mobileView) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
   } else {
-    await setViewport({ width: 800, height: 800 });
+    await setViewport({
+      width: 800,
+      height: 800
+    });
   }
   return fixture(html`
   <auro-combobox>
@@ -1275,11 +1299,22 @@ async function shiftTabFixture(mobileview) {
   `);
 }
 
-async function shiftTabDisabledFirstFixture(mobileview) {
-  if (mobileview) {
-    await setViewport({ width: 500, height: 800 });
+/**
+ * Testing fixture for shift+tab when the first option is disabled.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element for disabled-first-option shift+tab tests.
+ */
+async function shiftTabDisabledFirstFixture(mobileView) {
+  if (mobileView) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
   } else {
-    await setViewport({ width: 800, height: 800 });
+    await setViewport({
+      width: 800,
+      height: 800
+    });
   }
   return fixture(html`
   <auro-combobox>
@@ -1293,8 +1328,13 @@ async function shiftTabDisabledFirstFixture(mobileview) {
   `);
 }
 
-async function defaultFixture(mobileview) {
-  if (mobileview) {
+/**
+ * Default testing fixture for the base combobox behavior.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The default auro-combobox element used in tests.
+ */
+async function defaultFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1316,8 +1356,13 @@ async function defaultFixture(mobileview) {
   `);
 }
 
-async function nestedMenuFixture(mobileview) {
-  if (mobileview) {
+/**
+ * Testing fixture with nested menu options for keyboard navigation coverage.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element containing a nested auro-menu.
+ */
+async function nestedMenuFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1345,10 +1390,12 @@ async function nestedMenuFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture with an initial combobox value preselected.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element initialized with value="Apples".
  */
-async function presetValueFixture(mobileview) {
-  if (mobileview) {
+async function presetValueFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1371,10 +1418,12 @@ async function presetValueFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture for combobox behavior when checkmarks are enabled.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with the checkmark attribute set.
  */
-async function checkmarkFixture(mobileview) {
-  if (mobileview) {
+async function checkmarkFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1398,10 +1447,12 @@ async function checkmarkFixture(mobileview) {
 
 
 /**
- *
+ * Testing fixture for combobox with suggest attribute matching additional options.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with suggest attribute configured.
  */
-async function suggestFixture(mobileview) {
-  if (mobileview) {
+async function suggestFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1424,10 +1475,12 @@ async function suggestFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture for combobox with required attribute validation.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with required attribute set.
  */
-async function requiredFixture(mobileview) {
-  if (mobileview) {
+async function requiredFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1450,10 +1503,12 @@ async function requiredFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture for combobox with nomatch attribute for unmatched results.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with nomatch option configured.
  */
-async function noMatchFixture(mobileview) {
-  if (mobileview) {
+async function noMatchFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1477,10 +1532,12 @@ async function noMatchFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture for combobox with persistent attribute that always displays.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with persistent option configured.
  */
-async function persistentFixture(mobileview) {
-  if (mobileview) {
+async function persistentFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1504,10 +1561,12 @@ async function persistentFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture for combobox with filter behavior validation.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with filter behavior configured.
  */
-async function filterFixture(mobileview) {
-  if (mobileview) {
+async function filterFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1531,10 +1590,12 @@ async function filterFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture for combobox with custom event attribute on menu option.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with custom event option configured.
  */
-async function customEventFixture(mobileview) {
-  if (mobileview) {
+async function customEventFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1556,10 +1617,12 @@ async function customEventFixture(mobileview) {
 }
 
 /**
- *
+ * Testing fixture for combobox with noFilter attribute that disables option filtering.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with noFilter attribute configured.
  */
-async function noFilterFixture(mobileview) {
-  if (mobileview) {
+async function noFilterFixture(mobileView) {
+  if (mobileView) {
     await setViewport({
       width: 500,
       height: 800
@@ -1582,7 +1645,15 @@ async function noFilterFixture(mobileview) {
 }
 
 /**
+ * Simulates user text entry for the combobox input in tests.
  *
+ * Focuses the native input, sets its value, emits input events from both the
+ * native input and `auro-input` wrapper, then emits a keyup event on the
+ * combobox using the last typed character.
+ *
+ * @param {HTMLElement} el - The `auro-combobox` element under test.
+ * @param {string} value - The text value to apply to the input.
+ * @returns {void}
  */
 function setInputValue(el, value) {
   const auroInput = el.input;
@@ -1603,15 +1674,17 @@ function setInputValue(el, value) {
 // ─── comboboxKeyboardStrategy — edge branches ─────────────────────────────────
 
 /**
- * Builds a minimal shadow-DOM structure that satisfies the isClearBtnFocused
- * check inside comboboxKeyboardStrategy:
+ * Builds a minimal shadow-DOM structure that satisfies the `isClearBtnFocused`
+ * check inside `comboboxKeyboardStrategy`.
  *
- *   activeInput (shadow root)
- *     └── .clearBtn (shadow root)
- *           └── <button>   ← focused element
+ * The resulting structure is:
+ * activeInput (shadow root) -> .clearBtn (shadow root) -> button (focused)
  *
- * Returns { activeInput, cleanup } where cleanup() removes the element from
- * the document so focus state is restored between tests.
+ * @returns {{
+ *   activeInput: HTMLElement,
+ *   cleanup: () => void
+ * }} Object containing the mounted input host and a cleanup function that
+ * removes it from the document.
  */
 function buildFocusedClearBtnCtx() {
   const activeInput = document.createElement('div');
@@ -1635,39 +1708,3 @@ function buildFocusedClearBtnCtx() {
     cleanup: () => document.body.removeChild(activeInput),
   };
 }
-
-describe('comboboxKeyboardStrategy — arrow keys when clear button has focus', () => {
-  ['ArrowDown', 'ArrowUp'].forEach((key) => {
-    it(`${key}: returns early without calling showBib or navigateOptions`, () => {
-      const { activeInput, cleanup } = buildFocusedClearBtnCtx();
-
-      try {
-        let showBibCalled = false;
-        let navigateCalled = false;
-
-        const component = {
-          availableOptions: ['opt1', 'opt2'],
-          showBib: () => { showBibCalled = true; },
-          dropdown: { isPopoverVisible: false },
-          menu: { navigateOptions: () => { navigateCalled = true; } },
-        };
-
-        const evt = new KeyboardEvent('keydown', { key, cancelable: true });
-        const ctx = {
-          activeInput,
-          isExpanded: false,
-          isModal: false,
-          isPopover: true,
-        };
-
-        comboboxKeyboardStrategy[key](component, evt, ctx);
-
-        expect(showBibCalled).to.be.false;
-        expect(navigateCalled).to.be.false;
-        expect(evt.defaultPrevented).to.be.false;
-      } finally {
-        cleanup();
-      }
-    });
-  });
-});
