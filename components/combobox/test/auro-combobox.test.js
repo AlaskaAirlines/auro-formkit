@@ -415,8 +415,12 @@ function runFullTest(mobileView) {
   it('navigates nested menu with up and down arrow keys', async () => {
     const el = await nestedMenuFixture(mobileView);
 
-    setInputValue(el, 'option');
+    // Validate bib is shown when hitting enter but there is a value in the input
+    setInputValue(el, 'pp');
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    await elementUpdated(el);
+
+    setInputValue(el, 'option');
     await elementUpdated(el);
 
     if (mobileView) {
@@ -788,8 +792,8 @@ function runFullTest(mobileView) {
     el.shadowRoot.activeElement.blur();
     await elementUpdated(el);
 
-    // validity should still be `valueMissing` because no menu option was selected
-    await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
+    // validity should 'valid' because it's suggestion behavior mode
+    await expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
   it('fires `auroFormElement-validated` event after validation', async () => {
