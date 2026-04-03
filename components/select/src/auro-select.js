@@ -752,6 +752,20 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Returns the shadow root containing the live region for screen reader announcements.
+   * When the bib is open in fullscreen modal mode, everything outside the <dialog>
+   * is inert, so we target the bib's own shadow root instead of the host's.
+   * @private
+   * @returns {ShadowRoot}
+   */
+  _getAnnouncementRoot() {
+    if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible && this.dropdown.bibElement && this.dropdown.bibElement.value) {
+      return this.dropdown.bibElement.value.shadowRoot;
+    }
+    return this.shadowRoot;
+  }
+
+  /**
    * Binds all behavior needed to the menu after rendering.
    * @private
    * @returns {void}
@@ -797,7 +811,7 @@ export class AuroSelect extends AuroElement {
       if (this.optionActive) {
         const optionText = this.optionActive.textContent.trim();
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
-        announceToScreenReader(this.shadowRoot, `${optionText}${selectedState}`);
+        announceToScreenReader(this._getAnnouncementRoot(), `${optionText}${selectedState}`);
       }
 
       if (this.dropdown.isPopoverVisible) {
@@ -824,7 +838,7 @@ export class AuroSelect extends AuroElement {
       const selectedValue = event.detail.stringValue;
       const announcementDelay = 300;
       setTimeout(() => {
-        announceToScreenReader(this.shadowRoot, `${selectedValue}, selected`);
+        announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
       }, announcementDelay);
     });
   }
@@ -1322,6 +1336,7 @@ export class AuroSelect extends AuroElement {
             ${this.renderHtmlHelpText()}
           </div>
         </${this.dropdownTag}>
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
       </div>
     `;
   }
