@@ -1,7 +1,7 @@
 /* eslint-disable max-lines, jsdoc/require-jsdoc, no-return-await, no-undef */
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
-import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, waitUntil } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
 import { selectKeyboardStrategy } from '../src/selectKeyboardStrategy.js';
 import '@aurodesignsystem/auro-dropdown';
@@ -203,6 +203,22 @@ async function nestedMenuFixture() {
     </auro-menu>
   </auro-select>
   `);
+}
+
+/**
+ * Returns the shadow root that contains the live region for screen reader
+ * announcements. Mirrors `_getAnnouncementRoot()` on the component so tests
+ * always query the correct root regardless of fullscreen state.
+ *
+ * @param {object} dropdown - The auro-dropdown element.
+ * @param {ShadowRoot} fallbackShadowRoot - The host component's shadow root.
+ * @returns {ShadowRoot}
+ */
+function getAnnouncementRoot(dropdown, fallbackShadowRoot) {
+  if (dropdown.isBibFullscreen && dropdown.isPopoverVisible && dropdown.bibElement?.value) {
+    return dropdown.bibElement.value.shadowRoot;
+  }
+  return fallbackShadowRoot;
 }
 
 function runTest(mobileView) {
@@ -1021,6 +1037,7 @@ function runTest(mobileView) {
 
   describe('announceToScreenReader', function() {
     this.timeout(5000);
+
     it('populates the live region when an option is activated', async () => {
       const el = await defaultFixture();
       await elementUpdated(el);
@@ -1032,7 +1049,7 @@ function runTest(mobileView) {
       // Wait a frame for the rAF inside announceToScreenReader
       await new Promise((resolve) => requestAnimationFrame(resolve));
 
-      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
       expect(liveRegion).to.exist;
       expect(liveRegion.textContent).to.not.equal('');
     });
@@ -1045,7 +1062,7 @@ function runTest(mobileView) {
       await elementUpdated(el);
 
       await new Promise((resolve) => requestAnimationFrame(resolve));
-      const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
+      const liveRegion = getAnnouncementRoot(el.dropdown, el.shadowRoot).querySelector('#srAnnouncement');
       expect(liveRegion.textContent).to.not.equal('');
 
       // Multiple announcements can chain (e.g., active-option followed by selection),
@@ -1054,6 +1071,34 @@ function runTest(mobileView) {
       await new Promise((resolve) => setTimeout(resolve, 2200));
       expect(liveRegion.textContent).to.equal('');
     });
+
+    if (mobileView) {
+      it('routes announcements to the bib live region in fullscreen mode', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        // Open the dropdown
+        el.showBib();
+        await waitUntil(() => el.dropdown.isPopoverVisible);
+
+        // Simulate fullscreen (resize observers don't fire in test env)
+        el.dropdown.isBibFullscreen = true;
+        await elementUpdated(el.dropdown);
+
+        // Navigate directly via the menu to trigger auroMenu-activatedOption,
+        // bypassing the dialog keyboard bridge which doesn't fire in test env.
+        el.menu.navigateOptions('down');
+        await elementUpdated(el);
+
+        // Wait a frame for the rAF inside announceToScreenReader
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const bibEl = el.dropdown.bibElement.value;
+        const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
+        expect(bibLiveRegion).to.exist;
+        expect(bibLiveRegion.textContent).to.not.equal('');
+      });
+    }
   });
 }
 
