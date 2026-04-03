@@ -565,6 +565,12 @@ export default class BaseInput extends AuroElement {
     this.wrapperElement = this.shadowRoot.querySelector('.wrapper');
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');
+    this.clearBtn = this.clearButtonRef.value;
+
+    // This must get moved into inputKeyboardStrategy when implemented
+    this.clearBtn.addEventListener('keydown', (evt) => {
+      evt.stopPropagation();
+    });
 
     this.patchInputEvent(this.inputElement);
 
