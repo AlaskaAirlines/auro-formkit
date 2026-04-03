@@ -136,7 +136,7 @@ export const ComboboxEnterSelectsOption: Story = {
 export const ComboboxEscapeClosesWithoutSelect: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
   render: () => html`
-<auro-combobox>
+<auro-combobox behavior="filter">
   <span slot="ariaLabel.bib.close">Close combobox</span>
   <span slot="ariaLabel.input.clear">Clear All</span>
   <span slot="bib.fullscreen.headline">Bib Header</span>
