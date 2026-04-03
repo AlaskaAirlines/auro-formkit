@@ -368,6 +368,7 @@ export class MenuService {
 
     // Early exit for invalid/empty values
     if (isEmptyValue) {
+      this.selectedOptions = [];
       return;
     }
 
