@@ -274,18 +274,34 @@ function runFullTest(mobileView) {
   it(`selects the current active option when hitting Tab key`, async () => {
     const el = await defaultFixture(mobileView);
 
-    el.focus();
-    setInputValue(el, 'a');
-
+    el.input.inputElement.focus();
+    await sendKeys({ press: 'a' });
     await elementUpdated(el);
 
     const options = el.querySelectorAll('auro-menuoption');
-    setTimeout(() => {
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-    });
 
-    await expect(el.value === options[0].textContent);
+    await sendKeys({ press: 'Tab' });
+    await elementUpdated(el);
+
+    await expect(el.value).to.be.equal(options[0].textContent);
+
+    el.input.inputElement.focus();
+    await sendKeys({ press: 'Backspace' });
+    await sendKeys({ press: 'Backspace' });
+    await sendKeys({ press: 'Backspace' });
+    await sendKeys({ press: 'Backspace' });
+    await sendKeys({ press: 'Backspace' });
+    await sendKeys({ press: 'Backspace' });
+
+    await elementUpdated(el);
+
+    await sendKeys({ press: 'o' });
+
+    await elementUpdated(el);
+
+    await sendKeys({ press: 'Tab' });
+
+    await expect(el.value).to.be.equal(options[1].textContent);
   });
 
   it('Tab key makes selection and closes the bib', async () => {
