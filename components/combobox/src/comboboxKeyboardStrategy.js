@@ -31,6 +31,60 @@ function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
 }
 
 export const comboboxKeyboardStrategy = {
+  ArrowDown(component, evt, ctx) {
+    // If the clear button has focus, let the browser handle ArrowDown normally.
+    if (isClearBtnFocused(ctx)) {
+      return;
+    }
+
+    // option display and navigation are prevented if there are no available options
+    if (component.availableOptions.length > 0) {
+      // navigate if bib is open otherwise open it
+      if (component.dropdown.isPopoverVisible) {
+        evt.preventDefault();
+
+        if (evt.altKey || evt.metaKey) {
+          component.activateLastEnabledAvailableOption();
+        } else {
+          navigateArrow(component, 'down');
+        }
+      } else {
+        component.showBib();
+      }
+    }
+  },
+
+  ArrowUp(component, evt, ctx) {
+    // If the clear button has focus, let the browser handle ArrowUp normally.
+    if (isClearBtnFocused(ctx)) {
+      return;
+    }
+
+    // option display and navigation are prevented if there are no available options
+    if (component.availableOptions.length > 0) {
+      // navigate if bib is open otherwise open it
+      if (component.dropdown.isPopoverVisible) {
+        evt.preventDefault();
+
+        if (evt.altKey || evt.metaKey) {
+          component.activateFirstEnabledAvailableOption();
+        } else {
+          navigateArrow(component, 'up');
+        }
+      } else {
+        component.showBib();
+      }
+    }
+  },
+
+  End(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      component.activateLastEnabledAvailableOption();
+    }
+  },
+
   Enter(component, evt, ctx) {
     if (isClearBtnFocused(ctx)) {
       // If the clear button has focus, let the browser activate it normally.
@@ -58,6 +112,20 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
+  Escape(component, _evt, ctx) {
+    if (ctx.isExpanded && ctx.isModal) {
+      component.setTriggerInputFocus();
+    }
+  },
+
+  Home(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      component.activateFirstEnabledAvailableOption();
+    }
+  },
+
   Tab(component, evt, ctx) {
     if (ctx.isExpanded && !isClearBtnFocused(ctx)) {
       // ClearBtn will not bubble up tab key events when it's focused, so need to manage it here when focused
@@ -73,62 +141,4 @@ export const comboboxKeyboardStrategy = {
       }
     }
   },
-
-  Escape(component, _evt, ctx) {
-    if (ctx.isExpanded && ctx.isModal) {
-      component.setTriggerInputFocus();
-    }
-  },
-
-  Home(component, evt, ctx) {
-    if (ctx.isExpanded) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      component.activateFirstEnabledAvailableOption();
-    }
-  },
-
-  End(component, evt, ctx) {
-    if (ctx.isExpanded) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      component.activateLastEnabledAvailableOption();
-    }
-  },
-
-  ArrowUp(component, evt, ctx) {
-    // If the clear button has focus, let the browser handle ArrowUp normally.
-    if (isClearBtnFocused(ctx)) {
-      return;
-    }
-
-    // option display and navigation are prevented if there are no available options
-    if (component.availableOptions.length > 0) {
-      // navigate if bib is open otherwise open it
-      if (component.dropdown.isPopoverVisible) {
-        evt.preventDefault();
-        navigateArrow(component, 'up');
-      } else {
-        component.showBib();
-      }
-    }
-  },
-
-  ArrowDown(component, evt, ctx) {
-    // If the clear button has focus, let the browser handle ArrowDown normally.
-    if (isClearBtnFocused(ctx)) {
-      return;
-    }
-
-    // option display and navigation are prevented if there are no available options
-    if (component.availableOptions.length > 0) {
-      // navigate if bib is open otherwise open it
-      if (component.dropdown.isPopoverVisible) {
-        evt.preventDefault();
-        navigateArrow(component, 'down');
-      } else {
-        component.showBib();
-      }
-    }
-  }
 };
