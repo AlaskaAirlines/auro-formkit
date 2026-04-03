@@ -114,6 +114,58 @@ function runFullTest(mobileView) {
     await expect(el.getAttribute('validity')).to.be.equal('valid');
   });
 
+  it('updates value from typed input when behavior is set to suggestion', async () => {
+    const el = await requiredFixture(mobileView);
+
+    await expect(el.behavior).to.equal('suggestion');
+    await expect(el.value).to.be.undefined;
+
+    setInputValue(el, 'App');
+    await elementUpdated(el);
+
+    await expect(el.input.value).to.equal('App');
+    await expect(el.value).to.equal('App');
+
+    // Close the fullscreen dialog without selecting an option.
+    el.hideBib();
+
+    if (mobileView) {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await elementUpdated(el);
+    }
+    el.blur();
+    // trigger validation
+    el.validate(true);
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.equal('valid');
+  });
+
+  it('does not update value from typed input when behavior is set to filter', async () => {
+    const el = await requiredFilterBehaviorFixture(mobileView);
+
+    await expect(el.behavior).to.equal('filter');
+    await expect(el.value).to.be.undefined;
+
+    setInputValue(el, 'App');
+    await elementUpdated(el);
+
+    await expect(el.input.value).to.equal('App');
+    await expect(el.value).to.be.undefined;
+
+    // Close the fullscreen dialog without selecting an option.
+    el.hideBib();
+
+    if (mobileView) {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await elementUpdated(el);
+    }
+    el.blur();
+    // trigger validation
+    el.validate(true);
+    await elementUpdated(el);
+    await expect(el.getAttribute('validity')).to.equal('valueMissing');
+  });
+
   it('noFilter attribute results in no suggestion filtering', async () => {
     const el = await noFilterFixture(mobileView);
 
@@ -1680,6 +1732,30 @@ async function filterFixture(mobileView) {
   }
   return fixture(html`
     <auro-combobox behavior="filter" setCustomValidityValueMissingFilter="filter error">
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+        <auro-menuoption persistent id="option-noMatch">Persistent</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  `);
+}
+
+async function requiredFilterBehaviorFixture(mobileView) {
+  if (mobileView) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
+  return fixture(html`
+    <auro-combobox behavior="filter" required>
       <span slot="label">Name</span>
       <auro-menu>
         <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
