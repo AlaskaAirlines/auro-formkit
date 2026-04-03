@@ -26,7 +26,8 @@ function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
   if (!clearBtn) {
     return false;
   }
-  return Boolean(clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null);
+  const isFocused = Boolean(clearBtn.shadowRoot && clearBtn.shadowRoot.activeElement !== null);
+  return isFocused;
 }
 
 export const comboboxKeyboardStrategy = {
@@ -40,7 +41,7 @@ export const comboboxKeyboardStrategy = {
       return;
     }
 
-    if (ctx.isExpanded && component.optionActive) {
+    if (ctx.isExpanded && component.menu.optionActive) {
       component.menu.makeSelection();
       await component.updateComplete;
       evt.preventDefault();
@@ -57,71 +58,12 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
-  Tab(component, evt, ctx) {
-    if (!ctx.isExpanded) {
-      return;
-    }
-
-    // Shift+Tab moves the highlight to the first non-disabled option
-    // without making a selection or closing the bib.
-    if (evt.shiftKey) {
-      evt.preventDefault();
-      const firstActive = component.menu.menuService.menuOptions.find((option) => option.isActive);
-      if (firstActive) {
-        component.menu.updateActiveOption(firstActive);
-      }
-      return;
-    }
-
-    if (ctx.isModal) {
-      if (!ctx.activeInput) {
-        return;
-      }
-      const clearBtn = getClearBtn(ctx);
-      const clearBtnHasFocus = isClearBtnFocused(ctx, clearBtn);
-
-      // Tab from input: if clear button exists and doesn't have focus, focus it
-      if (clearBtn && !clearBtnHasFocus && ctx.activeInput.value) {
-        // Force clear button container visible to work around Safari not
-        // propagating :focus-within through shadow DOM boundaries, which
-        // causes .wrapper:not(:focus-within) to hide .notification.clear.
-        const clearContainer = clearBtn.closest('.clear');
-        if (clearContainer) {
-          clearContainer.style.display = 'flex';
-          clearBtn.addEventListener('focusout', () => {
-            // Delay cleanup so :focus-within settles when focus moves
-            // to a sibling (e.g., Shift+Tab back to the input).
-            requestAnimationFrame(() => {
-              clearContainer.style.display = '';
-            });
-          }, { once: true });
-        }
-
-        // Focus the native button inside auro-button so the browser
-        // treats it as a real focusable element inside the dialog.
-        const nativeBtn = clearBtn.shadowRoot && clearBtn.shadowRoot.querySelector('button');
-        if (nativeBtn) {
-          nativeBtn.focus();
-        } else {
-          clearBtn.focus();
-        }
-        return;
-      }
-
-      // Tab from clear button (or no clear button / no value) →
-      // select the highlighted option if any, then close
-      if (component.optionActive) {
-        component.menu.makeSelection();
-      }
+  Tab(component, _evt, ctx) {
+    if (ctx.isExpanded) {
+      // ClearBtn will not bubble up tab key events when it's focused, so need to manage it here when focused
+      component.menu.makeSelection();
       component.hideBib();
-      return;
     }
-
-    // Non-fullscreen: select + close
-    if (component.menu.optionActive && component.menu.optionActive.value) {
-      component.menu.value = component.menu.optionActive.value;
-    }
-    component.hideBib();
   },
 
   ArrowUp(component, evt, ctx) {
@@ -129,15 +71,15 @@ export const comboboxKeyboardStrategy = {
     if (isClearBtnFocused(ctx)) {
       return;
     }
-
-    if (component.availableOptions.length > 0) {
-      component.showBib();
-    }
     // Read live visibility — ctx.isExpanded was computed before showBib() above,
     // so it wouldn't reflect the state change.
-    if (component.dropdown.isPopoverVisible) {
+    if (component.availableOptions.length > 0 && component.dropdown.isPopoverVisible) {
       evt.preventDefault();
       navigateArrow(component, 'up');
+    }
+
+    if (component.availableOptions.length > 0 && !component.dropdown.isPopoverVisible) {
+      component.showBib();
     }
   },
 
@@ -147,14 +89,15 @@ export const comboboxKeyboardStrategy = {
       return;
     }
 
-    if (component.availableOptions.length > 0) {
-      component.showBib();
-    }
     // Read live visibility — ctx.isExpanded was computed before showBib() above,
     // so it wouldn't reflect the state change.
-    if (component.dropdown.isPopoverVisible) {
+    if (component.availableOptions.length > 0 && component.dropdown.isPopoverVisible) {
       evt.preventDefault();
       navigateArrow(component, 'down');
+    }
+
+    if (component.availableOptions.length > 0 && !component.dropdown.isPopoverVisible) {
+      component.showBib();
     }
   },
 };
