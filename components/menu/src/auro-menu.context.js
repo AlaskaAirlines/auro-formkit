@@ -262,7 +262,7 @@ export class MenuService {
 
   /**
    * Sets the highlighted option to the option at the specified index if it exists.
-   * @param {number} index 
+   * @param {number} index
    */
   setHighlightedIndex(index) {
     const option = this._menuOptions[index] || null;
@@ -329,7 +329,7 @@ export class MenuService {
 
   /**
    * Selects a single option.
-   * @param {AuroMenuOption} option 
+   * @param {AuroMenuOption} option
    */
   selectOption(option) {
     this.selectOptions(option);
@@ -337,7 +337,7 @@ export class MenuService {
 
   /**
    * Deselects a single option.
-   * @param {AuroMenuOption} option 
+   * @param {AuroMenuOption} option
    */
   deselectOption(option) {
     this.deselectOptions(option);
@@ -345,7 +345,7 @@ export class MenuService {
 
   /**
    * Toggles the selection state of a single option.
-   * @param {AuroMenuOption} option 
+   * @param {AuroMenuOption} option
    */
   toggleOption(option) {
     if (option.selected) {
@@ -381,7 +381,7 @@ export class MenuService {
 
     // Normalize values to array of strings
     const normalizedValues = this._getNormalizedValues(value);
-    
+
     // Validate for single-select mode
     let validatedValues = normalizedValues;
     if (normalizedValues.length > 1 && !this.multiSelect) {
@@ -400,7 +400,7 @@ export class MenuService {
       const passesFilter = validatedValues.includes(option.key);
       const alreadyTracked = trackedKeys.has(option.key);
       const isActive = option.isActive;
-      
+
       trackedKeys.add(option.key);
 
       // Include the option in the options to be selected if it passes the filter check and
@@ -512,7 +512,7 @@ export class MenuService {
 
   /**
    * Remove a previously subscribed callback from menu service events.
-   * @param {Function} callback 
+   * @param {Function} callback
    */
   unsubscribe(callback) {
     this._subscribers = this._subscribers.filter(cb => cb !== callback);
@@ -572,8 +572,8 @@ export class MenuService {
 
   /**
    * Dispatches a custom event from the host element.
-   * @param {string} eventName 
-   * @param {any} detail 
+   * @param {string} eventName
+   * @param {any} detail
    */
   dispatchChangeEvent(eventName, detail) {
     this.host.dispatchEvent(new CustomEvent(eventName, {
