@@ -829,7 +829,7 @@ export class AuroSelect extends AuroElement {
 
       this.optionSelected = this.multiSelect ? options : options[0];
 
-      if (this.dropdown.isPopoverVisible) {
+      if (this.dropdown.isPopoverVisible && !this.menu.multiSelect) {
         this.dropdown.hide();
       }
 
@@ -1089,7 +1089,9 @@ export class AuroSelect extends AuroElement {
 
       this._updateNativeSelect();
       this.validate();
-      this.hideBib();
+      if (!this.multiSelect) {
+        this.hideBib();
+      }
       if (this.dropdown && this.dropdown.trigger) {
         this.dropdown.trigger.focus();
       }
