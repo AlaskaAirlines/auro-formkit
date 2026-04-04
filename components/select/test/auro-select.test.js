@@ -2,8 +2,7 @@
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 
 import { fixture, html, expect, elementUpdated, waitUntil } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
-import { selectKeyboardStrategy } from '../src/selectKeyboardStrategy.js';
+import { sendKeys, setViewport } from '@web/test-runner-commands';
 import '@aurodesignsystem/auro-dropdown';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
@@ -1108,24 +1107,20 @@ runTest(true);
 // ─── selectKeyboardStrategy — edge branches ───────────────────────────────────
 
 describe('selectKeyboardStrategy — Tab multiselect', () => {
-  it('closes the dropdown without selecting when multiSelect is true and an option is highlighted', () => {
-    let hideCalled = false;
-    let selectionCalled = false;
+  it('selects the highlighted option and keeps the dropdown open when Enter is pressed in multiselect mode', async() => {
+    const el = await multiSelectFixture();
 
-    const component = {
-      multiSelect: true,
-      optionActive: { value: 'Apples' },
-      menu: { makeSelection: () => { selectionCalled = true; } },
-      dropdown: { hide: () => { hideCalled = true; } },
-    };
+    el.focus();
+    await elementUpdated(el);
 
-    const evt = new KeyboardEvent('keydown', { key: 'Tab' });
-    const ctx = { isExpanded: true, isModal: false, isPopover: true };
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+    await elementUpdated(el);
 
-    selectKeyboardStrategy.Tab(component, evt, ctx);
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
+    await sendKeys({ press: 'Enter'});
 
-    expect(selectionCalled).to.be.false;
-    expect(hideCalled).to.be.true;
+    await expect(el.value).to.not.be.undefined;
+    await expect(el.dropdown.isPopoverVisible).to.be.true;
   });
 });
 

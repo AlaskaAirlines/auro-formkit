@@ -52,7 +52,7 @@ export const selectKeyboardStrategy = {
 
     // Tab selects the focused option and closes the popup per the
     // WAI-ARIA APG select-only combobox / listbox pattern.
-    if (component.optionActive && !component.multiSelect) {
+    if (component.optionActive) {
       component.menu.makeSelection();
     }
     component.dropdown.hide();
