@@ -1435,6 +1435,9 @@ export class AuroCombobox extends AuroElement {
       // shadow DOM boundaries.
       if ((this.availableOptions.length > 0 && (this.componentHasFocus || this.dropdownOpen)) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
         this.showBib();
+        if (!this.availableOptions.includes(this.menu.optionActive)) {
+          this.activateFirstEnabledAvailableOption();
+        }
       } else {
         this.hideBib();
       }
@@ -1492,7 +1495,10 @@ export class AuroCombobox extends AuroElement {
    */
   updateActiveOption(index) {
     if (this.menu) {
-      this.menu.index = index;
+      // get index of all options including hidden ones,
+      // since the active option can be hidden by filter
+      const newIdx = this.menu.options.indexOf(this.availableOptions[index]);
+      this.menu.index = newIdx;
     }
   }
 
