@@ -40,7 +40,7 @@ export class AuroDropdownBib extends LitElement {
     /**
      * @private
      */
-    this._mobileBreakpointValue = undefined;
+    this._mobileBreakpointName = undefined;
 
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-dropdownbib');
 
@@ -149,17 +149,22 @@ export class AuroDropdownBib extends LitElement {
     // verify the defined breakpoint is valid and exit out if not
     // 'disabled' is a design token breakpoint so it acts as our "undefined" value
     const validatedValue = DESIGN_TOKEN_BREAKPOINT_OPTIONS.includes(value) ? value : undefined;
-    if (!validatedValue) {
-      this._mobileBreakpointValue = undefined;
-    } else {
-      // get the pixel value for the defined breakpoint
-      const docStyle = getComputedStyle(document.documentElement);
-      this._mobileBreakpointValue = docStyle.getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + value);
-    }
+    // Store the breakpoint NAME only. The CSS token pixel value is read lazily
+    // in the getter so it is always resolved against the current document styles.
+    // Caching the pixel value here races against stylesheet load in WebKit —
+    // external CDN stylesheets may not yet be applied when the component upgrades,
+    // causing getPropertyValue() to return "" and fullscreen mode to never activate.
+    this._mobileBreakpointName = validatedValue;
   }
 
   get mobileFullscreenBreakpoint() {
-    return this._mobileBreakpointValue;
+    if (!this._mobileBreakpointName) {
+      return undefined;
+    }
+    const value = getComputedStyle(document.documentElement).
+      getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + this._mobileBreakpointName).
+      trim();
+    return value || undefined;
   }
 
   updated(changedProperties) {
