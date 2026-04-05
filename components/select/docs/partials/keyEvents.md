@@ -116,7 +116,6 @@
       <td>Trigger element</td>
       <td>
         The current <code>focused</code> option is toggled, does not close the bib.
-        <p style="background-color: pink; color: red;">&nbsp;DEVELOPER NOTE: need to prevent default dropdown event behavior&nbsp;&nbsp;</p>
       </td>
     </tr>
     <tr>
