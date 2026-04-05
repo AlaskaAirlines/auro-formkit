@@ -121,10 +121,11 @@ export class AuroInput extends BaseInput {
    */
   get clearBtnClassMap() {
     return {
-      'util_displayHidden': !this.hasValue || this.readyOnly || this.disabled
+      'notificationBtn': true,
+      'clearBtn': true,
+      'util_displayHidden': !this.hasValue || this.readOnly || this.disabled
     };
   }
-
 
   /**
    * Determines if the HTML input element should be visually hidden.
@@ -445,7 +446,7 @@ export class AuroInput extends BaseInput {
         <${this.buttonTag}
           @click="${this.handleClickClear}"
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          class="notificationBtn clearBtn ${classMap(this.clearBtnClassMap)}"
+          class="${classMap(this.clearBtnClassMap)}"
           shape="circle"
           size="sm"
           variant="ghost"

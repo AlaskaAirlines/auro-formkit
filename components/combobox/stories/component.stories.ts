@@ -323,6 +323,9 @@ async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20
   while (!predicate() && Date.now() < deadline) {
     await new Promise((r) => setTimeout(r, interval));
   }
+  if (!predicate()) {
+    throw new Error(`waitUntil timed out after ${timeout}ms`);
+  }
 }
 
 export const ComboboxArrowKeysIgnoredWhenClearBtnFocused: Story = {
