@@ -12,7 +12,9 @@
   selector-class-pattern,
   max-nesting-depth,
   selector-not-notation,
-  selector-max-class
+  selector-max-class,
+  selector-max-pseudo-class,
+  selector-max-attribute
   */
 .layoutDefault,
 :host(:not([layout])) {
