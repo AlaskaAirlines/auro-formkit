@@ -123,7 +123,7 @@ export class AuroInput extends BaseInput {
     return {
       'notificationBtn': true,
       'clearBtn': true,
-      'util_displayHidden': !this.hasValue || this.readOnly || this.disabled
+      'util_displayHidden': !this.hasValue || this.readonly || this.disabled
     };
   }
 
@@ -347,6 +347,24 @@ export class AuroInput extends BaseInput {
     }
 
     this.hasDisplayValueContent = hasContent;
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+
+
+    this.clearBtn = this.clearButtonRef.value;
+
+    // This must get moved into inputKeyboardStrategy when implemented
+    if (this.clearBtn) {
+      this.clearBtn.addEventListener('keydown', (evt) => {
+        evt.stopPropagation();
+      });
+
+      this.clearBtn.addEventListener('click', (evt) => {
+        evt.stopPropagation();
+      });
+    }
   }
 
   /**

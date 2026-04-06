@@ -38,7 +38,7 @@ The `auro-input` element provides users a way to enter data into a text field.
 | `onDark`                          | `onDark`                          | `boolean`                                        |             | DEPRECATED - use `appearance="inverse"` instead. |
 | `pattern`                         | `pattern`                         | `string`                                         |             | Specifies a regular expression the form control's value should match. |
 | `placeholder`                     | `placeholder`                     | `string`                                         |             | Define custom placeholder text.                  |
-| `readOnly`                        | `readOnly`                        | `boolean`                                        |             | Makes the input read-only, but can be set programmatically. |
+| `readonly`                        | `readonly`                        | `boolean`                                        |             | Makes the input read-only, but can be set programmatically. |
 | `required`                        | `required`                        | `boolean`                                        |             | Populates the `required` attribute on the input. Used for client-side validation. |
 | `setCustomValidity`               | `setCustomValidity`               | `string`                                         |             | Sets a custom help text message to display for all validityStates. |
 | `setCustomValidityBadInput`       | `setCustomValidityBadInput`       | `string`                                         |             | Custom help text message to display when validity = `badInput`. |

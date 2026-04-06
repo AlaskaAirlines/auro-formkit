@@ -76,12 +76,6 @@ export class AuroMenu extends AuroElement {
 
     // Event Bindings
 
-    // /**
-    //  * @private
-    //  */
-    // this.handleKeyDown = this.handleKeyDown.bind(this);
-
-
     /**
      * @private
      */
