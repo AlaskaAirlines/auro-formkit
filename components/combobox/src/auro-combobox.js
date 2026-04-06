@@ -990,15 +990,19 @@ export class AuroCombobox extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
-    this.defaultMenuShape = this.menu.getAttribute('shape');
 
-    // racing condition on custom-combobox with custom-menu
+    // Guard before any menu access: if the menu element is not yet in the DOM
+    // (race condition with custom-combobox/custom-menu registration), retry
+    // asynchronously rather than dereferencing a null reference.
     if (!this.menu) {
       setTimeout(() => {
         this.configureMenu();
       }, 0);
       return;
     }
+
+    // Moved below the null guard so this.menu is guaranteed to exist before being accessed.
+    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     this.updateMenuShapeSize();
 
@@ -1383,8 +1387,9 @@ export class AuroCombobox extends AuroElement {
 
       if (this.behavior === 'suggestion') {
         // if menu has an option that has matched value, then select it,
-        // otherwise clear the menu value since the input value doesn't match any option
-        if (this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
+        // otherwise clear the menu value since the input value doesn't match any option.
+        // Guard: menu.options may be undefined if the menu component hasn't initialized yet.
+        if (this.menu.options && this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
           this.setMenuValue(this.value);
         } else {
           this.menu.value = undefined;
@@ -1494,7 +1499,9 @@ export class AuroCombobox extends AuroElement {
    * @param {number} index - Index of the option to make active.
    */
   updateActiveOption(index) {
-    if (this.menu) {
+    // Guard against menu/options not yet initialized, an invalid index (-1 when
+    // no enabled option was found), or the resolved option being undefined.
+    if (this.menu && this.menu.options && index >= 0 && this.availableOptions[index]) {
       // get index of all options including hidden ones,
       // since the active option can be hidden by filter
       const newIdx = this.menu.options.indexOf(this.availableOptions[index]);

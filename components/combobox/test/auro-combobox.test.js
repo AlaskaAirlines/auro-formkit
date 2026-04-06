@@ -19,6 +19,7 @@ import {
   requiredFilterBehaviorFixture,
   customEventFixture,
   noFilterFixture,
+  emptyMenuFixture,
 } from './testFixtures.js';
 import { setInputValue, getAnnouncementRoot } from './testFunctions.js';
 
@@ -80,6 +81,38 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
 
       expect(el.dropdown.bibDialogLabel).to.equal('Custom Label');
+    });
+
+    it('should not crash when value is set with an empty menu', async () => {
+      const el = await emptyMenuFixture(mobileView);
+      el.value = 'Apple';
+      await elementUpdated(el);
+      await expect(el.value).to.equal('Apple');
+    });
+
+    it('should not crash when suggestion mode value is set with an empty menu', async () => {
+      const el = await emptyMenuFixture(mobileView);
+      el.setAttribute('behavior', 'suggestion');
+      el.value = 'Apple';
+      await elementUpdated(el);
+      await expect(el.value).to.equal('Apple');
+    });
+
+    it('should not crash when all available options are disabled', async () => {
+      const el = await fixture(html`
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" disabled>Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" disabled>Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+      // Component should reach here without throwing in activateFirstEnabledAvailableOption
+      await expect(el.availableOptions.every((opt) => opt.disabled)).to.be.true;
     });
   });
 

@@ -431,3 +431,28 @@ export async function noFilterFixture(mobileView) {
   </auro-combobox>
   `);
 }
+
+/**
+ * Testing fixture for combobox with an empty menu that has no options.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} The auro-combobox element with an empty auro-menu.
+ */
+export async function emptyMenuFixture(mobileView) {
+  if (mobileView) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
+  return fixture(html`
+  <auro-combobox>
+    <span slot="label">Name</span>
+    <auro-menu></auro-menu>
+  </auro-combobox>
+  `);
+}

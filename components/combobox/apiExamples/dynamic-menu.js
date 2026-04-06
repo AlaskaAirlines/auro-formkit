@@ -95,7 +95,7 @@ export async function dynamicMenuExample() {
   });
 
 
-  if (dynamicMenuExampleEl.value && dynamicMenuExampleEl.value.length > 0 && dynamicMenuExampleEl.input.value && (!dynamicMenuExampleEl.menu.availableOptions || dynamicMenuExampleEl.menu.availableOptions.length === 0)) {
+  if (dynamicMenuExampleEl.value && dynamicMenuExampleEl.value.length > 0 && dynamicMenuExampleEl.input?.value && (!dynamicMenuExampleEl.availableOptions || dynamicMenuExampleEl.availableOptions.length === 0)) {
     let data = dynamicData.getData();
     data = dynamicData.filterData(data, inputEl.value);
     generateHtml(data, '#initMenu');
@@ -114,7 +114,7 @@ export async function dynamicMenuExample() {
     generateHtml(data, '#initMenuTwo');
   });
 
-  if (dynamicMenuExampleElTwo.value && dynamicMenuExampleElTwo.value.length > 0 && dynamicMenuExampleElTwo.input.value && (!dynamicMenuExampleElTwo.menu.availableOptions || dynamicMenuExampleElTwo.menu.availableOptions.length === 0)) {
+  if (dynamicMenuExampleElTwo.value && dynamicMenuExampleElTwo.value.length > 0 && dynamicMenuExampleElTwo.input?.value && (!dynamicMenuExampleElTwo.availableOptions || dynamicMenuExampleElTwo.availableOptions.length === 0)) {
     let data = dynamicDataTwo.getData();
     data = dynamicDataTwo.filterData(data, inputElTwo.value);
     generateHtml(data, '#initMenuTwo');
