@@ -648,6 +648,9 @@ describe("auro-dropdown", () => {
     });
   });
 
+  describe('Private Functions', () => {
+    // No private function tests
+  });
 
   describe('A11Y', () => {
 

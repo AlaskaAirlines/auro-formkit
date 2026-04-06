@@ -192,6 +192,9 @@ describe('Public Functions', () => {
   });
 });
 
+describe('Private Functions', () => {
+  // No private function tests
+});
 
 describe('A11Y', () => {
   it('should set aria-describedby elements on the spin button when a description element is slotted', async () => {
