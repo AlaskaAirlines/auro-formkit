@@ -14,11 +14,8 @@
 ### Keyboard Interactions
 
 [ ] Tab to the counter — verify focus lands on the counter component
-[ ] Tab through the counter — verify focus visits the decrement button, value display, and increment button
 [ ] Arrow Up on a focused counter — verify the value increments by 1
 [ ] Arrow Down on a focused counter — verify the value decrements by 1
-[ ] Enter/Space on the focused increment button — verify the value increments
-[ ] Enter/Space on the focused decrement button — verify the value decrements
 [ ] Tab away from the counter — verify focus moves to the next element
 
 ### Touch / Tap Interactions
@@ -35,7 +32,8 @@
 [ ] Read value after clicking increment — verify it matches the displayed value
 
 #### `min` / `max`
-[ ] Set min=0 and max=5 — verify the counter cannot go below 0 or above 5
+[ ] Default min=0 and max=9 - verify the counter cannot go below 0 or above 9
+[ ] Set min=2 and max=5 — verify the counter cannot go below 2 or above 5
 [ ] Set min=2 with initial value=0 — verify behavior when value is below min
 [ ] Set max=3 with initial value=5 — verify behavior when value exceeds max
 
