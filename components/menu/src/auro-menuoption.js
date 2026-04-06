@@ -260,6 +260,14 @@ export class AuroMenuOption extends AuroElement {
       }
     }
 
+    if (changedProperties.has('disabled')) {
+      if (this.disabled) {
+        this.setAttribute('aria-disabled', 'true');
+      } else {
+        this.removeAttribute('aria-disabled');
+      }
+    }
+
     if (changedProperties.has('active')) {
       this.updateActiveClasses();
     }
@@ -521,7 +529,7 @@ export class AuroMenuOption extends AuroElement {
     });
 
     return html`
-      <div class="${classes}" aria-disabled="${this.disabled ? 'true' : 'false'}">
+      <div class="${classes}">
         ${this.selected && !this.noCheckmark
         ? this.generateIconHtml(checkmarkIcon.svg)
         : undefined}
