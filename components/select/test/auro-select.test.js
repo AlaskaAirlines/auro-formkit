@@ -777,18 +777,18 @@ function runTest(mobileView) {
     describe('Mouse Behavior', () => {
       describe('Click', () => {
         describe('Trigger', () => {
-          // it('should toggle the bib on click', async () => {
-          //   const el = await defaultFixture();
+          it('should toggle the bib on click', async () => {
+            const el = await defaultFixture();
 
-          //   const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-          //   const trigger = dropdown.querySelector('[slot="trigger"]');
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            const trigger = dropdown.querySelector('[slot="trigger"]');
 
-          //   trigger.click();
-          //   await expect(dropdown.isPopoverVisible).to.be.true;
+            trigger.click();
+            await expect(dropdown.isPopoverVisible).to.be.true;
 
-          //   trigger.click();
-          //   await expect(dropdown.isPopoverVisible).to.be.false;
-          // });
+            trigger.click();
+            await expect(dropdown.isPopoverVisible).to.be.false;
+          });
 
           // // BUG: The select uses popover='manual' which does not support light dismiss,
           // // and noHideOnThisFocusLoss is set to true, so clicking outside does not close the bib.
@@ -835,40 +835,40 @@ function runTest(mobileView) {
               await expect(dropdown.isPopoverVisible).to.be.false;
             });
 
-            // it('should not deselect and should close the bib when an already-selected menuoption is clicked', async () => {
-            //   const el = await presetValueFixture();
+            it('should not deselect and should close the bib when an already-selected menuoption is clicked', async () => {
+              const el = await presetValueFixture();
 
-            //   await elementUpdated(el);
-            //   await new Promise((resolve) => setTimeout(resolve, 0));
-            //   await elementUpdated(el);
+              await elementUpdated(el);
+              await new Promise((resolve) => setTimeout(resolve, 0));
+              await elementUpdated(el);
 
-            //   const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-            //   const trigger = dropdown.querySelector('[slot="trigger"]');
+              const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+              const trigger = dropdown.querySelector('[slot="trigger"]');
 
-            //   trigger.click();
-            //   await elementUpdated(el);
-            //   await expect(dropdown.isPopoverVisible).to.be.true;
+              trigger.click();
+              await elementUpdated(el);
+              await expect(dropdown.isPopoverVisible).to.be.true;
 
-            //   const menu = el.querySelector('auro-menu');
-            //   const selectedOption = menu.querySelector('auro-menuoption[value="price"]');
-            //   await expect(selectedOption.selected).to.be.true;
+              const menu = el.querySelector('auro-menu');
+              const selectedOption = menu.querySelector('auro-menuoption[value="price"]');
+              await expect(selectedOption.selected).to.be.true;
 
-            //   const valueBefore = el.value;
+              const valueBefore = el.value;
 
-            //   // Wait for menu option internal state to settle
-            //   await new Promise((resolve) => setTimeout(resolve, 0));
+              // Wait for menu option internal state to settle
+              await new Promise((resolve) => setTimeout(resolve, 0));
 
-            //   selectedOption.click();
-            //   await elementUpdated(selectedOption);
-            //   await elementUpdated(menu);
-            //   await new Promise((resolve) => setTimeout(resolve, 0));
-            //   await elementUpdated(el);
+              selectedOption.click();
+              await elementUpdated(selectedOption);
+              await elementUpdated(menu);
+              await new Promise((resolve) => setTimeout(resolve, 0));
+              await elementUpdated(el);
 
-            //   // In single-select mode, clicking an already-selected option should NOT deselect it
-            //   await expect(selectedOption.selected).to.be.true;
-            //   await expect(el.value).to.equal(valueBefore);
-            //   await expect(dropdown.isPopoverVisible).to.be.false;
-            // });
+              // In single-select mode, clicking an already-selected option should NOT deselect it
+              await expect(selectedOption.selected).to.be.true;
+              await expect(el.value).to.equal(valueBefore);
+              await expect(dropdown.isPopoverVisible).to.be.false;
+            });
 
             it('should not select or close the bib when a disabled menuoption is clicked', async () => {
               const el = await fixture(html`
