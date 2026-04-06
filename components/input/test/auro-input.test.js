@@ -785,7 +785,7 @@ describe('auro-input', () => {
 
     });
 
-    describe('readOnly', () => {
+    describe('readonly', () => {
       it('should set the readonly attribute on the underlying HTML5 input', async () => {
         const el = await fixture(html`
           <auro-input readonly></auro-input>

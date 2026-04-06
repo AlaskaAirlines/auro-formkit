@@ -128,7 +128,9 @@ export const comboboxKeyboardStrategy = {
 
   Tab(component, evt, ctx) {
     if (ctx.isExpanded && !isClearBtnFocused(ctx)) {
-      // ClearBtn will not bubble up tab key events when it's focused, so need to manage it here when focused
+      // When the clear button is focused, Tab events do not bubble out of
+      // its shadow DOM, so this handler only fires when the clear button
+      // is NOT focused. In that case, select the active option and close.
       component.menu.makeSelection();
       component.hideBib();
 

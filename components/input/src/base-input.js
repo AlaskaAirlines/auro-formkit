@@ -406,7 +406,7 @@ export default class BaseInput extends AuroElement {
       /**
        * Makes the input read-only, but can be set programmatically.
        */
-      readOnly: {
+      readonly: {
         type: Boolean,
         reflect: true
       },
@@ -565,18 +565,6 @@ export default class BaseInput extends AuroElement {
     this.wrapperElement = this.shadowRoot.querySelector('.wrapper');
     this.inputElement = this.renderRoot.querySelector('input');
     this.labelElement = this.shadowRoot.querySelector('label');
-    this.clearBtn = this.clearButtonRef.value;
-
-    // This must get moved into inputKeyboardStrategy when implemented
-    if (this.clearBtn) {
-      this.clearBtn.addEventListener('keydown', (evt) => {
-        evt.stopPropagation();
-      });
-
-      this.clearBtn.addEventListener('click', (evt) => {
-        evt.stopPropagation();
-      });
-    }
 
     this.patchInputEvent(this.inputElement);
 
@@ -700,13 +688,13 @@ export default class BaseInput extends AuroElement {
       this.autocapitalize = undefined;
     }
 
-    if (changedProperties.has('readOnly')) {
-      if (this.readOnly) {
-        this.inputElement.setAttribute('readOnly', true);
-        this.inputElement.setAttribute('aria-readOnly', true);
+    if (changedProperties.has('readonly')) {
+      if (this.readonly) {
+        this.inputElement.setAttribute('readonly', true);
+        this.inputElement.setAttribute('aria-readonly', true);
       } else {
-        this.inputElement.removeAttribute('readOnly');
-        this.inputElement.removeAttribute('aria-readOnly');
+        this.inputElement.removeAttribute('readonly');
+        this.inputElement.removeAttribute('aria-readonly');
       }
     }
 
