@@ -43,7 +43,6 @@ export const comboboxKeyboardStrategy = {
 
       // navigate if bib is open otherwise open it
       if (component.dropdown.isPopoverVisible) {
-
         if (evt.altKey || evt.metaKey) {
           component.activateLastEnabledAvailableOption();
         } else {
