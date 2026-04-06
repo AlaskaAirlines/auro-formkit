@@ -134,13 +134,13 @@ async function getFixtureWithValueProp(htmlTemplate, value) {
 
 // checkbox does not support this
 describe.skip('checkbox', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute', async () => {
     const el = await getFixtureWithValueAttr(CHECKBOX_TEMPLATE, ['value2']);
     await expect(el.value).to.equal(['value2']);
     await expect(el.children[2].hasAttribute('checked')).to.be.true;
   });
 
-  it('value property works', async () => {
+  it('should set value via property', async () => {
     const el = await getFixtureWithValueProp(CHECKBOX_TEMPLATE, ['value2', 'value3']);
     await expect(el.children[2].hasAttribute('checked')).to.be.true;
     await expect(el.children[3].hasAttribute('checked')).to.be.true;
@@ -149,13 +149,13 @@ describe.skip('checkbox', () => {
 
 // radio does not support this
 describe.skip('radio', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute', async () => {
     const el = await getFixtureWithValueAttr(RADIO_TEMPLATE, 'yes');
     await expect(el.value).to.equal('yes');
     await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
   });
 
-  it('value property works', async () => {
+  it('should set value via property', async () => {
     const el = await getFixtureWithValueProp(RADIO_TEMPLATE, 'yes');
     await expect(el.value).to.equal('yes');
     await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
@@ -163,7 +163,7 @@ describe.skip('radio', () => {
 });
 
 describe('input', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute and reflect in inner input', async () => {
     const el = await getFixtureWithValueAttr(INPUT_TEMPLATE, 'some text');
     await expect(el.value).to.equal('some text');
 
@@ -171,7 +171,7 @@ describe('input', () => {
     await expect(innerInput.value).to.equal('some text');
   });
 
-  it('value property works', async () => {
+  it('should set value via property and reflect in inner input', async () => {
     const el = await getFixtureWithValueProp(INPUT_TEMPLATE, 'some text');
     await expect(el.value).to.equal('some text');
 
@@ -182,7 +182,7 @@ describe('input', () => {
 
 
 describe('combobox', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute and reflect in inner input', async () => {
     const el = await getFixtureWithValueAttr(COMBOBOX_TEMPLATE, 'Apples');
     await expect(el.value).to.equal('Apples');
 
@@ -191,7 +191,7 @@ describe('combobox', () => {
     await expect(innerInput.value).to.equal('Apples');
   });
 
-  it('value property works', async () => {
+  it('should set value via property and reflect in inner input', async () => {
     const el = await getFixtureWithValueProp(COMBOBOX_TEMPLATE, 'Apples');
     await expect(el.value).to.equal('Apples');
 
@@ -202,7 +202,7 @@ describe('combobox', () => {
 });
 
 describe('select', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute and display in trigger', async () => {
     const el = await getFixtureWithValueAttr(SELECT_TEMPLATE, 'price');
 
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -211,7 +211,7 @@ describe('select', () => {
     await expect(el.value).to.equal('price');
   });
 
-  it('value property works', async () => {
+  it('should set value via property and display in trigger', async () => {
     const el = await getFixtureWithValueProp(SELECT_TEMPLATE, 'price');
     await expect(el.value).to.equal('price');
 
@@ -223,7 +223,7 @@ describe('select', () => {
 
 
 describe('select with multi-select', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute and display selected options in trigger', async () => {
     const initialValueObj = ['price', 'arrival'];
     const el = await getFixtureWithValueAttr(MULTI_SELECT_TEMPLATE, JSON.stringify(initialValueObj));
     await expect(JSON.parse(el.value)).to.eql(initialValueObj);
@@ -234,7 +234,7 @@ describe('select with multi-select', () => {
     await expect(trigger.textContent.includes("Arrival")).to.be.true;
   });
 
-  it('value property works', async () => {
+  it('should set value via property and display selected options in trigger', async () => {
     const initialValueObj = ['price', 'arrival'];
     const el = await getFixtureWithValueProp(MULTI_SELECT_TEMPLATE, JSON.stringify(initialValueObj));
     await expect(JSON.parse(el.value)).to.eql(initialValueObj);
@@ -247,12 +247,12 @@ describe('select with multi-select', () => {
 });
 
 describe('counter', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute', async () => {
     const el = await getFixtureWithValueAttr(COUNTER_TEMPLATE, 3);
     await expect(el.value).to.eql(3);
   });
 
-  it('value property works', async () => {
+  it('should set value via property', async () => {
     const el = await getFixtureWithValueProp(COUNTER_TEMPLATE, 3);
     await expect(el.value).to.eql(3);
   });
@@ -260,7 +260,7 @@ describe('counter', () => {
 
 // counter-group does not support this
 describe.skip('counter-group', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute', async () => {
     const el = await getFixtureWithValueAttr(COUNTER_GROUP_TEMPLATE, JSON.stringify({'first': 2, 'second': 4}));
 
     await expect(el.children[0].value).to.eql(2);
@@ -268,7 +268,7 @@ describe.skip('counter-group', () => {
     await expect(el.value).to.eql(3);
   });
 
-  it('value property works', async () => {
+  it('should set value via property', async () => {
     const el = await getFixtureWithValueProp(COUNTER_GROUP_TEMPLATE, {'first': 2, 'second': 4});
     await expect(el.children[0].value).to.eql(2);
     await expect(el.children[1].value).to.eql(4);
@@ -277,7 +277,7 @@ describe.skip('counter-group', () => {
 });
 
 describe('datepicker', () => {
-  it('value attribute works ', async () => {
+  it('should set value via attribute and reflect in inner input', async () => {
     const el = await getFixtureWithValueAttr(DATEPICKER_TEMPLATE, '04/03/2023');
     await expect(el.value).to.equal('04/03/2023');
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -285,7 +285,7 @@ describe('datepicker', () => {
     await expect(innerInput.value).to.equal('04/03/2023');
   });
 
-  it('value property works', async () => {
+  it('should set value via property and reflect in inner input', async () => {
     const el = await getFixtureWithValueProp(DATEPICKER_TEMPLATE, '04/03/2023');
     await expect(el.value).to.equal('04/03/2023');
 
