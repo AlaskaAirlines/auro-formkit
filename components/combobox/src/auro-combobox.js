@@ -1384,7 +1384,7 @@ export class AuroCombobox extends AuroElement {
       if (this.behavior === 'suggestion') {
         // if menu has an option that has matched value, then select it,
         // otherwise clear the menu value since the input value doesn't match any option
-        if (this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
+        if (this.menu.options && this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
           this.setMenuValue(this.value);
         } else {
           this.menu.value = undefined;
@@ -1494,7 +1494,7 @@ export class AuroCombobox extends AuroElement {
    * @param {number} index - Index of the option to make active.
    */
   updateActiveOption(index) {
-    if (this.menu) {
+    if (this.menu && this.menu.options && index >= 0 && this.availableOptions[index]) {
       // get index of all options including hidden ones,
       // since the active option can be hidden by filter
       const newIdx = this.menu.options.indexOf(this.availableOptions[index]);
