@@ -11,58 +11,6 @@ describe('Rendering', () => {
 });
 
 describe('User Stories', () => {
-  describe('Increment', () => {
-    it('should increment the value by 1 when no argument is provided', async () => {
-      const el = await fixture(html`<auro-counter>Counter</auro-counter>>`);
-      el.increment();
-      expect(el.value).to.equal(1);
-    });
-
-    it('should increment the value by the provided argument', async () => {
-      const el = await fixture(html`<auro-counter>Counter</auro-counter>>`);
-      el.increment(5);
-      expect(el.value).to.equal(5);
-    });
-
-    it('should increment the value correctly when it is already set', async () => {
-      const el = await fixture(html`<auro-counter value="3">Counter</auro-counter>>`);
-      el.increment(2);
-      expect(el.value).to.equal(5);
-    });
-
-    it('should not increment the value when disabled', async () => {
-      const el = await fixture(html`<auro-counter disabled>Counter</auro-counter>>`);
-      el.increment();
-      expect(el.value).to.equal(0);
-    });
-  });
-
-  describe('Decrement', () => {
-
-    it('should decrement the value by 1 when no argument is provided', async () => {
-      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>>`);
-      el.decrement();
-      expect(el.value).to.equal(4);
-    });
-
-    it('should decrement the value by the provided argument', async () => {
-      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>>`);
-      el.decrement(2);
-      expect(el.value).to.equal(3);
-    });
-
-    it('should decrement the value correctly when it is already set', async () => {
-      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>>`);
-      el.decrement(3);
-      expect(el.value).to.equal(2);
-    });
-
-    it('should not decrement the value when disabled', async () => {
-      const el = await fixture(html`<auro-counter value="5" disabled>Counter</auro-counter>>`);
-      el.decrement();
-      expect(el.value).to.equal(5);
-    });
-  });
 });
 
 describe('Properties', () => {
@@ -181,6 +129,69 @@ describe('Slots', () => {
   });
 
 });
+
+describe('Public Functions', () => {
+  describe('register', () => {
+    // TODO: test needs to be added
+  });
+
+  describe('increment', () => {
+    it('should increment the value by 1 when no argument is provided', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>>`);
+      el.increment();
+      expect(el.value).to.equal(1);
+    });
+
+    it('should increment the value by the provided argument', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>>`);
+      el.increment(5);
+      expect(el.value).to.equal(5);
+    });
+
+    it('should increment the value correctly when it is already set', async () => {
+      const el = await fixture(html`<auro-counter value="3">Counter</auro-counter>>`);
+      el.increment(2);
+      expect(el.value).to.equal(5);
+    });
+
+    it('should not increment the value when disabled', async () => {
+      const el = await fixture(html`<auro-counter disabled>Counter</auro-counter>>`);
+      el.increment();
+      expect(el.value).to.equal(0);
+    });
+  });
+
+  describe('decrement', () => {
+    it('should decrement the value by 1 when no argument is provided', async () => {
+      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>>`);
+      el.decrement();
+      expect(el.value).to.equal(4);
+    });
+
+    it('should decrement the value by the provided argument', async () => {
+      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>>`);
+      el.decrement(2);
+      expect(el.value).to.equal(3);
+    });
+
+    it('should decrement the value correctly when it is already set', async () => {
+      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>>`);
+      el.decrement(3);
+      expect(el.value).to.equal(2);
+    });
+
+    it('should not decrement the value when disabled', async () => {
+      const el = await fixture(html`<auro-counter value="5" disabled>Counter</auro-counter>>`);
+      el.decrement();
+      expect(el.value).to.equal(5);
+    });
+  });
+
+  describe('validate', () => {
+    // TODO: test needs to be added
+  });
+});
+
 
 describe('A11Y', () => {
   it('should set aria-describedby elements on the spin button when a description element is slotted', async () => {

@@ -330,14 +330,6 @@ describe('auro-input', () => {
       expect(result).to.equal(undefined);
     });
 
-    it('should be programmatically focusable via focus()', async () => {
-      const el = await fixture(html`
-        <auro-input label="Label"></auro-input>
-      `);
-
-      el.focus();
-      expect(document.activeElement === el).to.be.true;
-    });
   });
 
   describe('Properties', () => {
@@ -1126,6 +1118,48 @@ describe('auro-input', () => {
       });
     });
   });
+
+  describe('Public Functions', () => {
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('focus', () => {
+      it('should be programmatically focusable via focus()', async () => {
+        const el = await fixture(html`
+          <auro-input label="Label"></auro-input>
+        `);
+
+        el.focus();
+        expect(document.activeElement === el).to.be.true;
+      });
+    });
+
+    describe('validate', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('reset', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('clear', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetShapeClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetLayoutClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('updateComponentArchitecture', () => {
+      // TODO: test needs to be added
+    });
+  });
+
 
   describe('Keyboard Behavior', () => {
     // add tests for all keyboard interactions such as tabbing into the input, typing, pressing enter, escape, arrow keys, etc.
