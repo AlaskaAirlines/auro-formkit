@@ -107,18 +107,6 @@ describe('auro-datepicker', () => {
   describe('User Stories', () => {
     // Add missing tests
 
-    it('should programmatically apply focus to the input when focus() is called', async () => {
-      const el = await fixture(html`
-        <auro-datepicker></auro-datepicker>
-      `);
-
-      const input = getInput(el, 0);
-
-      el.focus();
-
-      await expect(el.shadowRoot.activeElement).to.be.equal(input);
-    });
-
     it('should hide the dropdown when it or its children lose focus', async () => {
       const el = await fixture(html`
         <div>
@@ -1365,6 +1353,63 @@ describe('auro-datepicker', () => {
     });
 
   });
+
+  describe('Public Functions', () => {
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('focus', () => {
+      it('should programmatically apply focus to the input when focus() is called', async () => {
+        const el = await fixture(html`
+          <auro-datepicker></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+
+        el.focus();
+
+        await expect(el.shadowRoot.activeElement).to.be.equal(input);
+      });
+    });
+
+    describe('hideBib', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('showBib', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetInputs', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('reset', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('clear', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('validate', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetShapeClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetLayoutClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('updateComponentArchitecture', () => {
+      // TODO: test needs to be added
+    });
+  });
+
 
   describe('A11Y', () => {
     it('should be accessible', async () => {

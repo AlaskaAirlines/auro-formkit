@@ -112,6 +112,17 @@ describe('auro-checkbox', () => {
 
   });
 
+  describe('Public Functions', () => {
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('reset', () => {
+      // TODO: test needs to be added
+    });
+  });
+
+
   describe('A11Y', () => {
     it('should have role="checkbox" attribute on the host element', async () => {
       const el = await fixture(html`

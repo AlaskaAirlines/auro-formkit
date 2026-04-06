@@ -102,16 +102,6 @@ function runFullTest(mobileView) {
     //   await expect(el.value).to.equal(undefined);
     // });
 
-    it('should programmatically apply focus to input when focus() is called', async () => {
-      const el = await defaultFixture(mobileView);
-
-      const { input } = el;
-
-      el.focus();
-
-      await expect(el.shadowRoot.activeElement).to.be.equal(input);
-    });
-
     it('should hide the bib when there are no available options', async () => {
       const el = await defaultFixture(mobileView);
 
@@ -414,16 +404,6 @@ function runFullTest(mobileView) {
       }
     });
 
-    it('should programmatically apply focus to input when focus() is called', async () => {
-      const el = await defaultFixture(mobileView);
-
-      const { input } = el;
-
-      el.focus();
-
-      await expect(el.shadowRoot.activeElement).to.be.equal(input);
-    });
-
     it('should hide the bib when there are no available options', async () => {
       const el = await defaultFixture(mobileView);
 
@@ -432,22 +412,6 @@ function runFullTest(mobileView) {
     });
 
     // These tests require fullscreen (mobile) mode
-    if (mobileView) {
-      it('should focus input in bib when fullscreen dialog opens', async () => {
-        const el = await defaultFixture(mobileView);
-
-        setInputValue(el, 'a');
-        await elementUpdated(el);
-
-        // inputInBib should exist in fullscreen mode
-        await expect(el.inputInBib).to.exist;
-
-        // Follow existing mobile pattern: explicitly focus inputInBib
-        el.inputInBib.focus();
-        await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
-        expect(el.shadowRoot.activeElement).to.equal(el.inputInBib);
-      });
-    }
   });
 
   describe('Properties', () => {
@@ -940,6 +904,96 @@ function runFullTest(mobileView) {
     });
 
   });
+
+  describe('Public Functions', () => {
+    describe('isValid', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('hideBib', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('showBib', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('focus', () => {
+      it('should programmatically apply focus to input when focus() is called', async () => {
+        const el = await defaultFixture(mobileView);
+
+        const { input } = el;
+
+        el.focus();
+
+        await expect(el.shadowRoot.activeElement).to.be.equal(input);
+      });
+
+      it('should programmatically apply focus to input when focus() is called', async () => {
+        const el = await defaultFixture(mobileView);
+
+        const { input } = el;
+
+        el.focus();
+
+        await expect(el.shadowRoot.activeElement).to.be.equal(input);
+      });
+
+      if (mobileView) {
+        it('should focus input in bib when fullscreen dialog opens', async () => {
+          const el = await defaultFixture(mobileView);
+
+          setInputValue(el, 'a');
+          await elementUpdated(el);
+
+          // inputInBib should exist in fullscreen mode
+          await expect(el.inputInBib).to.exist;
+
+          // Follow existing mobile pattern: explicitly focus inputInBib
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+          expect(el.shadowRoot.activeElement).to.equal(el.inputInBib);
+        });
+      }
+    });
+
+    describe('setMenuValue', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('reset', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('clear', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('validate', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('updateActiveOption', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetShapeClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetLayoutClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('updateComponentArchitecture', () => {
+      // TODO: test needs to be added
+    });
+  });
+
 
   describe('A11Y', () => {
     it('should be accessible', async () => {

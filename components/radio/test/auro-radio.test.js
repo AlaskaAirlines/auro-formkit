@@ -27,30 +27,6 @@ describe('auro-radio', () => {
 
   describe('User Stories', () => {
     // Add missing tests
-
-    it('should reset all radio buttons to unchecked state when reset() is called', async () => {
-      const el = await fixture(html`
-        <auro-radio-group id="resetGroupTest" required>
-          <span slot="legend">Form label goes here</span>
-          <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes" checked>Yes</auro-radio>
-          <auro-radio id="radio2" label="No" name="radioDemo" value="no" checked>No</auro-radio>
-        </auro-radio-group>
-      `);
-
-      const radioButtonOne = el.querySelector('#radio1');
-      const radioButtonTwo = el.querySelector('#radio2');
-
-      el.reset();
-
-      await elementUpdated(el);
-
-      await expect(radioButtonOne.hasAttribute('checked')).to.be.false;
-      await expect(radioButtonTwo.hasAttribute('checked')).to.be.false;
-
-      await expect(el.value).to.equal(undefined);
-      await expect(el.optionSelected).to.equal(undefined);
-      await expect(el.hasAttribute('validity')).to.be.false;
-    });
   });
 
   describe('Properties', () => {
@@ -150,6 +126,38 @@ describe('auro-radio', () => {
 
         await expect(radioButtons.indexOf(el.optionSelected)).to.equal(0);
         await expect(el.value).to.equal('yes');
+      });
+    });
+  });
+
+  describe('Public Functions', () => {
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('reset', () => {
+      it('should reset all radio buttons to unchecked state when reset() is called', async () => {
+        const el = await fixture(html`
+          <auro-radio-group id="resetGroupTest" required>
+            <span slot="legend">Form label goes here</span>
+            <auro-radio id="radio1" label="Yes" name="radioDemo" value="yes" checked>Yes</auro-radio>
+            <auro-radio id="radio2" label="No" name="radioDemo" value="no" checked>No</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const radioButtonOne = el.querySelector('#radio1');
+        const radioButtonTwo = el.querySelector('#radio2');
+
+        el.reset();
+
+        await elementUpdated(el);
+
+        await expect(radioButtonOne.hasAttribute('checked')).to.be.false;
+        await expect(radioButtonTwo.hasAttribute('checked')).to.be.false;
+
+        await expect(el.value).to.equal(undefined);
+        await expect(el.optionSelected).to.equal(undefined);
+        await expect(el.hasAttribute('validity')).to.be.false;
       });
     });
   });

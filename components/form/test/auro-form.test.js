@@ -620,6 +620,21 @@ describe('Slots', () => {
 
 });
 
+describe('Public Functions', () => {
+  describe('reset', () => {
+    // TODO: test needs to be added
+  });
+
+  describe('submit', () => {
+    // TODO: test needs to be added
+  });
+
+  describe('register', () => {
+    // TODO: test needs to be added
+  });
+});
+
+
 
 describe('A11Y', () => {
   it('should be accessible', async () => {

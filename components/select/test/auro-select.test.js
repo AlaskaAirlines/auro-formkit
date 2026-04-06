@@ -51,32 +51,6 @@ function runTest(mobileView) {
     });
 
     describe('User Stories', () => {
-      it('should open the bib when showBib() method is called', async () => {
-        const el = await defaultFixture();
-
-        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-        await expect(dropdown.isPopoverVisible).to.be.false;
-
-        el.showBib();
-        await elementUpdated(el);
-        await expect(dropdown.isPopoverVisible).to.be.true;
-      });
-
-      it('should close the bib when hideBib() method is called', async () => {
-        const el = await defaultFixture();
-
-        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-        await expect(dropdown.isPopoverVisible).to.be.false;
-
-        el.showBib();
-        await elementUpdated(el);
-        await expect(dropdown.isPopoverVisible).to.be.true;
-
-        el.hideBib();
-        await elementUpdated(el);
-        await expect(dropdown.isPopoverVisible).to.be.false;
-      });
-
       it('should close the bib when an option is selected', async () => {
         const el = await defaultFixture();
         const menu = el.querySelector('auro-menu');
@@ -632,6 +606,71 @@ function runTest(mobileView) {
         });
       });
     });
+
+    describe('Public Functions', () => {
+      describe('register', () => {
+        // TODO: test needs to be added
+      });
+
+      describe('updateActiveOption', () => {
+        // TODO: test needs to be added
+      });
+
+      describe('hideBib', () => {
+        it('should close the bib when hideBib() method is called', async () => {
+          const el = await defaultFixture();
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.showBib();
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          el.hideBib();
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+      });
+
+      describe('showBib', () => {
+        it('should open the bib when showBib() method is called', async () => {
+          const el = await defaultFixture();
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.isPopoverVisible).to.be.false;
+
+          el.showBib();
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.true;
+        });
+      });
+
+      describe('setMenuValue', () => {
+        // TODO: test needs to be added
+      });
+
+      describe('reset', () => {
+        // TODO: test needs to be added
+      });
+
+      describe('validate', () => {
+        // TODO: test needs to be added
+      });
+
+      describe('resetShapeClasses', () => {
+        // TODO: test needs to be added
+      });
+
+      describe('resetLayoutClasses', () => {
+        // TODO: test needs to be added
+      });
+
+      describe('updateComponentArchitecture', () => {
+        // TODO: test needs to be added
+      });
+    });
+
 
     describe('A11Y', () => {
       // ─── §2.3.1  Trigger combobox ARIA attributes (P0) ──────────────────────

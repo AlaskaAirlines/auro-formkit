@@ -414,6 +414,21 @@ describe('auro-checkbox-group', () => {
 
   });
 
+  describe('Public Functions', () => {
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('reset', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('validate', () => {
+      // TODO: test needs to be added
+    });
+  });
+
+
   describe('AllY', () => {
     // Add missing tests
   });

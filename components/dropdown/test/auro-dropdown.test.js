@@ -266,27 +266,6 @@ describe("auro-dropdown", () => {
       expect(result).to.equal(undefined);
     });
 
-    it("should close the dialog when hide() is called", async () => {
-      const el = await fixture(html`
-        <auro-dropdown>
-          <span slot="label"> label text </span>
-          <div slot="trigger">Trigger</div>
-        </auro-dropdown>
-      `);
-
-      el.show();
-      await elementUpdated(el);
-      expectPopoverShown(el);
-
-      el.hide();
-      await elementUpdated(el);
-      expectPopoverHidden(el);
-
-      const bibEl = el.bibElement.value;
-      const dialog = bibEl.shadowRoot.querySelector('dialog');
-      expect(dialog.open).to.be.false;
-    });
-
     it("should close the bib when auro-bib-cancel event is dispatched", async () => {
       const el = await fixture(html`
         <auro-dropdown>
@@ -611,6 +590,64 @@ describe("auro-dropdown", () => {
     });
 
   });
+
+  describe('Public Functions', () => {
+    describe('hide', () => {
+      it("should close the dialog when hide() is called", async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+
+        el.show();
+        await elementUpdated(el);
+        expectPopoverShown(el);
+
+        el.hide();
+        await elementUpdated(el);
+        expectPopoverHidden(el);
+
+        const bibEl = el.bibElement.value;
+        const dialog = bibEl.shadowRoot.querySelector('dialog');
+        expect(dialog.open).to.be.false;
+      });
+    });
+
+    describe('show', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('focus', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('exposeCssParts', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('clearTriggerA11yAttributes', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetShapeClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetLayoutClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('updateComponentArchitecture', () => {
+      // TODO: test needs to be added
+    });
+  });
+
 
   describe('A11Y', () => {
 
