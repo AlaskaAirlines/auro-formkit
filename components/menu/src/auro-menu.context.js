@@ -321,7 +321,10 @@ export class MenuService {
     if (shouldPreventDeselect && isOnlySelectedOption) {
       optionsToDeselect.forEach(option => {
         option.selected = true;
-      })
+      });
+      this.dispatchChangeEvent('auroMenu-deselectPrevented', {
+        values: optionsToDeselect
+      });
       return;
     }
 
