@@ -548,6 +548,91 @@ function runTest(mobileView) {
       });
     });
 
+    describe('Slots', () => {
+      describe('default', () => {
+        it('should render content in the default slot', async () => {
+          const el = await defaultFixture();
+
+          const slot = el.shadowRoot.querySelector('slot:not([name])');
+
+          await expect(slot).to.exist;
+          const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE);
+
+          await expect(assigned.length).to.be.greaterThan(0);
+        });
+      });
+
+      describe('ariaLabel.bib.close', () => {
+        it('should render content in the ariaLabel.bib.close slot', async () => {
+          const el = await fixture(html`<auro-select><span slot="label">Choose</span><span slot="ariaLabel.bib.close">Close menu</span><auro-menu><auro-menuoption value="one">One</auro-menuoption></auro-menu></auro-select>`);
+
+          const slotContent = el.querySelector('[slot="ariaLabel.bib.close"]');
+
+          await expect(slotContent).to.exist;
+        });
+      });
+
+      describe('bib.fullscreen.headline', () => {
+        it('should render content in the bib.fullscreen.headline slot', async () => {
+          const el = await defaultFixture();
+
+          const slotContent = el.querySelector('[slot="bib.fullscreen.headline"]');
+
+          await expect(slotContent).to.exist;
+        });
+      });
+
+      describe('label', () => {
+        it('should render content in the label slot', async () => {
+          const el = await defaultFixture();
+
+          const slotContent = el.querySelector('[slot="label"]');
+
+          await expect(slotContent).to.exist;
+        });
+      });
+
+      describe('optionalLabel', () => {
+        it('should render content in the optionalLabel slot', async () => {
+          const el = await fixture(html`<auro-select><span slot="label">Choose</span><span slot="optionalLabel">(optional)</span><auro-menu><auro-menuoption value="one">One</auro-menuoption></auro-menu></auro-select>`);
+
+          const slotContent = el.querySelector('[slot="optionalLabel"]');
+
+          await expect(slotContent).to.exist;
+        });
+      });
+
+      describe('helpText', () => {
+        it('should render content in the helpText slot', async () => {
+          const el = await fixture(html`<auro-select><span slot="label">Choose</span><span slot="helpText">Select an option</span><auro-menu><auro-menuoption value="one">One</auro-menuoption></auro-menu></auro-select>`);
+
+          const slotContent = el.querySelector('[slot="helpText"]');
+
+          await expect(slotContent).to.exist;
+        });
+      });
+
+      describe('valueText', () => {
+        it('should render content in the valueText slot', async () => {
+          const el = await fixture(html`<auro-select><span slot="label">Choose</span><span slot="valueText">Custom display</span><auro-menu><auro-menuoption value="one">One</auro-menuoption></auro-menu></auro-select>`);
+
+          const slotContent = el.querySelector('[slot="valueText"]');
+
+          await expect(slotContent).to.exist;
+        });
+      });
+
+      describe('displayValue', () => {
+        it('should have a displayValue slot defined in shadow DOM', async () => {
+          const el = await defaultFixture();
+
+          const slot = el.shadowRoot.querySelector('slot[name="displayValue"]');
+
+          await expect(slot).to.exist;
+        });
+      });
+    });
+
     describe('A11Y', () => {
       // ─── §2.3.1  Trigger combobox ARIA attributes (P0) ──────────────────────
       it('should have role combobox with aria-expanded and aria-controls on dropdown trigger', async () => {

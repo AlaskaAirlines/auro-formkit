@@ -368,6 +368,52 @@ describe('auro-checkbox-group', () => {
     });
   });
 
+  describe('Slots', () => {
+    describe('default', () => {
+      it('should render content in the default slot', async () => {
+        const el = await fixture(html`<auro-checkbox-group><span slot="legend">Select options</span><auro-checkbox value="one">One</auro-checkbox></auro-checkbox-group>`);
+
+        const slot = el.shadowRoot.querySelector('slot:not([name])');
+
+        await expect(slot).to.exist;
+        const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE);
+
+        await expect(assigned.length).to.be.greaterThan(0);
+      });
+    });
+
+    describe('legend', () => {
+      it('should render content in the legend slot', async () => {
+        const el = await fixture(html`<auro-checkbox-group><span slot="legend">Select options</span><auro-checkbox value="one">One</auro-checkbox></auro-checkbox-group>`);
+
+        const slotContent = el.querySelector('[slot="legend"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('optionalLabel', () => {
+      it('should render content in the optionalLabel slot', async () => {
+        const el = await fixture(html`<auro-checkbox-group><span slot="legend">Pick</span><span slot="optionalLabel">(optional)</span><auro-checkbox value="one">One</auro-checkbox></auro-checkbox-group>`);
+
+        const slotContent = el.querySelector('[slot="optionalLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('helpText', () => {
+      it('should render content in the helpText slot', async () => {
+        const el = await fixture(html`<auro-checkbox-group><span slot="legend">Pick</span><span slot="helpText">Choose any</span><auro-checkbox value="one">One</auro-checkbox></auro-checkbox-group>`);
+
+        const slotContent = el.querySelector('[slot="helpText"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+  });
+
   describe('AllY', () => {
     // Add missing tests
   });

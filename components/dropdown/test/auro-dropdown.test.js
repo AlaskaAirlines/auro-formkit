@@ -576,6 +576,42 @@ describe("auro-dropdown", () => {
     });
   });
 
+  describe('Slots', () => {
+    describe('default', () => {
+      it('should render content in the default slot', async () => {
+        const el = await fixture(html`<auro-dropdown><span slot="trigger">Click me</span><div>Dropdown bib content</div></auro-dropdown>`);
+
+        const slot = el.shadowRoot.querySelector('slot:not([name])');
+
+        await expect(slot).to.exist;
+        const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE);
+
+        await expect(assigned.length).to.be.greaterThan(0);
+      });
+    });
+
+    describe('helpText', () => {
+      it('should render content in the helpText slot', async () => {
+        const el = await fixture(html`<auro-dropdown><span slot="trigger">Click me</span><span slot="helpText">Help text content</span></auro-dropdown>`);
+
+        const slotContent = el.querySelector('[slot="helpText"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('trigger', () => {
+      it('should render content in the trigger slot', async () => {
+        const el = await fixture(html`<auro-dropdown><span slot="trigger">Click me</span><div>Content</div></auro-dropdown>`);
+
+        const slotContent = el.querySelector('[slot="trigger"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+  });
+
   describe('A11Y', () => {
 
     // ─── §6.4 Popover attribute adds no implicit ARIA role to bib host (P1) ─────

@@ -126,6 +126,62 @@ describe('Properties', () => {
   });
 });
 
+describe('Slots', () => {
+  describe('default', () => {
+    it('should render content in the default slot', async () => {
+      const el = await fixture(html`<auro-counter>Guests</auro-counter>`);
+
+      const slot = el.shadowRoot.querySelector('slot:not([name])');
+
+      await expect(slot).to.exist;
+      const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE);
+
+      await expect(assigned.length).to.be.greaterThan(0);
+    });
+  });
+
+  describe('ariaLabel.minus', () => {
+    it('should render content in the ariaLabel.minus slot', async () => {
+      const el = await fixture(html`<auro-counter>Guests<span slot="ariaLabel.minus">Remove guest</span></auro-counter>`);
+
+      const slotContent = el.querySelector('[slot="ariaLabel.minus"]');
+
+      await expect(slotContent).to.exist;
+    });
+  });
+
+  describe('ariaLabel.plus', () => {
+    it('should render content in the ariaLabel.plus slot', async () => {
+      const el = await fixture(html`<auro-counter>Guests<span slot="ariaLabel.plus">Add guest</span></auro-counter>`);
+
+      const slotContent = el.querySelector('[slot="ariaLabel.plus"]');
+
+      await expect(slotContent).to.exist;
+    });
+  });
+
+  describe('helpText', () => {
+    it('should render content in the helpText slot', async () => {
+      const el = await fixture(html`<auro-counter>Guests<span slot="helpText">Max 10 guests</span></auro-counter>`);
+
+      const slotContent = el.querySelector('[slot="helpText"]');
+
+      await expect(slotContent).to.exist;
+    });
+  });
+
+  describe('description', () => {
+    it('should render content in the description slot', async () => {
+      const el = await fixture(html`<auro-counter>Guests<span slot="description">Number of guests</span></auro-counter>`);
+
+      const slotContent = el.querySelector('[slot="description"]');
+
+      await expect(slotContent).to.exist;
+    });
+  });
+
+});
+
 describe('A11Y', () => {
   it('should set aria-describedby elements on the spin button when a description element is slotted', async () => {
     const el = await fixture(html`
