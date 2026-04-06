@@ -8,7 +8,8 @@
    selector-max-compound-selectors,
    selector-max-type,
    scss/selector-nest-combinators,
-   selector-class-pattern */
+   selector-class-pattern,
+   selector-max-attribute */
 
 // Import Auro tokens
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
