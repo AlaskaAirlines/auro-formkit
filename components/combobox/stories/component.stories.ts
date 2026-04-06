@@ -429,13 +429,16 @@ export const ComboboxFullscreenLiveRegionInBib: Story = {
     // Simulate fullscreen
     el.dropdown.isBibFullscreen = true;
     await el.dropdown.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
 
     // Navigate directly via the menu (dialog bridge doesn't fire in Storybook)
     el.menu.navigateOptions('down');
     await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
 
     // Wait a frame for the rAF inside announceToScreenReader
-    await new Promise((r) => requestAnimationFrame(r));
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await new Promise((r) => setTimeout(r, 50));
 
     const bibEl = el.dropdown.bibElement.value;
     const bibLiveRegion = bibEl.shadowRoot.querySelector('#srAnnouncement');
@@ -473,11 +476,13 @@ export const ComboboxFullscreenActiveDescendantOnInputInBib: Story = {
     // Simulate fullscreen
     el.dropdown.isBibFullscreen = true;
     await el.dropdown.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
     await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
 
     // Navigate to an option
     el.menu.navigateOptions('down');
     await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
     await el.inputInBib.updateComplete;
 
     await expect(el.optionActive).not.toBeNull();
@@ -516,16 +521,19 @@ export const ComboboxFullscreenActiveDescendantClearedOnClose: Story = {
     // Simulate fullscreen
     el.dropdown.isBibFullscreen = true;
     await el.dropdown.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
     await waitUntil(() => el.inputInBib && el.inputInBib.inputElement);
 
     // Navigate to set activedescendant
     el.menu.navigateOptions('down');
     await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 100));
 
     // Close the dropdown
     el.hideBib();
     await el.updateComplete;
     await waitUntil(() => !el.dropdown.isPopoverVisible);
+    await new Promise((r) => setTimeout(r, 100));
     await el.inputInBib.updateComplete;
 
     const nativeInput = el.inputInBib.inputElement;
