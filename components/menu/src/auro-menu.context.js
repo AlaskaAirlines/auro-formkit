@@ -318,7 +318,12 @@ export class MenuService {
     const isOnlySelectedOption = this.selectedOptions.length === 1 && optionsToDeselect.includes(this.selectedOptions[0]);
 
     // Prevent deselecting the only selected option if not allowed
-    if (shouldPreventDeselect && isOnlySelectedOption) return;
+    if (shouldPreventDeselect && isOnlySelectedOption) {
+      optionsToDeselect.forEach(option => {
+        option.selected = true;
+      })
+      return;
+    }
 
     const optionsSet = new Set(optionsToDeselect);
     this.selectedOptions = (this.selectedOptions || [])
