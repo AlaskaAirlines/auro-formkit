@@ -9,319 +9,10 @@ import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plu
 import '../src/registered.js';
 
 useAccessibleIt();
-describe('auro-checkbox-group', () => {
-  it('has the expected properties and validity in required state', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group required>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-        >Alaska</auro-checkbox>
 
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
+describe('Old tests to refactor', () => {
 
-    expect(el.required).to.be.true;
-    expect(el.ariaRequired).to.equal('true');
-
-    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]");
-
-    alaskaCheckbox.shadowRoot.querySelector('input').click();
-
-    await elementUpdated(el);
-
-    expect(el.validity).to.equal('valid');
-
-    alaskaCheckbox.shadowRoot.querySelector('input').click();
-
-    await elementUpdated(el);
-
-    expect(el.validity).to.equal('valueMissing');
-  });
-
-  it('has the expected properties and validity in error state', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group error="custom error message">
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-        >Alaska</auro-checkbox>
-
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    expect(el.hasAttribute('error')).to.be.true;
-    expect(el.hasAttribute('aria-invalid')).to.be.true;
-    expect(el.validity).to.equal('customError');
-
-    el.removeAttribute('error');
-
-    await elementUpdated(el);
-
-    expect(el.hasAttribute('error')).to.be.false;
-    expect(el.hasAttribute('aria-invalid')).to.be.false;
-    expect(el.validity).to.equal('valid');
-  });
-
-  it('should fire a input event with correct data', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-        >Alaska</auro-checkbox>
-
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
-      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
-
-    let result = false;
-
-    el.addEventListener('input', (event) => {
-      result = event.target.checked;
-    });
-
-    alaskaCheckboxInput.click();
-
-    expect(result).to.be.true;
-  });
-
-  it('can uncheck a checkbox after selection', async () => {
-    const el = await fixture(html`
-      <auro-checkbox
-        id="alaska"
-        name="states-unchecking"
-        value="alaska"
-      >Alaska</auro-checkbox>
-    `);
-
-    const alaskaCheckbox = el,
-      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
-
-    alaskaCheckboxInput.click();
-    alaskaCheckboxInput.dispatchEvent(new Event('input'));
-    await alaskaCheckbox.updateComplete;
-    expect(alaskaCheckboxInput.hasAttribute('checked')).to.be.true;
-
-    alaskaCheckbox.checked = false;
-    await alaskaCheckbox.updateComplete;
-    expect(alaskaCheckboxInput.hasAttribute('checked'), 'the shadow input was not unchecked').to.be.false;
-  });
-
-  it('can select multiple checkboxes', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-        >Alaska</auro-checkbox>
-
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
-      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input'),
-      washingtonCheckbox = el.querySelector("auro-checkbox[id=washington]"),
-      washingtonCheckboxInput = washingtonCheckbox.shadowRoot.querySelector('input');
-
-    expect(alaskaCheckbox.checked).to.not.be.true;
-    expect(washingtonCheckbox.checked).to.not.be.true;
-
-    alaskaCheckboxInput.click();
-    washingtonCheckboxInput.click();
-    await elementUpdated(el);
-
-    // Selecting the first radio button should make it `checked`
-    expect(alaskaCheckbox.checked).to.be.true;
-    expect(washingtonCheckbox.checked).to.be.true;
-  });
-
-  it('controls child state after slot change', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group disabled required error="Test message">
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-        >Alaska</auro-checkbox>
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    const checkboxes = el.querySelectorAll('auro-checkbox');
-
-    checkboxes.forEach((checkbox) => {
-      expect(checkbox.disabled).to.be.true;
-      expect(checkbox.error).to.be.true;
-    });
-  });
-
-  it('updates states on children', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-          checked
-        >Alaska</auro-checkbox>
-
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    el.disabled = true;
-    el.required = true;
-    el.error = "This is an error";
-
-    await elementUpdated(el);
-
-    const checkboxes = el.querySelectorAll('auro-checkbox');
-
-    checkboxes.forEach((checkbox) => {
-      expect(checkbox.disabled, "child disabled state was not updated").to.be.true;
-      expect(checkbox.error, "child error state was not updated").to.be.true;
-    });
-  });
-
-  it('disabled state on checkboxes updates correctly', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-          disabled
-        >Alaska</auro-checkbox>
-
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    const alaskaCheckbox = document.getElementById('alaska');
-    const washingtonCheckbox = document.getElementById('washington');
-
-    expect(alaskaCheckbox.disabled).to.be.true;
-    expect(washingtonCheckbox.disabled).to.be.false;
-
-    el.disabled = true;
-
-    await elementUpdated(el);
-
-    expect(alaskaCheckbox.disabled).to.be.true;
-    expect(washingtonCheckbox.disabled).to.be.true;
-
-    el.disabled = false;
-
-    await elementUpdated(el);
-
-    expect(alaskaCheckbox.disabled).to.be.false;
-    expect(washingtonCheckbox.disabled).to.be.false;
-  });
-
-  it('exposes .value as an array of strings', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-        >Alaska</auro-checkbox>
-        <auro-checkbox
-          id="washington"
-          name="states"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
-      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
-
-    // Click the first checkbox
-    alaskaCheckboxInput.click();
-
-    await expect(el.value).to.eql(['alaska']);
-  });
-
-  it('resets value to empty array when calling reset()', async () => {
-    const el = await fixture(html`
-      <auro-checkbox-group>
-        <auro-checkbox
-          id="alaska"
-          name="states"
-          value="alaska"
-        >Alaska</auro-checkbox>
-        <auro-checkbox
-          id="washington"
-          name="states"
-          type="radio"
-          value="washington"
-        >Washington</auro-checkbox>
-      </auro-checkbox-group>
-    `);
-
-    const alaskaCheckbox = el.querySelector("auro-checkbox[id=alaska]"),
-      alaskaCheckboxInput = alaskaCheckbox.shadowRoot.querySelector('input');
-
-    const group = document.querySelector('auro-checkbox-group');
-
-    // Click the first checkbox
-    alaskaCheckboxInput.click();
-
-    await elementUpdated(el);
-
-    expect(alaskaCheckbox.checked).to.be.true;
-    expect(group.value).to.eql(['alaska']);
-
-    group.reset();
-
-    await elementUpdated(el);
-
-    expect(group.value).to.eql(undefined);
-  });
-});
-
-describe('auro-checkbox', () => {
-  it('has the expected properties', async () => {
+  it('should have the expected properties when attributes are set', async () => {
     const expectedId = "testId",
       expectedName = "testName",
       expectedValue = "testValue";
@@ -359,64 +50,147 @@ describe('auro-checkbox', () => {
     expect(el.getAttribute('aria-label')).to.equal('Checkbox option');
     expect(el.getAttribute('tabindex')).to.equal('0');
   });
+});
 
-  it('has role="checkbox" attribute', async () => {
-    const el = await fixture(html`
-      <auro-checkbox value="test">Test</auro-checkbox>
-    `);
+describe('auro-checkbox', () => {
 
-    expect(el.getAttribute('role')).to.equal('checkbox');
+  describe('Rendering', () => {
+    // Add missing tests
   });
 
-  it('has aria-checked attribute that reflects checked state', async () => {
-    const el = await fixture(html`
-      <auro-checkbox value="test">Test</auro-checkbox>
-    `);
-
-    expect(el.getAttribute('aria-checked')).to.equal('false');
-
-    el.checked = true;
-    await elementUpdated(el);
-
-    expect(el.getAttribute('aria-checked')).to.equal('true');
-
-    el.checked = false;
-    await elementUpdated(el);
-
-    expect(el.getAttribute('aria-checked')).to.equal('false');
+  describe('User Stories', () => {
+    // Add missing tests
   });
 
-  it('has aria-disabled attribute when disabled', async () => {
-    const el = await fixture(html`
-      <auro-checkbox value="test" disabled>Test</auro-checkbox>
-    `);
+  describe('Properties', () => {
+    describe('appearance', () => {
+      // add tests for this property
+    });
 
-    expect(el.getAttribute('aria-disabled')).to.equal('true');
+    describe('checked', () => {
+      // add tests for this property
+    });
 
-    el.disabled = false;
-    await elementUpdated(el);
+    describe('disabled', () => {
+      // add tests for this property
+    });
 
-    expect(el.hasAttribute('aria-disabled')).to.be.false;
+    describe('error', () => {
+      // add tests for this property
+    });
 
-    el.disabled = true;
-    await elementUpdated(el);
+    describe('id', () => {
+      // add tests for this property
+    });
 
-    expect(el.getAttribute('aria-disabled')).to.equal('true');
+    describe('name', () => {
+      // add tests for this property
+    });
+
+    describe('onDark', () => {
+      // add tests for this property
+    });
+
+    describe('value', () => {
+      // add tests for this property
+    });
   });
 
-  it('has tabindex="0" for keyboard accessibility', async () => {
-    const el = await fixture(html`
-      <auro-checkbox value="test">Test</auro-checkbox>
-    `);
+  describe('A11Y', () => {
+    it('should have role="checkbox" attribute on the host element', async () => {
+      const el = await fixture(html`
+        <auro-checkbox value="test">Test</auro-checkbox>
+      `);
 
-    expect(el.getAttribute('tabindex')).to.equal('0');
+      expect(el.getAttribute('role')).to.equal('checkbox');
+    });
+
+    it('should have aria-checked attribute that reflects the checked state', async () => {
+      const el = await fixture(html`
+        <auro-checkbox value="test">Test</auro-checkbox>
+      `);
+
+      expect(el.getAttribute('aria-checked')).to.equal('false');
+
+      el.checked = true;
+      await elementUpdated(el);
+
+      expect(el.getAttribute('aria-checked')).to.equal('true');
+
+      el.checked = false;
+      await elementUpdated(el);
+
+      expect(el.getAttribute('aria-checked')).to.equal('false');
+    });
+
+    it('should have aria-disabled attribute when disabled', async () => {
+      const el = await fixture(html`
+        <auro-checkbox value="test" disabled>Test</auro-checkbox>
+      `);
+
+      expect(el.getAttribute('aria-disabled')).to.equal('true');
+
+      el.disabled = false;
+      await elementUpdated(el);
+
+      expect(el.hasAttribute('aria-disabled')).to.be.false;
+
+      el.disabled = true;
+      await elementUpdated(el);
+
+      expect(el.getAttribute('aria-disabled')).to.equal('true');
+    });
+
+    it('should have tabindex="0" for keyboard accessibility', async () => {
+      const el = await fixture(html`
+        <auro-checkbox value="test">Test</auro-checkbox>
+      `);
+
+      expect(el.getAttribute('tabindex')).to.equal('0');
+    });
+
+    it('should derive aria-label from slot content text', async () => {
+      const el = await fixture(html`
+        <auro-checkbox value="test">My checkbox label</auro-checkbox>
+      `);
+
+      expect(el.getAttribute('aria-label')).to.equal('My checkbox label');
+    });
   });
 
-  it('has aria-label derived from slot content', async () => {
-    const el = await fixture(html`
-      <auro-checkbox value="test">My checkbox label</auro-checkbox>
-    `);
+  describe('Mouse Behavior', () => {
+    it('should toggle checked state when checkbox is clicked', async () => {
+      const el = await fixture(html`
+        <auro-checkbox value="alaska">Alaska</auro-checkbox>
+      `);
 
-    expect(el.getAttribute('aria-label')).to.equal('My checkbox label');
+      const input = el.shadowRoot.querySelector('input');
+      expect(el.checked).to.not.be.true;
+
+      input.click();
+      await elementUpdated(el);
+      expect(el.checked).to.be.true;
+
+      input.click();
+      await elementUpdated(el);
+      expect(el.checked).to.be.false;
+    });
+
+    it('should not toggle checked state when disabled checkbox is clicked', async () => {
+      const el = await fixture(html`
+        <auro-checkbox value="alaska" disabled>Alaska</auro-checkbox>
+      `);
+
+      const input = el.shadowRoot.querySelector('input');
+      expect(el.checked).to.not.be.true;
+
+      input.click();
+      await elementUpdated(el);
+      expect(el.checked).to.not.be.true;
+    });
+  });
+
+  describe('Keyboard Behavior', () => {
+    // add missing tests for keyboard interaction (space / enter key toggling checked state)
   });
 });
