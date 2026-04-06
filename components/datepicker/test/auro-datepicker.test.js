@@ -300,7 +300,6 @@ describe('auro-datepicker', () => {
       await oneEvent(el, 'auroDatePicker-toggled');
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
-
   });
 
   describe('Properties', () => {
@@ -1410,6 +1409,9 @@ describe('auro-datepicker', () => {
     });
   });
 
+  describe('Private Functions', () => {
+    // No private function tests
+  });
 
   describe('A11Y', () => {
     it('should be accessible', async () => {

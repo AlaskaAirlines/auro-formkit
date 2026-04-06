@@ -110,29 +110,6 @@ describe('auro-menu', () => {
   describe('User Stories', () => {
     // Add missing tests
 
-    describe('nested menu(s)', () => {
-      it('should select a nested option when makeSelection is called', async () => {
-        const el = await nestedMenuFixture();
-        const rootMenu = el.querySelector('auro-menu');
-        const nestedMenu = el.querySelector('auro-menu auro-menu');
-        const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
-
-        // Navigate to first nested option (option a)
-        rootMenu.navigateOptions('down');
-        await elementUpdated(rootMenu);
-        rootMenu.navigateOptions('down');
-        await elementUpdated(rootMenu);
-
-        // Select it
-        rootMenu.makeSelection();
-        await elementUpdated(rootMenu);
-
-        expect(rootMenu.optionSelected).to.equal(nestedOptions[0]);
-        expect(nestedOptions[0].hasAttribute('selected')).to.be.true;
-        expect(rootMenu.value).to.equal('option a');
-      });
-    });
-
     describe('multiSelect', () => {
       it('should allow multiple options to be selected in multiSelect mode', async () => {
         const el = await multiSelectFixture();
@@ -975,6 +952,30 @@ describe('auro-menu', () => {
     });
   });
 
+  describe('Private Functions', () => {
+    describe('makeSelection', () => {
+      it('should select a nested option when makeSelection is called', async () => {
+        const el = await nestedMenuFixture();
+        const rootMenu = el.querySelector('auro-menu');
+        const nestedMenu = el.querySelector('auro-menu auro-menu');
+        const nestedOptions = [...nestedMenu.querySelectorAll('auro-menuoption')];
+
+        // Navigate to first nested option (option a)
+        rootMenu.navigateOptions('down');
+        await elementUpdated(rootMenu);
+        rootMenu.navigateOptions('down');
+        await elementUpdated(rootMenu);
+
+        // Select it
+        rootMenu.makeSelection();
+        await elementUpdated(rootMenu);
+
+        expect(rootMenu.optionSelected).to.equal(nestedOptions[0]);
+        expect(nestedOptions[0].hasAttribute('selected')).to.be.true;
+        expect(rootMenu.value).to.equal('option a');
+      });
+    });
+  });
 
   describe('A11Y', () => {
     it('should be accessible', async () => {
