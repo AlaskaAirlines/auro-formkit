@@ -1055,6 +1055,78 @@ describe('auro-input', () => {
 
   });
 
+  describe('Slots', () => {
+    describe('ariaLabel.clear', () => {
+      it('should render content in the ariaLabel.clear slot', async () => {
+        const el = await fixture(html`<auro-input><span slot="label">Name</span><span slot="ariaLabel.clear">Clear field</span></auro-input>`);
+
+        const slotContent = el.querySelector('[slot="ariaLabel.clear"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('ariaLabel.password.show', () => {
+      it('should render content in the ariaLabel.password.show slot', async () => {
+        const el = await fixture(html`<auro-input type="password"><span slot="label">Password</span><span slot="ariaLabel.password.show">Show password</span></auro-input>`);
+
+        const slotContent = el.querySelector('[slot="ariaLabel.password.show"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('ariaLabel.password.hide', () => {
+      it('should render content in the ariaLabel.password.hide slot', async () => {
+        const el = await fixture(html`<auro-input type="password"><span slot="label">Password</span><span slot="ariaLabel.password.hide">Hide password</span></auro-input>`);
+
+        const slotContent = el.querySelector('[slot="ariaLabel.password.hide"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('helpText', () => {
+      it('should render content in the helpText slot', async () => {
+        const el = await fixture(html`<auro-input><span slot="label">Name</span><span slot="helpText">Enter your full name</span></auro-input>`);
+
+        const slotContent = el.querySelector('[slot="helpText"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('label', () => {
+      it('should render content in the label slot', async () => {
+        const el = await fixture(html`<auro-input><span slot="label">Name</span></auro-input>`);
+
+        const slotContent = el.querySelector('[slot="label"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('optionalLabel', () => {
+      it('should render content in the optionalLabel slot', async () => {
+        const el = await fixture(html`<auro-input><span slot="label">Name</span><span slot="optionalLabel">(optional)</span></auro-input>`);
+
+        const slotContent = el.querySelector('[slot="optionalLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('displayValue', () => {
+      it('should render content in the displayValue slot', async () => {
+        const el = await fixture(html`<auro-input><span slot="label">Name</span><span slot="displayValue">Custom value</span></auro-input>`);
+
+        const slotContent = el.querySelector('[slot="displayValue"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+  });
+
   describe('Keyboard Behavior', () => {
     // add tests for all keyboard interactions such as tabbing into the input, typing, pressing enter, escape, arrow keys, etc.
   });

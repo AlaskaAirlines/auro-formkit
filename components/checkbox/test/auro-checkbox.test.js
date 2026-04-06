@@ -96,6 +96,22 @@ describe('auro-checkbox', () => {
     });
   });
 
+  describe('Slots', () => {
+    describe('default', () => {
+      it('should render content in the default slot', async () => {
+        const el = await fixture(html`<auro-checkbox value="alaska">Alaska</auro-checkbox>`);
+
+        const slot = el.shadowRoot.querySelector('slot:not([name])');
+
+        await expect(slot).to.exist;
+        const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE);
+
+        await expect(assigned.length).to.be.greaterThan(0);
+      });
+    });
+
+  });
+
   describe('A11Y', () => {
     it('should have role="checkbox" attribute on the host element', async () => {
       const el = await fixture(html`

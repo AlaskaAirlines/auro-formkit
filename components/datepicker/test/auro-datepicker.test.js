@@ -1255,6 +1255,117 @@ describe('auro-datepicker', () => {
 
   });
 
+  describe('Slots', () => {
+    describe('helpText', () => {
+      it('should render content in the helpText slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span><span slot="helpText">Select a date</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="helpText"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('ariaLabel.bib.close', () => {
+      it('should render content in the ariaLabel.bib.close slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span><span slot="ariaLabel.bib.close">Close calendar</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="ariaLabel.bib.close"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('ariaLabel.input.clear', () => {
+      it('should render content in the ariaLabel.input.clear slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span><span slot="ariaLabel.input.clear">Clear date</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="ariaLabel.input.clear"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('bib.fullscreen.headline', () => {
+      it('should render content in the bib.fullscreen.headline slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span><span slot="bib.fullscreen.headline">Select dates</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="bib.fullscreen.headline"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('bib.fullscreen.dateLabel', () => {
+      it('should render content in the bib.fullscreen.dateLabel slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span><span slot="bib.fullscreen.dateLabel">Date</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="bib.fullscreen.dateLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('bib.fullscreen.fromLabel', () => {
+      it('should render content in the bib.fullscreen.fromLabel slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span><span slot="bib.fullscreen.fromLabel">From</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="bib.fullscreen.fromLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('bib.fullscreen.toLabel', () => {
+      it('should render content in the bib.fullscreen.toLabel slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span><span slot="bib.fullscreen.toLabel">To</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="bib.fullscreen.toLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('label', () => {
+      it('should render content in the label slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="label">Travel date</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="label"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('toLabel', () => {
+      it('should render content in the toLabel slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="toLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('fromLabel', () => {
+      it('should render content in the fromLabel slot', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="fromLabel">Departure</span><span slot="toLabel">Return</span></auro-datepicker>`);
+
+        const slotContent = el.querySelector('[slot="fromLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('date_MM_DD_YYYY', () => {
+      // Slot name is dynamic (e.g., date_01_15_2025). See calendar cell tests.
+    });
+
+    describe('popover_MM_DD_YYYY', () => {
+      // Slot name is dynamic (e.g., popover_01_15_2025). See calendar cell tests.
+    });
+
+  });
+
   describe('A11Y', () => {
     it('should be accessible', async () => {
       await setViewport({

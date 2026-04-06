@@ -604,6 +604,23 @@ describe('Properties', () => {
   });
 });
 
+describe('Slots', () => {
+  describe('default', () => {
+    it('should render content in the default slot', async () => {
+      const el = await fixture(html`<auro-form><auro-input><span slot="label">Name</span></auro-input></auro-form>`);
+
+      const slot = el.shadowRoot.querySelector('slot:not([name])');
+
+      await expect(slot).to.exist;
+      const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE);
+
+      await expect(assigned.length).to.be.greaterThan(0);
+    });
+  });
+
+});
+
+
 describe('A11Y', () => {
   it('should be accessible', async () => {
     const el = await fixture(html`
