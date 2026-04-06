@@ -588,67 +588,6 @@ describe('auro-menu', () => {
       });
 
       // Verify reset() returns to undefined
-      it('should return value to undefined only after reset() is called', async () => {
-        const el = await defaultFixture();
-        const menu = el.querySelector('auro-menu');
-
-        // Initial state
-        expect(menu.value).to.equal(undefined);
-        expect(menu.optionSelected).to.equal(undefined);
-
-        // Select an option
-        menu.navigateOptions('down');
-        await elementUpdated(menu);
-
-        menu.makeSelection();
-        await elementUpdated(menu);
-
-        // Verify selection
-        expect(menu.value).to.eql('option 1');
-
-        // Reset
-        menu.reset();
-        await elementUpdated(menu);
-
-        // After reset, should be undefined
-        expect(menu.value).to.equal(undefined);
-        expect(menu.optionSelected).to.equal(undefined);
-      });
-
-      it('should maintain the current selection in single-select mode until reset() is called', async () => {
-        const el = await defaultFixture();
-        const menu = el.querySelector('auro-menu');
-
-        // Initial state
-        expect(menu.value).to.equal(undefined);
-        expect(menu.optionSelected).to.equal(undefined);
-
-        // Select and verify
-        menu.navigateOptions('down');
-        await elementUpdated(menu);
-
-        menu.makeSelection();
-        await elementUpdated(menu);
-
-        // Verify array after selection
-        expect(menu.value).to.eql('option 1');
-
-        // Try to deselect - should have no effect
-        menu.makeSelection();
-        await elementUpdated(menu);
-
-        // Selection should persist
-        expect(menu.value).to.eql('option 1');
-
-        // Reset
-        menu.reset();
-        await elementUpdated(menu);
-
-        // After reset, should be undefined
-        expect(menu.value).to.equal(undefined);
-        expect(menu.optionSelected).to.equal(undefined);
-      });
-
       it('should handle undefined vs array state correctly in multi-select mode', async () => {
         const el = await multiSelectFixture();
         const menu = el.querySelector('auro-menu');
@@ -950,6 +889,92 @@ describe('auro-menu', () => {
       });
     });
   });
+
+  describe('Public Functions', () => {
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('updateActiveOption', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('reset', () => {
+      it('should return value to undefined only after reset() is called', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+
+        // Initial state
+        expect(menu.value).to.equal(undefined);
+        expect(menu.optionSelected).to.equal(undefined);
+
+        // Select an option
+        menu.navigateOptions('down');
+        await elementUpdated(menu);
+
+        menu.makeSelection();
+        await elementUpdated(menu);
+
+        // Verify selection
+        expect(menu.value).to.eql('option 1');
+
+        // Reset
+        menu.reset();
+        await elementUpdated(menu);
+
+        // After reset, should be undefined
+        expect(menu.value).to.equal(undefined);
+        expect(menu.optionSelected).to.equal(undefined);
+      });
+
+      it('should maintain the current selection in single-select mode until reset() is called', async () => {
+        const el = await defaultFixture();
+        const menu = el.querySelector('auro-menu');
+
+        // Initial state
+        expect(menu.value).to.equal(undefined);
+        expect(menu.optionSelected).to.equal(undefined);
+
+        // Select and verify
+        menu.navigateOptions('down');
+        await elementUpdated(menu);
+
+        menu.makeSelection();
+        await elementUpdated(menu);
+
+        // Verify array after selection
+        expect(menu.value).to.eql('option 1');
+
+        // Try to deselect - should have no effect
+        menu.makeSelection();
+        await elementUpdated(menu);
+
+        // Selection should persist
+        expect(menu.value).to.eql('option 1');
+
+        // Reset
+        menu.reset();
+        await elementUpdated(menu);
+
+        // After reset, should be undefined
+        expect(menu.value).to.equal(undefined);
+        expect(menu.optionSelected).to.equal(undefined);
+      });
+    });
+
+    describe('resetShapeClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('resetLayoutClasses', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('updateComponentArchitecture', () => {
+      // TODO: test needs to be added
+    });
+  });
+
 
   describe('A11Y', () => {
     it('should be accessible', async () => {
