@@ -175,6 +175,38 @@ describe('auro-radio-group', () => {
     });
   });
 
+  describe('Slots', () => {
+    describe('legend', () => {
+      it('should render content in the legend slot', async () => {
+        const el = await fixture(html`<auro-radio-group><span slot="legend">Select one</span><auro-radio value="one">One</auro-radio></auro-radio-group>`);
+
+        const slotContent = el.querySelector('[slot="legend"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('optionalLabel', () => {
+      it('should render content in the optionalLabel slot', async () => {
+        const el = await fixture(html`<auro-radio-group><span slot="optionalLabel">(optional)</span><span slot="legend">Pick</span><auro-radio value="one">One</auro-radio></auro-radio-group>`);
+
+        const slotContent = el.querySelector('[slot="optionalLabel"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+
+    describe('helpText', () => {
+      it('should render content in the helpText slot', async () => {
+        const el = await fixture(html`<auro-radio-group><span slot="helpText">Choose wisely</span><span slot="legend">Pick</span><auro-radio value="one">One</auro-radio></auro-radio-group>`);
+
+        const slotContent = el.querySelector('[slot="helpText"]');
+
+        await expect(slotContent).to.exist;
+      });
+    });
+  });
+
   describe('A11Y', () => {
     // Add missing tests
   });
