@@ -568,14 +568,16 @@ export class AuroSelect extends AuroElement {
 
         // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
         // No selection → first enabled option gets highlighted
-        if (this.optionSelected && !Array.isArray(this.optionSelected)) {
-          this.menu.updateActiveOption(this.optionSelected);
-        } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
-          this.menu.updateActiveOption(this.optionSelected[0]);
-        } else if (!this.menu.optionActive) {
-          // If no activeOption has yet to be set, then make the first enabled option active by default
-          const firstActive = this.menu.menuService.menuOptions.find((option) => !option.disabled);
-          this.menu.updateActiveOption(firstActive);
+        if (!this.menu.optionActive) {
+          if (this.optionSelected && !Array.isArray(this.optionSelected)) {
+            this.menu.updateActiveOption(this.optionSelected);
+          } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
+            this.menu.updateActiveOption(this.optionSelected[0]);
+          } else {
+            // If no activeOption has yet to be set, then make the first enabled option active by default
+            const firstActive = this.menu.menuService.menuOptions.find((option) => !option.disabled);
+            this.menu.updateActiveOption(firstActive);
+          }
         }
 
         // Scroll the selected option into view when dropdown opens
