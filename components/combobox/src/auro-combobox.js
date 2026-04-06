@@ -49,7 +49,7 @@ function normalizeFilterValue(value) {
  * The `auro-combobox` element provides users with a way to select an option from a list of filtered or suggested options based on user input.
  * @customElement auro-combobox
  *
- * @slot - Default slot for the menu content.
+ * @slot default - Default slot for the menu content.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib

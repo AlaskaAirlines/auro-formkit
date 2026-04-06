@@ -47,7 +47,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 
 | Name          | Description                                 |
 |---------------|---------------------------------------------|
-|               | Slot for insertion of menu options.         |
+| `default`     | Slot for insertion of menu options.         |
 | `loadingIcon` | Icon to show while loading attribute is set |
 | `loadingText` | Text to show while loading attribute is set |
 

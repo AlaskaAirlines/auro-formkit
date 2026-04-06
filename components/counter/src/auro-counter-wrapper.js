@@ -15,7 +15,7 @@ import AuroLibraryRuntimeUtils from "@aurodesignsystem/auro-library/scripts/util
 /**
  * Wrapper element for auro-counter elements in an application to provide layout structure for multiple counters.
  *
- * @slot Default - Slot for counter elements.
+ * @slot default - Slot for counter elements.
  */
 export class AuroCounterWrapper extends LitElement {
 

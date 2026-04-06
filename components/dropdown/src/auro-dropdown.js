@@ -43,7 +43,7 @@ import { AuroElement } from '../../layoutElement/src/auroElement.js';
  * The `auro-dropdown` element provides a way to place content in a bib that can be toggled.
  * @customElement auro-dropdown
  *
- * @slot - Default slot for the dropdown bib content.
+ * @slot default - Default slot for the dropdown bib content.
  * @slot helpText - Defines the content of the helpText.
  * @slot trigger - Defines the content of the trigger.
  * @csspart trigger - The trigger content container.

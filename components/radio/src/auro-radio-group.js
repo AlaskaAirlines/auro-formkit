@@ -32,6 +32,7 @@ import formkitVersion from '@aurodesignsystem/version';
  * @customElement auro-radio-group
  *
  * @csspart radio-group - Apply css to the fieldset element in the shadow DOM
+ * @slot default - Slot for auro-radio elements.
  * @slot {HTMLSlotElement} legend - Allows for the legend to be overridden.
  * @slot {HTMLSlotElement} optionalLabel - Allows overriding the optional display text "(optional)", which appears next to the label.
  * @slot {HTMLSlotElement} helpText - Allows for the helper text to be overridden.

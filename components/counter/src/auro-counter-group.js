@@ -41,6 +41,7 @@ import iconVersion from "./iconVersion.js";
  * @slot label - Dropdown label content. Only used when `isDropdown` is true.
  * @slot valueText - Dropdown value text display. Only used when `isDropdown` is true.
  * @slot helpText - Dropdown help text content. Only used when `isDropdown` is true.
+ * @slot typeIcon - Defines the icon to display in the dropdown trigger. Only used when `isDropdown` is true.
  */
 export class AuroCounterGroup extends AuroElement {
   constructor() {

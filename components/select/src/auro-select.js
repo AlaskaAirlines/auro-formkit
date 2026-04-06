@@ -38,7 +38,7 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create a dropdown menu control.
  * @customElement auro-select
  *
- * @slot - Default slot for the menu content.
+ * @slot default - Default slot for the menu content.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot bib.fullscreen.headline - Defines the headline to display above menu-options
  * @slot label - Defines the content of the label.
@@ -46,6 +46,7 @@ import { ifDefined } from "lit-html/directives/if-defined.js";
  * @slot helpText - Defines the content of the helpText.
  * @slot valueText - Dropdown value text display.
  * @slot displayValue - Allows custom HTML content to display the selected value when select is not focused.
+ * @slot typeIcon - Defines the icon to display in the trigger.
  * @event auroSelect-valueSet - Notifies that the component has a new value set.
  * @event input - Notifies every time the value prop of the element is changed. The updated `value` and `optionSelected` will be delivered in `detail` object.
  * @event auroFormElement-validated - Notifies that the `validity` and `errorMessage` values have changed.

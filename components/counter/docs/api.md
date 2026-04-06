@@ -49,6 +49,7 @@ The `auro-counter-group` element provides a flexible interface for grouping mult
 | `default`                 | Slot for counter elements.                       |
 | `helpText`                | Dropdown help text content. Only used when `isDropdown` is true. |
 | `label`                   | Dropdown label content. Only used when `isDropdown` is true. |
+| `typeIcon`                | Defines the icon to display in the dropdown trigger. Only used when `isDropdown` is true. |
 | `valueText`               | Dropdown value text display. Only used when `isDropdown` is true. |
 
 

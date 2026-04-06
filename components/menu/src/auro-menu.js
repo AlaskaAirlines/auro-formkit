@@ -33,7 +33,7 @@ import { ContextProvider } from "@lit/context";
  * @event {CustomEvent<any>} auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @slot loadingText - Text to show while loading attribute is set
  * @slot loadingIcon - Icon to show while loading attribute is set
- * @slot - Slot for insertion of menu options.
+ * @slot default - Slot for insertion of menu options.
  */
 
 /* eslint-disable max-lines */

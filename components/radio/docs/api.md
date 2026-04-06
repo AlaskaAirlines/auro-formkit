@@ -38,6 +38,7 @@ The `auro-radio-group` element is used to group a set `auro-radio` elements.
 
 | Name            | Description                                      |
 |-----------------|--------------------------------------------------|
+| `default`       | Slot for auro-radio elements.                    |
 | `helpText`      | Allows for the helper text to be overridden.     |
 | `legend`        | Allows for the legend to be overridden.          |
 | `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
