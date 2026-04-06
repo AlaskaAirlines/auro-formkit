@@ -20,12 +20,12 @@ function useSharedTestBehavior(name, markup) {
       await expect(form).to.be.accessible();
     });
 
-    it('should get included as an auro form element', async () => {
+    it('should be included as an auro form element in the form state', async () => {
       const form = await getElement();
       await expect(form._elements).to.have.length(1);
     });
 
-    it('value should be available on form.value via name attribute', async () => {
+    it('should expose value on form.value via the name attribute', async () => {
       const form = await getElement();
       const formMemberName = form._elements[0].getAttribute('name');
 
@@ -60,7 +60,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-checkbox-group', componentTemplate);
 
-    it('should surface checkbox group values as an array', async () => {
+    it('should surface checkbox group values as an array in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [checkboxGroup] = form._elements;
 
@@ -130,7 +130,7 @@ describe('auro-form', () => {
     useSharedTestBehavior('auro-radio-group', componentTemplate);
 
     // DOES NOT WORK. radio group needs to emit an input event!
-    it('should surface radio group value as a string', async () => {
+    it('should surface radio group value as a string in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [radioGroup] = form._elements;
       const [radioOne] = [...form.querySelectorAll('auro-radio')];
@@ -175,7 +175,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-combobox', componentTemplate);
 
-    it('should store combobox value as a string array', async () => {
+    it('should store combobox value as a string array in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [combobox] = form._elements;
 
@@ -203,7 +203,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-counter-group', componentTemplate);
 
-    it('should store counter group value as an object', async () => {
+    it('should store counter group value as an object in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [counterGroup] = form._elements;
       const someNumber = 5;
@@ -234,7 +234,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-select', componentTemplate);
 
-    it('should store select value as a string', async () => {
+    it('should store single-select value as a string in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [select] = form._elements;
 
@@ -254,7 +254,7 @@ describe('auro-form', () => {
       await expect(form.value.selectExample).to.deep.equal('stops');
     });
 
-    it('should store select value as a string', async () => {
+    it('should store multi-select value as a string in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [select] = form._elements;
       select.multiSelect = true;
