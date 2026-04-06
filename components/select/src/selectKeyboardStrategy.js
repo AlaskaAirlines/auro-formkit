@@ -2,19 +2,6 @@
 import { navigateArrow } from '@aurodesignsystem/utils';
 
 export const selectKeyboardStrategy = {
-  ArrowUp(component, evt, ctx) {
-    evt.preventDefault();
-    if (evt.altKey || evt.metaKey) {
-      // navigate to first enabled option
-      selectKeyboardStrategy.Home(component, evt, ctx);
-      return;
-    }
-    navigateArrow(component, 'up', {
-      ctx,
-      showFn: () => component.dropdown.show(),
-    });
-  },
-
   ArrowDown(component, evt, ctx) {
     evt.preventDefault();
     if (evt.altKey || evt.metaKey) {
@@ -28,6 +15,38 @@ export const selectKeyboardStrategy = {
     });
   },
 
+  ArrowUp(component, evt, ctx) {
+    evt.preventDefault();
+    if (evt.altKey || evt.metaKey) {
+      // navigate to first enabled option
+      selectKeyboardStrategy.Home(component, evt, ctx);
+      return;
+    }
+    navigateArrow(component, 'up', {
+      ctx,
+      showFn: () => component.dropdown.show(),
+    });
+  },
+
+  Escape(component, evt, ctx) {
+    if (!ctx.isExpanded) {
+      return;
+    }
+    component.dropdown.hide();
+  },
+
+  End(component, evt, ctx) {
+    if (!ctx.isExpanded) {
+      return;
+    }
+    evt.preventDefault();
+    evt.stopPropagation();
+    const lastOption = [...component.menu.menuService.menuOptions].reverse().find((option) => !option.disabled);
+    if (lastOption) {
+      component.menu.updateActiveOption(lastOption);
+    }
+  },
+
   Enter(component, evt, ctx) {
     evt.preventDefault();
     evt.stopPropagation();
@@ -38,11 +57,16 @@ export const selectKeyboardStrategy = {
     component.menu.makeSelection();
   },
 
-  Escape(component, evt, ctx) {
+  Home(component, evt, ctx) {
     if (!ctx.isExpanded) {
       return;
     }
-    component.dropdown.hide();
+    evt.preventDefault();
+    evt.stopPropagation();
+    const firstOption = component.menu.menuService.menuOptions.find((option) => !option.disabled);
+    if (firstOption) {
+      component.menu.updateActiveOption(firstOption);
+    }
   },
 
   Tab(component, evt, ctx) {
@@ -56,29 +80,6 @@ export const selectKeyboardStrategy = {
       component.menu.makeSelection();
     }
     component.dropdown.hide();
-  },
-  Home(component, evt, ctx) {
-    if (!ctx.isExpanded) {
-      return;
-    }
-    evt.preventDefault();
-    evt.stopPropagation();
-    const firstOption = component.menu.menuService.menuOptions.find((option) => !option.disabled);
-    if (firstOption) {
-      component.menu.updateActiveOption(firstOption);
-    }
-  },
-
-  End(component, evt, ctx) {
-    if (!ctx.isExpanded) {
-      return;
-    }
-    evt.preventDefault();
-    evt.stopPropagation();
-    const lastOption = [...component.menu.menuService.menuOptions].reverse().find((option) => !option.disabled);
-    if (lastOption) {
-      component.menu.updateActiveOption(lastOption);
-    }
   },
 
   default(component, evt, ctx) {
