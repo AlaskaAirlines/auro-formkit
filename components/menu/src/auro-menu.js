@@ -29,6 +29,7 @@ import { ContextProvider } from "@lit/context";
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Notifies when the loading attribute is changed.
  * @event {CustomEvent<any>} auroMenu-selectValueFailure - Notifies that an attempt to select a menuoption by matching a value has failed.
+ * @event {CustomEvent<{ values: HTMLElement[] }>} auroMenu-deselectPrevented - Notifies that deselection was prevented and includes the affected options in `detail.values`.
  * @event {CustomEvent<any>} auroMenu-selectValueReset - Notifies that the component value has been reset.
  * @event {CustomEvent<any>} auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @slot loadingText - Text to show while loading attribute is set

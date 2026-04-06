@@ -800,6 +800,10 @@ export class AuroSelect extends AuroElement {
     this.updateOptionPositions();
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
+    this.menu.addEventListener("auroMenu-deselectPrevented", () => {
+      this.hideBib();
+    });
+
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
 

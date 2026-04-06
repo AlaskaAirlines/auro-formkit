@@ -1280,6 +1280,43 @@ function runTest(mobileView) {
           await expect(dropdown.isPopoverVisible).to.be.false;
         });
 
+        it('should not deselect and should close the bib when Enter is pressed on an already-selected menuoption', async () => {
+          const el = await presetValueFixture();
+
+          await elementUpdated(el);
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const trigger = dropdown.querySelector('[slot="trigger"]');
+
+          trigger.click();
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          const menu = el.querySelector('auro-menu');
+          const selectedOption = menu.querySelector('auro-menuoption[value="price"]');
+          await expect(selectedOption.selected).to.be.true;
+
+          const valueBefore = el.value;
+          let deselectPreventedEvent = null;
+
+          menu.addEventListener('auroMenu-deselectPrevented', (event) => {
+            deselectPreventedEvent = event;
+          }, { once: true });
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          await elementUpdated(menu);
+          await elementUpdated(el);
+          await waitUntil(() => !!deselectPreventedEvent);
+
+          await expect(deselectPreventedEvent).to.exist;
+          await expect(deselectPreventedEvent.detail.values[0]).to.equal(selectedOption);
+          await expect(selectedOption.selected).to.be.true;
+          await expect(el.value).to.equal(valueBefore);
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
         it('should keep the dropdown open in multiselect mode', async () => {
           const el = await multiSelectFixture();
           const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
