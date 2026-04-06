@@ -162,6 +162,10 @@ describe('auro-radio', () => {
     });
   });
 
+  describe('Private Functions', () => {
+    // No private function tests
+  });
+
   describe('A11Y', () => {
     it('should be accessible', async () => {
       const el = await fixture(html`

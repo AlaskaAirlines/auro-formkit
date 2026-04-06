@@ -221,6 +221,9 @@ describe('auro-radio-group', () => {
     });
   });
 
+  describe('Private Functions', () => {
+    // No private function tests
+  });
 
   describe('A11Y', () => {
     // Add missing tests

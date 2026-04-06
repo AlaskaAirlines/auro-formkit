@@ -671,6 +671,9 @@ function runTest(mobileView) {
       });
     });
 
+    describe('Private Functions', () => {
+      // No private function tests
+    });
 
     describe('A11Y', () => {
       // ─── §2.3.1  Trigger combobox ARIA attributes (P0) ──────────────────────

@@ -122,6 +122,9 @@ describe('auro-checkbox', () => {
     });
   });
 
+  describe('Private Functions', () => {
+    // No private function tests
+  });
 
   describe('A11Y', () => {
     it('should have role="checkbox" attribute on the host element', async () => {

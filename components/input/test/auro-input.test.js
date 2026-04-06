@@ -1160,6 +1160,9 @@ describe('auro-input', () => {
     });
   });
 
+  describe('Private Functions', () => {
+    // No private function tests
+  });
 
   describe('Keyboard Behavior', () => {
     // add tests for all keyboard interactions such as tabbing into the input, typing, pressing enter, escape, arrow keys, etc.

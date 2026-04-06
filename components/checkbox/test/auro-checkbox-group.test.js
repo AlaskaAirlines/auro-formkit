@@ -1,9 +1,7 @@
-/* eslint-disable max-statements */
-/* eslint-disable no-console */
-/* eslint-disable one-var */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-lines */
+/* no-warning-comments */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import '../src/registered.js';
 
@@ -427,6 +425,11 @@ describe('auro-checkbox-group', () => {
       // TODO: test needs to be added
     });
   });
+
+  describe('Private Functions', () => {
+    // No private function tests
+  });
+
 
 
   describe('AllY', () => {
