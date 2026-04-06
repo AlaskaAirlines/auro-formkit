@@ -1301,7 +1301,7 @@ function runFullTest(mobileView) {
             await expect(el.dropdown.isPopoverVisible).to.be.true;
           });
 
-          it('should close the bib when an already-selected menuoption is clicked', async () => {
+          it('should not deselect and should close the bib when an already-selected menuoption is clicked', async () => {
             const el = await presetValueFixture(mobileView);
 
             el.focus();

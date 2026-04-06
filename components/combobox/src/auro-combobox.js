@@ -1012,6 +1012,10 @@ export class AuroCombobox extends AuroElement {
       this.menu.setAttribute('nocheckmark', '');
     }
 
+    this.menu.addEventListener("auroMenu-deselectPrevented", () => {
+      this.hideBib();
+    });
+
     // Handle menu option selection like select does
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
       // Update the optionSelected from the event details, not manually
