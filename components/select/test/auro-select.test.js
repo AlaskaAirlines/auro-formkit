@@ -835,6 +835,31 @@ function runTest(mobileView) {
               await expect(dropdown.isPopoverVisible).to.be.false;
             });
 
+            if (!mobileView) {
+              it('should move focus to the trigger after selecting an option via click', async () => {
+                const el = await defaultFixture();
+                const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+                const trigger = dropdown.querySelector('[slot="trigger"]');
+
+                trigger.click();
+                await elementUpdated(el);
+                await expect(dropdown.isPopoverVisible).to.be.true;
+
+                await new Promise((resolve) => setTimeout(resolve, 0));
+
+                const menu = el.querySelector('auro-menu');
+                const option = menu.querySelector('auro-menuoption[value="Oranges"]');
+                option.click();
+                await elementUpdated(option);
+                await elementUpdated(menu);
+                await new Promise((resolve) => setTimeout(resolve, 0));
+                await elementUpdated(el);
+
+                await expect(dropdown.isPopoverVisible).to.be.false;
+                await expect(dropdown.trigger.matches(':focus')).to.be.true;
+              });
+            }
+
             it('should not deselect and should close the bib when an already-selected menuoption is clicked', async () => {
               const el = await presetValueFixture();
 
@@ -1279,6 +1304,26 @@ function runTest(mobileView) {
           await expect(el.value).to.equal('Oranges');
           await expect(dropdown.isPopoverVisible).to.be.false;
         });
+
+        if (!mobileView) {
+          it('should move focus to the trigger after selecting an option', async () => {
+            const el = await defaultFixture();
+            const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+            const trigger = dropdown.querySelector('[slot="trigger"]');
+
+            trigger.click();
+            await elementUpdated(el);
+            await expect(dropdown.isPopoverVisible).to.be.true;
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            await elementUpdated(el);
+
+            await expect(dropdown.isPopoverVisible).to.be.false;
+            await expect(dropdown.trigger.matches(':focus')).to.be.true;
+          });
+        }
 
         it('should not deselect and should close the bib when Enter is pressed on an already-selected menuoption', async () => {
           const el = await presetValueFixture();
