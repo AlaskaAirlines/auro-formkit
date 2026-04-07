@@ -40,6 +40,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 |-------------------------------|--------------------------------------------------|--------------------------------------------------|
 | `auroMenu-activatedOption`    | `CustomEvent<Element>`                           | Notifies that a menuoption has been made `active`. |
 | `auroMenu-customEventFired`   | `CustomEvent<any>`                               | Notifies that a custom event has been fired.     |
+| `auroMenu-deselectPrevented`  | `CustomEvent<{ values: HTMLElement[] }>`         | Notifies that deselection was prevented and includes the affected options in `detail.values`. |
 | `auroMenu-loadingChange`      | `CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>` | Notifies when the loading attribute is changed.  |
 | `auroMenu-optionsChange`      | `CustomEvent<{ options: any; }>`                 |                                                  |
 | `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that an attempt to select a menuoption by matching a value has failed. |
