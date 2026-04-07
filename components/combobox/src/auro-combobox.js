@@ -653,7 +653,10 @@ export class AuroCombobox extends AuroElement {
    */
   updateTriggerTextDisplay(label) {
     // update the input content if persistInput is false
-    if (!this.persistInput) {
+    // in suggestion mode, do not override input value if no selection has been made and the input currently has focus
+    const isInputFocusedWithNoSelection = !this.menu.value && (this.input.matches(':focus-within') || (this.inputInBib && this.inputInBib.matches(':focus-within')));
+
+    if (!this.persistInput && !(this.behavior === 'suggestion' && isInputFocusedWithNoSelection)) {
       this.input.value = label || this.value;
     }
 
@@ -1039,7 +1042,10 @@ export class AuroCombobox extends AuroElement {
       // Hide dropdown on selection (except during slot changes)
       if (event.detail && event.detail.source !== 'slotchange') {
         setTimeout(() => {
-          this.hideBib();
+          // do not close while typing in suggestion mode with no value selected, to allow freeform input
+          if (this.menu.value || this.behavior !== 'suggestion') {
+            this.hideBib();
+          }
         }, 0);
 
         // Announce the selection after the dropdown closes so it isn't
@@ -1396,15 +1402,14 @@ export class AuroCombobox extends AuroElement {
       } else {
         // Use setMenuValue like select does instead of direct assignment
         this.setMenuValue(this.value);
+        if (!this.value) {
+          this.clear();
+        }
       }
-      if (this.value) {
+      if (this.value && !this.componentHasFocus) {
         // If the value got set programmatically make sure we hide the bib
         // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
-        if (!this.componentHasFocus) {
-          this.hideBib();
-        }
-      } else {
-        this.clear();
+        this.hideBib();
       }
 
       // Sync the input and match word, but don't directly set menu.value again
