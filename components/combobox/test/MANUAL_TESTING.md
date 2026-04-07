@@ -16,7 +16,6 @@
 
 ### Filter Mode (`persistInput`)
 [ ] Type a value — verify options filter
-[ ] Select an option — verify the input retains the typed text (not replaced by the option value)
 
 ## Keyboard Interactions — Desktop (Popup Closed)
 
@@ -49,9 +48,7 @@
 [ ] Escape — verify the dialog closes without selecting and focus returns to the trigger
 [ ] Tab (focus on input, clear button visible) — verify focus moves to the clear button
 [ ] Tab (focus on clear button, option highlighted) — verify the highlighted option is selected, the dialog closes, and focus returns to the trigger
-[ ] Tab (focus on clear button, no option highlighted) — verify the dialog closes and focus returns to the trigger
-[ ] Tab (no clear button visible / no value) — verify the dialog closes and focus returns to the trigger
-[ ] Shift+Tab — verify visual focus moves to the first non-disabled option and the dialog stays open (no selection)
+[ ] Shift+Tab — verify highlighted option is selected, the dialog closes, and focus moves to the previous element on the page (note: Shift+Tab behavior in fullscreen dialog may be inconsistent across browsers and may require custom handling for proper focus management)
 
 ## Touch / Tap Interactions
 

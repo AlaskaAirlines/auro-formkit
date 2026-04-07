@@ -58,7 +58,7 @@
 [ ] Verify the help text is announced (helpText slot)
 [ ] Verify the description is announced (description slot)
 [ ] Verify color contrast meets WCAG 2.1 AA in both default and inverse appearances
-[ ] Verify focus indicators are clearly visible on both buttons
+[ ] Verify focus indicators are clearly visible
 
 ### Slots
 
@@ -103,7 +103,7 @@
 [ ] Enter/Space on the trigger — verify the bib opens
 [ ] Tab through controls inside the bib — verify focus moves through counter controls
 [ ] Escape — verify the bib closes
-[ ] Tab past the last focusable element in the bib — verify the bib closes (fullscreen mode)
+[ ] Tab stays trapped inside bib when in fullscreen mode
 
 ### Touch / Tap Interactions
 

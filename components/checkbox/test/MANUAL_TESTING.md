@@ -13,7 +13,7 @@
 
 [ ] Tab to the checkbox — verify it receives visible focus
 [ ] Press Space on a focused checkbox — verify it toggles checked/unchecked
-[ ] Press Enter on a focused checkbox — verify it toggles checked/unchecked
+[ ] Press Enter on a focused checkbox — verify it does not toggle checked/unchecked
 [ ] Tab away from the checkbox — verify focus moves to the next focusable element
 
 ### Touch / Tap Interactions
@@ -56,7 +56,7 @@
 
 [ ] Tab into a checkbox group — verify focus lands on the first checkbox
 [ ] Tab through checkboxes in the group — verify each checkbox receives focus in order
-[ ] Space/Enter on each checkbox — verify each toggles independently
+[ ] Space on each checkbox — verify each toggles independently
 [ ] Tab out of the group — verify focus moves to the next element outside the group
 
 ### Touch / Tap Interactions
