@@ -388,14 +388,6 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the trigger will toggle the dropdown on mouseover/mouseout.
-       */
-      hoverToggle: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
        * @private
        */
       hasTriggerContent: {
