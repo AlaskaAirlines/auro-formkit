@@ -4,7 +4,7 @@
 
 ### Single Date
 [ ] Click the date input trigger — verify the calendar bib opens
-[ ] Click a date in the calendar — verify the date is selected, the bib closes, and the input shows the formatted date
+[ ] Click a date in the calendar — verify the date is selected and the input shows the formatted date
 [ ] Click the clear button — verify the date value is cleared
 [ ] Click outside the bib when open — verify the bib closes
 [ ] Click a disabled date (outside min/max range) — verify no selection occurs
