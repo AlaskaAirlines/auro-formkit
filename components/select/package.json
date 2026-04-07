@@ -29,7 +29,6 @@
     "compression": "^1.8.0",
     "rollup": "^4.39.0",
     "rollup-plugin-serve": "^3.0.0",
-    "stylelint": "^16.18.0",
     "wc-sass-render": "^1.4.0",
     "web-component-analyzer": "^2.0.0"
   },
