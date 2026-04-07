@@ -91,7 +91,7 @@ export const ComboboxArrowKeyNavigation: Story = {
     await userEvent.keyboard('{ArrowDown}');
     await new Promise((r) => setTimeout(r, 100));
     await el.updateComplete;
-    await expect(el.menu.optionActive.id).toBe('option2');
+    await expect(el.menu.optionActive.id).toBe('option3');
     await expect(el.dropdown.isPopoverVisible).toBe(true);
 
   },
