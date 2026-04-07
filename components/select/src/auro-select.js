@@ -824,6 +824,7 @@ export class AuroSelect extends AuroElement {
         this.scrollActiveOptionIntoView();
       }
     });
+
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
 
       // Update the displayed value
@@ -837,6 +838,7 @@ export class AuroSelect extends AuroElement {
 
       if (this.dropdown.isPopoverVisible && !this.multiSelect) {
         this.dropdown.hide();
+        this.dropdown.trigger.focus();
       }
 
       // Announce the selection after the dropdown closes so it isn't
@@ -1097,9 +1099,6 @@ export class AuroSelect extends AuroElement {
       this.validate();
       if (!this.multiSelect) {
         this.hideBib();
-      }
-      if (this.dropdown && this.dropdown.trigger) {
-        this.dropdown.trigger.focus();
       }
 
       // LEGACY EVENT
