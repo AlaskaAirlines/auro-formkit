@@ -4,8 +4,8 @@
 
 _Release Notes — March 10, 2026_
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/5_11_0.md) -->
-<!-- The below content is automatically added from ./docs/releases/5_11_0.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/releases/05_11_00.md) -->
+<!-- The below content is automatically added from ./docs/releases/05_11_00.md -->
 
 ### Features
 
