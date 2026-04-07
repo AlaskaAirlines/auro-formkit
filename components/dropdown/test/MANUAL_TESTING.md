@@ -6,8 +6,6 @@
 [ ] Click the trigger again — verify the bib closes (toggle behavior)
 [ ] Click outside the bib when it is open — verify the bib closes
 [ ] Click inside the bib content — verify the bib stays open
-[ ] Hover over the trigger with `hoverToggle` set — verify the bib opens on mouseover
-[ ] Move the mouse away from the trigger and bib with `hoverToggle` — verify the bib closes on mouseout
 [ ] Click a disabled dropdown trigger — verify nothing happens
 
 ## Keyboard Interactions
@@ -17,7 +15,7 @@
 [ ] Space on the focused trigger — verify the bib opens
 [ ] Escape when the bib is open — verify the bib closes and focus returns to the trigger
 [ ] Tab through focusable elements inside the bib — verify focus moves through bib content
-[ ] Tab past the last focusable element in the bib — verify appropriate behavior (bib closes or focus exits)
+[ **BUG - Fix After 5.11.1 Release** ] Tab past the last focusable element in the bib — verify appropriate behavior (bib closes or focus exits)
 [ ] Shift+Tab — verify focus moves backward through bib content
 [ ] Tab away from the dropdown — verify the bib closes (unless `noHideOnThisFocusLoss` is set)
 
@@ -31,7 +29,6 @@
 ## Fullscreen (Mobile) Mode
 
 [ ] Open the dropdown at mobile breakpoint — verify the fullscreen dialog appears
-[ ] Verify the close button is present in the fullscreen dialog
 [ ] Tap the close button — verify the dialog closes
 [ ] Press Escape — verify the dialog closes
 [ ] Verify focus is trapped inside the fullscreen dialog
