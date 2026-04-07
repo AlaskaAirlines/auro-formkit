@@ -796,7 +796,7 @@ function runFullTest(mobileView) {
       it('should reset selection value when reset() is called programmatically', async () => {
         const el = await presetValueFixture(mobileView);
 
-        el.value = undefined;
+        el.reset();
 
         await elementUpdated(el);
 
@@ -1305,7 +1305,7 @@ function runFullTest(mobileView) {
             const el = await presetValueFixture(mobileView);
 
             el.focus();
-            setInputValue(el, 'a');
+            await sendKeys({ press: 'Enter' });
             await elementUpdated(el);
 
             if (mobileView) {
@@ -1317,6 +1317,7 @@ function runFullTest(mobileView) {
 
             const menu = el.querySelector('auro-menu');
             const selectedOption = menu.querySelector('auro-menuoption[value="Apples"]');
+
             await expect(selectedOption.selected).to.be.true;
 
             const valueBefore = el.value;
