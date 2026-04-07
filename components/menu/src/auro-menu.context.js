@@ -376,6 +376,7 @@ export class MenuService {
 
     // Early exit for invalid/empty values
     if (isEmptyValue) {
+      this.selectedOptions.forEach(opt => opt.selected = false);
       this.selectedOptions = [];
       return;
     }
@@ -498,6 +499,7 @@ export class MenuService {
    */
   reset() {
     const previousOptions = [...this.selectedOptions];
+    previousOptions.forEach(opt => opt.selected = false);
     this.selectedOptions = [];
 
     // Single update after clearing all
