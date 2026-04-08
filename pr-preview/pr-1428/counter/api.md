@@ -1232,6 +1232,136 @@ All available slots for both components.
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+### Counter Group in Dialog
+
+The element used within an `auro-dialog`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/in-dialog.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/in-dialog.html -->
+  <div>
+    <auro-button id="counter-dialog-opener">Counter Group in Dialog</auro-button>
+    <auro-dialog id="counter-dialog">
+      <span slot="header">Counter Group in Dialog</span>
+      <div slot="content">
+        <auro-counter-group isDropdown>
+          <span slot="ariaLabel.bib.close">Close Popup</span>
+          <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+          <div slot="label">Counter Group</div>
+          <div slot="helpText">Select a value</div>
+          <auro-counter>Counter 1</auro-counter>
+          <auro-counter>Counter 2</auro-counter>
+        </auro-counter-group>
+      </div>
+    </auro-dialog>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-dialog.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-dialog.html -->
+
+```html
+<div>
+  <auro-button id="counter-dialog-opener">Counter Group in Dialog</auro-button>
+  <auro-dialog id="counter-dialog">
+    <span slot="header">Counter Group in Dialog</span>
+    <div slot="content">
+      <auro-counter-group isDropdown>
+        <span slot="ariaLabel.bib.close">Close Popup</span>
+        <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+        <div slot="label">Counter Group</div>
+        <div slot="helpText">Select a value</div>
+        <auro-counter>Counter 1</auro-counter>
+        <auro-counter>Counter 2</auro-counter>
+      </auro-counter-group>
+    </div>
+  </auro-dialog>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-dialog.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-dialog.js -->
+
+```js
+export function inDialogExample() {
+  document.querySelector("#counter-dialog-opener").addEventListener("click", () => {
+    const dialog = document.querySelector("#counter-dialog");
+    dialog.open = true;
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+### Counter Group in Drawer
+
+The element used within an `auro-drawer`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/in-drawer.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/in-drawer.html -->
+  <div>
+    <auro-button id="counter-drawer-opener">Counter Group in Drawer</auro-button>
+    <auro-drawer id="counter-drawer">
+      <span slot="header">Counter Group in Drawer</span>
+      <div slot="content">
+        <auro-counter-group isDropdown>
+          <span slot="ariaLabel.bib.close">Close Popup</span>
+          <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+          <div slot="label">Counter Group</div>
+          <div slot="helpText">Select a value</div>
+          <auro-counter>Counter 1</auro-counter>
+          <auro-counter>Counter 2</auro-counter>
+        </auro-counter-group>
+      </div>
+    </auro-drawer>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.html -->
+
+```html
+<div>
+  <auro-button id="counter-drawer-opener">Counter Group in Drawer</auro-button>
+  <auro-drawer id="counter-drawer">
+    <span slot="header">Counter Group in Drawer</span>
+    <div slot="content">
+      <auro-counter-group isDropdown>
+        <span slot="ariaLabel.bib.close">Close Popup</span>
+        <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+        <div slot="label">Counter Group</div>
+        <div slot="helpText">Select a value</div>
+        <auro-counter>Counter 1</auro-counter>
+        <auro-counter>Counter 2</auro-counter>
+      </auro-counter-group>
+    </div>
+  </auro-drawer>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.js -->
+
+```js
+export function inDrawerExample() {
+  document.querySelector("#counter-drawer-opener").addEventListener("click", () => {
+    const drawer = document.querySelector("#counter-drawer");
+    if (drawer.hasAttribute('open')) {
+      drawer.removeAttribute('open');
+    } else {
+      drawer.setAttribute('open', true);
+    }
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ## Restyle Component with CSS Variables
 
 The component may be restyled by changing the values of the following token(s).
