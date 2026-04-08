@@ -32,6 +32,10 @@ export const selectKeyboardStrategy = {
     if (!ctx.isExpanded) {
       return;
     }
+
+    // Prevent the Escape key from bubbling up and closing any parent dialogs / drawers / popups
+    evt.stopPropagation();
+
     component.dropdown.hide();
   },
 

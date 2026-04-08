@@ -6,6 +6,8 @@ import { html } from 'lit-html';
 import '../../menu/src/registered';
 
 import '../src/registered';
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 
 const meta: Meta = {
   component: 'auro-combobox',
@@ -530,5 +532,111 @@ export const ComboboxFullscreenActiveDescendantClearedOnClose: Story = {
 
     const nativeInput = el.inputInBib.inputElement;
     await expect(nativeInput.hasAttribute('aria-activedescendant')).toBe(false);
+  },
+};
+
+// ─── Combobox inside auro-dialog — bib closed ───────────────────────────────
+export const ComboboxInDialogBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Combobox in Dialog</span>
+  <div slot="content">
+    <auro-combobox>
+      <span slot="ariaLabel.bib.close">Close combobox</span>
+      <span slot="ariaLabel.input.clear">Clear All</span>
+      <span slot="bib.fullscreen.headline">Bib Header</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  </div>
+</auro-dialog>
+  `,
+};
+
+// ─── Combobox inside auro-dialog — bib open ─────────────────────────────────
+export const ComboboxInDialogBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Combobox in Dialog</span>
+  <div slot="content">
+    <auro-combobox>
+      <span slot="ariaLabel.bib.close">Close combobox</span>
+      <span slot="ariaLabel.input.clear">Clear All</span>
+      <span slot="bib.fullscreen.headline">Bib Header</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  </div>
+</auro-dialog>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    await el.updateComplete;
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+  },
+};
+
+// ─── Combobox inside auro-drawer — bib closed ───────────────────────────────
+export const ComboboxInDrawerBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Combobox in Drawer">
+  <span slot="header">Combobox in Drawer</span>
+  <div slot="content">
+    <auro-combobox>
+      <span slot="ariaLabel.bib.close">Close combobox</span>
+      <span slot="ariaLabel.input.clear">Clear All</span>
+      <span slot="bib.fullscreen.headline">Bib Header</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  </div>
+</auro-drawer>
+  `,
+};
+
+// ─── Combobox inside auro-drawer — bib open ─────────────────────────────────
+export const ComboboxInDrawerBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Combobox in Drawer">
+  <span slot="header">Combobox in Drawer</span>
+  <div slot="content">
+    <auro-combobox>
+      <span slot="ariaLabel.bib.close">Close combobox</span>
+      <span slot="ariaLabel.input.clear">Clear All</span>
+      <span slot="bib.fullscreen.headline">Bib Header</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  </div>
+</auro-drawer>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    await el.updateComplete;
+    await waitUntil(() => el.dropdown.isPopoverVisible);
   },
 };

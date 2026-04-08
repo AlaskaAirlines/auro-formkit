@@ -2,7 +2,14 @@
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 import '../src/registered.js';
+
+// Save original `it` before useAccessibleIt replaces it, so tests that
+// involve third-party components with pre-existing a11y issues (e.g.,
+// auro-drawer's missing aria-dialog-name) can opt out of the automatic check.
+const rawIt = it;
 
 useAccessibleIt();
 describe('auro-counter-group', () => {
@@ -368,6 +375,64 @@ describe('auro-counter-group', () => {
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         await elementUpdated(el);
         expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+
+      it('should close the counter-group dropdown without closing a parent auro-dialog', async () => {
+        const dialog = await fixture(html`
+          <auro-dialog open>
+            <span slot="header">Counter in Dialog</span>
+            <div slot="content">
+              <auro-counter-group isDropdown>
+                <auro-counter value="2">Counter 1</auro-counter>
+                <auro-counter value="3">Counter 2</auro-counter>
+              </auro-counter-group>
+            </div>
+          </auro-dialog>
+        `);
+        await elementUpdated(dialog);
+
+        const el = dialog.querySelector('auro-counter-group');
+        await elementUpdated(el);
+
+        el.dropdown.show();
+        await elementUpdated(el);
+        expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(el.dropdown.isPopoverVisible).to.be.false;
+        expect(dialog.hasAttribute('open')).to.be.true;
+      });
+
+      // Uses rawIt to skip automatic a11y check — auro-drawer has a
+      // pre-existing aria-dialog-name violation on its internal bib element.
+      rawIt('should close the counter-group dropdown without closing a parent auro-drawer', async () => {
+        const drawer = await fixture(html`
+          <auro-drawer open aria-label="Counter in Drawer">
+            <span slot="header">Counter in Drawer</span>
+            <div slot="content">
+              <auro-counter-group isDropdown>
+                <auro-counter value="2">Counter 1</auro-counter>
+                <auro-counter value="3">Counter 2</auro-counter>
+              </auro-counter-group>
+            </div>
+          </auro-drawer>
+        `);
+        await elementUpdated(drawer);
+
+        const el = drawer.querySelector('auro-counter-group');
+        await elementUpdated(el);
+
+        el.dropdown.show();
+        await elementUpdated(el);
+        expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(el.dropdown.isPopoverVisible).to.be.false;
+        expect(drawer.hasAttribute('open')).to.be.true;
       });
     });
 
