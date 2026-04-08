@@ -1769,10 +1769,11 @@ The following example demonstrates the use of `<auro-datepicker>` within an `<au
   <div>
     <auro-button id="datepicker-drawer-opener">Datepicker in Drawer</auro-button>
     <auro-drawer id="datepicker-drawer">
-      <span slot="bib.fullscreen.headline">inDrawer Example</span>
       <span slot="header">Datepicker in Drawer</span>
       <div slot="content">
-        <auro-datepicker />
+        <auro-datepicker>
+          <span slot="bib.fullscreen.headline">inDrawer Example</span>
+        </auro-datepicker>
       </div>
     </auro-drawer>
   </div>
@@ -1787,10 +1788,11 @@ The following example demonstrates the use of `<auro-datepicker>` within an `<au
 <div>
   <auro-button id="datepicker-drawer-opener">Datepicker in Drawer</auro-button>
   <auro-drawer id="datepicker-drawer">
-    <span slot="bib.fullscreen.headline">inDrawer Example</span>
     <span slot="header">Datepicker in Drawer</span>
     <div slot="content">
-      <auro-datepicker />
+      <auro-datepicker>
+        <span slot="bib.fullscreen.headline">inDrawer Example</span>
+      </auro-datepicker>
     </div>
   </auro-drawer>
 </div>

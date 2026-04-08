@@ -1328,7 +1328,7 @@ The element used within an `auro-drawer`.
       <div slot="content">
         <auro-dropdown id="in-drawer-dropdown" layout="classic" shape="classic" size="lg">
           <div style="padding: var(--ds-size-150);">
-            Lorem ipsum solar
+            Lorem ipsum dolor
             <br />
             <auro-button id="in-drawer-dismiss-btn">
               Dismiss Dropdown
@@ -1362,7 +1362,7 @@ The element used within an `auro-drawer`.
     <div slot="content">
       <auro-dropdown id="in-drawer-dropdown" layout="classic" shape="classic" size="lg">
         <div style="padding: var(--ds-size-150);">
-          Lorem ipsum solar
+          Lorem ipsum dolor
           <br />
           <auro-button id="in-drawer-dismiss-btn">
             Dismiss Dropdown
