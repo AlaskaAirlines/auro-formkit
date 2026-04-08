@@ -19,3 +19,5 @@ jobs:
         ./components/**/node_modules
         ./node_modules
         ./custom-elements.json
+        ./apps/**/node_modules
+        ./apps/svelte-framework/.svelte-kit
