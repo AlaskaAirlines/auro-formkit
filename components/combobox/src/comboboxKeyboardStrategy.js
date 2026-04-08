@@ -112,10 +112,19 @@ export const comboboxKeyboardStrategy = {
     }
   },
 
-  Escape(component, _evt, ctx) {
-    if (ctx.isExpanded && ctx.isModal) {
+  Escape(component, evt, ctx) {
+    if (!ctx.isExpanded) {
+      return;
+    }
+
+    // Prevent the Escape key from bubbling up and closing any parent dialogs / drawers / popups
+    evt.stopPropagation();
+
+    if (ctx.isModal) {
       component.setTriggerInputFocus();
     }
+
+    component.hideBib();
   },
 
   Home(component, evt, ctx) {

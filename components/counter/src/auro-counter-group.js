@@ -19,13 +19,14 @@ import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts
 import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 
-import { doubleRaf } from '@aurodesignsystem/utils';
+import { doubleRaf, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
 import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
 import { classMap } from "lit/directives/class-map.js";
+import { counterGroupKeyboardStrategy } from './counterGroupKeyboardStrategy.js';
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from "./iconVersion.js";
@@ -626,6 +627,10 @@ export class AuroCounterGroup extends AuroElement {
     super.firstUpdated();
     this.updateValue();
     this.updateValueText();
+
+    if (this.isDropdown) {
+      applyKeyboardStrategy(this, counterGroupKeyboardStrategy);
+    }
   }
 
   /**

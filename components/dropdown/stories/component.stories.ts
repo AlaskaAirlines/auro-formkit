@@ -5,6 +5,8 @@ import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
 
 import '../src/registered';
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 
 const meta: Meta = {
   component: 'auro-dropdown',
@@ -403,6 +405,92 @@ export const DropdownInContainerTypeSize: Story = {
   async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
     const trigger = await canvas.findByShadowRole('button');
     await userEvent.click(trigger);
+    const el = canvasElement.querySelector('auro-dropdown');
+    await expect(el).toHaveAttribute('open');
+  },
+};
+
+// ─── Dropdown inside auro-dialog — bib closed ──────────────────────────────
+export const DropdownInDialogBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Dropdown in Dialog</span>
+  <div slot="content">
+    <auro-dropdown chevron aria-label="dropdown in dialog">
+      <span slot="label">Select option</span>
+      <div slot="trigger">Trigger</div>
+      <div style="padding: 1rem;">Bib content</div>
+    </auro-dropdown>
+  </div>
+</auro-dialog>
+  `,
+};
+
+// ─── Dropdown inside auro-dialog — bib open ─────────────────────────────────
+export const DropdownInDialogBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Dropdown in Dialog</span>
+  <div slot="content">
+    <auro-dropdown chevron aria-label="dropdown in dialog">
+      <span slot="label">Select option</span>
+      <div slot="trigger">Trigger</div>
+      <div style="padding: 1rem;">Bib content</div>
+    </auro-dropdown>
+  </div>
+</auro-dialog>
+  `,
+  async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
+    const trigger = await canvas.findByShadowRole('button', { name: 'Trigger' });
+    await userEvent.click(trigger);
+    await wait(100);
+    const el = canvasElement.querySelector('auro-dropdown');
+    await expect(el).toHaveAttribute('open');
+  },
+};
+
+// ─── Dropdown inside auro-drawer — bib closed ──────────────────────────────
+export const DropdownInDrawerBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Dropdown in Drawer">
+  <span slot="header">Dropdown in Drawer</span>
+  <div slot="content">
+    <auro-dropdown chevron aria-label="dropdown in drawer">
+      <span slot="label">Select option</span>
+      <div slot="trigger">Trigger</div>
+      <div style="padding: 1rem;">Bib content</div>
+    </auro-dropdown>
+  </div>
+</auro-drawer>
+  `,
+};
+
+// ─── Dropdown inside auro-drawer — bib open ─────────────────────────────────
+export const DropdownInDrawerBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Dropdown in Drawer">
+  <span slot="header">Dropdown in Drawer</span>
+  <div slot="content">
+    <auro-dropdown chevron aria-label="dropdown in drawer">
+      <span slot="label">Select option</span>
+      <div slot="trigger">Trigger</div>
+      <div style="padding: 1rem;">Bib content</div>
+    </auro-dropdown>
+  </div>
+</auro-drawer>
+  `,
+  async play({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) {
+    const trigger = await canvas.findByShadowRole('button', { name: 'Trigger' });
+    await userEvent.click(trigger);
+    await wait(100);
     const el = canvasElement.querySelector('auro-dropdown');
     await expect(el).toHaveAttribute('open');
   },

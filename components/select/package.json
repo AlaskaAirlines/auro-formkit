@@ -20,6 +20,8 @@
   },
   "devDependencies": {
     "@alaskaairux/icons": "^5.14.0",
+    "@aurodesignsystem/auro-dialog": "^4.1.1",
+    "@aurodesignsystem/auro-drawer": "^5.1.2",
     "@aurodesignsystem/build-tools": "*",
     "@aurodesignsystem/config": "*",
     "@aurodesignsystem/form-validation": "*",

@@ -2,6 +2,8 @@
 
 import { fixture, html } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
 
@@ -429,5 +431,39 @@ export async function noFilterFixture(mobileView) {
       <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
     </auro-menu>
   </auro-combobox>
+  `);
+}
+
+export async function inDialogFixture() {
+  return fixture(html`
+    <auro-dialog open>
+      <span slot="header">Combobox in Dialog</span>
+      <div slot="content">
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      </div>
+    </auro-dialog>
+  `);
+}
+
+export async function inDrawerFixture() {
+  return fixture(html`
+    <auro-drawer open aria-label="Combobox in Drawer">
+      <span slot="header">Combobox in Drawer</span>
+      <div slot="content">
+        <auro-combobox>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      </div>
+    </auro-drawer>
   `);
 }

@@ -17,8 +17,15 @@ import {
   multiSelectFixture,
   requiredFixture,
   nestedMenuFixture,
+  inDialogFixture,
+  inDrawerFixture,
 } from './testFixtures.js';
 import { setScreenSize, getAnnouncementRoot } from './testFunctions.js';
+
+// Save original `it` before useAccessibleIt replaces it, so tests that
+// involve third-party components with pre-existing a11y issues (e.g.,
+// auro-drawer's missing aria-dialog-name) can opt out of the automatic check.
+const rawIt = it;
 
 useAccessibleIt();
 
@@ -1420,6 +1427,52 @@ function runTest(mobileView) {
           await expect(dropdown.isPopoverVisible).to.be.false;
           await expect(el.value).to.be.undefined;
         });
+
+        if (!mobileView) {
+          it('should close the select bib without closing a parent auro-dialog', async () => {
+            const dialog = await inDialogFixture();
+            await elementUpdated(dialog);
+
+            const select = dialog.querySelector('auro-select');
+            await elementUpdated(select);
+
+            const dropdown = select.shadowRoot.querySelector('[auro-dropdown]');
+            const trigger = dropdown.querySelector('[slot="trigger"]');
+
+            trigger.click();
+            await elementUpdated(select);
+            await expect(dropdown.isPopoverVisible).to.be.true;
+
+            select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+            await elementUpdated(select);
+
+            await expect(dropdown.isPopoverVisible).to.be.false;
+            await expect(dialog.hasAttribute('open')).to.be.true;
+          });
+
+          // Uses rawIt to skip automatic a11y check — auro-drawer has a
+          // pre-existing aria-dialog-name violation on its internal bib element.
+          rawIt('should close the select bib without closing a parent auro-drawer', async () => {
+            const drawer = await inDrawerFixture();
+            await elementUpdated(drawer);
+
+            const select = drawer.querySelector('auro-select');
+            await elementUpdated(select);
+
+            const dropdown = select.shadowRoot.querySelector('[auro-dropdown]');
+            const trigger = dropdown.querySelector('[slot="trigger"]');
+
+            trigger.click();
+            await elementUpdated(select);
+            await expect(dropdown.isPopoverVisible).to.be.true;
+
+            select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+            await elementUpdated(select);
+
+            await expect(dropdown.isPopoverVisible).to.be.false;
+            await expect(drawer.hasAttribute('open')).to.be.true;
+          });
+        }
       });
 
       describe('Home', () => {

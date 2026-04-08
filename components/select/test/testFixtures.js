@@ -2,6 +2,8 @@
 
 import { fixture, html } from '@open-wc/testing';
 import '@aurodesignsystem/auro-dropdown';
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 import '../../menu/src/registered.js';
 import '../src/registered.js';
 
@@ -183,5 +185,45 @@ export async function nestedMenuFixture() {
       <auro-menuoption value="option 2" id="nested-option-3">option 2</auro-menuoption>
     </auro-menu>
   </auro-select>
+  `);
+}
+
+export async function inDialogFixture() {
+  return await fixture(html`
+    <auro-dialog open>
+      <span slot="header">Select in Dialog</span>
+      <div slot="content">
+        <auro-select>
+          <span slot="bib.fullscreen.headline">Bib Headline</span>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+            <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+          </auro-menu>
+        </auro-select>
+      </div>
+    </auro-dialog>
+  `);
+}
+
+export async function inDrawerFixture() {
+  return await fixture(html`
+    <auro-drawer open aria-label="Select in Drawer">
+      <span slot="header">Select in Drawer</span>
+      <div slot="content">
+        <auro-select>
+          <span slot="bib.fullscreen.headline">Bib Headline</span>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+            <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+          </auro-menu>
+        </auro-select>
+      </div>
+    </auro-drawer>
   `);
 }

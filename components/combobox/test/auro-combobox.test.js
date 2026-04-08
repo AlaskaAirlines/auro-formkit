@@ -19,6 +19,8 @@ import {
   requiredFilterBehaviorFixture,
   customEventFixture,
   noFilterFixture,
+  inDialogFixture,
+  inDrawerFixture,
 } from './testFixtures.js';
 import { setInputValue, getAnnouncementRoot } from './testFunctions.js';
 
@@ -1859,6 +1861,48 @@ function runFullTest(mobileView) {
 
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
+
+      if (!mobileView) {
+        it('should close the combobox bib without closing a parent auro-dialog', async () => {
+          const dialog = await inDialogFixture();
+          await elementUpdated(dialog);
+
+          const el = dialog.querySelector('auro-combobox');
+          await elementUpdated(el);
+
+          setInputValue(el, 'a');
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+          await elementUpdated(el);
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+          await expect(dialog.hasAttribute('open')).to.be.true;
+        });
+
+        it('should close the combobox bib without closing a parent auro-drawer', async () => {
+          const drawer = await inDrawerFixture();
+          await elementUpdated(drawer);
+
+          const el = drawer.querySelector('auro-combobox');
+          await elementUpdated(el);
+
+          setInputValue(el, 'a');
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+          await elementUpdated(el);
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+          await expect(drawer.hasAttribute('open')).to.be.true;
+        });
+      }
     });
 
     describe('ArrowDown', () => {
