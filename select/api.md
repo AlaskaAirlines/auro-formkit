@@ -2284,6 +2284,82 @@ export function inDialogExample() {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+### Select in Drawer
+
+The component can be in a drawer.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/in-drawer.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/in-drawer.html -->
+  <div>
+    <auro-button id="select-drawer-opener">Select in drawer</auro-button>
+    <auro-drawer id="select-drawer">
+      <span slot="header">Select in drawer</span>
+      <div slot="content">
+        <auro-select id="valueExample" value="price">
+          <span slot="bib.fullscreen.headline">Bib Headline</span>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>
+            <auro-menuoption id="option-1" value="price">Price</auro-menuoption>
+            <auro-menuoption id="option-2" value="duration">Duration</auro-menuoption>
+            <auro-menuoption id="option-3" value="departure">Departure</auro-menuoption>
+            <auro-menuoption id="option-4" value="arrival">Arrival</auro-menuoption>
+            <auro-menuoption id="option-5" value="prefer alaska">Prefer Alaska</auro-menuoption>
+          </auro-menu>
+        </auro-select>
+      </div>
+    </auro-drawer>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.html -->
+
+```html
+<div>
+  <auro-button id="select-drawer-opener">Select in drawer</auro-button>
+  <auro-drawer id="select-drawer">
+    <span slot="header">Select in drawer</span>
+    <div slot="content">
+      <auro-select id="valueExample" value="price">
+        <span slot="bib.fullscreen.headline">Bib Headline</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption id="option-0" value="stops">Stops</auro-menuoption>
+          <auro-menuoption id="option-1" value="price">Price</auro-menuoption>
+          <auro-menuoption id="option-2" value="duration">Duration</auro-menuoption>
+          <auro-menuoption id="option-3" value="departure">Departure</auro-menuoption>
+          <auro-menuoption id="option-4" value="arrival">Arrival</auro-menuoption>
+          <auro-menuoption id="option-5" value="prefer alaska">Prefer Alaska</auro-menuoption>
+        </auro-menu>
+      </auro-select>
+    </div>
+  </auro-drawer>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.js -->
+
+```js
+export function inDrawerExample() {
+  document.querySelector("#select-drawer-opener").addEventListener("click", () => {
+    const drawer = document.querySelector("#select-drawer");
+
+    if (drawer.hasAttribute('open')) {
+      drawer.removeAttribute('open');
+    } else {
+      drawer.setAttribute('open', true);
+    }
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ### Watch for Value Changes
 
 The following example listens for the `auroMenu-selectedOption` event. Once triggered, element.value or element.optionSelected may be queried for the new value or complete option object.
