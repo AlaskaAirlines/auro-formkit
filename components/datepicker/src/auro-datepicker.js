@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -46,7 +46,8 @@ import iconVersion from './iconVersion.js';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
-import { doubleRaf, guardTouchPassthrough } from '@aurodesignsystem/utils';
+import { doubleRaf, guardTouchPassthrough, applyKeyboardStrategy } from '@aurodesignsystem/utils';
+import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -1501,6 +1502,7 @@ export class AuroDatePicker extends AuroElement {
     this.configureCalendar();
     this.configureDatepicker();
     this.configureClickHandler();
+    applyKeyboardStrategy(this, datepickerKeyboardStrategy);
   }
 
   connectedCallback() {

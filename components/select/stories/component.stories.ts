@@ -6,6 +6,8 @@ import { html } from 'lit-html';
 import '../../menu/src/registered';
 
 import '../src/registered';
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 
 const meta: Meta = {
   component: 'auro-select',
@@ -467,6 +469,116 @@ export const SelectEmphasizedLayoutHasLiveRegion: Story = {
 
     const liveRegion = el.shadowRoot.querySelector('#srAnnouncement');
     await expect(liveRegion).not.toBeNull();
+  },
+};
+
+// ─── Select inside auro-dialog — bib closed ─────────────────────────────────
+export const SelectInDialogBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Select in Dialog</span>
+  <div slot="content">
+    <auro-select>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <span slot="bib.fullscreen.headline">Bib Headline</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+        <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+        <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  </div>
+</auro-dialog>
+  `,
+};
+
+// ─── Select inside auro-dialog — bib open ───────────────────────────────────
+export const SelectInDialogBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Select in Dialog</span>
+  <div slot="content">
+    <auro-select>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <span slot="bib.fullscreen.headline">Bib Headline</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+        <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+        <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  </div>
+</auro-dialog>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+    el.showBib();
+    await wait(100);
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+  },
+};
+
+// ─── Select inside auro-drawer — bib closed ─────────────────────────────────
+export const SelectInDrawerBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Select in Drawer">
+  <span slot="header">Select in Drawer</span>
+  <div slot="content">
+    <auro-select>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <span slot="bib.fullscreen.headline">Bib Headline</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+        <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+        <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  </div>
+</auro-drawer>
+  `,
+};
+
+// ─── Select inside auro-drawer — bib open ───────────────────────────────────
+export const SelectInDrawerBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Select in Drawer">
+  <span slot="header">Select in Drawer</span>
+  <div slot="content">
+    <auro-select>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <span slot="bib.fullscreen.headline">Bib Headline</span>
+      <span slot="label">Name</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+        <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+        <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+      </auro-menu>
+    </auro-select>
+  </div>
+</auro-drawer>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+    el.showBib();
+    await wait(100);
+    await waitUntil(() => el.dropdown.isPopoverVisible);
   },
 };
 

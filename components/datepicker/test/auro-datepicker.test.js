@@ -4,7 +4,7 @@ import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@ope
 import { setViewport, sendKeys } from '@web/test-runner-commands';
 import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import '../src/registered.js';
-import { dateSlotFixture, popoverSlotFixture } from './testFixtures.js';
+import { dateSlotFixture, popoverSlotFixture, inDialogFixture, inDrawerFixture } from './testFixtures.js';
 import { setInputValue, getInput } from './testFunctions.js';
 
 describe('auro-datepicker', () => {
@@ -1669,6 +1669,52 @@ describe('auro-datepicker', () => {
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
     }
+
+    describe('Escape', () => {
+      it('should close the datepicker bib without closing a parent auro-dialog', async () => {
+        const dialog = await inDialogFixture();
+        await elementUpdated(dialog);
+
+        const el = dialog.querySelector('auro-datepicker');
+        await elementUpdated(el);
+
+        // Open the datepicker by clicking the input
+        el.focus();
+        el.shadowRoot.activeElement.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+        await expect(dialog.hasAttribute('open')).to.be.true;
+      });
+
+      it('should close the datepicker bib without closing a parent auro-drawer', async () => {
+        const drawer = await inDrawerFixture();
+        await elementUpdated(drawer);
+
+        const el = drawer.querySelector('auro-datepicker');
+        await elementUpdated(el);
+
+        // Open the datepicker by clicking the input
+        el.focus();
+        el.shadowRoot.activeElement.click();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+        await expect(drawer.hasAttribute('open')).to.be.true;
+      });
+    });
 
   });
 });

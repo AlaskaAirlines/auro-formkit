@@ -1,0 +1,28 @@
+
+<div>
+  <auro-button id="dropdown-drawer-opener">Dropdown in Drawer</auro-button>
+
+  <auro-drawer id="dropdown-drawer">
+    <span slot="header">Dropdown in Drawer</span>
+    <div slot="content">
+      <auro-dropdown id="in-drawer-dropdown" layout="classic" shape="classic" size="lg">
+        <div style="padding: var(--ds-size-150);">
+          Lorem ipsum dolor
+          <br />
+          <auro-button id="in-drawer-dismiss-btn">
+            Dismiss Dropdown
+          </auro-button>
+        </div>
+        <span slot="helpText">
+          Help text
+        </span>
+        <span slot="label">
+          Element label (default text will be read by screen reader)
+        </span>
+        <div slot="trigger">
+          Dropdown Trigger in Drawer
+        </div>
+      </auro-dropdown>
+    </div>
+  </auro-drawer>
+</div>

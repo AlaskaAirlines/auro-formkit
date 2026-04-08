@@ -5,6 +5,8 @@ import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
 
 import '../src/registered';
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 
 const meta: Meta = {
   component: 'auro-datepicker',
@@ -271,6 +273,96 @@ export const DatepickerBibCloseAriaLabel: Story = {
     const bibCloseLabel = el.querySelector('[slot="ariaLabel.bib.close"]');
     await expect(bibCloseLabel).toBeTruthy();
     await expect(bibCloseLabel.textContent.trim()).toBe('Close Calendar');
+  },
+};
+
+// ─── Datepicker inside auro-dialog — bib closed ─────────────────────────────
+export const DatepickerInDialogBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Datepicker in Dialog</span>
+  <div slot="content">
+    <auro-datepicker centralDate="03/01/2025">
+      <span slot="ariaLabel.bib.close">Close Calendar</span>
+      <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+      <span slot="fromLabel">Departure</span>
+      <span slot="bib.fullscreen.fromLabel">Departure</span>
+    </auro-datepicker>
+  </div>
+</auro-dialog>
+  `,
+};
+
+// ─── Datepicker inside auro-dialog — bib open ───────────────────────────────
+export const DatepickerInDialogBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Datepicker in Dialog</span>
+  <div slot="content">
+    <auro-datepicker centralDate="03/01/2025">
+      <span slot="ariaLabel.bib.close">Close Calendar</span>
+      <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+      <span slot="fromLabel">Departure</span>
+      <span slot="bib.fullscreen.fromLabel">Departure</span>
+    </auro-datepicker>
+  </div>
+</auro-dialog>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-datepicker') as any;
+    await el.updateComplete;
+    el.inputList[0].click();
+    await el.updateComplete;
+    await wait(200);
+  },
+};
+
+// ─── Datepicker inside auro-drawer — bib closed ─────────────────────────────
+export const DatepickerInDrawerBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Datepicker in Drawer">
+  <span slot="header">Datepicker in Drawer</span>
+  <div slot="content">
+    <auro-datepicker centralDate="03/01/2025">
+      <span slot="ariaLabel.bib.close">Close Calendar</span>
+      <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+      <span slot="fromLabel">Departure</span>
+      <span slot="bib.fullscreen.fromLabel">Departure</span>
+    </auro-datepicker>
+  </div>
+</auro-drawer>
+  `,
+};
+
+// ─── Datepicker inside auro-drawer — bib open ───────────────────────────────
+export const DatepickerInDrawerBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Datepicker in Drawer">
+  <span slot="header">Datepicker in Drawer</span>
+  <div slot="content">
+    <auro-datepicker centralDate="03/01/2025">
+      <span slot="ariaLabel.bib.close">Close Calendar</span>
+      <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+      <span slot="fromLabel">Departure</span>
+      <span slot="bib.fullscreen.fromLabel">Departure</span>
+    </auro-datepicker>
+  </div>
+</auro-drawer>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-datepicker') as any;
+    await el.updateComplete;
+    el.inputList[0].click();
+    await el.updateComplete;
+    await wait(200);
   },
 };
 
