@@ -126,7 +126,7 @@ function runFullTest(mobileView) {
       await sendKeys({ press: 'a' });
       await elementUpdated(el);
 
-      const firstEnabledOption = el.availableOptions.find((opt) => !opt.disabled && !opt.noMatch);
+      const firstEnabledOption = el.availableOptions.find((opt) => !opt.disabled && !opt.hasAttribute('nomatch'));
       await expect(el.optionActive).to.not.equal(noMatchOption);
       await expect(firstEnabledOption.classList.contains('active')).to.be.true;
     });
