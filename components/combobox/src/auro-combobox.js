@@ -550,7 +550,7 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   activateFirstEnabledAvailableOption() {
-    const firstEnabledOptionIndex = this.availableOptions.findIndex((opt) => !opt.disabled);
+    const firstEnabledOptionIndex = this.availableOptions.findIndex((opt) => !opt.disabled && !opt.noMatch);
     this.updateActiveOption(firstEnabledOptionIndex);
   }
 
@@ -564,7 +564,7 @@ export class AuroCombobox extends AuroElement {
 
     // Work backwards through the available options array to find the last enabled option
     for (let index = this.availableOptions.length - 1; index >= 0; index -= 1) {
-      if (!this.availableOptions[index].disabled) {
+      if (!this.availableOptions[index].disabled && !this.availableOptions[index].noMatch) {
         lastEnabledOptionIndex = index;
         break;
       }

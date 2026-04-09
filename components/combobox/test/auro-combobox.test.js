@@ -104,6 +104,33 @@ function runFullTest(mobileView) {
     //   await expect(el.value).to.equal(undefined);
     // });
 
+    it('should not mark the noMatch option as active when all regular options are filtered out', async () => {
+      const el = await noMatchFixture(mobileView);
+
+
+      // Focus the input and type a value that doesn't match any real option
+      el.input.inputElement.focus();
+      await sendKeys({ press: 'z' });
+      await sendKeys({ press: 'z' });
+      await sendKeys({ press: 'z' });
+      await elementUpdated(el);
+
+      const noMatchOption = el.querySelector('auro-menuoption[nomatch]');
+      await expect(noMatchOption.hasAttribute('hidden')).to.be.false;
+      await expect(el.optionActive).to.not.equal(noMatchOption);
+
+      // Clear the input and type a value that matches real options, hiding the noMatch option
+      await sendKeys({ press: 'Backspace' });
+      await sendKeys({ press: 'Backspace' });
+      await sendKeys({ press: 'Backspace' });
+      await sendKeys({ press: 'a' });
+
+
+      const firstEnabledOption = el.availableOptions.find((opt) => !opt.disabled && !opt.noMatch);
+      await expect(el.optionActive).to.not.equal(noMatchOption);
+      await expect(firstEnabledOption.classList.contains('active')).to.be.true;
+    });
+
     it('should hide the bib when there are no available options', async () => {
       const el = await defaultFixture(mobileView);
 
