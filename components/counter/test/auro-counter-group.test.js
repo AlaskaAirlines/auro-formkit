@@ -237,7 +237,129 @@ describe('auro-counter-group', () => {
   });
 
   describe('Properties', () => {
-    // Add missing tests
+    describe('appearance', () => {
+      // add tests for this property
+    });
+
+    describe('autoPlacement', () => {
+      // add tests for this property
+    });
+
+    describe('error', () => {
+      // add tests for this property
+    });
+
+    describe('fullscreenBreakpoint', () => {
+      // add tests for this property
+    });
+
+    describe('isDropdown', () => {
+      // add tests for this property
+    });
+
+    describe('largeFullscreenHeadline', () => {
+      // add tests for this property
+    });
+
+    describe('layout', () => {
+      // add tests for this property
+    });
+
+    describe('matchWidth', () => {
+      // add tests for this property
+    });
+
+    describe('max', () => {
+      // add tests for this property
+    });
+
+    describe('min', () => {
+      // add tests for this property
+    });
+
+    describe('noFlip', () => {
+      // add tests for this property
+    });
+
+    describe('offset', () => {
+      // add tests for this property
+    });
+
+    describe('onDark', () => {
+      // add tests for this property
+    });
+
+    describe('placement', () => {
+      // add tests for this property
+    });
+
+    describe('shift', () => {
+      // add tests for this property
+    });
+
+    describe('total', () => {
+      // add tests for this property
+    });
+
+    describe('validity', () => {
+      // add tests for this property
+    });
+
+    describe('value', () => {
+      // add tests for this property
+    });
+  });
+
+  describe('Slots', () => {
+    describe('default', () => {
+      // add tests for this slot
+    });
+
+    describe('ariaLabel.bib.close', () => {
+      // add tests for this slot
+    });
+
+    describe('bib.fullscreen.headline', () => {
+      // add tests for this slot
+    });
+
+    describe('bib.fullscreen.footer', () => {
+      // add tests for this slot
+    });
+
+    describe('label', () => {
+      // add tests for this slot
+    });
+
+    describe('valueText', () => {
+      // add tests for this slot
+    });
+
+    describe('helpText', () => {
+      // add tests for this slot
+    });
+  });
+
+  describe('Public Functions', () => {
+    describe('register', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('hideBib', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('showBib', () => {
+      // TODO: test needs to be added
+    });
+
+    describe('validate', () => {
+      // TODO: test needs to be added
+    });
+  });
+
+  describe('Private Functions', () => {
+    // No private function tests
   });
 
   describe('A11Y', () => {

@@ -829,6 +829,30 @@ describe('auro-menu', () => {
     describe('value', () => {
       // add tests for this property
     });
+
+    describe('options', () => {
+      // add tests for this property
+    });
+
+    describe('currentLabel', () => {
+      // add tests for this property
+    });
+
+    describe('items', () => {
+      // add tests for this property
+    });
+
+    describe('index', () => {
+      // add tests for this property
+    });
+
+    describe('selectedOptions', () => {
+      // add tests for this property
+    });
+
+    describe('selectedOption', () => {
+      // add tests for this property
+    });
   });
 
   describe('Slots', () => {

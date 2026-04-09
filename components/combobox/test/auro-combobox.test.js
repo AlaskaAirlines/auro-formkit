@@ -994,6 +994,10 @@ function runFullTest(mobileView) {
     describe('updateComponentArchitecture', () => {
       // TODO: test needs to be added
     });
+
+    describe('inputValue', () => {
+      // TODO: test needs to be added
+    });
   });
 
   describe('Private Functions', () => {

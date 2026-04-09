@@ -176,6 +176,10 @@ describe('auro-radio-group', () => {
   });
 
   describe('Slots', () => {
+    describe('default', () => {
+      // add tests for this slot
+    });
+
     describe('legend', () => {
       it('should render content in the legend slot', async () => {
         const el = await fixture(html`<auro-radio-group><span slot="legend">Select one</span><auro-radio value="one">One</auro-radio></auro-radio-group>`);

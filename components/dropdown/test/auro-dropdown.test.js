@@ -553,6 +553,10 @@ describe("auro-dropdown", () => {
     describe('size', () => {
       // add tests for this property
     });
+
+    describe('a11yRole', () => {
+      // add tests for this property
+    });
   });
 
   describe('Slots', () => {

@@ -1407,6 +1407,10 @@ describe('auro-datepicker', () => {
     describe('updateComponentArchitecture', () => {
       // TODO: test needs to be added
     });
+
+    describe('values', () => {
+      // TODO: test needs to be added
+    });
   });
 
   describe('Private Functions', () => {

@@ -602,6 +602,10 @@ describe('Properties', () => {
       await expect(el.validity).to.equal('valid');
     });
   });
+
+  describe('isInitialState', () => {
+    // add tests for this property
+  });
 });
 
 describe('Slots', () => {
