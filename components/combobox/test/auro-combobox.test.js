@@ -124,7 +124,7 @@ function runFullTest(mobileView) {
       await sendKeys({ press: 'Backspace' });
       await sendKeys({ press: 'Backspace' });
       await sendKeys({ press: 'a' });
-
+      await elementUpdated(el);
 
       const firstEnabledOption = el.availableOptions.find((opt) => !opt.disabled && !opt.noMatch);
       await expect(el.optionActive).to.not.equal(noMatchOption);
