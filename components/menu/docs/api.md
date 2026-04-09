@@ -65,6 +65,7 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | `iconTag`     |            |           | `string`  |         |                                                  |
 | `isActive`    |            | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable.<br />An option is considered active if it is not hidden, not disabled, and not static. |
 | `key`         | `key`      |           | `string`  |         | Allows users to set a unique key for the menu option for specified option selection. If no key is provided, the value property will be used. |
+| `noMatch`     | `noMatch`  |           | `boolean` |         | When true, marks this option as the "no matching results" placeholder shown by combobox when the user's input does not match any available options. Enables distinct styling and prevents the option from being treated as a selectable match. |
 | `selected`    | `selected` |           | `boolean` | false   | Specifies that an option is selected.            |
 | `tabIndex`    | `tabIndex` |           | `number`  |         | Specifies the tab index of the menu option.      |
 | `unsubscribe` |            |           |           | null    |                                                  |
