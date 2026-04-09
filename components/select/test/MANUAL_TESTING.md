@@ -31,14 +31,12 @@
 [ ] Arrow Down at the last option — verify it wraps to the first option
 [ ] Arrow Up at the first option — verify it wraps to the last option
 [ ] Enter on a highlighted option — verify it selects the option, closes the bib, and returns focus to the trigger
-[ ] Space on a highlighted option — verify same behavior as Enter
 [ ] Escape — verify the bib closes without selecting, focus returns to the trigger
-[ ] Tab (no option highlighted) — verify the bib closes and focus moves to the next element on the page
-[ ] Tab (option highlighted) — verify the highlighted option is selected, the bib closes, and focus moves to the next element
-[ ] Shift+Tab — verify visual focus moves to the first non-disabled option and the bib stays open (no selection)
+[ ] Space on a highlighted option — verify same behavior as Escape
+[ ] Tab verify the highlighted option is selected, the bib closes, and focus moves to the next element
+[ ] Shift+Tab — verify the highlighted option is selected, the bib closes, and focus moves to the previous element
 [ ] Home — verify visual focus moves to the first option
 [ ] End — verify visual focus moves to the last option
-[ ] Type-ahead (type a character) — verify visual focus moves to the next option starting with that character
 
 ## Keyboard Interactions — Fullscreen (Mobile Dialog)
 
@@ -46,9 +44,12 @@
 [ ] Arrow Up — verify visual focus moves to the previous option (same as desktop)
 [ ] Enter on a highlighted option — verify it selects the option, closes the dialog, and returns focus to the trigger
 [ ] Escape — verify the dialog closes without selecting and focus returns to the trigger
+[ ] Space on a highlighted option — verify same behavior as Escape
 [ ] Tab (no option highlighted) — verify the dialog closes and focus returns to the trigger
 [ ] Tab (option highlighted) — verify the highlighted option is selected, the dialog closes, and focus returns to the trigger
-[ ] Shift+Tab — verify visual focus moves to the first non-disabled option and the dialog stays open (no selection)
+[ ] Shift+Tab — verify the highlighted option is selected, the dialog closes, and focus moves to the previous element
+[ ] Home — verify visual focus moves to the first option
+[ ] End — verify visual focus moves to the last option
 
 ## Touch / Tap Interactions
 
