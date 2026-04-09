@@ -1160,6 +1160,20 @@ describe('auro-input', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('input', () => {
+      // add tests for this event
+    });
+
+    describe('auroFormElement-validated', () => {
+      // add tests for this event
+    });
+
+    describe('auroInput-validityChange', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

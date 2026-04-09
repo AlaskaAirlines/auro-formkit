@@ -638,6 +638,20 @@ describe('Public Functions', () => {
   });
 });
 
+describe('Events', () => {
+  describe('change', () => {
+    // add tests for this event
+  });
+
+  describe('reset', () => {
+    // add tests for this event
+  });
+
+  describe('submit', () => {
+    // add tests for this event
+  });
+});
+
 describe('Private Functions', () => {
   // No private function tests
 });

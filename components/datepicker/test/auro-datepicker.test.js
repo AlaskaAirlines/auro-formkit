@@ -1413,6 +1413,28 @@ describe('auro-datepicker', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('auroDatePicker-valueSet', () => {
+      // add tests for this event
+    });
+
+    describe('auroDatePicker-toggled', () => {
+      // add tests for this event
+    });
+
+    describe('auroDatePicker-monthChanged', () => {
+      // add tests for this event
+    });
+
+    describe('auroDatePicker-newSlotContent', () => {
+      // add tests for this event
+    });
+
+    describe('auroFormElement-validated', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

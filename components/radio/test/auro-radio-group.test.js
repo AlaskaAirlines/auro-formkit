@@ -225,6 +225,16 @@ describe('auro-radio-group', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('auroFormElement-validated', () => {
+      // add tests for this event
+    });
+
+    describe('input', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

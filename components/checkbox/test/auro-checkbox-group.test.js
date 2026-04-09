@@ -104,7 +104,7 @@ describe('auro-checkbox-group', () => {
 
   describe('Properties', () => {
     describe('appearance', () => {
-        // add tests for this property
+      // add tests for this property
     });
 
     describe('disabled', () => {
@@ -374,7 +374,7 @@ describe('auro-checkbox-group', () => {
         const slot = el.shadowRoot.querySelector('slot:not([name])');
 
         await expect(slot).to.exist;
-        const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE);
+        const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE);
 
         await expect(assigned.length).to.be.greaterThan(0);
       });
@@ -426,13 +426,21 @@ describe('auro-checkbox-group', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('input', () => {
+      // add tests for this event
+    });
+
+    describe('auroFormElement-validated', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });
 
-
-
-  describe('AllY', () => {
+  describe('A11Y', () => {
     // Add missing tests
   });
 

@@ -42,6 +42,10 @@ describe('auro-helptext', () => {
     });
   });
 
+  describe('Events', () => {
+    // No events dispatched by this component
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

@@ -1000,6 +1000,24 @@ function runFullTest(mobileView) {
     });
   });
 
+  describe('Events', () => {
+    describe('auroCombobox-valueSet', () => {
+      // add tests for this event
+    });
+
+    describe('input', () => {
+      // add tests for this event
+    });
+
+    describe('inputValue', () => {
+      // add tests for this event
+    });
+
+    describe('auroFormElement-validated', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

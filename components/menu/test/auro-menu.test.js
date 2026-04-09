@@ -976,6 +976,40 @@ describe('auro-menu', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('auroMenu-activatedOption', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenu-customEventFired', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenu-loadingChange', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenu-selectValueFailure', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenu-deselectPrevented', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenu-selectValueReset', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenu-selectedOption', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenu-optionsChange', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     describe('makeSelection', () => {
       it('should select a nested option when makeSelection is called', async () => {

@@ -122,6 +122,28 @@ describe('auro-checkbox', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('change', () => {
+      // add tests for this event
+    });
+
+    describe('input', () => {
+      // add tests for this event
+    });
+
+    describe('auroCheckbox-input', () => {
+      // add tests for this event
+    });
+
+    describe('auroCheckbox-focusin', () => {
+      // add tests for this event
+    });
+
+    describe('auroCheckbox-focusout', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

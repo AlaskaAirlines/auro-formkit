@@ -192,6 +192,12 @@ describe('Public Functions', () => {
   });
 });
 
+describe('Events', () => {
+  describe('input', () => {
+    // add tests for this event
+  });
+});
+
 describe('Private Functions', () => {
   // No private function tests
 });

@@ -162,6 +162,36 @@ describe('auro-radio', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('toggleSelected', () => {
+      // add tests for this event
+    });
+
+    describe('change', () => {
+      // add tests for this event
+    });
+
+    describe('input', () => {
+      // add tests for this event
+    });
+
+    describe('focusSelected', () => {
+      // add tests for this event
+    });
+
+    describe('auroRadio-blur', () => {
+      // add tests for this event
+    });
+
+    describe('resetRadio', () => {
+      // add tests for this event
+    });
+
+    describe('auroRadio-selected', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

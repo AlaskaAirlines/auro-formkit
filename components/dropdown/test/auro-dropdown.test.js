@@ -652,6 +652,20 @@ describe("auro-dropdown", () => {
     });
   });
 
+  describe('Events', () => {
+    describe('auroDropdown-triggerClick', () => {
+      // add tests for this event
+    });
+
+    describe('auroDropdown-toggled', () => {
+      // add tests for this event
+    });
+
+    describe('auroDropdown-idAdded', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });

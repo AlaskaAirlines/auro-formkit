@@ -678,6 +678,20 @@ function runTest(mobileView) {
       });
     });
 
+    describe('Events', () => {
+      describe('auroSelect-valueSet', () => {
+        // add tests for this event
+      });
+
+      describe('input', () => {
+        // add tests for this event
+      });
+
+      describe('auroFormElement-validated', () => {
+        // add tests for this event
+      });
+    });
+
     describe('Private Functions', () => {
       // No private function tests
     });

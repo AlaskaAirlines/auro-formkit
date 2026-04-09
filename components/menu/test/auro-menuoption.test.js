@@ -54,6 +54,16 @@ describe('auro-menuoption', () => {
     });
   });
 
+  describe('Events', () => {
+    describe('auroMenuOption-mouseover', () => {
+      // add tests for this event
+    });
+
+    describe('auroMenuOption-click', () => {
+      // add tests for this event
+    });
+  });
+
   describe('Private Functions', () => {
     // No private function tests
   });
