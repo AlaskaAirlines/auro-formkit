@@ -2,7 +2,7 @@
 
 ## Mouse Interactions
 
-[ ] Click the trigger input — verify the bib opens (if options exist) and the input receives focus
+[ ] Click the trigger input — verify the bib opens (if options exist with typeahead) and the input receives focus
 [ ] Type text in the input — verify options filter in real time based on input
 [ ] Click a menu option — verify it becomes selected, the bib closes, and the trigger displays the selected value
 [ ] Click the clear button (X) — verify the input value clears, options reset, and the clear button disappears
@@ -22,7 +22,8 @@
 [ ] Tab to the combobox trigger — verify the input receives visible focus
 [ ] Arrow Down — verify the bib opens and visual focus moves to the first option
 [ ] Arrow Up — verify the bib opens and visual focus moves to the last option
-[ ] Enter — verify the bib opens
+[ ] Enter — verify the bib toggles open state if input has value
+[ ] Space — verify the bib toggles open
 [ ] Type characters — verify the bib opens (if matching options exist) and options filter
 
 ## Keyboard Interactions — Desktop (Popup Open)
@@ -31,11 +32,15 @@
 [ ] Arrow Up — verify visual focus moves to the previous option
 [ ] Arrow Down at the last option — verify it wraps to the first option
 [ ] Arrow Up at the first option — verify it wraps to the last option
+[ ] Home — verify visual focus moves to the first option
+[ ] End — verify visual focus moves to the last option
 [ ] Enter on a highlighted option — verify it selects the option, closes the bib, and returns focus to the trigger
 [ ] Escape — verify the bib closes without selecting, focus returns to the trigger input
-[ ] Tab (no option highlighted) — verify the bib closes and focus moves to the next element on the page
-[ ] Tab (option highlighted) — verify the highlighted option is selected, the bib closes, and focus moves to the next element
-[ ] Shift+Tab — verify visual focus moves to the first non-disabled option and the bib stays open (no selection)
+[ ] Space - verify it does NOT select the highlighted option but does type a space character into the input (note: this may require custom handling to prevent default spacebar behavior from selecting an option when the bib is open)
+[ ] Tab (option highlighted) — verify the highlighted option is selected, the bib closes, and focus moves to the clear button
+[ ] Tab (no matching option) - verify the focus moves to the next element without selecting an option and the bib closes
+[ ] Shift+Tab (options highlighted) — verify the highlighted option is selected, the bib closes, and focus moves to the previous element on the page.
+[ ] Shift+Tab (no matching option) - verify the focus moves to the previous element without selecting an option and the bib closes
 [ ] Continue typing while options are highlighted — verify the filter updates and option highlight adjusts
 
 ## Keyboard Interactions — Fullscreen (Mobile Dialog)
@@ -48,7 +53,8 @@
 [ ] Escape — verify the dialog closes without selecting and focus returns to the trigger
 [ ] Tab (focus on input, clear button visible) — verify focus moves to the clear button
 [ ] Tab (focus on clear button, option highlighted) — verify the highlighted option is selected, the dialog closes, and focus returns to the trigger
-[ ] Shift+Tab — verify highlighted option is selected, the dialog closes, and focus moves to the previous element on the page (note: Shift+Tab behavior in fullscreen dialog may be inconsistent across browsers and may require custom handling for proper focus management)
+[ ] Shift+Tab (options highlighted) — verify the highlighted option is selected, the dialog closes, and focus moves to the previous element on the page (note: Shift+Tab behavior in fullscreen dialog may be inconsistent across browsers and may require custom handling for proper focus management)
+[ ] Shift+Tab (no matching option) - verify the focus moves to the previous element without selecting an option and the dialog closes
 
 ## Touch / Tap Interactions
 
