@@ -83,6 +83,7 @@ export class AuroMenuOption extends AuroElement {
     this.selected = false;
     this.noCheckmark = false;
     this.disabled = false;
+    this.noMatch = false;
 
     /**
      * @private
@@ -163,7 +164,8 @@ export class AuroMenuOption extends AuroElement {
        */
       noMatch: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        attribute: 'nomatch'
       },
 
       /**
