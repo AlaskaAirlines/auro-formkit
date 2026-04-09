@@ -159,6 +159,14 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
+       * When true, marks this option as the "no matching results" placeholder shown by combobox when the user's input does not match any available options. Enables distinct styling and prevents the option from being treated as a selectable match.
+       */
+      noMatch: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * Specifies that an option is selected.
        */
       selected: {
