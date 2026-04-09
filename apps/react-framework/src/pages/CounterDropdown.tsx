@@ -1,19 +1,3 @@
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'auro-counter-group': React.HTMLAttributes<HTMLElement> & {
-        isDropdown?: boolean | '';
-        min?: string | number;
-        max?: string | number;
-      };
-      'auro-counter': React.HTMLAttributes<HTMLElement> & {
-        min?: string | number;
-        max?: string | number;
-      };
-    }
-  }
-}
-
 export default function CounterDropdown() {
   return (
     <div>

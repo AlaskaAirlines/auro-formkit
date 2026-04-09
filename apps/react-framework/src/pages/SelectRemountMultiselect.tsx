@@ -1,15 +1,5 @@
 import { useState } from 'react';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'auro-select': React.HTMLAttributes<HTMLElement> & { value?: string; multiselect?: boolean };
-      'auro-menu': React.HTMLAttributes<HTMLElement>;
-      'auro-menuoption': React.HTMLAttributes<HTMLElement> & { value?: string };
-    }
-  }
-}
-
 const OPTIONS: [string, string][] = [
   ['foo', 'Foo'],
   ['bar', 'Bar'],
