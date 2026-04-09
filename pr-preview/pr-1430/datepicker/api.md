@@ -1759,6 +1759,63 @@ export function inDialogExample() {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+### Datepicker in Drawer
+
+The following example demonstrates the use of `<auro-datepicker>` within an `<auro-drawer>` component.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/in-drawer.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/in-drawer.html -->
+  <div>
+    <auro-button id="datepicker-drawer-opener">Datepicker in Drawer</auro-button>
+    <auro-drawer id="datepicker-drawer">
+      <span slot="header">Datepicker in Drawer</span>
+      <div slot="content">
+        <auro-datepicker>
+          <span slot="bib.fullscreen.headline">inDrawer Example</span>
+        </auro-datepicker>
+      </div>
+    </auro-drawer>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.html -->
+
+```html
+<div>
+  <auro-button id="datepicker-drawer-opener">Datepicker in Drawer</auro-button>
+  <auro-drawer id="datepicker-drawer">
+    <span slot="header">Datepicker in Drawer</span>
+    <div slot="content">
+      <auro-datepicker>
+        <span slot="bib.fullscreen.headline">inDrawer Example</span>
+      </auro-datepicker>
+    </div>
+  </auro-drawer>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.js -->
+
+```js
+export function inDrawerExample() {
+  document.querySelector("#datepicker-drawer-opener").addEventListener("click", () => {
+    const drawer = document.querySelector("#datepicker-drawer");
+    if (drawer.hasAttribute('open')) {
+      drawer.removeAttribute('open');
+    } else {
+      drawer.setAttribute('open', true);
+    }
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ## Restyle Component with CSS Variables
 
 The component may be restyled by changing the values of the following token(s).
