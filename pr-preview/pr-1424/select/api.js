@@ -3,6 +3,7 @@ import { valueExample } from "../apiExamples/value";
 import { valueExtractionExample } from "../apiExamples/value-extraction";
 import { valueAlertExample } from "../apiExamples/value-alert";
 import { inDialogExample } from '../apiExamples/in-dialog';
+import { inDrawerExample } from '../apiExamples/in-drawer';
 import { resetStateExample } from "../apiExamples/reset-state";
 import { updateActiveOptionExample } from "../apiExamples/update-active-option.js";
 // import { auroMenuLoadingExample } from "../apiExamples/loading";
@@ -23,6 +24,7 @@ export function initExamples(initCount) {
     valueExtractionExample();
     valueAlertExample();
     inDialogExample();
+    inDrawerExample();
     resetStateExample();
     updateActiveOptionExample();
     // auroMenuLoadingExample();

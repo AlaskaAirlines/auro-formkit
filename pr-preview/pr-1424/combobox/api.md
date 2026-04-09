@@ -2097,6 +2097,81 @@ export function inDialogExample() {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+### In Drawer
+
+Example use of component within an `auro-drawer`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/in-drawer.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/in-drawer.html -->
+  <div>
+    <auro-button id="combobox-drawer-opener">Combobox in Drawer</auro-button>
+    <auro-drawer id="combobox-drawer">
+      <span slot="header">Combobox in Drawer</span>
+      <div slot="content">
+        <auro-combobox>
+          <span slot="bib.fullscreen.headline">Bib Header</span>
+          <span slot="label">Name</span>
+          <auro-menu>
+            <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+            <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+            <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+            <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+            <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+            <auro-menuoption static nomatch>No matching option</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      </div>
+    </auro-drawer>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.html -->
+
+```html
+<div>
+  <auro-button id="combobox-drawer-opener">Combobox in Drawer</auro-button>
+  <auro-drawer id="combobox-drawer">
+    <span slot="header">Combobox in Drawer</span>
+    <div slot="content">
+      <auro-combobox>
+        <span slot="bib.fullscreen.headline">Bib Header</span>
+        <span slot="label">Name</span>
+        <auro-menu>
+          <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
+          <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
+          <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
+          <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
+          <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
+          <auro-menuoption static nomatch>No matching option</auro-menuoption>
+        </auro-menu>
+      </auro-combobox>
+    </div>
+  </auro-drawer>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.js -->
+
+```js
+export function inDrawerExample() {
+  document.querySelector("#combobox-drawer-opener").addEventListener("click", () => {
+    const drawer = document.querySelector("#combobox-drawer");
+    if (drawer.hasAttribute('open')) {
+      drawer.removeAttribute('open');
+    } else {
+      drawer.setAttribute('open', true);
+    }
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ### Persistent Menu Option with a Custom Event
 
 This example demonstrates a static menu option that will always appears regardless of the suggestion filtering performed. In this example "Add new address" will always be a displayed menu option.

@@ -1313,6 +1313,101 @@ export function inDialogExample() {
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 
+### Dropdown in Drawer
+
+The element used within an `auro-drawer`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/in-drawer.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/in-drawer.html -->
+  <div>
+    <auro-button id="dropdown-drawer-opener">Dropdown in Drawer</auro-button>
+    <auro-drawer id="dropdown-drawer">
+      <span slot="header">Dropdown in Drawer</span>
+      <div slot="content">
+        <auro-dropdown id="in-drawer-dropdown" layout="classic" shape="classic" size="lg">
+          <div style="padding: var(--ds-size-150);">
+            Lorem ipsum dolor
+            <br />
+            <auro-button id="in-drawer-dismiss-btn">
+              Dismiss Dropdown
+            </auro-button>
+          </div>
+          <span slot="helpText">
+            Help text
+          </span>
+          <span slot="label">
+            Element label (default text will be read by screen reader)
+          </span>
+          <div slot="trigger">
+            Dropdown Trigger in Drawer
+          </div>
+        </auro-dropdown>
+      </div>
+    </auro-drawer>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.html -->
+
+```html
+<div>
+  <auro-button id="dropdown-drawer-opener">Dropdown in Drawer</auro-button>
+  <auro-drawer id="dropdown-drawer">
+    <span slot="header">Dropdown in Drawer</span>
+    <div slot="content">
+      <auro-dropdown id="in-drawer-dropdown" layout="classic" shape="classic" size="lg">
+        <div style="padding: var(--ds-size-150);">
+          Lorem ipsum dolor
+          <br />
+          <auro-button id="in-drawer-dismiss-btn">
+            Dismiss Dropdown
+          </auro-button>
+        </div>
+        <span slot="helpText">
+          Help text
+        </span>
+        <span slot="label">
+          Element label (default text will be read by screen reader)
+        </span>
+        <div slot="trigger">
+          Dropdown Trigger in Drawer
+        </div>
+      </auro-dropdown>
+    </div>
+  </auro-drawer>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.js -->
+
+```js
+export function inDrawerExample() {
+  const openBtn = document.querySelector("#dropdown-drawer-opener");
+  const closeBtn = document.querySelector("#in-drawer-dismiss-btn");
+  const dropdown = document.querySelector("#in-drawer-dropdown");
+
+  openBtn?.addEventListener("click", () => {
+    const drawer = document.querySelector("#dropdown-drawer");
+    if (drawer.hasAttribute('open')) {
+      drawer.removeAttribute('open');
+    } else {
+      drawer.setAttribute('open', true);
+    }
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    dropdown?.hide();
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
 ## Restyle Component with CSS Variables
 
 The component may be restyled by changing the values of the following token(s).

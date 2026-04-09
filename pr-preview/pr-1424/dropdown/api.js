@@ -8,6 +8,7 @@ import { matchWidthExample } from '../apiExamples/match-width.js';
 import { hideExample } from './../apiExamples/programmatically-hide';
 import { showExample } from './../apiExamples/programmatically-show';
 import { inDialogExample } from './../apiExamples/in-dialog';
+import { inDrawerExample } from './../apiExamples/in-drawer';
 import '../src/registered.js';
 
 export function initExamples() {
@@ -21,4 +22,5 @@ export function initExamples() {
   hideExample();
   showExample();
   inDialogExample();
+  inDrawerExample();
 }
