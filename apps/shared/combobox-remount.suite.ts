@@ -102,5 +102,124 @@ export function comboboxRemountSuite(framework: string, options?: SuiteOptions) 
       expect(result.value).toBeUndefined();
       expect(result.optionSelected).toBeUndefined();
     });
+
+    test('no uncaught errors on initial mount', async ({ page }) => {
+      const pageErrors: string[] = [];
+      page.on('pageerror', (err) => pageErrors.push(err.message));
+
+      await page.goto(route);
+      await page.waitForFunction(() => customElements.get('auro-combobox') !== undefined, { timeout: 10_000 });
+      await waitForComboboxValue(page, initialValue);
+
+      const componentErrors = pageErrors.filter(
+        (msg) =>
+          msg.includes('selectOption') ||
+          msg.includes('deselectOption') ||
+          msg.includes("reading '0'") ||
+          msg.includes('null'),
+      );
+      expect(componentErrors, `Expected no component errors on mount, got: ${componentErrors.join('; ')}`).toEqual([]);
+    });
+
+    test('no uncaught errors after DOM remount', async ({ page }) => {
+      const pageErrors: string[] = [];
+      page.on('pageerror', (err) => pageErrors.push(err.message));
+
+      await page.goto(route);
+      await page.waitForFunction(() => customElements.get('auro-combobox') !== undefined, { timeout: 10_000 });
+      await waitForComboboxValue(page, initialValue);
+
+      pageErrors.length = 0;
+
+      // Unmount
+      await page.locator('#toggle').click();
+      await page.waitForSelector('auro-combobox', { state: 'detached' });
+
+      // Remount
+      await page.locator('#toggle').click();
+      await page.waitForSelector('auro-combobox', { state: 'attached' });
+      await waitForComboboxValue(page, initialValue);
+
+      const componentErrors = pageErrors.filter(
+        (msg) =>
+          msg.includes('selectOption') ||
+          msg.includes('deselectOption') ||
+          msg.includes("reading '0'") ||
+          msg.includes('null'),
+      );
+      expect(componentErrors, `Expected no component errors on remount, got: ${componentErrors.join('; ')}`).toEqual([]);
+    });
+
+    test('no TypeError when selected changes before menu context is delivered', async ({ page }) => {
+      // Reproduces the timing race where auro-menuoption.updated() fires with
+      // a selected change before ContextConsumer delivers the menuService.
+      // Expected error: TypeError: Cannot read properties of null (reading 'selectOption')
+      const pageErrors: string[] = [];
+      page.on('pageerror', (err) => pageErrors.push(err.message));
+
+      await page.goto(route);
+      await page.waitForFunction(() => customElements.get('auro-combobox') !== undefined, { timeout: 10_000 });
+      await waitForComboboxValue(page, initialValue);
+
+      // Force the race: null out menuService then change selected.
+      await page.evaluate(() => {
+        const option = document.querySelector('auro-menuoption') as any;
+        option.menuService = null;
+        option.selected = !option.selected;
+      });
+
+      await page.waitForTimeout(500);
+
+      const componentErrors = pageErrors.filter(
+        (msg) =>
+          msg.includes('selectOption') ||
+          msg.includes('deselectOption') ||
+          msg.includes('null'),
+      );
+      expect(
+        componentErrors,
+        `Expected no errors when selected changes before context delivery, got: ${componentErrors.join('; ')}`,
+      ).toEqual([]);
+    });
+
+    test('no TypeError when menu valueChange event has undefined options', async ({ page }) => {
+      // Reproduces the error where auro-menu.handleMenuChange accesses
+      // event.options[0] without guarding for undefined options.
+      // Expected error: TypeError: Cannot read properties of undefined (reading '0')
+      const pageErrors: string[] = [];
+      page.on('pageerror', (err) => pageErrors.push(err.message));
+
+      await page.goto(route);
+      await page.waitForFunction(() => customElements.get('auro-combobox') !== undefined, { timeout: 10_000 });
+      await waitForComboboxValue(page, initialValue);
+
+      // Wrapped in setTimeout so the throw becomes an uncaught page error
+      // (captured by the pageerror listener) instead of rejecting page.evaluate.
+      await page.evaluate(() => {
+        const menu = document.querySelector('auro-menu') as any;
+        setTimeout(() => {
+          menu.handleMenuChange({
+            type: 'valueChange',
+            value: undefined,
+            stringValue: undefined,
+            keys: undefined,
+            options: undefined,
+          });
+        }, 0);
+      });
+
+      await page.waitForTimeout(500);
+
+      const componentErrors = pageErrors.filter(
+        (msg) =>
+          msg.includes("reading '0'") ||
+          msg.includes("reading 'length'") ||
+          msg.includes('undefined'),
+      );
+      expect(
+        componentErrors,
+        `Expected no errors when valueChange has undefined options, got: ${componentErrors.join('; ')}`,
+      ).toEqual([]);
+    });
   });
 }
