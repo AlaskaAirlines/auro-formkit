@@ -876,6 +876,7 @@ export class AuroDatePicker extends AuroElement {
           // is already inert when the modal opens. noHideOnThisFocusLoss
           // prevents the floater from closing the bib when focus leaves.
           this.dropdown.trigger.inert = true;
+          this.dropdown.noHideOnThisFocusLoss = true;
 
           // The dropdown sets disableFocusTrap, so its own updated() lifecycle
           // opens the dialog as non-modal (dialog.setAttribute('open', '')).
@@ -908,6 +909,7 @@ export class AuroDatePicker extends AuroElement {
         // still has focus (e.g. Escape, date selected) — not when the user tabbed away,
         // which would pull them back and require extra Tab presses to escape.
         this.dropdown.trigger.inert = false;
+        this.dropdown.noHideOnThisFocusLoss = false;
         if (this.hasFocus) {
           requestAnimationFrame(() => {
             if (!this.dropdown.isPopoverVisible) {

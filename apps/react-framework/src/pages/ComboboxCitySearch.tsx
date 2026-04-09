@@ -60,11 +60,14 @@ function searchCities(query: string): Station[] {
   );
 }
 
-function ComboboxWrapper() {
+interface ComboboxWrapperProps {
+  onSelectedValueChange: (value: string) => void;
+}
+
+function ComboboxWrapper({ onSelectedValueChange }: ComboboxWrapperProps) {
   const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
   const comboboxRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLElement & { loading?: boolean }>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -98,8 +101,8 @@ function ComboboxWrapper() {
 
   const handleOptionSelected = useCallback((event: Event) => {
     const el = event.target as any;
-    setSelectedValue(el?.value ?? '');
-  }, []);
+    onSelectedValueChange(el?.value ?? '');
+  }, [onSelectedValueChange]);
 
   useEffect(() => {
     const el = comboboxRef.current;
@@ -116,8 +119,7 @@ function ComboboxWrapper() {
 
   return (
     <>
-      <div id="selected-value" data-testid="selected-value">{selectedValue}</div>
-      <auro-combobox ref={comboboxRef} noFilter persistInput required autocomplete="off">
+      <auro-combobox ref={comboboxRef} noFilter persistInput required autocomplete="off" dvInputOnly>
         <span slot="label">From</span>
         <auro-menu ref={menuRef} hasLoadingPlaceholder>
           {stations.map((city) => (
@@ -154,13 +156,15 @@ function ComboboxWrapper() {
 
 export default function ComboboxCitySearch() {
   const [show, setShow] = useState(true);
+  const [selectedValue, setSelectedValue] = useState('');
 
   return (
     <div>
       <button id="toggle" onClick={() => setShow((s) => !s)}>
         {show ? 'Hide' : 'Show'} Combobox
       </button>
-      {show && <ComboboxWrapper />}
+      <div id="selected-value" data-testid="selected-value">{selectedValue}</div>
+      {show && <ComboboxWrapper onSelectedValueChange={setSelectedValue} />}
     </div>
   );
 }

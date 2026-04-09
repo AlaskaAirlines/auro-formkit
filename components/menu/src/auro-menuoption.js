@@ -265,7 +265,7 @@ export class AuroMenuOption extends AuroElement {
       this.setAttribute('aria-selected', this.selected.toString());
 
       // Update menu service selection state if this isn't an internal update
-      if (this.internalUpdateInProgress !== true) {
+      if (this.internalUpdateInProgress !== true && this.menuService) {
         this.menuService[this.selected ? 'selectOption' : 'deselectOption'](this);
       }
     }
@@ -300,9 +300,10 @@ export class AuroMenuOption extends AuroElement {
   }
 
   disconnectedCallback() {
-    if (this.menuService) {
-      this.menuService.unsubscribe(this.handleMenuChange);
-      this.menuService.removeMenuOption(this);
+    const { menuService } = this;
+    if (menuService) {
+      menuService.unsubscribe(this.handleMenuChange);
+      menuService.removeMenuOption(this);
     }
   }
 
@@ -471,9 +472,11 @@ export class AuroMenuOption extends AuroElement {
    * @private
    */
   handleMouseEnter() {
-    if (!this.disabled) {
-      this.menuService.setHighlightedOption(this);
+    const { menuService } = this;
+    if (!menuService || this.disabled) {
+      return;
     }
+    menuService.setHighlightedOption(this);
   }
 
   /**

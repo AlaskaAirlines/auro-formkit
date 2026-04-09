@@ -607,6 +607,9 @@ export class MenuService {
     this.notify({ type: 'optionsChange', options: this._menuOptions });
 
     if (this._pendingValue != null) {
+      // Reset the retry count so a new option registration gives a fresh
+      // budget — the initial retries fired before delayed options arrived.
+      this._pendingRetryCount = 0;
       this.queuePendingValue(this._pendingValue);
     }
   }

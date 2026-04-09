@@ -2,10 +2,16 @@ import { test, expect, type Page } from '@playwright/test';
 
 /** Type text into the auro-combobox's internal shadow-DOM input. */
 async function typeIntoCombobox(page: Page, text: string) {
-  // Pierce shadow DOM to reach the native input inside auro-combobox
-  const input = page.locator('auro-combobox').locator('input').first();
-  await input.click();
-  await input.fill(text);
+  // Current combobox internals keep role="combobox" inputs visually hidden.
+  // Drive filtering via the component's public inputValue event instead.
+  await page.locator('auro-combobox').evaluate((el: any, value: string) => {
+    el.typedValue = value;
+    el.dispatchEvent(new CustomEvent('inputValue', {
+      bubbles: true,
+      composed: true,
+      detail: { value },
+    }));
+  }, text);
 }
 
 /** Wait until auro-menuoption elements with the given value are present in the DOM. */

@@ -62,13 +62,13 @@
 		);
 	}
 
-	// Pre-seeded with SEA to test initial-value rendering with the full Planbook config.
+	// Pre-seeded with destination-style SFO to mirror local-storage-like rehydration.
 	let comboboxElement = $state({} as any);
 	let stations = $state<Station[]>([]);
 	let loading = $state(false);
 	let hasSearched = $state(false);
-	let selectedValue = $state('SEA');
-	let typedInputValue = $state('SEA');
+	let selectedValue = $state('SFO');
+	let typedInputValue = $state('');
 	let appearance = $state<'default' | 'inverse'>('default');
 	let showCombobox = $state(true);
 	let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -114,10 +114,10 @@
 </script>
 
 <div class="page">
-	<h2 style="margin: 0 0 0.75rem;">Combobox: Full Planbook Config — Preselected (SEA)</h2>
+	<h2 style="margin: 0 0 0.75rem;">Combobox: Full Planbook Config — Preselected Destination</h2>
 	<p style="font-size: 0.85rem; color: #666; margin: 0 0 1rem;">
-		Same as the full-options page but with <code>value="SEA"</code> set on load.<br />
-		Tests that the combobox correctly reflects an initial value with all Planbook attributes active.
+		Same as the full-options page but with <code>value="SFO"</code> set on load and an empty typed value.<br />
+		Mirrors destination rehydration where code is preselected before user interaction.
 	</p>
 
 	<div class="controls">

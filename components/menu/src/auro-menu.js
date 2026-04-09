@@ -255,7 +255,11 @@ export class AuroMenu extends AuroElement {
    * @returns {string} - Returns the label of the currently selected option(s).
    */
   get currentLabel() {
-    return this.menuService.currentLabel;
+    const { menuService } = this;
+    if (!menuService) {
+      return '';
+    }
+    return menuService.currentLabel;
   };
 
   /**
@@ -278,7 +282,12 @@ export class AuroMenu extends AuroElement {
    * @param {number} value - Sets the index of the currently active option.
    */
   set index(value) {
-    this.menuService.setHighlightedIndex(value);
+    const { menuService } = this;
+    if (!menuService) {
+      return;
+    }
+
+    menuService.setHighlightedIndex(value);
   }
 
   /**
@@ -300,7 +309,11 @@ export class AuroMenu extends AuroElement {
    * @returns {String|Array<String>}
    */
   get formattedValue() {
-    return this.menuService.currentValue;
+    const { menuService } = this;
+    if (!menuService) {
+      return '';
+    }
+    return menuService.currentValue;
   }
 
   /**
@@ -344,7 +357,11 @@ export class AuroMenu extends AuroElement {
    * @param {HTMLElement} option - The option to set as active.
    */
   updateActiveOption(option) {
-    this.menuService.setHighlightedOption(option);
+    const { menuService } = this;
+    if (!menuService) {
+      return;
+    }
+    menuService.setHighlightedOption(option);
   }
 
   /**
@@ -372,7 +389,8 @@ export class AuroMenu extends AuroElement {
     if (event.type === 'valueChange') {
 
       // New option is array value or first option with fallback to undefined for empty array in all cases
-      const newOption = this.multiSelect && event.options.length ? event.options : event.options[0] || undefined;
+      const options = event.options || [];
+      const newOption = this.multiSelect && options.length ? options : options[0] || undefined;
       const newValue = event.stringValue;
 
       // Check if the option or value has actually changed
@@ -381,8 +399,11 @@ export class AuroMenu extends AuroElement {
         this.setInternalValue(newValue);
       }
 
-      // Notify components of selection change
-      this.notifySelectionChange(event);
+      // Notify components of selection change (pass normalized options to avoid undefined iterability errors)
+      this.notifySelectionChange({
+        ...event,
+        options
+      });
     }
 
     if (event.type === 'highlightChange') {
@@ -405,7 +426,11 @@ export class AuroMenu extends AuroElement {
    * @returns {Array<HTMLElement>}
    */
   get selectedOptions() {
-    return this.menuService ? this.menuService.selectedOptions : [];
+    const { menuService } = this;
+    if (!menuService) {
+      return [];
+    }
+    return menuService.selectedOptions;
   }
 
   /**
@@ -413,7 +438,11 @@ export class AuroMenu extends AuroElement {
    * @returns {HTMLElement|null}
    */
   get selectedOption() {
-    return this.menuService ? this.menuService.selectedOptions[0] : null;
+    const { menuService } = this;
+    if (!menuService) {
+      return null;
+    }
+    return menuService.selectedOptions[0] || null;
   }
 
   // Lifecycle Methods
@@ -457,7 +486,11 @@ export class AuroMenu extends AuroElement {
     // keys are not yet resolved (framework mount-order race), selectByValue
     // queues a bounded retry automatically via queuePendingValue.
     if (changedProperties.has('value') && !this.internalUpdateInProgress) {
-      this.menuService.selectByValue(this.value);
+      const { menuService } = this;
+      if (!menuService) {
+        return;
+      }
+      menuService.selectByValue(this.value);
     }
 
     // Handle loading state changes
@@ -522,7 +555,11 @@ export class AuroMenu extends AuroElement {
    * @protected
    */
   makeSelection() {
-    this.menuService.selectHighlightedOption();
+    const { menuService } = this;
+    if (!menuService) {
+      return;
+    }
+    menuService.selectHighlightedOption();
   }
 
   /**
@@ -541,7 +578,11 @@ export class AuroMenu extends AuroElement {
    * @public
    */
   reset() {
-    this.menuService.reset();
+    const { menuService } = this;
+    if (!menuService) {
+      return;
+    }
+    menuService.reset();
 
     // Dispatch reset event
     dispatchMenuEvent(this, 'auroMenu-selectValueReset');
@@ -576,10 +617,14 @@ export class AuroMenu extends AuroElement {
    * @protected
    */
   navigateOptions(direction) {
+    const { menuService } = this;
+    if (!menuService) {
+      return;
+    }
     if (direction === 'up') {
-      this.menuService.highlightPrevious();
+      menuService.highlightPrevious();
     } else if (direction === 'down') {
-      this.menuService.highlightNext();
+      menuService.highlightNext();
     }
   }
 
