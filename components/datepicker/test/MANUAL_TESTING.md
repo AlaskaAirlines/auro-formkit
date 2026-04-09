@@ -32,7 +32,7 @@ Note: Calendar keyboard navigation is NOT YET FULLY SUPPORTED. The following tes
 [ ] Type a date directly into the input — verify the format mask guides input (MM/DD/YYYY)
 [ ] Escape when the calendar is open — verify the calendar closes
 [ ] Tab through the clear button (when value is present) — verify it receives focus
-[ ] Enter/Space on the clear button — verify the value clears
+[ ] Enter/Space on the clear button — verify the value clears and focus returns to the input
 
 ### Fullscreen (Mobile) Mode — Keyboard
 [ ] Tab does NOT close the datepicker fullscreen dialog (exception from select/combobox behavior)
