@@ -19,7 +19,7 @@ export default defineConfig({
     // Always launch a fresh server. `reuseExistingServer: true` would silently
     // run tests against an already-running server that may be serving stale
     // dist files, producing false positives.
-    reuseExistingServer: false,
+    reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
 });

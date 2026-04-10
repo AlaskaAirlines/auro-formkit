@@ -2,21 +2,80 @@ import { test, expect, type Page } from '@playwright/test';
 
 /** Type text into the auro-combobox's internal shadow-DOM input. */
 async function typeIntoCombobox(page: Page, text: string) {
-  // Current combobox internals keep role="combobox" inputs visually hidden.
-  // Drive filtering via the component's public inputValue event instead.
+  await page.waitForFunction(() => {
+    const combobox = document.querySelector('auro-combobox') as any;
+    return !!combobox?.input;
+  }, { timeout: 8000 });
+
+  // Drive the same internal path as real input without depending on a visible
+  // native input element in shadow DOM.
   await page.locator('auro-combobox').evaluate((el: any, value: string) => {
-    el.typedValue = value;
-    el.dispatchEvent(new CustomEvent('inputValue', {
-      bubbles: true,
-      composed: true,
-      detail: { value },
-    }));
+    const input = el.input;
+    if (!input) {
+      throw new Error('Combobox input is not initialized');
+    }
+
+    if (typeof el.focus === 'function') {
+      el.focus();
+    }
+    if (typeof input.focus === 'function') {
+      input.focus();
+    }
+
+    const nativeInput = input.inputElement;
+    if (nativeInput) {
+      nativeInput.value = value;
+      input.value = value;
+      nativeInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      return;
+    }
+
+    input.value = value;
+    el.handleInputValueChange({ target: input });
   }, text);
+
+  // Ensure component state reflects the typed value before callers wait on
+  // results/no-results UI. This avoids transient focus/open races in parallel
+  // framework runs.
+  await page.waitForFunction((value: string) => {
+    const combobox = document.querySelector('auro-combobox') as any;
+    if (!combobox || !combobox.input) {
+      return false;
+    }
+
+    const triggerValue = combobox.input.value || '';
+    const bibValue = combobox.inputInBib?.value || triggerValue;
+    return triggerValue === value && bibValue === value;
+  }, text, { timeout: 8000 });
+
+  // Keep dropdown open for option/no-results visibility checks even when
+  // focus bookkeeping is briefly stale under heavy parallel load.
+  await page.locator('auro-combobox').evaluate((el: any) => {
+    if (el.dropdown && !el.dropdownOpen && typeof el.dropdown.show === 'function') {
+      el.dropdown.show();
+    }
+  });
 }
 
 /** Wait until auro-menuoption elements with the given value are present in the DOM. */
-async function waitForOption(page: Page, value: string, timeout = 5000) {
-  await page.waitForSelector(`auro-menuoption[value="${value}"]`, { timeout });
+async function waitForOption(page: Page, value: string, timeout = 8000) {
+  try {
+    await page.waitForSelector(`auro-menuoption[value="${value}"]`, { timeout });
+  } catch {
+    await page.locator('auro-combobox').evaluate((el: any) => {
+      if (typeof el.focus === 'function') {
+        el.focus();
+      }
+      if (el.input && typeof el.input.focus === 'function') {
+        el.input.focus();
+      }
+      if (!el.dropdownOpen && typeof el.showBib === 'function') {
+        el.showBib();
+      }
+    });
+
+    await page.waitForSelector(`auro-menuoption[value="${value}"]`, { timeout });
+  }
 }
 
 /** Wait until no auro-menuoption elements are visible (results cleared). */

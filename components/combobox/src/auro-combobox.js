@@ -649,14 +649,18 @@ export class AuroCombobox extends AuroElement {
   /**
    * Update displayValue or input.value, it's called when making a selection.
    * @param {string} label - The label of the selected option.
+   * @param {object} [options={}] - Optional display update settings.
+   * @param {boolean} [options.force=false] - Force display sync while focused.
    * @private
    */
-  updateTriggerTextDisplay(label) {
+  updateTriggerTextDisplay(label, options = {}) {
+    const { force = false } = options;
+
     // update the input content if persistInput is false
     // in suggestion mode, do not override input value if no selection has been made and the input currently has focus
     const isInputFocusedWithNoSelection = !this.menu.value && (this.input.matches(':focus-within') || (this.inputInBib && this.inputInBib.matches(':focus-within')));
 
-    if (!this.persistInput && !(this.behavior === 'suggestion' && isInputFocusedWithNoSelection)) {
+    if (!this.persistInput && (force || !(this.behavior === 'suggestion' && isInputFocusedWithNoSelection))) {
       this.input.value = label || this.value;
     }
 
@@ -733,6 +737,13 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
+    // Do not auto-open from programmatic value/option updates when the
+    // combobox is not focused. User-driven interactions still open normally
+    // once focus enters the component.
+    if (!this.componentHasFocus && !this.dropdown.isPopoverVisible) {
+      return;
+    }
+
     if (!this.input.value && !this.dropdown.isBibFullscreen) {
       this.dropdown.hide();
       return;
@@ -1021,6 +1032,25 @@ export class AuroCombobox extends AuroElement {
 
     // Handle menu option selection like select does
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
+      const hasMatchingOptionForValue =
+        typeof this.value === 'string' &&
+        this.value.length > 0 &&
+        this.menu && Array.isArray(this.menu.options) &&
+        this.menu.options.some((opt) => opt.value === this.value);
+
+      const isInitNoMatch = event.detail && event.detail.reason === 'no-match' &&
+        this.menu && this.menu.options && this.menu.options.length === 0 &&
+        typeof this.value === 'string' &&
+        this.value.length > 0;
+
+      const isTransientProgrammaticNoMatch = event.detail && event.detail.reason === 'no-match' &&
+        this._suppressNextEmptyInputClear &&
+        hasMatchingOptionForValue;
+
+      if (isInitNoMatch || isTransientProgrammaticNoMatch) {
+        return;
+      }
+
       // Update the optionSelected from the event details, not manually
       [this.optionSelected] = event.detail.options;
 
@@ -1196,7 +1226,18 @@ export class AuroCombobox extends AuroElement {
     }
 
     if (!this.input.value) {
-      this.clear();
+      const hasCommittedValue = typeof this.value === 'string' && this.value.length > 0;
+      const hasCommittedSelection = Boolean(this.menu && this.menu.optionSelected);
+      const isBlurSideEffect = !this.componentHasFocus && !this.dropdownOpen;
+      const isTransientEmptyInputEvent = this._suppressNextEmptyInputClear && (!event || !event.detail || event.detail.value === null || event.detail.value === undefined);
+
+      // Preserve a committed value when an empty input event is emitted as a
+      // side effect of focus leaving the combobox (e.g., clicking a swap
+      // control between two comboboxes). User-driven empty input while focused
+      // should still clear as before.
+      if (!(isTransientEmptyInputEvent || (isBlurSideEffect && hasCommittedValue && hasCommittedSelection))) {
+        this.clear();
+      }
     }
     this.handleMenuOptions();
 
@@ -1379,6 +1420,19 @@ export class AuroCombobox extends AuroElement {
   }
 
   updated(changedProperties) {
+    if (changedProperties.has('typedValue')) {
+      const nextTypedValue = this.typedValue === null || this.typedValue === undefined ? '' : this.typedValue;
+      if (this.input && this.input.value !== nextTypedValue) {
+        this.input.value = nextTypedValue;
+      }
+      if (this.inputInBib && this.inputInBib.value !== nextTypedValue) {
+        this.inputInBib.value = nextTypedValue;
+      }
+      if (this.menu) {
+        this.menu.matchWord = normalizeFilterValue(nextTypedValue);
+      }
+    }
+
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
       if (this.value && this.value.length > 0) {
@@ -1406,6 +1460,19 @@ export class AuroCombobox extends AuroElement {
           this.clear();
         }
       }
+
+      // Keep trigger text synced after value/menu state has settled. Force the
+      // update so external programmatic swaps reflect immediately in the UI
+      // even if the input still technically holds focus during the same tick.
+      if (this.value) {
+        const selectedOption = this.menu && this.menu.optionSelected;
+        const hasMatchingSelectedOption = selectedOption && selectedOption.value === this.value;
+        const selectedOptionLabel = (selectedOption && selectedOption.getAttribute('label')) || (selectedOption && selectedOption.textContent ? selectedOption.textContent.trim() : undefined);
+        const nextDisplayLabel = hasMatchingSelectedOption ? (selectedOptionLabel || this.value) : this.value;
+
+        this.updateTriggerTextDisplay(nextDisplayLabel, { force: true });
+      }
+
       if (this.value && !this.componentHasFocus) {
         // If the value got set programmatically make sure we hide the bib
         // when input is not taking the focus (input can be in dropdown.trigger or in bibtemplate)
@@ -1417,22 +1484,47 @@ export class AuroCombobox extends AuroElement {
         this.menu.matchWord = normalizeFilterValue(this.input.value);
       }
 
-      this.dispatchEvent(new CustomEvent('input', {
-        bubbles: true,
-        cancelable: false,
-        composed: true,
-        detail: {
-          optionSelected: this.menu.optionSelected,
-          value: this.menu.value
-        }
-      }));
+      // Only dispatch 'input' when the value transition is meaningful — at least one
+      // of old/new must be a non-empty string.  Skipping the event when both are
+      // empty/undefined prevents a feedback loop during SPA navigation where Lit's
+      // initial update cycle fires before the parent framework (e.g. Svelte) has
+      // had a chance to set the preselected value as a property.  Without this
+      // guard the event arrives with el.value === undefined, the surrounding
+      // framework reads it as '' and writes that back, permanently obscuring the
+      // intended preselected value.
+      const _oldValue = changedProperties.get('value');
+      const _oldIsNonEmpty = typeof _oldValue === 'string' && _oldValue.length > 0;
+      const _newIsNonEmpty = typeof this.value === 'string' && this.value.length > 0;
 
-      // Deprecated, need to be removed.
-      this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
-        bubbles: true,
-        cancelable: false,
-        composed: true,
-      }));
+      if (_newIsNonEmpty && this.menu && Array.isArray(this.menu.options) && this.menu.options.some((opt) => opt.value === this.value)) {
+        this._suppressNextEmptyInputClear = true;
+        clearTimeout(this._suppressNextEmptyInputClearTimeout);
+        const suppressNextEmptyInputClearDelay = 300;
+        this._suppressNextEmptyInputClearTimeout = setTimeout(() => {
+          this._suppressNextEmptyInputClear = false;
+        }, suppressNextEmptyInputClearDelay);
+      } else {
+        this._suppressNextEmptyInputClear = false;
+      }
+
+      if (_oldIsNonEmpty || _newIsNonEmpty) {
+        this.dispatchEvent(new CustomEvent('input', {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+          detail: {
+            optionSelected: this.menu.optionSelected,
+            value: this.menu.value
+          }
+        }));
+
+        // Deprecated, need to be removed.
+        this.dispatchEvent(new CustomEvent('auroCombobox-valueSet', {
+          bubbles: true,
+          cancelable: false,
+          composed: true,
+        }));
+      }
     }
 
     if (changedProperties.has('availableOptions')) {

@@ -328,10 +328,15 @@ export class MenuService {
       return;
     }
 
+    const before = this.selectedOptions || [];
     const optionsSet = new Set(optionsToDeselect);
-    this.selectedOptions = (this.selectedOptions || [])
-      .filter(opt => !optionsSet.has(opt));
+    const after = before.filter(opt => !optionsSet.has(opt));
 
+    if (this.optionsArraysMatch(after, before)) {
+      return;
+    }
+
+    this.selectedOptions = after;
     this.stageUpdate();
   }
 
@@ -424,6 +429,16 @@ export class MenuService {
 
       if (hasUnresolvedKeys) {
         this.queuePendingValue(value);
+        return;
+      }
+
+      const hostValue = this.host && this.host.value;
+      const hostHasValue = hostValue !== undefined &&
+        hostValue !== null &&
+        (!Array.isArray(hostValue) || hostValue.length > 0) &&
+        (typeof hostValue !== 'string' || hostValue.trim() !== '');
+
+      if (hostHasValue && this._pendingValue != null) {
         return;
       }
 

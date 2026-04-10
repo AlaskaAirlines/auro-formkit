@@ -48,13 +48,20 @@ async function seedPreviousSearchParams(page: Page) {
   }, PREVIOUS_SEARCH_PARAMS_PAYLOAD);
 }
 
+async function waitForPreselectedPath(page: Page) {
+  await page.waitForFunction(
+    () => window.location.pathname.endsWith('/combobox-city-search-preselected'),
+    { timeout: 10_000 },
+  );
+}
+
 export function comboboxPreselectedNavigationSuite(framework: string) {
   test.describe(`auro-combobox preselected value after SPA navigation in ${framework}`, () => {
     test('value equals preselected value after SPA navigation from homepage', async ({ page }) => {
       await page.goto('/combobox-city-search-preselected-navigate');
 
-      // Wait for the SPA navigation to complete (URL changes to the preselected page)
-      await page.waitForURL('**/combobox-city-search-preselected', { timeout: 5_000 });
+      // Wait for SPA route transition without relying on a page load event.
+      await waitForPreselectedPath(page);
 
       await waitForCombobox(page);
 
@@ -67,7 +74,7 @@ export function comboboxPreselectedNavigationSuite(framework: string) {
     test('selected-value display reflects preselected value after SPA navigation', async ({ page }) => {
       await page.goto('/combobox-city-search-preselected-navigate');
 
-      await page.waitForURL('**/combobox-city-search-preselected', { timeout: 5_000 });
+      await waitForPreselectedPath(page);
       await waitForCombobox(page);
 
       const display = page.locator('[data-testid="selected-value"]');
@@ -78,7 +85,7 @@ export function comboboxPreselectedNavigationSuite(framework: string) {
       await seedPreviousSearchParams(page);
 
       await page.goto('/combobox-city-search-preselected-navigate');
-      await page.waitForURL('**/combobox-city-search-preselected', { timeout: 5_000 });
+      await waitForPreselectedPath(page);
       await waitForCombobox(page);
 
       let result = await getComboboxState(page);

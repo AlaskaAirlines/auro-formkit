@@ -87,6 +87,56 @@ function runFullTest(mobileView) {
 
   describe('User Stories', () => {
 
+    it('preserves programmatic swapped values when focus leaves to an external control', async () => {
+      const root = await fixture(html`
+        <div>
+          <auro-combobox id="left">
+            <span slot="label">Left</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+          <button id="swapBtn" type="button">Swap</button>
+          <auro-combobox id="right">
+            <span slot="label">Right</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        </div>
+      `);
+
+      const left = root.querySelector('#left');
+      const right = root.querySelector('#right');
+      const swapBtn = root.querySelector('#swapBtn');
+
+      left.value = 'Apples';
+      right.value = 'Oranges';
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      swapBtn.addEventListener('click', () => {
+        const leftValue = left.value;
+        const rightValue = right.value;
+        left.value = rightValue;
+        right.value = leftValue;
+      });
+
+      left.click();
+      swapBtn.click();
+
+      await new Promise((resolve) => setTimeout(resolve, 120));
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      expect(left.value).to.equal('Oranges');
+      expect(right.value).to.equal('Apples');
+      expect(left.input.value).to.equal('Oranges');
+      expect(right.input.value).to.equal('Apples');
+    });
+
     // it('reset method clears the value and validity state', async () => {
     //   const el = await requiredFixture(mobileView);
 
