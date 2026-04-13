@@ -440,7 +440,54 @@ function runFullTest(mobileView) {
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
-    // These tests require fullscreen (mobile) mode
+    it('should swap values between two comboboxes', async () => {
+      const wrapper = await fixture(html`
+        <div>
+          <auro-combobox id="left">
+            <span slot="label">Left</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption value="Peaches">Peaches</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+          <auro-combobox id="right">
+            <span slot="label">Right</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption value="Peaches">Peaches</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        </div>
+      `);
+
+      const left = wrapper.querySelector('#left');
+      const right = wrapper.querySelector('#right');
+
+      // Set initial values
+      left.value = 'Apples';
+      right.value = 'Oranges';
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      await expect(left.value).to.equal('Apples');
+      await expect(right.value).to.equal('Oranges');
+
+      // Swap values (same logic as the swap demo)
+      const leftVal = left.value;
+      const rightVal = right.value;
+      left.value = rightVal;
+      right.value = leftVal;
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      await expect(left.value).to.equal('Oranges');
+      await expect(right.value).to.equal('Apples');
+      await expect(left.input.value).to.equal('Oranges');
+      await expect(right.input.value).to.equal('Apples');
+    });
+
   });
 
   describe('Properties', () => {

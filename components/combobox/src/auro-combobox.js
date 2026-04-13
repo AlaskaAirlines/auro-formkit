@@ -1391,6 +1391,18 @@ export class AuroCombobox extends AuroElement {
         this.input.value = this.value;
       }
 
+      // Remove hidden attributes from non-static options before selection so
+      // that selectByValue can find the target option even when a previous
+      // filter had hidden it.  The auroMenu-selectedOption handler will
+      // re-apply the correct filter after the selection completes.
+      if (this.menu && this.hasValue && this.menu.options) {
+        this.menu.options.forEach((opt) => {
+          if (!opt.hasAttribute('static')) {
+            opt.removeAttribute('hidden');
+          }
+        });
+      }
+
       if (this.behavior === 'suggestion') {
         // if menu has an option that has matched value, then select it,
         // otherwise clear the menu value since the input value doesn't match any option
