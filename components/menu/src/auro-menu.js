@@ -57,7 +57,7 @@ export class AuroMenu extends AuroElement {
     this.size = "sm";
 
     // Value of the selected options
-    this.value = undefined;
+    // this.value = undefined;
     // Currently selected option
     this.optionSelected = undefined;
     // String used for highlighting/filtering
@@ -370,6 +370,8 @@ export class AuroMenu extends AuroElement {
    */
   handleMenuChange(event) {
     if (event.type === 'valueChange') {
+      console.log('[VTRACE menu handleMenuChange valueChange] stringValue:', JSON.stringify(event.stringValue), 'reason:', event.reason, 'options:', event.options?.length);
+      console.trace('[VTRACE menu handleMenuChange STACK]');
 
       // New option is array value or first option with fallback to undefined for empty array in all cases
       const newOption = this.multiSelect && event.options.length ? event.options : event.options[0] || undefined;

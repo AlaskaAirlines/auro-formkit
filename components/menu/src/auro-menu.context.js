@@ -301,7 +301,7 @@ export class MenuService {
       this.selectedOptions = [optionsToSelect[optionsToSelect.length - 1]];
     }
 
-    this.stageUpdate();
+    this.stageUpdate({ _src: 'selectOptions' });
   }
 
   /**
@@ -329,10 +329,18 @@ export class MenuService {
     }
 
     const optionsSet = new Set(optionsToDeselect);
+    const previousCount = this.selectedOptions.length;
     this.selectedOptions = (this.selectedOptions || [])
       .filter(opt => !optionsSet.has(opt));
 
-    this.stageUpdate();
+    // Only notify when an option was actually removed from the selection.
+    // During menuoption init, selected transitions from undefined to false,
+    // triggering deselectOption for an option that was never selected.
+    // Firing stageUpdate in that case propagates an unwanted undefined value
+    // back to the host (e.g. combobox) and overwrites its programmatic value.
+    if (this.selectedOptions.length < previousCount) {
+      this.stageUpdate({ _src: 'deselectOptions' });
+    }
   }
 
   /**
@@ -369,6 +377,8 @@ export class MenuService {
    * @param {string|number|Array<string|number>} value - The value(s) to select.
    */
   selectByValue(value) {
+    console.log('MenuService selectByValue called with value:', value, 'menuOptions:', this._menuOptions.length);
+    console.trace('[VTRACE selectByValue STACK]');
     const isEmptyValue = value === undefined ||
         value === null ||
         (Array.isArray(value) && value.length === 0) ||
@@ -435,7 +445,7 @@ export class MenuService {
 
       // Always notify so the host resets any stale invalid value, even when
       // selectedOptions was already empty (e.g. double-clicking set-invalid).
-      this.stageUpdate({ reason: 'no-match' });
+      this.stageUpdate({ reason: 'no-match', _src: 'selectByValue-noMatch' });
 
       // Dispatch failure event if no matches found
       if (validatedValues.length) {
@@ -456,7 +466,7 @@ export class MenuService {
 
     // Apply programmatic selection as a single transaction and emit one final state.
     this.selectedOptions = optionsToSelect;
-    this.stageUpdate();
+    this.stageUpdate({ _src: 'selectByValue-matched' });
   }
 
   /**
@@ -504,7 +514,7 @@ export class MenuService {
 
     // Single update after clearing all
     if (previousOptions.length) {
-      this.stageUpdate();
+      this.stageUpdate({ _src: 'reset' });
     }
   }
 
@@ -532,6 +542,8 @@ export class MenuService {
    * Stages an update to notify subscribers of state and value changes.
    */
   stageUpdate(meta = {}) {
+    console.log('[VTRACE stageUpdate] _src:', meta._src, 'reason:', meta.reason, 'selectedOptions:', this.selectedOptions.length, 'stringValue:', JSON.stringify(this.stringValue));
+    console.trace('[VTRACE stageUpdate STACK]');
     this.notifyStateChange(meta);
     this.notifyValueChange(meta);
   }

@@ -1,17 +1,5 @@
 import { useState } from 'react';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'auro-counter': React.HTMLAttributes<HTMLElement> & {
-        value?: string;
-        min?: string;
-        max?: string;
-      };
-    }
-  }
-}
-
 const INITIAL_VALUE = 3;
 
 function CounterWrapper() {

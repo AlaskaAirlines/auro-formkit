@@ -84,7 +84,7 @@ export class AuroCombobox extends AuroElement {
     this.optionActive = null;
     this.persistInput = false;
     this.required = false;
-    this.value = undefined;
+    // this.value = undefined;
     this.typedValue = undefined;
     this.behavior = "suggestion";
     this.clearBtnFocused = false;
@@ -697,6 +697,13 @@ export class AuroCombobox extends AuroElement {
     });
 
     if (this.value && this.input.value && !this.menu.value) {
+      // When new options arrive and one matches the combobox value (e.g. async
+      // city-search where options load after the value is set), sync the menu
+      // so it reflects the programmatic selection.
+      if (this.behavior === 'suggestion' && this.menu.options && this.menu.options.some((opt) => opt.value === this.value)) {
+        this.setMenuValue(this.value);
+      }
+
       this.syncValuesAndStates();
     }
 
@@ -1021,6 +1028,14 @@ export class AuroCombobox extends AuroElement {
 
     // Handle menu option selection like select does
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
+      console.log('[VTRACE auroMenu-selectedOption] stringValue:', JSON.stringify(event.detail.stringValue), 'reason:', event.detail.reason, 'source:', event.detail.source, 'options:', event.detail.options.length, 'currentComboValue:', JSON.stringify(this.value));
+      console.trace('[VTRACE auroMenu-selectedOption STACK]');
+
+      // If the menu option was not selected due to a "no-match" scenario.
+      // if (event.detail.reason === 'no-match') {
+      //   console.log('[VTRACE auroMenu-selectedOption] No match selected, ignoring selection and keeping dropdown open');
+      //   return;
+      // }
       // Update the optionSelected from the event details, not manually
       [this.optionSelected] = event.detail.options;
 
@@ -1308,9 +1323,9 @@ export class AuroCombobox extends AuroElement {
     this.configureMenu();
 
     // Set the initial value in auro-menu if defined
-    if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      this.menu.value = this.value;
-    }
+    // if (this.value || (this.hasAttribute('value') && this.getAttribute('value').length > 0)) {
+    //   this.menu.value = this.value;
+    // }
   }
 
   /**
@@ -1381,6 +1396,7 @@ export class AuroCombobox extends AuroElement {
   updated(changedProperties) {
     // After the component is ready, send direct value changes to auro-menu.
     if (changedProperties.has('value')) {
+      console.log('Value changed to:', this.value);
       if (this.value && this.value.length > 0) {
         this.hasValue = true;
       } else {
@@ -1404,9 +1420,10 @@ export class AuroCombobox extends AuroElement {
       }
 
       if (this.behavior === 'suggestion') {
-        // if menu has an option that has matched value, then select it,
-        // otherwise clear the menu value since the input value doesn't match any option
-        if (this.menu.options && this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
+        if (!this.menu.options || this.menu.options.length === 0) {
+          // No options loaded yet (async pattern) - don't touch menu.value.
+          // Menu's queuePendingValue handles deferred selection when options arrive.
+        } else if (this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
           this.setMenuValue(this.value);
         } else {
           this.menu.value = undefined;

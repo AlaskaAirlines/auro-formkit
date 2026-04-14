@@ -1,20 +1,5 @@
 import { useState } from 'react';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'auro-counter-group': React.HTMLAttributes<HTMLElement> & {
-        isDropdown?: boolean | '';
-      };
-      'auro-counter': React.HTMLAttributes<HTMLElement> & {
-        value?: number;
-        min?: number;
-        max?: number;
-      };
-    }
-  }
-}
-
 const INITIAL_VALUES = [2, 1, 0];
 
 function CounterGroupWrapper() {
