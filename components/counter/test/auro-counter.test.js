@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-expressions, no-undef, no-magic-numbers */
+/* eslint-disable max-lines, no-unused-expressions, no-undef, no-magic-numbers */
 
 import { fixture, html, expect, oneEvent } from '@open-wc/testing';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
@@ -7,7 +7,21 @@ import '../src/registered.js';
 useAccessibleIt();
 
 describe('Rendering', () => {
-  // Add all missing tests
+  it('should be defined as a custom element', async () => {
+    const el = await Boolean(customElements.get('auro-counter'));
+    await expect(el).to.be.true;
+  });
+
+  it('should be successfully created in the document', async () => {
+    const el = document.createElement('auro-counter');
+    await expect(el.localName).to.equal('auro-counter');
+  });
+
+  it('should render a spinbutton role element', async () => {
+    const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+    const spinbutton = el.shadowRoot.querySelector('[role="spinbutton"]');
+    await expect(spinbutton).to.exist;
+  });
 });
 
 describe('User Stories', () => {
@@ -15,7 +29,15 @@ describe('User Stories', () => {
 
 describe('Properties', () => {
   describe('value', () => {
-    // add preset value tests here
+    it('should initialize value to min when undefined', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+      await expect(el.value).to.equal(0);
+    });
+
+    it('should accept a preset value', async () => {
+      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>`);
+      await expect(el.value).to.equal(5);
+    });
 
     describe('Disabled based on value', () => {
 
@@ -28,16 +50,57 @@ describe('Properties', () => {
   });
 
   describe('appearance', () => {
-    // add tests for this property
+    it('should default to default appearance', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+      await expect(el.appearance).to.equal('default');
+    });
+
+    it('should reflect the appearance attribute', async () => {
+      const el = await fixture(html`
+        <div style="background-color: #222222">
+          <auro-counter appearance="inverse">Counter</auro-counter>
+        </div>
+      `);
+      const counter = el.querySelector('auro-counter');
+      await expect(counter.getAttribute('appearance')).to.equal('inverse');
+    });
   });
 
   describe('disabled', () => {
-    // add tests for this property
+    it('should default to false', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+      await expect(el.disabled).to.be.false;
+    });
+
+    it('should reflect the disabled attribute', async () => {
+      const el = await fixture(html`<auro-counter disabled>Counter</auro-counter>`);
+      await expect(el.disabled).to.be.true;
+      await expect(el.hasAttribute('disabled')).to.be.true;
+    });
+
+    it('should prevent increment when disabled', async () => {
+      const el = await fixture(html`<auro-counter disabled>Counter</auro-counter>`);
+      el.increment();
+      await expect(el.value).to.equal(0);
+    });
+
+    it('should prevent decrement when disabled', async () => {
+      const el = await fixture(html`<auro-counter value="5" disabled>Counter</auro-counter>`);
+      el.decrement();
+      await expect(el.value).to.equal(5);
+    });
   });
 
   describe('error', () => {
-    // add tests for this property
+    it('should default to undefined', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+      await expect(el.error).to.be.undefined;
+    });
 
+    it('should set error state and message', async () => {
+      const el = await fixture(html`<auro-counter error="Too many">Counter</auro-counter>`);
+      await expect(el.error).to.equal('Too many');
+    });
   });
 
   describe('max', () => {
@@ -66,11 +129,34 @@ describe('Properties', () => {
   });
 
   describe('onDark', () => {
-    // add tests for this property
+    it('should default to false', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+      await expect(el.onDark).to.be.false;
+    });
+
+    it('should reflect the onDark attribute', async () => {
+      const el = await fixture(html`
+        <div style="background-color: #222222">
+          <auro-counter ondark>Counter</auro-counter>
+        </div>
+      `);
+      const counter = el.querySelector('auro-counter');
+      await expect(counter.onDark).to.be.true;
+      await expect(counter.hasAttribute('ondark')).to.be.true;
+    });
   });
 
   describe('validity', () => {
-    // add tests for this property
+    it('should be valid after initialization', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+      await expect(el.validity).to.equal('valid');
+    });
+
+    it('should reflect customError after validation with error attribute', async () => {
+      const el = await fixture(html`<auro-counter error="Error msg">Counter</auro-counter>`);
+      el.validate(true);
+      await expect(el.validity).to.equal('customError');
+    });
   });
 });
 
@@ -132,7 +218,10 @@ describe('Slots', () => {
 
 describe('Public Functions', () => {
   describe('register', () => {
-    // TODO: test needs to be added
+    it('should register the element as a custom element', async () => {
+      const el = await Boolean(customElements.get('auro-counter'));
+      await expect(el).to.be.true;
+    });
   });
 
   describe('increment', () => {
@@ -188,13 +277,43 @@ describe('Public Functions', () => {
   });
 
   describe('validate', () => {
-    // TODO: test needs to be added
+    it('should set customError validity when error attribute is set', async () => {
+      const el = await fixture(html`<auro-counter error="Error msg">Counter</auro-counter>`);
+      el.validate(true);
+      await expect(el.validity).to.equal('customError');
+    });
+
+    it('should validate without error when no error attribute', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+      el.validate(true);
+      await expect(el.validity).to.not.equal('customError');
+    });
   });
 });
 
 describe('Events', () => {
   describe('input', () => {
-    // add tests for this event
+    it('should fire input event when value changes via increment', async () => {
+      const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+
+      const listener = oneEvent(el, 'input');
+      el.increment();
+      const event = await listener;
+
+      await expect(event).to.exist;
+      await expect(event.detail.value).to.equal(1);
+    });
+
+    it('should fire input event when value changes via decrement', async () => {
+      const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>`);
+
+      const listener = oneEvent(el, 'input');
+      el.decrement();
+      const event = await listener;
+
+      await expect(event).to.exist;
+      await expect(event.detail.value).to.equal(4);
+    });
   });
 });
 
@@ -293,5 +412,27 @@ describe('Mouse Behavior', () => {
 });
 
 describe('Keyboard Behavior', () => {
-  // Add all missing tests
+  it('should increment value on ArrowUp', async () => {
+    const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await expect(el.value).to.equal(1);
+  });
+
+  it('should decrement value on ArrowDown', async () => {
+    const el = await fixture(html`<auro-counter value="5">Counter</auro-counter>`);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await expect(el.value).to.equal(4);
+  });
+
+  it('should not increment beyond max on ArrowUp', async () => {
+    const el = await fixture(html`<auro-counter value="9" max="9">Counter</auro-counter>`);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    await expect(el.value).to.equal(9);
+  });
+
+  it('should not decrement below min on ArrowDown', async () => {
+    const el = await fixture(html`<auro-counter value="0" min="0">Counter</auro-counter>`);
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    await expect(el.value).to.equal(0);
+  });
 });

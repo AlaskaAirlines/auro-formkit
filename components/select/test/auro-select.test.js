@@ -98,19 +98,90 @@ function runTest(mobileView) {
 
     describe('Properties', () => {
       describe('appearance', () => {
-        // add tests for this property
+        it('should default to default appearance', async () => {
+          const el = await defaultFixture();
+          await expect(el.appearance).to.equal('default');
+        });
+
+        it('should apply appearance="inverse" attribute', async () => {
+          const el = await fixture(html`
+            <div style="background-color: #222222">
+              <auro-select appearance="inverse">
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Apples">Apples</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            </div>
+          `);
+          const select = el.querySelector('auro-select');
+          await expect(select.getAttribute('appearance')).to.equal('inverse');
+        });
       });
 
       describe('autocomplete', () => {
-        // add tests for this property
+        it('should pass the autocomplete attribute to the native select element', async () => {
+          const el = await defaultFixture();
+          el.autocomplete = 'name';
+          await elementUpdated(el);
+          const nativeSelect = el.shadowRoot.querySelector('.nativeSelectWrapper select');
+          await expect(nativeSelect.getAttribute('autocomplete')).to.equal('name');
+        });
       });
 
       describe('autoPlacement', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.autoPlacement).to.be.false;
+        });
+
+        it('should reflect the autoPlacement attribute', async () => {
+          const el = await fixture(html`
+            <auro-select autoplacement>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.autoPlacement).to.be.true;
+          await expect(el.hasAttribute('autoplacement')).to.be.true;
+        });
       });
 
       describe('disabled', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.disabled).to.not.be.true;
+        });
+
+        it('should reflect the disabled attribute', async () => {
+          const el = await fixture(html`
+            <auro-select disabled>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.disabled).to.be.true;
+          await expect(el.hasAttribute('disabled')).to.be.true;
+        });
+
+        it('should not open the bib when disabled', async () => {
+          const el = await fixture(html`
+            <auro-select disabled>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          el.showBib();
+          await elementUpdated(el);
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.isPopoverVisible).to.be.false;
+        });
       });
 
       describe('error', () => {
@@ -129,23 +200,105 @@ function runTest(mobileView) {
       });
 
       describe('flexMenuWidth', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.flexMenuWidth).to.not.be.true;
+        });
+
+        it('should reflect the flexMenuWidth attribute', async () => {
+          const el = await fixture(html`
+            <auro-select flexmenuwidth>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.flexMenuWidth).to.be.true;
+          await expect(el.hasAttribute('flexmenuwidth')).to.be.true;
+        });
       });
 
       describe('fluid', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.fluid).to.not.be.true;
+        });
+
+        it('should reflect the fluid attribute', async () => {
+          const el = await fixture(html`
+            <auro-select fluid>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.fluid).to.be.true;
+          await expect(el.hasAttribute('fluid')).to.be.true;
+        });
       });
 
       describe('forceDisplayValue', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.forceDisplayValue).to.be.false;
+        });
+
+        it('should reflect the forceDisplayValue attribute', async () => {
+          const el = await fixture(html`
+            <auro-select forcedisplayvalue>
+              <span slot="label">Name</span>
+              <div slot="displayValue">Custom Display</div>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.forceDisplayValue).to.be.true;
+          await expect(el.hasAttribute('forcedisplayvalue')).to.be.true;
+        });
       });
 
       describe('fullscreenBreakpoint', () => {
-        // add tests for this property
+        it('should default to sm', async () => {
+          const el = await defaultFixture();
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.fullscreenBreakpoint).to.equal('sm');
+        });
+
+        it('should pass custom fullscreenBreakpoint to dropdown', async () => {
+          const el = await fixture(html`
+            <auro-select fullscreenBreakpoint="disabled">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.fullscreenBreakpoint).to.equal('disabled');
+        });
       });
 
       describe('largeFullscreenHeadline', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.largeFullscreenHeadline).to.not.be.true;
+        });
+
+        it('should reflect the largeFullscreenHeadline attribute', async () => {
+          const el = await fixture(html`
+            <auro-select largefullscreenheadline>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.largeFullscreenHeadline).to.be.true;
+        });
       });
 
       describe('layout', () => {
@@ -168,7 +321,23 @@ function runTest(mobileView) {
       });
 
       describe('matchWidth', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.matchWidth).to.be.false;
+        });
+
+        it('should reflect the matchWidth attribute', async () => {
+          const el = await fixture(html`
+            <auro-select matchwidth>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.matchWidth).to.be.true;
+          await expect(el.hasAttribute('matchwidth')).to.be.true;
+        });
       });
 
       describe('multiSelect', () => {
@@ -301,19 +470,85 @@ function runTest(mobileView) {
       });
 
       describe('noFlip', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.noFlip).to.be.false;
+        });
+
+        it('should reflect the noFlip attribute', async () => {
+          const el = await fixture(html`
+            <auro-select noflip>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.noFlip).to.be.true;
+          await expect(el.hasAttribute('noflip')).to.be.true;
+        });
       });
 
       describe('noValidate', () => {
-        // add tests for this property
+        it('should default to falsy', async () => {
+          const el = await defaultFixture();
+          await expect(el.noValidate).to.not.be.true;
+        });
+
+        it('should reflect the noValidate attribute', async () => {
+          const el = await fixture(html`
+            <auro-select required novalidate>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.noValidate).to.be.true;
+          await expect(el.hasAttribute('novalidate')).to.be.true;
+        });
       });
 
       describe('offset', () => {
-        // add tests for this property
+        it('should default to 0', async () => {
+          const el = await defaultFixture();
+          await expect(el.offset).to.equal(0);
+        });
+
+        it('should reflect the offset attribute', async () => {
+          const el = await fixture(html`
+            <auro-select offset="10">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.offset).to.equal(10);
+        });
       });
 
       describe('onDark', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.onDark).to.not.be.true;
+        });
+
+        it('should reflect the onDark attribute', async () => {
+          const el = await fixture(html`
+            <div style="background-color: #222222">
+              <auro-select ondark>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Apples">Apples</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            </div>
+          `);
+          const select = el.querySelector('auro-select');
+          await expect(select.onDark).to.be.true;
+          await expect(select.hasAttribute('ondark')).to.be.true;
+        });
       });
 
       describe('optionSelected', () => {
@@ -331,11 +566,37 @@ function runTest(mobileView) {
       });
 
       describe('placeholder', () => {
-        // add tests for this property
+        it('should display custom placeholder text', async () => {
+          const el = await fixture(html`
+            <auro-select placeholder="Choose an option">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.getAttribute('placeholder')).to.equal('Choose an option');
+        });
       });
 
       describe('placement', () => {
-        // add tests for this property
+        it('should default to bottom-start', async () => {
+          const el = await defaultFixture();
+          await expect(el.placement).to.equal('bottom-start');
+        });
+
+        it('should reflect custom placement', async () => {
+          const el = await fixture(html`
+            <auro-select placement="top">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.placement).to.equal('top');
+          await expect(el.getAttribute('placement')).to.equal('top');
+        });
       });
 
       describe('required', () => {
@@ -356,31 +617,128 @@ function runTest(mobileView) {
       });
 
       describe('setCustomValidity', () => {
-        // add tests for this property
+        it('should display custom validation message for all validity states', async () => {
+          const el = await requiredFixture();
+          el.setCustomValidity = 'Custom error message';
+          await elementUpdated(el);
+
+          el.validate(true);
+          await elementUpdated(el);
+
+          const helpText = el.shadowRoot.querySelector('[auro-helptext]');
+          await expect(helpText.textContent.trim()).to.equal('Custom error message');
+        });
       });
 
       describe('setCustomValidityCustomError', () => {
-        // add tests for this property
+        it('should display custom message when validity is customError', async () => {
+          const el = await fixture(html`
+            <auro-select error="generic error">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // setCustomValidityCustomError takes precedence over the error attribute text
+          el.setCustomValidityCustomError = 'Custom error text';
+          el.validate();
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('customError');
+          const helpText = el.shadowRoot.querySelector('[auro-helptext]');
+          await expect(helpText.textContent.trim()).to.equal('Custom error text');
+        });
       });
 
       describe('setCustomValidityValueMissing', () => {
-        // add tests for this property
+        it('should display custom message when required value is missing', async () => {
+          const el = await requiredFixture();
+          el.setCustomValidityValueMissing = 'Please select a value';
+          await elementUpdated(el);
+
+          el.validate(true);
+          await elementUpdated(el);
+
+          const helpText = el.shadowRoot.querySelector('[auro-helptext]');
+          await expect(helpText.textContent.trim()).to.equal('Please select a value');
+        });
       });
 
       describe('shape', () => {
-        // add tests for this property
+        it('should default to classic', async () => {
+          const el = await defaultFixture();
+          await expect(el.shape).to.equal('classic');
+        });
+
+        it('should reflect a custom shape attribute', async () => {
+          const el = await fixture(html`
+            <auro-select shape="pill">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.getAttribute('shape')).to.equal('pill');
+        });
       });
 
       describe('shift', () => {
-        // add tests for this property
+        it('should default to false', async () => {
+          const el = await defaultFixture();
+          await expect(el.shift).to.be.false;
+        });
+
+        it('should reflect the shift attribute', async () => {
+          const el = await fixture(html`
+            <auro-select shift>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await expect(el.shift).to.be.true;
+          await expect(el.hasAttribute('shift')).to.be.true;
+        });
       });
 
       describe('size', () => {
-        // add tests for this property
+        it('should default to lg', async () => {
+          const el = await defaultFixture();
+          await expect(el.size).to.equal('lg');
+        });
+
+        it('should support xl size with emphasized layout', async () => {
+          const el = await emphasizedFixture();
+          await expect(el.getAttribute('size')).to.equal('xl');
+        });
       });
 
       describe('validity', () => {
-        // add tests for this property
+        it('should be customError when error attribute is set', async () => {
+          const el = await errorFixture();
+          await expect(el.getAttribute('validity')).to.equal('customError');
+        });
+
+        it('should be valueMissing when required and no value after validation', async () => {
+          const el = await requiredFixture();
+          el.validate(true);
+          await elementUpdated(el);
+          await expect(el.getAttribute('validity')).to.equal('valueMissing');
+        });
+
+        it('should be valid after selecting a value when required', async () => {
+          const el = await requiredFixture();
+          el.value = 'Apples';
+          await elementUpdated(el);
+          el.validate(true);
+          await elementUpdated(el);
+          await expect(el.getAttribute('validity')).to.equal('valid');
+        });
       });
 
       describe('value', () => {
@@ -616,11 +974,25 @@ function runTest(mobileView) {
 
     describe('Public Functions', () => {
       describe('register', () => {
-        // TODO: test needs to be added
+        it('should register the element as a custom element', async () => {
+          const el = await Boolean(customElements.get('auro-select'));
+          await expect(el).to.be.true;
+        });
       });
 
       describe('updateActiveOption', () => {
-        // TODO: test needs to be added
+        it('should update the active option by index', async () => {
+          const el = await defaultFixture();
+          el.showBib();
+          await elementUpdated(el);
+
+          el.updateActiveOption(2);
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          const options = menu.querySelectorAll('auro-menuoption');
+          await expect(options[2].classList.contains('active')).to.be.true;
+        });
       });
 
       describe('hideBib', () => {
@@ -654,41 +1026,171 @@ function runTest(mobileView) {
       });
 
       describe('setMenuValue', () => {
-        // TODO: test needs to be added
+        it('should set the menu value programmatically', async () => {
+          const el = await defaultFixture();
+          const menu = el.querySelector('auro-menu');
+
+          el.setMenuValue('Oranges');
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          await expect(el.value).to.equal('Oranges');
+        });
       });
 
       describe('reset', () => {
-        // TODO: test needs to be added
+        it('should clear value and validation state', async () => {
+          const el = await presetValueFixture();
+          await elementUpdated(el);
+          await expect(el.value).to.equal('price');
+
+          el.reset();
+          await elementUpdated(el);
+
+          await expect(el.value).to.be.undefined;
+          await expect(el.optionSelected).to.be.undefined;
+        });
       });
 
       describe('validate', () => {
-        // TODO: test needs to be added
+        it('should set valueMissing when required and no value', async () => {
+          const el = await requiredFixture();
+          await elementUpdated(el);
+
+          el.validate(true);
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('valueMissing');
+        });
+
+        it('should set valid when value is present', async () => {
+          const el = await requiredFixture();
+          el.value = 'Apples';
+          await elementUpdated(el);
+
+          el.validate(true);
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('validity')).to.equal('valid');
+        });
       });
 
       describe('resetShapeClasses', () => {
-        // TODO: test needs to be added
+        it('should be callable without error', async () => {
+          const el = await fixture(html`
+            <auro-select shape="pill" size="lg">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.shape = 'pill-left';
+          el.resetShapeClasses();
+          await elementUpdated(el);
+
+          await expect(el.shape).to.equal('pill-left');
+        });
       });
 
       describe('resetLayoutClasses', () => {
-        // TODO: test needs to be added
+        it('should be callable without error', async () => {
+          const el = await fixture(html`
+            <auro-select layout="emphasized">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.layout = 'snowflake';
+          el.resetLayoutClasses();
+          await elementUpdated(el);
+
+          await expect(el.layout).to.equal('snowflake');
+        });
       });
 
       describe('updateComponentArchitecture', () => {
-        // TODO: test needs to be added
+        it('should be callable and update layout and shape', async () => {
+          const el = await fixture(html`
+            <auro-select layout="emphasized" shape="pill" size="lg">
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="Apples">Apples</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.layout = 'snowflake';
+          el.shape = 'snowflake';
+          el.updateComponentArchitecture();
+          await elementUpdated(el);
+
+          await expect(el.layout).to.equal('snowflake');
+          await expect(el.shape).to.equal('snowflake');
+        });
       });
     });
 
     describe('Events', () => {
       describe('auroSelect-valueSet', () => {
-        // add tests for this event
+        it('should fire auroSelect-valueSet when a value is set', async () => {
+          const el = await defaultFixture();
+          const menu = el.querySelector('auro-menu');
+
+          const eventPromise = new Promise((resolve) => {
+            el.addEventListener('auroSelect-valueSet', (event) => resolve(event));
+          });
+
+          el.value = 'Apples';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          const event = await eventPromise;
+          await expect(event).to.exist;
+        });
       });
 
       describe('input', () => {
-        // add tests for this event
+        it('should fire input event when a value is selected', async () => {
+          const el = await defaultFixture();
+          const menu = el.querySelector('auro-menu');
+
+          const eventPromise = new Promise((resolve) => {
+            el.addEventListener('input', (event) => resolve(event));
+          });
+
+          el.value = 'Apples';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          const event = await eventPromise;
+          await expect(event).to.exist;
+          await expect(event.detail.value).to.equal('Apples');
+        });
       });
 
       describe('auroFormElement-validated', () => {
-        // add tests for this event
+        it('should fire auroFormElement-validated when validation runs', async () => {
+          const el = await requiredFixture();
+          await elementUpdated(el);
+
+          const eventPromise = new Promise((resolve) => {
+            el.addEventListener('auroFormElement-validated', (event) => resolve(event));
+          });
+
+          el.validate(true);
+          await elementUpdated(el);
+
+          const event = await eventPromise;
+          await expect(event).to.exist;
+        });
       });
     });
 

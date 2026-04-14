@@ -334,43 +334,103 @@ describe('auro-input', () => {
 
   describe('Properties', () => {
     describe('a11yActivedescendant', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+
+        expect(el.a11yActivedescendant).to.be.undefined;
+      });
     });
 
     describe('a11yControls', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+
+        expect(el.a11yControls).to.be.undefined;
+      });
     });
 
     describe('a11yExpanded', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+
+        expect(el.a11yExpanded).to.be.undefined;
+      });
     });
 
     describe('a11yRole', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+
+        expect(el.a11yRole).to.be.undefined;
+      });
     });
 
     describe('activeLabel', () => {
-      // add tests for this property
+      it('should keep the label in the active position when set', async () => {
+        const el = await fixture(html`<auro-input activeLabel label="Test"></auro-input>`);
+
+        expect(el.activeLabel).to.be.true;
+        expect(el.hasAttribute('activeLabel')).to.be.true;
+      });
     });
 
     describe('appearance', () => {
-      // add tests for this property
+      it('should default to default', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+
+        expect(el.appearance).to.equal('default');
+      });
+
+      it('should accept inverse appearance', async () => {
+        const el = await fixture(html`
+          <div style="background-color: #222222; padding: 16px;">
+            <auro-input appearance="inverse"></auro-input>
+          </div>
+        `);
+        const inputEl = el.querySelector('auro-input');
+
+        expect(inputEl.appearance).to.equal('inverse');
+      });
     });
 
     describe('autocapitalize', () => {
-      // add tests for this property
+      it('should not have autocapitalize by default', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+
+        expect(el.hasAttribute('autocapitalize')).to.be.false;
+      });
     });
 
     describe('autocomplete', () => {
-      // add tests for this property
+      it('should set autocomplete on the input', async () => {
+        const el = await fixture(html`<auro-input autocomplete="off"></auro-input>`);
+        const input = el.shadowRoot.querySelector('input');
+
+        expect(input.getAttribute('autocomplete')).to.equal('off');
+      });
     });
 
     describe('autocorrect', () => {
-      // add tests for this property
+      it('should set autocorrect on the input', async () => {
+        const el = await fixture(html`<auro-input autocorrect="off"></auro-input>`);
+        const input = el.shadowRoot.querySelector('input');
+
+        expect(input.getAttribute('autocorrect')).to.equal('off');
+      });
     });
 
     describe('customValidityTypeEmail', () => {
-      // add tests for this property
+      it('should use custom message for email validation failure', async () => {
+        const el = await fixture(html`<auro-input type="email" customValidityTypeEmail="Bad email format"></auro-input>`);
+
+        const input = el.shadowRoot.querySelector('input');
+        input.focus();
+        el.value = 'invalid';
+        input.blur();
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('patternMismatch');
+      });
     });
 
     describe('disabled', () => {
@@ -386,7 +446,11 @@ describe('auro-input', () => {
     });
 
     describe('dvInputOnly', () => {
-      // add tests for this property
+      it('should set dvInputOnly attribute', async () => {
+        const el = await fixture(html`<auro-input dvInputOnly></auro-input>`);
+
+        expect(el.dvInputOnly).to.be.true;
+      });
     });
 
     describe('error', () => {
@@ -421,7 +485,16 @@ describe('auro-input', () => {
     });
 
     describe('errorMessage', () => {
-      // add tests for this property
+      it('should contain the error message after validation failure', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+
+        const input = el.shadowRoot.querySelector('input');
+        input.focus();
+        input.blur();
+        await elementUpdated(el);
+
+        expect(el.errorMessage).to.not.be.empty;
+      });
     });
 
     describe('format', () => {
@@ -500,11 +573,19 @@ describe('auro-input', () => {
     });
 
     describe('icon', () => {
-      // add tests for this property
+      it('should set the icon attribute', async () => {
+        const el = await fixture(html`<auro-input icon></auro-input>`);
+
+        expect(el.icon).to.be.true;
+      });
     });
 
     describe('id', () => {
-      // add tests for this property
+      it('should set the id attribute on the element', async () => {
+        const el = await fixture(html`<auro-input id="test-id"></auro-input>`);
+
+        expect(el.id).to.equal('test-id');
+      });
     });
 
     describe('inputmode', () => {
@@ -537,11 +618,19 @@ describe('auro-input', () => {
     });
 
     describe('lang', () => {
-      // add tests for this property
+      it('should accept a lang attribute', async () => {
+        const el = await fixture(html`<auro-input lang="es"></auro-input>`);
+
+        expect(el.lang).to.equal('es');
+      });
     });
 
     describe('layout', () => {
-      // add tests for this property
+      it('should accept a layout property', async () => {
+        const el = await fixture(html`<auro-input layout="emphasized"></auro-input>`);
+
+        expect(el.layout).to.equal('emphasized');
+      });
     });
 
     describe('max', () => {
@@ -677,7 +766,12 @@ describe('auro-input', () => {
     });
 
     describe('nested', () => {
-      // add tests for this property
+      it('should set the nested attribute', async () => {
+        const el = await fixture(html`<auro-input nested></auro-input>`);
+
+        expect(el.nested).to.be.true;
+        expect(el.hasAttribute('nested')).to.be.true;
+      });
     });
 
     describe('noValidate', () => {
@@ -728,7 +822,16 @@ describe('auro-input', () => {
     });
 
     describe('onDark', () => {
-      // add tests for this property
+      it('should set the onDark attribute (deprecated)', async () => {
+        const el = await fixture(html`
+          <div style="background-color: #222222; padding: 16px;">
+            <auro-input onDark></auro-input>
+          </div>
+        `);
+        const inputEl = el.querySelector('auro-input');
+
+        expect(inputEl.onDark).to.be.true;
+      });
     });
 
     describe('pattern', () => {
@@ -795,59 +898,162 @@ describe('auro-input', () => {
     });
 
     describe('required', () => {
-      // add tests for this property
+      it('should set the required attribute on the input', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+        const input = el.shadowRoot.querySelector('input');
+
+        expect(input.required).to.be.true;
+      });
+
+      it('should fail validation when required and empty', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+
+        const input = el.shadowRoot.querySelector('input');
+        input.focus();
+        input.blur();
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
     });
 
     describe('setCustomValidity', () => {
-      // add tests for this property
+      it('should override all validation messages', async () => {
+        const el = await fixture(html`<auro-input required setCustomValidity="Custom message"></auro-input>`);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        const helpText = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+        expect(helpText.textContent).to.contain('Custom message');
+      });
     });
 
     describe('setCustomValidityBadInput', () => {
-      // add tests for this property
+      it('should accept a custom message for badInput', async () => {
+        const el = await fixture(html`<auro-input setCustomValidityBadInput="Bad input"></auro-input>`);
+
+        expect(el.setCustomValidityBadInput).to.equal('Bad input');
+      });
     });
 
     describe('setCustomValidityCustomError', () => {
-      // add tests for this property
+      it('should accept a custom message for customError', async () => {
+        const el = await fixture(html`<auro-input setCustomValidityCustomError="Custom error"></auro-input>`);
+
+        expect(el.setCustomValidityCustomError).to.equal('Custom error');
+      });
     });
 
     describe('setCustomValidityForType', () => {
-      // add tests for this property
+      it('should accept a custom message for type validation', async () => {
+        const el = await fixture(html`<auro-input setCustomValidityForType="Type error"></auro-input>`);
+
+        expect(el.setCustomValidityForType).to.equal('Type error');
+      });
     });
 
     describe('setCustomValidityRangeOverflow', () => {
-      // add tests for this property
+      it('should accept a custom message for rangeOverflow', async () => {
+        const el = await fixture(html`<auro-input type="number" max="10" setCustomValidityRangeOverflow="Too high"></auro-input>`);
+
+        el.value = '20';
+        el.validate(true);
+        await elementUpdated(el);
+
+        const helpText = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+        expect(helpText.textContent).to.contain('Too high');
+      });
     });
 
     describe('setCustomValidityRangeUnderflow', () => {
-      // add tests for this property
+      it('should accept a custom message for rangeUnderflow', async () => {
+        const el = await fixture(html`<auro-input type="number" min="10" setCustomValidityRangeUnderflow="Too low"></auro-input>`);
+
+        el.value = '5';
+        el.validate(true);
+        await elementUpdated(el);
+
+        const helpText = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+        expect(helpText.textContent).to.contain('Too low');
+      });
     });
 
     describe('setCustomValidityTooLong', () => {
-      // add tests for this property
+      it('should accept a custom message for tooLong', async () => {
+        const el = await fixture(html`<auro-input maxlength="3" setCustomValidityTooLong="Too long"></auro-input>`);
+
+        el.value = 'abcde';
+        el.validate(true);
+        await elementUpdated(el);
+
+        const helpText = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+        expect(helpText.textContent).to.contain('Too long');
+      });
     });
 
     describe('setCustomValidityTooShort', () => {
-      // add tests for this property
+      it('should accept a custom message for tooShort', async () => {
+        const el = await fixture(html`<auro-input minlength="5" setCustomValidityTooShort="Too short"></auro-input>`);
+
+        el.value = 'ab';
+        el.validate(true);
+        await elementUpdated(el);
+
+        const helpText = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+        expect(helpText.textContent).to.contain('Too short');
+      });
     });
 
     describe('setCustomValidityValueMissing', () => {
-      // add tests for this property
+      it('should accept a custom message for valueMissing', async () => {
+        const el = await fixture(html`<auro-input required setCustomValidityValueMissing="Required field"></auro-input>`);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        const helpText = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+        expect(helpText.textContent).to.contain('Required field');
+      });
     });
 
     describe('shape', () => {
-      // add tests for this property
+      it('should accept a shape property', async () => {
+        const el = await fixture(html`<auro-input shape="round"></auro-input>`);
+
+        expect(el.shape).to.equal('round');
+      });
     });
 
     describe('showPassword', () => {
-      // add tests for this property
+      it('should toggle password visibility', async () => {
+        const el = await fixture(html`<auro-input type="password" value="secret"></auro-input>`);
+        const input = el.shadowRoot.querySelector('input');
+
+        expect(input.type).to.equal('password');
+
+        el.showPassword = true;
+        await elementUpdated(el);
+
+        expect(input.type).to.equal('text');
+      });
     });
 
     describe('simple', () => {
-      // add tests for this property
+      it('should set the simple attribute', async () => {
+        const el = await fixture(html`<auro-input simple></auro-input>`);
+
+        expect(el.simple).to.be.true;
+        expect(el.hasAttribute('simple')).to.be.true;
+      });
     });
 
     describe('size', () => {
-      // add tests for this property
+      it('should accept a size property', async () => {
+        const el = await fixture(html`<auro-input size="md"></auro-input>`);
+
+        expect(el.size).to.equal('md');
+      });
     });
 
     describe('spellcheck', () => {
@@ -990,7 +1196,24 @@ describe('auro-input', () => {
     });
 
     describe('validity', () => {
-      // add tests for this property
+      it('should be valid when input passes validation', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+
+        el.value = 'test';
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valid');
+      });
+
+      it('should reflect valueMissing when required and empty', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
     });
 
     describe('value', () => {
@@ -1121,7 +1344,11 @@ describe('auro-input', () => {
 
   describe('Public Functions', () => {
     describe('register', () => {
-      // TODO: test needs to be added
+      it('should register the custom element', async () => {
+        const registeredTag = customElements.get('auro-input');
+
+        expect(registeredTag).to.not.be.undefined;
+      });
     });
 
     describe('focus', () => {
@@ -1136,41 +1363,120 @@ describe('auro-input', () => {
     });
 
     describe('validate', () => {
-      // TODO: test needs to be added
+      it('should validate and set validity attribute', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.hasAttribute('validity')).to.be.true;
+        expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
+
+      it('should set valid when value satisfies requirements', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+
+        el.value = 'test';
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('valid');
+      });
     });
 
     describe('reset', () => {
-      // TODO: test needs to be added
+      it('should clear value and validity state', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+
+        el.value = 'test';
+        el.validate(true);
+        await elementUpdated(el);
+        expect(el.getAttribute('validity')).to.equal('valid');
+
+        el.reset();
+        await elementUpdated(el);
+
+        expect(el.value).to.not.equal('test');
+      });
     });
 
     describe('clear', () => {
-      // TODO: test needs to be added
+      it('should clear the input value', async () => {
+        const el = await fixture(html`<auro-input value="hello"></auro-input>`);
+
+        el.clear();
+        await elementUpdated(el);
+
+        expect(el.value).to.not.equal('hello');
+      });
     });
 
     describe('resetShapeClasses', () => {
-      // TODO: test needs to be added
+      it('should execute without error', async () => {
+        const el = await fixture(html`<auro-input shape="round"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(() => el.resetShapeClasses()).to.not.throw();
+      });
     });
 
     describe('resetLayoutClasses', () => {
-      // TODO: test needs to be added
+      it('should execute without error', async () => {
+        const el = await fixture(html`<auro-input layout="emphasized"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(() => el.resetLayoutClasses()).to.not.throw();
+      });
     });
 
     describe('updateComponentArchitecture', () => {
-      // TODO: test needs to be added
+      it('should execute without error', async () => {
+        const el = await fixture(html`<auro-input layout="emphasized" shape="round"></auro-input>`);
+        await elementUpdated(el);
+
+        expect(() => el.updateComponentArchitecture()).to.not.throw();
+      });
     });
   });
 
   describe('Events', () => {
     describe('input', () => {
-      // add tests for this event
+      it('should fire input event when value changes', async () => {
+        const el = await fixture(html`<auro-input></auro-input>`);
+        await elementUpdated(el);
+
+        const listener = oneEvent(el, 'input');
+        setInputValue(el, 'hello');
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
     });
 
     describe('auroFormElement-validated', () => {
-      // add tests for this event
+      it('should fire after validation runs', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+        await elementUpdated(el);
+
+        const listener = oneEvent(el, 'auroFormElement-validated');
+        el.validate(true);
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
     });
 
     describe('auroInput-validityChange', () => {
-      // add tests for this event
+      it('should fire when validity state changes', async () => {
+        const el = await fixture(html`<auro-input required></auro-input>`);
+        await elementUpdated(el);
+
+        const listener = oneEvent(el, 'auroInput-validityChange');
+        el.validate(true);
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
     });
   });
 
@@ -1179,7 +1485,22 @@ describe('auro-input', () => {
   });
 
   describe('Keyboard Behavior', () => {
-    // add tests for all keyboard interactions such as tabbing into the input, typing, pressing enter, escape, arrow keys, etc.
+    it('should accept typed input', async () => {
+      const el = await fixture(html`<auro-input></auro-input>`);
+      await elementUpdated(el);
+
+      setInputValue(el, 'typed text');
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('typed text');
+    });
+
+    it('should focus the input when tabbed to', async () => {
+      const el = await fixture(html`<auro-input></auro-input>`);
+
+      el.focus();
+      expect(document.activeElement === el).to.be.true;
+    });
   });
 
   describe('Mouse Behavior', () => {

@@ -291,11 +291,35 @@ describe("auro-dropdown", () => {
 
   describe('Properties', () => {
     describe('appearance', () => {
-      // add tests for this property
+      it('should default to default appearance', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.appearance).to.equal('default');
+      });
+
+      it('should apply appearance="inverse" attribute', async () => {
+        const el = await fixture(html`
+          <div style="background-color: #222222">
+            <auro-dropdown appearance="inverse">
+              <div slot="trigger">Trigger</div>
+            </auro-dropdown>
+          </div>
+        `);
+        const dropdown = el.querySelector('auro-dropdown');
+        await expect(dropdown.getAttribute('appearance')).to.equal('inverse');
+      });
     });
 
     describe('autoPlacement', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.autoPlacement).to.be.false;
+      });
+
+      it('should reflect the autoPlacement attribute', async () => {
+        const el = await fixture(html`<auro-dropdown autoplacement><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.autoPlacement).to.be.true;
+        await expect(el.hasAttribute('autoplacement')).to.be.true;
+      });
     });
 
     describe('chevron', () => {
@@ -353,7 +377,23 @@ describe("auro-dropdown", () => {
     });
 
     describe('disabled', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.disabled).to.not.be.true;
+      });
+
+      it('should reflect the disabled attribute', async () => {
+        const el = await fixture(html`<auro-dropdown disabled><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.disabled).to.be.true;
+        await expect(el.hasAttribute('disabled')).to.be.true;
+      });
+
+      it('should not open when disabled', async () => {
+        const el = await fixture(html`<auro-dropdown disabled><div slot="trigger">Trigger</div></auro-dropdown>`);
+        el.show();
+        await elementUpdated(el);
+        expectPopoverHidden(el);
+      });
     });
 
     describe('disableEventShow', () => {
@@ -375,27 +415,75 @@ describe("auro-dropdown", () => {
     });
 
     describe('disableKeyboardHandling', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.disableKeyboardHandling).to.not.be.true;
+      });
+
+      it('should reflect the disableKeyboardHandling attribute', async () => {
+        const el = await fixture(html`<auro-dropdown disablekeyboardhandling><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.disableKeyboardHandling).to.be.true;
+        await expect(el.hasAttribute('disablekeyboardhandling')).to.be.true;
+      });
     });
 
     describe('error', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.error).to.not.be.true;
+      });
+
+      it('should reflect the error attribute', async () => {
+        const el = await fixture(html`<auro-dropdown error><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.error).to.be.true;
+        await expect(el.hasAttribute('error')).to.be.true;
+      });
     });
 
     describe('errorMessage', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.errorMessage).to.be.undefined;
+      });
     });
 
     describe('focusShow', () => {
-      // add tests for this property
+      it('should default to falsy', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.focusShow).to.not.be.true;
+      });
+
+      it('should reflect the focusShow attribute', async () => {
+        const el = await fixture(html`<auro-dropdown focusshow><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.focusShow).to.be.true;
+        await expect(el.hasAttribute('focusshow')).to.be.true;
+      });
     });
 
     describe('fullscreenBreakpoint', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.fullscreenBreakpoint).to.be.undefined;
+      });
+
+      it('should reflect a custom fullscreenBreakpoint', async () => {
+        const el = await fixture(html`<auro-dropdown fullscreenBreakpoint="disabled"><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.fullscreenBreakpoint).to.equal('disabled');
+      });
     });
 
     describe('hoverToggle', () => {
-      // add tests for this property
+      it('should default to falsy', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.hoverToggle).to.not.be.true;
+      });
+
+      it('should be true when set programmatically', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        el.hoverToggle = true;
+        await elementUpdated(el);
+        await expect(el.hoverToggle).to.be.true;
+      });
     });
 
     describe('isBibFullscreen', () => {
@@ -456,7 +544,17 @@ describe("auro-dropdown", () => {
     });
 
     describe('isPopoverVisible', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.isPopoverVisible).to.be.false;
+      });
+
+      it('should be true after show() is called', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        el.show();
+        await elementUpdated(el);
+        await expect(el.isPopoverVisible).to.be.true;
+      });
     });
 
     describe('layout', () => {
@@ -486,27 +584,87 @@ describe("auro-dropdown", () => {
     });
 
     describe('matchWidth', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.matchWidth).to.be.false;
+      });
+
+      it('should reflect the matchWidth attribute', async () => {
+        const el = await fixture(html`<auro-dropdown matchwidth><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.matchWidth).to.be.true;
+        await expect(el.hasAttribute('matchwidth')).to.be.true;
+      });
     });
 
     describe('noFlip', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.noFlip).to.be.false;
+      });
+
+      it('should reflect the noFlip attribute', async () => {
+        const el = await fixture(html`<auro-dropdown noflip><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.noFlip).to.be.true;
+        await expect(el.hasAttribute('noflip')).to.be.true;
+      });
     });
 
     describe('noHideOnThisFocusLoss', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.noHideOnThisFocusLoss).to.be.false;
+      });
+
+      it('should reflect the noHideOnThisFocusLoss attribute', async () => {
+        const el = await fixture(html`<auro-dropdown nohideonthisfocusloss><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.noHideOnThisFocusLoss).to.be.true;
+        await expect(el.hasAttribute('nohideonthisfocusloss')).to.be.true;
+      });
     });
 
     describe('noToggle', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.noToggle).to.be.false;
+      });
+
+      it('should reflect the noToggle attribute', async () => {
+        const el = await fixture(html`<auro-dropdown notoggle><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.noToggle).to.be.true;
+        await expect(el.hasAttribute('notoggle')).to.be.true;
+      });
     });
 
     describe('offset', () => {
-      // add tests for this property
+      it('should default to 0', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.offset).to.equal(0);
+      });
+
+      it('should reflect the offset attribute', async () => {
+        const el = await fixture(html`<auro-dropdown offset="10"><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.offset).to.equal(10);
+      });
     });
 
     describe('onDark', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.onDark).to.not.be.true;
+      });
+
+      it('should reflect the onDark attribute', async () => {
+        const el = await fixture(html`
+          <div style="background-color: #222222">
+            <auro-dropdown ondark>
+              <div slot="trigger">Trigger</div>
+            </auro-dropdown>
+          </div>
+        `);
+        const dropdown = el.querySelector('auro-dropdown');
+        await expect(dropdown.onDark).to.be.true;
+        await expect(dropdown.hasAttribute('ondark')).to.be.true;
+      });
     });
 
     describe('onSlotChange', () => {
@@ -535,27 +693,76 @@ describe("auro-dropdown", () => {
     });
 
     describe('placement', () => {
-      // add tests for this property
+      it('should default to bottom-start', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.placement).to.equal('bottom-start');
+      });
+
+      it('should reflect custom placement', async () => {
+        const el = await fixture(html`<auro-dropdown placement="top"><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.placement).to.equal('top');
+        await expect(el.getAttribute('placement')).to.equal('top');
+      });
     });
 
     describe('shape', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.shape).to.be.undefined;
+      });
+
+      it('should reflect a custom shape attribute', async () => {
+        const el = await fixture(html`<auro-dropdown shape="pill"><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.getAttribute('shape')).to.equal('pill');
+      });
     });
 
     describe('shift', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.shift).to.be.false;
+      });
+
+      it('should reflect the shift attribute', async () => {
+        const el = await fixture(html`<auro-dropdown shift><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.shift).to.be.true;
+        await expect(el.hasAttribute('shift')).to.be.true;
+      });
     });
 
     describe('simple', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.simple).to.not.be.true;
+      });
+
+      it('should reflect the simple attribute', async () => {
+        const el = await fixture(html`<auro-dropdown simple><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.simple).to.be.true;
+        await expect(el.hasAttribute('simple')).to.be.true;
+      });
     });
 
     describe('size', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.size).to.be.undefined;
+      });
     });
 
     describe('a11yRole', () => {
-      // add tests for this property
+      it('should default to button', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.a11yRole).to.equal('button');
+      });
+
+      it('should apply the role to the trigger element', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        el.a11yRole = 'combobox';
+        await elementUpdated(el);
+        const trigger = el.shadowRoot.querySelector('#trigger');
+        await expect(trigger.getAttribute('role')).to.equal('combobox');
+      });
     });
   });
 
@@ -620,49 +827,177 @@ describe("auro-dropdown", () => {
     });
 
     describe('show', () => {
-      // TODO: test needs to be added
+      it('should open the bib when show() method is called', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+
+        expectPopoverHidden(el);
+
+        el.show();
+        await elementUpdated(el);
+        expectPopoverShown(el);
+      });
     });
 
     describe('focus', () => {
-      // TODO: test needs to be added
+      it('should focus the trigger element when bib is closed', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+
+        el.focus();
+        await elementUpdated(el);
+
+        const trigger = el.shadowRoot.querySelector('#trigger');
+        await expect(el.shadowRoot.activeElement).to.equal(trigger);
+      });
     });
 
     describe('register', () => {
-      // TODO: test needs to be added
+      it('should register the element as a custom element', async () => {
+        const el = await Boolean(customElements.get('auro-dropdown'));
+        await expect(el).to.be.true;
+      });
     });
 
     describe('exposeCssParts', () => {
-      // TODO: test needs to be added
+      it('should be callable without error', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        expect(() => el.exposeCssParts()).to.not.throw();
+      });
     });
 
     describe('clearTriggerA11yAttributes', () => {
-      // TODO: test needs to be added
+      it('should be callable without error', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        expect(() => el.clearTriggerA11yAttributes()).to.not.throw();
+      });
     });
 
     describe('resetShapeClasses', () => {
-      // TODO: test needs to be added
+      it('should be callable without error', async () => {
+        const el = await fixture(html`
+          <auro-dropdown shape="pill">
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.shape = 'pill-left';
+        el.resetShapeClasses();
+        await elementUpdated(el);
+
+        await expect(el.shape).to.equal('pill-left');
+      });
     });
 
     describe('resetLayoutClasses', () => {
-      // TODO: test needs to be added
+      it('should be callable without error', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.resetLayoutClasses();
+        await elementUpdated(el);
+
+        await expect(el).to.exist;
+      });
     });
 
     describe('updateComponentArchitecture', () => {
-      // TODO: test needs to be added
+      it('should be callable and update layout and shape', async () => {
+        const el = await fixture(html`
+          <auro-dropdown layout="emphasized" shape="pill">
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.layout = 'snowflake';
+        el.shape = 'snowflake';
+        el.updateComponentArchitecture();
+        await elementUpdated(el);
+
+        await expect(el.layout).to.equal('snowflake');
+        await expect(el.shape).to.equal('snowflake');
+      });
     });
   });
 
   describe('Events', () => {
     describe('auroDropdown-triggerClick', () => {
-      // add tests for this event
+      it('should fire auroDropdown-triggerClick when trigger is clicked', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+
+        const trigger = el.shadowRoot.querySelector('#trigger');
+
+        const listener = oneEvent(el, 'auroDropdown-triggerClick');
+        trigger.click();
+        const event = await listener;
+
+        await expect(event).to.exist;
+      });
     });
 
     describe('auroDropdown-toggled', () => {
-      // add tests for this event
+      it('should fire auroDropdown-toggled when the bib visibility changes', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+
+        const listener = oneEvent(el, 'auroDropdown-toggled');
+        el.show();
+        await elementUpdated(el);
+        const event = await listener;
+
+        await expect(event).to.exist;
+      });
     });
 
     describe('auroDropdown-idAdded', () => {
-      // add tests for this event
+      it('should have a dropdownId after rendering', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <span slot="label"> label text </span>
+            <div slot="trigger">Trigger</div>
+          </auro-dropdown>
+        `);
+
+        await expect(el.dropdownId).to.be.a('string');
+        await expect(el.dropdownId.length).to.be.greaterThan(0);
+      });
     });
   });
 

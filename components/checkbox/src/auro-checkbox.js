@@ -40,7 +40,7 @@ export class AuroCheckbox extends LitElement {
   }
 
   _initializeDefaults() {
-    this.apperance = 'default';
+    this.appearance = 'default';
     this.checked = false;
     this.disabled = false;
     this.error = false;

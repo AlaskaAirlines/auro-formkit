@@ -14,7 +14,15 @@ const rawIt = it;
 useAccessibleIt();
 describe('auro-counter-group', () => {
   describe('Rendering', () => {
-    // Add missing tests
+    it('should be defined as a custom element', async () => {
+      const el = await Boolean(customElements.get('auro-counter-group'));
+      await expect(el).to.be.true;
+    });
+
+    it('should be successfully created in the document', async () => {
+      const el = document.createElement('auro-counter-group');
+      await expect(el.localName).to.equal('auro-counter-group');
+    });
 
     it('should render the correct label in the dropdown label slot', async () => {
       const el = await fixture(html`
@@ -50,8 +58,6 @@ describe('auro-counter-group', () => {
   });
 
   describe('User Stories', () => {
-    // Add missing tests
-
     it('should handle an empty counter group without errors', async () => {
       const el = await fixture(html`
             <auro-counter-group isDropdown>
@@ -238,129 +244,434 @@ describe('auro-counter-group', () => {
 
   describe('Properties', () => {
     describe('appearance', () => {
-      // add tests for this property
+      it('should default to default appearance', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.appearance).to.equal('default');
+      });
+
+      it('should reflect the appearance attribute', async () => {
+        const el = await fixture(html`
+          <auro-counter-group appearance="inverse">
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.getAttribute('appearance')).to.equal('inverse');
+      });
     });
 
     describe('autoPlacement', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.autoPlacement).to.be.false;
+      });
     });
 
     describe('error', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.error).to.be.undefined;
+      });
     });
 
     describe('fullscreenBreakpoint', () => {
-      // add tests for this property
+      it('should default to sm', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.fullscreenBreakpoint).to.equal('sm');
+      });
     });
 
     describe('isDropdown', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.isDropdown).to.be.false;
+      });
+
+      it('should render a dropdown when set to true', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.isDropdown).to.be.true;
+        await expect(el.dropdown).to.exist;
+      });
     });
 
     describe('largeFullscreenHeadline', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.largeFullscreenHeadline).to.be.false;
+      });
     });
 
     describe('layout', () => {
-      // add tests for this property
+      it('should default to classic', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.layout).to.equal('classic');
+      });
+
+      it('should reflect snowflake layout', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown layout="snowflake">
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.getAttribute('layout')).to.equal('snowflake');
+      });
     });
 
     describe('matchWidth', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.matchWidth).to.be.false;
+      });
     });
 
     describe('max', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.max).to.be.undefined;
+      });
+
+      it('should disable increment on all counters when group total reaches max', async () => {
+        const el = await fixture(html`
+          <auro-counter-group max="5">
+            <auro-counter value="3">Counter 1</auro-counter>
+            <auro-counter value="2">Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+        el.configureCounters();
+        el.updateValue();
+        el.counters.forEach((counter) => {
+          expect(counter.disableMax).to.be.true;
+        });
+      });
     });
 
     describe('min', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.min).to.be.undefined;
+      });
+
+      it('should disable decrement on all counters when group total reaches min', async () => {
+        const el = await fixture(html`
+          <auro-counter-group min="5">
+            <auro-counter value="3">Counter 1</auro-counter>
+            <auro-counter value="2">Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+        el.configureCounters();
+        el.updateValue();
+        el.counters.forEach((counter) => {
+          expect(counter.disableMin).to.be.true;
+        });
+      });
     });
 
     describe('noFlip', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.noFlip).to.be.false;
+      });
     });
 
     describe('offset', () => {
-      // add tests for this property
+      it('should not have offset attribute by default', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.hasAttribute('offset')).to.be.false;
+      });
     });
 
     describe('onDark', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.onDark).to.be.false;
+      });
     });
 
     describe('placement', () => {
-      // add tests for this property
+      it('should default to bottom-start', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.placement).to.equal('bottom-start');
+      });
     });
 
     describe('shift', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.shift).to.be.false;
+      });
     });
 
     describe('total', () => {
-      // add tests for this property
+      it('should calculate total from child counter values', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter value="2">Counter 1</auro-counter>
+            <auro-counter value="3">Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+        el.configureCounters();
+        el.updateValue();
+        await expect(el.total).to.equal(5);
+      });
     });
 
     describe('validity', () => {
-      // add tests for this property
+      it('should be valid after initialization', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        await expect(el.validity).to.equal('valid');
+      });
     });
 
     describe('value', () => {
-      // add tests for this property
+      it('should aggregate individual counter values', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter name="adults" value="2">Adults</auro-counter>
+            <auro-counter name="children" value="1">Children</auro-counter>
+          </auro-counter-group>
+        `);
+        el.configureCounters();
+        el.updateValue();
+        await expect(el.value).to.deep.equal({ adults: 2, children: 1 });
+      });
     });
   });
 
   describe('Slots', () => {
     describe('default', () => {
-      // add tests for this slot
+      it('should render auro-counter elements in the default slot', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter 1</auro-counter>
+            <auro-counter>Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+        const counters = el.querySelectorAll('auro-counter');
+        await expect(counters.length).to.equal(2);
+      });
     });
 
     describe('ariaLabel.bib.close', () => {
-      // add tests for this slot
+      it('should render content in the ariaLabel.bib.close slot', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="ariaLabel.bib.close">Close menu</span>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        const slotContent = el.querySelector('[slot="ariaLabel.bib.close"]');
+        await expect(slotContent).to.exist;
+      });
     });
 
     describe('bib.fullscreen.headline', () => {
-      // add tests for this slot
+      it('should render content in the bib.fullscreen.headline slot', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="bib.fullscreen.headline">Travelers</span>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        const slotContent = el.querySelector('[slot="bib.fullscreen.headline"]');
+        await expect(slotContent).to.exist;
+      });
     });
 
     describe('bib.fullscreen.footer', () => {
-      // add tests for this slot
+      it('should render content in the bib.fullscreen.footer slot', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="bib.fullscreen.footer">Footer text</span>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        const slotContent = el.querySelector('[slot="bib.fullscreen.footer"]');
+        await expect(slotContent).to.exist;
+      });
     });
 
     describe('label', () => {
-      // add tests for this slot
+      it('should render content in the label slot', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="label">Travelers</span>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        const slotContent = el.querySelector('[slot="label"]');
+        await expect(slotContent).to.exist;
+      });
     });
 
     describe('valueText', () => {
-      // add tests for this slot
+      it('should render content in the valueText slot', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <div slot="valueText">5 travelers</div>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        const slotContent = el.querySelector('[slot="valueText"]');
+        await expect(slotContent).to.exist;
+      });
     });
 
     describe('helpText', () => {
-      // add tests for this slot
+      it('should render content in the helpText slot', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <span slot="helpText">Select number of travelers</span>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        const slotContent = el.querySelector('[slot="helpText"]');
+        await expect(slotContent).to.exist;
+      });
     });
   });
 
   describe('Public Functions', () => {
     describe('register', () => {
-      // TODO: test needs to be added
+      it('should register the element as a custom element', async () => {
+        const el = await Boolean(customElements.get('auro-counter-group'));
+        await expect(el).to.be.true;
+      });
     });
 
     describe('hideBib', () => {
-      // TODO: test needs to be added
+      it('should close the dropdown when called', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        el.dropdown.show();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        el.hideBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
     });
 
     describe('showBib', () => {
-      // TODO: test needs to be added
+      it('should open the dropdown when called', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.showBib();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
     });
 
     describe('validate', () => {
-      // TODO: test needs to be added
+      it('should run validation on the group', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+        el.validate(true);
+        await elementUpdated(el);
+        await expect(el.validity).to.equal('valid');
+      });
     });
   });
 
   describe('Events', () => {
     describe('input', () => {
-      // add tests for this event
+      it('should fire input event when a child counter value changes', async () => {
+        const el = await fixture(html`
+          <auro-counter-group>
+            <auro-counter value="2">Counter 1</auro-counter>
+            <auro-counter value="3">Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+        el.configureCounters();
+
+        let inputFired = false;
+        el.addEventListener('input', () => { inputFired = true; });
+
+        el.counters[0].increment();
+        await elementUpdated(el);
+
+        await expect(inputFired).to.be.true;
+      });
     });
   });
 
@@ -369,7 +680,6 @@ describe('auro-counter-group', () => {
   });
 
   describe('A11Y', () => {
-    // Add missing tests
 
 
     // against a11y

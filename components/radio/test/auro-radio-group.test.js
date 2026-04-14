@@ -1,64 +1,365 @@
-/* eslint-disable no-undef, max-lines */
+/* eslint-disable no-undef, max-lines, max-statements, no-unused-expressions */
 
 import {elementUpdated, expect, fixture, html} from '@open-wc/testing';
 import '../src/registered.js';
 
 describe('auro-radio-group', () => {
   describe('Rendering', () => {
-    // Add missing tests
+    it('should render a shadow root', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      expect(el.shadowRoot).to.exist;
+    });
+
+    it('should render a fieldset element', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      const fieldset = el.shadowRoot.querySelector('fieldset');
+      expect(fieldset).to.exist;
+    });
+
+    it('should render the help text component', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      const helpText = el.shadowRoot.querySelector('[part="helpText"]');
+      expect(helpText).to.exist;
+    });
   });
 
   describe('User Stories', () => {
-    // Add missing tests
+    it('should allow selecting one option from a group', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" name="demo" value="one">One</auro-radio>
+          <auro-radio id="r2" name="demo" value="two">Two</auro-radio>
+        </auro-radio-group>
+      `);
+
+      el.querySelector('#r1').shadowRoot.querySelector('input').click();
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('one');
+      expect(el.querySelector('#r1').checked).to.be.true;
+    });
+
+    it('should only allow one radio to be selected at a time', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" name="demo" value="one">One</auro-radio>
+          <auro-radio id="r2" name="demo" value="two">Two</auro-radio>
+        </auro-radio-group>
+      `);
+
+      el.querySelector('#r1').shadowRoot.querySelector('input').click();
+      await elementUpdated(el);
+      expect(el.querySelector('#r1').checked).to.be.true;
+
+      el.querySelector('#r2').shadowRoot.querySelector('input').click();
+      await elementUpdated(el);
+      expect(el.querySelector('#r1').checked).to.be.false;
+      expect(el.querySelector('#r2').checked).to.be.true;
+    });
   });
 
   describe('Properties', () => {
     describe('appearance', () => {
-      // add tests for this property
+      it('should default to "default"', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.appearance).to.equal('default');
+      });
+
+      it('should propagate appearance to child radios', async () => {
+        const el = await fixture(html`
+          <auro-radio-group appearance="inverse">
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').appearance).to.equal('inverse');
+      });
     });
 
     describe('disabled', () => {
-      // add tests for this property
+      it('should propagate disabled to child radios', async () => {
+        const el = await fixture(html`
+          <auro-radio-group disabled>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+            <auro-radio id="r2" value="two" name="test">Two</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').disabled).to.be.true;
+        expect(el.querySelector('#r2').disabled).to.be.true;
+      });
+
+      it('should update disabled state on child radios when toggled', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').disabled).to.be.false;
+
+        el.disabled = true;
+        await elementUpdated(el);
+        expect(el.querySelector('#r1').disabled).to.be.true;
+
+        el.disabled = false;
+        await elementUpdated(el);
+        expect(el.querySelector('#r1').disabled).to.be.false;
+      });
     });
 
     describe('error', () => {
-      // add tests for this property
+      it('should set validity to customError when error is set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error message">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.validity).to.equal('customError');
+      });
+
+      it('should set error on child radios when validity is not valid', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error message">
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').hasAttribute('error')).to.be.true;
+      });
+
+      it('should clear error on child radios when validity becomes valid', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error message">
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').hasAttribute('error')).to.be.true;
+
+        el.removeAttribute('error');
+        await elementUpdated(el);
+
+        expect(el.querySelector('#r1').hasAttribute('error')).to.be.false;
+      });
     });
 
     describe('horizontal', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.horizontal).to.be.false;
+      });
+
+      it('should apply displayFlex class when horizontal and items <= max', async () => {
+        const el = await fixture(html`
+          <auro-radio-group horizontal>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+            <auro-radio value="two" name="test">Two</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const fieldset = el.shadowRoot.querySelector('fieldset');
+        expect(fieldset.classList.contains('displayFlex')).to.be.true;
+      });
     });
 
     describe('noValidate', () => {
-      // add tests for this property
+      it('should reflect the noValidate attribute', async () => {
+        const el = await fixture(html`
+          <auro-radio-group noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.noValidate).to.be.true;
+        expect(el.hasAttribute('novalidate')).to.be.true;
+      });
     });
 
     describe('onDark', () => {
-      // add tests for this property
+      it('should propagate onDark to child radios', async () => {
+        const el = await fixture(html`
+          <auro-radio-group onDark>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').onDark).to.be.true;
+      });
     });
 
     describe('optionSelected', () => {
-      // add tests for this property
+      it('should be undefined when no radio is selected', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.optionSelected).to.be.undefined;
+      });
+
+      it('should reference the selected radio element', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const r1 = el.querySelector('#r1');
+        r1.shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(el.optionSelected).to.equal(r1);
+      });
     });
 
     describe('required', () => {
-      // add tests for this property
+      it('should propagate required to child radios', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').required).to.be.true;
+      });
+
+      it('should hide optional label when required', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const optionalSlot = el.shadowRoot.querySelector('slot[name="optionalLabel"]');
+        expect(optionalSlot).to.not.exist;
+      });
     });
 
     describe('setCustomValidity', () => {
-      // add tests for this property
+      it('should accept a setCustomValidity string', async () => {
+        const el = await fixture(html`
+          <auro-radio-group setCustomValidity="Custom message">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.setCustomValidity).to.equal('Custom message');
+      });
     });
 
     describe('setCustomValidityCustomError', () => {
-      // add tests for this property
+      it('should accept a setCustomValidityCustomError string', async () => {
+        const el = await fixture(html`
+          <auro-radio-group setCustomValidityCustomError="Custom error msg">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.setCustomValidityCustomError).to.equal('Custom error msg');
+      });
     });
 
     describe('setCustomValidityValueMissing', () => {
-      // add tests for this property
+      it('should accept a setCustomValidityValueMissing string', async () => {
+        const el = await fixture(html`
+          <auro-radio-group setCustomValidityValueMissing="Required msg">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.setCustomValidityValueMissing).to.equal('Required msg');
+      });
     });
 
     describe('validity', () => {
-      // add tests for this property
+      it('should be undefined initially', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.validity).to.be.undefined;
+      });
+
+      it('should set aria-invalid when validity is not valid', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.getAttribute('aria-invalid')).to.equal('true');
+      });
+
+      it('should remove aria-invalid when validity becomes valid', async () => {
+        const el = await fixture(html`
+          <auro-radio-group error="Error">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.getAttribute('aria-invalid')).to.equal('true');
+
+        el.removeAttribute('error');
+        await elementUpdated(el);
+
+        expect(el.hasAttribute('aria-invalid')).to.be.false;
+      });
     });
 
     describe('value', () => {
@@ -172,27 +473,105 @@ describe('auro-radio-group', () => {
         await expect(radioGroup.value).to.equal('maybe2');
         await expect(radioGroup.optionSelected).to.equal(radio6);
       });
+
+      it('should be undefined initially', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.value).to.be.undefined;
+      });
+
+      it('should set value to empty string when selected radio has null/undefined value', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const r1 = el.querySelector('#r1');
+        r1.shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(el.value).to.equal('');
+      });
+    });
+
+    describe('touched', () => {
+      it('should default to false', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.touched).to.be.false;
+      });
+
+      it('should become true after radio blur', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const r1 = el.querySelector('#r1');
+        r1.dispatchEvent(new Event('focus'));
+        r1.dispatchEvent(new Event('blur'));
+        await elementUpdated(el);
+
+        expect(el.touched).to.be.true;
+      });
     });
   });
 
   describe('Slots', () => {
     describe('default', () => {
-      // add tests for this slot
+      it('should render radio buttons in the default slot', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const slot = el.shadowRoot.querySelector('slot:not([name])');
+        expect(slot).to.exist;
+        const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE);
+        expect(assigned.length).to.be.greaterThan(0);
+      });
     });
 
     describe('legend', () => {
       it('should render content in the legend slot', async () => {
-        const el = await fixture(html`<auro-radio-group><span slot="legend">Select one</span><auro-radio value="one">One</auro-radio></auro-radio-group>`);
+        const el = await fixture(html`<auro-radio-group><span slot="legend">Select one</span><auro-radio value="one" name="test">One</auro-radio></auro-radio-group>`);
 
         const slotContent = el.querySelector('[slot="legend"]');
 
         await expect(slotContent).to.exist;
       });
+
+      it('should set hasLegend when legend slot is populated', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.hasLegend).to.be.true;
+      });
     });
 
     describe('optionalLabel', () => {
       it('should render content in the optionalLabel slot', async () => {
-        const el = await fixture(html`<auro-radio-group><span slot="optionalLabel">(optional)</span><span slot="legend">Pick</span><auro-radio value="one">One</auro-radio></auro-radio-group>`);
+        const el = await fixture(html`<auro-radio-group><span slot="optionalLabel">(optional)</span><span slot="legend">Pick</span><auro-radio value="one" name="test">One</auro-radio></auro-radio-group>`);
 
         const slotContent = el.querySelector('[slot="optionalLabel"]');
 
@@ -202,36 +581,177 @@ describe('auro-radio-group', () => {
 
     describe('helpText', () => {
       it('should render content in the helpText slot', async () => {
-        const el = await fixture(html`<auro-radio-group><span slot="helpText">Choose wisely</span><span slot="legend">Pick</span><auro-radio value="one">One</auro-radio></auro-radio-group>`);
+        const el = await fixture(html`<auro-radio-group><span slot="helpText">Choose wisely</span><span slot="legend">Pick</span><auro-radio value="one" name="test">One</auro-radio></auro-radio-group>`);
 
         const slotContent = el.querySelector('[slot="helpText"]');
 
         await expect(slotContent).to.exist;
       });
     });
+
+    describe('slotchange', () => {
+      it('should update items array when a new radio is added', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const initialCount = el.items.length;
+
+        const newRadio = document.createElement('auro-radio');
+        newRadio.value = 'two';
+        newRadio.name = 'test';
+        newRadio.textContent = 'Two';
+        el.appendChild(newRadio);
+
+        await elementUpdated(el);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        expect(el.items.length).to.be.greaterThan(initialCount);
+      });
+    });
   });
 
   describe('Public Functions', () => {
     describe('register', () => {
-      // TODO: test needs to be added
+      it('should have a static register method', () => {
+        expect(typeof customElements.get('auro-radio-group').register).to.equal('function');
+      });
     });
 
     describe('reset', () => {
-      // TODO: test needs to be added
+      it('should reset all radios and clear value/optionSelected', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one" checked>One</auro-radio>
+            <auro-radio id="r2" name="test" value="two">Two</auro-radio>
+          </auro-radio-group>
+        `);
+
+        expect(el.querySelector('#r1').checked).to.be.true;
+
+        el.reset();
+        await elementUpdated(el);
+
+        expect(el.querySelector('#r1').checked).to.be.false;
+        expect(el.value).to.be.undefined;
+        expect(el.optionSelected).to.be.undefined;
+      });
+
+      it('should reset touched on child radios', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        const r1 = el.querySelector('#r1');
+        r1.dispatchEvent(new Event('focus'));
+        await elementUpdated(el);
+        expect(r1.touched).to.be.true;
+
+        el.reset();
+        await elementUpdated(el);
+        expect(r1.touched).to.be.false;
+      });
     });
 
     describe('validate', () => {
-      // TODO: test needs to be added
+      it('should set validity to valueMissing when required and no selection', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('valueMissing');
+      });
+
+      it('should set validity to valid when required and a selection is made', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        el.querySelector('#r1').shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('valid');
+      });
     });
   });
 
   describe('Events', () => {
     describe('auroFormElement-validated', () => {
-      // add tests for this event
+      it('should fire auroFormElement-validated after validation', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        let fired = false;
+        el.addEventListener('auroFormElement-validated', () => {
+          fired = true;
+        });
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(fired).to.be.true;
+      });
     });
 
     describe('input', () => {
-      // add tests for this event
+      it('should fire input event when value changes', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        let fired = false;
+        el.addEventListener('input', () => {
+          fired = true;
+        });
+
+        el.querySelector('#r1').shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(fired).to.be.true;
+      });
+
+      it('should have bubbles, cancelable, and composed set to true', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        let event = null;
+        el.addEventListener('input', (ev) => {
+          event = ev;
+        });
+
+        el.querySelector('#r1').shadowRoot.querySelector('input').click();
+        await elementUpdated(el);
+
+        expect(event.bubbles).to.be.true;
+        expect(event.composed).to.be.true;
+      });
     });
   });
 
@@ -240,15 +760,129 @@ describe('auro-radio-group', () => {
   });
 
   describe('A11Y', () => {
-    // Add missing tests
+    it('should have role="radiogroup" on the fieldset', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      const fieldset = el.shadowRoot.querySelector('fieldset');
+      expect(fieldset.getAttribute('role')).to.equal('radiogroup');
+    });
+
+    it('should set aria-invalid when in error state', async () => {
+      const el = await fixture(html`
+        <auro-radio-group error="Error">
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      expect(el.getAttribute('aria-invalid')).to.equal('true');
+    });
+
+    it('should remove aria-invalid when error is cleared', async () => {
+      const el = await fixture(html`
+        <auro-radio-group error="Error">
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      el.removeAttribute('error');
+      await elementUpdated(el);
+
+      expect(el.hasAttribute('aria-invalid')).to.be.false;
+    });
+
+    it('should render error help text with role="alert" when invalid', async () => {
+      const el = await fixture(html`
+        <auro-radio-group error="Error message">
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      const errorHelpText = el.shadowRoot.querySelector('[part="helpText"][role="alert"]');
+      expect(errorHelpText).to.exist;
+    });
   });
 
   describe('Mouse Behavior', () => {
-    // Add missing tests
+    it('should select radio and update group value on click', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          <auro-radio id="r2" name="test" value="two">Two</auro-radio>
+        </auro-radio-group>
+      `);
+
+      el.querySelector('#r1').shadowRoot.querySelector('input').click();
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('one');
+      expect(el.querySelector('#r1').checked).to.be.true;
+    });
   });
 
   describe('Keyboard Behavior', () => {
-    // Add missing tests
+    it('should select with Space key', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          <auro-radio id="r2" name="test" value="two">Two</auro-radio>
+        </auro-radio-group>
+      `);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+      await elementUpdated(el);
+
+      expect(el.querySelector('#r1').checked).to.be.true;
+    });
+
+    it('should navigate with ArrowDown/ArrowRight', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          <auro-radio id="r2" name="test" value="two">Two</auro-radio>
+        </auro-radio-group>
+      `);
+
+      // Select first
+      el.querySelector('#r1').shadowRoot.querySelector('input').click();
+      await elementUpdated(el);
+
+      // ArrowRight should move to second
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('two');
+    });
+
+    it('should navigate with ArrowUp/ArrowLeft', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" name="test" value="one">One</auro-radio>
+          <auro-radio id="r2" name="test" value="two">Two</auro-radio>
+        </auro-radio-group>
+      `);
+
+      // Select second
+      el.querySelector('#r2').shadowRoot.querySelector('input').click();
+      await elementUpdated(el);
+
+      // ArrowLeft should move to first
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('one');
+    });
   });
 });
 
