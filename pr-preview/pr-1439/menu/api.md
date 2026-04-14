@@ -25,7 +25,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 | [selectAllMatchingOptions](#selectAllMatchingOptions) | `selectAllMatchingOptions` |           | `boolean`             | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
 | [selectedOption](#selectedOption)           |                            | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
 | [selectedOptions](#selectedOptions)          |                            | readonly  | `HTMLElement[]`       |             | Gets the currently selected options.             |
-| [value](#value)                    | `value`                    |           | `string`              | "undefined" | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values. |
+| [value](#value)                    | `value`                    |           | `string`              |             | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values. |
 
 ## Methods
 
