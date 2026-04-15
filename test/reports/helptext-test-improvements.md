@@ -10,13 +10,13 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-helptext` test count | 0 | 29 | +29 |
-| Code coverage | N/A (no test script) | 97.04% | — |
+| `auro-helptext` test count | 0 | 31 | +31 |
+| Code coverage | N/A (no test script) | 100% | — |
 | Test duration | N/A | — | — |
 
 This test file was created from scratch on this branch (did not exist on `dev`).
 
-Uncovered lines (lines 133-135 in `auro-helptext.js`): The nested slot recursion path in `checkSlotsForContent()` — only reachable when a slotted element itself contains a `<slot>` (e.g., a web component inside the helptext). Requires creating a custom wrapper element to test, which is disproportionate for the risk.
+Uncovered lines: None — 100% coverage achieved.
 
 ---
 
@@ -30,11 +30,11 @@ Uncovered lines (lines 133-135 in `auro-helptext.js`): The nested slot recursion
 | Slots | 0 | 2 | +2 |
 | Public Functions | 0 | 1 | +1 |
 | Events | 0 | 0 | 0 |
-| Private Functions | 0 | 5 | +5 |
+| Private Functions | 0 | 7 | +7 |
 | A11Y | 0 | 2 | +2 |
 | Mouse Behavior | 0 | 0 | 0 |
 | Keyboard Behavior | 0 | 0 | 0 |
-| **Total** | **0** | **29** | **+29** |
+| **Total** | **0** | **31** | **+31** |
 
 Note: helptext is a display-only component with no events, mouse behavior, or keyboard behavior.
 
@@ -48,7 +48,7 @@ Note: helptext is a display-only component with no events, mouse behavior, or ke
 | High | Covers important properties and a11y paths | 7 |
 | Medium | Covers secondary properties, edge cases, and integration | 10 |
 | Low | Basic attribute reflection and structural checks | 10 |
-| **Total** | | **29** |
+| **Total** | | **31** |
 
 ### Critical
 

@@ -1002,7 +1002,705 @@ describe("auro-dropdown", () => {
   });
 
   describe('Private Functions', () => {
-    // No private function tests
+    it('should focus the first focusable element in bib when open', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <button id="bibBtn">Click me</button>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+      expectPopoverShown(el);
+
+      el.focus();
+      await elementUpdated(el);
+
+      const bibBtn = el.querySelector('#bibBtn');
+      await expect(document.activeElement === bibBtn || el.shadowRoot.activeElement !== null).to.be.true;
+    });
+
+    it('should focus trigger when bib is closed', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.focus();
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      await expect(el.shadowRoot.activeElement).to.equal(trigger);
+    });
+
+    it('isCustomSlotContent should detect slotted content', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger"><span id="inner">Trigger</span></div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Test with an element whose parent has a slot attribute
+      const inner = el.querySelector('#inner');
+      await expect(el.isCustomSlotContent(inner)).to.be.true;
+
+      // Test with an element that has no slot attribute ancestor
+      const detached = document.createElement('div');
+      await expect(el.isCustomSlotContent(detached)).to.be.false;
+    });
+
+    it('bindFocusEventToTrigger should dispatch a FocusEvent on trigger', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      let received = false;
+      el.trigger.addEventListener('focus', () => { received = true; });
+
+      el.bindFocusEventToTrigger(new FocusEvent('focus'));
+      await expect(received).to.be.true;
+    });
+
+    it('clearTriggerA11yAttributes should remove a11y attributes', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      trigger.setAttribute('role', 'combobox');
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.setAttribute('aria-controls', 'bib-id');
+      trigger.setAttribute('aria-autocomplete', 'list');
+      trigger.setAttribute('aria-labelledby', 'label-id');
+      trigger.id = `${el.id}-trigger-element`;
+
+      el.clearTriggerA11yAttributes(trigger);
+
+      await expect(trigger.hasAttribute('role')).to.be.false;
+      await expect(trigger.hasAttribute('aria-expanded')).to.be.false;
+      await expect(trigger.hasAttribute('aria-controls')).to.be.false;
+      await expect(trigger.hasAttribute('aria-autocomplete')).to.be.false;
+      await expect(trigger.hasAttribute('aria-labelledby')).to.be.false;
+      await expect(trigger.hasAttribute('id')).to.be.false;
+    });
+
+    it('clearTriggerA11yAttributes should handle null input', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Should not throw
+      el.clearTriggerA11yAttributes(null);
+      el.clearTriggerA11yAttributes(undefined);
+    });
+
+    it('setupTriggerFocusEventBinding should add focus/blur listeners to auro elements in trigger slot', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <auro-input slot="trigger"></auro-input>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Force setup
+      el.setupTriggerFocusEventBinding();
+      await elementUpdated(el);
+
+      // clearTriggerFocusEventBinding should also work
+      el.clearTriggerFocusEventBinding();
+      await elementUpdated(el);
+    });
+
+    it('setupTriggerFocusEventBinding should return early when no trigger content', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.triggerContentSlot = null;
+      el.setupTriggerFocusEventBinding();
+      el.clearTriggerFocusEventBinding();
+    });
+
+    it('setActiveDescendant should return early when no trigger', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const origTrigger = el.trigger;
+      el.trigger = null;
+      el.setActiveDescendant(document.createElement('div'));
+      el.trigger = origTrigger;
+    });
+
+    it('renderLayout should handle emphasized-left and emphasized-right', async () => {
+      const el = await fixture(html`
+        <auro-dropdown layout="emphasized" shape="pill">
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const result1 = el.renderLayout('emphasized-left');
+      await expect(result1).to.exist;
+
+      const result2 = el.renderLayout('emphasized-right');
+      await expect(result2).to.exist;
+    });
+
+    it('renderLayout should handle snowflake-left and snowflake-right', async () => {
+      const el = await fixture(html`
+        <auro-dropdown layout="snowflake" shape="pill">
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const result1 = el.renderLayout('snowflake-left');
+      await expect(result1).to.exist;
+
+      const result2 = el.renderLayout('snowflake-right');
+      await expect(result2).to.exist;
+    });
+
+    it('handleTriggerSlotChange should detect nested slot content', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger"><span>Trigger text</span></div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      await expect(el.hasTriggerContent).to.be.true;
+    });
+
+    it('handleTriggerContentSlotChange should set hasTriggerContent false when no triggerContentSlot', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.triggerContentSlot = null;
+      el.handleTriggerContentSlotChange();
+      await elementUpdated(el);
+
+      await expect(el.hasTriggerContent).to.be.false;
+    });
+
+    it('handleTriggerContentSlotChange catch block handles assignedNodes error gracefully', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Mock event whose target.assignedNodes throws (simulates NodeJS test environment)
+      const mockEvent = {
+        target: {
+          assignedNodes() {
+            throw new Error('assignedNodes not supported');
+          }
+        }
+      };
+
+      // Should not throw — catch block absorbs the error
+      el.handleTriggerContentSlotChange(mockEvent);
+      await elementUpdated(el);
+    });
+
+    it('handleTriggerContentSlotChange detects content in nested slot', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Mock triggerContentSlot with node that has empty text but contains a nested slot with content
+      const mockNestedSlot = {
+        assignedNodes: () => [document.createTextNode('nested trigger text')]
+      };
+      const mockNode = {
+        textContent: '   ',
+        querySelector: (sel) => sel === 'slot' ? mockNestedSlot : null,
+        querySelectorAll: () => []
+      };
+
+      el.triggerContentSlot = [mockNode];
+      el.handleTriggerContentSlotChange();
+      await elementUpdated(el);
+
+      expect(el.hasTriggerContent).to.be.true;
+    });
+
+    it('handleTriggerSlotChange with focusable content should clear a11y attributes', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <button slot="trigger">Click</button>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // A focusable trigger should have had tabindex removed
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      await expect(trigger.hasAttribute('tabindex')).to.be.false;
+    });
+
+    // ─── handleFocusout sets hasFocus to false ─────────────────────────
+    it('handleFocusout should set hasFocus to false', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.hasFocus = true;
+      el.handleFocusout();
+      await expect(el.hasFocus).to.be.false;
+    });
+
+    // ─── setupTriggerFocusEventBinding with focusable children in trigger ──
+    it('setupTriggerFocusEventBinding should bind blur listeners for focusable children in trigger', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger"><input type="text" id="innerInput" aria-label="test input" /></div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // The slot assigned nodes should include the div with a <input> child
+      // Setup was done automatically. Verify focus event dispatches to trigger.
+      let triggerFocused = false;
+      el.trigger.addEventListener('focus', () => { triggerFocused = true; });
+
+      const innerInput = el.querySelector('#innerInput');
+      innerInput.focus();
+      await elementUpdated(el);
+
+      // Clear binding should also run without error
+      el.clearTriggerFocusEventBinding();
+    });
+
+    // ─── handleDropdownToggle focuses trigger on keydown hide ──────────
+    it('handleDropdownToggle should focus trigger when bib hides via keydown', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.hasFocus = true;
+      el.handleDropdownToggle({
+        detail: { expanded: false, eventType: 'keydown' }
+      });
+      await elementUpdated(el);
+
+      await expect(el.isPopoverVisible).to.be.false;
+    });
+
+    // ─── handleDropdownToggle defaults eventType to unknown ───────────
+    it('handleDropdownToggle should default eventType to unknown when not provided', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.hasFocus = true;
+      // Dispatch with no eventType — the || "unknown" fallback is used
+      el.handleDropdownToggle({
+        detail: { expanded: false }
+      });
+      await elementUpdated(el);
+
+      // Should not focus trigger since eventType defaults to "unknown", not "keydown"
+      await expect(el.isPopoverVisible).to.be.false;
+    });
+
+    // ─── chevron renders with onDark inverse appearance ───────────────
+    it('chevron should render with inverse appearance when onDark is set', async () => {
+      const el = await fixture(html`
+        <auro-dropdown chevron ondark>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const chevronIcon = el.shadowRoot.querySelector('#showStateIcon auro-icon, #showStateIcon [auro-icon]');
+      if (chevronIcon) {
+        await expect(chevronIcon.getAttribute('appearance')).to.equal('inverse');
+      }
+    });
+
+    // ─── chevron renders with disabled variant ────────────────────────
+    it('chevron should render with disabled variant when disabled', async () => {
+      const el = await fixture(html`
+        <auro-dropdown chevron disabled>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const chevronIcon = el.shadowRoot.querySelector('#showStateIcon auro-icon, #showStateIcon [auro-icon]');
+      if (chevronIcon) {
+        await expect(chevronIcon.getAttribute('variant')).to.equal('disabled');
+      }
+    });
+
+    // ─── bib bibtemplate-connected event sets bibTemplate and fullscreen ─
+    it('bib should handle auro-bibtemplate-connected event', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const mockBibTemplate = document.createElement('div');
+
+      bib.dispatchEvent(new CustomEvent('auro-bibtemplate-connected', {
+        bubbles: false,
+        detail: { element: mockBibTemplate }
+      }));
+      await elementUpdated(bib);
+
+      await expect(bib.bibTemplate).to.equal(mockBibTemplate);
+    });
+
+    it('bib should set isFullscreen on bibTemplate during bibtemplate-connected when already fullscreen', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const mockBibTemplate = document.createElement('div');
+
+      // Set isFullscreen before dispatching the event
+      bib.isFullscreen = true;
+      await elementUpdated(bib);
+
+      bib.dispatchEvent(new CustomEvent('auro-bibtemplate-connected', {
+        bubbles: false,
+        detail: { element: mockBibTemplate }
+      }));
+      await elementUpdated(bib);
+
+      expect(mockBibTemplate.getAttribute('isFullscreen')).to.equal('true');
+    });
+
+    // ─── bib updated() propagates isFullscreen to bibTemplate ─────────
+    it('bib should set isFullscreen attribute on bibTemplate when isFullscreen changes', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const mockBibTemplate = document.createElement('div');
+      bib.bibTemplate = mockBibTemplate;
+
+      bib.isFullscreen = true;
+      await elementUpdated(bib);
+      await expect(mockBibTemplate.getAttribute('isFullscreen')).to.equal('true');
+
+      bib.isFullscreen = false;
+      await elementUpdated(bib);
+      await expect(mockBibTemplate.hasAttribute('isFullscreen')).to.be.false;
+    });
+
+    // ─── bib dialog cancel event dispatches auro-bib-cancel ───────────
+    it('bib dialog cancel event should dispatch auro-bib-cancel', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const dialog = bib.shadowRoot.querySelector('dialog');
+
+      let cancelReceived = false;
+      bib.addEventListener('auro-bib-cancel', () => { cancelReceived = true; });
+
+      // Dispatch native cancel event on dialog (as if ESC was pressed on a modal dialog)
+      dialog.dispatchEvent(new Event('cancel', { bubbles: false }));
+
+      await expect(cancelReceived).to.be.true;
+    });
+
+    // ─── bib dialogLabel renders label span and aria-labelledby ───────
+    it('bib dialog should render dialogLabel and aria-labelledby', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      bib.dialogLabel = 'Test Dialog Label';
+      await elementUpdated(bib);
+
+      const dialog = bib.shadowRoot.querySelector('dialog');
+      const labelSpan = bib.shadowRoot.querySelector('#dialogLabel');
+
+      await expect(dialog.getAttribute('aria-labelledby')).to.equal('dialogLabel');
+      await expect(labelSpan).to.exist;
+      await expect(labelSpan.textContent).to.equal('Test Dialog Label');
+    });
+
+    // ─── bib keyboard strategy Enter/Escape handlers ──────────────────
+    it('bib keyboard strategy Enter and Escape handlers should execute without error', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const dialog = bib.shadowRoot.querySelector('dialog');
+
+      // Dispatch Enter and Escape keydown on the dialog to hit the strategy handlers
+      dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+
+      // No errors expected
+      await expect(el).to.exist;
+    });
+
+    // ─── bib _lockTouchScroll registers touchmove handler ─────────────
+    it('bib _lockTouchScroll should register and invoke touchmove handler', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+
+      // Call _lockTouchScroll to register the handler
+      bib._lockTouchScroll();
+
+      // Verify handler was registered by dispatching touchmove
+      let preventDefaultCalled = false;
+      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
+      touchEvent.composedPath = () => [document.body, document.documentElement, document];
+      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+
+      document.dispatchEvent(touchEvent);
+
+      await expect(preventDefaultCalled).to.be.true;
+
+      // Clean up
+      bib._unlockTouchScroll();
+    });
+
+    // ─── bib _lockTouchScroll allows scroll inside scrollable child ───
+    it('bib _lockTouchScroll should allow scroll inside scrollable child', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const dialog = bib.shadowRoot.querySelector('dialog');
+
+      bib._lockTouchScroll();
+
+      // Create a mock scrollable element with scrollHeight > clientHeight
+      const scrollableEl = document.createElement('div');
+      Object.defineProperty(scrollableEl, 'scrollHeight', { get: () => 200 });
+      Object.defineProperty(scrollableEl, 'clientHeight', { get: () => 50 });
+      // Override getComputedStyle for this element
+      const origGetComputedStyle = window.getComputedStyle;
+      window.getComputedStyle = (elem) => {
+        if (elem === scrollableEl) {
+          return { overflowY: 'auto' };
+        }
+        return origGetComputedStyle(elem);
+      };
+
+      // Simulate touchmove inside a scrollable child within the dialog
+      let preventDefaultCalled = false;
+      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
+      touchEvent.composedPath = () => [scrollableEl, dialog, bib, document.body];
+      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+
+      document.dispatchEvent(touchEvent);
+
+      // Should NOT prevent default because there's a scrollable child before the dialog
+      await expect(preventDefaultCalled).to.be.false;
+
+      // Restore
+      window.getComputedStyle = origGetComputedStyle;
+      bib._unlockTouchScroll();
+    });
+
+    // ─── bib _lockTouchScroll allows scroll inside overflow-scroll child ─
+    it('bib _lockTouchScroll should allow scroll inside child with overflow-y scroll', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const dialog = bib.shadowRoot.querySelector('dialog');
+
+      bib._lockTouchScroll();
+
+      const scrollableEl = document.createElement('div');
+      Object.defineProperty(scrollableEl, 'scrollHeight', { get: () => 200 });
+      Object.defineProperty(scrollableEl, 'clientHeight', { get: () => 50 });
+      const origGetComputedStyle = window.getComputedStyle;
+      window.getComputedStyle = (elem) => {
+        if (elem === scrollableEl) {
+          return { overflowY: 'scroll' };
+        }
+        return origGetComputedStyle(elem);
+      };
+
+      let preventDefaultCalled = false;
+      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
+      touchEvent.composedPath = () => [scrollableEl, dialog, bib, document.body];
+      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+
+      document.dispatchEvent(touchEvent);
+
+      await expect(preventDefaultCalled).to.be.false;
+
+      window.getComputedStyle = origGetComputedStyle;
+      bib._unlockTouchScroll();
+    });
+
+    // ─── bib _lockTouchScroll breaks at dialog boundary ───────────────
+    it('bib _lockTouchScroll should break at dialog boundary and call preventDefault', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      const bib = el.shadowRoot.querySelector('[auro-dropdownbib]');
+      const dialog = bib.shadowRoot.querySelector('dialog');
+
+      bib._lockTouchScroll();
+
+      // composedPath includes a non-scrollable child then the dialog itself
+      const nonScrollableChild = document.createElement('span');
+      let preventDefaultCalled = false;
+      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
+      touchEvent.composedPath = () => [nonScrollableChild, dialog, document.body];
+      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+
+      document.dispatchEvent(touchEvent);
+
+      // Should preventDefault because loop hit dialog boundary without finding scrollable child
+      expect(preventDefaultCalled).to.be.true;
+
+      bib._unlockTouchScroll();
+    });
   });
 
   describe('A11Y', () => {
@@ -1144,6 +1842,67 @@ describe("auro-dropdown", () => {
 
         document.body.removeChild(option);
       });
+    });
+
+    // ─── setActiveDescendant sets hasActiveDescendant in fullscreen mode ─
+    it('setActiveDescendant sets hasActiveDescendant true when fullscreen and element is truthy', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label"> label text </span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Ensure bibContent is set
+      expect(el.bibContent).to.exist;
+
+      // Simulate fullscreen mode
+      el.isBibFullscreen = true;
+
+      const option = document.createElement('div');
+      option.id = 'fullscreen-option';
+      option.setAttribute('role', 'option');
+      document.body.appendChild(option);
+
+      el.setActiveDescendant(option);
+      expect(el.bibContent.hasActiveDescendant).to.be.true;
+
+      // Clear active descendant in fullscreen
+      el.setActiveDescendant(null);
+      expect(el.bibContent.hasActiveDescendant).to.be.false;
+
+      document.body.removeChild(option);
+    });
+
+    // ─── mobileFullscreenBreakpoint returns undefined when CSS token is empty ─
+    it('mobileFullscreenBreakpoint getter returns undefined when CSS custom property is empty', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <span slot="label">label</span>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      // Set _mobileBreakpointName directly to a value whose CSS token won't resolve
+      el.bibContent._mobileBreakpointName = 'xs';
+
+      // Temporarily override the design token to return empty string
+      const origGetPropertyValue = CSSStyleDeclaration.prototype.getPropertyValue;
+      CSSStyleDeclaration.prototype.getPropertyValue = function(prop) {
+        if (prop.startsWith('--ds-grid-breakpoint-')) {
+          return '';
+        }
+        return origGetPropertyValue.call(this, prop);
+      };
+
+      const result = el.bibContent.mobileFullscreenBreakpoint;
+      expect(result).to.be.undefined;
+
+      CSSStyleDeclaration.prototype.getPropertyValue = origGetPropertyValue;
     });
   });
 

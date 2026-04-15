@@ -2,28 +2,28 @@
 
 **Components:** `@aurodesignsystem/auro-counter`, `auro-counter-group`
 **Branch:** `jbaker/testImprovements`
-**Date:** 2025-04-10
+**Date:** 2025-04-14
 
 ## Summary
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-counter` test count | 24 | 50 | +26 (+108%) |
-| `auro-counter-group` test count | 24 | 60 | +36 (+150%) |
-| **Combined tests** | **48** | **110** | **+62 (+129%)** |
-| Code coverage | 92.00% | 95.36% | +3.36% |
-| Test duration | ~1.8s | ~2.7s | +0.9s |
+| `auro-counter` test count | 24 | 59 | +35 (+146%) |
+| `auro-counter-group` test count | 24 | 74 | +50 (+208%) |
+| **Combined tests** | **48** | **133** | **+85 (+177%)** |
+| Code coverage | 92.00% | 100% | +8.00% |
+| Test duration | ~1.8s | ~2.6s | +0.8s |
 
 ## Per-File Coverage
 
 | File | Lines Hit | Lines Total | Coverage |
 |------|-----------|-------------|----------|
-| auro-counter.js | 458 | 460 | 99.57% |
-| auro-counter-group.js | 799 | 858 | 93.12% |
-| auro-counter-button.js | 46 | 48 | 95.83% |
-| auro-counter-wrapper.js | 48 | 50 | 96.00% |
-| keyboardStrategy.js | 18 | 22 | 81.82% |
-| counterGroupKeyboardStrategy.js | 15 | 17 | 88.24% |
+| auro-counter.js | 460 | 460 | 100% |
+| auro-counter-group.js | 858 | 858 | 100% |
+| auro-counter-button.js | 48 | 48 | 100% |
+| auro-counter-wrapper.js | 50 | 50 | 100% |
+| keyboardStrategy.js | 22 | 22 | 100% |
+| counterGroupKeyboardStrategy.js | 17 | 17 | 100% |
 
 ## auro-counter: Tests Added by Section
 
@@ -31,10 +31,14 @@
 |---------|--------|-------|-------|
 | Rendering | 0 | 3 | +3 |
 | Properties | 5 | 19 | +14 |
-| Public Functions | 8 | 11 | +3 |
+| Slots | 0 | 5 | +5 |
+| Public Functions | 8 | 14 | +6 |
 | Events | 0 | 2 | +2 |
+| Private Functions | 0 | 6 | +6 |
+| A11Y | 0 | 4 | +4 |
+| Mouse Behavior | 0 | 2 | +2 |
 | Keyboard Behavior | 0 | 4 | +4 |
-| **Total** | **24** | **50** | **+26** |
+| **Total** | **24** | **59** | **+35** |
 
 ## auro-counter-group: Tests Added by Section
 
@@ -45,16 +49,17 @@
 | Slots | 0 | 7 | +7 |
 | Public Functions | 0 | 4 | +4 |
 | Events | 0 | 1 | +1 |
-| **Total** | **24** | **60** | **+36** |
+| Private Functions | 0 | 20 | +20 |
+| **Total** | **24** | **74** | **+50** |
 
 ## New Tests by Importance
 
 | Priority | Description | Count |
 |----------|-------------|-------|
-| High | Core functionality | 12 |
-| Medium | Property reflection & behavior | 19 |
-| Low | Slots & rendering | 5 |
-| **Total** | | **36** |
+| High | Core functionality | 16 |
+| Medium | Property reflection & behavior | 27 |
+| Low | Slots, rendering, private functions & a11y | 42 |
+| **Total** | | **85** |
 
 ### High (P0) — Core functionality
 | Test | Component | Property/Method |
@@ -110,4 +115,7 @@
 - `appearance="inverse"` tests on counter-group omit dark background wrapper to avoid timeout from nested child counter a11y checks
 - `auro-drawer` test in counter-group uses `rawIt` to skip a11y check due to pre-existing aria-dialog-name violation
 - `updateValidity()` in counter-group uses `setTimeout` internally, making direct validity propagation tests unreliable; tested via `validate()` and default state instead
-- `keyboardStrategy.js` uncovered lines (81.82%) are `preventDefault` guard paths not reached in headless browser keyboard dispatch
+- `keyboardStrategy.js` uncovered lines now fully covered (100%) with additional private function tests
+- Counter-group private functions tested include: doubleRaf focusCloseButton, handleSlotChange fallback, renderHelpText error, register(), setTagAttribute, Escape early return
+- Counter private functions added: disabled keyboard guards, error/valid helpText rendering, NaN value setter, onDark inverse appearance (valid + error paths)
+- All counter component files now at 100% line and branch coverage

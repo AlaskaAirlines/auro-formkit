@@ -11,9 +11,9 @@
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
 | `auro-checkbox` test count | 9 | 54 | +45 |
-| `auro-checkbox-group` test count | 14 | 58 | +44 |
-| **Total Tests** | **23** | **112** | **+89 (+387%)** |
-| Code coverage | 97.04% | 98.94% | +1.9% |
+| `auro-checkbox-group` test count | 14 | 61 | +47 |
+| **Total Tests** | **23** | **115** | **+92 (+400%)** |
+| Code coverage | 97.04% | 99.64% | +2.6% |
 | Test duration | ~1.7s | ~2.0s | +0.3s |
 
 The only untestable branch is `evt.isTrusted` (browser-security gate that cannot be triggered in unit tests).
@@ -33,11 +33,11 @@ Dead code identified: `layout` propagation block in `auro-checkbox-group.js` `up
 | Properties | 7 | 46 | +39 |
 | Slots | 5 | 7 | +2 |
 | Public Functions | 0 | 8 | +8 |
-| Events | 0 | 11 | +11 |
+| Events | 0 | 14 | +14 |
 | A11Y | 5 | 13 | +8 |
 | Mouse Behavior | 2 | 5 | +3 |
 | Keyboard Behavior | 0 | 7 | +7 |
-| **Total** | **23** | **112** | **+89** |
+| **Total** | **23** | **115** | **+92** |
 
 ### auro-checkbox.test.js
 
@@ -63,11 +63,11 @@ Dead code identified: `layout` propagation block in `auro-checkbox-group.js` `up
 | Properties | 7 | 28 | +21 |
 | Slots | 4 | 6 | +2 |
 | Public Functions | 0 | 5 | +5 |
-| Events | 0 | 3 | +3 |
+| Events | 0 | 6 | +6 |
 | A11Y | 0 | 7 | +7 |
 | Mouse Behavior | 0 | 1 | +1 |
 | Keyboard Behavior | 0 | 1 | +1 |
-| **Total** | **14** | **58** | **+44** |
+| **Total** | **14** | **61** | **+47** |
 
 ---
 
@@ -76,10 +76,10 @@ Dead code identified: `layout` propagation block in `auro-checkbox-group.js` `up
 | Priority | Description | Count |
 |----------|-------------|-------|
 | Critical | Prevents silent regressions or guards core behavior | 5 |
-| High | Covers important properties and a11y paths | 10 |
+| High | Covers important properties and a11y paths | 13 |
 | Medium | Covers secondary properties, edge cases, and integration | 12 |
 | Low | Basic attribute reflection and structural checks | 7 |
-| **Total** | | **34** |
+| **Total** | | **37** |
 
 ### Critical — prevents silent regressions or guards core behavior
 
@@ -105,35 +105,38 @@ Dead code identified: `layout` propagation block in `auro-checkbox-group.js` `up
 | 13 | checkbox-group | `touched` set on child interaction and cleared on `reset()` | Dirty-state tracking for group-level validation |
 | 14 | checkbox-group | Error help text renders in `helpText` slot when `error` is set | User-facing validation message visibility |
 | 15 | checkbox-group | Focus-leave triggers validation on required group | Validates on blur-away, not just on submit |
+| 16 | checkbox-group | `auroCheckbox-focusout` sets `document.auroCheckboxGroupActive` | Tracks active group for cross-component focus management |
+| 17 | checkbox-group | `auroCheckbox-focusout` adds focusin listener and resets `focusWithin` on outside focus | Ensures validation fires when focus leaves the group |
+| 18 | checkbox-group | `auroCheckbox-focusout` sets `focusWithin` to true when initially false | First-focusout initialization path |
 
 ### Medium — covers secondary properties, edge cases, and integration
 
 | # | Component | Test | Rationale |
 |---|-----------|------|-----------|
-| 16 | checkbox | `register()` with custom tag name creates working element | Custom element registration API contract |
-| 17 | checkbox | `focusin` dispatched via `focus()` method | Ensures programmatic focus fires expected event |
-| 18 | checkbox | Event objects carry correct `bubbles`/`composed` flags | Cross-shadow-DOM event propagation |
-| 19 | checkbox | Host `click` delegates to internal input | Click-anywhere-on-host pattern |
-| 20 | checkbox-group | `horizontal` reflects attribute and sets max children | Layout variant behavior |
-| 21 | checkbox-group | `noValidate` suppresses validation | Opt-out validation path |
-| 22 | checkbox-group | `setCustomValidity` / `setCustomValidityCustomError` / `setCustomValidityValueMissing` | Custom error message API |
-| 23 | checkbox-group | Dynamic slotchange adds new checkbox to internal array | Covers runtime DOM mutation handling |
-| 24 | checkbox-group | Disabled propagation to dynamically added children | Ensures late-added checkboxes inherit group state |
-| 25 | checkbox-group | `onDark` propagates to child checkboxes | Theme propagation |
-| 26 | checkbox-group | `appearance` propagates to child checkboxes | Appearance propagation |
-| 27 | checkbox-group | Rendering: shadow root exists, fieldset present, slots rendered | Basic structural verification |
+| 19 | checkbox | `register()` with custom tag name creates working element | Custom element registration API contract |
+| 20 | checkbox | `focusin` dispatched via `focus()` method | Ensures programmatic focus fires expected event |
+| 21 | checkbox | Event objects carry correct `bubbles`/`composed` flags | Cross-shadow-DOM event propagation |
+| 22 | checkbox | Host `click` delegates to internal input | Click-anywhere-on-host pattern |
+| 23 | checkbox-group | `horizontal` reflects attribute and sets max children | Layout variant behavior |
+| 24 | checkbox-group | `noValidate` suppresses validation | Opt-out validation path |
+| 25 | checkbox-group | `setCustomValidity` / `setCustomValidityCustomError` / `setCustomValidityValueMissing` | Custom error message API |
+| 26 | checkbox-group | Dynamic slotchange adds new checkbox to internal array | Covers runtime DOM mutation handling |
+| 27 | checkbox-group | Disabled propagation to dynamically added children | Ensures late-added checkboxes inherit group state |
+| 28 | checkbox-group | `onDark` propagates to child checkboxes | Theme propagation |
+| 29 | checkbox-group | `appearance` propagates to child checkboxes | Appearance propagation |
+| 30 | checkbox-group | Rendering: shadow root exists, fieldset present, slots rendered | Basic structural verification |
 
 ### Low — basic attribute reflection and structural checks
 
 | # | Component | Test | Rationale |
 |---|-----------|------|-----------|
-| 28 | checkbox | Basic rendering: shadow DOM exists, input present | Sanity check that component renders |
-| 29 | checkbox | `id`, `name`, `value` attribute reflection | Standard attribute mirror tests |
-| 30 | checkbox | `onDark` attribute reflection | Theme attribute test |
-| 31 | checkbox-group | `validity` reflects `'valid'` when no constraints | Baseline validity state |
-| 32 | checkbox-group | Keyboard behavior: space key toggles child within group | Structural keyboard test |
-| 33 | checkbox-group | Mouse behavior: click on child within group updates `value` | Structural click test |
-| 34 | checkbox-group | A11Y: `role`, `aria-invalid`, `aria-required` attributes | Standard ARIA attribute tests |
+| 31 | checkbox | Basic rendering: shadow DOM exists, input present | Sanity check that component renders |
+| 32 | checkbox | `id`, `name`, `value` attribute reflection | Standard attribute mirror tests |
+| 33 | checkbox | `onDark` attribute reflection | Theme attribute test |
+| 34 | checkbox-group | `validity` reflects `'valid'` when no constraints | Baseline validity state |
+| 35 | checkbox-group | Keyboard behavior: space key toggles child within group | Structural keyboard test |
+| 36 | checkbox-group | Mouse behavior: click on child within group updates `value` | Structural click test |
+| 37 | checkbox-group | A11Y: `role`, `aria-invalid`, `aria-required` attributes | Standard ARIA attribute tests |
 
 ---
 

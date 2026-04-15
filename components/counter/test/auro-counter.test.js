@@ -1,7 +1,10 @@
 /* eslint-disable max-lines, no-unused-expressions, no-undef, no-magic-numbers */
 
-import { fixture, html, expect, oneEvent } from '@open-wc/testing';
+import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+import { AuroCounterButton } from '../src/auro-counter-button.js';
+import { AuroCounterWrapper } from '../src/auro-counter-wrapper.js';
+import { AuroCounter } from '../src/auro-counter.js';
 import '../src/registered.js';
 
 useAccessibleIt();
@@ -222,6 +225,25 @@ describe('Public Functions', () => {
       const el = await Boolean(customElements.get('auro-counter'));
       await expect(el).to.be.true;
     });
+
+    it('AuroCounterButton.register registers the counter-button element', () => {
+      AuroCounterButton.register('test-counter-button');
+      const registered = Boolean(customElements.get('test-counter-button'));
+      expect(registered).to.be.true;
+    });
+
+    it('AuroCounterWrapper.register registers the counter-wrapper element', () => {
+      AuroCounterWrapper.register('test-counter-wrapper');
+      const registered = Boolean(customElements.get('test-counter-wrapper'));
+      expect(registered).to.be.true;
+    });
+
+    it('setTagAttribute sets auro-counter attribute when registered under a custom name', async () => {
+      AuroCounter.register('test-custom-counter');
+      const el = await fixture(html`<test-custom-counter>Counter</test-custom-counter>`);
+      await elementUpdated(el);
+      expect(el.hasAttribute('auro-counter')).to.be.true;
+    });
   });
 
   describe('increment', () => {
@@ -315,10 +337,83 @@ describe('Events', () => {
       await expect(event.detail.value).to.equal(4);
     });
   });
-});
 
-describe('Private Functions', () => {
-  // No private function tests
+  describe('Private Functions', () => {
+    it('should return without action when ArrowUp pressed on disabled counter', async () => {
+      const el = await fixture(html`<auro-counter disabled value="5" max="10" min="0">Counter</auro-counter>`);
+      await elementUpdated(el);
+
+      const prevValue = el.value;
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal(prevValue);
+    });
+
+    it('should return without action when ArrowDown pressed on disabled counter', async () => {
+      const el = await fixture(html`<auro-counter disabled value="5" max="10" min="0">Counter</auro-counter>`);
+      await elementUpdated(el);
+
+      const prevValue = el.value;
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal(prevValue);
+    });
+
+    it('should render error help text when validity is not valid', async () => {
+      const el = await fixture(html`<auro-counter required min="1" max="5" value="0">Counter</auro-counter>`);
+      await elementUpdated(el);
+
+      el.touched = true;
+      el.validate(true);
+      await elementUpdated(el);
+
+      expect(el.validity).to.not.be.undefined;
+    });
+
+    it('should set value to undefined when a non-numeric string is assigned', async () => {
+      const el = await fixture(html`<auro-counter value="3">Counter</auro-counter>`);
+      await elementUpdated(el);
+
+      el.value = 'abc';
+      await elementUpdated(el);
+
+      expect(el.value).to.be.undefined;
+    });
+
+    it('should render helpText with inverse appearance when onDark is true', async () => {
+      const el = await fixture(html`
+        <div style="background-color: #000;">
+          <auro-counter ondark><span slot="helpText">Help</span>Counter</auro-counter>
+        </div>
+      `);
+      const counter = el.querySelector('auro-counter');
+      await elementUpdated(counter);
+
+      const helpText = counter.shadowRoot.querySelector('[appearance]');
+      expect(helpText).to.not.be.null;
+      expect(helpText.getAttribute('appearance')).to.equal('inverse');
+    });
+
+    it('should render error helpText with inverse appearance when onDark is true', async () => {
+      const el = await fixture(html`
+        <div style="background-color: #000;">
+          <auro-counter ondark required min="1" max="5" value="0">Counter</auro-counter>
+        </div>
+      `);
+      const counter = el.querySelector('auro-counter');
+      await elementUpdated(counter);
+
+      counter.touched = true;
+      counter.validate(true);
+      await elementUpdated(counter);
+
+      const helpText = counter.shadowRoot.querySelector('[error][appearance]');
+      expect(helpText).to.not.be.null;
+      expect(helpText.getAttribute('appearance')).to.equal('inverse');
+    });
+  });
 });
 
 describe('A11Y', () => {

@@ -788,7 +788,103 @@ describe('Events', () => {
 });
 
 describe('Private Functions', () => {
-  // No private function tests
+  // ─── _addElementToState deduplication guard ────────────────────────
+  it('_addElementToState does not overwrite existing element', async () => {
+    const el = await fixture(html`
+      <auro-form>
+        <auro-input name="dupInput"></auro-input>
+      </auro-form>
+    `);
+    await elementUpdated(el);
+
+    // The element is already registered in formState
+    const originalState = el.formState['dupInput'];
+    await expect(originalState).to.exist;
+
+    // Call _addElementToState again with same name - should be a no-op
+    const inputEl = el.querySelector('auro-input[name="dupInput"]');
+    el._addElementToState(inputEl);
+
+    // State should remain the same reference
+    await expect(el.formState['dupInput']).to.equal(originalState);
+  });
+
+  // ─── handleKeyDown textarea exemption ──────────────────────────────
+  it('handleKeyDown does not submit when Enter is pressed on textarea', async () => {
+    const el = await fixture(html`
+      <auro-form>
+        <auro-input name="testInput" textarea></auro-input>
+      </auro-form>
+    `);
+    await elementUpdated(el);
+
+    let submitted = false;
+    el.addEventListener('submit', () => {
+      submitted = true;
+    });
+
+    const inputEl = el.querySelector('auro-input');
+    inputEl.value = 'test';
+    await elementUpdated(el);
+
+    // Dispatch Enter on the textarea element
+    inputEl.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      composed: true
+    }));
+    await elementUpdated(el);
+
+    await expect(submitted).to.be.false;
+  });
+
+  // ─── sharedInputListener range datepicker values ───────────────────
+  it('sharedInputListener stores values for range datepicker', async () => {
+    const el = await fixture(html`
+      <auro-form>
+        <auro-datepicker name="dates" range></auro-datepicker>
+      </auro-form>
+    `);
+    await elementUpdated(el);
+
+    const datepicker = el.querySelector('auro-datepicker');
+    datepicker.value = '01/15/2024';
+    datepicker.valueEnd = '01/20/2024';
+
+    // Fire input event to trigger sharedInputListener
+    datepicker.dispatchEvent(new Event('input', {
+      bubbles: true,
+      composed: true
+    }));
+    await elementUpdated(el);
+
+    // formState should use .values for range datepicker
+    await expect(el.formState['dates']).to.exist;
+  });
+
+  // ─── sharedInputListener adds unknown element to state ─────────────
+  it('sharedInputListener adds element to state when not already tracked', async () => {
+    const el = await fixture(html`
+      <auro-form>
+        <auro-input name="field1" label="Field"></auro-input>
+      </auro-form>
+    `);
+    await elementUpdated(el);
+
+    const input = el.querySelector('auro-input');
+
+    // Remove from formState to simulate an element that fires input before initializeState runs
+    delete el.formState['field1'];
+
+    // Fire input event — sharedInputListener should re-add to formState
+    input.dispatchEvent(new Event('input', {
+      bubbles: true,
+      composed: true
+    }));
+    await elementUpdated(el);
+
+    expect(el.formState['field1']).to.exist;
+  });
 });
 
 describe('A11Y', () => {

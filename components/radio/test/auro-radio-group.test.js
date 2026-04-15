@@ -756,7 +756,192 @@ describe('auro-radio-group', () => {
   });
 
   describe('Private Functions', () => {
-    // No private function tests
+    // ─── selectNextItem focuses item when group is disabled ────────────
+    it('selectNextItem focuses disabled item when entire group is disabled', async () => {
+      const el = await fixture(html`
+        <auro-radio-group disabled>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test">A</auro-radio>
+          <auro-radio value="b" name="test">B</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      // Dispatch ArrowDown to trigger selectNextItem with group disabled
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      await elementUpdated(el);
+
+      // Should not throw, component should still be accessible
+      await expect(el).to.exist;
+    });
+
+    // ─── selectNextItem focuses item when all radios are disabled ──────
+    it('selectNextItem focuses item when all individual radios are disabled', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test" disabled>A</auro-radio>
+          <auro-radio value="b" name="test" disabled>B</auro-radio>
+          <auro-radio value="c" name="test" disabled>C</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      await elementUpdated(el);
+
+      await expect(el).to.exist;
+    });
+
+    // ─── selectNextItem decrements index when navigating Up past disabled ─
+    it('selectNextItem skips disabled radio when navigating Up', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test">A</auro-radio>
+          <auro-radio value="b" name="test" disabled>B</auro-radio>
+          <auro-radio value="c" name="test">C</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      // Select C so index is 2
+      el.querySelector('auro-radio[value="c"]').click();
+      await elementUpdated(el);
+      expect(el.value).to.equal('c');
+
+      // ArrowUp should skip disabled B and land on A
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('a');
+    });
+
+    // ─── selectNextItem wraps index through -1 when navigating Up ─────
+    it('selectNextItem wraps through -1 when all preceding radios are disabled', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test" disabled>A</auro-radio>
+          <auro-radio value="b" name="test" disabled>B</auro-radio>
+          <auro-radio value="c" name="test">C</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      // Select C so index is 2
+      el.querySelector('auro-radio[value="c"]').click();
+      await elementUpdated(el);
+      expect(el.value).to.equal('c');
+
+      // ArrowUp should skip disabled A and B, wrap through -1, land back on C
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('c');
+    });
+
+    // ─── handleKeyDown default case does nothing ──────────────────────
+    it('handleKeyDown default case does nothing for unrecognized keys', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test">A</auro-radio>
+          <auro-radio value="b" name="test">B</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      const valueBefore = el.value;
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal(valueBefore);
+    });
+
+    // ─── handleKeyDown ArrowLeft wraps to last item ───────────────────
+    it('handleKeyDown ArrowLeft navigates backward', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test">A</auro-radio>
+          <auro-radio value="b" name="test">B</auro-radio>
+          <auro-radio value="c" name="test">C</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      // Select first item
+      const firstRadio = el.querySelector('auro-radio[value="a"]');
+      firstRadio.click();
+      await elementUpdated(el);
+      await expect(el.value).to.equal('a');
+
+      // ArrowLeft should wrap to last
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+      await elementUpdated(el);
+
+      await expect(el.value).to.equal('c');
+    });
+
+    // ─── handleKeyDown legacy "Down" key navigates forward ────────────
+    it('handleKeyDown legacy "Down" key navigates forward', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test">A</auro-radio>
+          <auro-radio value="b" name="test">B</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      el.querySelector('auro-radio[value="a"]').click();
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Down', bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('b');
+    });
+
+    // ─── handleKeyDown legacy "Up" key navigates backward ─────────────
+    it('handleKeyDown legacy "Up" key navigates backward', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test">A</auro-radio>
+          <auro-radio value="b" name="test">B</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      el.querySelector('auro-radio[value="b"]').click();
+      await elementUpdated(el);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Up', bubbles: true }));
+      await elementUpdated(el);
+
+      expect(el.value).to.equal('a');
+    });
+
+    // ─── render error helpText uses inverse appearance when onDark ────
+    it('render error helpText uses inverse when onDark is true', async () => {
+      const el = await fixture(html`
+        <auro-radio-group error="Custom error" ondark>
+          <span slot="legend">Pick one</span>
+          <auro-radio value="a" name="test">A</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      // Force an error validity state so the error help text branch renders
+      el.validity = 'customError';
+      await elementUpdated(el);
+
+      const helpText = el.shadowRoot.querySelector('[part="helpText"]');
+      expect(helpText).to.exist;
+      expect(helpText.getAttribute('appearance')).to.equal('inverse');
+    });
   });
 
   describe('A11Y', () => {

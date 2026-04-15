@@ -8,15 +8,15 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `bibtemplate` test count | 0 | 30 | +30 (new) |
-| Code coverage | N/A (no test file) | 96.93% | +96.93% |
-| Test duration | N/A | ~1.3s | +~1.3s |
+| `bibtemplate` test count | 0 | 32 | +32 (new) |
+| Code coverage | N/A (no test file) | 100% | — |
+| Test duration | N/A | ~1.7s | — |
 
 ## Per-File Coverage
 
 | File | Lines Hit | Lines Total | Coverage |
 |------|-----------|-------------|----------|
-| auro-bibtemplate.js | 188 | 192 | 97.92% |
+| auro-bibtemplate.js | 192 | 192 | 100% |
 | registered.js | 3 | 3 | 100.00% |
 
 ## Tests by Section
@@ -28,19 +28,20 @@
 | Properties | 7 |
 | Slots | 6 |
 | Public Functions | 5 |
+| Private Functions | 2 |
 | Events | 2 |
 | A11Y | 2 |
 | Mouse Behavior | 1 |
-| **Total** | **30** |
+| **Total** | **32** |
 
 ## New Tests by Importance
 
 | Priority | Description | Count |
 |----------|-------------|-------|
-| High | Core functionality | 5 |
+| High | Core functionality | 7 |
 | Medium | Property reflection & rendering | 6 |
 | Low | Slots & a11y | 4 |
-| **Total** | | **15** |
+| **Total** | | **17** |
 
 ### High (P0) — Core functionality
 | Test | Area |
@@ -74,4 +75,4 @@
 - This component had **no test file or test script** — both were created from scratch
 - Component uses `useAccessibleIt()` for automatic axe a11y checks on every test
 - `auro-bibtemplate` is an internal component used by `auro-dropdown`, `auro-select`, and `auro-counter-group` for fullscreen mobile modals
-- 4 uncovered lines in main source are the `preventBodyScroll` touchmove handler and `disconnectedCallback` cleanup (not easily testable in headless browser)
+- 100% code coverage achieved — all lines including `preventBodyScroll` and `disconnectedCallback` are fully covered

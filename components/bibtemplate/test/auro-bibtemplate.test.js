@@ -313,7 +313,36 @@ describe('Events', () => {
 });
 
 describe('Private Functions', () => {
-  // No private function tests
+  describe('preventBodyScroll', () => {
+    it('should prevent default when touchmove target is the component itself', async () => {
+      const el = await fixture(html`<auro-bibtemplate>Content</auro-bibtemplate>`);
+
+      const event = new TouchEvent('touchmove', {
+        bubbles: true,
+        cancelable: true,
+        touches: [new Touch({ identifier: 0, target: el })]
+      });
+
+      el.dispatchEvent(event);
+
+      await expect(event.defaultPrevented).to.be.true;
+    });
+
+    it('should not prevent default when touchmove target is a child element', async () => {
+      const el = await fixture(html`<auro-bibtemplate><div id="child">Content</div></auro-bibtemplate>`);
+
+      const child = el.querySelector('#child');
+      const event = new TouchEvent('touchmove', {
+        bubbles: true,
+        cancelable: true,
+        touches: [new Touch({ identifier: 0, target: child })]
+      });
+
+      child.dispatchEvent(event);
+
+      await expect(event.defaultPrevented).to.be.false;
+    });
+  });
 });
 
 describe('A11Y', () => {

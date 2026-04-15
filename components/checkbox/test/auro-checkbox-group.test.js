@@ -896,6 +896,64 @@ describe('auro-checkbox-group', () => {
         document.body.removeChild(outsideEl);
       });
     });
+    describe('auroCheckbox-focusout', () => {
+      it('should set document.auroCheckboxGroupActive to the group', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group>
+            <auro-checkbox value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+
+        const cb = el.querySelector('auro-checkbox');
+        cb.dispatchEvent(new CustomEvent('auroCheckbox-focusout', { bubbles: true }));
+
+        await expect(document.auroCheckboxGroupActive).to.equal(el);
+      });
+
+      it('should add focusin listener when focusWithin is true and validate on outside focus', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required>
+            <auro-checkbox value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+
+        // First set focusWithin to true via focusin event
+        const cb = el.querySelector('auro-checkbox');
+        cb.dispatchEvent(new CustomEvent('auroCheckbox-focusin', { bubbles: true }));
+        await expect(el.focusWithin).to.be.true;
+
+        // Dispatch focusout — sets active group and adds window focusin listener
+        cb.dispatchEvent(new CustomEvent('auroCheckbox-focusout', { bubbles: true }));
+        await expect(document.auroCheckboxGroupActive).to.equal(el);
+
+        // Simulate focus moving to an outside element
+        const outsideEl = document.createElement('button');
+        document.body.appendChild(outsideEl);
+
+        // The listener is on window for 'focusin' — dispatch from the outside element so it bubbles
+        outsideEl.dispatchEvent(new FocusEvent('focusin', { bubbles: true, composed: true }));
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        await expect(el.focusWithin).to.be.false;
+        document.body.removeChild(outsideEl);
+      });
+
+      it('should set focusWithin to true when focusWithin is false', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group>
+            <auro-checkbox value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+
+        await expect(el.focusWithin).to.not.be.true;
+
+        const cb = el.querySelector('auro-checkbox');
+        cb.dispatchEvent(new CustomEvent('auroCheckbox-focusout', { bubbles: true }));
+
+        await expect(el.focusWithin).to.be.true;
+      });
+    });
   });
 
   describe('Private Functions', () => {

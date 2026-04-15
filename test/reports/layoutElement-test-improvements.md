@@ -8,7 +8,7 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `layoutElement test count | 0 | 25 | +25 (new) |
+| `layoutElement` test count | 0 | 25 | +25 (new) |
 | Code coverage | N/A (no test script) | 100% | — |
 | Test duration | N/A | ~1.5s | — |
 

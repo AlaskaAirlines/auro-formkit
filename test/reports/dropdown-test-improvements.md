@@ -2,27 +2,24 @@
 
 **Component:** `@aurodesignsystem/auro-dropdown`
 **Branch:** `jbaker/testImprovements`
-**Date:** 2025-04-14
+**Date:** 2025-04-15
 
 ## Summary
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-dropdown` test count | 50 | 104 | +54 (+108%) |
-| Combined coverage | 87.72% | 89.3% | +1.58% |
-| Test duration | ~1.3s | ~1.8s | +0.5s |
+| `auro-dropdown` test count | 50 | 138 | +88 (+176%) |
+| Combined coverage | 87.72% | 100% | +12.28% |
+| Test duration | ~1.3s | ~2.5s | +1.2s |
 
 ## Per-File Coverage
 
 | File | Coverage |
 |------|----------|
-| auro-dropdown.js | 93.72% |
-| auro-dropdownBib.js | 89.36% |
-| dropdownBibKeyboardStrategy.js | 84.21% |
+| auro-dropdown.js | 100% |
+| auro-dropdownBib.js | 100% |
+| dropdownBibKeyboardStrategy.js | 100% |
 | registered.js | 100% |
-| dropdownVersion.js | 100% |
-| helptextVersion.js | 100% |
-| iconVersion.js | 100% |
 
 ## Tests Added by Section
 
@@ -34,11 +31,11 @@
 | Slots | 3 | 3 | +0 |
 | Public Functions | 1 | 9 | +8 |
 | Events | 0 | 3 | +3 |
-| Private Functions | 0 | 0 | +0 |
+| Private Functions | 0 | 34 | +34 |
 | A11Y | 8 | 8 | +0 |
 | Mouse Behavior | 4 | 4 | +0 |
 | Keyboard Behavior | 7 | 7 | +0 |
-| **Total** | **50** | **104** | **+54** |
+| **Total** | **50** | **138** | **+88** |
 
 ## New Tests by Importance
 
@@ -46,8 +43,8 @@
 |----------|-------------|-------|
 | High | Core functionality | 9 |
 | Medium | Property reflection & behavior | 39 |
-| Low | Inherited helpers | 6 |
-| **Total** | | **54** |
+| Low | Inherited helpers & private functions | 40 |
+| **Total** | | **88** |
 
 ### High (P0) — Core functionality
 | Test | Property/Method |
@@ -122,4 +119,5 @@
 - `fullscreenBreakpoint` defaults to `undefined` on the dropdown itself; the 'sm' default is applied by the floater/bib layer
 - `hoverToggle` attribute reflection from HTML is unreliable in the constructor initialization flow; tested via programmatic property set instead
 - `resetLayoutClasses` tested without a layout attribute to avoid `getLayout` errors — dropdown implements `renderLayout` directly rather than inheriting the full `getLayout` pattern
-- Coverage gap is primarily in `dropdownBibKeyboardStrategy.js` (84.21%) — modifier key and edge-case keyboard paths
+- 34 Private Functions tests cover dropdown bib keyboard strategy, event handling, slot management, internal state management, setActiveDescendant fullscreen mode, mobileFullscreenBreakpoint CSS token fallback, handleDropdownToggle eventType default, and _lockTouchScroll overflow-y scroll path
+- All source files now at 100% coverage

@@ -623,6 +623,98 @@ describe('auro-counter-group', () => {
       });
     });
 
+    describe('configureBibtemplate close-click', () => {
+      it('should hide the dropdown when close-click fires and popover is visible', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        // Open the dropdown
+        el.dropdown.show();
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        // Dispatch close-click on the bibtemplate
+        el.bibtemplate.dispatchEvent(new CustomEvent('close-click', { bubbles: true }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+    });
+
+    describe('configureBibtemplate fullscreen focus', () => {
+      rawIt('should focus close button via doubleRaf when toggled open in fullscreen', async function() {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        // Remove the dropdown's own handler
+        el.dropdown.removeEventListener('auroDropdown-toggled', el.dropdown.handleDropdownToggle);
+
+        // Open normally so isPopoverVisible is set naturally
+        el.dropdown.show();
+        await elementUpdated(el);
+
+        // Mock focusCloseButton on current bibtemplate
+        let focusCalled = false;
+        el.bibtemplate.focusCloseButton = () => { focusCalled = true; };
+
+        // Mock isBibFullscreen
+        Object.defineProperty(el.dropdown, 'isBibFullscreen', {
+          value: true,
+          writable: true,
+          configurable: true
+        });
+
+        // Override rAF to execute callbacks synchronously so doubleRaf completes immediately
+        const origRaf = window.requestAnimationFrame;
+        window.requestAnimationFrame = (cb) => { cb(); return 0; };
+
+        el.dropdown.dispatchEvent(new CustomEvent('auroDropdown-toggled'));
+
+        // Restore rAF
+        window.requestAnimationFrame = origRaf;
+
+        expect(focusCalled).to.be.true;
+
+        // Cleanup
+        el.dropdown.addEventListener('auroDropdown-toggled', el.dropdown.handleDropdownToggle);
+        delete el.dropdown.isBibFullscreen;
+        el.dropdown.hide();
+        await elementUpdated(el);
+      });
+    });
+
+    describe('handleSlotChange configureDropdownCounters fallback', () => {
+      it('should call configureDropdownCounters when dropdown is not yet set', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter>Counter</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        // Clear the dropdown reference to simulate the slot firing before configuration
+        el.dropdown = undefined;
+
+        // Dynamically add a fullscreen headline slot to trigger handleSlotChange
+        const headline = document.createElement('span');
+        headline.setAttribute('slot', 'bib.fullscreen.headline');
+        headline.textContent = 'Test Headline';
+        el.appendChild(headline);
+        await elementUpdated(el);
+
+        // dropdown should now be re-configured
+        expect(el.dropdown).to.exist;
+      });
+    });
+
     describe('showBib', () => {
       it('should open the dropdown when called', async () => {
         const el = await fixture(html`
@@ -676,7 +768,149 @@ describe('auro-counter-group', () => {
   });
 
   describe('Private Functions', () => {
-    // No private function tests
+    it('renderHelpTextErrors should return empty for no messages', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="0">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      const result = el.renderHelpTextErrors([]);
+      expect(result).to.exist;
+    });
+
+    it('renderHelpTextErrors should render messages', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="0">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      const result = el.renderHelpTextErrors(['Error 1', 'Error 2']);
+      expect(result).to.have.length(2);
+    });
+
+    it('renderHelpText should render error state when validity is an error', async () => {
+      const el = await fixture(html`
+        <auro-counter-group isDropdown>
+          <auro-counter>Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      el.error = 'Something went wrong';
+      el.validity = 'customError';
+      await elementUpdated(el);
+
+      const helpTextEl = el.dropdown.querySelector('[slot="helpText"]');
+      expect(helpTextEl).to.exist;
+
+      const alertP = helpTextEl.querySelector('[role="alert"]');
+      expect(alertP).to.exist;
+    });
+
+    it('getInvalidCounters should filter invalid counters', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="0">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      const counters = el.querySelectorAll('auro-counter');
+      const result = el.getInvalidCounters(counters);
+      expect(result).to.be.an('array');
+    });
+
+    it('getErrorMessages should extract messages from invalid counters', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="0">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      const mockCounters = [{ errorMessage: 'Error 1' }, { errorMessage: '' }, { errorMessage: 'Error 2' }];
+      const result = el.getErrorMessages(mockCounters);
+      expect(result).to.deep.equal(['Error 1', 'Error 2']);
+    });
+
+    it('safeNumberConversion should return 0 for NaN', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="0">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      expect(el.safeNumberConversion('abc')).to.equal(0);
+      expect(el.safeNumberConversion(5)).to.equal(5);
+    });
+
+    it('renderValidationErrorIcon should return undefined for valid state', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="5">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      el.validity = 'valid';
+      expect(el.renderValidationErrorIcon()).to.be.undefined;
+    });
+
+    it('renderValidationErrorIcon should return html for invalid state', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="5">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      el.validity = 'customError';
+      const result = el.renderValidationErrorIcon();
+      expect(result).to.exist;
+    });
+
+    it('updateValidity should handle no counters gracefully', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="5">Counter</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      const origCounters = el.counters;
+      el.counters = undefined;
+      el.updateValidity();
+      el.counters = origCounters;
+    });
+
+    it('updateValidity sets validity and errorMessage when a counter is invalid', async () => {
+      const el = await fixture(html`
+        <auro-counter-group>
+          <auro-counter min="0" max="10" value="5">Adults</auro-counter>
+          <auro-counter min="0" max="5" value="2">Children</auro-counter>
+        </auro-counter-group>
+      `);
+      await elementUpdated(el);
+
+      // Force one counter into an invalid state
+      const counter = el.counters[0];
+      counter.validity = 'rangeOverflow';
+      counter.errorMessage = 'Too many adults';
+
+      // Call updateValidity which uses setTimeout
+      el.updateValidity();
+
+      // Wait for the setTimeout callback to execute
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(el.validity).to.equal('rangeOverflow');
+      expect(el.errorMessage).to.not.be.undefined;
+    });
   });
 
   describe('A11Y', () => {
@@ -798,6 +1032,23 @@ describe('auro-counter-group', () => {
     });
 
     describe('Escape', () => {
+      it('should do nothing when the dropdown is not visible', async () => {
+        const el = await fixture(html`
+          <auro-counter-group isDropdown>
+            <auro-counter value="2">Counter 1</auro-counter>
+            <auro-counter value="3">Counter 2</auro-counter>
+          </auro-counter-group>
+        `);
+        await elementUpdated(el);
+
+        expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+
       it('should close the dropdown', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>

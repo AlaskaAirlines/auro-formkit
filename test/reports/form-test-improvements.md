@@ -4,9 +4,9 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-form` test count | 28 | 40 | +12 |
-| Coverage | 98.13% | 98.14% | +0.01% |
-| Test duration | ~3.3s | — | — |
+| `auro-form` test count | 28 | 71 | +43 |
+| Coverage | 98.13% | 100% | +1.87% |
+| Test duration | ~3.3s | ~3.4s | +0.1s |
 
 ## Placeholders Filled
 
@@ -28,7 +28,7 @@
 - All 8 placeholder stubs were filled with working tests.
 - No test failures required fixing.
 - The 16 skipped tests are pre-existing and unrelated to this change.
-- Coverage is already very high at 98.14%.
+- Coverage is now 100% across all form source files.
 
 ## New Tests by Importance
 

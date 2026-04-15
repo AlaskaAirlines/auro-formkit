@@ -520,7 +520,24 @@ describe('auro-radio', () => {
   });
 
   describe('Private Functions', () => {
-    // No private function tests
+    it('resetRadio calls handleItems when items array is empty', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <auro-radio value="one">One</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      const group = el;
+
+      // Clear the items array to simulate the empty state
+      group.items = [];
+
+      // Call resetRadio directly — should re-populate items via handleItems
+      group.resetRadio();
+
+      expect(group.items.length).to.be.greaterThan(0);
+    });
   });
 
   describe('A11Y', () => {

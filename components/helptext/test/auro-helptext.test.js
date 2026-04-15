@@ -238,6 +238,36 @@ describe('auro-helptext', () => {
 
         expect(el.checkSlotsForContent([node])).to.be.false;
       });
+
+      it('should recurse into nested slot assignedNodes', async () => {
+        const el = await fixture(html`<auro-helptext>Help</auro-helptext>`);
+
+        // Mock a slot element with assignedNodes returning a text node with content
+        const mockSlot = {
+          textContent: '',
+          tagName: 'SLOT',
+          querySelector: () => null,
+          assignedNodes: () => [document.createTextNode('nested content')]
+        };
+
+        expect(el.checkSlotsForContent([mockSlot])).to.be.true;
+      });
+
+      it('should recurse into slot found via querySelector', async () => {
+        const el = await fixture(html`<auro-helptext>Help</auro-helptext>`);
+
+        // Mock an element containing a nested slot
+        const innerSlot = {
+          assignedNodes: () => [document.createTextNode('deep content')]
+        };
+        const wrapperDiv = {
+          textContent: '',
+          tagName: 'DIV',
+          querySelector: (sel) => sel === 'slot' ? innerSlot : null
+        };
+
+        expect(el.checkSlotsForContent([wrapperDiv])).to.be.true;
+      });
     });
   });
 

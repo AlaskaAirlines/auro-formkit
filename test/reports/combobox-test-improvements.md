@@ -3,19 +3,19 @@
 ## Summary
 - **Component**: `auro-combobox`
 - **Test file**: `components/combobox/test/auro-combobox.test.js`
-- **All tests run twice** (desktop + mobile viewport) = **325 passing test executions** (was 167)
+- **All tests run twice** (desktop + mobile viewport) = **379 passing test executions** (was 167)
 
 | Metric | Before | After | Change |
-|--------|--------|-------|--------|
-| `auro-combobox` test count | 167 | 325 | +158 |
-| Code coverage | 94.28% | 95.72% | +1.44% |
-| Test duration | ~7.4s | ~7.8s | +0.4s |
+|--------|--------|-------|---------|
+| `auro-combobox` test count | 167 | 379 | +212 |
+| Code coverage | 94.28% | 100% | +5.72% |
+| Test duration | ~7.4s | ~8.3s | +0.9s |
 
 ## Per-File Coverage
 | File | Lines Hit | Total Lines | Coverage |
 |------|-----------|-------------|----------|
-| `auro-combobox.js` | 1629 | 1673 | 97.37% |
-| `comboboxKeyboardStrategy.js` | 143 | 155 | 92.26% |
+| `auro-combobox.js` | 1673 | 1673 | 100% |
+| `comboboxKeyboardStrategy.js` | 155 | 155 | 100% |
 | `registered.js` | 5 | 5 | 100% |
 | Style files | 6 | 6 | 100% |
 
@@ -77,6 +77,32 @@
 | `inputValue` | 1 | Fires on input value change |
 | `auroFormElement-validated` | 1 | Fires after validation completes |
 
+### Private Functions (+27 tests)
+| Function / Area | Tests Added | Notes |
+|----------------|------------|-------|
+| `inputValue` guard | 1 | Returns undefined before firstUpdated |
+| `updateFilter` isHiddenWhileLoading | 1 | Hides bib when loading + isHiddenWhileLoading |
+| `updateTriggerTextDisplay` clone | 1 | Clones displayValue slot from selected option |
+| `generateOptionsArray` fallback | 1 | Sets options to empty array when menu undefined |
+| `showBib` isHiddenWhileLoading | 1 | Sets isHiddenWhileLoading when loading without placeholder |
+| `configureDropdown` bibDialogLabel | 1 | Sets undefined when label slot is empty |
+| `strategy-change` fullscreen | 1 | Sets trigger.inert true when switching to fullscreen while open |
+| `strategy-change` not fullscreen | 1 | Sets trigger.inert false when not fullscreen |
+| `setInputFocus` persistInput | 1 | Calls setClearBtnFocus and validate when menuoption focused |
+| `updateMenuShapeSize` no menu | 1 | Returns early when menu not set |
+| `updateMenuShapeSize` emphasized | 1 | Sets rounded shape for emphasized layout |
+| `configureMenu` retry | 2 | setTimeout guard + callback execution via getter/setter trick |
+| `scrollIntoView` reduced-motion | 1 | Uses "auto" behavior when prefers-reduced-motion enabled |
+| `handleMenuLoadingChange` show | 1 | Shows dropdown when loading finishes with focus inside |
+| `handleInputValueChange` hideBib | 1 | Hides bib for truthy input value with length 0 |
+| `setMenuValue` guard | 1 | Returns early when menu is not set |
+| `updated` input.value sync | 1 | Syncs input.value when input empty and menu has no options |
+| `updated` filter clear | 1 | Calls clear() in filter mode when value is falsy |
+| `handleSlotChange` headline | 1 | Transports bib.fullscreen.headline nodes to bibtemplate |
+| `handleSlotChange` default | 1 | Does nothing for unknown slot names |
+| `render` onDark error helpText | 1 | Uses inverse appearance for error helpText when onDark |
+| `getClearBtn` null guard | 1 | Returns null when ctx has no activeInput shadowRoot |
+
 ## Fixes During Development
 1. **noValidate**: Property is declared but not actually gating validation logic — changed test to verify attribute reflection only
 2. **typedValue**: Only used as initial/reset value, not a live mirror of user input — changed test to verify reset behavior instead
@@ -91,7 +117,7 @@
 
 | Priority | Description | Count |
 |----------|-------------|-------|
-| High | Core functionality & validation | 17 |
-| Medium | Property reflection & behavior | 52 |
-| Low | Registration & architecture helpers | 4 |
-| **Total** | | **73** |
+| High | Core functionality & validation | 25 |
+| Medium | Property reflection & behavior | 64 |
+| Low | Registration & architecture helpers | 11 |
+| **Total** | | **100** |

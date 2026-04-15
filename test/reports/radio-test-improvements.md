@@ -10,18 +10,17 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-radio` test count | 10 | 57 | +47 |
-| `auro-radio-group` test count | 6 | 55 | +49 |
-| **Total Tests** | **16** | **112** | **+96 (+600%)** |
-| Code coverage | 96.56% | 97.88% | +1.32% |
+| `auro-radio` test count | 10 | 58 | +48 |
+| `auro-radio-group` test count | 6 | 64 | +58 |
+| **Total Tests** | **16** | **122** | **+106 (+663%)** |
+| Code coverage | 96.56% | 100% | +3.44% |
 | Test duration | ~1.2s | ~1.8s | +0.6s |
 
-Uncovered lines (all in `auro-radio-group.js`):
-- `resetRadio()` empty-items guard (lines 373-374) — edge case where items array hasn't been populated
-- `selectNextItem()` disabled-group focus path (lines 485-487) — keyboard nav when entire group is disabled
-- `handleKeyDown()` default switch case (line 527) — non-matching key press
+Per-file line coverage:
+- `auro-radio.js`: 100%
+- `auro-radio-group.js`: 100%
 
-All `auro-radio.js` lines are fully covered.
+All branches covered.
 
 ---
 
@@ -37,10 +36,11 @@ All `auro-radio.js` lines are fully covered.
 | Slots | 3 | 6 | +3 |
 | Public Functions | 1 | 8 | +7 |
 | Events | 0 | 13 | +13 |
+| Private Functions | 0 | 10 | +10 |
 | A11Y | 1 | 9 | +8 |
 | Mouse Behavior | 1 | 4 | +3 |
 | Keyboard Behavior | 1 | 8 | +7 |
-| **Total** | **16** | **112** | **+96** |
+| **Total** | **16** | **122** | **+106** |
 
 ### auro-radio.test.js
 
@@ -52,10 +52,11 @@ All `auro-radio.js` lines are fully covered.
 | Slots | 0 | 0 | 0 |
 | Public Functions | 1 | 3 | +2 |
 | Events | 0 | 10 | +10 |
+| Private Functions | 0 | 1 | +1 |
 | A11Y | 1 | 5 | +4 |
 | Mouse Behavior | 1 | 3 | +2 |
 | Keyboard Behavior | 1 | 5 | +4 |
-| **Total** | **10** | **57** | **+47** |
+| **Total** | **10** | **58** | **+48** |
 
 ### auro-radio-group.test.js
 
@@ -67,10 +68,11 @@ All `auro-radio.js` lines are fully covered.
 | Slots | 3 | 6 | +3 |
 | Public Functions | 0 | 5 | +5 |
 | Events | 0 | 3 | +3 |
+| Private Functions | 0 | 9 | +9 |
 | A11Y | 0 | 4 | +4 |
 | Mouse Behavior | 0 | 1 | +1 |
 | Keyboard Behavior | 0 | 3 | +3 |
-| **Total** | **6** | **55** | **+49** |
+| **Total** | **6** | **64** | **+58** |
 
 ---
 

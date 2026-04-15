@@ -2,35 +2,29 @@
 
 **Component:** `@aurodesignsystem/auro-datepicker`
 **Branch:** `jbaker/testImprovements`
-**Date:** 2025-04-14
+**Date:** 2025-04-15
 
 ## Summary
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-datepicker` tests | 76 | 136 | +60 (+79%) |
-| Combined coverage | 89.35% | 93.03% | +3.68% |
-| Test duration | ~7.2s | ~8.1s | +0.9s |
+| `auro-datepicker` tests | 76 | 196 | +120 (+158%) |
+| Combined coverage | 89.35% | 99.92% | +10.57% |
+| Test duration | ~7.2s | ~8.4s | +1.2s |
 
 ## Per-File Coverage
 
 | File | Coverage |
 |------|----------|
-| auro-datepicker.js | 94.94% |
-| auro-calendar.js | 93.36% |
-| auro-calendar-cell.js | 97.57% |
-| auro-calendar-month.js | 98.71% |
-| datepickerKeyboardStrategy.js | 93.1% |
-| utilities.js | 95.95% |
-| utilitiesCalendar.js | 90.78% |
-| utilitiesCalendarRender.js | 93.67% |
+| auro-datepicker.js | 100% |
+| auro-calendar.js | 100% |
+| auro-calendar-cell.js | 100% |
+| auro-calendar-month.js | 100% |
+| datepickerKeyboardStrategy.js | 100% |
+| utilities.js | 100% |
+| utilitiesCalendar.js | 100% |
+| utilitiesCalendarRender.js | 98.73% |
 | registered.js | 100% |
-| bibtemplateVersion.js | 100% |
-| buttonVersion.js | 100% |
-| dropdownVersion.js | 100% |
-| iconVersion.js | 100% |
-| inputVersion.js | 100% |
-| popoverVersion.js | 100% |
 
 ## Tests Added by Section
 
@@ -38,15 +32,17 @@
 |---------|--------|-------|-------|
 | Rendering | 5 | 5 | +0 |
 | User Stories | 8 | 8 | +0 |
-| Properties | 40 | 81 | +41 |
+| Properties | 40 | 80 | +40 |
 | Slots | 10 | 10 | +0 |
 | Public Functions | 1 | 15 | +14 |
 | Events | 0 | 5 | +5 |
-| Private Functions | 0 | 0 | +0 |
+| Private Functions | 0 | 60 | +60 |
 | A11Y | 1 | 1 | +0 |
 | Mouse Behavior | 6 | 6 | +0 |
 | Keyboard Behavior | 5 | 5 | +0 |
-| **Total** | **76** | **136** | **+60** |
+| **Total** | **76** | **195** | **+119** |
+
+Note: 1 additional skipped test brings the runtime total to 196.
 
 ## New Tests by Importance
 
@@ -54,8 +50,8 @@
 |----------|-------------|-------|
 | High | Core functionality | 18 |
 | Medium | Property reflection & behavior | 38 |
-| Low | Inherited helpers | 4 |
-| **Total** | | **60** |
+| Low | Inherited helpers & private functions | 63 |
+| **Total** | | **119** |
 
 ### High (P0) — Core functionality
 | Test | Property/Method |
@@ -134,5 +130,5 @@
 - 1 pre-existing skipped test (`should set an error when a wrongly formatted value is passed`) remains skipped
 - Datepicker does not use `useAccessibleIt()` — a11y is tested via a single manual axe check
 - `appearance="inverse"` and `onDark` fixtures wrapped in dark background `<div>` for contrast compliance
-- Coverage gap is primarily in `utilitiesCalendar.js` (90.78%) and `datepickerKeyboardStrategy.js` (93.1%) — edge cases in date math and modifier key handling
-- Test duration remained effectively unchanged after adding 60 tests
+- Only remaining uncovered file is `utilitiesCalendarRender.js` (98.73%) — edge cases in calendar render utilities
+- 60 Private Functions tests cover: calendar-cell methods (dateChanged, isLastHoveredDate, isReferenceDate, handleHover, isInRange), calendar-month null guards, locale overrides, snowflake layout error icon, range + onDark input rendering, bibDialogLabel, labelHidden, monthDiff, and more

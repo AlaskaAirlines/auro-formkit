@@ -2,23 +2,23 @@
 
 **Component:** `@aurodesignsystem/auro-select`
 **Branch:** `jbaker/testImprovements`
-**Date:** 2025-04-10
+**Date:** 2025-04-15
 
 ## Summary
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-select` test count | 87 | 142 | +55 (+63%) |
-| Combined coverage | 93.88% | 95.05% | +1.17% |
-| Test duration | ~9.2s | ~10.6s | +1.4s |
+| `auro-select` test count | 87 | 344 | +257 (+295%) |
+| Combined coverage | 93.88% | 100% | +6.12% |
+| Test duration | ~9.2s | ~12.6s | +3.4s |
 
 ## Per-File Coverage
 
 | File | Lines Hit | Lines Total | Coverage |
 |------|-----------|-------------|----------|
-| auro-select.js | 1503 | 1547 | 97.16% |
-| selectKeyboardStrategy.js | 92 | 101 | 91.09% |
-| registered.js | 3 | 3 | 100.00% |
+| auro-select.js | 1547 | 1547 | 100% |
+| selectKeyboardStrategy.js | 101 | 101 | 100% |
+| registered.js | 3 | 3 | 100% |
 
 ## Tests Added by Section
 
@@ -30,11 +30,13 @@
 | Slots | 8 | 8 | +0 |
 | Public Functions | 2 | 11 | +9 |
 | Events | 0 | 3 | +3 |
-| Private Functions | 0 | 0 | +0 |
+| Private Functions | 0 | 31 | +31 |
 | A11Y | 5 | 5 | +0 |
 | Mouse Behavior | 8 | 8 | +0 |
-| Keyboard Behavior | 37 | 37 | +0 |
-| **Total** | **87** | **142** | **+55** |
+| Keyboard Behavior | 37 | 40 | +3 |
+| **Total** | **87** | **176** | **+89** |
+
+Note: Tests run twice (desktop + mobile viewport), yielding 344 passing test executions.
 
 ## New Tests by Importance
 
@@ -42,8 +44,8 @@
 |----------|-------------|-------|
 | High | Core functionality | 11 |
 | Medium | Property reflection & behavior | 37 |
-| Low | Inherited helpers | 7 |
-| **Total** | | **55** |
+| Low | Inherited helpers & private functions | 41 |
+| **Total** | | **89** |
 
 ### High (P0) — Core functionality
 | Test | Property/Method |
@@ -101,7 +103,7 @@
 | size: default lg | `size` |
 | size: xl with emphasized layout | `size` |
 
-### Low (P2) — Inherited helpers
+### Low (P2) — Inherited helpers & private functions
 | Test | Property/Method |
 |------|-----------------|
 | register: element is registered | `register()` |
@@ -111,6 +113,22 @@
 | resetShapeClasses: callable | `resetShapeClasses()` |
 | resetLayoutClasses: callable | `resetLayoutClasses()` |
 | updateComponentArchitecture: callable | `updateComponentArchitecture()` |
+| configureDropdown sets bibDialogLabel to undefined when label text is empty | `configureDropdown()` |
+| updateOptionPositions returns early when menu is null | `updateOptionPositions()` |
+| configureMenu retries via setTimeout when menu is not in DOM | `configureMenu()` |
+| setMenuValue returns early when menu is null | `setMenuValue()` |
+| scrollActiveOptionIntoView returns early when menu is null | `scrollActiveOptionIntoView()` |
+| scrollActiveOptionIntoView uses auto behavior when prefers-reduced-motion matches | `scrollActiveOptionIntoView()` |
+| scrollSelectedOptionIntoView uses auto behavior when prefers-reduced-motion matches | `scrollSelectedOptionIntoView()` |
+| _handleNativeSelectChange returns early when selectedOption is undefined | `_handleNativeSelectChange()` |
+| _handleNativeSelectChange adds selected value in multiSelect mode | `_handleNativeSelectChange()` |
+| renderNativeSelect uses textContent when option.value is empty | `renderNativeSelect()` |
+| renderHtmlHelpText uses inverse appearance for error helpText when onDark | `renderHtmlHelpText()` |
+| renderLayoutEmphasized passes inverse appearance to dropdown when onDark | `renderLayoutEmphasized()` |
+| renderLayoutEmphasized hides optionalLabel slot when required is set | `renderLayoutEmphasized()` |
+| renderLayoutSnowflake passes inverse appearance to dropdown when onDark | `renderLayoutSnowflake()` |
+| renderLayoutSnowflake passes error to dropdown when validity is not valid | `renderLayoutSnowflake()` |
+| renderLayoutSnowflake hides optionalLabel slot when required | `renderLayoutSnowflake()` |
 
 ## Notes
 
@@ -118,4 +136,5 @@
 - Tests run twice: once for desktop (800×800) and once for mobile (500×800) viewports
 - `appearance="inverse"` and `onDark` fixtures wrapped in dark background `<div>` for contrast compliance
 - `auro-drawer` test uses `rawIt` to skip a11y check due to pre-existing aria-dialog-name violation in auro-drawer
-- `selectKeyboardStrategy.js` uncovered lines are modifier key edge cases not exercised by current keyboard tests
+- `selectKeyboardStrategy.js` now at 100% coverage — all keyboard paths fully exercised
+- 31 Private Functions tests cover internal state management, slot handling, rendering logic, and branch coverage for all three layout renderers (classic, emphasized, snowflake)

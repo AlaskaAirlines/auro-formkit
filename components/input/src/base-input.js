@@ -792,18 +792,6 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Required to convert SVG icons from data to HTML string.
-   * @private
-   * @param {string} icon HTML string for requested icon.
-   * @returns {object} Appended HTML for SVG.
-   */
-  getIconAsHtml(icon) {
-    const dom = new DOMParser().parseFromString(icon.svg, 'text/html');
-
-    return dom.body.firstChild;
-  }
-
-  /**
    * Sends event notifying that the input has changed it's value.
    * @private
    * @returns {void}

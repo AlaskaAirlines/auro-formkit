@@ -10,21 +10,17 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-input` test count | 71 | 120 | +49 |
-| Code coverage | 88.70% | 91.43% | +2.73% |
-| Test duration | ~2.1s | — | — |
+| `auro-input` test count | 71 | 176 | +105 |
+| Code coverage | 88.70% | 100% | +11.30% |
+| Test duration | ~2.1s | ~3.5s | +1.4s |
 
 Per-file line coverage:
-- `base-input.js`: 96.92%
-- `utilities.js`: 94.69%
-- `i18n.js`: 94.35%
-- `auro-input.js`: 93.10%
+- `auro-input.js`: 100%
+- `base-input.js`: 100%
+- `utilities.js`: 100%
+- `i18n.js`: 100%
 
-Uncovered areas (all low-risk internal paths):
-- Layout-specific render branches in `auro-input.js` (`emphasized`, `snowflake` layout variants)
-- Safari cursor management workarounds
-- `MutationObserver` language change handler in `i18n.js`
-- IMask `complete` event handler edge cases in `utilities.js`
+Uncovered areas: None — 100% overall coverage with all source files at 100% line and branch coverage.
 
 ### Notes
 
@@ -39,16 +35,16 @@ The `useAccessibleIt()` test plugin wraps every `it()` with an automatic accessi
 | Describe Block | Before | After | Delta |
 |----------------|--------|-------|-------|
 | Rendering | 2 | 2 | +0 |
-| User Stories | 23 | 23 | +0 |
+| User Stories | 23 | 32 | +9 |
 | Properties | 34 | 70 | +36 |
-| Slots | 7 | 7 | +0 |
-| Public Functions | 1 | 9 | +8 |
+| Slots | 7 | 8 | +1 |
+| Public Functions | 1 | 10 | +9 |
 | Events | 0 | 3 | +3 |
-| Private Functions | 0 | 0 | +0 |
+| Private Functions | 0 | 48 | +48 |
 | A11Y | 2 | 2 | +0 |
-| Mouse Behavior | 2 | 2 | +0 |
+| Mouse Behavior | 2 | 3 | +1 |
 | Keyboard Behavior | 0 | 2 | +2 |
-| **Total** | **71** | **120** | **+49** |
+| **Total** | **71** | **176** | **+105** |
 
 ---
 
@@ -58,7 +54,7 @@ The `useAccessibleIt()` test plugin wraps every `it()` with an automatic accessi
 |------------|-------|
 | High | 18 |
 | Medium | 22 |
-| Low | 9 |
+| Low | 25 |
 
 ### High Importance (18)
 
@@ -122,4 +118,20 @@ The `useAccessibleIt()` test plugin wraps every `it()` with an automatic accessi
 | should set the id attribute on the element | Properties > id |
 | should set the simple attribute | Properties > simple |
 | should accept typed input | Keyboard Behavior |
+| inputHidden returns true when hasDisplayValueContent is true with value and no focus | Private Functions |
+| inputHidden first branch short-circuits when hasDisplayValueContent is true but focused | Private Functions |
+| inputHidden first branch short-circuits when hasDisplayValueContent is true with no value | Private Functions |
+| noFocusOrValue returns false when hasDisplayValueContent is true and focused | Private Functions |
+| noFocusOrValue first branch short-circuits at hasValue when hasDisplayValueContent is true with no value | Private Functions |
+| renderValidationErrorIconHtml uses inverse appearance when onDark is true | Private Functions |
+| renderHtmlNotificationPassword uses inverse appearance when onDark is true | Private Functions |
+| renderHtmlTypeIcon uses inverse appearance and disabled variant for credit-card icon when onDark and disabled | Private Functions |
+| renderHtmlTypeIcon uses inverse appearance and disabled variant for date icon when onDark and disabled | Private Functions |
+| patchInputEvent returns early when called with null | Private Functions |
+| setLang sets lang to undefined when document lang changes to en | Private Functions |
+| getMaskOptions uses default credit-card mask when format is undefined | Private Functions |
+| getMaskOptions date parse converts 2-digit year <= 25 to 2000s | Private Functions |
+| toNorthAmericanFormat defaults day to 01 when format has no dd component | Private Functions |
+| toNorthAmericanFormat defaults month and year when format only has dd | Private Functions |
+| parseDate uses default mm/dd/yyyy format when format is undefined | Private Functions |
 | should focus the input when tabbed to | Keyboard Behavior |

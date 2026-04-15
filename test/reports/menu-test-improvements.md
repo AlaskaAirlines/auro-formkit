@@ -10,24 +10,21 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-menu` test count | 55 | 103 | +48 |
+| `auro-menu` test count | 55 | 128 | +73 |
 | `auro-menuoption` test count | 0 | 24 | +24 |
-| **Total Tests** | **55** | **127** | **+72 (+131%)** |
-| Code coverage | 80.47% (41 failures) | 92.67% | +12.2% |
-| Test duration | ~81.5s (failures) | ~2.0s | -79.5s |
+| **Total Tests** | **55** | **152** | **+97 (+176%)** |
+| Code coverage | 80.47% (41 failures) | 96.96% | +16.49% |
+| Test duration | ~81.5s (failures) | ~2.1s | -79.4s |
 
 Per-file line coverage:
-- `auro-menu.js`: 96.66%
-- `auro-menuoption.js`: 96.11%
-- `auro-menu.context.js`: 90.87%
-- `auro-menu-utils.js`: 78.64%
+- `auro-menu.js`: 99.42%
+- `auro-menuoption.js`: 98.15%
+- `auro-menu.context.js`: 94.80%
+- `auro-menu-utils.js`: 100%
 
-Uncovered areas (all low-risk internal paths):
-- `arraysAreEqual()` / `isOptionInteractive()` in utils — called internally by MenuService, not directly testable via component API
+Uncovered areas (low-risk internal paths):
 - `queuePendingValue()` retry logic in context — bounded retry for framework-specific timing (Svelte/React late property setting)
-- `isOptionSelected()` multiSelect array path in menu — only reached through deprecated code path
-- `clearSelection()` — called during internal reset flow
-- `handleCustomEvent()` — partially covered (custom event attribute testing covers main path)
+- A few branches in `auro-menu.context.js` (94.80%), `auro-menuoption.js` (98.15%), and `auro-menu.js` (99.42%)
 
 ### Infrastructure Change
 
@@ -54,8 +51,8 @@ Fixed pre-existing A11Y test failure in `auro-menuoption.test.js` — the fixtur
 | Private Functions | 1 | 1 | +0 |
 | A11Y | 3 | 4 | +1 |
 | Mouse Behavior | 1 | 2 | +1 |
-| Keyboard Behavior | 7 | 8 | +1 |
-| **Total** | **55** | **127** | **+72** |
+| Keyboard Behavior | 7 | 33 | +26 |
+| **Total** | **55** | **152** | **+97** |
 
 ### auro-menu.test.js
 
@@ -70,8 +67,8 @@ Fixed pre-existing A11Y test failure in `auro-menuoption.test.js` — the fixtur
 | Private Functions | 1 | 1 | +0 |
 | A11Y | 3 | 3 | +0 |
 | Mouse Behavior | 1 | 1 | +0 |
-| Keyboard Behavior | 7 | 7 | +0 |
-| **Total** | **55** | **103** | **+48** |
+| Keyboard Behavior | 7 | 32 | +25 |
+| **Total** | **55** | **128** | **+73** |
 
 ### auro-menuoption.test.js (new file)
 
