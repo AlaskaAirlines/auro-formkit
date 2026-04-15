@@ -957,7 +957,7 @@ export class AuroDatePicker extends AuroElement {
       }
     });
   }
-  
+
   /**
    * Binds all behavior needed to the input after rendering.
    * @private
