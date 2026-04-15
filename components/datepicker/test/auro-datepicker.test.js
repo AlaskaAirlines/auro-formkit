@@ -283,6 +283,52 @@ describe('auro-datepicker', () => {
       await expect(centralAfterAgain).to.contain('01/01/2024');
     });
 
+    it('should show April 2026 when next month is clicked from value 03/31/2026', async () => {
+      const el = await fixture(html`
+        <auro-datepicker value="03/31/2026"></auro-datepicker>
+      `);
+
+      await elementUpdated(el);
+
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+      const nextMonthBth = calendar.shadowRoot.querySelector('.nextMonth');
+
+      const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+
+      await expect(central).to.equal('03/01/2026');
+
+      nextMonthBth.click();
+
+      await elementUpdated(el);
+
+      const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+
+      await expect(centralAfter).to.equal('04/01/2026');
+    });
+
+    it('should show February 2026 when previous month is clicked from value 03/31/2026', async () => {
+      const el = await fixture(html`
+        <auro-datepicker value="03/31/2026"></auro-datepicker>
+      `);
+
+      await elementUpdated(el);
+
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+      const prevMonthBth = calendar.shadowRoot.querySelector('.prevMonth');
+
+      const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+
+      await expect(central).to.equal('03/01/2026');
+
+      prevMonthBth.click();
+
+      await elementUpdated(el);
+
+      const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
+
+      await expect(centralAfter).to.equal('02/01/2026');
+    });
+
     it('should hide the dropdown on blur', async () => {
       const el = await fixture(html`
           <auro-datepicker></auro-datepicker>
@@ -337,7 +383,7 @@ describe('auro-datepicker', () => {
 
         const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-        await expect(central).to.be.equal('03/23/2023');
+        await expect(central).to.be.equal('03/01/2023');
 
         el.calendarFocusDate = '04/25/2024';
 
@@ -345,7 +391,7 @@ describe('auro-datepicker', () => {
 
         const centralAfter = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
-        await expect(centralAfter).to.be.equal('04/25/2024');
+        await expect(centralAfter).to.be.equal('04/01/2024');
       });
 
     });
@@ -750,8 +796,8 @@ describe('auro-datepicker', () => {
 
         await elementUpdated(el);
 
-        const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
-        const min = el.minDate;
+        const central = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getFullYear()}`.slice(-2)}`;
+        const min = `${`0${new Date(el.minDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.minDate).getFullYear()}`.slice(-2)}`;
 
         await expect(min).to.be.equal(central);
       });
