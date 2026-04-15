@@ -22,10 +22,10 @@
 | layoutElement | 0 | 25 | +25 | N/A | 100% | — |
 | menu² | 55 | 152 | +97 | 80.47% | 96.96% | +16.49% |
 | radio | 16 | 122 | +106 | 96.56% | 100% | +3.44% |
-| select¹ | 87 | 344 | +257 | 93.88% | 100% | +6.12% |
-| **Totals** | **621** | **1,914** | **+1,293** | **~91.5%** | **~99.7%** | **+~8.2%** |
+| select¹ | 87 | 346 | +259 | 93.88% | 100% | +6.12% |
+| **Totals** | **621** | **1,916** | **+1,295** | **~91.5%** | **~99.7%** | **+~8.2%** |
 
-¹ Combobox and select tests run twice (desktop + mobile viewport); counts are test executions, not `it()` blocks.
+¹ Combobox and select tests run twice (desktop + mobile viewport); counts are test executions, not test blocks.
 ² Menu baseline had 41 pre-existing failures due to concurrent test file collisions; fixed by adding `concurrency: 1` config.
 
 ---
@@ -48,7 +48,7 @@
 | Properties | 536 | +406 | 38.5% |
 | Private Functions | 246 | +245 | 17.7% |
 | Public Functions | 126 | +110 | 9.1% |
-| Keyboard Behavior | 106 | +49 | 7.6% |
+| Keyboard Behavior | 107 | +50 | 7.7% |
 | User Stories | 84 | +19 | 6.0% |
 | Rendering | 73 | +38 | 5.2% |
 | Slots | 66 | +27 | 4.7% |
@@ -56,7 +56,7 @@
 | A11Y | 50 | +25 | 3.6% |
 | Mouse Behavior | 35 | +11 | 2.5% |
 | Lifecycle | 3 | +3 | 0.2% |
-| **Total** | **1,391** | **+999** | |
+| **Total** | **1,392** | **+1,000** | |
 
 Note: Section totals count unique test blocks across all components. Combobox and select run tests twice (desktop + mobile viewport); their test execution counts are higher. Form has tests across 3 files with non-standard groupings.
 
@@ -67,10 +67,10 @@ Note: Section totals count unique test blocks across all components. Combobox an
 | Priority | bibtemplate | checkbox | combobox | counter | datepicker | dropdown | form | helptext | input | layoutElement | menu | radio | select | Total |
 |----------|-----------|----------|----------|---------|------------|----------|------|----------|-------|---------------|------|-------|--------|-------|
 | Critical | — | 5 | — | — | — | — | — | 2 | — | — | — | 6 | — | 13 |
-| High | 7 | 13 | 25 | 16 | 18 | 9 | 5 | 7 | 18 | 8 | 25 | 12 | 11 | 174 |
+| High | 7 | 13 | 25 | 16 | 18 | 9 | 5 | 7 | 18 | 8 | 25 | 12 | 12 | 175 |
 | Medium | 6 | 12 | 64 | 27 | 38 | 39 | 3 | 10 | 22 | 13 | 32 | 10 | 37 | 313 |
 | Low | 4 | 7 | 11 | 42 | 63 | 40 | 1 | 10 | 25 | — | 15 | 8 | 41 | 267 |
-| **Total** | **17** | **37** | **100** | **85** | **119** | **88** | **9** | **29** | **65** | **21** | **72** | **36** | **89** | **767** |
+| **Total** | **17** | **37** | **100** | **85** | **119** | **88** | **9** | **29** | **65** | **21** | **72** | **36** | **90** | **768** |
 
 ---
 

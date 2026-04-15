@@ -2829,6 +2829,25 @@ function runTest(mobileView) {
           await expect(el.value).to.equal('Oranges');
         });
 
+        it('should select the active option and close the bib in multiSelect mode', async () => {
+          const el = await multiSelectFixture();
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const trigger = dropdown.querySelector('[slot="trigger"]');
+
+          trigger.click();
+          await elementUpdated(el);
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+          await elementUpdated(el);
+
+          await expect(dropdown.isPopoverVisible).to.be.false;
+          await expect(el.value).to.not.be.undefined;
+        });
+
         if (mobileView) {
           it('should close the fullscreen dialog', async () => {
             const el = await defaultFixture();

@@ -8,9 +8,9 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-select` test count | 87 | 344 | +257 (+295%) |
+| `auro-select` test count | 87 | 346 | +259 (+298%) |
 | Combined coverage | 93.88% | 100% | +6.12% |
-| Test duration | ~9.2s | ~12.6s | +3.4s |
+| Test duration | ~9.2s | ~13.2s | +4.0s |
 
 ## Per-File Coverage
 
@@ -33,19 +33,19 @@
 | Private Functions | 0 | 31 | +31 |
 | A11Y | 5 | 5 | +0 |
 | Mouse Behavior | 8 | 8 | +0 |
-| Keyboard Behavior | 37 | 40 | +3 |
-| **Total** | **87** | **176** | **+89** |
+| Keyboard Behavior | 37 | 41 | +4 |
+| **Total** | **87** | **177** | **+90** |
 
-Note: Tests run twice (desktop + mobile viewport), yielding 344 passing test executions.
+Note: Tests run twice (desktop + mobile viewport), yielding 346 passing test executions.
 
 ## New Tests by Importance
 
 | Priority | Description | Count |
 |----------|-------------|-------|
-| High | Core functionality | 11 |
+| High | Core functionality | 12 |
 | Medium | Property reflection & behavior | 37 |
 | Low | Inherited helpers & private functions | 41 |
-| **Total** | | **89** |
+| **Total** | | **90** |
 
 ### High (P0) — Core functionality
 | Test | Property/Method |
@@ -61,6 +61,7 @@ Note: Tests run twice (desktop + mobile viewport), yielding 344 passing test exe
 | auroSelect-valueSet event | `auroSelect-valueSet` |
 | input event with detail | `input` |
 | auroFormElement-validated event | `auroFormElement-validated` |
+| Tab should select and close bib in multiSelect mode | `Tab` (keyboard) |
 
 ### Medium (P1) — Property reflection & behavior
 | Test | Property/Method |
