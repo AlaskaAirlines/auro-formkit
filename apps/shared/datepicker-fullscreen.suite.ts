@@ -126,7 +126,7 @@ export function datepickerFullscreenSuite(framework: string) {
     });
   });
 
-  // ─── Keyboard contract (transitional — see components/datepicker/docs/partials/keyboardBehavior.md) ───
+  // ─── Keyboard contract (transitional — see components/datepicker/docs/partials/keyboard-behavior.md) ───
 
   test.describe(`auro-datepicker keyboard contract (desktop) in ${framework}`, () => {
     test.use({ viewport: { width: 1280, height: 800 } });

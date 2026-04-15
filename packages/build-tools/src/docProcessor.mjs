@@ -104,11 +104,11 @@ export const fileConfigs = (config) => [
     output: fromAuroComponentRoot(`components/${config.component}/demo/api.md`),
     preProcessors: [templateFiller.formatApiTable],
   },
-  // keyboardBehavior.md
+  // keyboard-behavior.md
   {
-    identifier: 'keyboardBehavior.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/keyboardBehavior.md`),
-    output: fromAuroComponentRoot(`components/${config.component}/demo/keyboardBehavior.md`),
+    identifier: 'keyboard-behavior.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/keyboard-behavior.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/keyboard-behavior.md`),
     preProcessors: [templateFiller.formatApiTable],
   },
   // ux.md

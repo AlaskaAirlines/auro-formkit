@@ -2,7 +2,7 @@
 // See LICENSE in the project root for license information.
 
 // Authoritative datepicker keyboard behavior spec:
-//   components/datepicker/docs/partials/keyboardBehavior.md
+//   components/datepicker/docs/partials/keyboard-behavior.md
 //
 // Current behavior (transitional — full bib keyboard navigation is planned for a future iteration):
 //   - The bib opens and closes via pointer/touch interaction only.

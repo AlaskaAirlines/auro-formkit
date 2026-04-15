@@ -654,7 +654,7 @@ The base dropdown component; all consumers inherit these behaviors.
 
 #### 4.2.2 Tab does not close fullscreen dialog — P1
 
-> **Note:** Tab-closes-fullscreen was removed from `auro-datepicker` during a transition period while full bib keyboard navigation is being designed. See `components/datepicker/docs/partials/keyboardBehavior.md` for the current authoritative contract.
+> **Note:** Tab-closes-fullscreen was removed from `auro-datepicker` during a transition period while full bib keyboard navigation is being designed. See `components/datepicker/docs/partials/keyboard-behavior.md` for the current authoritative contract.
 
 - [ ] **Setup:** Open datepicker in fullscreen mode.
 - [ ] **Action:** Press Tab.
