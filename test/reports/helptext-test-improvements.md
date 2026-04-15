@@ -10,11 +10,12 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-helptext` test count | 0 | 31 | +31 |
+| `auro-helptext` unique test count | 0 | 31 | +31 |
+| `auro-helptext` test executions | — | 62 | — |
 | Code coverage | N/A (no test script) | 100% | — |
-| Test duration | N/A | — | — |
+| Test duration | N/A | ~1.9s | — |
 
-This test file was created from scratch on this branch (did not exist on `dev`).
+This test file was created from scratch on this branch (did not exist on `dev`). All tests run twice (desktop 800×800 + mobile 575px viewport).
 
 Uncovered lines: None — 100% coverage achieved.
 

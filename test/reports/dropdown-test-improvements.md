@@ -8,9 +8,12 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-dropdown` test count | 50 | 138 | +88 (+176%) |
+| `auro-dropdown` unique test count | 50 | 138 | +88 (+176%) |
+| `auro-dropdown` test executions | — | 276 | — |
 | Combined coverage | 87.72% | 100% | +12.28% |
-| Test duration | ~1.3s | ~2.5s | +1.2s |
+| Test duration | ~1.3s | ~4.3s | +3.0s |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport).
 
 ## Per-File Coverage
 

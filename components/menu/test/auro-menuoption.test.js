@@ -1,9 +1,22 @@
 /* eslint-disable no-undef, no-unused-expressions */
 
 import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 
-describe('auro-menuoption', () => {
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+
+/**
+ * Runs the full menuoption test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
   describe('Rendering', () => {
     it('should be defined as a custom element', async () => {
       const el = await Boolean(customElements.get("auro-menuoption"));
@@ -135,7 +148,7 @@ describe('auro-menuoption', () => {
 
   describe('Public Functions', () => {
     describe('register', () => {
-      it('should register the custom element', async () => {
+      it('should register the custom element', () => {
         const registeredTag = customElements.get('auro-menuoption');
 
         expect(registeredTag).to.not.be.undefined;
@@ -181,7 +194,10 @@ describe('auro-menuoption', () => {
         const option = el.querySelector('auro-menuoption');
 
         const listener = oneEvent(option, 'auroMenuOption-mouseover');
-        option.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, composed: true }));
+        option.dispatchEvent(new MouseEvent('mouseover', {
+          bubbles: true,
+          composed: true
+        }));
 
         const event = await listener;
         expect(event).to.exist;
@@ -207,7 +223,9 @@ describe('auro-menuoption', () => {
         const option = el.querySelector('auro-menuoption');
 
         let fired = false;
-        option.addEventListener('auroMenuOption-click', () => { fired = true; });
+        option.addEventListener('auroMenuOption-click', () => {
+          fired = true;
+        });
         option.click();
         await elementUpdated(el);
 
@@ -267,4 +285,14 @@ describe('auro-menuoption', () => {
       expect(option.getAttribute('role')).to.equal('option');
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-menuoption', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-menuoption in small viewport', () => {
+  runFullTest(true);
 });

@@ -1,7 +1,9 @@
 /* eslint-disable no-magic-numbers */
-/* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
+/* eslint-disable no-underscore-dangle,max-lines,array-element-newline, no-undef */
 
 import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 
@@ -15,6 +17,7 @@ import '@aurodesignsystem/auro-input/src/registered';
 import '@aurodesignsystem/auro-radio/src/registered';
 import '@aurodesignsystem/auro-select/src/registered';
 
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 const CHECKBOX_TEMPLATE = html`
 <auro-checkbox-group required>
@@ -114,6 +117,12 @@ const DATEPICKER_TEMPLATE = html`
 </auro-datepicker>
 `;
 
+/**
+ * Creates a fixture and sets a value via the HTML attribute.
+ * @param {import('lit').TemplateResult} htmlTemplate - The lit-html template to render.
+ * @param {string} value - The value to set via setAttribute.
+ * @returns {Promise<HTMLElement>} The rendered element with the value attribute set.
+ */
 async function getFixtureWithValueAttr(htmlTemplate, value) {
   const element = await fixture(htmlTemplate);
   if (value) {
@@ -123,6 +132,12 @@ async function getFixtureWithValueAttr(htmlTemplate, value) {
   return element;
 }
 
+/**
+ * Creates a fixture and sets a value via the JavaScript property.
+ * @param {import('lit').TemplateResult} htmlTemplate - The lit-html template to render.
+ * @param {string} value - The value to set via the property.
+ * @returns {Promise<HTMLElement>} The rendered element with the value property set.
+ */
 async function getFixtureWithValueProp(htmlTemplate, value) {
   const element = await fixture(htmlTemplate);
   if (value) {
@@ -132,165 +147,192 @@ async function getFixtureWithValueProp(htmlTemplate, value) {
   return element;
 }
 
-// checkbox does not support this
-describe.skip('checkbox', () => {
-  it('should set value via attribute', async () => {
-    const el = await getFixtureWithValueAttr(CHECKBOX_TEMPLATE, ['value2']);
-    await expect(el.value).to.equal(['value2']);
-    await expect(el.children[2].hasAttribute('checked')).to.be.true;
+/**
+ * Runs the full validation-value-setting test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
   });
 
-  it('should set value via property', async () => {
-    const el = await getFixtureWithValueProp(CHECKBOX_TEMPLATE, ['value2', 'value3']);
-    await expect(el.children[2].hasAttribute('checked')).to.be.true;
-    await expect(el.children[3].hasAttribute('checked')).to.be.true;
+  // checkbox does not support this
+  describe.skip('checkbox', () => {
+    it('should set value via attribute', async () => {
+      const el = await getFixtureWithValueAttr(CHECKBOX_TEMPLATE, ['value2']);
+      await expect(el.value).to.equal(['value2']);
+      await expect(el.children[2].hasAttribute('checked')).to.be.true;
+    });
+
+    it('should set value via property', async () => {
+      const el = await getFixtureWithValueProp(CHECKBOX_TEMPLATE, ['value2', 'value3']);
+      await expect(el.children[2].hasAttribute('checked')).to.be.true;
+      await expect(el.children[3].hasAttribute('checked')).to.be.true;
+    });
   });
+
+  // radio does not support this
+  describe.skip('radio', () => {
+    it('should set value via attribute', async () => {
+      const el = await getFixtureWithValueAttr(RADIO_TEMPLATE, 'yes');
+      await expect(el.value).to.equal('yes');
+      await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
+    });
+
+    it('should set value via property', async () => {
+      const el = await getFixtureWithValueProp(RADIO_TEMPLATE, 'yes');
+      await expect(el.value).to.equal('yes');
+      await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
+    });
+  });
+
+  describe('input', () => {
+    it('should set value via attribute and reflect in inner input', async () => {
+      const el = await getFixtureWithValueAttr(INPUT_TEMPLATE, 'some text');
+      await expect(el.value).to.equal('some text');
+
+      const innerInput = el.shadowRoot.querySelector('input');
+      await expect(innerInput.value).to.equal('some text');
+    });
+
+    it('should set value via property and reflect in inner input', async () => {
+      const el = await getFixtureWithValueProp(INPUT_TEMPLATE, 'some text');
+      await expect(el.value).to.equal('some text');
+
+      const innerInput = el.shadowRoot.querySelector('input');
+      await expect(innerInput.value).to.equal('some text');
+    });
+  });
+
+
+  describe('combobox', () => {
+    it('should set value via attribute and reflect in inner input', async () => {
+      const el = await getFixtureWithValueAttr(COMBOBOX_TEMPLATE, 'Apples');
+      await expect(el.value).to.equal('Apples');
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const innerInput = dropdown.querySelector('[auro-input]');
+      await expect(innerInput.value).to.equal('Apples');
+    });
+
+    it('should set value via property and reflect in inner input', async () => {
+      const el = await getFixtureWithValueProp(COMBOBOX_TEMPLATE, 'Apples');
+      await expect(el.value).to.equal('Apples');
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const innerInput = dropdown.querySelector('[auro-input]');
+      await expect(innerInput.value).to.equal('Apples');
+    });
+  });
+
+  describe('select', () => {
+    it('should set value via attribute and display in trigger', async () => {
+      const el = await getFixtureWithValueAttr(SELECT_TEMPLATE, 'price');
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector("#triggerFocus");
+      await expect(trigger.textContent.includes("Price")).to.be.true;
+      await expect(el.value).to.equal('price');
+    });
+
+    it('should set value via property and display in trigger', async () => {
+      const el = await getFixtureWithValueProp(SELECT_TEMPLATE, 'price');
+      await expect(el.value).to.equal('price');
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector("#triggerFocus");
+      await expect(trigger.textContent.includes("Price")).to.be.true;
+    });
+  });
+
+
+  describe('select with multi-select', () => {
+    it('should set value via attribute and display selected options in trigger', async () => {
+      const initialValueObj = ['price', 'arrival'];
+      const el = await getFixtureWithValueAttr(MULTI_SELECT_TEMPLATE, JSON.stringify(initialValueObj));
+      await expect(JSON.parse(el.value)).to.eql(initialValueObj);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector("#triggerFocus");
+      await expect(trigger.textContent.includes("Price")).to.be.true;
+      await expect(trigger.textContent.includes("Arrival")).to.be.true;
+    });
+
+    it('should set value via property and display selected options in trigger', async () => {
+      const initialValueObj = ['price', 'arrival'];
+      const el = await getFixtureWithValueProp(MULTI_SELECT_TEMPLATE, JSON.stringify(initialValueObj));
+      await expect(JSON.parse(el.value)).to.eql(initialValueObj);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const trigger = dropdown.querySelector("#triggerFocus");
+      await expect(trigger.textContent.includes("Price")).to.be.true;
+      await expect(trigger.textContent.includes("Arrival")).to.be.true;
+    });
+  });
+
+  describe('counter', () => {
+    it('should set value via attribute', async () => {
+      const el = await getFixtureWithValueAttr(COUNTER_TEMPLATE, 3);
+      await expect(el.value).to.eql(3);
+    });
+
+    it('should set value via property', async () => {
+      const el = await getFixtureWithValueProp(COUNTER_TEMPLATE, 3);
+      await expect(el.value).to.eql(3);
+    });
+  });
+
+  // counter-group does not support this
+  describe.skip('counter-group', () => {
+    it('should set value via attribute', async () => {
+      const el = await getFixtureWithValueAttr(COUNTER_GROUP_TEMPLATE, JSON.stringify({
+        'first': 2,
+        'second': 4
+      }));
+
+      await expect(el.children[0].value).to.eql(2);
+      await expect(el.children[1].value).to.eql(4);
+      await expect(el.value).to.eql(3);
+    });
+
+    it('should set value via property', async () => {
+      const el = await getFixtureWithValueProp(COUNTER_GROUP_TEMPLATE, {
+        'first': 2,
+        'second': 4
+      });
+      await expect(el.children[0].value).to.eql(2);
+      await expect(el.children[1].value).to.eql(4);
+      await expect(el.value).to.eql(3);
+    });
+  });
+
+  describe('datepicker', () => {
+    it('should set value via attribute and reflect in inner input', async () => {
+      const el = await getFixtureWithValueAttr(DATEPICKER_TEMPLATE, '04/03/2023');
+      await expect(el.value).to.equal('04/03/2023');
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const innerInput = dropdown.querySelector('[auro-input]');
+      await expect(innerInput.value).to.equal('04/03/2023');
+    });
+
+    it('should set value via property and reflect in inner input', async () => {
+      const el = await getFixtureWithValueProp(DATEPICKER_TEMPLATE, '04/03/2023');
+      await expect(el.value).to.equal('04/03/2023');
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const innerInput = dropdown.querySelector('[auro-input]');
+      await expect(innerInput.value).to.equal('04/03/2023');
+    });
+  });
+}
+
+// Desktop Test Suite
+describe('validation-value-setting', () => {
+  runFullTest(false);
 });
 
-// radio does not support this
-describe.skip('radio', () => {
-  it('should set value via attribute', async () => {
-    const el = await getFixtureWithValueAttr(RADIO_TEMPLATE, 'yes');
-    await expect(el.value).to.equal('yes');
-    await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
-  });
-
-  it('should set value via property', async () => {
-    const el = await getFixtureWithValueProp(RADIO_TEMPLATE, 'yes');
-    await expect(el.value).to.equal('yes');
-    await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
-  });
-});
-
-describe('input', () => {
-  it('should set value via attribute and reflect in inner input', async () => {
-    const el = await getFixtureWithValueAttr(INPUT_TEMPLATE, 'some text');
-    await expect(el.value).to.equal('some text');
-
-    const innerInput = el.shadowRoot.querySelector('input');
-    await expect(innerInput.value).to.equal('some text');
-  });
-
-  it('should set value via property and reflect in inner input', async () => {
-    const el = await getFixtureWithValueProp(INPUT_TEMPLATE, 'some text');
-    await expect(el.value).to.equal('some text');
-
-    const innerInput = el.shadowRoot.querySelector('input');
-    await expect(innerInput.value).to.equal('some text');
-  });
-});
-
-
-describe('combobox', () => {
-  it('should set value via attribute and reflect in inner input', async () => {
-    const el = await getFixtureWithValueAttr(COMBOBOX_TEMPLATE, 'Apples');
-    await expect(el.value).to.equal('Apples');
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const innerInput = dropdown.querySelector('[auro-input]');
-    await expect(innerInput.value).to.equal('Apples');
-  });
-
-  it('should set value via property and reflect in inner input', async () => {
-    const el = await getFixtureWithValueProp(COMBOBOX_TEMPLATE, 'Apples');
-    await expect(el.value).to.equal('Apples');
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const innerInput = dropdown.querySelector('[auro-input]');
-    await expect(innerInput.value).to.equal('Apples');
-  });
-});
-
-describe('select', () => {
-  it('should set value via attribute and display in trigger', async () => {
-    const el = await getFixtureWithValueAttr(SELECT_TEMPLATE, 'price');
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const trigger = dropdown.querySelector("#triggerFocus");
-    await expect(trigger.textContent.includes("Price")).to.be.true;
-    await expect(el.value).to.equal('price');
-  });
-
-  it('should set value via property and display in trigger', async () => {
-    const el = await getFixtureWithValueProp(SELECT_TEMPLATE, 'price');
-    await expect(el.value).to.equal('price');
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const trigger = dropdown.querySelector("#triggerFocus");
-    await expect(trigger.textContent.includes("Price")).to.be.true;
-  });
-});
-
-
-describe('select with multi-select', () => {
-  it('should set value via attribute and display selected options in trigger', async () => {
-    const initialValueObj = ['price', 'arrival'];
-    const el = await getFixtureWithValueAttr(MULTI_SELECT_TEMPLATE, JSON.stringify(initialValueObj));
-    await expect(JSON.parse(el.value)).to.eql(initialValueObj);
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const trigger = dropdown.querySelector("#triggerFocus");
-    await expect(trigger.textContent.includes("Price")).to.be.true;
-    await expect(trigger.textContent.includes("Arrival")).to.be.true;
-  });
-
-  it('should set value via property and display selected options in trigger', async () => {
-    const initialValueObj = ['price', 'arrival'];
-    const el = await getFixtureWithValueProp(MULTI_SELECT_TEMPLATE, JSON.stringify(initialValueObj));
-    await expect(JSON.parse(el.value)).to.eql(initialValueObj);
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const trigger = dropdown.querySelector("#triggerFocus");
-    await expect(trigger.textContent.includes("Price")).to.be.true;
-    await expect(trigger.textContent.includes("Arrival")).to.be.true;
-  });
-});
-
-describe('counter', () => {
-  it('should set value via attribute', async () => {
-    const el = await getFixtureWithValueAttr(COUNTER_TEMPLATE, 3);
-    await expect(el.value).to.eql(3);
-  });
-
-  it('should set value via property', async () => {
-    const el = await getFixtureWithValueProp(COUNTER_TEMPLATE, 3);
-    await expect(el.value).to.eql(3);
-  });
-});
-
-// counter-group does not support this
-describe.skip('counter-group', () => {
-  it('should set value via attribute', async () => {
-    const el = await getFixtureWithValueAttr(COUNTER_GROUP_TEMPLATE, JSON.stringify({'first': 2, 'second': 4}));
-
-    await expect(el.children[0].value).to.eql(2);
-    await expect(el.children[1].value).to.eql(4);
-    await expect(el.value).to.eql(3);
-  });
-
-  it('should set value via property', async () => {
-    const el = await getFixtureWithValueProp(COUNTER_GROUP_TEMPLATE, {'first': 2, 'second': 4});
-    await expect(el.children[0].value).to.eql(2);
-    await expect(el.children[1].value).to.eql(4);
-    await expect(el.value).to.eql(3);
-  });
-});
-
-describe('datepicker', () => {
-  it('should set value via attribute and reflect in inner input', async () => {
-    const el = await getFixtureWithValueAttr(DATEPICKER_TEMPLATE, '04/03/2023');
-    await expect(el.value).to.equal('04/03/2023');
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const innerInput = dropdown.querySelector('[auro-input]');
-    await expect(innerInput.value).to.equal('04/03/2023');
-  });
-
-  it('should set value via property and reflect in inner input', async () => {
-    const el = await getFixtureWithValueProp(DATEPICKER_TEMPLATE, '04/03/2023');
-    await expect(el.value).to.equal('04/03/2023');
-
-    const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-    const innerInput = dropdown.querySelector('[auro-input]');
-    await expect(innerInput.value).to.equal('04/03/2023');
-  });
+// Mobile Test Suite
+describe('validation-value-setting in small viewport', () => {
+  runFullTest(true);
 });

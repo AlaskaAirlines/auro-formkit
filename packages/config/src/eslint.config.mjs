@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
@@ -14,16 +16,22 @@ const compat = new FlatCompat({
 });
 
 export default [
-{
+  {
     ignores: [
-    'node_modules/**',
-    'components/**/*Version.js',
-    'components/**/apiExamples/**',
-    'components/**/test/**/*',
-    'components/**/demo/**/*',
-    'components/**/dist/**/*',
-    "components/**/vendor/**"
+      'node_modules/**',
+      'components/**/*Version.js',
+      'components/**/apiExamples/**',
+      'components/**/test/**/*',
+      'components/**/demo/**/*',
+      'components/**/dist/**/*',
+      "components/**/vendor/**"
     ]
-},
-...fixupConfigRules(compat.extends("@aurodesignsystem/eslint-config"))
+  },
+  ...fixupConfigRules(compat.extends("@aurodesignsystem/eslint-config")),
+  {
+    languageOptions: {
+      ecmaVersion: 2025,
+      sourceType: 'module'
+    }
+  }
 ];

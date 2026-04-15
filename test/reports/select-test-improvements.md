@@ -134,7 +134,7 @@ Note: Tests run twice (desktop + mobile viewport), yielding 346 passing test exe
 ## Notes
 
 - Select uses `useAccessibleIt()` — every `it()` includes an automatic axe a11y check
-- Tests run twice: once for desktop (800×800) and once for mobile (500×800) viewports
+- Tests run twice: once for desktop (800×800) and once for mobile (575px, derived from `ds-grid-breakpoint-sm` design token minus 1) viewports
 - `appearance="inverse"` and `onDark` fixtures wrapped in dark background `<div>` for contrast compliance
 - `auro-drawer` test uses `rawIt` to skip a11y check due to pre-existing aria-dialog-name violation in auro-drawer
 - `selectKeyboardStrategy.js` now at 100% coverage — all keyboard paths fully exercised

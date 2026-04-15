@@ -8,9 +8,12 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `layoutElement` test count | 0 | 25 | +25 (new) |
+| `layoutElement` unique test count | 0 | 25 | +25 (new) |
+| `layoutElement` test executions | — | 50 | — |
 | Code coverage | N/A (no test script) | 100% | — |
-| Test duration | N/A | ~1.5s | — |
+| Test duration | N/A | ~2.2s | — |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport).
 
 ## Per-File Coverage
 

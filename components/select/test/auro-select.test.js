@@ -29,6 +29,11 @@ const rawIt = it;
 
 useAccessibleIt();
 
+/**
+ * Runs the full select test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
 function runTest(mobileView) {
   describe(`auro-select${mobileView ? ' in mobile' : ''}`, () => {
     before(async () => {

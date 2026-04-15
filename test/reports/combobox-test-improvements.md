@@ -109,7 +109,7 @@
 
 ## Test Architecture
 - Tests use `runFullTest(mobileView)` pattern executing all tests twice (desktop + mobile viewport)
-- Desktop viewport: 800×800, Mobile viewport: 500×800
+- Desktop viewport: 800×800, Mobile viewport: 575px (derived from `ds-grid-breakpoint-sm` design token minus 1)
 - Mobile tests include fullscreen dialog behavior (inputInBib, close button, etc.)
 - Fixtures in `testFixtures.js`, helper functions in `testFunctions.js`
 

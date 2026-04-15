@@ -1,10 +1,14 @@
-/* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
+/* eslint-disable no-underscore-dangle,max-lines,array-element-newline, no-undef */
 
 import {fixture, html, expect, elementUpdated, oneEvent} from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 import '../demo/registerDemoDeps.js';
 import '../src/registered.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 /**
  * Shared tests to dedupe maintenance effort.
@@ -34,7 +38,16 @@ function useSharedTestBehavior(name, markup) {
   });
 }
 
-describe('auro-form', () => {
+/**
+ * Runs the full form interactions test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
   describe('when an auro-input is present', () => {
     useSharedTestBehavior('auro-input', html`
       <auro-form>
@@ -276,4 +289,14 @@ describe('auro-form', () => {
       await expect(form.value.selectExample).to.deep.equal(JSON.stringify(['stops']));
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-form', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-form in small viewport', () => {
+  runFullTest(true);
 });

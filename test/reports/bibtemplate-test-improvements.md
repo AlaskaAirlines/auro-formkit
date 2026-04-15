@@ -8,9 +8,11 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `bibtemplate` test count | 0 | 32 | +32 (new) |
+| `bibtemplate` test count | 0 | 64 | +64 (new) |
 | Code coverage | N/A (no test file) | 100% | — |
-| Test duration | N/A | ~1.7s | — |
+| Test duration | N/A | ~2.1s | — |
+
+All 32 unique tests run twice (desktop 800×800 + mobile 575px viewport) = 64 test executions.
 
 ## Per-File Coverage
 

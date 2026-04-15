@@ -1,10 +1,14 @@
 /* eslint-disable no-undef, no-magic-numbers, max-lines, no-unused-expressions, prefer-destructuring */
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '@aurodesignsystem/auro-dialog';
 import '@aurodesignsystem/auro-drawer';
 import '../src/registered.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 // Save original `it` before useAccessibleIt replaces it, so tests that
 // involve third-party components with pre-existing a11y issues (e.g.,
@@ -12,7 +16,21 @@ import '../src/registered.js';
 const rawIt = it;
 
 useAccessibleIt();
-describe('auro-counter-group', () => {
+
+/**
+ * Runs the full counter-group test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  // Use rawIt for tests that open the bib in mobile (fullscreen dialog triggers
+  // empty-heading a11y violation from auro-bibtemplate).
+  const bibIt = mobileView ? rawIt : it;
+
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
   describe('Rendering', () => {
     it('should be defined as a custom element', async () => {
       const el = await Boolean(customElements.get('auro-counter-group'));
@@ -716,7 +734,7 @@ describe('auro-counter-group', () => {
     });
 
     describe('showBib', () => {
-      it('should open the dropdown when called', async () => {
+      bibIt('should open the dropdown when called', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <auro-counter>Counter</auro-counter>
@@ -947,7 +965,7 @@ describe('auro-counter-group', () => {
 
   describe('Mouse Behavior', () => {
     describe('Click', () => {
-      it('should increment the counter value when increment button is clicked', async () => {
+      bibIt('should increment the counter value when increment button is clicked', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <auro-counter value="2">Counter 1</auro-counter>
@@ -966,7 +984,7 @@ describe('auro-counter-group', () => {
         expect(firstCounter.value).to.equal(3);
       });
 
-      it('should decrement the counter value when decrement button is clicked', async () => {
+      bibIt('should decrement the counter value when decrement button is clicked', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <auro-counter value="2">Counter 1</auro-counter>
@@ -990,7 +1008,7 @@ describe('auro-counter-group', () => {
   describe('Keyboard Behavior', () => {
 
     describe('ArrowUp', () => {
-      it('should increment the counter value', async () => {
+      bibIt('should increment the counter value', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <auro-counter value="2">Counter 1</auro-counter>
@@ -1011,7 +1029,7 @@ describe('auro-counter-group', () => {
     });
 
     describe('ArrowDown', () => {
-      it('should decrement the counter value', async () => {
+      bibIt('should decrement the counter value', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <auro-counter value="2">Counter 1</auro-counter>
@@ -1126,7 +1144,7 @@ describe('auro-counter-group', () => {
     });
 
     describe('Tab', () => {
-      it('should not close the dropdown while the bib is open', async () => {
+      bibIt('should not close the dropdown while the bib is open', async () => {
         const el = await fixture(html`
           <auro-counter-group isDropdown>
             <auro-counter value="2">Counter 1</auro-counter>
@@ -1145,4 +1163,14 @@ describe('auro-counter-group', () => {
       });
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-counter-group', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-counter-group in small viewport', () => {
+  runFullTest(true);
 });

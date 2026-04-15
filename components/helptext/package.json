@@ -44,6 +44,7 @@
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./src/**/*.scss\"",
-    "esLint": "eslint \"./src/**/*.js\""
+    "esLint": "eslint \"./src/**/*.js\"",
+    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7712"
   }
 }

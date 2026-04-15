@@ -10,9 +10,12 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-input` test count | 71 | 176 | +105 |
+| `auro-input` unique test count | 71 | 176 | +105 |
+| `auro-input` test executions | — | 352 | — |
 | Code coverage | 88.70% | 100% | +11.30% |
-| Test duration | ~2.1s | ~3.5s | +1.4s |
+| Test duration | ~2.1s | ~6.3s | +4.2s |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport).
 
 Per-file line coverage:
 - `auro-input.js`: 100%

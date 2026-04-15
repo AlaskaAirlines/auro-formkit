@@ -1,9 +1,22 @@
 /* eslint-disable no-undef, max-lines, max-statements, no-unused-expressions */
 
 import {elementUpdated, expect, fixture, html} from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 
-describe('auro-radio-group', () => {
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+
+/**
+ * Runs the full radio-group test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
   describe('Rendering', () => {
     it('should render a shadow root', async () => {
       const el = await fixture(html`
@@ -1069,6 +1082,14 @@ describe('auro-radio-group', () => {
       expect(el.value).to.equal('one');
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-radio-group', () => {
+  runFullTest(false);
 });
 
-
+// Mobile Test Suite
+describe('auro-radio-group in small viewport', () => {
+  runFullTest(true);
+});

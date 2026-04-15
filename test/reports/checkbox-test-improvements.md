@@ -12,11 +12,12 @@
 |--------|--------|-------|--------|
 | `auro-checkbox` test count | 9 | 54 | +45 |
 | `auro-checkbox-group` test count | 14 | 61 | +47 |
-| **Total Tests** | **23** | **115** | **+92 (+400%)** |
+| **Total unique tests** | **23** | **115** | **+92 (+400%)** |
+| **Total test executions** | — | **229** | — |
 | Code coverage | 97.04% | 99.64% | +2.6% |
-| Test duration | ~1.7s | ~2.0s | +0.3s |
+| Test duration | ~1.7s | ~7.8s | +6.1s |
 
-The only untestable branch is `evt.isTrusted` (browser-security gate that cannot be triggered in unit tests).
+All tests run twice (desktop 800×800 + mobile 575px viewport). The only untestable branch is `evt.isTrusted` (browser-security gate that cannot be triggered in unit tests).
 
 Dead code identified: `layout` propagation block in `auro-checkbox-group.js` `updated()` — `layout` is never declared as a Lit property so `changedProperties.has('layout')` is always false.
 

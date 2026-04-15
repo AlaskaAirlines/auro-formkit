@@ -1,16 +1,31 @@
-/* eslint-disable max-lines, no-unused-expressions, no-undef, no-plusplus, no-await-in-loop, no-implicit-coercion, jsdoc/require-jsdoc */
+/* eslint-disable max-lines, no-magic-numbers, lit/no-invalid-html, no-unused-expressions, lit/binding-positions
+, no-undef, no-plusplus, init-declarations
+, no-await-in-loop, no-implicit-coercion, jsdoc/require-jsdoc */
 
 import { fixture, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
 import { unsafeStatic } from 'lit/static-html.js';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 import { AuroInput } from '../src/auro-input.js';
 import { setInputValue } from './testFunctions.js';
 
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+
 const rawIt = it;
 useAccessibleIt();
 
-describe('auro-input', () => {
+/**
+ * Runs the full input test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
 
   describe('Rendering', () => {
     it('should be successfully created in the document', async () => {
@@ -1436,7 +1451,7 @@ describe('auro-input', () => {
 
   describe('Public Functions', () => {
     describe('register', () => {
-      it('should register the custom element', async () => {
+      it('should register the custom element', () => {
         const registeredTag = customElements.get('auro-input');
 
         expect(registeredTag).to.not.be.undefined;
@@ -1915,8 +1930,12 @@ describe('auro-input', () => {
       // (direct assignment triggers an infinite Lit update loop via reflected a11yActivedescendant)
       let capturedValue;
       Object.defineProperty(el.inputElement, 'ariaActiveDescendantElement', {
-        set(val) { capturedValue = val; },
-        get() { return capturedValue; },
+        set(val) {
+          capturedValue = val;
+        },
+        get() {
+          return capturedValue;
+        },
         configurable: true
       });
 
@@ -2099,7 +2118,8 @@ describe('auro-input', () => {
       // Simulate IMask calling parse with a yy/mm string where year <= 25
       const result = options.parse.call({ mask: 'yy/mm' }, '25/06');
       expect(result.getFullYear()).to.equal(2025);
-      expect(result.getMonth()).to.equal(5); // June = month index 5
+      // June = month index 5
+      expect(result.getMonth()).to.equal(5);
     });
 
     rawIt('toNorthAmericanFormat defaults day to 01 when format has no dd component', async () => {
@@ -2181,7 +2201,11 @@ describe('auro-input', () => {
           propagated = true;
         });
 
-        clearButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        clearButton.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Tab',
+          bubbles: true,
+          composed: true
+        }));
         expect(propagated).to.be.false;
       });
 
@@ -2238,5 +2262,15 @@ describe('auro-input', () => {
       expect(el.inputElement.hasAttribute('aria-invalid')).to.be.true;
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-input', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-input in small viewport', () => {
+  runFullTest(true);
 });
 

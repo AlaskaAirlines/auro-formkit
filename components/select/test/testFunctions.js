@@ -1,9 +1,12 @@
 import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 export async function setScreenSize(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {

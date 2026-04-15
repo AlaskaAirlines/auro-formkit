@@ -10,9 +10,12 @@
 |--------|--------|-------|--------|
 | `auro-counter` test count | 24 | 59 | +35 (+146%) |
 | `auro-counter-group` test count | 24 | 74 | +50 (+208%) |
-| **Combined tests** | **48** | **133** | **+85 (+177%)** |
+| **Combined unique tests** | **48** | **133** | **+85 (+177%)** |
+| **Combined test executions** | — | **266** | — |
 | Code coverage | 92.00% | 100% | +8.00% |
-| Test duration | ~1.8s | ~2.6s | +0.8s |
+| Test duration | ~1.8s | ~4.3s | +2.5s |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport).
 
 ## Per-File Coverage
 

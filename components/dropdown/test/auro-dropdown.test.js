@@ -1,12 +1,24 @@
-/* eslint-disable max-lines, jsdoc/require-jsdoc, no-return-await, no-undef, no-unused-expressions, function-paren-newline, lit-a11y/anchor-is-valid */
+/* eslint-disable max-lines, no-confusing-arrow, no-underscore-dangle, no-magic-numbers, max-statements-per-line, jsdoc/require-jsdoc, no-return-await, no-undef, no-unused-expressions, function-paren-newline, lit-a11y/anchor-is-valid */
 import { fixture, html, expect, oneEvent, elementUpdated } from "@open-wc/testing";
+import { setViewport } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import "../src/registered.js";
 import { expectPopoverShown, expectPopoverHidden } from './testFunctions.js';
 
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+
 useAccessibleIt();
 
-describe("auro-dropdown", () => {
+/**
+ * Runs the full dropdown test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
 
   describe('Rendering', () => {
     it("should be defined as a custom element", async () => {
@@ -774,7 +786,7 @@ describe("auro-dropdown", () => {
         const slot = el.shadowRoot.querySelector('slot:not([name])');
 
         await expect(slot).to.exist;
-        const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE);
+        const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE);
 
         await expect(assigned.length).to.be.greaterThan(0);
       });
@@ -1070,7 +1082,9 @@ describe("auro-dropdown", () => {
       await elementUpdated(el);
 
       let received = false;
-      el.trigger.addEventListener('focus', () => { received = true; });
+      el.trigger.addEventListener('focus', () => {
+        received = true;
+      });
 
       el.bindFocusEventToTrigger(new FocusEvent('focus'));
       await expect(received).to.be.true;
@@ -1329,7 +1343,9 @@ describe("auro-dropdown", () => {
       // The slot assigned nodes should include the div with a <input> child
       // Setup was done automatically. Verify focus event dispatches to trigger.
       let triggerFocused = false;
-      el.trigger.addEventListener('focus', () => { triggerFocused = true; });
+      el.trigger.addEventListener('focus', () => {
+        triggerFocused = true;
+      });
 
       const innerInput = el.querySelector('#innerInput');
       innerInput.focus();
@@ -1352,7 +1368,10 @@ describe("auro-dropdown", () => {
 
       el.hasFocus = true;
       el.handleDropdownToggle({
-        detail: { expanded: false, eventType: 'keydown' }
+        detail: {
+          expanded: false,
+          eventType: 'keydown'
+        }
       });
       await elementUpdated(el);
 
@@ -1503,7 +1522,9 @@ describe("auro-dropdown", () => {
       const dialog = bib.shadowRoot.querySelector('dialog');
 
       let cancelReceived = false;
-      bib.addEventListener('auro-bib-cancel', () => { cancelReceived = true; });
+      bib.addEventListener('auro-bib-cancel', () => {
+        cancelReceived = true;
+      });
 
       // Dispatch native cancel event on dialog (as if ESC was pressed on a modal dialog)
       dialog.dispatchEvent(new Event('cancel', { bubbles: false }));
@@ -1549,8 +1570,14 @@ describe("auro-dropdown", () => {
       const dialog = bib.shadowRoot.querySelector('dialog');
 
       // Dispatch Enter and Escape keydown on the dialog to hit the strategy handlers
-      dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-      dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      dialog.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true
+      }));
+      dialog.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true
+      }));
 
       // No errors expected
       await expect(el).to.exist;
@@ -1574,9 +1601,18 @@ describe("auro-dropdown", () => {
 
       // Verify handler was registered by dispatching touchmove
       let preventDefaultCalled = false;
-      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
-      touchEvent.composedPath = () => [document.body, document.documentElement, document];
-      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+      const touchEvent = new Event('touchmove', {
+        bubbles: true,
+        cancelable: true
+      });
+      touchEvent.composedPath = () => [
+        document.body,
+        document.documentElement,
+        document
+      ];
+      touchEvent.preventDefault = () => {
+        preventDefaultCalled = true;
+      };
 
       document.dispatchEvent(touchEvent);
 
@@ -1617,9 +1653,19 @@ describe("auro-dropdown", () => {
 
       // Simulate touchmove inside a scrollable child within the dialog
       let preventDefaultCalled = false;
-      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
-      touchEvent.composedPath = () => [scrollableEl, dialog, bib, document.body];
-      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+      const touchEvent = new Event('touchmove', {
+        bubbles: true,
+        cancelable: true
+      });
+      touchEvent.composedPath = () => [
+        scrollableEl,
+        dialog,
+        bib,
+        document.body
+      ];
+      touchEvent.preventDefault = () => {
+        preventDefaultCalled = true;
+      };
 
       document.dispatchEvent(touchEvent);
 
@@ -1659,9 +1705,19 @@ describe("auro-dropdown", () => {
       };
 
       let preventDefaultCalled = false;
-      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
-      touchEvent.composedPath = () => [scrollableEl, dialog, bib, document.body];
-      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+      const touchEvent = new Event('touchmove', {
+        bubbles: true,
+        cancelable: true
+      });
+      touchEvent.composedPath = () => [
+        scrollableEl,
+        dialog,
+        bib,
+        document.body
+      ];
+      touchEvent.preventDefault = () => {
+        preventDefaultCalled = true;
+      };
 
       document.dispatchEvent(touchEvent);
 
@@ -1690,9 +1746,18 @@ describe("auro-dropdown", () => {
       // composedPath includes a non-scrollable child then the dialog itself
       const nonScrollableChild = document.createElement('span');
       let preventDefaultCalled = false;
-      const touchEvent = new Event('touchmove', { bubbles: true, cancelable: true });
-      touchEvent.composedPath = () => [nonScrollableChild, dialog, document.body];
-      touchEvent.preventDefault = () => { preventDefaultCalled = true; };
+      const touchEvent = new Event('touchmove', {
+        bubbles: true,
+        cancelable: true
+      });
+      touchEvent.composedPath = () => [
+        nonScrollableChild,
+        dialog,
+        document.body
+      ];
+      touchEvent.preventDefault = () => {
+        preventDefaultCalled = true;
+      };
 
       document.dispatchEvent(touchEvent);
 
@@ -2131,6 +2196,14 @@ describe("auro-dropdown", () => {
       expectPopoverHidden(el);
     });
   });
+}
+
+// Desktop Test Suite
+describe("auro-dropdown", () => {
+  runFullTest(false);
 });
 
-
+// Mobile Test Suite
+describe("auro-dropdown in small viewport", () => {
+  runFullTest(true);
+});

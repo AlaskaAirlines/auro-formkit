@@ -1,14 +1,27 @@
 /* eslint-disable max-lines, no-undef, no-unused-expressions */
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import { TestAuroElement } from './testFixtures.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 // Register test element
 if (!customElements.get('test-auro-element')) {
   customElements.define('test-auro-element', TestAuroElement);
 }
 
-describe('AuroElement', () => {
+/**
+ * Runs the full layoutElement test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
 
   describe('Rendering', () => {
     it('should be successfully created in the document', async () => {
@@ -162,7 +175,7 @@ describe('AuroElement', () => {
         await elementUpdated(el);
 
         const wrapper = el.shadowRoot.querySelector('.wrapper');
-        const hasLayoutClass = [...wrapper.classList].some((c) => c.startsWith('layout-'));
+        const hasLayoutClass = [...wrapper.classList].some((cl) => cl.startsWith('layout-'));
         await expect(hasLayoutClass).to.be.false;
       });
 
@@ -242,4 +255,14 @@ describe('AuroElement', () => {
       await expect(wrapper.classList.contains('shape-pill-xl')).to.be.true;
     });
   });
+}
+
+// Desktop Test Suite
+describe('AuroElement', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('AuroElement in small viewport', () => {
+  runFullTest(true);
 });

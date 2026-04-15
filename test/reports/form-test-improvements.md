@@ -4,9 +4,12 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-form` test count | 28 | 71 | +43 |
+| `auro-form` unique test count | 28 | 71 | +43 |
+| `auro-form` test executions | — | 142 | — |
 | Coverage | 98.13% | 100% | +1.87% |
 | Test duration | ~3.3s | ~3.4s | +0.1s |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport). 32 tests skipped (pre-existing).
 
 ## Placeholders Filled
 

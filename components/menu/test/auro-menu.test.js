@@ -1,7 +1,11 @@
-/* eslint-disable max-lines, no-undef, no-magic-numbers, no-unused-expressions, no-console, no-plusplus, no-await-in-loop, init-declarations */
+/* eslint-disable max-lines, no-undef, no-underscore-dangle, max-statements-per-line, no-extra-parens, no-implicit-coercion, no-magic-numbers, no-unused-expressions, no-console, no-plusplus, no-await-in-loop, init-declarations */
 
 import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 import { arrayConverter, arraysAreEqual, isOptionInteractive } from '../src/auro-menu-utils.js';
 import {
   defaultFixture,
@@ -15,7 +19,16 @@ import {
 } from './testFixtures.js';
 import { getOptions } from './testFunctions.js';
 
-describe('auro-menu', () => {
+/**
+ * Runs the full menu test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
 
   describe('Rendering', () => {
     // Add missing tests
@@ -675,7 +688,7 @@ describe('auro-menu', () => {
       menuEl.navigateOptions('up');
       await elementUpdated(menuEl);
 
-      const selectedOption = options.find(opt => opt.classList.contains('active'));
+      const selectedOption = options.find((opt) => opt.classList.contains('active'));
       expect(selectedOption).to.not.be.undefined;
     });
 
@@ -1124,7 +1137,7 @@ describe('auro-menu', () => {
         const slot = menu.shadowRoot.querySelector('slot:not([name])');
 
         await expect(slot).to.exist;
-        const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE);
+        const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE);
 
         await expect(assigned.length).to.be.greaterThan(0);
       });
@@ -1153,7 +1166,7 @@ describe('auro-menu', () => {
 
   describe('Public Functions', () => {
     describe('register', () => {
-      it('should register the custom element', async () => {
+      it('should register the custom element', () => {
         const registeredTag = customElements.get('auro-menu');
 
         expect(registeredTag).to.not.be.undefined;
@@ -1601,15 +1614,36 @@ describe('auro-menu', () => {
 
   describe('auro-menu-utils', () => {
     it('arraysAreEqual should return true for identical arrays', () => {
-      expect(arraysAreEqual([1, 2, 3], [1, 2, 3])).to.be.true;
+      expect(arraysAreEqual([
+        1,
+        2,
+        3
+      ], [
+        1,
+        2,
+        3
+      ])).to.be.true;
     });
 
     it('arraysAreEqual should return false for different arrays', () => {
-      expect(arraysAreEqual([1, 2], [1, 3])).to.be.false;
+      expect(arraysAreEqual([
+        1,
+        2
+      ], [
+        1,
+        3
+      ])).to.be.false;
     });
 
     it('arraysAreEqual should return false for different lengths', () => {
-      expect(arraysAreEqual([1, 2], [1, 2, 3])).to.be.false;
+      expect(arraysAreEqual([
+        1,
+        2
+      ], [
+        1,
+        2,
+        3
+      ])).to.be.false;
     });
 
     it('arraysAreEqual should return true when both undefined', () => {
@@ -1689,7 +1723,10 @@ describe('auro-menu', () => {
       await elementUpdated(menu);
 
       // Don't set multiSelect, so it's single select mode
-      menu.menuService.selectByValue(['Stop 1', 'Stop 2']);
+      menu.menuService.selectByValue([
+        'Stop 1',
+        'Stop 2'
+      ]);
       // Should still work (takes first value)
     });
 
@@ -1743,7 +1780,9 @@ describe('auro-menu', () => {
       const option = el.querySelector('auro-menuoption[event]');
       if (option) {
         let eventFired = false;
-        menu.addEventListener('auroMenu-customEventFired', () => { eventFired = true; });
+        menu.addEventListener('auroMenu-customEventFired', () => {
+          eventFired = true;
+        });
         menu.handleCustomEvent(option);
         expect(eventFired).to.be.true;
       }
@@ -1823,4 +1862,14 @@ describe('auro-menu', () => {
     });
   });
 
+}
+
+// Desktop Test Suite
+describe('auro-menu', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-menu in small viewport', () => {
+  runFullTest(true);
 });

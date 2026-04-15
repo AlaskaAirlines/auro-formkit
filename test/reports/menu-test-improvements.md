@@ -10,11 +10,14 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-menu` test count | 55 | 128 | +73 |
-| `auro-menuoption` test count | 0 | 24 | +24 |
-| **Total Tests** | **55** | **152** | **+97 (+176%)** |
+| `auro-menu` unique test count | 55 | 128 | +73 |
+| `auro-menuoption` unique test count | 0 | 24 | +24 |
+| **Total unique tests** | **55** | **152** | **+97 (+176%)** |
+| **Total test executions** | — | **304** | — |
 | Code coverage | 80.47% (41 failures) | 96.96% | +16.49% |
-| Test duration | ~81.5s (failures) | ~2.1s | -79.4s |
+| Test duration | ~81.5s (failures) | ~3.5s | -78.0s |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport).
 
 Per-file line coverage:
 - `auro-menu.js`: 99.42%

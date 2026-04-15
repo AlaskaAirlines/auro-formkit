@@ -12,9 +12,12 @@
 |--------|--------|-------|--------|
 | `auro-radio` test count | 10 | 58 | +48 |
 | `auro-radio-group` test count | 6 | 64 | +58 |
-| **Total Tests** | **16** | **122** | **+106 (+663%)** |
+| **Total unique tests** | **16** | **122** | **+106 (+663%)** |
+| **Total test executions** | — | **244** | — |
 | Code coverage | 96.56% | 100% | +3.44% |
-| Test duration | ~1.2s | ~1.8s | +0.6s |
+| Test duration | ~1.2s | ~2.2s | +1.0s |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport).
 
 Per-file line coverage:
 - `auro-radio.js`: 100%

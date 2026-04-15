@@ -1,10 +1,23 @@
-/* eslint-disable no-undef, max-lines, max-statements, no-unused-expressions */
+/* eslint-disable no-undef, max-lines, max-statements, no-unused-expressions, no-implicit-coercion, prefer-destructuring */
 
 import {elementUpdated, expect, fixture, html} from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 import { errorFixture } from './testFixtures.js';
 
-describe('auro-radio', () => {
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+
+/**
+ * Runs the full radio test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
 
   describe('Rendering', () => {
     it('should be defined as a custom element', async () => {
@@ -759,5 +772,15 @@ describe('auro-radio', () => {
       });
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-radio', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-radio in small viewport', () => {
+  runFullTest(true);
 });
 

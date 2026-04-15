@@ -3,11 +3,23 @@
 import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport, sendKeys } from '@web/test-runner-commands';
 import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 import { dateSlotFixture, popoverSlotFixture, inDialogFixture, inDrawerFixture } from './testFixtures.js';
 import { setInputValue, getInput } from './testFunctions.js';
 
-describe('auro-datepicker', () => {
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+
+/**
+ * Runs the full datepicker test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
   describe('Rendering', () => {
     // Add missing tests
 
@@ -56,20 +68,22 @@ describe('auro-datepicker', () => {
       }
     });
 
-    it('should render a single calendar by default', async () => {
-      const el = await fixture(html`
-        <auro-datepicker></auro-datepicker>
-      `);
+    if (!mobileView) {
+      it('should render a single calendar by default', async () => {
+        const el = await fixture(html`
+          <auro-datepicker></auro-datepicker>
+        `);
 
-      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-      await dropdown.querySelector('[auro-input]').click();
-      await expect(dropdown.isPopoverVisible).to.be.true;
-      await elementUpdated(calendar.shadowRoot);
-      await nextFrame();
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        await dropdown.querySelector('[auro-input]').click();
+        await expect(dropdown.isPopoverVisible).to.be.true;
+        await elementUpdated(calendar.shadowRoot);
+        await nextFrame();
 
-      await expect(calendar.numCalendars).to.be.equal(1);
-    });
+        await expect(calendar.numCalendars).to.be.equal(1);
+      });
+    }
 
     it('should correctly parse date slot name and pass content down to the cell', async () => {
       const el = await dateSlotFixture();
@@ -107,30 +121,32 @@ describe('auro-datepicker', () => {
   describe('User Stories', () => {
     // Add missing tests
 
-    it('should hide the dropdown when it or its children lose focus', async () => {
-      const el = await fixture(html`
-        <div>
-          <auro-datepicker></auro-datepicker>
-          <button>Test Button</button>
-        </div>
-      `);
+    if (!mobileView) {
+      it('should hide the dropdown when it or its children lose focus', async () => {
+        const el = await fixture(html`
+          <div>
+            <auro-datepicker></auro-datepicker>
+            <button>Test Button</button>
+          </div>
+        `);
 
-      const datepicker = el.querySelector('auro-datepicker');
-      const button = el.querySelector('button');
+        const datepicker = el.querySelector('auro-datepicker');
+        const button = el.querySelector('button');
 
-      const input = getInput(datepicker, 0);
-      input.click();
+        const input = getInput(datepicker, 0);
+        input.click();
 
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
+        await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
 
-      // wait for a frame to add `click` event listener correctly
-      await nextFrame();
+        // wait for a frame to add `click` event listener correctly
+        await nextFrame();
 
-      button.click();
+        button.click();
 
-      await elementUpdated(datepicker);
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
-    });
+        await elementUpdated(datepicker);
+        await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
+      });
+    }
 
     it('should not restore focus to trigger when bib closes due to tab-out', async () => {
       await setViewport({ width: 1024, height: 800 });
@@ -393,7 +409,7 @@ describe('auro-datepicker', () => {
 
       it('should render the correct number of calendars with calendarStartDate and calendarEndDate in mobile', async () => {
         await setViewport({
-          width: 500,
+          width: mobileBreakpointWidth,
           height: 800
         });
 
@@ -522,7 +538,7 @@ describe('auro-datepicker', () => {
     describe('fullscreenBreakpoint', () => {
       it('should render twelve calendars in mobile version', async () => {
         await setViewport({
-          width: 500,
+          width: mobileBreakpointWidth,
           height: 800
         });
 
@@ -543,7 +559,7 @@ describe('auro-datepicker', () => {
       });
 
       it('should focus the close button when the fullscreen dialog opens', async () => {
-        await setViewport({ width: 500, height: 800 });
+        await setViewport({ width: mobileBreakpointWidth, height: 800 });
 
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -565,7 +581,7 @@ describe('auro-datepicker', () => {
       });
 
       it('should not close the fullscreen dialog when Tab key is pressed', async () => {
-        await setViewport({ width: 500, height: 800 });
+        await setViewport({ width: mobileBreakpointWidth, height: 800 });
 
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -594,7 +610,7 @@ describe('auro-datepicker', () => {
       });
 
       it('should restore trigger inert and focus after fullscreen dialog closes', async () => {
-        await setViewport({ width: 500, height: 800 });
+        await setViewport({ width: mobileBreakpointWidth, height: 800 });
 
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -621,7 +637,7 @@ describe('auro-datepicker', () => {
       });
 
       it('should not cycle through content in fullscreen bib when Tab is pressed', async () => {
-        await setViewport({ width: 500, height: 800 });
+        await setViewport({ width: mobileBreakpointWidth, height: 800 });
 
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -3221,7 +3237,7 @@ describe('auro-datepicker', () => {
 
       it('should close the mobile bib when the done button is clicked', async () => {
         await setViewport({
-          width: 500,
+          width: mobileBreakpointWidth,
           height: 800
         });
 
@@ -3372,4 +3388,14 @@ describe('auro-datepicker', () => {
     });
 
   });
+}
+
+// Desktop Test Suite
+describe('auro-datepicker', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-datepicker in small viewport', () => {
+  runFullTest(true);
 });

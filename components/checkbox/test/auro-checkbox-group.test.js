@@ -3,9 +3,22 @@
 /* eslint-disable max-lines */
 /* no-warning-comments */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 
-describe('auro-checkbox-group', () => {
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+
+/**
+ * Runs the full checkbox-group test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
 
   describe('Rendering', () => {
     it('should render a shadow root with a fieldset', async () => {
@@ -863,38 +876,40 @@ describe('auro-checkbox-group', () => {
         expect(fired).to.be.true;
       });
 
-      it('should reset focusWithin when an outside click is detected', async () => {
-        const el = await fixture(html`
-          <auro-checkbox-group required>
-            <auro-checkbox value="one">One</auro-checkbox>
-          </auro-checkbox-group>
-        `);
+      if (!mobileView) {
+        it('should reset focusWithin when an outside click is detected', async () => {
+          const el = await fixture(html`
+            <auro-checkbox-group required>
+              <auro-checkbox value="one">One</auro-checkbox>
+            </auro-checkbox-group>
+          `);
 
-        const cb = el.querySelector('auro-checkbox');
+          const cb = el.querySelector('auro-checkbox');
 
-        // Click the internal input to trigger the full event chain
-        cb.shadowRoot.querySelector('input').click();
-        await elementUpdated(el);
+          // Click the internal input to trigger the full event chain
+          cb.shadowRoot.querySelector('input').click();
+          await elementUpdated(el);
 
-        expect(el.touched).to.be.true;
-        expect(el.focusWithin).to.be.true;
+          expect(el.touched).to.be.true;
+          expect(el.focusWithin).to.be.true;
 
-        // Set the active group reference (normally done by auroCheckbox-focusout)
-        document.auroCheckboxGroupActive = el;
+          // Set the active group reference (normally done by auroCheckbox-focusout)
+          document.auroCheckboxGroupActive = el;
 
-        // Create and append an outside element, then click it
-        const outsideEl = document.createElement('button');
-        document.body.appendChild(outsideEl);
+          // Create and append an outside element, then click it
+          const outsideEl = document.createElement('button');
+          document.body.appendChild(outsideEl);
 
-        outsideEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+          outsideEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
-        await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 100));
 
-        expect(el.focusWithin).to.be.false;
+          expect(el.focusWithin).to.be.false;
 
-        // Cleanup
-        document.body.removeChild(outsideEl);
-      });
+          // Cleanup
+          document.body.removeChild(outsideEl);
+        });
+      }
     });
     describe('auroCheckbox-focusout', () => {
       it('should set document.auroCheckboxGroupActive to the group', async () => {
@@ -1095,4 +1110,14 @@ describe('auro-checkbox-group', () => {
       expect(cb.checked).to.be.true;
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-checkbox-group', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-checkbox-group in small viewport', () => {
+  runFullTest(true);
 });

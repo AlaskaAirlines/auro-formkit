@@ -2,10 +2,13 @@
 
 import { fixture, html } from '@open-wc/testing';
 import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '@aurodesignsystem/auro-dialog';
 import '@aurodesignsystem/auro-drawer';
 import '../src/registered.js';
 import '../../menu/src/registered.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 /**
  * Testing fixture for persistInput attribute.
@@ -15,7 +18,7 @@ import '../../menu/src/registered.js';
 export async function persistInputFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -44,7 +47,7 @@ export async function persistInputFixture(mobileView) {
 export async function shiftTabFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -73,7 +76,7 @@ export async function shiftTabFixture(mobileView) {
 export async function shiftTabDisabledFirstFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -102,7 +105,7 @@ export async function shiftTabDisabledFirstFixture(mobileView) {
 export async function defaultFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -130,7 +133,7 @@ export async function defaultFixture(mobileView) {
 export async function nestedMenuFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -163,7 +166,7 @@ export async function nestedMenuFixture(mobileView) {
 export async function presetValueFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -191,7 +194,7 @@ export async function presetValueFixture(mobileView) {
 export async function checkmarkFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -220,7 +223,7 @@ export async function checkmarkFixture(mobileView) {
 export async function suggestFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -248,7 +251,7 @@ export async function suggestFixture(mobileView) {
 export async function requiredFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -276,7 +279,7 @@ export async function requiredFixture(mobileView) {
 export async function noMatchFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -305,7 +308,7 @@ export async function noMatchFixture(mobileView) {
 export async function persistentFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -334,7 +337,7 @@ export async function persistentFixture(mobileView) {
 export async function filterFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -358,7 +361,7 @@ export async function filterFixture(mobileView) {
 export async function requiredFilterBehaviorFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -387,7 +390,7 @@ export async function requiredFilterBehaviorFixture(mobileView) {
 export async function customEventFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {
@@ -414,7 +417,7 @@ export async function customEventFixture(mobileView) {
 export async function noFilterFixture(mobileView) {
   if (mobileView) {
     await setViewport({
-      width: 500,
+      width: mobileBreakpointWidth,
       height: 800
     });
   } else {

@@ -5,12 +5,25 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-lines */
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 useAccessibleIt();
 
-describe('auro-checkbox', () => {
+/**
+ * Runs the full checkbox test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
 
   describe('Rendering', () => {
     it('should render a shadow root with an input element', async () => {
@@ -627,4 +640,14 @@ describe('auro-checkbox', () => {
       expect(el.checked).to.not.be.true;
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-checkbox', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-checkbox in small viewport', () => {
+  runFullTest(true);
 });

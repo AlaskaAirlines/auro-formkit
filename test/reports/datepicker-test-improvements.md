@@ -8,9 +8,12 @@
 
 | Metric | Before | After | Change |
 |--------|--------|-------|--------|
-| `auro-datepicker` tests | 76 | 196 | +120 (+158%) |
+| `auro-datepicker` unique tests | 76 | 196 | +120 (+158%) |
+| `auro-datepicker` test executions | — | 390 | — |
 | Combined coverage | 89.35% | 99.92% | +10.57% |
-| Test duration | ~7.2s | ~8.4s | +1.2s |
+| Test duration | ~7.2s | ~14.4s | +7.2s |
+
+All tests run twice (desktop 800×800 + mobile 575px viewport). 2 tests skipped.
 
 ## Per-File Coverage
 
