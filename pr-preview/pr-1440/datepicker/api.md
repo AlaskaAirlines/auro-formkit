@@ -111,7 +111,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
-  <auro-datepicker value="03/31/2026">
+  <auro-datepicker>
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
@@ -125,7 +125,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 ```html
-<auro-datepicker value="03/31/2026">
+<auro-datepicker>
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
@@ -1335,7 +1335,7 @@ To view this demo, set your window to a mobile screen size.
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
-  <auro-datepicker value="03/31/2026">
+  <auro-datepicker>
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
@@ -1349,7 +1349,7 @@ To view this demo, set your window to a mobile screen size.
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 ```html
-<auro-datepicker value="03/31/2026">
+<auro-datepicker>
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
@@ -1366,7 +1366,7 @@ The `fromLabel` slot sets the label used for the input. When the `range` attribu
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
-  <auro-datepicker value="03/31/2026">
+  <auro-datepicker>
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
@@ -1380,7 +1380,7 @@ The `fromLabel` slot sets the label used for the input. When the `range` attribu
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 ```html
-<auro-datepicker value="03/31/2026">
+<auro-datepicker>
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>

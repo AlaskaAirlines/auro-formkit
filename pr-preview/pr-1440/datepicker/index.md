@@ -28,7 +28,7 @@ The `<auro-datepicker>` element should be used in situations where users may:
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
   <!-- The below content is automatically added from ./../apiExamples/basic.html -->
-  <auro-datepicker value="03/31/2026">
+  <auro-datepicker>
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
@@ -42,7 +42,7 @@ The `<auro-datepicker>` element should be used in situations where users may:
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
 
 ```html
-<auro-datepicker value="03/31/2026">
+<auro-datepicker>
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
