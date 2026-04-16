@@ -45,15 +45,11 @@ export const defaultDocsProcessorConfig = {
  * @returns {import('@aurodesignsystem/auro-library/scripts/utils/sharedFileProcessorUtils').FileProcessorConfig[]}
  */
 export const fileConfigs = (config) => [
+  // README.md
   {
     identifier: 'README.md',
-    input: fromAuroComponentRoot(`docs/templates/kitReadmeTemplate.md`),
+    input: fromAuroComponentRoot(`docs/templates/componentReadmeTemplate.md`),
     output: fromAuroComponentRoot(`README.md`)
-  },
-  {
-    identifier: 'RELEASE_NOTES.md',
-    input: fromAuroComponentRoot(`docs/templates/RELEASE_NOTES.md`),
-    output: fromAuroComponentRoot(`RELEASE_NOTES.md`)
   }
 ];
 
