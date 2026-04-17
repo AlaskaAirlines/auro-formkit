@@ -240,7 +240,6 @@ export class AuroCalendarCell extends LitElement {
    * @returns Boolean - True if the date is a highlighted date.
    */
   isReferenceDate(dateStr) {
-
     // If the datepicker has highlighted dates specified
     if (this.datepicker && this.datepicker.hasAttribute('referenceDates')) {
 
@@ -250,8 +249,8 @@ export class AuroCalendarCell extends LitElement {
       // Guard clause: no dates in the array
       if (!Array.isArray(referenceDates) || referenceDates.length === 0) return false;
 
-      // Compare the dateStr (MM_DD_YYYY) to the referenceDates (MM-DD-YYYY)
-      const compareDateStr = dateStr.replace(/_/gu, '-');
+      // Compare the dateStr (MM_DD_YYYY) to the referenceDates (MM/DD/YYYY)
+      const compareDateStr = dateStr.replace(/_/gu, '/');
 
       // Check if the compareDateStr is in the referenceDates array
       return referenceDates.includes(compareDateStr);

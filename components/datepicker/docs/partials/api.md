@@ -205,7 +205,7 @@ The `format` attribute is used to define the date format used by the datepicker.
 
 You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
 
-The default value of `fullscreenBreakpoint` is `sm`. 
+The default value of `fullscreenBreakpoint` is `sm`.
 
 Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens).
 
@@ -324,7 +324,7 @@ This example demonstrates that behavior.
 
 ### Month Names Localization
 
-The datepicker supports localized month names through the `monthNames` property. 
+The datepicker supports localized month names through the `monthNames` property.
 
 This example demonstrates how to set the `monthNames` property to Korean month names, with a Korean date format.
 
@@ -367,7 +367,7 @@ You can choose to outline dates for the user to reference by passing a string co
 
 Example:
 ```html
-<auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]'></auro-datepicker>
+<auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]'></auro-datepicker>
 ```
 
 <div class="exampleWrapper">

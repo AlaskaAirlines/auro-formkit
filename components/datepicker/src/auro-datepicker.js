@@ -495,7 +495,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Dates that the user should have for reference as part of their decision making when selecting a date.
-       * This should be a JSON string array of dates in the format of `MM-DD-YYYY`.
+       * This should be a JSON string array of dates in the format of `MM/DD/YYYY`.
        */
       referenceDates: {
         type: Array,

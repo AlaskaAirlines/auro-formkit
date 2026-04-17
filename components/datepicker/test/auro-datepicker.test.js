@@ -954,7 +954,7 @@ describe('auro-datepicker', () => {
     describe('referenceDates', () => {
       it('should mark dates as reference dates when referenceDates attribute is set', async () => {
         const el = await fixture(html`
-          <auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]' centralDate="10-10-2025"></auro-datepicker>
+          <auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' centralDate="10/10/2025"></auro-datepicker>
         `);
 
         await elementUpdated(el);
