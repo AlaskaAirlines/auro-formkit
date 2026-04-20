@@ -1225,6 +1225,14 @@ export class AuroDatePicker extends AuroElement {
       this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
     }
 
+    if (changedProperties.has('referenceDates')) {
+      // backward compatibility for old format of referenceDates which is a stringified array with - instead of / as separator, e.g. ["10-22-2025","10-23-2025"]
+      const stringfiedDates = JSON.stringify(this.referenceDates);
+      if (stringfiedDates.includes('-')) {
+        this.referenceDates = this.referenceDates.map(date => date.replace(/-/gu, '/' ));
+      }
+    }
+
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.previousTabIndex = this.getAttribute('tabindex');
