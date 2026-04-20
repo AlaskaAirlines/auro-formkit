@@ -920,8 +920,33 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   handleInputValueChange(event) {
+    // When the event comes from the fullscreen bib input, sync the value to
+    // the trigger input. Setting trigger.value triggers Lit's updated()
+    // (async, microtask) which fires notifyValueChanged() → another 'input'
+    // event from the trigger. The _syncingBibValue guard persists across the
+    // async boundary and prevents that re-entrant event from running the
+    // non-fullscreen path (which would call clear() → hideBib()).
+    // When the event comes from the fullscreen bib input, sync the value to
+    // the trigger and run filtering, but suppress the re-entrant input event
+    // that the trigger fires (via Lit updated() → notifyValueChanged()) so
+    // the non-fullscreen hide/clear logic doesn't close the dialog.
     if (event.target === this.inputInBib) {
+      this._syncingBibValue = true;
       this.input.value = this.inputInBib.value;
+      this.input.updateComplete.then(() => {
+        this._syncingBibValue = false;
+      });
+
+      // Run filtering inline — the re-entrant event won't reach this code.
+      this.menu.matchWord = this.inputInBib.value;
+      this.optionActive = null;
+      this.handleMenuOptions();
+      this.dispatchEvent(new CustomEvent('inputValue', { detail: { value: this.inputValue } }));
+      return;
+    }
+
+    // Ignore re-entrant input events caused by the bib→trigger sync above.
+    if (this._syncingBibValue) {
       return;
     }
 
