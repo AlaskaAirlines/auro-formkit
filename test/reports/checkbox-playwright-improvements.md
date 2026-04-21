@@ -107,6 +107,16 @@ An `#outside-element` button sits outside all checkboxes for focus-loss/validati
 | Disabled group enforcement | Tested per-checkbox in WTR | Tested via real click on checkbox inside a disabled group |
 | Cross-framework validation | Tests only run in WTR's Chromium context | Same suite runs in React + Svelte |
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Focus before keyboard action | Added `await expect(checkbox(...)).toBeFocused()` after `focusCheckbox()` before Space key presses | Space toggles on, Space toggles off, Space on disabled |
+| Rapid sequential clicks | Added `await expect.poll(() => isChecked(...)).toBe(true)` between consecutive clicks | Clicking multiple checkboxes, unchecking one does not affect others |
+| Required group check/uncheck | Added intermediate `expect.poll` waits between check → uncheck → blur steps | Required group clears error |
+
 ## Architecture
 
 - **Shared suite pattern**: `checkbox-interaction.suite.ts` exports `checkboxInteractionSuite(framework)`, consumed by both framework spec files

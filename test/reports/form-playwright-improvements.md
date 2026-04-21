@@ -42,10 +42,19 @@ Added **23 Playwright interaction tests** for `auro-form`, running across both R
 | `mixed` | auro-input + auro-checkbox-group + submit + reset | Multi-element forms |
 | `validation` | Required + optional auro-inputs + submit | Validation error display |
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Shadow DOM focus delegation | Updated `focusInput()` helper to poll-confirm focus via `el.shadowRoot.activeElement === inp` before keyboard actions | Enter key triggers form submit, Enter key does not submit when invalid |
+| Fixed timeout for negative assertion | Replaced `page.waitForTimeout(500)` with `expect.poll(..., { timeout: 2_000 }).toBe(false)` | Enter key does not submit when invalid |
+
 ## Verification
 
 ```
-React:   23 passed (11.8s)
-Svelte:  23 passed (22.4s)
+React:   23 passed
+Svelte:  23 passed
 Total:   46 passed
 ```
