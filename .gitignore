@@ -45,3 +45,4 @@ build-storybook.log
 apps/svelte-framework/test-results/.last-run.json
 test-results
 /apps/**/playwright-report
+/apps/**/coverage-code

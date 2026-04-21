@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './coverage-fixture';
 
 /** Poll until auro-select.value matches the expected value or we time out. */
 async function waitForSelectValue(page: Page, expected: string, timeout = 3000) {

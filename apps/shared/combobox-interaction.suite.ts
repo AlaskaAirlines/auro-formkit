@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -55,6 +55,17 @@ async function typeInCombobox(page: Page, fixture: string, text: string) {
   await page.keyboard.type(text, { delay: 30 });
 }
 
+/** Wait for at least one option to be rendered in the open bib. */
+async function waitForOptionsReady(page: Page, fixture: string) {
+  await expect.poll(() =>
+    combobox(page, fixture).evaluate((el: any) => {
+      const opts = el.querySelectorAll('auro-menuoption:not([disabled])');
+      return opts.length > 0;
+    }),
+    { timeout: 5_000 },
+  ).toBe(true);
+}
+
 // ─── Suite ────────────────────────────────────────────────────────────────────
 
 interface SuiteOptions {
@@ -81,6 +92,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('ArrowDown / ArrowUp cycle through options', async ({ page }) => {
         await typeInCombobox(page, 'default', 'a');
         await waitForBibOpen(page, 'default');
+        await waitForOptionsReady(page, 'default');
 
         // First ArrowDown moves from default active (index 0) to index 1
         await page.keyboard.press('ArrowDown');
@@ -98,6 +110,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('ArrowDown / ArrowUp navigate nested menus', async ({ page }) => {
         await typeInCombobox(page, 'nested', 'option');
         await waitForBibOpen(page, 'nested');
+        await waitForOptionsReady(page, 'nested');
 
         // Navigate through the flat+nested ordering:
         // option 1 (already active) → option a → option b → option 2 → option 1
@@ -121,6 +134,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('Alt+ArrowDown jumps to the last option', async ({ page }) => {
         await typeInCombobox(page, 'three-options', 'a');
         await waitForBibOpen(page, 'three-options');
+        await waitForOptionsReady(page, 'three-options');
 
         await page.keyboard.press('Alt+ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Grapes');
@@ -129,6 +143,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('Meta+ArrowDown jumps to the last option', async ({ page }) => {
         await typeInCombobox(page, 'three-options', 'a');
         await waitForBibOpen(page, 'three-options');
+        await waitForOptionsReady(page, 'three-options');
 
         await page.keyboard.press('Meta+ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Grapes');
@@ -137,6 +152,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('Alt+ArrowUp jumps to the first option', async ({ page }) => {
         await typeInCombobox(page, 'three-options', 'a');
         await waitForBibOpen(page, 'three-options');
+        await waitForOptionsReady(page, 'three-options');
 
         // Navigate away from first
         await page.keyboard.press('ArrowDown');
@@ -149,6 +165,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('Meta+ArrowUp jumps to the first option', async ({ page }) => {
         await typeInCombobox(page, 'three-options', 'a');
         await waitForBibOpen(page, 'three-options');
+        await waitForOptionsReady(page, 'three-options');
 
         await page.keyboard.press('ArrowDown');
         await page.keyboard.press('ArrowDown');
@@ -160,6 +177,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('Home jumps to the first enabled option', async ({ page }) => {
         await typeInCombobox(page, 'three-options', 'a');
         await waitForBibOpen(page, 'three-options');
+        await waitForOptionsReady(page, 'three-options');
 
         // Navigate to last
         await page.keyboard.press('ArrowDown');
@@ -172,6 +190,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('Home skips a disabled first option', async ({ page }) => {
         await typeInCombobox(page, 'disabled-first', 'a');
         await waitForBibOpen(page, 'disabled-first');
+        await waitForOptionsReady(page, 'disabled-first');
 
         // Navigate away
         await page.keyboard.press('ArrowDown');
@@ -185,6 +204,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('End jumps to the last option', async ({ page }) => {
         await typeInCombobox(page, 'three-options', 'a');
         await waitForBibOpen(page, 'three-options');
+        await waitForOptionsReady(page, 'three-options');
 
         await page.keyboard.press('End');
         await expect.poll(() => activeOptionValue(page, 'three-options')).toBe('Grapes');
@@ -206,6 +226,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('Enter selects the active option and closes the bib', async ({ page }) => {
         await typeInCombobox(page, 'default', 'a');
         await waitForBibOpen(page, 'default');
+        await waitForOptionsReady(page, 'default');
 
         // Move to Oranges
         await page.keyboard.press('ArrowDown');
@@ -332,6 +353,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       test('populates live region when an option is activated', async ({ page }) => {
         await typeInCombobox(page, 'no-filter', 'a');
         await waitForBibOpen(page, 'no-filter');
+        await waitForOptionsReady(page, 'no-filter');
 
         await page.keyboard.press('ArrowDown');
 
@@ -470,6 +492,8 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       await expect.poll(async () =>
         combobox(page, 'default').evaluate((el: any) => Boolean(el.dropdown?.isBibFullscreen)),
       ).toBe(true);
+
+      await waitForOptionsReady(page, 'default');
 
       await page.keyboard.press('ArrowDown');
       await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');

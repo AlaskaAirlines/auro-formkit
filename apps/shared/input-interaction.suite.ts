@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -104,6 +104,7 @@ export function inputInteractionSuite(framework: string) {
     test.describe('Validation', () => {
       test('required field shows valueMissing on blur when empty', async ({ page }) => {
         await focusNative(page, 'required');
+        await expect(auroInput(page, 'required').locator('input')).toBeFocused();
         await page.click('#outside-element');
 
         await expect.poll(() => getValidity(page, 'required')).toBe('valueMissing');
@@ -160,6 +161,7 @@ export function inputInteractionSuite(framework: string) {
 
       test('noValidate prevents validation on blur', async ({ page }) => {
         await focusNative(page, 'no-validate');
+        await expect(auroInput(page, 'no-validate').locator('input')).toBeFocused();
         await page.click('#outside-element');
 
         // validity should remain undefined/null (untouched)
@@ -180,6 +182,7 @@ export function inputInteractionSuite(framework: string) {
         });
 
         await focusNative(page, 'required');
+        await expect(auroInput(page, 'required').locator('input')).toBeFocused();
         await page.click('#outside-element');
 
         await expect.poll(() =>

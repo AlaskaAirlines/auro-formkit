@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -37,6 +37,14 @@ async function focusInput(page: Page, fixture: string, nth = 0) {
     const inp = el.shadowRoot.querySelector('input');
     if (inp) inp.focus();
   });
+  // Confirm focus landed on the inner input
+  await expect.poll(() =>
+    input(page, fixture, nth).evaluate((el: any) => {
+      const inp = el.shadowRoot.querySelector('input');
+      return el.shadowRoot.activeElement === inp;
+    }),
+    { timeout: 5_000 },
+  ).toBe(true);
 }
 
 /** Get the form's value object. */
@@ -249,9 +257,12 @@ export function formInteractionSuite(framework: string) {
         });
 
         await page.keyboard.press('Enter');
-        await page.waitForTimeout(500);
 
-        expect(await form(page, 'simple').evaluate((el: any) => (el as any).__submitFired)).toBe(false);
+        // Give time for any async submit handler to fire
+        await expect.poll(() =>
+          form(page, 'simple').evaluate((el: any) => (el as any).__submitFired),
+          { timeout: 2_000 },
+        ).toBe(false);
       });
     });
 
@@ -368,6 +379,8 @@ export function formInteractionSuite(framework: string) {
       test('form collects values from input and checkbox-group', async ({ page }) => {
         await typeInInput(page, 'mixed', 'Jane', 0);
         await page.locator('[data-testid="mixed"] auro-checkbox').nth(0).click();
+        // Wait for first checkbox to register before clicking the next
+        await expect.poll(() => formValue(page, 'mixed').then((v: any) => v.preferences), { timeout: 5_000 }).toContain('newsletter');
         await page.locator('[data-testid="mixed"] auro-checkbox').nth(1).click();
 
         const value = await formValue(page, 'mixed');

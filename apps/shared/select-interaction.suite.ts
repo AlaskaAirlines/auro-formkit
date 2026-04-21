@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -61,6 +61,15 @@ async function focusTrigger(page: Page, fixture: string) {
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     dropdown.trigger.focus();
   });
+  // Confirm focus landed on the trigger
+  await expect.poll(() =>
+    select(page, fixture).evaluate((el: any) => {
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      return document.activeElement === dropdown.trigger ||
+             dropdown.trigger?.matches(':focus');
+    }),
+    { timeout: 5_000 },
+  ).toBe(true);
 }
 
 // ─── Suite ────────────────────────────────────────────────────────────────────
@@ -90,8 +99,8 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
 
-        // First option should be active by default
-        await expect.poll(() => activeOptionValue(page, 'default')).toBe('Apples');
+        // Wait for the menu to fully initialize its active option before pressing keys
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');
@@ -125,6 +134,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Alt+ArrowDown jumps to the last option', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('Alt+ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Grapes');
@@ -133,6 +143,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Meta+ArrowDown jumps to the last option', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('Meta+ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Grapes');
@@ -141,6 +152,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Alt+ArrowUp jumps to the first option', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         // Navigate away first
         await page.keyboard.press('ArrowDown');
@@ -153,6 +165,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Meta+ArrowUp jumps to the first option', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('ArrowDown');
         await page.keyboard.press('ArrowDown');
@@ -164,6 +177,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Home jumps to the first option', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('ArrowDown');
         await page.keyboard.press('ArrowDown');
@@ -175,6 +189,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('End jumps to the last option', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('End');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Grapes');
@@ -183,6 +198,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Home skips disabled first option', async ({ page }) => {
         await openBib(page, 'disabled-first');
         await waitForBibOpen(page, 'disabled-first');
+        await expect.poll(() => activeOptionValue(page, 'disabled-first'), { timeout: 5_000 }).not.toBeNull();
 
         // Navigate away first
         await page.keyboard.press('ArrowDown');
@@ -196,6 +212,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('End skips disabled last option', async ({ page }) => {
         await openBib(page, 'disabled-last');
         await waitForBibOpen(page, 'disabled-last');
+        await expect.poll(() => activeOptionValue(page, 'disabled-last'), { timeout: 5_000 }).not.toBeNull();
 
         await page.keyboard.press('End');
         // Should skip disabled 'Grapes' and land on 'Bananas'
@@ -205,6 +222,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Meta+ArrowDown skips disabled last option', async ({ page }) => {
         await openBib(page, 'disabled-last');
         await waitForBibOpen(page, 'disabled-last');
+        await expect.poll(() => activeOptionValue(page, 'disabled-last'), { timeout: 5_000 }).not.toBeNull();
 
         await page.keyboard.press('Meta+ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'disabled-last')).toBe('Bananas');
@@ -213,6 +231,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Alt+ArrowDown skips disabled last option', async ({ page }) => {
         await openBib(page, 'disabled-last');
         await waitForBibOpen(page, 'disabled-last');
+        await expect.poll(() => activeOptionValue(page, 'disabled-last'), { timeout: 5_000 }).not.toBeNull();
 
         await page.keyboard.press('Alt+ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'disabled-last')).toBe('Bananas');
@@ -249,6 +268,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Enter selects the active option and closes the bib', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');
@@ -261,6 +281,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Tab selects the active option and closes the bib', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');
@@ -273,6 +294,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
       test('Shift+Tab selects the active option and closes the bib', async ({ page }) => {
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
+        await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
         await page.keyboard.press('ArrowDown');
         await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');
@@ -695,6 +717,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
     test('Enter selects option and closes fullscreen dialog', async ({ page }) => {
       await openBib(page, 'default');
       await waitForBibOpen(page, 'default');
+      await expect.poll(() => activeOptionValue(page, 'default'), { timeout: 5_000 }).toBe('Apples');
 
       await page.keyboard.press('ArrowDown');
       await expect.poll(() => activeOptionValue(page, 'default')).toBe('Oranges');

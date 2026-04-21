@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './coverage-fixture';
 
 /** Wait for auro-datepicker to be defined and for its internal dropdown to
  * be fully initialized.  Checking only customElements.get() is not

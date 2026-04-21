@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -250,8 +250,9 @@ export function counterInteractionSuite(framework: string) {
         });
         await waitForBibOpen(page, 'dropdown-group');
 
-        // Tab to the first counter
+        // Tab to the first counter and confirm focus landed
         await page.keyboard.press('Tab');
+        await expect(counter(page, 'dropdown-group').first()).toBeFocused();
         const before = await counterValue(page, 'dropdown-group', 0);
         await page.keyboard.press('ArrowUp');
         await expect.poll(() => counterValue(page, 'dropdown-group', 0)).toBe(before + 1);
@@ -266,6 +267,7 @@ export function counterInteractionSuite(framework: string) {
 
         // Tab to the first counter, increment then decrement
         await page.keyboard.press('Tab');
+        await expect(counter(page, 'dropdown-group').first()).toBeFocused();
         await page.keyboard.press('ArrowUp');
         await expect.poll(() => counterValue(page, 'dropdown-group', 0)).toBe(1);
 

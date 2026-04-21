@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -38,6 +38,14 @@ async function focusTrigger(page: Page, fixture: string) {
     const trigger = el.shadowRoot.querySelector('#trigger');
     if (trigger) trigger.focus();
   });
+  // Confirm focus landed on the trigger inside shadow DOM
+  await expect.poll(() =>
+    dropdown(page, fixture).evaluate((el: any) => {
+      const trigger = el.shadowRoot.querySelector('#trigger');
+      return el.shadowRoot.activeElement === trigger;
+    }),
+    { timeout: 5_000 },
+  ).toBe(true);
 }
 
 /** Click the dropdown's trigger element. */

@@ -3,7 +3,21 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   timeout: process.env.CI ? 30_000 : 15_000,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1,
+  reporter: [
+    ['list'],
+    ['monocart-reporter', {
+      name: 'Svelte Playwright Coverage',
+      outputFile: './coverage/report.html',
+      coverage: {
+        outputDir: './coverage-code',
+        reports: ['v8', 'console-details', ['json-summary', { file: 'coverage-summary.json' }]],
+        entryFilter: (entry: { url: string }) =>
+          entry.url.includes('/components/') && entry.url.includes('/dist/'),
+        sourceFilter: () => true,
+      },
+    }],
+  ],
   use: {
     baseURL: 'http://localhost:5182',
   },

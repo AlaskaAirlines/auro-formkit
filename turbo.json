@@ -114,7 +114,7 @@
     "test:framework": {
       "dependsOn": ["^build"],
       "cache": false,
-      "outputs": ["test-results/**", "playwright-report/**"]
+      "outputs": ["test-results/**", "playwright-report/**", "coverage/**", "coverage-code/**"]
     },
     "dev:app": {
       "dependsOn": ["^build"],

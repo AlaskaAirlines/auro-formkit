@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -302,13 +302,13 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
         // Click dateFrom (cell 4)
         await clickCalendarCell(page, 'range', 4);
 
-        // In range mode, bib stays open for second date
-        await page.waitForTimeout(200);
+        // Wait for dateFrom to be set before clicking dateTo
+        await expect.poll(() => getValue(page, 'range'), { timeout: 5_000 }).toBeTruthy();
 
         // Click dateTo (cell 10)
         await clickCalendarCell(page, 'range', 10);
 
-        await page.waitForTimeout(200);
+        await expect.poll(() => getValueEnd(page, 'range'), { timeout: 5_000 }).toBeTruthy();
 
         const value = await getValue(page, 'range');
         const valueEnd = await getValueEnd(page, 'range');
@@ -326,13 +326,16 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
 
         // Click dateFrom at cell 10 (later in the month)
         await clickCalendarCell(page, 'range', 10);
-        await page.waitForTimeout(200);
+        await expect.poll(() => getValue(page, 'range'), { timeout: 5_000 }).toBeTruthy();
 
         const valueAfterFirst = await getValue(page, 'range');
         expect(valueAfterFirst).toBeDefined();
 
         // Try to click dateTo at cell 5 (earlier in the month)
         await clickCalendarCell(page, 'range', 5);
+
+        // Give the component a moment to process, then verify rejection
+        // This is a negative assertion - we need a brief wait since there's no state change to poll
         await page.waitForTimeout(200);
 
         // valueEnd should be undefined — earlier date rejected
@@ -360,7 +363,7 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
 
         // Select dateFrom (cell 3)
         await clickCalendarCell(page, 'range', 3);
-        await page.waitForTimeout(200);
+        await expect.poll(() => getValue(page, 'range'), { timeout: 5_000 }).toBeTruthy();
 
         // Hover over a later cell (cell 8) — should show hovered state
         await hoverCalendarCell(page, 'range', 8);
@@ -382,16 +385,13 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
 
         // Focus the datepicker, then Tab to the clear button
         await dp(page, 'preset').evaluate((el: any) => el.focus());
-        await page.waitForTimeout(100);
+        await expect(dp(page, 'preset')).toBeFocused();
         await page.keyboard.press('Tab');
-        await page.waitForTimeout(100);
 
         // Press Enter to trigger the clear button
         await page.keyboard.press('Enter');
-        await page.waitForTimeout(200);
 
-        const value = await getValue(page, 'preset');
-        expect(value).toBe('');
+        await expect.poll(() => getValue(page, 'preset'), { timeout: 5_000 }).toBe('');
 
         const visible = await isBibVisible(page, 'preset');
         expect(visible).toBe(false);
@@ -404,15 +404,12 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
         expect(initialValue).not.toBe('');
 
         await dp(page, 'preset').evaluate((el: any) => el.focus());
-        await page.waitForTimeout(100);
+        await expect(dp(page, 'preset')).toBeFocused();
         await page.keyboard.press('Tab');
-        await page.waitForTimeout(100);
 
         await page.keyboard.press('Space');
-        await page.waitForTimeout(200);
 
-        const value = await getValue(page, 'preset');
-        expect(value).toBe('');
+        await expect.poll(() => getValue(page, 'preset'), { timeout: 5_000 }).toBe('');
 
         const visible = await isBibVisible(page, 'preset');
         expect(visible).toBe(false);
@@ -464,7 +461,8 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
       await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(true);
 
       await clickCalendarCell(page, 'default', 4);
-      await page.waitForTimeout(200);
+
+      await expect.poll(() => getValue(page, 'default'), { timeout: 5_000 }).toBeTruthy();
 
       const value = await getValue(page, 'default');
       expect(value).toBeDefined();
@@ -478,19 +476,17 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
       await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(true);
 
       // Wait for focus cycle (rAF)
-      await page.waitForTimeout(200);
-
-      const closeButtonFocused = await dp(page, 'default').evaluate((el: any) => {
-        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-        const bibtemplateTag = calendar.bibtemplateTag?._$litStatic$;
-        if (!bibtemplateTag) return false;
-        const bibtemplate = calendar.shadowRoot.querySelector(bibtemplateTag);
-        if (!bibtemplate) return false;
-        const closeBtn = bibtemplate.shadowRoot.querySelector('#closeButton');
-        return bibtemplate.shadowRoot.activeElement === closeBtn;
-      });
-
-      expect(closeButtonFocused).toBe(true);
+      await expect.poll(async () => {
+        return dp(page, 'default').evaluate((el: any) => {
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          const bibtemplateTag = calendar.bibtemplateTag?._$litStatic$;
+          if (!bibtemplateTag) return false;
+          const bibtemplate = calendar.shadowRoot.querySelector(bibtemplateTag);
+          if (!bibtemplate) return false;
+          const closeBtn = bibtemplate.shadowRoot.querySelector('#closeButton');
+          return bibtemplate.shadowRoot.activeElement === closeBtn;
+        });
+      }, { timeout: 5_000 }).toBe(true);
     });
 
     test('trigger is set to inert while fullscreen dialog is open', async ({ page }) => {
