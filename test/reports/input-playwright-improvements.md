@@ -47,10 +47,18 @@ Added **26 Playwright interaction tests** for `auro-input`, running across both 
 | `no-validate` | `required noValidate` | Skip validation on blur |
 | `error-attr` | `error="Custom error message"` | Programmatic error |
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Focus before blur validation | Added `await expect(auroInput(...).locator('input')).toBeFocused()` after focus before click-outside blur | required field shows valueMissing on blur, noValidate prevents validation on blur, validated event fires after blur validation |
+
 ## Verification
 
 ```
-React:   26 passed (13.5s)
-Svelte:  26 passed (28.6s)
+React:   26 passed
+Svelte:  26 passed
 Total:   52 passed
 ```

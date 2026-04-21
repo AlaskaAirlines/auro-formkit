@@ -117,11 +117,21 @@ An `#outside-element` button sits outside all comboboxes for click-outside-to-cl
 | Modifier key combos | Synthetic `KeyboardEvent` with `altKey`/`metaKey` flags | Real modifier key dispatch via `Alt+ArrowDown` etc. |
 | Cross-framework validation | Tests only run in WTR's Chromium context | Same suite runs in React + Svelte, verifiable in Firefox/WebKit |
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Keyboard before options rendered | Added `waitForOptionsReady()` helper — polls until `auro-menuoption` elements exist in the DOM after bib opens | 12 keyboard navigation tests + Enter selects + SR announcement + fullscreen keyboard |
+
+Unlike `auro-select`, the combobox does **not** auto-activate `optionActive` when the bib opens — it stays `null` until the user navigates with keyboard. The guard waits for options to be rendered (not for active option), ensuring keyboard events are processed correctly.
+
 ## Architecture
 
 - **Shared suite pattern**: `combobox-interaction.suite.ts` exports `comboboxInteractionSuite(framework, options?)`, consumed by both framework spec files with a one-liner
 - **Fixture isolation**: Each test targets a specific `data-testid` section, preventing cross-test interference without requiring page reloads
-- **Helper functions**: `waitForCombobox()`, `combobox()`, `focusCombobox()`, `typeInCombobox()`, `waitForBibOpen()`, `waitForBibClosed()`, `isBibVisible()`, `activeOptionValue()`, `comboboxValue()` — all using `expect.poll()` for resilient assertions
+- **Helper functions**: `waitForCombobox()`, `combobox()`, `focusCombobox()`, `typeInCombobox()`, `waitForBibOpen()`, `waitForBibClosed()`, `waitForOptionsReady()`, `isBibVisible()`, `activeOptionValue()`, `comboboxValue()` — all using `expect.poll()` for resilient assertions
 - **No test duplication**: These tests cover interaction flows not already covered in WTR; WTR retains property reflection, slot checks, validity state, public function contracts, private edge cases, and `useAccessibleIt()` a11y audits
 
 ## Test Results

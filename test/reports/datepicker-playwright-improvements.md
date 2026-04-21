@@ -139,6 +139,18 @@ This new interaction suite covers **user workflows** (24 tests per framework):
 
 No test overlap exists between the two suites.
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Fixed timeouts after cell clicks | Replaced `page.waitForTimeout(200)` with `expect.poll(() => getValue(...)).toBeTruthy()` | Range date selection (value, valueEnd), hover preview dateFrom, fullscreen date selection |
+| Fixed timeouts for clear button | Replaced `page.waitForTimeout(100/200)` with `toBeFocused()` after focus + `expect.poll(() => getValue(...)).toBe('')` after key press | Enter on clear button, Space on clear button |
+| Fixed timeout for focus check | Replaced `page.waitForTimeout(200)` + manual assertion with `expect.poll()` for `shadowRoot.activeElement === closeButton` | Focus moves to close button in fullscreen |
+
+12 of 16 `waitForTimeout` calls were replaced with state-based polling. The remaining 4 are negative assertions (proving bib does NOT open) where brief timeouts are the only viable approach.
+
 ## Architecture
 
 - **Shared suite pattern**: `datepicker-interaction.suite.ts` exports `datepickerInteractionSuite(framework, options?)`, consumed by both framework spec files with a one-liner

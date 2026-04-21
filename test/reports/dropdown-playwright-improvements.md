@@ -109,6 +109,14 @@ An `#outside-element` button sits outside all dropdowns for focus-loss tests.
 | Toggle behavior | Synthetic clicks may not reflect real event pipeline | Real trigger clicks exercise the full event → toggle → Floating UI pipeline |
 | Cross-framework validation | Tests only run in WTR's Chromium context | Same suite runs in React + Svelte |
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Shadow DOM focus delegation | Updated `focusTrigger()` helper to poll-confirm focus via `el.shadowRoot.activeElement === trigger` before keyboard actions | All tests using `focusTrigger()` (Enter opens, Space opens, Enter on disabled, disableKeyboardHandling) |
+
 ## Architecture
 
 - **Shared suite pattern**: `dropdown-interaction.suite.ts` exports `dropdownInteractionSuite(framework)`, consumed by both framework spec files

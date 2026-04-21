@@ -139,6 +139,17 @@ An `#outside-element` button sits outside all selects for click-outside-to-close
 | Modifier key combos | Synthetic `KeyboardEvent` with `altKey`/`metaKey` flags | Real modifier key dispatch via `Alt+ArrowDown` etc. |
 | Cross-framework validation | Tests only run in WTR's Chromium context | Same suite runs in React + Svelte, verifiable in Firefox/WebKit |
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Focus before keyboard action | Updated `focusTrigger()` helper to poll-confirm focus landed on trigger via `dropdown.trigger.matches(':focus')` | All tests using `focusTrigger()` (ArrowDown/ArrowUp/Enter/Space opens bib, keyboard navigation) |
+| Keyboard before active option set | Added `await expect.poll(() => activeOptionValue(...), { timeout: 5_000 })` after `waitForBibOpen()` before any keyboard press | 15 keyboard navigation tests (Alt/Meta+Arrow, Home, End, Enter/Tab/Shift+Tab selection, disabled skip variants, fullscreen keyboard) |
+
+Unlike combobox, `auro-select` auto-activates the first option when the bib opens. The guard confirms `optionActive` is set before keyboard events fire.
+
 ## Architecture
 
 - **Shared suite pattern**: `select-interaction.suite.ts` exports `selectInteractionSuite(framework, options?)`, consumed by both framework spec files with a one-liner

@@ -51,10 +51,22 @@ Added **26 Playwright interaction tests** for `auro-radio` and `auro-radio-group
 | `with-error` | `error="..."` | customError validity |
 | `no-validate` | `required noValidate` | noValidate behavior |
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Shadow DOM focus delegation | Replaced `toBeFocused()` with shadow-DOM-aware polling: `el.shadowRoot?.activeElement != null \|\| el.matches(':focus-within')` | Space selects focused radio, validated event fires after blur, required group valueMissing on blur, reset() clears validity |
+| Rapid sequential clicks | Added `await expect.poll(() => groupValue(...))` between consecutive radio clicks | Only one radio can be checked at a time |
+| ArrowUp keyboard timeout | Added `{ timeout: 5_000 }` to value poll after ArrowUp wrap | ArrowUp wraps from first to last |
+
+`auro-radio` delegates focus into its shadow DOM. Playwright's `toBeFocused()` checks `document.activeElement`, which may not match the host element when focus delegation hasn't fully settled under load.
+
 ## Verification
 
 ```
-React:   26 passed (12.8s)
-Svelte:  26 passed (26.1s)
+React:   26 passed
+Svelte:  26 passed
 Total:   52 passed
 ```

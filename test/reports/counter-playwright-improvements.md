@@ -4,7 +4,7 @@
 - **Components**: `auro-counter`, `auro-counter-group`
 - **Shared suite**: `apps/shared/counter-interaction.suite.ts`
 - **Test harnesses**: React (`CounterInteraction.tsx`) + Svelte (`counter-interaction/+page.svelte`)
-- **Total tests**: 22 per framework × 2 frameworks = **44 passing test executions**
+- **Total tests**: 25 per framework × 2 frameworks = **50 passing test executions**
 - **Complements**: Existing `counter-dropdown.suite.ts` (Tab navigation) and `counter-remount.suite.ts` / `single-counter-remount.suite.ts` (value persistence)
 
 ## Motivation
@@ -121,6 +121,14 @@ An `#outside-element` button sits outside all counters for focus-loss tests.
 
 No test overlap exists between the suites.
 
+## Flakiness Fixes
+
+The following guards were added to eliminate race conditions under CI load:
+
+| Pattern | Fix Applied | Tests Affected |
+|---------|-------------|----------------|
+| Tab without focus confirmation | Added `await expect(counter(...).first()).toBeFocused()` after Tab into dropdown content before ArrowUp/ArrowDown | ArrowUp increments counter in dropdown, ArrowDown decrements counter in dropdown |
+
 ## Architecture
 
 - **Shared suite pattern**: `counter-interaction.suite.ts` exports `counterInteractionSuite(framework)`, consumed by both framework spec files
@@ -130,6 +138,6 @@ No test overlap exists between the suites.
 ## Test Results
 
 ```
-React:    22 passed
-Svelte:   22 passed
+React:    25 passed
+Svelte:   25 passed
 ```
