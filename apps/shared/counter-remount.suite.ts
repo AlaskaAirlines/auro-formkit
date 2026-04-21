@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './coverage-fixture';
 
 /** Named initial values — keys match the `name` attributes on each auro-counter. */
 const DEFAULT_INITIAL_VALUES: Record<string, number> = {

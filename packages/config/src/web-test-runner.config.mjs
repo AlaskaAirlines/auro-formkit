@@ -1,9 +1,12 @@
+import { jsonSummaryReporter } from './wtr-json-summary-reporter.mjs';
+
 export default {
   rootDir: '../../',
   files: [
     'test/**/*.test.js',
     '!**/node_modules/**'
   ],
+  reporters: [jsonSummaryReporter()],
   nodeResolve: {
     moduleDirectories: [
       'node_modules',

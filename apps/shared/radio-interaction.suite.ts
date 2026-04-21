@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from '@playwright/test';
+import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -134,7 +134,7 @@ export function radioInteractionSuite(framework: string) {
 
       test('ArrowUp wraps from first to last', async ({ page }) => {
         await clickRadio(page, 'default', 'red');
-        await expect.poll(() => groupValue(page, 'default')).toBe('red');
+        await expect.poll(() => groupValue(page, 'default'), { timeout: 5_000 }).toBe('red');
 
         await page.keyboard.press('ArrowUp');
 
@@ -153,7 +153,13 @@ export function radioInteractionSuite(framework: string) {
 
       test('Space selects focused radio', async ({ page }) => {
         // Focus the first radio
-        await radio(page, 'default', 'red').focus();
+        await radio(page, 'default', 'red').evaluate((el: any) => el.focus());
+        await expect.poll(() =>
+          radio(page, 'default', 'red').evaluate((el: any) =>
+            el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+          ),
+          { timeout: 5_000 },
+        ).toBe(true);
 
         await page.keyboard.press('Space');
 
@@ -220,10 +226,16 @@ export function radioInteractionSuite(framework: string) {
 
     test.describe('Validation', () => {
       test('required group shows valueMissing after blur without selection', async ({ page }) => {
-        await radio(page, 'required', 'yes').focus();
+        await radio(page, 'required', 'yes').evaluate((el: any) => el.focus());
+        await expect.poll(() =>
+          radio(page, 'required', 'yes').evaluate((el: any) =>
+            el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+          ),
+          { timeout: 5_000 },
+        ).toBe(true);
         await page.click('#outside-element');
 
-        await expect.poll(() => groupValidity(page, 'required')).toBe('valueMissing');
+        await expect.poll(() => groupValidity(page, 'required'), { timeout: 5_000 }).toBe('valueMissing');
       });
 
       test('required group shows valid after making a selection', async ({ page }) => {
@@ -245,7 +257,14 @@ export function radioInteractionSuite(framework: string) {
           }, { once: true });
         });
 
-        await radio(page, 'required', 'yes').focus();
+        await radio(page, 'required', 'yes').evaluate((el: any) => el.focus());
+        // Confirm focus settled inside the shadow DOM before blurring
+        await expect.poll(() =>
+          radio(page, 'required', 'yes').evaluate((el: any) =>
+            el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+          ),
+          { timeout: 5_000 },
+        ).toBe(true);
         await page.click('#outside-element');
 
         await expect.poll(() =>
@@ -272,9 +291,15 @@ export function radioInteractionSuite(framework: string) {
       });
 
       test('reset() clears validity', async ({ page }) => {
-        await radio(page, 'required', 'yes').focus();
+        await radio(page, 'required', 'yes').evaluate((el: any) => el.focus());
+        await expect.poll(() =>
+          radio(page, 'required', 'yes').evaluate((el: any) =>
+            el.shadowRoot?.activeElement != null || el.matches(':focus-within'),
+          ),
+          { timeout: 5_000 },
+        ).toBe(true);
         await page.click('#outside-element');
-        await expect.poll(() => groupValidity(page, 'required')).toBe('valueMissing');
+        await expect.poll(() => groupValidity(page, 'required'), { timeout: 5_000 }).toBe('valueMissing');
 
         await group(page, 'required').evaluate((el: any) => el.reset());
 
@@ -316,7 +341,11 @@ export function radioInteractionSuite(framework: string) {
     test.describe('Mutual exclusivity', () => {
       test('only one radio can be checked at a time', async ({ page }) => {
         await clickRadio(page, 'default', 'red');
+        await expect.poll(() => groupValue(page, 'default')).toBe('red');
+
         await clickRadio(page, 'default', 'blue');
+        await expect.poll(() => groupValue(page, 'default')).toBe('blue');
+
         await clickRadio(page, 'default', 'green');
 
         expect(await isChecked(page, 'default', 'red')).toBe(false);

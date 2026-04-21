@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './coverage-fixture';
 
 /** Poll until auro-combobox.value matches the expected value or we time out. */
 async function waitForComboboxValue(page: Page, expected: string, timeout = 3000) {
