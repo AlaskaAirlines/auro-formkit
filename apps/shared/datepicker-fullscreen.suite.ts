@@ -102,7 +102,7 @@ export function datepickerFullscreenSuite(framework: string) {
     test('bib closes when focus moves outside in non-fullscreen mode', async ({ page }) => {
       await openBib(page);
 
-      await expect.poll(() => isBibVisible(page)).toBe(true);
+      await expect.poll(() => isBibVisible(page), { timeout: 8_000 }).toBe(true);
 
       // Tab focus to the outside button — simulates the user tabbing away.
       // noHideOnThisFocusLoss is false at desktop, so FloatingUI should close the bib.
@@ -115,14 +115,19 @@ export function datepickerFullscreenSuite(framework: string) {
     test('focus is not stolen back to datepicker after tab-out closes the bib', async ({ page }) => {
       await openBib(page);
 
-      await expect.poll(() => isBibVisible(page)).toBe(true);
+      await expect.poll(() => isBibVisible(page), { timeout: 8_000 }).toBe(true);
 
       await page.locator('#outside').focus();
-      await page.waitForTimeout(100); // allow rAF in close handler to fire
+
+      // Wait for the bib to fully close before checking focus — the close
+      // handler uses rAF and may take longer than a fixed timeout under load.
+      await expect.poll(() => isBibVisible(page), { timeout: 8_000 }).toBe(false);
 
       // Focus must remain on the outside button, not yanked back to the input.
-      const focused = await page.evaluate(() => document.activeElement?.id);
-      expect(focused).toBe('outside');
+      await expect.poll(
+        () => page.evaluate(() => document.activeElement?.id),
+        { timeout: 5_000 },
+      ).toBe('outside');
     });
   });
 

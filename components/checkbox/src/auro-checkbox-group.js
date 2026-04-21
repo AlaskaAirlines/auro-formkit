@@ -344,12 +344,6 @@ export class AuroCheckboxGroup extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
-    if (changedProperties.has('layout')) {
-      this.checkboxes.forEach((el) => {
-        el.layout = this.layout;
-      });
-    }
-
     if (changedProperties.has('disabled')) {
       this.checkboxes.forEach((el) => {
         if (this.disabled) {

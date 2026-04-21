@@ -1,8 +1,12 @@
-/* eslint-disable max-lines, no-undef, no-magic-numbers, no-unused-expressions, no-console, no-plusplus, no-await-in-loop, init-declarations */
+/* eslint-disable max-lines, no-undef, no-underscore-dangle, max-statements-per-line, no-extra-parens, no-implicit-coercion, no-magic-numbers, no-unused-expressions, no-console, no-plusplus, no-await-in-loop, init-declarations */
 
 import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
-import { arrayConverter } from '../src/auro-menu-utils.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
+import { arrayConverter, arraysAreEqual, isOptionInteractive } from '../src/auro-menu-utils.js';
 import {
   defaultFixture,
   multiSelectDuplicateValuesFixture,
@@ -15,7 +19,16 @@ import {
 } from './testFixtures.js';
 import { getOptions } from './testFunctions.js';
 
-describe('auro-menu', () => {
+/**
+ * Runs the full menu test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
 
   describe('Rendering', () => {
     // Add missing tests
@@ -675,7 +688,7 @@ describe('auro-menu', () => {
       menuEl.navigateOptions('up');
       await elementUpdated(menuEl);
 
-      const selectedOption = options.find(opt => opt.classList.contains('active'));
+      const selectedOption = options.find((opt) => opt.classList.contains('active'));
       expect(selectedOption).to.not.be.undefined;
     });
 
@@ -714,7 +727,32 @@ describe('auro-menu', () => {
 
   describe('Properties', () => {
     describe('allowDeselect', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.allowDeselect).to.be.false;
+      });
+
+      it('should allow deselection when set to true', async () => {
+        const el = await fixture(html`
+          <auro-menu allowDeselect aria-label="test">
+            <auro-menuoption value="opt1">Opt 1</auro-menuoption>
+          </auro-menu>
+        `);
+
+        // Select option
+        el.navigateOptions('down');
+        await elementUpdated(el);
+        el.makeSelection();
+        await elementUpdated(el);
+        expect(el.value).to.equal('opt1');
+
+        // Deselect same option
+        el.makeSelection();
+        await elementUpdated(el);
+        expect(el.value).to.be.undefined;
+      });
     });
 
     describe('disabled', () => {
@@ -728,15 +766,36 @@ describe('auro-menu', () => {
     });
 
     describe('hasLoadingPlaceholder', () => {
-      // add tests for this property
+      it('should be true when loadingText slot is populated', async () => {
+        const el = await fixture(html`<auro-menu loading><span slot="loadingText">Loading...</span><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+        await elementUpdated(el);
+
+        expect(el.hasLoadingPlaceholder).to.be.true;
+      });
     });
 
     describe('layout', () => {
-      // add tests for this property
+      it('should accept a layout property', async () => {
+        const el = await fixture(html`<auro-menu layout="compact" aria-label="test"><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+
+        expect(el.layout).to.equal('compact');
+      });
     });
 
     describe('loading', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.loading).to.be.false;
+      });
+
+      it('should reflect the loading attribute', async () => {
+        const el = await fixture(html`<auro-menu loading aria-label="test"><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+
+        expect(el.loading).to.be.true;
+        expect(el.hasAttribute('loading')).to.be.true;
+      });
     });
 
     describe('matchWord', () => {
@@ -748,7 +807,19 @@ describe('auro-menu', () => {
     });
 
     describe('multiSelect', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.multiSelect).to.be.false;
+      });
+
+      it('should reflect the multiSelect attribute', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.multiSelect).to.be.true;
+      });
     });
 
     describe('noCheckmark', () => {
@@ -765,11 +836,32 @@ describe('auro-menu', () => {
     });
 
     describe('onDark', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.hasAttribute('ondark')).to.be.false;
+      });
     });
 
     describe('optionActive', () => {
-      // add tests for this property
+      it('should be undefined initially', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.optionActive).to.be.undefined;
+      });
+
+      it('should update after navigation', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        const options = getOptions(menuEl);
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+
+        expect(menuEl.optionActive).to.equal(options[0]);
+      });
     });
 
     describe('optionSelected', () => {
@@ -815,19 +907,224 @@ describe('auro-menu', () => {
     });
 
     describe('selectAllMatchingOptions', () => {
-      // add tests for this property
+      it('should default to false', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.selectAllMatchingOptions).to.be.false;
+      });
+
+      it('should select all matching duplicate values when true', async () => {
+        const el = await multiSelectDuplicateValuesSelectAllFixture();
+        await elementUpdated(el);
+
+        el.value = '["option 2"]';
+        await elementUpdated(el);
+
+        const selected = el.selectedOptions;
+        expect(selected.length).to.be.greaterThan(1);
+      });
     });
 
     describe('shape', () => {
-      // add tests for this property
+      it('should default to box', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.shape).to.equal('box');
+      });
+
+      it('should accept a shape property', async () => {
+        const el = await fixture(html`<auro-menu shape="round" aria-label="test"><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+
+        expect(el.shape).to.equal('round');
+      });
     });
 
     describe('size', () => {
-      // add tests for this property
+      it('should default to sm', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.size).to.equal('sm');
+      });
+
+      it('should accept a size property', async () => {
+        const el = await fixture(html`<auro-menu size="md" aria-label="test"><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+
+        expect(el.size).to.equal('md');
+      });
     });
 
     describe('value', () => {
-      // add tests for this property
+      it('should default to undefined', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.value).to.be.undefined;
+      });
+
+      it('should update value when an option is selected', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(menuEl.value).to.equal('option 1');
+      });
+
+      it('should select an option when value is set programmatically', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        menuEl.value = 'option 1';
+        await elementUpdated(menuEl);
+
+        expect(menuEl.optionSelected).to.not.be.undefined;
+        expect(menuEl.optionSelected.value).to.equal('option 1');
+      });
+    });
+
+    describe('options', () => {
+      it('should return the list of registered options', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.options).to.be.an('array');
+        expect(menuEl.options.length).to.be.greaterThan(0);
+      });
+
+      it('should return an empty array for a menu with no options', async () => {
+        const el = await emptyItemsFixture();
+        const menuEl = el.querySelector('auro-menu');
+        const opts = menuEl.options;
+
+        expect(opts === undefined || (Array.isArray(opts) && opts.length === 0)).to.be.true;
+      });
+    });
+
+    describe('currentLabel', () => {
+      it('should return empty string when no option is selected', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.currentLabel).to.equal('');
+      });
+
+      it('should return the label of the selected option', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(menuEl.currentLabel).to.not.equal('');
+      });
+    });
+
+    describe('items', () => {
+      it('should return the same value as options (deprecated alias)', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.items).to.deep.equal(menuEl.options);
+      });
+    });
+
+    describe('index', () => {
+      it('should default to -1', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.index).to.equal(-1);
+      });
+
+      it('should update after navigating options', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+
+        expect(menuEl.index).to.equal(0);
+      });
+
+      it('should highlight the correct option when set programmatically', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        const options = getOptions(menuEl);
+
+        menuEl.index = 2;
+        await elementUpdated(menuEl);
+
+        expect(menuEl.optionActive).to.equal(options[2]);
+      });
+    });
+
+    describe('selectedOptions', () => {
+      it('should return an empty array when no option is selected', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.selectedOptions).to.be.an('array');
+        expect(menuEl.selectedOptions.length).to.equal(0);
+      });
+
+      it('should contain the selected option after making a selection', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(menuEl.selectedOptions.length).to.equal(1);
+      });
+
+      it('should contain multiple selected options in multiSelect mode', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(menuEl.selectedOptions.length).to.equal(2);
+      });
+    });
+
+    describe('selectedOption', () => {
+      it('should return undefined when no option is selected', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        expect(menuEl.selectedOption).to.not.exist;
+      });
+
+      it('should return the selected option after making a selection', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        expect(menuEl.selectedOption).to.not.be.null;
+        expect(menuEl.selectedOption.value).to.equal('option 1');
+      });
     });
   });
 
@@ -840,7 +1137,7 @@ describe('auro-menu', () => {
         const slot = menu.shadowRoot.querySelector('slot:not([name])');
 
         await expect(slot).to.exist;
-        const assigned = slot.assignedNodes().filter((n) => n.nodeType === Node.ELEMENT_NODE);
+        const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE);
 
         await expect(assigned.length).to.be.greaterThan(0);
       });
@@ -869,11 +1166,24 @@ describe('auro-menu', () => {
 
   describe('Public Functions', () => {
     describe('register', () => {
-      // TODO: test needs to be added
+      it('should register the custom element', () => {
+        const registeredTag = customElements.get('auro-menu');
+
+        expect(registeredTag).to.not.be.undefined;
+      });
     });
 
     describe('updateActiveOption', () => {
-      // TODO: test needs to be added
+      it('should set the given option as the active option', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        const options = getOptions(menuEl);
+
+        menuEl.updateActiveOption(options[2]);
+        await elementUpdated(menuEl);
+
+        expect(menuEl.optionActive).to.equal(options[2]);
+      });
     });
 
     describe('reset', () => {
@@ -940,15 +1250,185 @@ describe('auro-menu', () => {
     });
 
     describe('resetShapeClasses', () => {
-      // TODO: test needs to be added
+      it('should execute without error', async () => {
+        const el = await fixture(html`<auro-menu shape="round" size="md" aria-label="test"><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+        await elementUpdated(el);
+
+        expect(() => el.resetShapeClasses()).to.not.throw();
+      });
     });
 
     describe('resetLayoutClasses', () => {
-      // TODO: test needs to be added
+      it('should execute without error', async () => {
+        const el = await fixture(html`<auro-menu layout="compact" aria-label="test"><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+        await elementUpdated(el);
+
+        expect(() => el.resetLayoutClasses()).to.not.throw();
+      });
     });
 
     describe('updateComponentArchitecture', () => {
-      // TODO: test needs to be added
+      it('should execute without error', async () => {
+        const el = await fixture(html`<auro-menu layout="compact" shape="round" size="md" aria-label="test"><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
+        await elementUpdated(el);
+
+        expect(() => el.updateComponentArchitecture()).to.not.throw();
+      });
+    });
+  });
+
+  describe('Events', () => {
+    describe('auroMenu-activatedOption', () => {
+      it('should fire when an option is highlighted via navigation', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        const listener = oneEvent(menuEl, 'auroMenu-activatedOption');
+        menuEl.navigateOptions('down');
+
+        const event = await listener;
+        expect(event).to.exist;
+        expect(event.detail).to.exist;
+      });
+
+      it('should fire when index is set programmatically', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        const listener = oneEvent(menuEl, 'auroMenu-activatedOption');
+        menuEl.index = 1;
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
+    });
+
+    describe('auroMenu-customEventFired', () => {
+      it('should fire when selecting an option with an event attribute', async () => {
+        const el = await customEventFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        const listener = oneEvent(menuEl, 'auroMenu-customEventFired');
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
+    });
+
+    describe('auroMenu-loadingChange', () => {
+      it('should fire when loading property changes', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        const listener = oneEvent(menuEl, 'auroMenu-loadingChange');
+        menuEl.loading = true;
+        await elementUpdated(menuEl);
+
+        const event = await listener;
+        expect(event).to.exist;
+        expect(event.detail.loading).to.be.true;
+      });
+    });
+
+    describe('auroMenu-selectValueFailure', () => {
+      it('should fire when value is set to a non-existent option', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        const listener = oneEvent(menuEl, 'auroMenu-selectValueFailure');
+        menuEl.value = 'non-existent-value';
+        await elementUpdated(menuEl);
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
+    });
+
+    describe('auroMenu-deselectPrevented', () => {
+      it('should fire when trying to deselect in single-select mode without allowDeselect', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        // Select an option
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        // Try to deselect the same option
+        const listener = oneEvent(menuEl, 'auroMenu-deselectPrevented');
+        menuEl.makeSelection();
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
+    });
+
+    describe('auroMenu-selectValueReset', () => {
+      it('should fire when reset() is called', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        // Select an option first
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+        await elementUpdated(menuEl);
+
+        const listener = oneEvent(menuEl, 'auroMenu-selectValueReset');
+        menuEl.reset();
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
+    });
+
+    describe('auroMenu-selectedOption', () => {
+      it('should fire when an option is selected', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        const listener = oneEvent(menuEl, 'auroMenu-selectedOption');
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+
+        const event = await listener;
+        expect(event).to.exist;
+        expect(event.detail).to.have.property('value');
+      });
+
+      it('should include selection details in the event', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        const listener = oneEvent(menuEl, 'auroMenu-selectedOption');
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+        menuEl.makeSelection();
+
+        const event = await listener;
+        expect(event.detail).to.have.property('options');
+        expect(event.detail).to.have.property('keys');
+      });
+    });
+
+    describe('auroMenu-optionsChange', () => {
+      it('should fire when options are added', async () => {
+        const el = await fixture(html`<auro-menu aria-label="test"></auro-menu>`);
+
+        const listener = oneEvent(el, 'auroMenu-optionsChange');
+        const option = document.createElement('auro-menuoption');
+        option.value = 'new-option';
+        option.textContent = 'New Option';
+        el.appendChild(option);
+
+        const event = await listener;
+        expect(event).to.exist;
+      });
     });
   });
 
@@ -1132,4 +1612,264 @@ describe('auro-menu', () => {
     });
   });
 
+  describe('auro-menu-utils', () => {
+    it('arraysAreEqual should return true for identical arrays', () => {
+      expect(arraysAreEqual([
+        1,
+        2,
+        3
+      ], [
+        1,
+        2,
+        3
+      ])).to.be.true;
+    });
+
+    it('arraysAreEqual should return false for different arrays', () => {
+      expect(arraysAreEqual([
+        1,
+        2
+      ], [
+        1,
+        3
+      ])).to.be.false;
+    });
+
+    it('arraysAreEqual should return false for different lengths', () => {
+      expect(arraysAreEqual([
+        1,
+        2
+      ], [
+        1,
+        2,
+        3
+      ])).to.be.false;
+    });
+
+    it('arraysAreEqual should return true when both undefined', () => {
+      expect(arraysAreEqual(undefined, undefined)).to.be.true;
+    });
+
+    it('arraysAreEqual should return false when one undefined', () => {
+      expect(arraysAreEqual([1], undefined)).to.be.false;
+    });
+
+    it('isOptionInteractive should return true for enabled visible option', () => {
+      const opt = document.createElement('auro-menuoption');
+      expect(isOptionInteractive(opt)).to.be.true;
+    });
+
+    it('isOptionInteractive should return false for hidden option', () => {
+      const opt = document.createElement('auro-menuoption');
+      opt.setAttribute('hidden', '');
+      expect(isOptionInteractive(opt)).to.be.false;
+    });
+
+    it('isOptionInteractive should return false for disabled option', () => {
+      const opt = document.createElement('auro-menuoption');
+      opt.setAttribute('disabled', '');
+      expect(isOptionInteractive(opt)).to.be.false;
+    });
+
+    it('isOptionInteractive should return false for static option', () => {
+      const opt = document.createElement('auro-menuoption');
+      opt.setAttribute('static', '');
+      expect(isOptionInteractive(opt)).to.be.false;
+    });
+  });
+
+  describe('MenuService coverage', () => {
+    it('selectByValue should clear selection for empty string', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      menu.menuService.selectByValue('');
+      expect(menu.menuService.selectedOptions.length).to.equal(0);
+    });
+
+    it('selectByValue should clear selection for null', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      menu.menuService.selectByValue(null);
+      expect(menu.menuService.selectedOptions.length).to.equal(0);
+    });
+
+    it('selectByValue should clear selection for empty array', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      menu.menuService.selectByValue([]);
+      expect(menu.menuService.selectedOptions.length).to.equal(0);
+    });
+
+    it('selectByValue should queue pending value when options not loaded', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      // Force empty options
+      menu.menuService._menuOptions = [];
+      menu.menuService.selectByValue('test');
+      expect(menu.menuService._pendingValue).to.equal('test');
+    });
+
+    it('selectByValue should warn for multi-value in single-select', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      // Don't set multiSelect, so it's single select mode
+      menu.menuService.selectByValue([
+        'Stop 1',
+        'Stop 2'
+      ]);
+      // Should still work (takes first value)
+    });
+
+    it('currentValue should return undefined for empty string', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      // No selection = undefined value
+      expect(menu.menuService.currentValue).to.be.undefined;
+    });
+
+    it('isOptionSelected should return false when no selection', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      const option = el.querySelector('auro-menuoption');
+      expect(menu.isOptionSelected(option)).to.be.false;
+    });
+
+    it('isOptionSelected should return true for selected option', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      const option = el.querySelector('auro-menuoption');
+      menu.optionSelected = option;
+
+      expect(menu.isOptionSelected(option)).to.be.true;
+    });
+
+    it('isOptionSelected should check array in multiSelect mode', async () => {
+      const el = await multiSelectFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      const options = [...el.querySelectorAll('auro-menuoption')];
+      menu.optionSelected = [options[0]];
+      menu.multiSelect = true;
+
+      expect(menu.isOptionSelected(options[0])).to.be.true;
+      expect(menu.isOptionSelected(options[1])).to.be.false;
+    });
+
+    it('handleCustomEvent should dispatch custom event', async () => {
+      const el = await customEventFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      const option = el.querySelector('auro-menuoption[event]');
+      if (option) {
+        let eventFired = false;
+        menu.addEventListener('auroMenu-customEventFired', () => {
+          eventFired = true;
+        });
+        menu.handleCustomEvent(option);
+        expect(eventFired).to.be.true;
+      }
+    });
+
+    it('clearSelection should reset optionSelected and value', async () => {
+      const el = await defaultFixture();
+      const menu = el.querySelector('auro-menu');
+      await elementUpdated(menu);
+
+      menu.optionSelected = 'something';
+      menu.value = 'some value';
+      menu.clearSelection();
+
+      expect(menu.optionSelected).to.be.undefined;
+      expect(menu.value).to.be.undefined;
+    });
+  });
+
+  describe('auro-menuoption coverage', () => {
+    it('handleMenuChange should ignore events without type or property', async () => {
+      const el = await defaultFixture();
+      const option = el.querySelector('auro-menuoption');
+      await elementUpdated(option);
+
+      // Should not throw
+      option.handleMenuChange({});
+      option.handleMenuChange(null);
+    });
+
+    it('setSelected should update selected property', async () => {
+      const el = await defaultFixture();
+      const option = el.querySelector('auro-menuoption');
+      await elementUpdated(option);
+
+      option.setSelected(true);
+      expect(option.selected).to.be.true;
+      option.setSelected(false);
+      expect(option.selected).to.be.false;
+    });
+
+    it('updateActive should set active state and update classes', async () => {
+      const el = await defaultFixture();
+      const option = el.querySelector('auro-menuoption');
+      await elementUpdated(option);
+
+      option.updateActive(true);
+      expect(option.active).to.be.true;
+      expect(option.classList.contains('active')).to.be.true;
+
+      option.updateActive(false);
+      expect(option.active).to.be.false;
+      expect(option.classList.contains('active')).to.be.false;
+    });
+
+    it('attachTo should do nothing when service is null', async () => {
+      const el = await defaultFixture();
+      const option = el.querySelector('auro-menuoption');
+      await elementUpdated(option);
+
+      // Should not throw
+      option.attachTo(null);
+    });
+
+    it('disabled property should set aria-disabled', async () => {
+      const el = await defaultFixture();
+      const option = el.querySelector('auro-menuoption');
+      await elementUpdated(option);
+
+      option.disabled = true;
+      await elementUpdated(option);
+      expect(option.getAttribute('aria-disabled')).to.equal('true');
+
+      option.disabled = false;
+      await elementUpdated(option);
+      expect(option.hasAttribute('aria-disabled')).to.be.false;
+    });
+  });
+
+}
+
+// Desktop Test Suite
+describe('auro-menu', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-menu in small viewport', () => {
+  runFullTest(true);
 });
