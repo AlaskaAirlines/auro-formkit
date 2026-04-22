@@ -35,6 +35,22 @@ async function waitUntil(predicate: () => boolean, timeout = 2000, interval = 20
   }
 }
 
+// ─── Default closed state ────────────────────────────────────────────────────
+export const SelectDefault: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select placeholder="Placeholder Text">
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Sort by</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+};
+
 // ─── §2.1.1  Open dropdown and select an option (P0) ────────────────────────
 export const SelectOpenAndSelectOption: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -580,5 +596,160 @@ export const SelectInDrawerBibOpen: Story = {
     await wait(100);
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
+};
+
+// ─── Hover pseudo-state on a select ──────────────────────────────────────────
+export const SelectHover: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+};
+SelectHover.parameters = {
+  pseudo: {
+    hover: true,
+  },
+};
+
+// ─── Focus-within pseudo-state on a select ───────────────────────────────────
+export const SelectFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+};
+SelectFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
+// ─── Disabled option within select ──────────────────────────────────────────
+export const SelectDisabledOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-select>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" disabled>Oranges (disabled)</auro-menuoption>
+    <auro-menuoption value="Bananas">Bananas</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+    el.showBib();
+    await wait(100);
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+  },
+};
+
+// ─── Entire select disabled ─────────────────────────────────────────────────
+export const SelectDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select disabled placeholder="Placeholder Text">
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Label</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+};
+
+// ─── Error state on select ──────────────────────────────────────────────────
+export const SelectError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select error="Custom error message" placeholder="Placeholder Text">
+  <span slot="bib.fullscreen.headline">Bib Headline</span>
+  <span slot="label">Label</span>
+  <auro-menu>
+    <auro-menuoption value="stops">Stops</auro-menuoption>
+    <auro-menuoption value="price">Price</auro-menuoption>
+    <auro-menuoption value="duration">Duration</auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const SelectInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-select appearance="inverse">
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Select Example</span>
+    <auro-menu>
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="duration">Duration</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+</div>
+  `,
+};
+
+// ─── Inverse disabled ────────────────────────────────────────────────────────
+export const SelectInverseDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-select appearance="inverse" disabled placeholder="Placeholder Text">
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Label</span>
+    <auro-menu>
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="duration">Duration</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+</div>
+  `,
+};
+
+// ─── Inverse error ───────────────────────────────────────────────────────────
+export const SelectInverseError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-select appearance="inverse" error="Custom error message" placeholder="Placeholder Text">
+    <span slot="bib.fullscreen.headline">Bib Headline</span>
+    <span slot="label">Label</span>
+    <auro-menu>
+      <auro-menuoption value="stops">Stops</auro-menuoption>
+      <auro-menuoption value="price">Price</auro-menuoption>
+      <auro-menuoption value="duration">Duration</auro-menuoption>
+    </auro-menu>
+  </auro-select>
+</div>
+  `,
 };
 

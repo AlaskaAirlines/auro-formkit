@@ -205,6 +205,22 @@ CounterWithHover.parameters = {
   }
 };
 
+// ─── Focus-within pseudo-state on a counter ──────────────────────────────────
+export const CounterFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-counter min="0" max="3">
+  Adults
+  <span slot="description">Max: 3</span>
+</auro-counter>
+  `,
+};
+CounterFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
 // ─── Counter-group inside auro-dialog — bib closed ──────────────────────────
 export const CounterInDialogBibClosed: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -293,4 +309,83 @@ export const CounterInDrawerBibOpen: Story = {
     await userEvent.click(trigger);
     await wait(100);
   },
+};
+
+// ─── Disabled counter ────────────────────────────────────────────────────────
+export const CounterDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-counter-group>
+  <auro-counter disabled>Short label</auro-counter>
+  <auro-counter disabled>
+    Long label example
+    <span slot="description">with sub label text</span>
+  </auro-counter>
+</auro-counter-group>
+  `,
+};
+
+// ─── Error state on counter ──────────────────────────────────────────────────
+export const CounterError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-counter error="There is an error with the counter">
+  Adults
+</auro-counter>
+  `,
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const CounterInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter appearance="inverse">
+    Adults
+  </auro-counter>
+</div>
+  `,
+};
+
+// ─── Inverse disabled ────────────────────────────────────────────────────────
+export const CounterInverseDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter-group>
+    <auro-counter appearance="inverse" disabled>Short label</auro-counter>
+    <auro-counter appearance="inverse" disabled>
+      Long label example
+      <span slot="description">with sub label text</span>
+    </auro-counter>
+  </auro-counter-group>
+</div>
+  `,
+};
+
+// ─── Inverse error ───────────────────────────────────────────────────────────
+export const CounterInverseError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter appearance="inverse" error="There is an error with the counter">
+    Adults
+  </auro-counter>
+</div>
+  `,
+};
+
+// ─── Inverse group ───────────────────────────────────────────────────────────
+export const CounterInverseGroup: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter-group appearance="inverse">
+    <div slot="label">Passengers</div>
+    <div slot="helpText">Total must be 4 or fewer</div>
+    <auro-counter>Adults</auro-counter>
+    <auro-counter>Children</auro-counter>
+  </auro-counter-group>
+</div>
+  `,
 };

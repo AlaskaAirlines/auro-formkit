@@ -160,3 +160,133 @@ RadioOptionHover.parameters = {
     hover: true,
   },
 };
+
+// ─── Focus-within pseudo-state on a radio group ──────────────────────────────
+export const RadioFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-radio-group>
+  <span slot="legend">Form label goes here</span>
+  <auro-radio id="radio-focus1" label="Yes" name="focusDemo" value="yes"></auro-radio>
+  <auro-radio id="radio-focus2" label="No" name="focusDemo" value="no"></auro-radio>
+  <auro-radio id="radio-focus3" label="Maybe" name="focusDemo" value="maybe"></auro-radio>
+</auro-radio-group>
+  `,
+};
+RadioFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
+// ─── Pre-selected (value entered) state ─────────────────────────────────────
+export const RadioPreSelected: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-radio-group>
+  <span slot="legend">Form label goes here</span>
+  <auro-radio id="radio-pre1" label="Yes" name="preDemo" value="yes"></auro-radio>
+  <auro-radio id="radio-pre2" label="No" name="preDemo" value="no" checked></auro-radio>
+  <auro-radio id="radio-pre3" label="Maybe" name="preDemo" value="maybe"></auro-radio>
+</auro-radio-group>
+  `,
+};
+
+// ─── Disabled individual option ──────────────────────────────────────────────
+export const RadioDisabledOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-radio-group>
+  <span slot="legend">Form label goes here</span>
+  <auro-radio id="radio-disOpt1" label="Yes" name="disOptDemo" value="yes"></auro-radio>
+  <auro-radio id="radio-disOpt2" label="No" name="disOptDemo" value="no" disabled></auro-radio>
+  <auro-radio id="radio-disOpt3" label="Maybe" name="disOptDemo" value="maybe"></auro-radio>
+</auro-radio-group>
+  `,
+};
+
+// ─── Entire group disabled ───────────────────────────────────────────────────
+export const RadioGroupDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-radio-group disabled>
+  <span slot="legend">Form label goes here</span>
+  <auro-radio id="radio-disGrp1" label="Yes" name="disGrpDemo" value="yes"></auro-radio>
+  <auro-radio id="radio-disGrp2" label="No" name="disGrpDemo" value="no" checked></auro-radio>
+  <auro-radio id="radio-disGrp3" label="Maybe" name="disGrpDemo" value="maybe"></auro-radio>
+</auro-radio-group>
+  `,
+};
+
+// ─── Error state on group ────────────────────────────────────────────────────
+export const RadioGroupError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-radio-group error="There is an error with this form entry">
+  <span slot="legend">Form label goes here</span>
+  <auro-radio id="radio-err1" label="Yes" name="errDemo" value="yes"></auro-radio>
+  <auro-radio id="radio-err2" label="No" name="errDemo" value="no"></auro-radio>
+  <auro-radio id="radio-err3" label="Maybe" name="errDemo" value="maybe"></auro-radio>
+</auro-radio-group>
+  `,
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const RadioInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-radio-group appearance="inverse">
+    <span slot="legend">Form label goes here</span>
+    <auro-radio id="radio-inv1" label="Yes" name="invDemo" value="yes"></auro-radio>
+    <auro-radio id="radio-inv2" label="No" name="invDemo" value="no"></auro-radio>
+    <auro-radio id="radio-inv3" label="Maybe" name="invDemo" value="maybe"></auro-radio>
+  </auro-radio-group>
+</div>
+  `,
+};
+
+// ─── Inverse with pre-selected ───────────────────────────────────────────────
+export const RadioInverseChecked: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-radio-group appearance="inverse">
+    <span slot="legend">Form label goes here</span>
+    <auro-radio id="radio-invChk1" label="Yes" name="invChkDemo" value="yes"></auro-radio>
+    <auro-radio id="radio-invChk2" label="No" name="invChkDemo" value="no" checked></auro-radio>
+    <auro-radio id="radio-invChk3" label="Maybe" name="invChkDemo" value="maybe"></auro-radio>
+  </auro-radio-group>
+</div>
+  `,
+};
+
+// ─── Inverse disabled ────────────────────────────────────────────────────────
+export const RadioInverseDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-radio-group appearance="inverse" disabled>
+    <span slot="legend">Form label goes here</span>
+    <auro-radio id="radio-invDis1" label="Yes" name="invDisDemo" value="yes"></auro-radio>
+    <auro-radio id="radio-invDis2" label="No" name="invDisDemo" value="no" checked></auro-radio>
+    <auro-radio id="radio-invDis3" label="Maybe" name="invDisDemo" value="maybe"></auro-radio>
+  </auro-radio-group>
+</div>
+  `,
+};
+
+// ─── Inverse error ───────────────────────────────────────────────────────────
+export const RadioInverseError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-radio-group appearance="inverse" error="There is an error with this form entry">
+    <span slot="legend">Form label goes here</span>
+    <auro-radio id="radio-invErr1" label="Yes" name="invErrDemo" value="yes"></auro-radio>
+    <auro-radio id="radio-invErr2" label="No" name="invErrDemo" value="no"></auro-radio>
+    <auro-radio id="radio-invErr3" label="Maybe" name="invErrDemo" value="maybe"></auro-radio>
+  </auro-radio-group>
+</div>
+  `,
+};

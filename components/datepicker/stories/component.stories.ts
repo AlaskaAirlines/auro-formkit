@@ -186,6 +186,24 @@ DatepickerHover.parameters = {
   }
 };
 
+// ─── Focus-within pseudo-state on a datepicker ──────────────────────────────
+export const DatepickerFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-datepicker>
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+  <span slot="fromLabel">Departure date</span>
+  <span slot="bib.fullscreen.fromLabel">Departure date</span>
+</auro-datepicker>
+  `,
+};
+DatepickerFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
 // ─── fromLabel slot renders with correct text content ────────────────────────
 export const DatepickerFromLabelSlot: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -364,5 +382,60 @@ export const DatepickerInDrawerBibOpen: Story = {
     await el.updateComplete;
     await wait(200);
   },
+};
+
+// ─── Disabled datepicker ─────────────────────────────────────────────────────
+export const DatepickerDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-datepicker disabled>
+  <span slot="fromLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+</auro-datepicker>
+  `,
+};
+
+// ─── Error state on datepicker ───────────────────────────────────────────────
+export const DatepickerError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-datepicker error="Custom error message">
+  <span slot="bib.fullscreen.headline">Error Example</span>
+  <span slot="fromLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+</auro-datepicker>
+  `,
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const DatepickerInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-datepicker appearance="inverse">
+    <span slot="ariaLabel.bib.close">Close Calendar</span>
+    <span slot="bib.fullscreen.headline">Datepicker Headline</span>
+    <span slot="fromLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+  </auro-datepicker>
+</div>
+  `,
+};
+
+// ─── Inverse range ───────────────────────────────────────────────────────────
+export const DatepickerInverseRange: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-datepicker appearance="inverse" range>
+    <span slot="ariaLabel.bib.close">Close Calendar</span>
+    <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
+    <span slot="fromLabel">Departure</span>
+    <span slot="toLabel">Return</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
+  </auro-datepicker>
+</div>
+  `,
 };
 

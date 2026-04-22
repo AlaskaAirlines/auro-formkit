@@ -188,3 +188,48 @@ MenuOptionHover.parameters = {
   },
 };
 
+// ─── Focus-within pseudo-state on a menu ─────────────────────────────────────
+export const MenuFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-menu>
+  <auro-menuoption value="apples">Apples</auro-menuoption>
+  <auro-menuoption value="oranges">Oranges</auro-menuoption>
+  <auro-menuoption value="grapes">Grapes</auro-menuoption>
+</auro-menu>
+  `,
+};
+MenuFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
+// ─── Disabled individual options ─────────────────────────────────────────────
+export const MenuDisabledOptions: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-menu>
+  <auro-menuoption value="new tab">New tab</auro-menuoption>
+  <auro-menuoption value="new window">New window</auro-menuoption>
+  <hr>
+  <auro-menuoption value="close tab" disabled>Close tab</auro-menuoption>
+  <auro-menuoption value="share" disabled>Share</auro-menuoption>
+  <hr>
+  <auro-menuoption value="print">Print</auro-menuoption>
+</auro-menu>
+  `,
+};
+
+// ─── Entire menu disabled ────────────────────────────────────────────────────
+export const MenuDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-menu disabled>
+  <auro-menuoption value="apples">Apples</auro-menuoption>
+  <auro-menuoption value="oranges">Oranges</auro-menuoption>
+  <auro-menuoption value="grapes">Grapes</auro-menuoption>
+</auro-menu>
+  `,
+};
+

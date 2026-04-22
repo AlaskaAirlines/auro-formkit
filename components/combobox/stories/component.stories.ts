@@ -640,3 +640,118 @@ export const ComboboxInDrawerBibOpen: Story = {
     await waitUntil(() => el.dropdown.isPopoverVisible);
   },
 };
+
+// ─── Disabled combobox ───────────────────────────────────────────────────────
+export const ComboboxDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox disabled>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+    <auro-menuoption static nomatch>No matching option</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+};
+
+// ─── Error state on combobox ─────────────────────────────────────────────────
+export const ComboboxError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-combobox error="Custom error message">
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Name</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+    <auro-menuoption static nomatch>No matching option</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+};
+
+// ─── Disabled option within combobox ─────────────────────────────────────────
+export const ComboboxDisabledOption: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-combobox>
+  <span slot="ariaLabel.input.clear">Clear All</span>
+  <span slot="bib.fullscreen.headline">Bib Header</span>
+  <span slot="label">Fruit</span>
+  <auro-menu>
+    <auro-menuoption value="Apples">Apples</auro-menuoption>
+    <auro-menuoption value="Oranges" disabled>Oranges (disabled)</auro-menuoption>
+    <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+    <auro-menuoption static nomatch>No matching option</auro-menuoption>
+  </auro-menu>
+</auro-combobox>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-combobox') as any;
+    await el.updateComplete;
+    setInputValue(el, 'a');
+    await el.updateComplete;
+    await waitUntil(() => el.dropdown.isPopoverVisible);
+  },
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const ComboboxInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-combobox appearance="inverse">
+    <span slot="bib.fullscreen.headline">Bib Header</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+      <auro-menuoption value="Grapes">Grapes</auro-menuoption>
+      <auro-menuoption static nomatch>No matching option</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+</div>
+  `,
+};
+
+// ─── Inverse disabled ────────────────────────────────────────────────────────
+export const ComboboxInverseDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-combobox appearance="inverse" disabled>
+    <span slot="bib.fullscreen.headline">Bib Header</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+      <auro-menuoption static nomatch>No matching option</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+</div>
+  `,
+};
+
+// ─── Inverse error ───────────────────────────────────────────────────────────
+export const ComboboxInverseError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-combobox appearance="inverse" error="Custom error message">
+    <span slot="bib.fullscreen.headline">Bib Header</span>
+    <span slot="label">Name</span>
+    <auro-menu>
+      <auro-menuoption value="Apples">Apples</auro-menuoption>
+      <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+      <auro-menuoption static nomatch>No matching option</auro-menuoption>
+    </auro-menu>
+  </auro-combobox>
+</div>
+  `,
+};
