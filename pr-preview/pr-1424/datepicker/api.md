@@ -35,7 +35,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
 | [placeholderEndDate](#placeholderEndDate)              | `placeholderEndDate`              |           | `string`                                         |                                                  | Optional placeholder text to display in the second input when using date range.<br />By default, datepicker will use `placeholder` for both inputs if placeholder is<br />specified, but placeholderEndDate is not. |
 | [placement](#placement)                       | `placement`                       |           | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'"                                 | Position where the bib should appear relative to the trigger. |
 | [range](#range)                           | `range`                           |           | `boolean`                                        | false                                            | If set, turns on date range functionality in auro-calendar. |
-| [referenceDates](#referenceDates)                  | `referenceDates`                  |           | `array`                                          |                                                  | Dates that the user should have for reference as part of their decision making when selecting a date.<br />This should be a JSON string array of dates in the format of `MM-DD-YYYY`. |
+| [referenceDates](#referenceDates)                  | `referenceDates`                  |           | `array`                                          |                                                  | Dates that the user should have for reference as part of their decision making when selecting a date.<br />This should be a JSON string array of dates in the format of `MM/DD/YYYY`. |
 | [required](#required)                        | `required`                        |           | `boolean`                                        | false                                            | Populates the `required` attribute on the input. Used for client-side validation. |
 | [setCustomValidity](#setCustomValidity)               | `setCustomValidity`               |           | `string`                                         |                                                  | Sets a custom help text message to display for all validityStates. |
 | [setCustomValidityCustomError](#setCustomValidityCustomError)    | `setCustomValidityCustomError`    |           | `string`                                         |                                                  | Custom help text message to display when validity = `customError`. |
@@ -529,7 +529,7 @@ The `format` attribute is used to define the date format used by the datepicker.
 
 You can make the dropdown open in fullscreen at a specific breakpoint by setting `fullscreenBreakpoint`.
 
-The default value of `fullscreenBreakpoint` is `sm`. 
+The default value of `fullscreenBreakpoint` is `sm`.
 
 Breakpoint token can be found [here](https://auro.alaskaair.com/getting-started/developers/design-tokens).
 
@@ -814,7 +814,7 @@ export function updateMinDateExample() {
 
 ### Month Names Localization
 
-The datepicker supports localized month names through the `monthNames` property. 
+The datepicker supports localized month names through the `monthNames` property.
 
 This example demonstrates how to set the `monthNames` property to Korean month names, with a Korean date format.
 
@@ -889,13 +889,13 @@ You can choose to outline dates for the user to reference by passing a string co
 
 Example:
 ```html
-<auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]'></auro-datepicker>
+<auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]'></auro-datepicker>
 ```
 
 <div class="exampleWrapper">
   <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reference-dates.html) -->
   <!-- The below content is automatically added from ./../apiExamples/reference-dates.html -->
-  <auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]' minDate="10-12-2025">
+  <auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/12/2025">
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
@@ -909,7 +909,7 @@ Example:
 <!-- The below code snippet is automatically added from ./../apiExamples/reference-dates.html -->
 
 ```html
-<auro-datepicker referenceDates='["10-05-2025", "10-15-2025", "10-20-2025", "10-22-2025"]' minDate="10-12-2025">
+<auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/12/2025">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
