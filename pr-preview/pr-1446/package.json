@@ -1,0 +1,13 @@
+{
+  "name": "auro-formkit-demo",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "http-server ./ -o"
+  },
+  "author": "Auro",
+  "license": "ISC",
+  "description": "Auro FormKit component demo",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
