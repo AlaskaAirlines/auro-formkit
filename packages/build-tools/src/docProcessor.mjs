@@ -124,6 +124,12 @@ export const fileConfigs = (config) => [
     input: fromAuroComponentRoot(`components/${config.component}/docs/partials/accessibility.md`),
     output: fromAuroComponentRoot(`components/${config.component}/demo/accessibility.md`),
   },
+  // voiceover.md
+  {
+    identifier: 'voiceover.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/voiceover.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/voiceover.md`),
+  },
 ];
 
 /**
