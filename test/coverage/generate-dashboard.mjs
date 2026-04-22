@@ -103,9 +103,30 @@ for (const fw of ['react', 'svelte']) {
 
 const data = { components, frameworks };
 
-// Read the HTML template and inject data
+// Read the HTML template and inject data (create if missing)
 const htmlPath = resolve(__dirname, 'index.html');
-let html = readFileSync(htmlPath, 'utf-8');
+let html;
+if (existsSync(htmlPath)) {
+  html = readFileSync(htmlPath, 'utf-8');
+} else {
+  html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Test Coverage Dashboard</title></head>
+<body>
+<h1>Test Coverage Dashboard</h1>
+<p>Generated: <!--TIMESTAMP--></p>
+<!--REPORT_DATA-->
+<script>
+  const d = window.__DASHBOARD_DATA__;
+  if (d) {
+    const pre = document.createElement('pre');
+    pre.textContent = JSON.stringify(d, null, 2);
+    document.body.appendChild(pre);
+  }
+</script>
+</body>
+</html>`;
+}
 
 const scriptTag = `<!--REPORT_DATA_START--><script>window.__DASHBOARD_DATA__ = ${JSON.stringify(data)};</script><!--REPORT_DATA_END-->`;
 const timestamp = `<!--TS_START-->${new Date().toLocaleString()}<!--TS_END-->`;
