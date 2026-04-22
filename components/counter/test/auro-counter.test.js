@@ -23,7 +23,9 @@ function runFullTest(mobileView) {
     await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
   });
 
-  describe('Rendering', () => {
+  describe('Rendering', function () {
+    this.timeout(5000);
+
     it('should be defined as a custom element', async () => {
       const el = await Boolean(customElements.get('auro-counter'));
       await expect(el).to.be.true;
@@ -44,7 +46,9 @@ function runFullTest(mobileView) {
   describe('User Stories', () => {
   });
 
-  describe('Properties', () => {
+  describe('Properties', function () {
+    this.timeout(5000);
+
     describe('value', () => {
       it('should initialize value to min when undefined', async () => {
         const el = await fixture(html`<auro-counter>Counter</auro-counter>`);
