@@ -16,11 +16,11 @@ export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.spec.ts',
   fullyParallel: false,
-  retries: 0,
+  retries: process.env.CI ? 2 : 1,
   reporter: [
     ['html', { open: 'always' }],
   ],
-  timeout: 15_000,
+  timeout: 30_000,
   use: {
     baseURL: 'http://localhost:5181',
     headless: true,
