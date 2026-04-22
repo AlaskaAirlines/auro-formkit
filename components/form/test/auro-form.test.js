@@ -350,42 +350,6 @@ function runFullTest(mobileView) {
     });
   });
 
-  describe('when calling reset() method', () => {
-    it.skip('should emit a reset event when reset() is called', async () => {
-      const el = await fixture(html`
-        <auro-form>
-          <auro-input name="testInput" required></auro-input>
-          <auro-input name="testInput2" value="prefilled-value" required></auro-input>
-        </auro-form>
-      `);
-
-      const resetEventPromise = new Promise((res) => {
-        el.addEventListener('reset', (event) => {
-          res(event.detail.previousValue);
-        });
-      });
-
-      const [inputEl, inputEl2] = el._elements;
-
-      inputEl.focus();
-      inputEl.value = 'zzz';
-      inputEl.blur();
-
-      inputEl2.focus();
-      inputEl.value = 'zzzzz';
-      inputEl.blur();
-
-      el.reset();
-
-      await elementUpdated(el);
-
-      await resetEventPromise;
-      await expect(el.value).to.have.keys('testInput', 'testInput2');
-      await expect(el.value.testInput).to.equal(null);
-      await expect(el.value.testInput2).to.equal('prefilled-value');
-    });
-  });
-
   describe('Mouse Behavior', () => {
     describe('Click', () => {
       it('should submit when submit button is clicked', async () => {

@@ -87,8 +87,11 @@ export function comboboxRemountSuite(framework: string, options?: SuiteOptions) 
         { timeout: 3000 },
       );
 
-      // Second click - value should still be cleared
+      // Second click - ensure the assignment takes effect before polling for cleared state
       await page.locator('#set-invalid').click();
+      await page.locator('auro-combobox').evaluate(async (el: any) => {
+        await el.updateComplete;
+      });
       await page.waitForFunction(
         () => (document.querySelector('auro-combobox') as any)?.value === undefined,
         { timeout: 3000 },

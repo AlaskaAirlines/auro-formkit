@@ -511,29 +511,6 @@ function runFullTest(mobileView) {
 
       });
 
-      it.skip('should set an error when a wrongly formatted value is passed', async () => {
-        const el = await fixture(html`
-          <auro-datepicker></auro-datepicker>
-        `);
-
-        el.value = "02.02.2022";
-        el.validate();
-        await elementUpdated(el);
-        await expect(el.getAttribute('validity')).to.be.equal('invalid');
-
-        // empty
-        el.value = "";
-        el.validate();
-        await elementUpdated(el);
-        await expect(el.getAttribute('validity')).to.be.equal('valid');
-
-        // passing YY/MM/DD format to MM/DD/YY datepicker
-        el.value = "2021/01/02";
-        el.validate();
-        await elementUpdated(el);
-        await expect(el.getAttribute('validity')).to.be.equal('invalid');
-      });
-
     });
 
     describe('fullscreenBreakpoint', () => {

@@ -19,11 +19,6 @@ function useSharedTestBehavior(name, markup) {
   const getElement = () => fixture(markup);
 
   describe(`${name} automatic form behavior`, () => {
-    it.skip('should be accessible', async () => {
-      const form = await getElement();
-      await expect(form).to.be.accessible();
-    });
-
     it('should be included as an auro form element in the form state', async () => {
       const form = await getElement();
       await expect(form._elements).to.have.length(1);
@@ -94,19 +89,20 @@ function runFullTest(mobileView) {
 
     useSharedTestBehavior('auro-datepicker', template);
 
-    it.skip('should surface values from datepicker without `range` attribute as a string', async () => {
+    it('should surface values from datepicker without `range` attribute as a string', async () => {
       const form = await fixture(template);
       const [datePicker] = form._elements;
       const [input] = datePicker.inputList;
 
       await expect(form.value.dateExample).to.equal(null);
 
-      input.value = '04/03/2023';
-      await elementUpdated(form);
+      setTimeout(() => { input.value = '04/03/2023'; }, 0);
+      await oneEvent(form, 'change');
+
       await expect(form.value.dateExample).to.equal('04/03/2023');
     });
 
-    it.skip('should surface values from datepicker with `range` attribute as a string array', async () => {
+    it('should surface values from datepicker with `range` attribute as a string array', async () => {
       const form = await fixture(html`
         <auro-form>
           <auro-datepicker id="date-example" name="dateExample" range required>
@@ -120,10 +116,12 @@ function runFullTest(mobileView) {
 
       await expect(form.value.dateExample).to.equal(null);
 
-      input.value = '04/03/2023';
-      input2.value = '04/04/2023';
+      setTimeout(() => { input.value = '04/03/2023'; }, 0);
+      await oneEvent(form, 'change');
 
-      await elementUpdated(form);
+      setTimeout(() => { input2.value = '04/04/2023'; }, 0);
+      await oneEvent(form, 'change');
+
       await expect(form.value.dateExample).to.deep.equal(['04/03/2023', '04/04/2023']);
     });
   });

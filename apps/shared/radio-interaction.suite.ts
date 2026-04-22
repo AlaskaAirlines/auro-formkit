@@ -212,8 +212,8 @@ export function radioInteractionSuite(framework: string) {
 
     test.describe('Preset value', () => {
       test('preset checked radio is selected on load', async ({ page }) => {
-        await expect.poll(() => isChecked(page, 'preset', 'beta')).toBe(true);
-        await expect.poll(() => groupValue(page, 'preset')).toBe('beta');
+        await expect.poll(() => isChecked(page, 'preset', 'beta'), { timeout: 5_000 }).toBe(true);
+        await expect.poll(() => groupValue(page, 'preset'), { timeout: 5_000 }).toBe('beta');
       });
 
       test('other radios in preset group are not checked', async ({ page }) => {

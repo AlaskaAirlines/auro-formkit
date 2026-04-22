@@ -380,15 +380,29 @@ export function menuInteractionSuite(framework: string) {
 
     test.describe('Nested menu', () => {
       test('clicking child option in nested menu selects it on root', async ({ page }) => {
+        // Ensure the menuoption's context consumer has wired up menuService
+        await expect.poll(() =>
+          page.locator('[data-testid="nested"] auro-menuoption[value="Child1"]')
+            .evaluate((el: any) => el.menuService != null),
+          { timeout: 5_000 },
+        ).toBe(true);
+
         await clickOption(page, 'nested', 'Child1');
 
-        await expect.poll(() => menuValue(page, 'nested')).toBe('Child1');
+        await expect.poll(() => menuValue(page, 'nested'), { timeout: 5_000 }).toBe('Child1');
       });
 
       test('clicking parent-level option still works', async ({ page }) => {
+        // Ensure the menuoption's context consumer has wired up menuService
+        await expect.poll(() =>
+          page.locator('[data-testid="nested"] auro-menuoption[value="Parent1"]')
+            .evaluate((el: any) => el.menuService != null),
+          { timeout: 5_000 },
+        ).toBe(true);
+
         await clickOption(page, 'nested', 'Parent1');
 
-        await expect.poll(() => menuValue(page, 'nested')).toBe('Parent1');
+        await expect.poll(() => menuValue(page, 'nested'), { timeout: 5_000 }).toBe('Parent1');
       });
 
       test('navigation traverses into nested menu', async ({ page }) => {

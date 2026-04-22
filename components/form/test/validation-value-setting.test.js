@@ -157,36 +157,6 @@ function runFullTest(mobileView) {
     await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
   });
 
-  // checkbox does not support this
-  describe.skip('checkbox', () => {
-    it('should set value via attribute', async () => {
-      const el = await getFixtureWithValueAttr(CHECKBOX_TEMPLATE, ['value2']);
-      await expect(el.value).to.equal(['value2']);
-      await expect(el.children[2].hasAttribute('checked')).to.be.true;
-    });
-
-    it('should set value via property', async () => {
-      const el = await getFixtureWithValueProp(CHECKBOX_TEMPLATE, ['value2', 'value3']);
-      await expect(el.children[2].hasAttribute('checked')).to.be.true;
-      await expect(el.children[3].hasAttribute('checked')).to.be.true;
-    });
-  });
-
-  // radio does not support this
-  describe.skip('radio', () => {
-    it('should set value via attribute', async () => {
-      const el = await getFixtureWithValueAttr(RADIO_TEMPLATE, 'yes');
-      await expect(el.value).to.equal('yes');
-      await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
-    });
-
-    it('should set value via property', async () => {
-      const el = await getFixtureWithValueProp(RADIO_TEMPLATE, 'yes');
-      await expect(el.value).to.equal('yes');
-      await expect(el.children[1].getAttribute('aria-checked')).to.equal('true');
-    });
-  });
-
   describe('input', () => {
     it('should set value via attribute and reflect in inner input', async () => {
       const el = await getFixtureWithValueAttr(INPUT_TEMPLATE, 'some text');
@@ -279,30 +249,6 @@ function runFullTest(mobileView) {
 
     it('should set value via property', async () => {
       const el = await getFixtureWithValueProp(COUNTER_TEMPLATE, 3);
-      await expect(el.value).to.eql(3);
-    });
-  });
-
-  // counter-group does not support this
-  describe.skip('counter-group', () => {
-    it('should set value via attribute', async () => {
-      const el = await getFixtureWithValueAttr(COUNTER_GROUP_TEMPLATE, JSON.stringify({
-        'first': 2,
-        'second': 4
-      }));
-
-      await expect(el.children[0].value).to.eql(2);
-      await expect(el.children[1].value).to.eql(4);
-      await expect(el.value).to.eql(3);
-    });
-
-    it('should set value via property', async () => {
-      const el = await getFixtureWithValueProp(COUNTER_GROUP_TEMPLATE, {
-        'first': 2,
-        'second': 4
-      });
-      await expect(el.children[0].value).to.eql(2);
-      await expect(el.children[1].value).to.eql(4);
       await expect(el.value).to.eql(3);
     });
   });
