@@ -23,6 +23,8 @@ build/
 
 ## Code coverage reports
 coverage/
+!test/coverage/
+test/coverage/index.html
 
 ## Turbo repo
 .turbo
