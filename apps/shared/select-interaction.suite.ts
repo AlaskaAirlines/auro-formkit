@@ -17,7 +17,14 @@ function select(page: Page, fixture: string): Locator {
 
 /** Focus the select trigger via click. */
 async function openBib(page: Page, fixture: string) {
-  // Click the trigger to open — select opens on trigger click, not on typing
+  // Wait for the dropdown shadow element to be available before clicking
+  await expect.poll(() =>
+    select(page, fixture).evaluate((el: any) =>
+      el.shadowRoot?.querySelector('[auro-dropdown]') != null,
+    ),
+    { timeout: 5_000 },
+  ).toBe(true);
+
   await select(page, fixture).evaluate((el: any) => {
     const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
     const trigger = dropdown.querySelector('[slot="trigger"]');

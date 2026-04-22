@@ -49,7 +49,7 @@ function getNativeType(page: Page, fixture: string) {
 /** Clear the native input via keyboard (select-all + delete). */
 async function clearViaKeyboard(page: Page, fixture: string) {
   await focusNative(page, fixture);
-  await page.keyboard.press('Meta+A');
+  await page.keyboard.press('ControlOrMeta+A');
   await page.keyboard.press('Backspace');
 }
 
