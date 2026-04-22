@@ -70,7 +70,7 @@
     "test:framework:svelte": "turbo run test:framework --filter=@aurodesignsystem/svelte-framework",
     "test:frameworks": "turbo run test:framework --filter=@aurodesignsystem/react-framework --filter=@aurodesignsystem/svelte-framework",
     "test:watch": "turbo run test:watch",
-    "test:wtr": "turbo run test",
+    "test:wtr": "turbo run test --concurrency=3",
     "update-stories": "node ./packages/utils/update-stories.js"
   },
   "dependencies": {
