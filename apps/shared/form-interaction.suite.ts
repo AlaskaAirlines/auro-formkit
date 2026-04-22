@@ -2,12 +2,20 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Wait for auro-form and auro-input custom elements to be fully registered. */
+/** Wait for auro-form and auro-input custom elements to be fully registered and shadow DOM rendered. */
 async function waitForForm(page: Page) {
   await page.waitForFunction(
     () =>
       customElements.get('auro-form') !== undefined &&
       customElements.get('auro-input') !== undefined,
+    { timeout: 10_000 },
+  );
+  // Wait for the first input's shadow DOM <input> to be rendered
+  await page.waitForFunction(
+    () => {
+      const el = document.querySelector('auro-input');
+      return el?.shadowRoot?.querySelector('input') !== null;
+    },
     { timeout: 10_000 },
   );
 }
@@ -153,7 +161,7 @@ export function formInteractionSuite(framework: string) {
 
     test.describe('isInitialState', () => {
       test('is true when form is first created', async ({ page }) => {
-        expect(await formIsInitial(page, 'simple')).toBe(true);
+        await expect.poll(() => formIsInitial(page, 'simple')).toBe(true);
       });
 
       test('becomes false after typing in an input', async ({ page }) => {
@@ -213,7 +221,7 @@ export function formInteractionSuite(framework: string) {
         await form(page, 'simple').evaluate((el: any) => el.submit());
         await page.waitForTimeout(500);
 
-        expect(await form(page, 'simple').evaluate((el: any) => (el as any).__submitFired)).toBe(false);
+        await expect.poll(() => form(page, 'simple').evaluate((el: any) => (el as any).__submitFired)).toBe(false);
       });
     });
 

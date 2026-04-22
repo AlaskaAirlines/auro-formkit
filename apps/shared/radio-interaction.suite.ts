@@ -2,12 +2,20 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Wait for auro-radio and auro-radio-group to be registered. */
+/** Wait for auro-radio and auro-radio-group to be registered and shadow DOM rendered. */
 async function waitForRadio(page: Page) {
   await page.waitForFunction(
     () =>
       customElements.get('auro-radio') !== undefined &&
       customElements.get('auro-radio-group') !== undefined,
+    { timeout: 10_000 },
+  );
+  // Wait for the first radio's shadow DOM input to be rendered
+  await page.waitForFunction(
+    () => {
+      const el = document.querySelector('auro-radio');
+      return el?.shadowRoot?.querySelector('input') !== null;
+    },
     { timeout: 10_000 },
   );
 }
@@ -82,8 +90,8 @@ export function radioInteractionSuite(framework: string) {
 
         await clickRadio(page, 'default', 'green');
 
-        expect(await groupValue(page, 'default')).toBe('green');
-        expect(await isChecked(page, 'default', 'green')).toBe(true);
+        await expect.poll(() => groupValue(page, 'default')).toBe('green');
+        await expect.poll(() => isChecked(page, 'default', 'green')).toBe(true);
       });
 
       test('fires input event on group when selection changes', async ({ page }) => {
@@ -217,8 +225,8 @@ export function radioInteractionSuite(framework: string) {
       });
 
       test('other radios in preset group are not checked', async ({ page }) => {
-        expect(await isChecked(page, 'preset', 'alpha')).toBe(false);
-        expect(await isChecked(page, 'preset', 'gamma')).toBe(false);
+        await expect.poll(() => isChecked(page, 'preset', 'alpha')).toBe(false);
+        await expect.poll(() => isChecked(page, 'preset', 'gamma')).toBe(false);
       });
     });
 
@@ -287,7 +295,7 @@ export function radioInteractionSuite(framework: string) {
           return val == null;
         }).toBe(true);
 
-        expect(await isChecked(page, 'default', 'red')).toBe(false);
+        await expect.poll(() => isChecked(page, 'default', 'red')).toBe(false);
       });
 
       test('reset() clears validity', async ({ page }) => {
@@ -348,9 +356,9 @@ export function radioInteractionSuite(framework: string) {
 
         await clickRadio(page, 'default', 'green');
 
-        expect(await isChecked(page, 'default', 'red')).toBe(false);
-        expect(await isChecked(page, 'default', 'blue')).toBe(false);
-        expect(await isChecked(page, 'default', 'green')).toBe(true);
+        await expect.poll(() => isChecked(page, 'default', 'red')).toBe(false);
+        await expect.poll(() => isChecked(page, 'default', 'blue')).toBe(false);
+        await expect.poll(() => isChecked(page, 'default', 'green')).toBe(true);
       });
     });
   });

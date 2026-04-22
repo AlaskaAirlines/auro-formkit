@@ -2,10 +2,18 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Wait for auro-dropdown custom element to be fully registered. */
+/** Wait for auro-dropdown custom element to be fully registered and shadow DOM rendered. */
 async function waitForDropdown(page: Page) {
   await page.waitForFunction(
     () => customElements.get('auro-dropdown') !== undefined,
+    { timeout: 10_000 },
+  );
+  // Wait for the first dropdown's shadow DOM trigger to be rendered
+  await page.waitForFunction(
+    () => {
+      const el = document.querySelector('auro-dropdown');
+      return el?.shadowRoot?.querySelector('#trigger') !== null;
+    },
     { timeout: 10_000 },
   );
 }
@@ -93,7 +101,7 @@ export function dropdownInteractionSuite(framework: string) {
         await clickTrigger(page, 'disabled');
         // Small wait to verify it doesn't open
         await page.waitForTimeout(200);
-        expect(await isBibVisible(page, 'disabled')).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'disabled')).toBe(false);
       });
 
       test('noToggle: second click does not close the dropdown', async ({ page }) => {
@@ -103,13 +111,13 @@ export function dropdownInteractionSuite(framework: string) {
         await clickTrigger(page, 'no-toggle');
         // Wait a moment to confirm it stays open
         await page.waitForTimeout(200);
-        expect(await isBibVisible(page, 'no-toggle')).toBe(true);
+        await expect.poll(() => isBibVisible(page, 'no-toggle')).toBe(true);
       });
 
       test('disableEventShow: click does not open the dropdown', async ({ page }) => {
         await clickTrigger(page, 'disable-event-show');
         await page.waitForTimeout(200);
-        expect(await isBibVisible(page, 'disable-event-show')).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'disable-event-show')).toBe(false);
       });
 
       test('disableEventShow: show() method opens the dropdown', async ({ page }) => {
@@ -160,18 +168,18 @@ export function dropdownInteractionSuite(framework: string) {
         await focusTrigger(page, 'disabled');
         await page.keyboard.press('Enter');
         await page.waitForTimeout(200);
-        expect(await isBibVisible(page, 'disabled')).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'disabled')).toBe(false);
       });
 
       test('disableKeyboardHandling: Enter and Space do not open', async ({ page }) => {
         await focusTrigger(page, 'disable-keyboard');
         await page.keyboard.press('Enter');
         await page.waitForTimeout(200);
-        expect(await isBibVisible(page, 'disable-keyboard')).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'disable-keyboard')).toBe(false);
 
         await page.keyboard.press('Space');
         await page.waitForTimeout(200);
-        expect(await isBibVisible(page, 'disable-keyboard')).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'disable-keyboard')).toBe(false);
       });
     });
 
@@ -191,14 +199,14 @@ export function dropdownInteractionSuite(framework: string) {
         await page.locator('#outside-element').focus();
         // Wait a moment to confirm it stays open
         await page.waitForTimeout(300);
-        expect(await isBibVisible(page, 'no-hide-focus-loss')).toBe(true);
+        await expect.poll(() => isBibVisible(page, 'no-hide-focus-loss')).toBe(true);
       });
     });
 
     test.describe('Chevron indicator', () => {
       test('chevron points down when closed and up when open', async ({ page }) => {
         // Closed — chevron should be down (not up)
-        expect(await isChevronUp(page, 'default')).toBe(false);
+        await expect.poll(() => isChevronUp(page, 'default')).toBe(false);
 
         await clickTrigger(page, 'default');
         await waitForBibOpen(page, 'default');
