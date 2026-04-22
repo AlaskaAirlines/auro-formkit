@@ -2,10 +2,18 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Wait for auro-input custom element to be fully registered. */
+/** Wait for auro-input custom element to be fully registered and shadow DOM rendered. */
 async function waitForInput(page: Page) {
   await page.waitForFunction(
     () => customElements.get('auro-input') !== undefined,
+    { timeout: 10_000 },
+  );
+  // Wait for the first input's shadow DOM <input> to be rendered
+  await page.waitForFunction(
+    () => {
+      const el = document.querySelector('auro-input');
+      return el?.shadowRoot?.querySelector('input') !== null;
+    },
     { timeout: 10_000 },
   );
 }
@@ -69,7 +77,7 @@ export function inputInteractionSuite(framework: string) {
     test.describe('Typing and value', () => {
       test('typing sets the value property', async ({ page }) => {
         await typeIn(page, 'default', 'John Doe');
-        expect(await getValue(page, 'default')).toBe('John Doe');
+        await expect.poll(() => getValue(page, 'default')).toBe('John Doe');
       });
 
       test('preset value is reflected', async ({ page }) => {
@@ -201,7 +209,7 @@ export function inputInteractionSuite(framework: string) {
         });
         await page.keyboard.type('extra');
 
-        expect(await getValue(page, 'disabled')).toBe('Cannot edit');
+        await expect.poll(() => getValue(page, 'disabled')).toBe('Cannot edit');
       });
 
       test('readonly input does not accept typed input', async ({ page }) => {
@@ -211,7 +219,7 @@ export function inputInteractionSuite(framework: string) {
         });
         await page.keyboard.type('extra');
 
-        expect(await getValue(page, 'readonly')).toBe('Read only');
+        await expect.poll(() => getValue(page, 'readonly')).toBe('Read only');
       });
     });
 
@@ -219,7 +227,7 @@ export function inputInteractionSuite(framework: string) {
 
     test.describe('Password toggle', () => {
       test('password input masks text by default', async ({ page }) => {
-        expect(await getNativeType(page, 'password')).toBe('password');
+        await expect.poll(() => getNativeType(page, 'password')).toBe('password');
       });
 
       test('clicking toggle reveals password text', async ({ page }) => {
@@ -316,7 +324,7 @@ export function inputInteractionSuite(framework: string) {
 
         // Type and verify value — confirms focus is correct
         await page.keyboard.type('focused text', { delay: 20 });
-        expect(await getValue(page, 'default')).toBe('focused text');
+        await expect.poll(() => getValue(page, 'default')).toBe('focused text');
       });
     });
 

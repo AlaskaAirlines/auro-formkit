@@ -2,12 +2,20 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Wait for auro-menu and auro-menuoption to be registered. */
+/** Wait for auro-menu and auro-menuoption to be registered and ready. */
 async function waitForMenu(page: Page) {
   await page.waitForFunction(
     () =>
       customElements.get('auro-menu') !== undefined &&
       customElements.get('auro-menuoption') !== undefined,
+    { timeout: 10_000 },
+  );
+  // Wait for the first menu's options to be slotted and ready
+  await page.waitForFunction(
+    () => {
+      const el = document.querySelector('auro-menu') as any;
+      return el?.updateComplete !== undefined;
+    },
     { timeout: 10_000 },
   );
 }
@@ -242,7 +250,7 @@ export function menuInteractionSuite(framework: string) {
         ).toBe(true);
 
         // Value should remain
-        expect(await menuValue(page, 'default')).toBe('Apples');
+        await expect.poll(() => menuValue(page, 'default')).toBe('Apples');
       });
     });
 

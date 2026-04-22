@@ -2,10 +2,18 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Wait for auro-checkbox custom element to be fully registered. */
+/** Wait for auro-checkbox custom element to be fully registered and shadow DOM rendered. */
 async function waitForCheckbox(page: Page) {
   await page.waitForFunction(
     () => customElements.get('auro-checkbox') !== undefined,
+    { timeout: 10_000 },
+  );
+  // Wait for the first checkbox's shadow DOM input to be rendered
+  await page.waitForFunction(
+    () => {
+      const el = document.querySelector('auro-checkbox');
+      return el?.shadowRoot?.querySelector('input') !== null;
+    },
     { timeout: 10_000 },
   );
 }
@@ -43,7 +51,7 @@ export function checkboxInteractionSuite(framework: string) {
 
     test.describe('Mouse interaction', () => {
       test('clicking a checkbox checks it', async ({ page }) => {
-        expect(await isChecked(page, 'default')).toBe(false);
+        await expect.poll(() => isChecked(page, 'default')).toBe(false);
         await checkbox(page, 'default').click();
         await expect.poll(() => isChecked(page, 'default')).toBe(true);
       });
@@ -57,15 +65,15 @@ export function checkboxInteractionSuite(framework: string) {
       });
 
       test('clicking a disabled checkbox does not toggle it', async ({ page }) => {
-        expect(await isChecked(page, 'disabled')).toBe(false);
+        await expect.poll(() => isChecked(page, 'disabled')).toBe(false);
         await checkbox(page, 'disabled').click({ force: true });
         // Small wait to ensure no async toggle
         await page.waitForTimeout(100);
-        expect(await isChecked(page, 'disabled')).toBe(false);
+        await expect.poll(() => isChecked(page, 'disabled')).toBe(false);
       });
 
       test('clicking a pre-checked checkbox unchecks it', async ({ page }) => {
-        expect(await isChecked(page, 'checked')).toBe(true);
+        await expect.poll(() => isChecked(page, 'checked')).toBe(true);
         await checkbox(page, 'checked').click();
         await expect.poll(() => isChecked(page, 'checked')).toBe(false);
       });
@@ -75,7 +83,7 @@ export function checkboxInteractionSuite(framework: string) {
       test('Space toggles the checkbox on', async ({ page }) => {
         await focusCheckbox(page, 'default');
         await expect(checkbox(page, 'default')).toBeFocused();
-        expect(await isChecked(page, 'default')).toBe(false);
+        await expect.poll(() => isChecked(page, 'default')).toBe(false);
         await page.keyboard.press('Space');
         await expect.poll(() => isChecked(page, 'default')).toBe(true);
       });
@@ -93,11 +101,11 @@ export function checkboxInteractionSuite(framework: string) {
       test('Space on a disabled checkbox does not toggle it', async ({ page }) => {
         await focusCheckbox(page, 'disabled');
         await expect(checkbox(page, 'disabled')).toBeFocused();
-        expect(await isChecked(page, 'disabled')).toBe(false);
+        await expect.poll(() => isChecked(page, 'disabled')).toBe(false);
         await page.keyboard.press('Space');
         // Small wait to ensure no async toggle
         await page.waitForTimeout(100);
-        expect(await isChecked(page, 'disabled')).toBe(false);
+        await expect.poll(() => isChecked(page, 'disabled')).toBe(false);
       });
     });
 
@@ -106,7 +114,7 @@ export function checkboxInteractionSuite(framework: string) {
         const ariaChecked = () =>
           checkbox(page, 'default').evaluate((el: any) => el.getAttribute('aria-checked'));
 
-        expect(await ariaChecked()).toBe('false');
+        await expect.poll(ariaChecked).toBe('false');
 
         await checkbox(page, 'default').click();
         await expect.poll(ariaChecked).toBe('true');
@@ -167,8 +175,8 @@ export function checkboxInteractionSuite(framework: string) {
         await checkbox(page, 'group', 1).click();
         await expect.poll(() => isChecked(page, 'group', 1)).toBe(true);
 
-        expect(await isChecked(page, 'group', 0)).toBe(true);
-        expect(await isChecked(page, 'group', 2)).toBe(false);
+        await expect.poll(() => isChecked(page, 'group', 0)).toBe(true);
+        await expect.poll(() => isChecked(page, 'group', 2)).toBe(false);
       });
 
       test('unchecking one does not affect others', async ({ page }) => {
@@ -180,14 +188,14 @@ export function checkboxInteractionSuite(framework: string) {
 
         await checkbox(page, 'group', 0).click();
         await expect.poll(() => isChecked(page, 'group', 0)).toBe(false);
-        expect(await isChecked(page, 'group', 1)).toBe(true);
+        await expect.poll(() => isChecked(page, 'group', 1)).toBe(true);
       });
 
       test('clicking a checkbox in a disabled group does not toggle it', async ({ page }) => {
-        expect(await isChecked(page, 'disabled-group', 0)).toBe(false);
+        await expect.poll(() => isChecked(page, 'disabled-group', 0)).toBe(false);
         await checkbox(page, 'disabled-group', 0).click({ force: true });
         await page.waitForTimeout(100);
-        expect(await isChecked(page, 'disabled-group', 0)).toBe(false);
+        await expect.poll(() => isChecked(page, 'disabled-group', 0)).toBe(false);
       });
     });
 
@@ -211,7 +219,7 @@ export function checkboxInteractionSuite(framework: string) {
         await page.keyboard.press('Space');
         await expect.poll(() => isChecked(page, 'group', 1)).toBe(true);
         // First checkbox should remain unchecked
-        expect(await isChecked(page, 'group', 0)).toBe(false);
+        await expect.poll(() => isChecked(page, 'group', 0)).toBe(false);
       });
     });
 
