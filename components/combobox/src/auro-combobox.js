@@ -663,7 +663,9 @@ export class AuroCombobox extends AuroElement {
    * @returns {void}
    */
   showBib() {
-    if (!this.input.value) {
+    // for fullscreen bib, with `noFilter` showBib() gets called again as availableOptions gets updated
+    // to prevent closing bib in that case, adding guard not to hide bib for empty input on fullscreen bib
+    if (!this.input.value && !this.dropdown.isBibFullscreen) {
       this.dropdown.hide();
       return;
     }
