@@ -1,5 +1,6 @@
 import { Logger } from "@aurodesignsystem/auro-library/scripts/utils/logger.mjs";
 import fs from "node:fs/promises";
+import { existsSync } from "node:fs";
 import {
   fromAuroComponentRoot,
   processContentForFile,
@@ -138,6 +139,12 @@ export async function processDocFiles(componentName) {
     await templateFiller.extractNames();
 
     for (const fileConfig of fileConfigs(config)) {
+      // Skip files whose input doesn't exist for this component
+      if (!existsSync(fileConfig.input)) {
+        Logger.log(`Skipping ${fileConfig.identifier} — input file not found for ${config.component}`);
+        continue;
+      }
+
       try {
         const dependencies = componentDependencyTree[config.component];
         const components = componentTree[config.component];
