@@ -27,9 +27,6 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    chromatic: {
-      disableSnapshot: true,
-    },
   },
 };
 export default meta;
@@ -41,7 +38,7 @@ type Story = StoryObj;
  * Clicking submit fires the `submit` event with the correct form value.
  */
 export const SuccessfulSubmit: Story = {
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'chromatic-enabled'],
   play: async ({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) => {
     const form = canvasElement.querySelector('auro-form') as any;
 
@@ -86,7 +83,7 @@ export const SuccessfulSubmit: Story = {
  * The reset button starts disabled and enables once the user interacts with the form.
  */
 export const ResetForm: Story = {
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'chromatic-enabled'],
   play: async ({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) => {
     const form = canvasElement.querySelector('auro-form') as any;
 
@@ -133,7 +130,7 @@ export const ResetForm: Story = {
  * Pressing Enter while focused in a valid form field submits the form.
  */
 export const EnterKeySubmit: Story = {
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'chromatic-enabled'],
   play: async ({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) => {
     const form = canvasElement.querySelector('auro-form') as any;
 
@@ -168,7 +165,7 @@ export const EnterKeySubmit: Story = {
  * and firing the `submit` event with the correct value.
  */
 export const CustomRegistration: Story = {
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'chromatic-enabled'],
   play: async ({ canvas, canvasElement }: { canvas: any; canvasElement: HTMLElement }) => {
     // Verify the custom element is registered in the registry
     expect(customElements.get('custom-form')).toBeDefined();

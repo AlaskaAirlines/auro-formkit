@@ -194,3 +194,91 @@ InputHover.parameters = {
     hover: true,
   }
 };
+
+// ─── Focus-within pseudo-state on an input ───────────────────────────────────
+export const InputFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input>
+  <span slot="label">First name</span>
+  <span slot="helpText">Please enter your first name.</span>
+</auro-input>
+  `,
+};
+InputFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
+// ─── Disabled state ─────────────────────────────────────────────────────────
+export const InputDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input disabled>
+  <span slot="label">First name</span>
+  <span slot="helpText">Help text</span>
+</auro-input>
+  `,
+};
+
+// ─── Error state with message ────────────────────────────────────────────────
+export const InputError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input error="Please enter a valid name">
+  <span slot="label">First name</span>
+  <span slot="helpText">Please enter your first name.</span>
+</auro-input>
+  `,
+};
+
+// ─── Readonly state ──────────────────────────────────────────────────────────
+export const InputReadonly: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input readonly value="Read-only value">
+  <span slot="label">First name</span>
+  <span slot="helpText">This field is read-only.</span>
+</auro-input>
+  `,
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const InputInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-input appearance="inverse">
+    <span slot="label">Label</span>
+    <span slot="helpText">Help Text</span>
+  </auro-input>
+</div>
+  `,
+};
+
+// ─── Inverse disabled ────────────────────────────────────────────────────────
+export const InputInverseDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-input appearance="inverse" disabled>
+    <span slot="label">Label</span>
+    <span slot="helpText">Help Text</span>
+  </auro-input>
+</div>
+  `,
+};
+
+// ─── Inverse error ───────────────────────────────────────────────────────────
+export const InputInverseError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-input appearance="inverse" error="Custom error message">
+    <span slot="label">Name</span>
+    <span slot="helpText">Please enter your full name.</span>
+  </auro-input>
+</div>
+  `,
+};

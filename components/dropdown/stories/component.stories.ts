@@ -24,6 +24,18 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// ─── Default closed state ────────────────────────────────────────────────────
+export const DropdownDefault: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-dropdown chevron aria-label="dropdown default">
+  <span slot="label">Select option</span>
+  <div slot="trigger">Trigger</div>
+  <div style="padding: 1rem;">Bib content</div>
+</auro-dropdown>
+  `,
+};
+
 // ─── §1.3.1  Click opens the bib (P0) ───────────────────────────────────────
 export const DropdownOpenViaClick: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -497,3 +509,106 @@ export const DropdownInDrawerBibOpen: Story = {
 };
 
 // Counter-group interaction stories live in components/counter/stories/component.stories.ts
+
+// ─── Hover pseudo-state on a dropdown trigger ────────────────────────────────
+export const DropdownHover: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-dropdown chevron aria-label="dropdown hover">
+  <span slot="label">Select option</span>
+  <div slot="trigger">Trigger</div>
+  <div style="padding: 1rem;">Bib content</div>
+</auro-dropdown>
+  `,
+};
+DropdownHover.parameters = {
+  pseudo: {
+    hover: true,
+  },
+};
+
+// ─── Focus-within pseudo-state on a dropdown ─────────────────────────────────
+export const DropdownFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-dropdown chevron aria-label="dropdown focus">
+  <span slot="label">Select option</span>
+  <div slot="trigger">Trigger</div>
+  <div style="padding: 1rem;">Bib content</div>
+</auro-dropdown>
+  `,
+};
+DropdownFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
+// ─── Disabled dropdown ───────────────────────────────────────────────────────
+export const DropdownDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-dropdown aria-label="custom label" disabled chevron>
+  Lorem ipsum solar
+  <div slot="trigger">Trigger</div>
+  <span slot="helpText">Help text</span>
+  <span slot="label">Name</span>
+</auro-dropdown>
+  `,
+};
+
+// ─── Error state on dropdown ─────────────────────────────────────────────────
+export const DropdownError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-dropdown error aria-label="dropdown error">
+  <div style="padding: 1rem;">Lorem ipsum solar</div>
+  <span slot="helpText">Help text</span>
+  <span slot="label">Element label</span>
+  <div slot="trigger">Trigger</div>
+</auro-dropdown>
+  `,
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const DropdownInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-dropdown appearance="inverse" aria-label="inverse dropdown">
+    Lorem ipsum solar
+    <div slot="trigger">Trigger</div>
+  </auro-dropdown>
+</div>
+  `,
+};
+
+// ─── Inverse disabled ────────────────────────────────────────────────────────
+export const DropdownInverseDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-dropdown appearance="inverse" disabled chevron aria-label="inverse disabled dropdown">
+    Lorem ipsum solar
+    <div slot="trigger">Trigger</div>
+    <span slot="helpText">Help text</span>
+    <span slot="label">Name</span>
+  </auro-dropdown>
+</div>
+  `,
+};
+
+// ─── Inverse error ───────────────────────────────────────────────────────────
+export const DropdownInverseError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-dropdown appearance="inverse" error aria-label="inverse error dropdown">
+    <div style="padding: 1rem;">Lorem ipsum solar</div>
+    <span slot="helpText">Help text</span>
+    <span slot="label">Element label</span>
+    <div slot="trigger">Trigger</div>
+  </auro-dropdown>
+</div>
+  `,
+};
