@@ -111,6 +111,12 @@ export const fileConfigs = (config) => [
     output: fromAuroComponentRoot(`components/${config.component}/demo/keyboardBehavior.md`),
     preProcessors: [templateFiller.formatApiTable],
   },
+  // layout.md
+  {
+    identifier: 'layout.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/layout.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/layout.md`),
+  },
 ];
 
 /**
