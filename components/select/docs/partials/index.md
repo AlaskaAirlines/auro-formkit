@@ -1,9 +1,3 @@
-<!--
- THIS PAGE'S CONTENT SHOULD BE KEPT MINIMAL.
- ONLY ADD EXAMPLES THAT ARE TRULY NECESSARY FOR THE INDEX PAGE — THE BASIC EXAMPLE IS USUALLY ENOUGH.
- ALL OTHER EXAMPLES SHOULD GO IN THE API DOCUMENTATION.
--->
-
 <auro-header level="1" id="overview">Select - Overview and UX Guide</auro-header>
 <div class="contentWrapper">
   <nav>
