@@ -2,6 +2,7 @@
   "extends": "@aurodesignsystem/typescript/base.json",
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": ".",
     "rootDirs": ["src", "vendor"]
   },
   "include": [
