@@ -63,17 +63,19 @@ export function accessibilityTreeSuite(framework: string) {
     test('checkbox group uses fieldset/legend grouping', async ({ page }) => {
       // fieldset and legend are inside the shadow DOM of auro-checkbox-group
       const group = fixture(page, 'group', 'auro-checkbox-group');
-      const hasFieldset = await group.evaluate((el: any) =>
-        el.shadowRoot?.querySelector('fieldset') !== null,
-      );
-      expect(hasFieldset).toBe(true);
+      await expect.poll(() =>
+        group.evaluate((el: any) =>
+          el.shadowRoot?.querySelector('fieldset') !== null,
+        ),
+      ).toBe(true);
 
-      const legendText = await group.evaluate((el: any) => {
-        const legend = el.shadowRoot?.querySelector('legend');
-        return legend?.textContent?.trim() ?? '';
-      });
       // The legend contains the slotted text
-      expect(legendText.length).toBeGreaterThan(0);
+      await expect.poll(() =>
+        group.evaluate((el: any) => {
+          const legend = el.shadowRoot?.querySelector('legend');
+          return (legend?.textContent?.trim() ?? '').length > 0;
+        }),
+      ).toBe(true);
     });
 
     test('clicking checkbox updates accessible checked state', async ({ page }) => {
@@ -147,19 +149,21 @@ export function accessibilityTreeSuite(framework: string) {
 
     test('input has an accessible label from the label slot', async ({ page }) => {
       // The shadow DOM <input> gets its label via <label for=id>
-      const hasLabel = await fixture(page, 'default', 'auro-input').evaluate((el: any) => {
-        const input = el.shadowRoot?.querySelector('input');
-        const label = el.shadowRoot?.querySelector('label');
-        return input !== null && label !== null && label.getAttribute('for') === input.id;
-      });
-      expect(hasLabel).toBe(true);
+      await expect.poll(() =>
+        fixture(page, 'default', 'auro-input').evaluate((el: any) => {
+          const input = el.shadowRoot?.querySelector('input');
+          const label = el.shadowRoot?.querySelector('label');
+          return input !== null && label !== null && label.getAttribute('for') === input.id;
+        }),
+      ).toBe(true);
     });
 
     test('input has aria-describedby linking to help text', async ({ page }) => {
       const input = fixture(page, 'default', 'auro-input')
         .locator('input');
-      const describedBy = await input.getAttribute('aria-describedby');
-      expect(describedBy).toBeTruthy();
+      await expect.poll(() =>
+        input.getAttribute('aria-describedby'),
+      ).toBeTruthy();
     });
 
     test('invalid input exposes aria-invalid=true', async ({ page }) => {
@@ -257,10 +261,11 @@ export function accessibilityTreeSuite(framework: string) {
       // Standalone auro-dropdown only sets aria-expanded when a11yRole is assigned
       // (e.g. when used inside auro-select or auro-combobox).
       // Verify the trigger element exists and is interactive.
-      const hasTrigger = await fixture(page, 'default', 'auro-dropdown').evaluate((el: any) =>
-        el.shadowRoot?.querySelector('#trigger') !== null,
-      );
-      expect(hasTrigger).toBe(true);
+      await expect.poll(() =>
+        fixture(page, 'default', 'auro-dropdown').evaluate((el: any) =>
+          el.shadowRoot?.querySelector('#trigger') !== null,
+        ),
+      ).toBe(true);
     });
 
     test('opening dropdown updates isPopoverVisible', async ({ page }) => {
@@ -330,14 +335,15 @@ export function accessibilityTreeSuite(framework: string) {
     test('increment and decrement buttons have accessible labels', async ({ page }) => {
       const buttons = fixture(page, 'default', 'auro-counter')
         .locator('button');
-      const count = await buttons.count();
-      expect(count).toBe(2);
+      await expect.poll(() => buttons.count()).toBe(2);
 
       // Both buttons should have aria-label for screen readers
-      for (let i = 0; i < count; i++) {
-        const label = await buttons.nth(i).getAttribute('aria-label');
-        expect(label).toBeTruthy();
-      }
+      await expect.poll(() =>
+        buttons.nth(0).getAttribute('aria-label'),
+      ).toBeTruthy();
+      await expect.poll(() =>
+        buttons.nth(1).getAttribute('aria-label'),
+      ).toBeTruthy();
     });
   });
 
@@ -377,11 +383,12 @@ export function accessibilityTreeSuite(framework: string) {
     });
 
     test('select has screen reader live region', async ({ page }) => {
-      const hasLiveRegion = await fixture(page, 'default', 'auro-select').evaluate((el: any) => {
-        const sr = el.shadowRoot?.querySelector('#srAnnouncement');
-        return sr !== null && sr.getAttribute('aria-live') === 'polite';
-      });
-      expect(hasLiveRegion).toBe(true);
+      await expect.poll(() =>
+        fixture(page, 'default', 'auro-select').evaluate((el: any) => {
+          const sr = el.shadowRoot?.querySelector('#srAnnouncement');
+          return sr !== null && sr.getAttribute('aria-live') === 'polite';
+        }),
+      ).toBe(true);
     });
 
     test('error help text uses role=alert for announcement', async ({ page }) => {
@@ -391,7 +398,9 @@ export function accessibilityTreeSuite(framework: string) {
       await select.evaluate((el: any) => {
         el.shadowRoot?.querySelector('[auro-dropdown]')?.shadowRoot?.querySelector('#trigger')?.click();
       });
-      await page.waitForTimeout(200);
+      await expect.poll(() =>
+        select.evaluate((el: any) => Boolean(el.isPopoverVisible)),
+      ).toBe(true);
       await page.click('#outside-element');
 
       await expect.poll(() =>
@@ -413,21 +422,23 @@ export function accessibilityTreeSuite(framework: string) {
 
     test('combobox input has combobox role', async ({ page }) => {
       // The combobox role is on the <input> inside nested shadow DOMs
-      const hasCombobox = await fixture(page, 'default', 'auro-combobox').evaluate((el: any) => {
-        // auro-combobox > shadow > auro-input > shadow > input[role="combobox"]
-        const input = el.shadowRoot?.querySelector('[auro-input]');
-        const innerInput = input?.shadowRoot?.querySelector('input');
-        return innerInput?.getAttribute('role') === 'combobox';
-      });
-      expect(hasCombobox).toBe(true);
+      await expect.poll(() =>
+        fixture(page, 'default', 'auro-combobox').evaluate((el: any) => {
+          // auro-combobox > shadow > auro-input > shadow > input[role="combobox"]
+          const input = el.shadowRoot?.querySelector('[auro-input]');
+          const innerInput = input?.shadowRoot?.querySelector('input');
+          return innerInput?.getAttribute('role') === 'combobox';
+        }),
+      ).toBe(true);
     });
 
     test('combobox has screen reader live region', async ({ page }) => {
-      const hasLiveRegion = await fixture(page, 'default', 'auro-combobox').evaluate((el: any) => {
-        const sr = el.shadowRoot?.querySelector('#srAnnouncement');
-        return sr !== null && sr.getAttribute('aria-live') === 'polite';
-      });
-      expect(hasLiveRegion).toBe(true);
+      await expect.poll(() =>
+        fixture(page, 'default', 'auro-combobox').evaluate((el: any) => {
+          const sr = el.shadowRoot?.querySelector('#srAnnouncement');
+          return sr !== null && sr.getAttribute('aria-live') === 'polite';
+        }),
+      ).toBe(true);
     });
 
     test('combobox menu has listbox role', async ({ page }) => {
