@@ -786,15 +786,16 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   notifyValueChanged() {
-    let inputEvent = null;
-
-    inputEvent = new Event('auroDatePicker-valueSet', {
+    this.dispatchEvent(new Event('auroDatePicker-valueSet', {
       bubbles: true,
       composed: true,
-    });
+    }));
 
-    // Dispatched event to alert outside shadow DOM context of event firing.
-    this.dispatchEvent(inputEvent);
+    // Standard input event so auro-form can track datepicker value changes.
+    this.dispatchEvent(new Event('input', {
+      bubbles: true,
+      composed: true,
+    }));
   }
 
   /**
@@ -969,7 +970,9 @@ export class AuroDatePicker extends AuroElement {
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
     this.inputList.forEach((input, index) => {
-      input.addEventListener('input', () => {
+      input.addEventListener('input', (event) => {
+        event.stopPropagation();
+
         if (index === 0) {
           this.value = input.value;
         } else if (index === 1) {
