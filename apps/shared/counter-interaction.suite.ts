@@ -153,11 +153,14 @@ export function counterInteractionSuite(framework: string) {
       });
 
       test('plus button is disabled when value equals max', async ({ page }) => {
-        await expect.poll(() => isPlusDisabled(page, 'at-max')).toBe(true);
+        // Wait for the counter to have processed its value attribute before checking button state
+        await expect.poll(() => counterValue(page, 'at-max'), { timeout: 5_000 }).toBe(9);
+        await expect.poll(() => isPlusDisabled(page, 'at-max'), { timeout: 5_000 }).toBe(true);
       });
 
       test('minus button is disabled when value equals min', async ({ page }) => {
-        await expect.poll(() => isMinusDisabled(page, 'at-min')).toBe(true);
+        await expect.poll(() => counterValue(page, 'at-min'), { timeout: 5_000 }).toBe(0);
+        await expect.poll(() => isMinusDisabled(page, 'at-min'), { timeout: 5_000 }).toBe(true);
       });
 
       test('clicking plus on a counter at max does not change the value', async ({ page }) => {
