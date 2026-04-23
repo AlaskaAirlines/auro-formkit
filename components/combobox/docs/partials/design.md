@@ -1,34 +1,56 @@
-<p>The component consists of the following elements:</p>
-<ul>
-  <li>
-    <strong>trigger:</strong> shows the component label, current value and will render to reflect state of the component (e.g. <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, <code>invalid</code>), and a flag marking instances that are required. The trigger includes a text input that allows the user to type and filter the available options.
-  </li>
-  <li>
-    <strong>options list:</strong> a list of options that may be selected which are rendered in an element which can be expanded/collapsed by interacting with the trigger. The list is filtered based on user input.
-  </li>
-  <li>
-    <strong>help text:</strong> descriptive text rendered below the trigger intended to help clarify the intended use of the component instance and any current validation error with instructions to resolve those errors.
-  </li>
-</ul>
-<auro-header level="3" id="trigger">Trigger</auro-header>
-<p>The trigger includes the component label, a flag marking the component optional/required and the current value. This label is required in order to ensure correct behavior when a guest is using accessibility tools such as screen readers and VoiceOver utilities. The invalid state will also announce to accessibility tools when applied.</p>
-<p>The optional/required flag content may be customized.</p>
-<p>When rendering the value of a selected option, the text content of the option will render in the input field.</p>
-<p>The trigger is a focusable element and will visually respond to common UI states - <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, <strong>Disabled</strong> <em>(:disabled)</em>. The component does not have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
-<auro-header level="3" id="options">List Options</auro-header>
-<p>The component will render a list of options that may be selected. Options are filtered as the user types in the input. Each option may be in one of the following states when rendered:</p>
-<ul>
-  <li>
-    <code>selected</code> - One option may be selected at a time and identifies the current value of the component.
-  </li>
-  <li>
-    <code>active</code> - One option may be active at a time. The active option indicates the item that will become selected if the user chooses.
-  </li>
-  <li>
-    <code>disabled</code> - One or more options may be disabled. Disabled options are not interactive and cannot be marked as active or selected.
-  </li>
-</ul>
-<auro-header level="3" id="helpText">Help Text</auro-header>
-<p>Help text is not required. However, consideration should be given to how users will understand the full context of the component instance, particularly users reliant on accessibility tools like screen readers. In certain cases, a component label alone may be confusing.</p>
-<p>If the component fails validation, the help text will change to show a validation help message instead of the default help text.</p>
-</section>
+<auro-header level="1" id="overview">Combobox - Design</auro-header>
+<div class="contentWrapper">
+  <div class="mainContent">
+    <div class="scrollWrapper">
+      <auro-header level="3" id="anatomy">Component Anatomy</auro-header>
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout.md) -->
+      <!-- AURO-GENERATED-CONTENT:END -->
+      <auro-header level="3" id="shapeSizeLayout">Shape | Size | Layout Support</auro-header>
+      <p>The `auro-combobox` component supports the `shape`, `size` and `layout` feature set. The component defaults to the `layout="classic"`, `shape="classic"` and `size="lg"`.</p>
+      <auro-header level="4" id="classicLayout">Classic Layout</auro-header>
+      <p>The `classic` layout is default for `auro-combobox`. No customization is needed to achieve this look.</p>
+      <div class="exampleWrapper">
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
+      <!-- AURO-GENERATED-CONTENT:END -->
+      </div>
+      <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+      <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+      <!-- AURO-GENERATED-CONTENT:END -->
+      </auro-accordion>
+      <auro-header level="4" id="emphasizedLayout">Emphasized Layout</auro-header>
+      <p>The `emphasized` layout is only supported on light backgrounds.</p>
+      <p>The <code>emphasized</code> layout supports the following shapes:</p>
+      <ul>
+        <li><code>pill</code></li>
+        <li><code>pill-left</code></li>
+        <li><code>pill-right</code></li>
+      </ul>
+      <p>The <code>emphasized</code> layout supports the following sizes:</p>
+      <ul>
+        <li><code>xl</code></li>
+      </ul>
+      <div class="exampleWrapper">
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
+      <!-- AURO-GENERATED-CONTENT:END -->
+      </div>
+      <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/emphasized/basic.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+      </auro-accordion>
+      <auro-header level="4" id="snowflakeLayout">Snowflake Layout</auro-header>
+      <p>The `snowflake` layout is a unique, one off layout that does not follow the normal pattern. There is only one way to use snowflake as shown in the following example.</p>
+      <p>The `snowflake` layout is only expected to be used on dark backgrounds, in conjunction with `appearance="inverse"`.</p>
+      <div class="exampleWrapper--ondark">
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
+      <!-- AURO-GENERATED-CONTENT:END -->
+      </div>
+      <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake/basic.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+      </auro-accordion>
+    </div>
+  </div>
+</div>
