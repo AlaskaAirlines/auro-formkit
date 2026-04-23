@@ -1,0 +1,141 @@
+pre[class*="language-"] {
+  overflow: unset !important;
+}
+
+table {
+  --ds-color-container-secondary-default: transparent;
+}
+
+tr:not(:last-of-type) {
+  border-bottom: 1px solid var(--ds-color-border-tertiary-default);
+}
+
+sup {
+  font-size: 60%;
+  font-style: italic;
+  top: -0.5rem;
+}
+
+sup a {
+  text-decoration: none !important;
+}
+
+body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.contentWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 25px;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 0;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.scrollWrapper {
+  flex: 1;
+  flex-basis: 0;
+  min-height: 0;
+}
+
+nav {
+  max-width: 200px;
+}
+
+pre[class*="language-"] {
+  background-color: #ddd !important;
+  padding: var(--ds-size-200) !important;
+  border-radius: .5rem;
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: var(--ds-color-border-secondary-default) !important;
+  margin-top: var(--ds-size-200) !important;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  overflow-x: scroll !important;
+}
+
+code[class*="language-"] {
+  text-shadow: none;
+}
+
+:not(pre) > code[class*=language-] {
+  background-color: unset !important;
+}
+
+.token.operator {
+  background-color: unset !important;
+}
+
+auro-header {
+  margin: 10px 0;
+}
+
+auro-anchorlink.level2 {
+  padding-left: var(--ds-size-200);
+}
+
+table.compressed {
+  width: unset !important;
+  margin: var(--ds-size-50) 0 var(--ds-size-100) !important;
+}
+
+.note {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  font-style: italic;
+  color: var(--ds-basic-color-texticon-muted);
+  background-color: var(--ds-basic-color-surface-neutral-subtle);
+}
+
+table.compressed th,
+table.compressed td {
+  padding: var(--ds-size-50) !important;
+}
+
+.pre-wrapper {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  background: var(--ds-color-container-primary-default, #fff);
+  border: 1px solid var(--ds-color-border-secondary-default, #ccc);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--ds-color-text-secondary-default, #333);
+  z-index: 1;
+}
+
+.copy-btn:hover {
+  background: var(--ds-color-container-secondary-default, #f0f0f0);
+}
+
+.pre-wrapper:hover .copy-btn {
+  opacity: 1;
+}
