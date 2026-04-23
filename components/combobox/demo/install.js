@@ -6,6 +6,7 @@ import { AuroCombobox } from '../src/auro-combobox.js';
 import '../../menu/src/registered.js';
 
 AuroCombobox.register();
+AuroCombobox.register('custom-combobox');
 
 export function initExamples(initCount) {
   initCount = initCount || 0;

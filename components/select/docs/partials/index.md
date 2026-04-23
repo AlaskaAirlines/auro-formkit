@@ -11,11 +11,6 @@
       <auro-anchorlink fluid href="#options" class="level2 body-xs">Options</auro-anchorlink>
       <auro-anchorlink fluid href="#helpText" class="level2 body-xs">Help Text</auro-anchorlink>
       <auro-anchorlink fluid href="#initialState">Initial State</auro-anchorlink>
-      <auro-anchorlink fluid href="#ux">UX</auro-anchorlink>
-      <auro-anchorlink fluid href="#uxOpen" class="level2 body-xs">Open | Expand</auro-anchorlink>
-      <auro-anchorlink fluid href="#uxClose" class="level2 body-xs">Close | Collapse</auro-anchorlink>
-      <auro-anchorlink fluid href="#uxSelect" class="level2 body-xs">Select Option</auro-anchorlink>
-      <auro-anchorlink fluid href="#uxSelect" class="level2 body-xs">Viewport Size</auro-anchorlink>
       <auro-anchorlink fluid href="#usersStories">User Stories</auro-anchorlink>
       <auro-anchorlink fluid href="#select" class="level2 body-xs">Select A Value</auro-anchorlink>
       <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
@@ -46,11 +41,6 @@
         <auro-header level="2" id="ui">UI</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/ui.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
-      <section>
-        <auro-header level="2" id="ux">UX</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/ux.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-      </section>
       <section>
         <auro-header level="2" id="userStories">User Stories</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/userStories.md) -->
