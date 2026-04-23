@@ -833,11 +833,10 @@ export default class BaseInput extends AuroElement {
    */
   handleClickClear() {
     this.inputElement.value = "";
-    this.value = "";
     this.labelElement.classList.remove('inputElement-label--sticky');
+    this.validation.reset(this);
     this.notifyValueChanged();
     this.focus();
-    this.validation.validate(this);
   }
 
   /**

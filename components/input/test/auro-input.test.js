@@ -379,6 +379,17 @@ function runFullTest(mobileView) {
       });
     });
 
+    it('clears the value when clicked', async () => {
+      const el = await fixture(html`
+        <auro-input value="other value" label="First name"></auro-input>
+      `);
+
+      const clearButton = el.shadowRoot.querySelector('.clearBtn');
+      clearButton.click();
+      await elementUpdated();
+      expect(el.value).to.undefined;
+    });
+
     it('should validate input after the first blur event', async () => {
       const el = await fixture(html`
         <auro-input required label="Label"></auro-input>
