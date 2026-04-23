@@ -56,8 +56,6 @@ export class AuroMenu extends AuroElement {
      */
     this.size = "sm";
 
-    // Value of the selected options
-    this.value = undefined;
     // Currently selected option
     this.optionSelected = undefined;
     // String used for highlighting/filtering

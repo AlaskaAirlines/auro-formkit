@@ -17,6 +17,12 @@ import FormInteraction from './pages/FormInteraction';
 import InputInteraction from './pages/InputInteraction';
 import MenuInteraction from './pages/MenuInteraction';
 import RadioInteraction from './pages/RadioInteraction';
+import SelectDynamic from './pages/SelectDynamic';
+import SelectDynamicNavigate from './pages/SelectDynamicNavigate';
+import ComboboxCitySearch from './pages/ComboboxCitySearch';
+import ComboboxCitySearchFull from './pages/ComboboxCitySearchFull';
+import ComboboxCitySearchPreselected from './pages/ComboboxCitySearchPreselected';
+import ComboboxCitySearchPreselectedNavigate from './pages/ComboboxCitySearchPreselectedNavigate';
 
 export default function App() {
   return (
@@ -25,8 +31,14 @@ export default function App() {
       <Route path="/select-remount" component={SelectRemount} />
       <Route path="/select-remount-multiselect" component={SelectRemountMultiselect} />
       <Route path="/select-interaction" component={SelectInteraction} />
+      <Route path="/select-dynamic" component={SelectDynamic} />
+      <Route path="/select-dynamic-navigate" component={SelectDynamicNavigate} />
       <Route path="/combobox-remount" component={ComboboxRemount} />
       <Route path="/combobox-interaction" component={ComboboxInteraction} />
+      <Route path="/combobox-city-search" component={ComboboxCitySearch} />
+      <Route path="/combobox-city-search-full" component={ComboboxCitySearchFull} />
+      <Route path="/combobox-city-search-preselected" component={ComboboxCitySearchPreselected} />
+      <Route path="/combobox-city-search-preselected-navigate" component={ComboboxCitySearchPreselectedNavigate} />
       <Route path="/counter-dropdown" component={CounterDropdown} />
       <Route path="/counter-remount" component={CounterRemount} />
       <Route path="/counter-interaction" component={CounterInteraction} />
