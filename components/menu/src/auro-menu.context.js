@@ -328,10 +328,13 @@ export class MenuService {
     }
 
     const optionsSet = new Set(optionsToDeselect);
+    const previousCount = this.selectedOptions.length;
     this.selectedOptions = (this.selectedOptions || [])
       .filter(opt => !optionsSet.has(opt));
 
-    this.stageUpdate();
+    if (this.selectedOptions.length < previousCount) {
+      this.stageUpdate();
+    }
   }
 
   /**

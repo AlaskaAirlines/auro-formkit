@@ -84,7 +84,6 @@ export class AuroCombobox extends AuroElement {
     this.optionActive = null;
     this.persistInput = false;
     this.required = false;
-    this.value = undefined;
     this.typedValue = undefined;
     this.behavior = "suggestion";
     this.clearBtnFocused = false;
@@ -697,6 +696,10 @@ export class AuroCombobox extends AuroElement {
     });
 
     if (this.value && this.input.value && !this.menu.value) {
+      if (this.behavior === 'suggestion' && this.menu.options && this.menu.options.some((opt) => opt.value === this.value)) {
+        this.setMenuValue(this.value);
+      }
+
       this.syncValuesAndStates();
     }
 
@@ -1310,10 +1313,6 @@ export class AuroCombobox extends AuroElement {
     this.configureCombobox();
     this.configureMenu();
 
-    // Set the initial value in auro-menu if defined
-    if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
-      this.menu.value = this.value;
-    }
   }
 
   /**
@@ -1394,10 +1393,18 @@ export class AuroCombobox extends AuroElement {
         this.input.value = this.value;
       }
 
+      if (this.menu && this.hasValue && this.menu.options) {
+        this.menu.options.forEach((opt) => {
+          if (!opt.hasAttribute('static')) {
+            opt.removeAttribute('hidden');
+          }
+        });
+      }
+
       if (this.behavior === 'suggestion') {
-        // if menu has an option that has matched value, then select it,
-        // otherwise clear the menu value since the input value doesn't match any option
-        if (this.menu.options && this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
+        if (!this.menu.options || this.menu.options.length === 0) {
+          // No options loaded yet (async pattern) — don't touch menu.value.
+        } else if (this.menu.options.filter((opt) => opt.value === this.value).length > 0) {
           this.setMenuValue(this.value);
         } else {
           this.menu.value = undefined;
