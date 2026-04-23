@@ -113,7 +113,13 @@ export const fileConfigs = (config) => [
     output: fromAuroComponentRoot(`components/${config.component}/demo/keyboard-behavior.md`),
     preProcessors: [templateFiller.formatApiTable],
   },
-  // layout.md
+  // design.md
+  {
+    identifier: 'design.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/design.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/design.md`),
+  },
+  // layout.md (legacy, kept for components not yet renamed)
   {
     identifier: 'layout.md',
     input: fromAuroComponentRoot(`components/${config.component}/docs/partials/layout.md`),
@@ -184,7 +190,7 @@ export async function processDocFiles(componentName) {
         if (fileConfig.output.endsWith('.md')) {
           const outputDir = path.dirname(fileConfig.output);
           let outputContents = await fs.readFile(fileConfig.output, 'utf8');
-          const emptyTagPattern = /<!-- AURO-GENERATED-CONTENT:START \((FILE|CODE):src=([^)]+)\) -->\n<!-- AURO-GENERATED-CONTENT:END -->/g;
+          const emptyTagPattern = /^[ \t]*<!-- AURO-GENERATED-CONTENT:START \((FILE|CODE):src=([^)]+)\) -->\n[ \t]*<!-- AURO-GENERATED-CONTENT:END -->/gm;
           let match;
           let modified = false;
 
@@ -197,14 +203,23 @@ export async function processDocFiles(componentName) {
               let replacement;
 
               if (type === 'FILE') {
-                replacement = `<!-- AURO-GENERATED-CONTENT:START (FILE:src=${srcPath}) -->\n<!-- The below content is automatically added from ${srcPath} -->\n${fileContent}\n<!-- AURO-GENERATED-CONTENT:END -->`;
+                replacement = `<!-- AURO-GENERATED-CONTENT:START (FILE:src=${srcPath}) -->\n<!-- The below content is automatically added from ${srcPath} -->\n${fileContent.trimEnd()}\n<!-- AURO-GENERATED-CONTENT:END -->`;
               } else {
-                // CODE: wrap in a fenced code block
+                // CODE: wrap in a pre/code HTML block with language classes
+                // matching the format that Prism.js expects for syntax highlighting
                 const ext = path.extname(srcPath).slice(1) || 'html';
-                replacement = `<!-- AURO-GENERATED-CONTENT:START (CODE:src=${srcPath}) -->\n<!-- The below code snippet is automatically added from ${srcPath} -->\n\n\`\`\`${ext}\n${fileContent}\n\`\`\`\n<!-- AURO-GENERATED-CONTENT:END -->`;
+                const escaped = fileContent.trimEnd()
+                  .replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;');
+                replacement = `<!-- AURO-GENERATED-CONTENT:START (CODE:src=${srcPath}) -->\n<!-- The below code snippet is automatically added from ${srcPath} -->\n<pre class="language-${ext}"><code class="language-${ext}">${escaped}\n</code></pre>\n<!-- AURO-GENERATED-CONTENT:END -->`;
               }
 
               outputContents = outputContents.replace(fullMatch, replacement);
+              // Reset lastIndex so the regex rescans from the start of
+              // the replacement — otherwise consecutive tags are skipped
+              // because the string length changed.
+              emptyTagPattern.lastIndex = 0;
               modified = true;
             }
           }
@@ -212,6 +227,86 @@ export async function processDocFiles(componentName) {
           if (modified) {
             await fs.writeFile(fileConfig.output, outputContents);
           }
+
+          // Convert markdown code fences to <pre><code> HTML blocks.
+          // marked.js won't parse fences inside HTML block context, so all
+          // fenced code blocks (from both first-pass and second-pass) need
+          // to be converted to raw HTML for consistent rendering.
+          outputContents = await fs.readFile(fileConfig.output, 'utf8');
+          const fencePattern = /^[ \t]*```(\w*)\n([\s\S]*?)^[ \t]*```[ \t]*$/gm;
+          const convertedContents = outputContents.replace(fencePattern, (_match, lang, code) => {
+            const language = lang || 'html';
+            const escaped = code.trimEnd()
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
+            return `<pre class="language-${language}"><code class="language-${language}">${escaped}\n</code></pre>`;
+          });
+
+          if (convertedContents !== outputContents) {
+            await fs.writeFile(fileConfig.output, convertedContents);
+          }
+
+          // Final whitespace normalization for marked.js compatibility.
+          //
+          // 1. Strip leading indentation outside <pre> blocks so closing
+          //    tags aren't treated as markdown indented code blocks.
+          //
+          // 2. Inside <pre> blocks: replace blank lines with U+200B
+          //    (zero-width space) to prevent marked.js from ending the
+          //    HTML block, and dedent the code content by removing the
+          //    common leading whitespace inherited from the indentation
+          //    of the source CODE tag.
+          outputContents = await fs.readFile(fileConfig.output, 'utf8');
+
+          // Dedent and fix blank lines inside <pre><code>...</code></pre> blocks
+          outputContents = outputContents.replace(
+            /(<pre[^>]*><code[^>]*>)([\s\S]*?)(<\/code><\/pre>)/g,
+            (_match, open, content, close) => {
+              const lines = content.split('\n');
+              // Find minimum indentation across non-empty lines
+              const nonEmpty = lines.filter(l => l.trim().length > 0);
+              if (nonEmpty.length === 0) return _match;
+              const minIndent = Math.min(...nonEmpty.map(l => {
+                const m = l.match(/^[ \t]*/);
+                return m ? m[0].length : 0;
+              }));
+              // Dedent and replace blank lines with zero-width space
+              const processed = lines.map(l => {
+                if (l === '') return '\u200B';
+                if (l.trim().length === 0) return '\u200B';
+                return minIndent > 0 ? l.substring(minIndent) : l;
+              });
+              // Strip trailing empty/zwsp lines
+              while (processed.length > 0 && (processed[processed.length - 1] === '\u200B' || processed[processed.length - 1] === '')) {
+                processed.pop();
+              }
+              return open + processed.join('\n') + close;
+            }
+          );
+
+          // Strip leading whitespace outside <pre> blocks
+          const outputLines = outputContents.split('\n');
+          let insidePre = false;
+          let wsModified = false;
+
+          for (let i = 0; i < outputLines.length; i++) {
+            if (/<pre[\s>]/i.test(outputLines[i])) {
+              insidePre = true;
+            }
+            if (!insidePre) {
+              const stripped = outputLines[i].replace(/^[ \t]+/, '');
+              if (stripped !== outputLines[i]) {
+                outputLines[i] = stripped;
+                wsModified = true;
+              }
+            }
+            if (/<\/pre>/i.test(outputLines[i])) {
+              insidePre = false;
+            }
+          }
+
+          await fs.writeFile(fileConfig.output, outputLines.join('\n'));
         }
       } catch (err) {
         Logger.error(`Error processing ${fileConfig.identifier}: ${err.message}`);
