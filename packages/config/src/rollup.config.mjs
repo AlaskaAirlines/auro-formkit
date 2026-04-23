@@ -1,4 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { existsSync } from 'node:fs';
 import componentRollupConfig from './internal.rollup.config.mjs';
 
 function createExampleConfig(entryPoint) {
@@ -14,4 +15,9 @@ function createExampleConfig(entryPoint) {
   };
 }
 
-export default [...componentRollupConfig, createExampleConfig('index'), createExampleConfig('api')];
+const optionalEntryPoints = ['install'];
+const optionalConfigs = optionalEntryPoints
+  .filter((entry) => existsSync(`./demo/${entry}.js`))
+  .map(createExampleConfig);
+
+export default [...componentRollupConfig, createExampleConfig('index'), createExampleConfig('api'), ...optionalConfigs];

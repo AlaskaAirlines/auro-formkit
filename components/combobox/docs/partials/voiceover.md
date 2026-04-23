@@ -1,5 +1,5 @@
-<auro-header level="1" id="overview">Select - VoiceOver Behavior</auro-header>
-<p>This page documents the VoiceOver experience when using the <code>&lt;auro-select&gt;</code> component. It covers announcements, gestures, and workflows for both large and small viewports.</p>
+<auro-header level="1" id="overview">Combobox - VoiceOver Behavior</auro-header>
+<p>This page documents the VoiceOver experience when using the <code>&lt;auro-combobox&gt;</code> component. It covers announcements, gestures, and workflows for both large and small viewports.</p>
 
 <auro-header level="2" id="voiceOverInteractiveAnnouncements">Interactive Announcements</auro-header>
 
@@ -102,7 +102,7 @@
 <p>Key characteristics across both platforms:</p>
 <ul>
   <li>The <code>label</code> is always read first.</li>
-  <li>The component <strong>role</strong> is announced as <em>"pop-up button"</em> (macOS) or <em>"button"</em> (iOS).</li>
+  <li>The component <strong>role</strong> is announced as <em>"combo box"</em>.</li>
   <li><code>disabled</code> options are announced as <em>"dimmed"</em> and cannot be selected.</li>
 </ul>
 
@@ -119,79 +119,10 @@
 <p>Key distinction from <code>aria-hidden</code>: A disabled element is <em>reachable but not operable</em>. If you want VoiceOver to skip it entirely, you would need <code>aria-hidden="true"</code> or <code>tabindex="-1"</code>, but that is generally not recommended for disabled controls — users benefit from knowing the field exists and why it may be unavailable.</p>
 <p>This is consistent across NVDA and JAWS as well, though the announcement wording differs (e.g., NVDA says <em>"unavailable"</em>).</p>
 
-<auro-header level="3" id="voiceOverStateMultiSelect">Multi Select</auro-header>
-
-<auro-header level="4" id="voiceOverStateMultiSelectLargeVP">Large Viewport Multi-select</auro-header>
-<p>Examples: large tablet, typical size or larger desktop browser window</p>
-<ol>
-  <li><strong>Focus</strong></li>
-  <li><strong>Open | Expand</strong></li>
-  <li><strong>Navigate Options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or nothing.</li>
-  <li><strong>Selecting an option:</strong> Double-tap toggles the focused option's selection — announces <em>"selected"</em> or <em>"unselected"</em>.</li>
-  <li><strong>Close | Collapse:</strong> Collapses the list, announces the expanded state change.</li>
-</ol>
-
-<auro-header level="4" id="voiceOverStateMultiSelectSmallVP">Small Viewport Multi-select</auro-header>
-<p>Examples: mobile phone, very small desktop browser window</p>
-<ol>
-  <li><strong>Focus</strong></li>
-  <li><strong>Open | Expand</strong></li>
-  <li><strong>Navigate Options:</strong> Moves through options; announces each option name plus <em>"selected"</em> or nothing.</li>
-  <li><strong>Selecting an option:</strong> Double-tap toggles the focused option's selection — announces <em>"selected"</em> or <em>"unselected"</em>.</li>
-  <li><strong>Close | Collapse:</strong> Collapses the list, announces the expanded state change.</li>
-</ol>
-
-<p>Key differences from single-select:</p>
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Single</th>
-      <th>Multi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Role</td>
-      <td>pop-up button</td>
-      <td>list box</td>
-    </tr>
-    <tr>
-      <td>Interaction model</td>
-      <td>Open → pick → auto close</td>
-      <td>Open → toggle items → manually close</td>
-    </tr>
-    <tr>
-      <td>Value announcement</td>
-      <td>
-        <p>Current selected value</p>
-        <div class="note">
-          <strong>On focus:</strong> Announces "[component label], [current value or 'no selection'], pop-up button"
-        </div>
-      </td>
-      <td>
-        <p>Each option's selected state individually</p>
-        <div class="note">
-          <strong>On focus:</strong> Announces "[component label], [[{option label, 'selected'}, {option label, 'selected'}] or 'no selection'], list box"
-        </div>
-        <div class="note">
-          <strong>On selection change:</strong> Announces "[option label], ['selected' | 'unselected']"
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>Space key</td>
-      <td>Opens/closes picker</td>
-      <td>Toggles selection</td>
-    </tr>
-  </tbody>
-</table>
-<div class="note"><strong>Important caveat:</strong> Multi-select is notoriously difficult for all users, including screen reader users — WCAG and usability research generally recommend avoiding <code>&lt;auro-select multiSelect&gt;</code> in favor of checkboxes or other patterns that make multi-selection more discoverable.</div>
-
 <auro-header level="3" id="voiceOverStateInvalid">Invalid</auro-header>
-<p>When an <code>&lt;auro-select&gt;</code> is invalid the following occurs:</p>
+<p>When an <code>&lt;auro-combobox&gt;</code> is invalid the following occurs:</p>
 <ul>
   <li><code>Focus</code> — VoiceOver announces <em>"invalid data"</em> (macOS) or <em>"invalid entry"</em> (iOS) after the element's label.</li>
   <li>The Help Text will render the error message and it will be included in the VoiceOver focus announcement.</li>
 </ul>
-<p>Example: when focusing on an invalid <code>&lt;auro-select&gt;</code> the VoiceOver announces something like <em>"Country, invalid data, combo box, Please select a country"</em>.</p>
+<p>Example: when focusing on an invalid <code>&lt;auro-combobox&gt;</code> the VoiceOver announces something like <em>"Destination, invalid data, combo box, Please select a destination"</em>.</p>

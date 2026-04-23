@@ -1,6 +1,7 @@
 import { Logger } from "@aurodesignsystem/auro-library/scripts/utils/logger.mjs";
 import fs from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 import {
   fromAuroComponentRoot,
   processContentForFile,
@@ -107,9 +108,9 @@ export const fileConfigs = (config) => [
   },
   // keyboardBehavior.md
   {
-    identifier: 'keyboardBehavior.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/keyboardBehavior.md`),
-    output: fromAuroComponentRoot(`components/${config.component}/demo/keyboardBehavior.md`),
+    identifier: 'keyboard-behavior.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/keyboard-behavior.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/keyboard-behavior.md`),
     preProcessors: [templateFiller.formatApiTable],
   },
   // layout.md
@@ -117,6 +118,12 @@ export const fileConfigs = (config) => [
     identifier: 'layout.md',
     input: fromAuroComponentRoot(`components/${config.component}/docs/partials/layout.md`),
     output: fromAuroComponentRoot(`components/${config.component}/demo/layout.md`),
+  },
+  // install.md
+  {
+    identifier: 'install.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/install.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/install.md`),
   },
   // accessibility.md
   {
@@ -170,6 +177,42 @@ export async function processDocFiles(componentName) {
             hasMultipleComponents: components.length > 1
           } 
         });
+
+        // Resolve any AURO-GENERATED-CONTENT tags that were introduced by inlined partials.
+        // These tags have empty content (START immediately followed by END) because markdown-magic
+        // only runs one pass and doesn't process tags introduced during that same pass.
+        if (fileConfig.output.endsWith('.md')) {
+          const outputDir = path.dirname(fileConfig.output);
+          let outputContents = await fs.readFile(fileConfig.output, 'utf8');
+          const emptyTagPattern = /<!-- AURO-GENERATED-CONTENT:START \((FILE|CODE):src=([^)]+)\) -->\n<!-- AURO-GENERATED-CONTENT:END -->/g;
+          let match;
+          let modified = false;
+
+          while ((match = emptyTagPattern.exec(outputContents)) !== null) {
+            const [fullMatch, type, srcPath] = match;
+            const resolvedPath = path.resolve(outputDir, srcPath);
+
+            if (existsSync(resolvedPath)) {
+              const fileContent = readFileSync(resolvedPath, 'utf8');
+              let replacement;
+
+              if (type === 'FILE') {
+                replacement = `<!-- AURO-GENERATED-CONTENT:START (FILE:src=${srcPath}) -->\n<!-- The below content is automatically added from ${srcPath} -->\n${fileContent}\n<!-- AURO-GENERATED-CONTENT:END -->`;
+              } else {
+                // CODE: wrap in a fenced code block
+                const ext = path.extname(srcPath).slice(1) || 'html';
+                replacement = `<!-- AURO-GENERATED-CONTENT:START (CODE:src=${srcPath}) -->\n<!-- The below code snippet is automatically added from ${srcPath} -->\n\n\`\`\`${ext}\n${fileContent}\n\`\`\`\n<!-- AURO-GENERATED-CONTENT:END -->`;
+              }
+
+              outputContents = outputContents.replace(fullMatch, replacement);
+              modified = true;
+            }
+          }
+
+          if (modified) {
+            await fs.writeFile(fileConfig.output, outputContents);
+          }
+        }
       } catch (err) {
         Logger.error(`Error processing ${fileConfig.identifier}: ${err.message}`);
       }

@@ -17,7 +17,7 @@
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/tabindex.md) -->
     <!-- AURO-GENERATED-CONTENT:END -->
     <p>There are no focusable elements inside the <code>&lt;auro-select></code> bib content.</p>
-    <div class="stepDetails">
+    <div class="note">
       <strong>Note:</strong> The following HTML5 select element keyboard behavior is unsupported in <code>&lt;auro-select multiSelect></code>:
       <ul>
         <li><strong>Extending selection (Shift+Arrow)</strong></li>

@@ -25,8 +25,3 @@
     </div>
   </div>
 </div>
-
-## DEVELOPER NOTES / CODE ACTION ITEMS / TODO ITEMS
-1. Remove the bridge for keyboard event bubbling out of the bib
-1. Prevent auro-dropdown `Enter` and `Space` key behavior for opening and closing the bib.
-1. Strip out key event listeners not listed in this document

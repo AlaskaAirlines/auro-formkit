@@ -3,7 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/demo.md
+  All demo code should be added/edited in ./demo/voiceover.md
 
   With the exception of adding custom elements if needed for the demo.
 
@@ -16,7 +16,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-combobox</title>
+    <title>Auro Web Component Demo | auro-combobox | VoiceOver</title>
 
     <!-- Prism.js Stylesheet -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css"/>
@@ -26,22 +26,31 @@
 
     <!-- Design Token Alaska Theme -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css"/>
-    
+
     <!-- Webcore Stylesheet Alaska Theme -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
-    
+
     <!-- Demo Specific Styles -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
     <link rel="stylesheet" type="text/css" href="./styles.css" />
-</head>
+    <style>
+      table {
+        --ds-color-container-secondary-default: transparent;
+      }
+
+      tr:not(:last-of-type) {
+        border-bottom: 1px solid var(--ds-color-border-tertiary-default);
+      }
+    </style>
+  </head>
   <body class="auro-markdown">
     <main></main>
 
     <script type="module">
       import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js';
       import 'https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js';
-      fetch('./api.md')
+      fetch('./voiceover.md')
         .then((response) => response.text())
         .then((text) => {
           const rawHtml = marked.parse(text);
@@ -51,16 +60,7 @@
     </script>
 
     <!-- If additional elements are needed for the demo, add them here. -->
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/+esm" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-icon@latest/+esm" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-dialog@latest/+esm" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-drawer@latest/+esm" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-loader@latest/+esm" type="module"></script>
-
-    <script type="module" data-demo-script="true">
-      import { initExamples } from "./api.min.js"
-      initExamples();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-header@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
   </body>
 </html>
