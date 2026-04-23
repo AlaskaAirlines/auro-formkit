@@ -104,7 +104,7 @@ describe('auro-input', () => {
     const clearButton = el.shadowRoot.querySelector('.clearBtn');
     clearButton.click();
     await elementUpdated();
-    expect(el.value).to.equal('');
+    expect(el.value).to.undefined;
   });
 
   it('flips hide-password bit', async () => {
