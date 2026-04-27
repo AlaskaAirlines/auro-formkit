@@ -12,7 +12,7 @@ async function waitForCheckbox(page: Page) {
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-checkbox');
-      return el?.shadowRoot?.querySelector('input') !== null;
+      return !!el?.shadowRoot?.querySelector('input');
     },
     { timeout: 10_000 },
   );

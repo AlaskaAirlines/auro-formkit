@@ -12,7 +12,7 @@ async function waitForInput(page: Page) {
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-input');
-      return el?.shadowRoot?.querySelector('input') !== null;
+      return !!el?.shadowRoot?.querySelector('input');
     },
     { timeout: 10_000 },
   );
