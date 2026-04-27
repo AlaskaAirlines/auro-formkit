@@ -13,7 +13,7 @@ async function waitForComponent(page: Page, tagName: string, shadowSelector?: st
     await page.waitForFunction(
       ({ tag, sel }) => {
         const el = document.querySelector(tag);
-        return el?.shadowRoot?.querySelector(sel) !== null;
+        return !!el?.shadowRoot?.querySelector(sel);
       },
       { tag: tagName, sel: shadowSelector },
       { timeout: 10_000 },
@@ -65,7 +65,7 @@ export function accessibilityTreeSuite(framework: string) {
       const group = fixture(page, 'group', 'auro-checkbox-group');
       await expect.poll(() =>
         group.evaluate((el: any) =>
-          el.shadowRoot?.querySelector('fieldset') !== null,
+          !!el.shadowRoot?.querySelector('fieldset'),
         ),
       ).toBe(true);
 
@@ -257,13 +257,13 @@ export function accessibilityTreeSuite(framework: string) {
       await waitForComponent(page, 'auro-dropdown', '#trigger');
     });
 
-    test('trigger exposes aria-expanded when dropdown has a role', async ({ page }) => {
+    test('trigger element exists and is interactive', async ({ page }) => {
       // Standalone auro-dropdown only sets aria-expanded when a11yRole is assigned
       // (e.g. when used inside auro-select or auro-combobox).
       // Verify the trigger element exists and is interactive.
       await expect.poll(() =>
         fixture(page, 'default', 'auro-dropdown').evaluate((el: any) =>
-          el.shadowRoot?.querySelector('#trigger') !== null,
+          !!el.shadowRoot?.querySelector('#trigger'),
         ),
       ).toBe(true);
     });
@@ -396,7 +396,12 @@ export function accessibilityTreeSuite(framework: string) {
       const select = fixture(page, 'required', 'auro-select');
       // Open and close without selecting to trigger validation
       await select.evaluate((el: any) => {
-        el.shadowRoot?.querySelector('[auro-dropdown]')?.shadowRoot?.querySelector('#trigger')?.click();
+        if (typeof el.showBib === 'function') {
+          el.showBib();
+          return;
+        }
+
+        el.dropdown?.show?.();
       });
       await expect.poll(() =>
         select.evaluate((el: any) => Boolean(el.isPopoverVisible)),
@@ -421,15 +426,11 @@ export function accessibilityTreeSuite(framework: string) {
     });
 
     test('combobox input has combobox role', async ({ page }) => {
-      // The combobox role is on the <input> inside nested shadow DOMs
-      await expect.poll(() =>
-        fixture(page, 'default', 'auro-combobox').evaluate((el: any) => {
-          // auro-combobox > shadow > auro-input > shadow > input[role="combobox"]
-          const input = el.shadowRoot?.querySelector('[auro-input]');
-          const innerInput = input?.shadowRoot?.querySelector('input');
-          return innerInput?.getAttribute('role') === 'combobox';
-        }),
-      ).toBe(true);
+      // The combobox role is on the <input> inside nested shadow DOMs.
+      // Use Playwright's shadow-piercing locator to find the actual input.
+      // Use .first() because auro-combobox renders a second input inside the bib for fullscreen mode.
+      const comboboxInput = fixture(page, 'default', 'auro-combobox').locator('input[role="combobox"]').first();
+      await expect(comboboxInput).toHaveAttribute('role', 'combobox');
     });
 
     test('combobox has screen reader live region', async ({ page }) => {

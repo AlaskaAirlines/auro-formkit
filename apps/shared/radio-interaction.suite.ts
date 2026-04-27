@@ -14,7 +14,7 @@ async function waitForRadio(page: Page) {
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-radio');
-      return el?.shadowRoot?.querySelector('input') !== null;
+      return !!el?.shadowRoot?.querySelector('input');
     },
     { timeout: 10_000 },
   );

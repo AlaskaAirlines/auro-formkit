@@ -13,8 +13,8 @@ async function waitForMenu(page: Page) {
   // Wait for the first menu's options to be slotted and ready
   await page.waitForFunction(
     () => {
-      const el = document.querySelector('auro-menu') as any;
-      return el?.updateComplete !== undefined;
+      const el = document.querySelector('auro-menu');
+      return el?.shadowRoot !== null && el?.querySelectorAll('auro-menuoption').length > 0;
     },
     { timeout: 10_000 },
   );

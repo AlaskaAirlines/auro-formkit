@@ -12,7 +12,7 @@ async function waitForDropdown(page: Page) {
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-dropdown');
-      return el?.shadowRoot?.querySelector('#trigger') !== null;
+      return !!el?.shadowRoot?.querySelector('#trigger');
     },
     { timeout: 10_000 },
   );

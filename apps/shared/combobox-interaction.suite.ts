@@ -517,10 +517,17 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         combobox(page, 'default').evaluate((el: any) => Boolean(el.dropdown?.isBibFullscreen)),
       ).toBe(true);
 
-      // The close button lives in auro-bibtemplate's shadow DOM
+      // The close button lives in auro-bibtemplate's shadow DOM.
+      // Wait for it to be rendered before clicking.
+      await expect.poll(() =>
+        combobox(page, 'default').evaluate((el: any) =>
+          !!el.bibtemplate?.shadowRoot?.querySelector('#closeButton'),
+        ),
+        { timeout: 5_000 },
+      ).toBe(true);
+
       await combobox(page, 'default').evaluate((el: any) => {
-        const closeBtn = el.bibtemplate?.shadowRoot?.querySelector('#closeButton');
-        if (closeBtn) closeBtn.click();
+        el.bibtemplate.shadowRoot.querySelector('#closeButton').click();
       });
 
       await waitForBibClosed(page, 'default');

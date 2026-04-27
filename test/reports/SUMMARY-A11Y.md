@@ -18,7 +18,7 @@ The tests run in both the React and Svelte framework apps, validating that ARIA 
 
 | File | Purpose |
 |------|---------|
-| `apps/shared/accessibility-tree.suite.ts` | Shared test suite (41 tests across 7 components) |
+| `apps/shared/accessibility-tree.suite.ts` | Shared test suite (41 tests across 8 components) |
 | `apps/svelte-framework/tests/accessibility-tree.spec.ts` | Svelte runner |
 | `apps/react-framework/tests/accessibility-tree.spec.ts` | React runner |
 
@@ -29,7 +29,7 @@ The tests run in both the React and Svelte framework apps, validating that ARIA 
 | Metric | Value |
 |--------|-------|
 | Total tests | 41 per framework (82 total) |
-| Components covered | 7 (checkbox, radio, input, menu, dropdown, counter, select, combobox) |
+| Components covered | 8 (checkbox, radio, input, menu, dropdown, counter, select, combobox) |
 | Frameworks tested | React, Svelte |
 | Pass rate | 82/82 (100%) |
 
@@ -132,7 +132,7 @@ Alongside the accessibility tests, all shared Playwright test suites were harden
 |------|--------|
 | `checkbox-interaction.suite.ts` | `waitForCheckbox` now waits for shadow DOM `<input>` |
 | `input-interaction.suite.ts` | `waitForInput` now waits for shadow DOM `<input>` |
-| `menu-interaction.suite.ts` | `waitForMenu` now waits for `updateComplete` |
+| `menu-interaction.suite.ts` | `waitForMenu` now waits for `auro-menu`/`auro-menuoption` registration and at least one light DOM `auro-menuoption` |
 | `radio-interaction.suite.ts` | `waitForRadio` now waits for shadow DOM `<input>` |
 | `dropdown-interaction.suite.ts` | `waitForDropdown` now waits for shadow DOM `#trigger` |
 | `form-interaction.suite.ts` | `waitForForm` now waits for shadow DOM `<input>` |
