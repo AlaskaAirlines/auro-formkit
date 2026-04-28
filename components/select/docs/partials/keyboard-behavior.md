@@ -30,10 +30,5 @@
     <auro-header level="3" id="keyEventsDropdown">Key Events inherited from Auro-Dropdown</auro-header>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/keyEvents.md) -->
     <!-- AURO-GENERATED-CONTENT:END -->
-    <section class="footnotes">
-    <hr />
-    <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/footnotes/1.md) -->
-    <!-- AURO-GENERATED-CONTENT:END -->
-    </section>
   </div>
 </div>

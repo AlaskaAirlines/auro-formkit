@@ -44,11 +44,7 @@ The `<auro-form>` element should be used in situations where users want to build
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
-#### NPM Installation
-
-```shell
-$ npm i @aurodesignsystem/auro-formkit
-```
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
 <!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->
@@ -57,13 +53,11 @@ $ npm i @aurodesignsystem/auro-formkit
 
 When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
 
-```json
-{
+<pre class="language-json"><code class="language-json">{
     "compilerOptions": {
         "moduleResolution": "bundler"
     }
-}
-```
+}</code></pre>
 
 This configuration enables proper module resolution for the component's TypeScript files.
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -74,9 +68,7 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-form/+esm"></script>
-```
+<pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-form/+esm"&gt;&lt;/script&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit Development
@@ -90,9 +82,7 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-```shell
-npx turbo dev --filter=@aurodesignsystem/auro-input
-```
+<pre class="language-shell"><code class="language-shell">npx turbo dev --filter=@aurodesignsystem/auro-input</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
@@ -107,13 +97,11 @@ However, if you need to load multiple versions of the same component on a single
 
 You can do this by importing only the component class and using the `register(name)` method with a unique name:
 
-```js
-// Import the class only
+<pre class="language-js"><code class="language-js">// Import the class only
 import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
-
+​
 // Register with a custom name if desired
-AuroForm.register('custom-form');
-```
+AuroForm.register('custom-form');</code></pre>
 
 This will create a new custom element `<custom-form>` that behaves exactly like `<auro-form>`, allowing both to coexist on the same page without interfering with each other.
 
@@ -125,21 +113,17 @@ Auro form elements are automatically recognized based on their tag name (e.g. `a
 
 For example, the following is correct:
 
-```javascript
-import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
+<pre class="language-javascript"><code class="language-javascript">import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
 import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
-
+​
 AuroInput.register('my-custom-input'); // adds an internal identifier auro-form uses to recognize the custom element
-AuroForm.register(); // render looks for said identifier
-```
+AuroForm.register(); // render looks for said identifier</code></pre>
 
 The following is NOT correct and will result in forms not working as expected:
 
-```javascript
-import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
+<pre class="language-javascript"><code class="language-javascript">import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
 import { AuroForm } from '@aurodesignsystem/auro-formkit/auro-form/class';
-
+​
 AuroForm.register(); // forms start rendering, looking for auro inputs, or custom-named inputs
-AuroInput.register('my-custom-input'); // too late, form has already rendered and did not find the custom element
-```
+AuroInput.register('my-custom-input'); // too late, form has already rendered and did not find the custom element</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

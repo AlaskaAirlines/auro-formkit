@@ -43,11 +43,7 @@ The `auro-counter` element should be used in situations where users may:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
-#### NPM Installation
-
-```shell
-$ npm i @aurodesignsystem/auro-formkit
-```
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
 <!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->
@@ -56,13 +52,11 @@ $ npm i @aurodesignsystem/auro-formkit
 
 When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
 
-```json
-{
+<pre class="language-json"><code class="language-json">{
     "compilerOptions": {
         "moduleResolution": "bundler"
     }
-}
-```
+}</code></pre>
 
 This configuration enables proper module resolution for the component's TypeScript files.
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -73,9 +67,7 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-counter/+esm"></script>
-```
+<pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-counter/+esm"&gt;&lt;/script&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit Development
@@ -89,9 +81,7 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-```shell
-npx turbo dev --filter=@aurodesignsystem/auro-input
-```
+<pre class="language-shell"><code class="language-shell">npx turbo dev --filter=@aurodesignsystem/auro-input</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
@@ -106,56 +96,52 @@ However, if you need to load multiple versions of the same component on a single
 
 You can do this by importing only the component class and using the `register(name)` method with a unique name:
 
-```js
-// Import the class only
+<pre class="language-js"><code class="language-js">// Import the class only
 import { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
-
+​
 // Register with a custom name if desired
 AuroCounter.register('custom-counter');
-AuroCounterGroup.register('custom-counter-group');
-```
+AuroCounterGroup.register('custom-counter-group');</code></pre>
 
 This will create a new custom element `<custom-counter>` and `<custom-counter-group>` that behaves exactly like `<auro-counter>` and `<auro-counter-group>`, allowing both to coexist on the same page without interfering with each other.
 
 <div class="exampleWrapper exampleWrapper--flex">
-  <custom-counter-group>
-    <div slot="bib.fullscreen.headline">Passengers</div>
-    <div slot="label">Passengers</div>
-    <custom-counter>
-      Adults
-      <span slot="description">18 years or older</span>
-    </custom-counter>
-    <custom-counter>
-      Children
-      <span slot="description">2-17 years</span>
-    </custom-counter>
-  </custom-counter-group>
+<custom-counter-group>
+<div slot="bib.fullscreen.headline">Passengers</div>
+<div slot="label">Passengers</div>
+<custom-counter>
+Adults
+<span slot="description">18 years or older</span>
+</custom-counter>
+<custom-counter>
+Children
+<span slot="description">2-17 years</span>
+</custom-counter>
+</custom-counter-group>
 </div>
 <auro-accordion alignRight>
-  <span slot="trigger">See code</span>
+<span slot="trigger">See code</span>
 
-```html
-  <custom-counter-group>
-    <div slot="bib.fullscreen.headline">Passengers</div>
-    <div slot="label">Passengers</div>
-    <custom-counter>
+<pre class="language-html"><code class="language-html">  &lt;custom-counter-group&gt;
+    &lt;div slot="bib.fullscreen.headline"&gt;Passengers&lt;/div&gt;
+    &lt;div slot="label"&gt;Passengers&lt;/div&gt;
+    &lt;custom-counter&gt;
       Adults
-      <span slot="description">18 years or older</span>
-    </custom-counter>
-    <custom-counter>
+      &lt;span slot="description"&gt;18 years or older&lt;/span&gt;
+    &lt;/custom-counter&gt;
+    &lt;custom-counter&gt;
       Children
-      <span slot="description">2-17 years</span>
-    </custom-counter>
-  </custom-counter-group>
-
+      &lt;span slot="description"&gt;2-17 years&lt;/span&gt;
+    &lt;/custom-counter&gt;
+  &lt;/custom-counter-group&gt;
+​
 ```html
-  <custom-checkbox-group>
-    <span slot="legend">Form label goes here</span>
-    <custom-checkbox value="value1" name="custom" id="checkbox-custom1">Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value2" name="custom" id="checkbox-custom2" checked>Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value3" name="custom" id="checkbox-custom3">Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value4" name="custom" id="checkbox-custom4">Custom checkbox option</custom-checkbox>
-  </custom-checkbox-group>
-```
+  &lt;custom-checkbox-group&gt;
+    &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
+    &lt;custom-checkbox value="value1" name="custom" id="checkbox-custom1"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
+    &lt;custom-checkbox value="value2" name="custom" id="checkbox-custom2" checked&gt;Custom checkbox option&lt;/custom-checkbox&gt;
+    &lt;custom-checkbox value="value3" name="custom" id="checkbox-custom3"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
+    &lt;custom-checkbox value="value4" name="custom" id="checkbox-custom4"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
+  &lt;/custom-checkbox-group&gt;</code></pre>
 </auro-accordion>
 <!-- AURO-GENERATED-CONTENT:END -->
