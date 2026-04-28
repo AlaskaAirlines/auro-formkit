@@ -44,8 +44,6 @@ The following examples illustrate fully functional `<auro-radio>` elements wrapp
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
-#### NPM Installation
-
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->

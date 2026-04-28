@@ -3,9 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/index.md
-
-  With the exception of adding custom elements if needed for the demo.
+  All demo code should be added/edited in ./demo/getting-started.md
 
   ----------------------- DO NOT EDIT -----------------------------
 
@@ -16,28 +14,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-combobox</title>
+    <title>Auro Web Component Demo | auro-select | Getting Started</title>
 
     <!-- highlight.js Stylesheet -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"/>
 
-    <!-- Legacy reference is still needed to support auro-combobox's use of legacy token values at this time -->
+    <!-- Legacy reference is still needed to support auro-select's use of legacy token values at this time -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
 
     <!-- Design Token Alaska Theme -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css"/>
-    
+
     <!-- Webcore Stylesheet Alaska Theme -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
-    
+
     <!-- Demo Specific Styles -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" /> -->
     <link rel="stylesheet" type="text/css" href="./styles.css" />
-</head>
+  </head>
   <body class="auro-markdown">
     <main></main>
 
+    <!-- If additional elements are needed for the demo, add them here. -->
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-nav@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-header@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-icon@latest/+esm" type="module"></script>
     <script type="module">
       import {unified} from 'https://esm.sh/unified';
       import remarkParse from 'https://esm.sh/remark-parse';
@@ -47,7 +51,7 @@
       import rehypeHighlight from 'https://esm.sh/rehype-highlight';
       import rehypeStringify from 'https://esm.sh/rehype-stringify';
 
-      const response = await fetch('../combobox/readme.md');
+      const response = await fetch('../select/getting-started.md');
       const text = await response.text();
       const result = await unified()
         .use(remarkParse)
@@ -59,11 +63,13 @@
         .process(text);
 
       document.querySelector('main').innerHTML = String(result);
-      addCopyButtons();
+    </script>
+    <script type="module">
+      // import "https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js";
+      // import "https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js";
 
       function addCopyButtons() {
-        document.querySelectorAll('pre code[class*="language-"], pre code[class*="hljs"]').forEach((code) => {
-          const pre = code.parentElement;
+        document.querySelectorAll('pre[class*="language-"]').forEach((pre) => {
           const wrapper = document.createElement('div');
           wrapper.className = 'pre-wrapper';
           pre.parentNode.insertBefore(wrapper, pre);
@@ -72,7 +78,8 @@
           btn.className = 'copy-btn';
           btn.textContent = 'Copy';
           btn.addEventListener('click', () => {
-            const raw = code.textContent;
+            const code = pre.querySelector('code');
+            const raw = code ? code.textContent : pre.textContent;
             const text = raw.replace(/\u200B/g, '').replace(/^\n+/, '').replace(/\n+$/, '\n').replace(/^\$ /, '');
             navigator.clipboard.writeText(text).then(() => {
               btn.textContent = 'Copied!';
@@ -82,10 +89,37 @@
           wrapper.appendChild(btn);
         });
       }
-    </script>
-    <script src="../combobox/index.min.js" data-demo-script="true" type="module"></script>
 
-    <!-- If additional elements are needed for the demo, add them here. -->
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+      function openAccordion(id) {
+        document.querySelectorAll('auro-accordion').forEach((accordion) => {
+          accordion.removeAttribute('expanded');
+        });
+        const target = document.getElementById(id);
+        if (target) {
+          target.setAttribute('expanded', '');
+          // Wait for accordion collapse/expand animation (500ms) to finish before scrolling
+          setTimeout(() => {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 550);
+        }
+      }
+
+      window.openAccordion = openAccordion;
+
+      // function loadMd(path) {
+      //   fetch(path)
+      //     .then((response) => response.text())
+      //     .then((text) => {
+      //       const rawHtml = marked.parse(text);
+      //       document.querySelector("main").innerHTML = rawHtml;
+      //       Prism.highlightAll();
+      //       addCopyButtons();
+      //     });
+      // }
+
+      // loadMd("./getting-started.md");
+      addCopyButtons();
+    </script>
+    <script src="../select/getting-started.min.js" data-demo-script="true" type="module"></script>
   </body>
 </html>

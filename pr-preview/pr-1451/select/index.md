@@ -2,24 +2,15 @@
 <div class="contentWrapper">
 <nav>
 <auro-nav anchorNavContent=".scrollWrapper">
-<!-- <span slot="label">Anchor Navigation</span> -->
 <span slot="mobileToggleCollapsed">View More</span>
 <span slot="mobileToggleExpanded">View Less</span>
 <auro-anchorlink fluid href="#description">Description</auro-anchorlink>
-<auro-anchorlink fluid href="#ui">UI</auro-anchorlink>
-<auro-anchorlink fluid href="#trigger" class="level2 body-xs">Trigger</auro-anchorlink>
-<auro-anchorlink fluid href="#options" class="level2 body-xs">Options</auro-anchorlink>
-<auro-anchorlink fluid href="#helpText" class="level2 body-xs">Help Text</auro-anchorlink>
-<auro-anchorlink fluid href="#initialState">Initial State</auro-anchorlink>
-<auro-anchorlink fluid href="#usersStories">User Stories</auro-anchorlink>
+<auro-anchorlink fluid href="#userStories">User Stories</auro-anchorlink>
 <auro-anchorlink fluid href="#select" class="level2 body-xs">Select A Value</auro-anchorlink>
 <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
+<auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-select</auro-anchorlink>
 <auro-anchorlink fluid href="#autocomplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
 <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
-<auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
-<auro-anchorlink fluid href="#multiselect" class="level2 body-xs">Multi-select</auro-anchorlink>
-<auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
-<auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
 <auro-anchorlink fluid href="#viewport" class="level2 body-xs">Viewport Size</auro-anchorlink>
 </auro-nav>
 </nav>
@@ -63,7 +54,6 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
-
 <pre class="language-html"><code class="language-html">&lt;auro-select&gt;
   &lt;span slot="ariaLabel.bib.close"&gt;Close Popup&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Headline&lt;/span&gt;
@@ -79,51 +69,6 @@
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<section>
-<auro-header level="2" id="ui">UI</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/ui.md) -->
-<!-- The below content is automatically added from ./../docs/partials/ui.md -->
-<p>The component consists of the following elements:</p>
-<ul>
-<li>
-<strong>trigger:</strong> shows the component label, current value and will render to reflect state of the component (e.g. <code>focus</code>, <code>hover</code>, <code>disabled</code>, <code>valid</code>, <code>invalid</code>), and a flag marking instances that are required.
-</li>
-<li>
-<strong>options list:</strong> a list of options that may be selected which are rendered in an element which can be expanded/collapsed by interacting with the trigger.
-</li>
-<li>
-<strong>help text:</strong> descriptive text rendered below the trigger intended to help clarify the intended use of the component instance and any current validation error with instructions to resolve those errors.
-</li>
-</ul>
-<auro-header level="3" id="trigger">Trigger</auro-header>
-<p>The trigger includes the component label, a flag marking the component optional/required and the current value. This label is required in order to ensure correct behavior when a guest is using accessibility tools such as screen readers and VoiceOver utilities. The invalid state will also announce to accessibility tools when applied.</p>
-<p>The optional/required flag content may be customized.</p>
-<p>When rendering the value of a selected option, the entire text content of the option will render in the trigger, including any icons.</p>
-<p>The trigger is a focusable element and will visually respond to common UI states - <strong>Hover</strong> <em>(:hover)</em>, <strong>Focus</strong> <em>(:focus / :focus-visible)</em>, <strong>Disabled</strong> <em>(:disabled)</em>. The component does not have a visual response to the <strong>Active</strong> <em>(:active)</em> state.</p>
-<auro-header level="3" id="options">List Options</auro-header>
-<p>The component will render a list of options that may be selected. Each option may be in one of the following states when rendered:</p>
-<ul>
-<li>
-<code>selected</code> - One option may be selected at a time and identifies the current value of the component. There is an optional feature that may be used to enable more than one option to be selected at a time.
-</li>
-<li>
-<code>active</code> - One option may be active at a time. The active option indicates the item that will become selected if the user chooses.
-</li>
-<li>
-<code>disabled</code> - One or more options may be disabled. Disabled options are not interactive and cannot be marked as active or selected.
-</li>
-</ul>
-<auro-header level="3" id="helpText">Help Text</auro-header>
-<p>Help text is not required. However, consideration should be given to how users will understand the full context of the component instance, particularly users reliant on accessibility tools like screen readers. In certain cases, a component label alone may be confusing.</p>
-<p>If the component fails validation, the help text will change to show a validation help message instead of the default help text.</p>
-</section>
-<section>
-<auro-header level="2" id="initialState">Initial Render State</auro-header>
-<p>
-When the component first renders in it's default use case the value is <code>undefined</code> and the first enabled option is marked <code>active</code>. The component will initially render with the option list collapsed.
-</p>
-</section>
-<!-- AURO-GENERATED-CONTENT:END -->
 <section>
 <auro-header level="2" id="userStories">User Stories</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/userStories.md) -->
@@ -170,6 +115,39 @@ Any previously selected option will be un-selected. The current active option ma
 <p>When configured for multi-select, the preset value may include multiple options. The first selected option will also be marked <code>active</code>.</p>
 <p>If one or more preset values do not match any option they will be discarded. If no preset values match any option, the value is reset to <code>undefined</code>.</p>
 <div class="note"><strong>Important caveat:</strong> Multi-select is notoriously difficult for all users, including screen reader users — WCAG and usability research generally recommend avoiding <code>&lt;auro-select multiSelect></code> in favor of checkboxes or other patterns that make multi-selection more discoverable.</div>
+<auro-header level="3" id="multiselect">Multi-select</auro-header>
+<p>In certain cases it may be valid to allow more than one option to be selected. When the component is configured to support multi-select only one option is still able to be marked <code>active</code>. However, multiple options may be <code>selected</code> via click, tap or keyboard events on each option. A second click, tap or keyboard event on an already selected option will de-select it.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/multi-select.html) -->
+<!-- The below content is automatically added from ./../apiExamples/multi-select.html -->
+<auro-select multiselect>
+<span slot="bib.fullscreen.headline">Bib Headline</span>
+<label slot="placeholder">Select one or more options</label>
+<span slot="label">multiselect select example</span>
+<auro-menu>
+<auro-menuoption value="1">Option 1</auro-menuoption>
+<auro-menuoption value="2">Option 2</auro-menuoption>
+<auro-menuoption value="3">Option 3</auro-menuoption>
+</auro-menu>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/multi-select.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/multi-select.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-select multiselect&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Headline&lt;/span&gt;
+  &lt;label slot="placeholder"&gt;Select one or more options&lt;/label&gt;
+  &lt;span slot="label"&gt;multiselect select example&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="1"&gt;Option 1&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="2"&gt;Option 2&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="3"&gt;Option 3&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="autocomplete">Autocomplete</auro-header>
 <p>The component supports the use of <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete">autocomplete</auro-hyperlink> configuration through HTML attributes.</p>
 <auro-header level="3" id="skipSelection">Close the list of options without making a selection</auro-header>
@@ -183,45 +161,6 @@ Any previously selected option will be un-selected. The current active option ma
 </div>
 </li>
 </ol>
-<auro-header level="3" id="requireSelection">Require selection of an option</auro-header>
-<p>Certain use cases may require the guest to make a selection from the component in order to continue the intended work flow (e.g. form submission).</p>
-<p>When the component is marked required:</p>
-<ol>
-<li>Move focus to the auro-select element</li>
-<li>Activate the trigger (e.g. mouse click, tap or keyboard event)</li>
-<li>Navigate the list of options</li>
-<li>
-Collapse the bib without making a selection
-<div class="note">
-<p>This will re-render the component in a state reflecting the validation error. To resolve the error, the guest may continue to the following steps.</p>
-</div>
-</li>
-<li>Activate the trigger</li>
-<li>Navigate the list of options marking any option as active</li>
-<li>
-Select the active option
-<div class="note">
-<p>This will re-render the component and the validation error state will be removed.</p>
-</div>
-</li>
-</ol>
-<auro-header level="3" id="multiselect">Supporting multi-select</auro-header>
-<p>In certain cases it may be valid to allow more than one option to be selected. When the component is configured to support multi-select only one option is still able to be marked <code>active</code>. However, multiple options may be <code>selected</code> via click, tap or keyboard events on each option. A second click, tap or keyboard event on an already selected option will de-select it.</p>
-<auro-header level="3" id="disableOptions">Disable Option(s)</auro-header>
-<p>The component may be rendered with one or more <code>disabled</code> options. When navigating the list of options with the keyboard or assistive technology to mark the next or previous option as active, disabled options will skipped, jumping to the next enabled option.</p>
-<p>While using the pointer to mark options as active, hovering over disabled options will be ignored and the previous active option will remain active.</p>
-<div class="note">
-<strong>Note:</strong> If the currently <code>selected</code> option is marked as <code>disabled</code>, the component value is reset to <code>undefined</code> and the component validation workflow is performed (e.g., if the component instance is <code>required</code> it will set <code>validity="valueMissing".</code>).
-</div>
-<div class="note">
-<strong>Note:</strong> marking all options as disabled is not supported. Disable the component instead.
-</div>
-<auro-header level="3" id="disableComponent">Disable Component</auro-header>
-<p>The entire component may be disabled. When disabled, the component will render to reflect the state, may not receive focus nor react to any key or pointer events.</p>
-<p>When the component is disabled and part of a form, the components value is still included in the form submission.</p>
-<div class="note">
-<strong>Note:</strong> If the component is marked as both <strong>invalid</strong> and <code>disabled</code>, the <strong>invalid</strong> state UI/UX and functional behavior are ignored. The <code>disabled</code> UI/UX and functional behavior works normally.
-</div>
 <auro-header level="3" id="viewport">Change Viewport Size</auro-header>
 <p>The guest may change the size of their viewport (e.g. resize their desktop browser window, rotate their mobile device). In some cases, this may cause a re-render of the component while the option list is expanded. It is possible that the viewport size change will cause the option list to change from a popover bib to a fullscreen modal or vice versa while the bib is open.</p>
 <auro-header level="4" id="us9a">Popover to Modal</auro-header>
@@ -230,6 +169,7 @@ Select the active option
 <p>While in a fullscreen modal display state with the bib open, focus will be on the close button inside the dialog. After switching to the fullscreen modal dialog, focus will move to the trigger.</p>
 </section>
 <!-- AURO-GENERATED-CONTENT:END -->
+</section>
 </div>
 </div>
 </div>

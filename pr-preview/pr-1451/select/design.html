@@ -3,7 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/voiceover.md
+  All demo code should be added/edited in ./demo/layout.md
 
   With the exception of adding custom elements if needed for the demo.
 
@@ -16,12 +16,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-combobox | VoiceOver</title>
+    <title>Auro Web Component Demo | auro-select | Layout</title>
 
     <!-- highlight.js Stylesheet -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"/>
 
-    <!-- Legacy reference is still needed to support auro-combobox's use of legacy token values at this time -->
+    <!-- Legacy reference is still needed to support auro-select's use of legacy token values at this time -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
 
     <!-- Design Token Alaska Theme -->
@@ -34,15 +34,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
     <link rel="stylesheet" type="text/css" href="./styles.css" />
-    <style>
-      table {
-        --ds-color-container-secondary-default: transparent;
-      }
-
-      tr:not(:last-of-type) {
-        border-bottom: 1px solid var(--ds-color-border-tertiary-default);
-      }
-    </style>
   </head>
   <body class="auro-markdown">
     <main></main>
@@ -56,7 +47,7 @@
       import rehypeHighlight from 'https://esm.sh/rehype-highlight';
       import rehypeStringify from 'https://esm.sh/rehype-stringify';
 
-      const response = await fetch('../combobox/voiceover.md');
+      const response = await fetch('../select/design.md');
       const text = await response.text();
       const result = await unified()
         .use(remarkParse)
@@ -68,10 +59,36 @@
         .process(text);
 
       document.querySelector('main').innerHTML = String(result);
+      addCopyButtons();
+
+      function addCopyButtons() {
+        document.querySelectorAll('pre code[class*="language-"], pre code[class*="hljs"]').forEach((code) => {
+          const pre = code.parentElement;
+          const wrapper = document.createElement('div');
+          wrapper.className = 'pre-wrapper';
+          pre.parentNode.insertBefore(wrapper, pre);
+          wrapper.appendChild(pre);
+          const btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = 'Copy';
+          btn.addEventListener('click', () => {
+            const raw = code.textContent;
+            const text = raw.replace(/\u200B/g, '').replace(/^\n+/, '').replace(/\n+$/, '\n').replace(/^\$ /, '');
+            navigator.clipboard.writeText(text).then(() => {
+              btn.textContent = 'Copied!';
+              setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+            });
+          });
+          wrapper.appendChild(btn);
+        });
+      }
     </script>
 
     <!-- If additional elements are needed for the demo, add them here. -->
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-icon@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-header@latest/+esm" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
+
+    <script src="../select/index.min.js" data-demo-script="true" type="module"></script>
   </body>
 </html>

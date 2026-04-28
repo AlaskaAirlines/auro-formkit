@@ -18,8 +18,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auro Web Component Demo | auro-combobox</title>
 
-    <!-- Prism.js Stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css"/>
+    <!-- highlight.js Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"/>
 
     <!-- Legacy reference is still needed to support auro-combobox's use of legacy token values at this time -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
@@ -39,19 +39,31 @@
     <main></main>
 
     <script type="module">
-      import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js';
-      import 'https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js';
-      fetch('../combobox/api.md')
-        .then((response) => response.text())
-        .then((text) => {
-          const rawHtml = marked.parse(text);
-          document.querySelector('main').innerHTML = rawHtml;
-          Prism.highlightAll();
-          addCopyButtons();
-        });
+      import {unified} from 'https://esm.sh/unified';
+      import remarkParse from 'https://esm.sh/remark-parse';
+      import remarkGfm from 'https://esm.sh/remark-gfm';
+      import remarkRehype from 'https://esm.sh/remark-rehype';
+      import rehypeRaw from 'https://esm.sh/rehype-raw';
+      import rehypeHighlight from 'https://esm.sh/rehype-highlight';
+      import rehypeStringify from 'https://esm.sh/rehype-stringify';
+
+      const response = await fetch('../combobox/api.md');
+      const text = await response.text();
+      const result = await unified()
+        .use(remarkParse)
+        .use(remarkGfm)
+        .use(remarkRehype, { allowDangerousHtml: true })
+        .use(rehypeRaw)
+        .use(rehypeHighlight)
+        .use(rehypeStringify)
+        .process(text);
+
+      document.querySelector('main').innerHTML = String(result);
+      addCopyButtons();
 
       function addCopyButtons() {
-        document.querySelectorAll('auro-accordion pre[class*="language-"]').forEach((pre) => {
+        document.querySelectorAll('pre code[class*="language-"], pre code[class*="hljs"]').forEach((code) => {
+          const pre = code.parentElement;
           const wrapper = document.createElement('div');
           wrapper.className = 'pre-wrapper';
           pre.parentNode.insertBefore(wrapper, pre);
@@ -60,9 +72,8 @@
           btn.className = 'copy-btn';
           btn.textContent = 'Copy';
           btn.addEventListener('click', () => {
-            const code = pre.querySelector('code');
-            const raw = code ? code.textContent : pre.textContent;
-            const text = raw.replace(/\u200B/g, '').replace(/^\n+/, '').replace(/\n+$/, '\n');
+            const raw = code.textContent;
+            const text = raw.replace(/\u200B/g, '').replace(/^\n+/, '').replace(/\n+$/, '\n').replace(/^\$ /, '');
             navigator.clipboard.writeText(text).then(() => {
               btn.textContent = 'Copied!';
               setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
