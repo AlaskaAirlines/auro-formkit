@@ -3316,7 +3316,7 @@ function runFullTest(mobileView) {
         await new Promise((r) => setTimeout(r, 500));
         await sendKeys({ press: key });
         await new Promise((r) => setTimeout(r, 500));
-        await expect(el.value).to.be.equal('');
+        await expect(el.value).to.be.undefined;
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
     }

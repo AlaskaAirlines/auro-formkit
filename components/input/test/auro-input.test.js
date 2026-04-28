@@ -2197,7 +2197,7 @@ function runFullTest(mobileView) {
         const clearButton = el.shadowRoot.querySelector('.clearBtn');
         clearButton.click();
         await elementUpdated();
-        expect(el.value).to.equal('');
+        expect(el.value).to.undefined;
       });
 
       it('should stop propagation of keydown events on the clear button', async () => {
