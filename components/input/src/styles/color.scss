@@ -15,7 +15,7 @@
 @use '@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska' as v;
 
 .wrapper {
-  border-color: red; // var(--ds-auro-input-border-color);
+  border-color: var(--ds-auro-input-border-color);
   background-color: var(--ds-auro-input-container-color);
   color: var(--ds-auro-input-text-color);
 

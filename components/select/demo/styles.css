@@ -838,6 +838,11 @@ small,
 .auro-markdown p:last-child {
   margin-bottom: 0;
 }
+.hljs {
+  background-color: unset !important;
+  padding: unset !important;
+}
+
 pre {
   background: var(--ds-color-brand-gray-100, #f8f8f8) !important;
   border: unset !important;
@@ -857,17 +862,38 @@ pre code {
   text-shadow: none;
 }
 
+.pre-wrapper:last-of-type pre {
+  margin-bottom: 0 !important;
+}
+
 code:not(.html):not(.css):not(.js):not([class*=language-]) {
   color: var(--ds-color-brand-flamingo-500, #b82b47);
+  margin-bottom: 0 !important;
 }
 
 .token.operator {
   background-color: unset !important;
 }
 
-auro-accordion {
+auro-accordion:not([class=section]) {
   margin-top: 1rem !important;
   display: block;
+}
+auro-accordion:not([class=section]):nth-child(2) {
+  margin-block-start: 0;
+}
+
+auro-accordion.section::part(accordion) {
+  padding-right: 2px;
+  display: block;
+}
+
+accordion.section * {
+  padding-right: 2px;
+}
+
+.accordion-content {
+  padding-top: 1rem;
 }
 
 .pre-wrapper {
@@ -902,12 +928,14 @@ auro-accordion {
   background-color: var(--ds-basic-color-surface-default);
   padding: 1rem;
   border-radius: 0.5rem;
+  margin-top: 1rem;
 }
 
 .exampleWrapper--ondark {
   background-color: var(--ds-basic-color-surface-inverse);
   padding: 1rem;
   border-radius: 0.5rem;
+  margin-top: 1rem;
 }
 
 table {
@@ -971,11 +999,28 @@ auro-anchorlink.level2 {
   padding-left: var(--ds-size-200);
 }
 
-.note {
+p:first-of-type {
+  margin-top: 0;
+}
+
+.note,
+.warning {
   margin: 10px 0;
   padding: 10px;
   border-radius: 6px;
   font-style: italic;
-  color: var(--ds-basic-color-texticon-muted);
+}
+
+.note {
   background-color: var(--ds-basic-color-surface-neutral-subtle);
+  color: var(--ds-basic-color-texticon-muted);
+}
+
+.warning {
+  background-color: var(--ds-basic-color-status-error-subtle);
+  color: var(--ds-basic-color-status-error);
+}
+
+auro-header {
+  margin-top: 1rem;
 }

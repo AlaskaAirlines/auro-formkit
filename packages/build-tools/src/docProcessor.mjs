@@ -131,6 +131,12 @@ export const fileConfigs = (config) => [
     input: fromAuroComponentRoot(`components/${config.component}/docs/partials/install.md`),
     output: fromAuroComponentRoot(`components/${config.component}/demo/install.md`),
   },
+  // getting-started.md
+  {
+    identifier: 'getting-started.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/getting-started.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/getting-started.md`),
+  },
   // accessibility.md
   {
     identifier: 'accessibility.md',
@@ -225,6 +231,21 @@ export async function processDocFiles(componentName) {
           }
 
           if (modified) {
+            // Replace template variables (e.g. {{ monorepoName }}) in content
+            // introduced by second-pass inlining — the first pass only
+            // replaces variables in the original file, not in nested partials.
+            const dependencies = componentDependencyTree[config.component];
+            const components = componentTree[config.component];
+            const formattedComponents = components.map(name => ({
+              name,
+              capitalizedName: name.charAt(0).toUpperCase() + name.slice(1)
+            }));
+            outputContents = templateFiller.replaceTemplateValues(outputContents, {
+              ...monorepoVars,
+              dependentComponents: dependencies,
+              componentList: formattedComponents,
+              hasMultipleComponents: components.length > 1
+            });
             await fs.writeFile(fileConfig.output, outputContents);
           }
 

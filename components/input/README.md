@@ -42,11 +42,7 @@ The `<auro-input>` element should be used in situations where users may:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
-#### NPM Installation
-
-```shell
-$ npm i @aurodesignsystem/auro-formkit
-```
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
 <!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->
@@ -55,13 +51,11 @@ $ npm i @aurodesignsystem/auro-formkit
 
 When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
 
-```json
-{
+<pre class="language-json"><code class="language-json">{
     "compilerOptions": {
         "moduleResolution": "bundler"
     }
-}
-```
+}</code></pre>
 
 This configuration enables proper module resolution for the component's TypeScript files.
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -72,9 +66,7 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-input/+esm"></script>
-```
+<pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-input/+esm"&gt;&lt;/script&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit Development
@@ -88,9 +80,7 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-```shell
-npx turbo dev --filter=@aurodesignsystem/auro-input
-```
+<pre class="language-shell"><code class="language-shell">npx turbo dev --filter=@aurodesignsystem/auro-input</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
@@ -105,30 +95,26 @@ However, if you need to load multiple versions of the same component on a single
 
 You can do this by importing only the component class and using the `register(name)` method with a unique name:
 
-```js
-// Import the class only
+<pre class="language-js"><code class="language-js">// Import the class only
 import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
-
+​
 // Register with a custom name if desired
-AuroInput.register('custom-input');
-```
+AuroInput.register('custom-input');</code></pre>
 
 This will create a new custom element `<custom-input>` that behaves exactly like `<auro-input>`, allowing both to coexist on the same page without interfering with each other.
 
 <div class="exampleWrapper exampleWrapper--flex">
-  <custom-input>
-    <span slot="label">Label</span>
-    <span slot="helpText">Help Text</span>
-  </custom-input>
+<custom-input>
+<span slot="label">Label</span>
+<span slot="helpText">Help Text</span>
+</custom-input>
 </div>
 <auro-accordion alignRight>
-  <span slot="trigger">See code</span>
+<span slot="trigger">See code</span>
 
-```html
-  <custom-input>
-    <span slot="label">Label</span>
-    <span slot="helpText">Help Text</span>
-  </custom-input>
-```
+<pre class="language-html"><code class="language-html">&lt;custom-input&gt;
+  &lt;span slot="label"&gt;Label&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/custom-input&gt;</code></pre>
 </auro-accordion>
 <!-- AURO-GENERATED-CONTENT:END -->

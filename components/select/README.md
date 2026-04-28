@@ -25,13 +25,13 @@ The following sections are editable by making changes to the following files:
 <p>The component is used to create a drop-down list for user input within a form. It acts as a container for options.</p>
 <p>Key features:</p>
 <ul>
-  <li>Preset values</li>
-  <li>Mark as required when in a form</li>
-  <li>Disable individual options or the entire component</li>
-  <li>Enable multi-select</li>
-  <li>Separate options into groups with dividers</li>
-  <li>Group options into nested levels</li>
-  <li>Autocomplete</li>
+<li>Preset values</li>
+<li>Mark as required when in a form</li>
+<li>Disable individual options or the entire component</li>
+<li>Enable multi-select</li>
+<li>Separate options into groups with dividers</li>
+<li>Group options into nested levels</li>
+<li>Autocomplete</li>
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
@@ -51,11 +51,7 @@ See description.
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
-#### NPM Installation
-
-```shell
-$ npm i @aurodesignsystem/auro-formkit
-```
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
 <!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->
@@ -64,13 +60,11 @@ $ npm i @aurodesignsystem/auro-formkit
 
 When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
 
-```json
-{
+<pre class="language-json"><code class="language-json">{
     "compilerOptions": {
         "moduleResolution": "bundler"
     }
-}
-```
+}</code></pre>
 
 This configuration enables proper module resolution for the component's TypeScript files.
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -81,9 +75,7 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-select/+esm"></script>
-```
+<pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-select/+esm"&gt;&lt;/script&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit Development
@@ -97,63 +89,39 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-```shell
-npx turbo dev --filter=@aurodesignsystem/auro-input
-```
+<pre class="language-shell"><code class="language-shell">npx turbo dev --filter=@aurodesignsystem/auro-input</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
+<p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
+<p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
+<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
+<p>To do this, import the component class directly and call its `register(name)` method with a unique name:</p>
 
-## Custom Component Registration for Version Management
-
-There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
-
-When you install the component as described on the `Install` page, the class is imported automatically, and the component is registered globally for you.
-
-However, if you need to load multiple versions of the same component on a single page (for example, when two projects depend on different versions), you can manually register the class under a custom element name to avoid conflicts.
-
-You can do this by importing only the component class and using the `register(name)` method with a unique name:
-
-```js
-// Import the class only
+<pre class="language-js"><code class="language-js">// Import the classes
 import { AuroSelect } from '@aurodesignsystem/auro-formkit/auro-select/class';
-
-// Register with a custom name if desired
+import { AuroMenu } from '@aurodesignsystem/auro-formkit/auro-menu/class';
+import { AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menuoption/class';
+​
+// Register each component with a custom name
 AuroSelect.register('custom-select');
-```
+AuroMenu.register('custom-menu');
+AuroMenuOption.register('custom-menuoption');</code></pre>
 
-This will create a new custom element `<custom-select>` that behaves exactly like `<auro-select>`, allowing both to coexist on the same page without interfering with each other.
+The `<auro-menu>` and `<auro-menuoption>` components must also be custom registered when using a custom `<auro-select>` registration. All three components work together and need to be registered under the same custom naming convention.
 
-<div class="exampleWrapper exampleWrapper--flex">
-  <custom-select placeholder="Placeholder Text">
-    <span slot="bib.fullscreen.headline">Bib Headline</span>
-    <span slot="label">Label</span>
-    <auro-menu>
-      <auro-menuoption value="stops">Stops</auro-menuoption>
-      <auro-menuoption value="price">Price</auro-menuoption>
-      <auro-menuoption value="duration">Duration</auro-menuoption>
-      <auro-menuoption value="departure">Departure</auro-menuoption>
-      <auro-menuoption value="arrival">Arrival</auro-menuoption>
-      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-    </auro-menu>
-  </custom-select>
-</div>
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
+This will create new custom elements that behave exactly like their standard counterparts, allowing both to coexist on the same page without interfering with each other.
 
-```html
-  <custom-select placeholder="Placeholder Text">
-    <span slot="bib.fullscreen.headline">Bib Headline</span>
-    <span slot="label">Label</span>
-    <auro-menu>
-      <auro-menuoption value="stops">Stops</auro-menuoption>
-      <auro-menuoption value="price">Price</auro-menuoption>
-      <auro-menuoption value="duration">Duration</auro-menuoption>
-      <auro-menuoption value="departure">Departure</auro-menuoption>
-      <auro-menuoption value="arrival">Arrival</auro-menuoption>
-      <auro-menuoption value="prefer alaska">Prefer Alaska</auro-menuoption>
-    </auro-menu>
-  </custom-select>
-```
-</auro-accordion>
+<pre class="language-html"><code class="language-html">&lt;custom-select placeholder="Placeholder Text" id="custom-select"&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Headline&lt;/span&gt;
+  &lt;span slot="label"&gt;Label&lt;/span&gt;
+  &lt;custom-menu&gt;
+    &lt;custom-menuoption value="stops"&gt;Stops&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="price"&gt;Price&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="duration"&gt;Duration&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="departure"&gt;Departure&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="arrival"&gt;Arrival&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="prefer alaska"&gt;Prefer Alaska&lt;/custom-menuoption&gt;
+  &lt;/custom-menu&gt;
+&lt;/custom-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
