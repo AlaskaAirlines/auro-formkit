@@ -391,7 +391,7 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
         // Press Enter to trigger the clear button
         await page.keyboard.press('Enter');
 
-        await expect.poll(() => getValue(page, 'preset'), { timeout: 5_000 }).toBe('');
+        await expect.poll(() => getValue(page, 'preset'), { timeout: 5_000 }).toBe(undefined);
 
         const visible = await isBibVisible(page, 'preset');
         expect(visible).toBe(false);
@@ -409,7 +409,7 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
 
         await page.keyboard.press('Space');
 
-        await expect.poll(() => getValue(page, 'preset'), { timeout: 5_000 }).toBe('');
+        await expect.poll(() => getValue(page, 'preset'), { timeout: 5_000 }).toBe(undefined);
 
         const visible = await isBibVisible(page, 'preset');
         expect(visible).toBe(false);

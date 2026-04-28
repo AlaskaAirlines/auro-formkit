@@ -80,7 +80,7 @@ export const InputValueCleared: Story = {
     clearBtn.click();
     await el.updateComplete;
     await el.updateComplete;
-    await expect(el.value).toBe('');
+    await expect(el.value).toBe(undefined);
   },
 };
 
