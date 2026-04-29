@@ -906,6 +906,18 @@ main {
   display: flex;
   flex-direction: row-reverse;
   gap: 25px;
+  align-items: flex-start;
+}
+.contentWrapper > nav {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.contentWrapper > nav auro-nav {
+  display: block;
 }
 
 .mainContent {

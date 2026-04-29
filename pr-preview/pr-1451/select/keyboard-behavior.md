@@ -5,9 +5,8 @@
 <!-- <span slot="label">Anchor Navigation</span> -->
 <span slot="mobileToggleCollapsed">View More</span>
 <span slot="mobileToggleExpanded">View Less</span>
-<auro-anchorlink fluid href="#keyboard">Keyboard Behavior</auro-anchorlink>
-<auro-anchorlink fluid href="#tabBehavior" class="level2 body-xs">Tab Behavior</auro-anchorlink>
-<auro-anchorlink fluid href="#keyEvents" class="level2 body-xs">Key Events</auro-anchorlink>
+<auro-anchorlink fluid href="#tabBehavior">Tab Behavior</auro-anchorlink>
+<auro-anchorlink fluid href="#keyEvents">Key Events</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
