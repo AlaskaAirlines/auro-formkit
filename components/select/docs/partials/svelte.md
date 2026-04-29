@@ -34,7 +34,9 @@ Use `<auro-select>` directly in your Svelte template. Properties can be bound us
     ['duration', 'Duration'],
   ];
 
-  let selectValue = $state<string>('');
+  let selectValue = $state<string>(''); // this will work to preset the value but it will not be reactive - it's a one way binding
+
+  // Need to add testing that oninput works in all our components
 </script>
 
 <custom-select value={selectValue}>
@@ -68,31 +70,26 @@ This enables prop hinting for attributes like `value`, `placeholder`, `disabled`
 
 <auro-header level="3" id="svelteEvents">Event Handling</auro-header>
 
-Auro components emit native `CustomEvent`s. Use `bind:this` to get a reference to the element and attach event listeners with `$effect`:
+Auro components emit native `CustomEvent`s. Use the `oninput` handler directly on the element:
 
 ```html
 <script lang="ts">
-  let selectRef = $state<HTMLElement | null>(null);
+  let value = $state('');
 
-  $effect(() => {
-    if (!selectRef) return;
-
-    const handleInput = () => {
-      console.log('Selected value:', (selectRef as any).value);
-    };
-
-    selectRef.addEventListener('input', handleInput);
-    return () => selectRef?.removeEventListener('input', handleInput);
-  });
+  function handleInput(e: Event) {
+    value = (e.target as HTMLElement & { value: string }).value;
+  }
 </script>
 
-<custom-select bind:this={selectRef}>
+<custom-select oninput={handleInput}>
   <span slot="label">Choose an option</span>
   <custom-menu>
     <custom-menuoption value="option1">Option 1</custom-menuoption>
     <custom-menuoption value="option2">Option 2</custom-menuoption>
   </custom-menu>
 </custom-select>
+
+<p>Selected: {value}</p>
 ```
 
 <auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
