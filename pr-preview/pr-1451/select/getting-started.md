@@ -280,7 +280,9 @@ Use `<auro-select>` directly in your Svelte template. Properties can be bound us
     ['duration', 'Duration'],
   ];
 ​
-  let selectValue = $state&lt;string&gt;('');
+  let selectValue = $state&lt;string&gt;(''); // this will work to preset the value but it will not be reactive - it's a one way binding
+​
+  // Need to add testing that oninput works in all our components
 &lt;/script&gt;
 &lt;custom-select value={selectValue}&gt;
   &lt;span slot="label"&gt;Filter by&lt;/span&gt;
@@ -308,29 +310,23 @@ declare namespace svelteHTML {
 This enables prop hinting for attributes like `value`, `placeholder`, `disabled`, and others directly in Svelte templates.
 
 <auro-header level="3" id="svelteEvents">Event Handling</auro-header>
-Auro components emit native `CustomEvent`s. Use `bind:this` to get a reference to the element and attach event listeners with `$effect`:
+Auro components emit native `CustomEvent`s. Use the `oninput` handler directly on the element:
 
 <pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
-  let selectRef = $state&lt;HTMLElement | null&gt;(null);
+  let value = $state('');
 ​
-  $effect(() =&gt; {
-    if (!selectRef) return;
-​
-    const handleInput = () =&gt; {
-      console.log('Selected value:', (selectRef as any).value);
-    };
-​
-    selectRef.addEventListener('input', handleInput);
-    return () =&gt; selectRef?.removeEventListener('input', handleInput);
-  });
+  function handleInput(e: Event) {
+    value = (e.target as HTMLElement &amp; { value: string }).value;
+  }
 &lt;/script&gt;
-&lt;custom-select bind:this={selectRef}&gt;
+&lt;custom-select oninput={handleInput}&gt;
   &lt;span slot="label"&gt;Choose an option&lt;/span&gt;
   &lt;custom-menu&gt;
     &lt;custom-menuoption value="option1"&gt;Option 1&lt;/custom-menuoption&gt;
     &lt;custom-menuoption value="option2"&gt;Option 2&lt;/custom-menuoption&gt;
   &lt;/custom-menu&gt;
-&lt;/custom-select&gt;</code></pre>
+&lt;/custom-select&gt;
+&lt;p&gt;Selected: {value}&lt;/p&gt;</code></pre>
 
 <auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
 Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:

@@ -1,66 +1,4 @@
-.grid {
-  display: grid;
-  max-width: 1232px;
-  margin-left: auto;
-  margin-right: auto;
-  gap: 0.5rem;
-}
-@media screen and (min-width: 576px) {
-  .grid {
-    gap: var(--ds-grid-gutter-sm, 1rem);
-  }
-}
-@media screen and (min-width: 768px) {
-  .grid {
-    gap: var(--ds-grid-gutter-md, 1.5rem);
-  }
-}
-@media screen and (min-width: 1024px) {
-  .grid {
-    gap: var(--ds-grid-gutter-lg, 1.5rem);
-  }
-}
-@media screen and (min-width: 1232px) {
-  .grid {
-    gap: var(--ds-grid-gutter-xl, 2rem);
-  }
-}
-.grid.two-column, .grid.fixed-anchor, .grid.fixed-nav {
-  grid-template-columns: repeat(auto-fit, minmax(2rem, 1fr));
-  grid-template-areas: "col1" "col2";
-}
-.grid.two-column > :nth-child(1), .grid.fixed-anchor > :nth-child(1), .grid.fixed-nav > :nth-child(1) {
-  grid-area: col1;
-}
-.grid.two-column > :nth-child(2), .grid.fixed-anchor > :nth-child(2), .grid.fixed-nav > :nth-child(2) {
-  grid-area: col2;
-}
-@media screen and (min-width: 768px) {
-  .grid.two-column, .grid.fixed-anchor, .grid.fixed-nav {
-    grid-template-areas: "col1 col2";
-  }
-}
-.grid.fixed-nav > :nth-child(1) {
-  position: sticky;
-  top: 0;
-  --align-self: stretch;
-  align-self: var(--align-self);
-}
-@media screen and (min-width: 768px) {
-  .grid.fixed-nav {
-    grid-template-columns: var(--fixed-nav-width, 280px) auto;
-  }
-}
-.grid.fixed-anchor {
-  grid-template-areas: "col2" "col1";
-}
-@media screen and (min-width: 768px) {
-  .grid.fixed-anchor {
-    grid-template-areas: "col1 col2";
-    grid-template-columns: auto var(--fixed-nav-width, 280px);
-  }
-}
-
+/* stylelint-disable no-invalid-position-at-import-rule */
 .container {
   display: grid;
   margin-left: auto;
@@ -243,7 +181,7 @@
 }
 .pageLayout-2colSideNav .sidenav {
   grid-area: sidenav;
-  background-color: var(--ds-color-base-white, #ffffff);
+  background-color: var(--ds-color-container-primary-default, #ffffff);
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -333,7 +271,7 @@
 .pageLayout-3col .sidenav {
   grid-area: sidenav;
   z-index: 1;
-  background-color: var(--ds-color-base-white, #ffffff);
+  background-color: var(--ds-color-container-primary-default, #ffffff);
   padding-left: 1rem;
   padding-right: 1rem;
   position: sticky;
@@ -387,21 +325,21 @@
   font-weight: var(--ds-text-heading-display-weight, 100);
   font-style: normal;
   font-display: fallback;
-  src: url("https://resource.alaskaair.net/-/media/4E8D77C0D7A8411AB9C351C1EFF86681.woff2") format("woff2"), url("https://resource.alaskaair.net/-/media/CAAEEC88586944808EDE9B36A3460098.woff") format("woff");
+  src: url("https://www.alaskaair.com/v3/assets/blt2cefe12c88e9dd91/bltd55b385b9432ca51/ASCircularWeb-Light?environment=production") format("woff2"), url("https://www.alaskaair.com/v3/assets/blt2cefe12c88e9dd91/blt1566a6d54c0bf457/ASCircularWeb-Light?environment=production") format("woff");
 }
 @font-face {
   font-family: "AS Circular";
   font-weight: var(--ds-text-heading-medium-weight, 300);
   font-style: normal;
   font-display: fallback;
-  src: url("https://resource.alaskaair.net/-/media/A5558137DB0F4B818D85EBE44FDC542E.woff2") format("woff2"), url("https://resource.alaskaair.net/-/media/F4E82B6C6CBA46B4A322B4B99B2CBC63.woff") format("woff");
+  src: url("https://www.alaskaair.com/v3/assets/blt2cefe12c88e9dd91/bltc48385a5d7dd0f20/ASCircularWeb-Medium?environment=production") format("woff2"), url("https://www.alaskaair.com/v3/assets/blt2cefe12c88e9dd91/bltf30c93842722e935/ASCircularWeb-Medium?environment=production") format("woff");
 }
 @font-face {
   font-family: "AS Circular";
   font-weight: var(--ds-text-body-default-weight, 500);
   font-style: normal;
   font-display: fallback;
-  src: url("https://resource.alaskaair.net/-/media/1DD02F55437F4346B7EF7D5A08326D71.woff2") format("woff2"), url("https://resource.alaskaair.net/-/media/2339807B68A344348447336D15035425.woff") format("woff");
+  src: url("https://www.alaskaair.com/v3/assets/blt2cefe12c88e9dd91/blt3b851fb0e0de3833/ASCircularWeb-Book?environment=production") format("woff2"), url("https://www.alaskaair.com/v3/assets/blt2cefe12c88e9dd91/blt8b440e82e9793058/ASCircularWeb-Book?environment=production") format("woff");
 }
 /* Document
    ========================================================================== */
@@ -691,10 +629,10 @@ template {
 
 blockquote {
   margin-left: 0;
-  border-left: 1px solid var(--ds-color-border-active-default, #0074c8);
+  border-left: 1px solid var(--ds-color-border-ui-active-default, #225296);
   padding: var(--ds-size-100, 0.5rem);
   padding-left: var(--ds-size-400, 2rem);
-  color: var(--ds-color-text-secondary-default, #626b79);
+  color: var(--ds-color-text-secondary-default, #525252);
   font-weight: 200;
   margin-top: var(--ds-size-300, 1.5rem);
   margin-bottom: var(--ds-size-300, 1.5rem);
@@ -719,7 +657,7 @@ blockquote + p, .auro-markdown blockquote + p {
   font-weight: var(--ds-text-heading-display-weight, 100);
 }
 .auro_table tr:nth-child(even), .auro-markdown table tr:nth-child(even) {
-  background-color: var(--ds-color-brand-gray-100, #f8f8f8);
+  background-color: var(--ds-color-container-secondary-default, #f7f7f7);
 }
 .auro_table th, .auro-markdown table th {
   text-align: left;
@@ -733,7 +671,7 @@ blockquote + p, .auro-markdown blockquote + p {
 }
 .auro_table thead, .auro-markdown table thead {
   border-collapse: collapse;
-  border-bottom: 1px solid var(--ds-color-brand-gray-200, #dbdbdb);
+  border-bottom: 1px solid var(--ds-color-border-tertiary-default, #dddddd);
 }
 .auro_table th, .auro-markdown table th,
 .auro_table td,
@@ -741,23 +679,13 @@ blockquote + p, .auro-markdown blockquote + p {
   padding: var(--ds-size-200, 1rem);
 }
 
-*, *:before, *:after {
-  box-sizing: border-box;
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *:before, *:after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
 *:focus-visible {
-  outline: 0;
-}
-*:focus-visible {
-  outline: 0;
+  outline: 1px solid var(--ds-color-border-ui-focus-default, #2c67b5);
 }
 
+/*
+  Essentials for Auro Classic theme
+*/
 :focus:not(:focus-visible) {
   outline: 3px solid transparent;
 }
@@ -772,8 +700,8 @@ html {
 body,
 .baseType {
   margin: 0;
-  color: var(--ds-color-text-primary-default, #222222);
-  font-family: var(--ds-font-family-default, "AS Circular", Helvetica Neue, Arial, sans-serif);
+  color: var(--ds-color-text-primary-default, #2a2a2a);
+  font-family: var(--ds-font-family-default, "AS Circular", "Helvetica Neue", Arial, sans-serif);
   font-variant-ligatures: no-common-ligatures;
   font-size: var(--ds-text-body-size-default, 1rem);
   font-weight: var(--ds-text-body-default-weight, 500);
@@ -790,10 +718,10 @@ body,
 
 .hyperlink, .auro-markdown a {
   text-decoration: underline;
-  color: var(--ds-color-ui-default-default, #0074c8);
+  color: var(--ds-color-text-ui-default-default, #2c67b5);
 }
 .hyperlink:visited, .auro-markdown a:visited {
-  color: var(--ds-color-ui-default-default, #0074c8);
+  color: var(--ds-color-text-ui-default-default, #2c67b5);
 }
 .hyperlink--nav {
   display: block;
@@ -803,17 +731,17 @@ body,
   text-decoration: underline !important;
 }
 .hyperlink--ondark {
-  color: var(--ds-color-ui-default-inverse, #00cff0);
+  color: var(--ds-color-text-ui-default-inverse, #56bbde);
 }
 .hyperlink--ondark:not(.is-touching):hover {
-  color: var(--ds-color-ui-hover-inverse, #5de3f7);
+  color: var(--ds-color-text-ui-hover-inverse, #a8e9f7);
 }
 .hyperlink--ondark:visited {
-  color: var(--ds-color-ui-default-inverse, #00cff0);
+  color: var(--ds-color-text-ui-default-inverse, #56bbde);
 }
 .hyperlink:not(.is-touching):hover, .auro-markdown a:not(.is-touching):hover {
   text-decoration: none;
-  color: var(--ds-color-ui-hover-default, #054687);
+  color: var(--ds-color-text-ui-hover-default, #193d73);
 }
 
 img {
@@ -828,10 +756,10 @@ small,
 
 /* stylelint-disable-line scss/dollar-variable-first-in-block */
 .fineprint {
-  font-family: var(--ds-font-family-default, "AS Circular", Helvetica Neue, Arial, sans-serif);
+  font-family: var(--ds-font-family-default, "AS Circular", "Helvetica Neue", Arial, sans-serif);
   font-size: var(--ds-text-body-size-xs, 0.75rem);
   line-height: var(--ds-text-body-height-xs, 1rem);
-  color: var(--ds-color-text-secondary-default, #626b79);
+  color: var(--ds-color-text-secondary-default, #525252);
 }
 
 /* stylelint-disable selector-type-no-unknown */
@@ -844,7 +772,7 @@ small,
 }
 
 pre {
-  background: var(--ds-color-brand-gray-100, #f8f8f8) !important;
+  background: var(--ds-color-brand-gray-100, #f7f7f7) !important;
   border: unset !important;
   padding: var(--ds-size-200) !important;
   margin-bottom: var(--ds-size-300, 1.5rem) !important;
@@ -875,25 +803,31 @@ code:not(.html):not(.css):not(.js):not([class*=language-]) {
   background-color: unset !important;
 }
 
-auro-accordion:not([class=section]) {
+auro-accordion:not(.section) {
   margin-top: 1rem !important;
   display: block;
 }
-auro-accordion:not([class=section]):nth-child(2) {
+
+auro-accordion:not(.section):nth-child(2) {
   margin-block-start: 0;
 }
 
-auro-accordion.section::part(accordion) {
+auro-accordion[class~=section]::part(accordion) {
   padding-right: 2px;
   display: block;
-}
-
-accordion.section * {
-  padding-right: 2px;
 }
 
 .accordion-content {
   padding-top: 1rem;
+}
+
+.token.operator {
+  background-color: unset !important;
+}
+
+auro-accordion {
+  margin-top: 1rem !important;
+  display: block;
 }
 
 .pre-wrapper {
@@ -941,7 +875,6 @@ accordion.section * {
 table {
   --ds-color-container-secondary-default: transparent;
 }
-
 table.compressed {
   width: unset !important;
   margin: var(--ds-size-50) 0 var(--ds-size-100) !important;
@@ -989,7 +922,7 @@ main {
   min-height: 0;
 }
 
-nav {
+auro-nav {
   max-width: 200px;
   position: sticky;
   top: 2rem;
@@ -998,7 +931,7 @@ nav {
   overflow-y: auto;
 }
 
-auro-anchorlink.level2 {
+auro-anchorlink[class~=level2] {
   padding-left: var(--ds-size-200);
 }
 
