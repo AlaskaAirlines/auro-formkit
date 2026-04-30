@@ -137,6 +137,12 @@ export const fileConfigs = (config) => [
     input: fromAuroComponentRoot(`components/${config.component}/docs/partials/getting-started.md`),
     output: fromAuroComponentRoot(`components/${config.component}/demo/getting-started.md`),
   },
+  // customize.md
+  {
+    identifier: 'customize.md',
+    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/customize.md`),
+    output: fromAuroComponentRoot(`components/${config.component}/demo/customize.md`),
+  },
   // accessibility.md
   {
     identifier: 'accessibility.md',

@@ -11,29 +11,6 @@
       <auro-anchorlink fluid href="#setup">Frameworks</auro-anchorlink>
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
-      <auro-anchorlink fluid href="#appearance">Customize Appearance</auro-anchorlink>
-      <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
-      <auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
-      <auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Custom Display Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#noCheckmark" class="level2 body-xs">No Checkmark</auro-anchorlink>
-      <auro-anchorlink fluid href="#fluid" class="level2 body-xs">Fluid</auro-anchorlink>
-      <auro-anchorlink fluid href="#flexMenuWidth" class="level2 body-xs">Flex Menu Width</auro-anchorlink>
-      <auro-anchorlink fluid href="#matchWidth" class="level2 body-xs">Match Width</auro-anchorlink>
-      <auro-anchorlink fluid href="#placement" class="level2 body-xs">Placement</auro-anchorlink>
-      <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
-      <auro-anchorlink fluid href="#offset" class="level2 body-xs">Offset</auro-anchorlink>
-      <auro-anchorlink fluid href="#shift" class="level2 body-xs">Shift</auro-anchorlink>
-      <auro-anchorlink fluid href="#largeHeader" class="level2 body-xs">Large Fullscreen Header</auro-anchorlink>
-      <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
-      <auro-anchorlink fluid href="#customBehavior">Customize Behavior</auro-anchorlink>
-      <auro-anchorlink fluid href="#autoComplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
-      <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
-      <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
-      <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
-      <auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
-      <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
-      <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
-      <auro-anchorlink fluid href="#placeholder" class="level2 body-xs">Placeholder</auro-anchorlink>
       <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
       <auro-anchorlink fluid href="#hasFocus" class="level2 body-xs">hasFocus</auro-anchorlink>
       <auro-anchorlink fluid href="#isPopoverVisible" class="level2 body-xs">isPopoverVisible</auro-anchorlink>
@@ -61,10 +38,6 @@
       </section>
       <section>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/minimal-config.md) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-      </section>
-      <section>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customization.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
     </div>
