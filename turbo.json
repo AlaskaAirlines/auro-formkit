@@ -108,7 +108,9 @@
     },
     "@aurodesignsystem/auro-select#build": {
       "dependsOn": [
-        "@aurodesignsystem/auro-dropdown#build"
+        "@aurodesignsystem/auro-dropdown#build",
+        "@aurodesignsystem/auro-form#build",
+        "@aurodesignsystem/auro-menu#build"
       ]
     },
     "test:framework": {

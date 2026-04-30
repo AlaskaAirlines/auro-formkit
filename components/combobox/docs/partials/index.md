@@ -47,11 +47,6 @@
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/userStories.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
-      <section>
-        <auro-header level="2" id="customization">Customization</auro-header>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customization.md) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-      </section>
     </div>
   </div>
 </div>

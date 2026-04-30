@@ -15,9 +15,9 @@ function createExampleConfig(entryPoint) {
   };
 }
 
-const optionalEntryPoints = ['install', 'getting-started'];
+const optionalEntryPoints = ['api', 'install', 'getting-started', 'customize'];
 const optionalConfigs = optionalEntryPoints
   .filter((entry) => existsSync(`./demo/${entry}.js`))
   .map(createExampleConfig);
 
-export default [...componentRollupConfig, createExampleConfig('index'), createExampleConfig('api'), ...optionalConfigs];
+export default [...componentRollupConfig, createExampleConfig('index'), ...optionalConfigs];
