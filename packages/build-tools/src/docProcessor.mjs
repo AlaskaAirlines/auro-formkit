@@ -78,6 +78,22 @@ export const componentTree = {
 }
 
 /**
+ * Resolves a page input path, checking the new folder structure first
+ * (e.g., docs/pages/index/index.md), then falling back to the legacy flat structure
+ * (e.g., docs/partials/index.md).
+ * @param {string} component - The component name.
+ * @param {string} pageName - The page file name (e.g., 'index', 'api').
+ * @returns {string} The resolved absolute path to the page partial.
+ */
+function resolvePartialInput(component, pageName) {
+  const pagesPath = fromAuroComponentRoot(`components/${component}/docs/pages/${pageName}/${pageName}.md`);
+  if (existsSync(pagesPath)) return pagesPath;
+  const subfolderPath = fromAuroComponentRoot(`components/${component}/docs/partials/${pageName}/${pageName}.md`);
+  if (existsSync(subfolderPath)) return subfolderPath;
+  return fromAuroComponentRoot(`components/${component}/docs/partials/${pageName}.md`);
+}
+
+/**
  * @param {ProcessorConfig} config - The configuration for this processor.
  * @returns {import('@aurodesignsystem/auro-library/scripts/utils/sharedFileProcessorUtils').FileProcessorConfig[]}
  */
@@ -91,7 +107,7 @@ export const fileConfigs = (config) => [
   // index.md
   {
     identifier: 'index.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/index.md`),
+    input: resolvePartialInput(config.component, 'index'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/index.md`),
     mdMagicConfig: {
       output: {
@@ -102,56 +118,56 @@ export const fileConfigs = (config) => [
   // api.md
   {
     identifier: 'api.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/api.md`),
+    input: resolvePartialInput(config.component, 'api'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/api.md`),
   },
   // keyboardBehavior.md
   {
     identifier: 'keyboard-behavior.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/keyboard-behavior.md`),
+    input: resolvePartialInput(config.component, 'keyboard-behavior'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/keyboard-behavior.md`),
     preProcessors: [templateFiller.formatApiTable],
   },
   // design.md
   {
     identifier: 'design.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/design.md`),
+    input: resolvePartialInput(config.component, 'design'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/design.md`),
   },
   // layout.md (legacy, kept for components not yet renamed)
   {
     identifier: 'layout.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/layout.md`),
+    input: resolvePartialInput(config.component, 'layout'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/layout.md`),
   },
   // install.md
   {
     identifier: 'install.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/install.md`),
+    input: resolvePartialInput(config.component, 'install'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/install.md`),
   },
   // getting-started.md
   {
     identifier: 'getting-started.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/getting-started.md`),
+    input: resolvePartialInput(config.component, 'getting-started'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/getting-started.md`),
   },
   // customize.md
   {
     identifier: 'customize.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/customize.md`),
+    input: resolvePartialInput(config.component, 'customize'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/customize.md`),
   },
   // accessibility.md
   {
     identifier: 'accessibility.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/accessibility.md`),
+    input: resolvePartialInput(config.component, 'accessibility'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/accessibility.md`),
   },
   // voiceover.md
   {
     identifier: 'voiceover.md',
-    input: fromAuroComponentRoot(`components/${config.component}/docs/partials/voiceover.md`),
+    input: resolvePartialInput(config.component, 'voiceover'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/voiceover.md`),
   },
 ];

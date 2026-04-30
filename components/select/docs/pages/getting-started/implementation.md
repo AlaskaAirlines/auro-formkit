@@ -2,7 +2,7 @@
 
 <auro-header level="3" id="defaultSetup">Default Registration</auro-header>
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/defaultRegistration.md) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/defaultRegistration.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 <auro-header level="3" id="customRegistration">Custom Registration</auro-header>

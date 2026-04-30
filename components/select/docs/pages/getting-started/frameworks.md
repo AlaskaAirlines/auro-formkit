@@ -3,14 +3,14 @@
   <auro-accordion class="section" id="react">
     <span slot="trigger">React</span>
     <div class="accordion-content">
-      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/react.md) -->
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/react.md) -->
       <!-- AURO-GENERATED-CONTENT:END -->
     </div>
   </auro-accordion>
   <auro-accordion class="section" id="svelte">
     <span slot="trigger">Svelte</span>
     <div class="accordion-content">
-      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/svelte.md) -->
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/svelte.md) -->
       <!-- AURO-GENERATED-CONTENT:END -->
     </div>
   </auro-accordion>
