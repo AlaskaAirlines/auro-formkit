@@ -13,19 +13,6 @@
 <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
 <auro-anchorlink fluid href="#swapValues" class="level2 body-xs">Swap Values</auro-anchorlink>
 <auro-anchorlink fluid href="#viewport" class="level2 body-xs">Viewport Size</auro-anchorlink>
-<auro-anchorlink fluid href="#customization">Customization</auro-anchorlink>
-<auro-anchorlink fluid href="#inputType" class="level2 body-xs">Input Type</auro-anchorlink>
-<auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
-<auro-anchorlink fluid href="#checkmarks" class="level2 body-xs">Checkmarks</auro-anchorlink>
-<auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
-<auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
-<auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
-<auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
-<auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
-<auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Display Value</auro-anchorlink>
-<auro-anchorlink fluid href="#dynamicMenu" class="level2 body-xs">Dynamic Menu</auro-anchorlink>
-<auro-anchorlink fluid href="#bibPlacement" class="level2 body-xs">Bib Placement</auro-anchorlink>
-<auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">

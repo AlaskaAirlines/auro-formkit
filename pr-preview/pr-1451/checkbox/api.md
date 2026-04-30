@@ -9,40 +9,40 @@ The `auro-checkbox-group` element is a wrapper for `auro-checkbox` elements..
 
 | Property                        | Attribute                       | Type                     | Default     | Description                                      |
 |---------------------------------|---------------------------------|--------------------------|-------------|--------------------------------------------------|
-| [appearance](#appearance)                    | `appearance`                    | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
-| [disabled](#disabled)                      | `disabled`                      | `boolean`                |             | If set, disables the checkbox group.             |
-| [error](#error)                         | `error`                         | `string`                 |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
-| [horizontal](#horizontal)                    | `horizontal`                    | `boolean`                |             | If set, checkboxes will be aligned horizontally. |
-| [noValidate](#noValidate)                    | `noValidate`                    | `boolean`                |             | If set, disables auto-validation on blur.        |
-| [onDark](#onDark)                        | `onDark`                        | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
-| [required](#required)                      | `required`                      | `boolean`                |             | Populates the `required` attribute on the element. Used for client-side validation. |
-| [setCustomValidity](#setCustomValidity)             | `setCustomValidity`             | `string`                 |             | Sets a custom help text message to display for all validityStates. |
-| [setCustomValidityCustomError](#setCustomValidityCustomError)  | `setCustomValidityCustomError`  | `string`                 |             | Custom help text message to display when validity = `customError`. |
-| [setCustomValidityValueMissing](#setCustomValidityValueMissing) | `setCustomValidityValueMissing` | `string`                 |             | Custom help text message to display when validity = `valueMissing`. |
-| [validity](#validity)                      | `validity`                      | `string`                 |             | Specifies the `validityState` this element is in. |
+| `appearance`                    | `appearance`                    | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
+| `disabled`                      | `disabled`                      | `boolean`                |             | If set, disables the checkbox group.             |
+| `error`                         | `error`                         | `string`                 |             | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
+| `horizontal`                    | `horizontal`                    | `boolean`                |             | If set, checkboxes will be aligned horizontally. |
+| `noValidate`                    | `noValidate`                    | `boolean`                |             | If set, disables auto-validation on blur.        |
+| `onDark`                        | `onDark`                        | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `required`                      | `required`                      | `boolean`                |             | Populates the `required` attribute on the element. Used for client-side validation. |
+| `setCustomValidity`             | `setCustomValidity`             | `string`                 |             | Sets a custom help text message to display for all validityStates. |
+| `setCustomValidityCustomError`  | `setCustomValidityCustomError`  | `string`                 |             | Custom help text message to display when validity = `customError`. |
+| `setCustomValidityValueMissing` | `setCustomValidityValueMissing` | `string`                 |             | Custom help text message to display when validity = `valueMissing`. |
+| `validity`                      | `validity`                      | `string`                 |             | Specifies the `validityState` this element is in. |
 
 ## Methods
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
-| [reset](#reset)    | `(): void`                             | Resets component to initial state.               |
-| [validate](#validate) | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| `reset`    | `(): void`                             | Resets component to initial state.               |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
 | Event                       | Type               | Description                                      |
 |-----------------------------|--------------------|--------------------------------------------------|
 | `auroFormElement-validated` |                    | Notifies that the `validity` and `errorMessage` values have changed. |
-| [input](#input)                     | `CustomEvent<any>` |                                                  |
+| `input`                     | `CustomEvent<any>` |                                                  |
 
 ## Slots
 
 | Name            | Description                                      |
 |-----------------|--------------------------------------------------|
-| [default](#default)       | The default slot for the checkbox items.         |
-| [helpText](#helpText)      | Allows for the helper text to be overridden.     |
-| [legend](#legend)        | Allows for the legend to be overridden.          |
-| [optionalLabel](#optionalLabel) | Allows overriding the optional display text "(optional)", which appears next to the label. |
+| `default`       | The default slot for the checkbox items.         |
+| `helpText`      | Allows for the helper text to be overridden.     |
+| `legend`        | Allows for the legend to be overridden.          |
+| `optionalLabel` | Allows overriding the optional display text "(optional)", which appears next to the label. |
 
 # auro-checkbox
 
@@ -52,20 +52,20 @@ The `auro-checkbox` element is for the purpose of allowing users to select one o
 
 | Property     | Attribute    | Type                     | Default     | Description                                      |
 |--------------|--------------|--------------------------|-------------|--------------------------------------------------|
-| [appearance](#appearance) | `appearance` | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
-| [checked](#checked)    | `checked`    | `boolean`                |             | If set to true, the checkbox will be filled with a checkmark. |
-| [disabled](#disabled)   | `disabled`   | `boolean`                |             | If set to true, the checkbox will not be clickable. |
-| [error](#error)      | `error`      | `boolean`                |             | If set to true, the checkbox will be displayed with an error state. |
-| [id](#id)         | `id`         | `string`                 |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
-| [name](#name)       | `name`       | `string`                 |             | Accepts any string and is used to identify related checkboxes when submitting form data. |
-| [onDark](#onDark)     | `onDark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
-| [value](#value)      | `value`      | `string`                 |             | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
+| `appearance` | `appearance` | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
+| `checked`    | `checked`    | `boolean`                |             | If set to true, the checkbox will be filled with a checkmark. |
+| `disabled`   | `disabled`   | `boolean`                |             | If set to true, the checkbox will not be clickable. |
+| `error`      | `error`      | `boolean`                |             | If set to true, the checkbox will be displayed with an error state. |
+| `id`         | `id`         | `string`                 |             | The id global attribute defines an identifier (ID) which must be unique in the whole document. |
+| `name`       | `name`       | `string`                 |             | Accepts any string and is used to identify related checkboxes when submitting form data. |
+| `onDark`     | `onDark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `value`      | `value`      | `string`                 |             | Sets the element's input value. Must be unique within an auro-checkbox-group element. |
 
 ## Methods
 
 | Method  | Type       | Description                        |
 |---------|------------|------------------------------------|
-| [reset](#reset) | `(): void` | Resets component to initial state. |
+| `reset` | `(): void` | Resets component to initial state. |
 
 ## Events
 
@@ -74,20 +74,20 @@ The `auro-checkbox` element is for the purpose of allowing users to select one o
 | `auroCheckbox-focusin`  | `CustomEvent<any>` |                                                  |
 | `auroCheckbox-focusout` | `CustomEvent<any>` |                                                  |
 | `auroCheckbox-input`    | `CustomEvent<any>` |                                                  |
-| [change](#change)                |                    | (Deprecated) Notifies when checked value is changed. |
-| [input](#input)                 |                    | Notifies when when checked value is changed by user's interface. |
+| `change`                |                    | (Deprecated) Notifies when checked value is changed. |
+| `input`                 |                    | Notifies when when checked value is changed by user's interface. |
 
 ## Slots
 
 | Name      | Description                              |
 |-----------|------------------------------------------|
-| [default](#default) | The default slot for the checkbox label. |
+| `default` | The default slot for the checkbox label. |
 
 ## CSS Shadow Parts
 
 | Part             | Description                               |
 |------------------|-------------------------------------------|
-| [checkbox](#checkbox)       | apply css to a specific checkbox.         |
+| `checkbox`       | apply css to a specific checkbox.         |
 | `checkbox-input` | apply css to a specific checkbox's input. |
 | `checkbox-label` | apply css to a specific checkbox's label. |
 <!-- AURO-GENERATED-CONTENT:END -->

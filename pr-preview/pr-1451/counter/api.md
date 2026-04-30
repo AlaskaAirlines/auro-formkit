@@ -9,38 +9,38 @@ The `auro-counter-group` element provides a flexible interface for grouping mult
 
 | Property                  | Attribute                 | Type                                             | Default          | Description                                      |
 |---------------------------|---------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
-| [appearance](#appearance)              | `appearance`              | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
-| [autoPlacement](#autoPlacement)           | `autoPlacement`           | `boolean`                                        | "false"          | If declared, bib's position will be automatically calculated where to appear. |
-| [error](#error)                   | `error`                   | `string`                                         |                  | The current error message to display when the component is invalid. |
-| [fullscreenBreakpoint](#fullscreenBreakpoint)    | `fullscreenBreakpoint`    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
-| [isDropdown](#isDropdown)              | `isDropdown`              | `boolean`                                        | false            | If true, the counter group is displayed as a dropdown. |
-| [largeFullscreenHeadline](#largeFullscreenHeadline) | `largeFullscreenHeadline` | `boolean`                                        | false            | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
-| [layout](#layout)                  | `layout`                  | `'classic' \| 'snowflake'`                       | "'classic'"      | Determines the layout style of the counter group when it is a dropdown. |
-| [matchWidth](#matchWidth)              | `matchWidth`              | `boolean`                                        | false            | If declared, the dropdown will expand to the width of its parent container.<br />Otherwise, the dropdown width will be determined by its content. |
-| [max](#max)                     | `max`                     | `number`                                         | "undefined"      | The maximum value allowed for the whole group of counters. |
-| [min](#min)                     | `min`                     | `number`                                         | "undefined"      | The minimum value allowed for the whole group of counters. |
-| [noFlip](#noFlip)                  | `noFlip`                  | `boolean`                                        | false            | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
-| [offset](#offset)                  | `offset`                  | `number`                                         | "0"              | Gap between the trigger element and bib.         |
-| [onDark](#onDark)                  | `onDark`                  | `boolean`                                        | false            | DEPRECATED - use `appearance` instead.           |
-| [placement](#placement)               | `placement`               | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
-| [shift](#shift)                   | `shift`                   | `boolean`                                        | false            | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
-| [total](#total)                   | `total`                   | `number`                                         | "undefined"      | The total value of the counters.                 |
-| [validity](#validity)                | `validity`                | `string`                                         | "undefined"      | Reflects the validity state.                     |
-| [value](#value)                   | `value`                   | `object`                                         | "undefined"      | The current individual values of the nested counters. |
+| `appearance`              | `appearance`              | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
+| `autoPlacement`           | `autoPlacement`           | `boolean`                                        | "false"          | If declared, bib's position will be automatically calculated where to appear. |
+| `error`                   | `error`                   | `string`                                         |                  | The current error message to display when the component is invalid. |
+| `fullscreenBreakpoint`    | `fullscreenBreakpoint`    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
+| `isDropdown`              | `isDropdown`              | `boolean`                                        | false            | If true, the counter group is displayed as a dropdown. |
+| `largeFullscreenHeadline` | `largeFullscreenHeadline` | `boolean`                                        | false            | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
+| `layout`                  | `layout`                  | `'classic' \| 'snowflake'`                       | "'classic'"      | Determines the layout style of the counter group when it is a dropdown. |
+| `matchWidth`              | `matchWidth`              | `boolean`                                        | false            | If declared, the dropdown will expand to the width of its parent container.<br />Otherwise, the dropdown width will be determined by its content. |
+| `max`                     | `max`                     | `number`                                         | "undefined"      | The maximum value allowed for the whole group of counters. |
+| `min`                     | `min`                     | `number`                                         | "undefined"      | The minimum value allowed for the whole group of counters. |
+| `noFlip`                  | `noFlip`                  | `boolean`                                        | false            | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
+| `offset`                  | `offset`                  | `number`                                         | "0"              | Gap between the trigger element and bib.         |
+| `onDark`                  | `onDark`                  | `boolean`                                        | false            | DEPRECATED - use `appearance` instead.           |
+| `placement`               | `placement`               | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
+| `shift`                   | `shift`                   | `boolean`                                        | false            | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
+| `total`                   | `total`                   | `number`                                         | "undefined"      | The total value of the counters.                 |
+| `validity`                | `validity`                | `string`                                         | "undefined"      | Reflects the validity state.                     |
+| `value`                   | `value`                   | `object`                                         | "undefined"      | The current individual values of the nested counters. |
 
 ## Methods
 
 | Method     | Type                                   | Description                                      |
 |------------|----------------------------------------|--------------------------------------------------|
-| [hideBib](#hideBib)  | `(): void`                             | Hides the dropdown bib if its open.              |
-| [showBib](#showBib)  | `(): void`                             | Shows the dropdown bib if there are options to show. |
-| [validate](#validate) | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| `hideBib`  | `(): void`                             | Hides the dropdown bib if its open.              |
+| `showBib`  | `(): void`                             | Shows the dropdown bib if there are options to show. |
+| `validate` | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
 | Event   | Type                                             |
 |---------|--------------------------------------------------|
-| [input](#input) | `CustomEvent<{ total: number \| undefined; value: {} \| undefined; }>` |
+| `input` | `CustomEvent<{ total: number \| undefined; value: {} \| undefined; }>` |
 
 ## Slots
 
@@ -49,10 +49,10 @@ The `auro-counter-group` element provides a flexible interface for grouping mult
 | `ariaLabel.bib.close`     | Sets aria-label on close button in fullscreen bib |
 | `bib.fullscreen.footer`   | Defines the footer to display at the bottom of fullscreen bib. Only used when `isDropdown` is true. |
 | `bib.fullscreen.headline` | Defines the headline to display above menu-options. Only used when `isDropdown` is true. Required. |
-| [default](#default)                 | Slot for counter elements.                       |
-| [helpText](#helpText)                | Dropdown help text content. Only used when `isDropdown` is true. |
-| [label](#label)                   | Dropdown label content. Only used when `isDropdown` is true. |
-| [valueText](#valueText)               | Dropdown value text display. Only used when `isDropdown` is true. |
+| `default`                 | Slot for counter elements.                       |
+| `helpText`                | Dropdown help text content. Only used when `isDropdown` is true. |
+| `label`                   | Dropdown label content. Only used when `isDropdown` is true. |
+| `valueText`               | Dropdown value text display. Only used when `isDropdown` is true. |
 
 # auro-counter
 
@@ -62,28 +62,28 @@ The `auro-counter` element provides a flexible counter interface with increment 
 
 | Property     | Attribute    | Type                     | Default     | Description                                      |
 |--------------|--------------|--------------------------|-------------|--------------------------------------------------|
-| [appearance](#appearance) | `appearance` | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
-| [disabled](#disabled)   | `disabled`   | `boolean`                |             | Indicates if the counter is disabled.            |
-| [error](#error)      | `error`      | `string`                 |             | Error state and message.<br />True if set, value is the error message. |
-| [max](#max)        | `max`        | `number`                 |             | The maximum value for the counter.               |
-| [min](#min)        | `min`        | `number`                 |             | The minimum value for the counter.               |
-| [onDark](#onDark)     | `onDark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
-| [validity](#validity)   | `validity`   | `string`                 |             | The validity state of the counter.               |
-| [value](#value)      | `value`      | `number \| undefined`    |             | Gets the current value of the counter.           |
+| `appearance` | `appearance` | `'default' \| 'inverse'` | "'default'" | Defines whether the component will be on lighter or darker backgrounds. |
+| `disabled`   | `disabled`   | `boolean`                |             | Indicates if the counter is disabled.            |
+| `error`      | `error`      | `string`                 |             | Error state and message.<br />True if set, value is the error message. |
+| `max`        | `max`        | `number`                 |             | The maximum value for the counter.               |
+| `min`        | `min`        | `number`                 |             | The minimum value for the counter.               |
+| `onDark`     | `onDark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
+| `validity`   | `validity`   | `string`                 |             | The validity state of the counter.               |
+| `value`      | `value`      | `number \| undefined`    |             | Gets the current value of the counter.           |
 
 ## Methods
 
 | Method      | Type                                   | Description                                      |
 |-------------|----------------------------------------|--------------------------------------------------|
-| [decrement](#decrement) | `(value?: number \| undefined): void`  | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
-| [increment](#increment) | `(value?: number \| undefined): void`  | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
-| [validate](#validate)  | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| `decrement` | `(value?: number \| undefined): void`  | Decrements the value of the counter by 1. If a value is provided, it decrements by that amount.<br /><br />**value**: The amount to decrement by. |
+| `increment` | `(value?: number \| undefined): void`  | Increments the counter value by 1. If a value is provided, it increments by that amount.<br /><br />**value**: The amount to increment by. |
+| `validate`  | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
 
 ## Events
 
 | Event   | Type                                           |
 |---------|------------------------------------------------|
-| [input](#input) | `CustomEvent<{ value: number \| undefined; }>` |
+| `input` | `CustomEvent<{ value: number \| undefined; }>` |
 
 ## Slots
 
@@ -91,9 +91,9 @@ The `auro-counter` element provides a flexible counter interface with increment 
 |-------------------|--------------------------------------------|
 | `ariaLabel.minus` | Accessible label for the decrement button. |
 | `ariaLabel.plus`  | Accessible label for the increment button. |
-| [default](#default)         | Main label content for the counter.        |
-| [description](#description)     | Descriptive content for the counter.       |
-| [helpText](#helpText)        | Help text content for the counter.         |
+| `default`         | Main label content for the counter.        |
+| `description`     | Descriptive content for the counter.       |
+| `helpText`        | Help text content for the counter.         |
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Basic Counter

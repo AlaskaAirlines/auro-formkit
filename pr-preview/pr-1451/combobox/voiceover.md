@@ -100,7 +100,7 @@
 </ul>
 <auro-header level="2" id="voiceOverStates">Impact of State</auro-header>
 <auro-header level="3" id="voiceOverStateDisabled">Disabled</auro-header>
-<p><strong>What VoiceOver does:</strong></p>
+<p>What VoiceOver does:</p>
 <ul>
 <li>Focuses the element and announces it (e.g., <em>"[label], dimmed, combo box"</em> on macOS / <em>"[label], dimmed"</em> on iOS).</li>
 <li>The word <strong>"dimmed"</strong> is VoiceOver's way of indicating disabled.</li>
