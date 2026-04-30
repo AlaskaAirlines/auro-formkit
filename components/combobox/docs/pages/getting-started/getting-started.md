@@ -51,7 +51,7 @@
               <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
               <!-- AURO-GENERATED-CONTENT:END -->
               <auro-header level="3">Implementation</auro-header>
-              <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/defaultRegistration.md) -->
+              <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/defaultRegistration.md) -->
               <!-- AURO-GENERATED-CONTENT:END -->
             </div>
           </auro-accordion>
@@ -60,18 +60,18 @@
             <div class="accordion-content">
               <p class="warning"><strong>Warning:</strong> CDN install & registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
               <auro-header level="3">Install & Implementation</auro-header>
-              <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/cdnRegistration.md) -->
+              <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/cdnRegistration.md) -->
               <!-- AURO-GENERATED-CONTENT:END -->
             </div>
           </auro-accordion>
         </auro-accordion-group>
       </section>
       <section>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/frameworks.md) -->
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/frameworks.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/minimal-config.md) -->
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/minimal-config.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>

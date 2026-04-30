@@ -13,7 +13,7 @@
       <p>On <strong>large viewport devices</strong> (e.g., desktop browser, tablet) there is no focusable content inside the component bib.</p>
       <p>On <strong>small viewport devices</strong> (e.g., phone) the bib opens a modal dialog with a focusable <strong>input</strong> and <strong>clear button</strong> which can receive <strong>Click</strong> and <strong>Tap</strong> events.</p>
       <auro-header level="2" id="keyEvents">Key Events</auro-header>
-      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/keyboard-behavior/keyEvents.md) -->
       <!-- AURO-GENERATED-CONTENT:END -->
       <div class="note">
         <p><strong>Note:</strong> The following keyboard behavior is unsupported at this time:</p>

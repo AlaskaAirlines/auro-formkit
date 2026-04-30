@@ -31,15 +31,15 @@
   <div class="mainContent">
     <div class="scrollWrapper">
       <section>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/install.md) -->
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/install/install.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/frameworks.md) -->
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/frameworks.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/minimal-config.md) -->
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/minimal-config.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>

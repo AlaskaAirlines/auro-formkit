@@ -24,7 +24,7 @@
       </ul>
     </div>
     <auro-header level="2" id="keyEvents">Key Events</auro-header>
-    <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
+    <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/keyboard-behavior/keyEvents.md) -->
     <!-- AURO-GENERATED-CONTENT:END -->
     <auro-header level="3" id="keyEventsDropdown">Key Events inherited from Auro-Dropdown</auro-header>
     <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/keyEvents.md) -->
