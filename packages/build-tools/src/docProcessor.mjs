@@ -104,7 +104,6 @@ export const fileConfigs = (config) => [
     identifier: 'api.md',
     input: fromAuroComponentRoot(`components/${config.component}/docs/partials/api.md`),
     output: fromAuroComponentRoot(`components/${config.component}/demo/api.md`),
-    preProcessors: [templateFiller.formatApiTable],
   },
   // keyboardBehavior.md
   {
