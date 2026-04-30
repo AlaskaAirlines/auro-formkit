@@ -1,8 +1,7 @@
 <auro-header level="2" id="appearance">Customize Appearance</auro-header>
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
-<p>The <code>layout</code> attribute determines the overall layout of the select component. Supported values are <code>classic</code>, <code>emphasized</code>, and <code>snowflake</code>. The default value is <code>classic</code>.</p>
-<p>The <code>shape</code> attribute determines the shape of the dropdown bib. Supported values are <code>classic</code>, <code>pill</code>, <code>pill-left</code>, <code>pill-right</code>, and <code>snowflake</code>.</p>
-<p>These attributes work together to give full control over the visual appearance and sizing of the component. See the <a href="./layout.html">Layout page</a> for a detailed breakdown of each layout option.</p>
+<p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
+<p>See the <a href="./layout.html">Layout page</a> for a detailed breakdown.</p>
 <auro-header level="3" id="background">Light vs. Dark Background</auro-header>
 <p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
 <div class="exampleWrapper">
@@ -26,6 +25,15 @@
 <auro-header level="3" id="displayValue">Custom Display Value</auro-header>
 <p>The <code>displayValue</code> slot allows custom HTML content to be shown in place of the selected option's text when the select is not focused. This is useful for displaying icons, formatted text, or other rich content in the trigger.</p>
 <p>To always show the custom display value (even when no selection has been made), set the <code>forceDisplayValue</code> attribute on the component.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/display-value.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/display-value.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="noCheckmark">Hide checkmark indicators</auro-header>
 <p>By default, the select component displays a checkmark next to the currently selected option. To hide the checkmark indicator, set the <code>nocheckmark</code> attribute on the <code>auro-menu</code> element.</p>
 <div class="exampleWrapper">
@@ -68,17 +76,6 @@
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/match-width.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="3" id="size">Size</auro-header>
-<p>The <code>size</code> attribute determines the size of the dropdown bib. Only the <code>emphasized</code> layout supports <code>size="xl"</code>, while all other layouts support <code>size="lg"</code>.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/size.html) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/size.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="placement">Placement</auro-header>
@@ -127,6 +124,15 @@
 </auro-accordion>
 <auro-header level="3" id="largeHeader">Large Fullscreen Header</auro-header>
 <p>When the <code>largeFullscreenHeadline</code> attribute is present, the headline displayed in the fullscreen bib will render in the larger <code>HeadingDisplay</code> style. By default, the fullscreen headline uses <code>Heading 600</code>.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/large-fullscreen-headline.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/large-fullscreen-headline.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="breakpoint">Fullscreen Breakpoint</auro-header>
 <p>The <code>fullscreenBreakpoint</code> attribute defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>. The default value is <code>sm</code>.</p>
 <p>When expanded, the dropdown will automatically display in fullscreen mode if the screen size is equal to or smaller than the selected breakpoint. Setting the value to <code>disabled</code> prevents the dropdown from ever entering fullscreen mode.</p>
@@ -141,7 +147,7 @@
 </auro-accordion>
 <auro-header level="2" id="customBehavior">Customize Behavior</auro-header>
 <auro-header level="3" id="autoComplete">Autocomplete</auro-header>
-<p>The <code>autocomplete</code> attribute enables browser autofill support for the select element. When set, the browser may offer saved values for the field based on the specified autocomplete token (e.g. <code>address-level1</code> for state selection).</p>
+<p>The <code>autocomplete</code> attribute enables browser autofill support for the select element. When set, the browser may offer saved values for the field based on the specified autocomplete token (e.g. <code>country-name</code> for country selection).</p>
 <p>This is especially useful when the select is used alongside other form fields that support autofill, creating a seamless form-filling experience.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/autocomplete.html) -->
@@ -237,8 +243,26 @@
 <li><strong><code>setCustomValidityValueMissing</code></strong> — Displayed when the component is <code>required</code> and the user leaves it empty (<code>valueMissing</code> validity state).</li>
 </ul>
 <p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message. Default messages are provided by the browser and are pre-localized to the language the browser is running in.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-validity.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-validity.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="noValidate">No Validation</auro-header>
 <p>When the <code>noValidate</code> attribute is present, the component will not perform automatic validation on blur. This is useful when validation is handled externally or should only be triggered on form submission.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-validate.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/no-validate.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="placeholder">Placeholder</auro-header>
 <p>Use the <code>placeholder</code> attribute to define custom placeholder text that is displayed in the trigger before a value has been selected.</p>
 <div class="exampleWrapper">
@@ -288,7 +312,7 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="updateActiveOption">updateActiveOption()</auro-header>
-<p>The <code>updateActiveOption(index)</code> method programmatically sets the active (highlighted) option in the menu by its zero-based index. This does not select the option — it only marks it as active for keyboard navigation or visual highlighting.</p>
+<p>The <code>updateActiveOption(index)</code> method programmatically sets the focused (highlighted) option in the menu by its zero-based index. This does not select the option — it only marks it as active for keyboard navigation or visual highlighting. This is useful to draw attention to the option most likely to be selected, such as a recommended or default choice.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/update-active-option.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -296,6 +320,8 @@
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/update-active-option.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/update-active-option.js) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="hideBib">hideBib()</auro-header>
