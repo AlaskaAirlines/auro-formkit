@@ -28,8 +28,8 @@
 </ul>
 </div>
 <auro-header level="2" id="keyEvents">Key Events</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
-<!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/keyboard-behavior/keyEvents.md) -->
+<!-- The below content is automatically added from ./../docs/pages/keyboard-behavior/keyEvents.md -->
 <table>
 <thead>
 <tr>

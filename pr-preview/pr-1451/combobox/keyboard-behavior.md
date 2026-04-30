@@ -13,8 +13,8 @@
 <p>On <strong>large viewport devices</strong> (e.g., desktop browser, tablet) there is no focusable content inside the component bib.</p>
 <p>On <strong>small viewport devices</strong> (e.g., phone) the bib opens a modal dialog with a focusable <strong>input</strong> and <strong>clear button</strong> which can receive <strong>Click</strong> and <strong>Tap</strong> events.</p>
 <auro-header level="2" id="keyEvents">Key Events</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
-<!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/keyboard-behavior/keyEvents.md) -->
+<!-- The below content is automatically added from ./../docs/pages/keyboard-behavior/keyEvents.md -->
 <div class="note">
 <p><strong>Static vs Dynamic Option List:</strong> The <strong>expanded</strong> state can never be applied without list options rendered into the DOM. Since the component supports dynamic option lists generated <em>after</em> a value is typed into the <strong>input</strong>, certain key events (as noted in the <strong>Current State</strong> column of the table below) only function with the option list rendered into the DOM.</p>
 </div>

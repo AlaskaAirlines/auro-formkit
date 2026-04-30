@@ -54,8 +54,8 @@ This will create new custom elements that behave exactly like their standard cou
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/defaultRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/defaultRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/defaultRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/defaultRegistration.md -->
 <p>Once installed, the component can be used in your project by importing the component's registered module:</p>
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-select';</code></pre>
 <p>This import registers the <code>&lt;auro-select&gt;</code> custom element globally. You can then use it in your HTML:</p>
@@ -74,8 +74,8 @@ This will create new custom elements that behave exactly like their standard cou
 <div class="accordion-content">
 <p class="warning"><strong>Warning:</strong> CDN install & registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <auro-header level="3">Install & Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/cdnRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/cdnRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/cdnRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/cdnRegistration.md -->
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-select/+esm"&gt;&lt;/script&gt;</code></pre>
 <p>This script registers the <code>&lt;auro-select&gt;</code> custom element globally. You can then use it in your HTML:</p>

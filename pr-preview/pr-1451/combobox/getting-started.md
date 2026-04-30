@@ -103,8 +103,8 @@ This will create a new custom element `<custom-combobox>` that behaves exactly l
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/defaultRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/defaultRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/defaultRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/defaultRegistration.md -->
 <p>Once installed, the component can be used in your project by importing the component's registered module:</p>
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-combobox';</code></pre>
 <p>This import registers the <code>&lt;auro-combobox&gt;</code> custom element globally. You can then use it in your HTML:</p>
@@ -124,8 +124,8 @@ This will create a new custom element `<custom-combobox>` that behaves exactly l
 <div class="accordion-content">
 <p class="warning"><strong>Warning:</strong> CDN install & registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <auro-header level="3">Install & Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/cdnRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/cdnRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/cdnRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/cdnRegistration.md -->
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-combobox/+esm"&gt;&lt;/script&gt;</code></pre>
 <p>This script registers the <code>&lt;auro-combobox&gt;</code> custom element globally. You can then use it in your HTML:</p>
@@ -143,15 +143,15 @@ This will create a new custom element `<custom-combobox>` that behaves exactly l
 </auro-accordion-group>
 </section>
 <section>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/frameworks.md) -->
-<!-- The below content is automatically added from ./../docs/partials/frameworks.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/frameworks.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/frameworks.md -->
 <auro-header level="2" id="frameworks">Frameworks</auro-header>
 <auro-accordion-group Emphasis>
 <auro-accordion class="section" id="react">
 <span slot="trigger">React</span>
 <div class="accordion-content">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/react.md) -->
-<!-- The below content is automatically added from ./../docs/partials/react.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/react.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/react.md -->
 React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so <code>&lt;auro-combobox&gt;</code> works directly in JSX without any wrapper library.
 
 <auro-header level="3" id="reactImport">Import the Component</auro-header>
@@ -234,8 +234,8 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-accordion class="section" id="svelte">
 <span slot="trigger">Svelte</span>
 <div class="accordion-content">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/svelte.md) -->
-<!-- The below content is automatically added from ./../docs/partials/svelte.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/svelte.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/svelte.md -->
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-combobox&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
 <auro-header level="3" id="svelteImport">Import the Component</auro-header>
@@ -330,8 +330,8 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/minimal-config.md) -->
-<!-- The below content is automatically added from ./../docs/partials/minimal-config.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/minimal-config.md) -->
+<!-- The below content is automatically added from ./../docs/pages/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
 Every <code>&lt;auro-combobox&gt;</code> implementation requires three things:
 

@@ -71,8 +71,8 @@
 </auro-accordion>
 <section>
 <auro-header level="2" id="userStories">User Stories</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/userStories.md) -->
-<!-- The below content is automatically added from ./../docs/partials/userStories.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/index/userStories.md) -->
+<!-- The below content is automatically added from ./../docs/pages/index/userStories.md -->
 <auro-header level="3" id="select">Select an option from the list</auro-header>
 <ol>
 <li>

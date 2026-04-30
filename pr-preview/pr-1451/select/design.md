@@ -3,8 +3,8 @@
 <div class="mainContent">
 <div class="scrollWrapper">
 <auro-header level="3" id="anatomy">Component Anatomy</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout.md) -->
-<!-- The below content is automatically added from ./../docs/partials/layout.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/layout/layout.md) -->
+<!-- The below content is automatically added from ./../docs/pages/layout/layout.md -->
 <p>The component consists of the following elements:</p>
 <ul>
 <li>
