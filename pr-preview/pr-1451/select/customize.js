@@ -2,9 +2,6 @@
 
 /* eslint-disable jsdoc/require-jsdoc, no-magic-numbers, no-param-reassign */
 
-import { valueExample } from "../apiExamples/value";
-import { resetStateExample } from "../apiExamples/reset-state";
-import { updateActiveOptionExample } from "../apiExamples/update-active-option.js";
 import { AuroSelect } from '../src/auro-select.js';
 import '../../menu/src/registered.js';
 import '../../form/src/registered.js';
@@ -16,9 +13,7 @@ export function initExamples(initCount) {
   initCount = initCount || 0;
 
   try {
-    valueExample();
-    resetStateExample();
-    updateActiveOptionExample();
+    // Add any example initialization code here. For instance, if you have examples that require JavaScript to set up, you can call those functions here.
   } catch (err) {
     if (initCount <= 20) {
       setTimeout(() => {
