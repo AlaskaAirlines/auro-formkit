@@ -19,7 +19,6 @@
       <auro-anchorlink fluid href="#fluid" class="level2 body-xs">Fluid</auro-anchorlink>
       <auro-anchorlink fluid href="#flexMenuWidth" class="level2 body-xs">Flex Menu Width</auro-anchorlink>
       <auro-anchorlink fluid href="#matchWidth" class="level2 body-xs">Match Width</auro-anchorlink>
-      <auro-anchorlink fluid href="#size" class="level2 body-xs">Size</auro-anchorlink>
       <auro-anchorlink fluid href="#placement" class="level2 body-xs">Placement</auro-anchorlink>
       <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
       <auro-anchorlink fluid href="#offset" class="level2 body-xs">Offset</auro-anchorlink>
