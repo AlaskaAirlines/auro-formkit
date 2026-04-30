@@ -544,7 +544,7 @@ width: 25%;
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/autocomplete.html) -->
 <!-- The below content is automatically added from ./../apiExamples/autocomplete.html -->
-<auro-form>
+<form>
 <auro-select autocomplete="country-name">
 <span slot="label">Select Your Country</span>
 <span slot="bib.fullscreen.headline">Select Your Country</span>
@@ -561,14 +561,14 @@ width: 25%;
 <auro-menuoption value="IN">India</auro-menuoption>
 </auro-menu>
 </auro-select>
-</auro-form>
+</form>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/autocomplete.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/autocomplete.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-form&gt;
+<pre class="language-html"><code class="language-html">&lt;form&gt;
   &lt;auro-select autocomplete="country-name"&gt;
     &lt;span slot="label"&gt;Select Your Country&lt;/span&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Select Your Country&lt;/span&gt;
@@ -585,7 +585,7 @@ width: 25%;
       &lt;auro-menuoption value="IN"&gt;India&lt;/auro-menuoption&gt;
     &lt;/auro-menu&gt;
   &lt;/auro-select&gt;
-&lt;/auro-form&gt;</code></pre>
+&lt;/form&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="disableComponent">Disable Component</auro-header>
