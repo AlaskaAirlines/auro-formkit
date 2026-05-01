@@ -825,7 +825,7 @@ auro-accordion[class~=section]::part(accordion) {
   background-color: unset !important;
 }
 
-auro-accordion {
+auro-accordion:not(auro-accordion-group *) {
   margin-top: 1rem !important;
   display: block;
 }

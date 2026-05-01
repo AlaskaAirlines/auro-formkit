@@ -15,7 +15,7 @@ function createExampleConfig(entryPoint) {
   };
 }
 
-const optionalEntryPoints = ['api', 'install', 'getting-started', 'customize'];
+const optionalEntryPoints = ['api', 'getting-started', 'customize'];
 const optionalConfigs = optionalEntryPoints
   .filter((entry) => existsSync(`./demo/${entry}.js`))
   .map(createExampleConfig);
