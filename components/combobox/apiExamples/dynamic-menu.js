@@ -20,30 +20,15 @@ export async function dynamicMenuExample() {
     const elOneInputValue = elOne.input.value;
     const elTwoInputValue = elTwo.input.value;
 
-    elOne.reset();
-    elTwo.reset();
-
     elOne.value = elTwoValue;
     elTwo.value = elOneValue;
 
+    elOne.typedValue = elTwoInputValue;
+    elTwo.typedValue = elOneInputValue;
 
-    setTimeout(() => {
-      elOne.typedValue = elTwoInputValue;
-      elTwo.typedValue = elOneInputValue;
-    }, 0);
+    elOne.input.value = elTwoInputValue;
+    elTwo.input.value = elOneInputValue;
   }
-
-  document.querySelector('#dynamicMenuSwapButton').addEventListener('click', () => {
-    swapValues();
-  });
-
-  document.querySelector('#dynamicMenuPersistButton').addEventListener('click', () => {
-    const elOne = document.querySelector('#dynamicMenuExample');
-    const elTwo = document.querySelector('#dynamicMenuExampleTwo');
-
-    elOne.persistInput = !elOne.persistInput;
-    elTwo.persistInput = !elTwo.persistInput;
-  });
 
   // Generates HTML for menu and submenus using country & city data from an external API
   function generateHtml(data, selector) {
@@ -81,11 +66,26 @@ export async function dynamicMenuExample() {
   }
 
   // Main javascript that runs all JS to create example
+  await customElements.whenDefined('auro-combobox');
+
   const dynamicData = new DynamicData();
   const dynamicMenuExampleEl = document.querySelector('#dynamicMenuExample');
+  await dynamicMenuExampleEl.updateComplete;
 
   const dropdownEl = dynamicMenuExampleEl.shadowRoot.querySelector(dynamicMenuExampleEl.dropdownTag._$litStatic$);
   const inputEl = dropdownEl.querySelector(dynamicMenuExampleEl.inputTag._$litStatic$);
+
+  document.querySelector('#dynamicMenuSwapButton').addEventListener('click', () => {
+    swapValues();
+  });
+
+  document.querySelector('#dynamicMenuPersistButton').addEventListener('click', () => {
+    const elOne = document.querySelector('#dynamicMenuExample');
+    const elTwo = document.querySelector('#dynamicMenuExampleTwo');
+
+    elOne.persistInput = !elOne.persistInput;
+    elTwo.persistInput = !elTwo.persistInput;
+  });
 
   inputEl.addEventListener('input', () => {
     let data = dynamicData.getData();
@@ -104,6 +104,8 @@ export async function dynamicMenuExample() {
   // TODO: Need to refactor this to to not console a console error
   const dynamicDataTwo = new DynamicData();
   const dynamicMenuExampleElTwo = document.querySelector('#dynamicMenuExampleTwo');
+  await dynamicMenuExampleElTwo.updateComplete;
+
   const dropdownElTwo = dynamicMenuExampleElTwo.shadowRoot.querySelector(dynamicMenuExampleElTwo.dropdownTag._$litStatic$);
   const inputElTwo = dropdownElTwo.querySelector(dynamicMenuExampleElTwo.inputTag._$litStatic$);
 

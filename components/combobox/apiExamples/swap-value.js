@@ -4,6 +4,7 @@ export function swapValueExample() {
   const comboboxTwo = document.querySelector('#swapExampleRight');
 
   btn.addEventListener('click', () => {
+    console.warn('swap value example button clicked');
     const valueOne = comboboxOne.value;
     const valueTwo = comboboxTwo.value;
 

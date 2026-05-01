@@ -78,7 +78,8 @@ export const componentTree = {
 }
 
 /**
- * Resolves a page input path, checking the new folder structure first
+ * Resolves a page input path, checking the flat pages structure first
+ * (e.g., docs/pages/index.md), then the nested folder structure
  * (e.g., docs/pages/index/index.md), then falling back to the legacy flat structure
  * (e.g., docs/partials/index.md).
  * @param {string} component - The component name.
@@ -86,6 +87,8 @@ export const componentTree = {
  * @returns {string} The resolved absolute path to the page partial.
  */
 function resolvePartialInput(component, pageName) {
+  const flatPagesPath = fromAuroComponentRoot(`components/${component}/docs/pages/${pageName}.md`);
+  if (existsSync(flatPagesPath)) return flatPagesPath;
   const pagesPath = fromAuroComponentRoot(`components/${component}/docs/pages/${pageName}/${pageName}.md`);
   if (existsSync(pagesPath)) return pagesPath;
   const subfolderPath = fromAuroComponentRoot(`components/${component}/docs/partials/${pageName}/${pageName}.md`);
@@ -139,12 +142,6 @@ export const fileConfigs = (config) => [
     identifier: 'layout.md',
     input: resolvePartialInput(config.component, 'layout'),
     output: fromAuroComponentRoot(`components/${config.component}/demo/layout.md`),
-  },
-  // install.md
-  {
-    identifier: 'install.md',
-    input: resolvePartialInput(config.component, 'install'),
-    output: fromAuroComponentRoot(`components/${config.component}/demo/install.md`),
   },
   // getting-started.md
   {
@@ -221,12 +218,21 @@ export async function processDocFiles(componentName) {
           let match;
           let modified = false;
 
+          // Fallback directory: paths in shared partials are typically written
+          // relative to the demo/ output directory. When the same partial is
+          // inlined into a README (output at components/<comp>/), the path
+          // won't resolve from that shallower directory. Using the demo dir
+          // as a fallback ensures nested imports resolve consistently.
+          const demoDir = fromAuroComponentRoot(`components/${config.component}/demo`);
+
           while ((match = emptyTagPattern.exec(outputContents)) !== null) {
             const [fullMatch, type, srcPath] = match;
             const resolvedPath = path.resolve(outputDir, srcPath);
+            const fallbackPath = path.resolve(demoDir, srcPath);
+            const actualPath = existsSync(resolvedPath) ? resolvedPath : (existsSync(fallbackPath) ? fallbackPath : null);
 
-            if (existsSync(resolvedPath)) {
-              const fileContent = readFileSync(resolvedPath, 'utf8');
+            if (actualPath) {
+              const fileContent = readFileSync(actualPath, 'utf8');
               let replacement;
 
               if (type === 'FILE') {
