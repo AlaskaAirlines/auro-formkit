@@ -1,32 +1,32 @@
 <auro-header level="1" id="overview">Combobox - Customize</auro-header>
 <div class="contentWrapper">
 <nav>
-<auro-nav anchorNavContent=".scrollWrapper">
-<span slot="mobileToggleCollapsed">View More</span>
-<span slot="mobileToggleExpanded">View Less</span>
-<auro-anchorlink fluid href="#appearance">Appearance</auro-anchorlink>
-<auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
-<auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
-<auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Custom Display Value</auro-anchorlink>
-<auro-anchorlink fluid href="#checkmarks" class="level2 body-xs">Checkmarks</auro-anchorlink>
-<auro-anchorlink fluid href="#placement" class="level2 body-xs">Bib Placement</auro-anchorlink>
-<auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
-<auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
-<auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
-<auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
-<auro-anchorlink fluid href="#behaviorMode" class="level2 body-xs">Suggestion vs. Filter</auro-anchorlink>
-<auro-anchorlink fluid href="#inputType" class="level2 body-xs">Input Type</auro-anchorlink>
-<auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
-<auro-anchorlink fluid href="#noFilter" class="level2 body-xs">No Filter</auro-anchorlink>
-<auro-anchorlink fluid href="#persistInput" class="level2 body-xs">Persist Input</auro-anchorlink>
-<auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
-<auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
-<auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
-<auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
-<auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
-<auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
-<auro-anchorlink fluid href="#dynamicMenu" class="level2 body-xs">Dynamic Menu</auro-anchorlink>
-</auro-nav>
+  <auro-nav anchorNavContent=".scrollWrapper">
+    <span slot="mobileToggleCollapsed">View More</span>
+    <span slot="mobileToggleExpanded">View Less</span>
+    <auro-anchorlink fluid href="#appearance">Appearance</auro-anchorlink>
+    <auro-anchorlink fluid href="#layout" class="level2 body-xs">Shape, Size & Layout</auro-anchorlink>
+    <auro-anchorlink fluid href="#background" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
+    <auro-anchorlink fluid href="#displayValue" class="level2 body-xs">Custom Display Value</auro-anchorlink>
+    <auro-anchorlink fluid href="#checkmarks" class="level2 body-xs">Checkmarks</auro-anchorlink>
+    <auro-anchorlink fluid href="#placement" class="level2 body-xs">Bib Placement</auro-anchorlink>
+    <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
+    <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
+    <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
+    <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
+    <auro-anchorlink fluid href="#behaviorMode" class="level2 body-xs">Suggestion vs. Filter</auro-anchorlink>
+    <auro-anchorlink fluid href="#inputType" class="level2 body-xs">Input Type</auro-anchorlink>
+    <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
+    <auro-anchorlink fluid href="#noFilter" class="level2 body-xs">No Filter</auro-anchorlink>
+    <auro-anchorlink fluid href="#persistInput" class="level2 body-xs">Persist Input</auro-anchorlink>
+    <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
+    <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
+    <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
+    <auro-anchorlink fluid href="#forceError" class="level2 body-xs">Force Error State</auro-anchorlink>
+    <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
+    <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
+    <auro-anchorlink fluid href="#dynamicMenu" class="level2 body-xs">Dynamic Menu</auro-anchorlink>
+  </auro-nav>
 </nav>
 <div class="mainContent">
 <div class="scrollWrapper">
@@ -38,12 +38,12 @@
 <auro-header level="3" id="background">Light vs. Dark Background</auro-header>
 <p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
 <div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-default.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-default.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <div class="exampleWrapper--ondark">
