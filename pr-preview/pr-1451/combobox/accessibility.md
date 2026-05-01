@@ -4,7 +4,7 @@
 <div class="scrollWrapper">
 The `auro-combobox` component follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/" target="_blank">W3C APG Combobox</a> pattern. This page documents the ARIA semantics, screen reader announcements, and other accessibility behaviors built into the component.
 
-For keyboard interaction details, see the <a href="./keyboardBehavior.html">Keyboard Behavior</a> page.
+For keyboard interaction details, see the <a href="./keyboard-behavior.html">Keyboard Behavior</a> page.
 
 <auro-header level="2" id="ariaRolesAndAttributes">ARIA Roles and Attributes</auro-header>
 <auro-header level="3" id="trigger">Trigger</auro-header>

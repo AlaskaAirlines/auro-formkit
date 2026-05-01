@@ -12,6 +12,15 @@
 <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
 <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
 <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+<auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-default" class="level2 body-xs">(default)</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-label" class="level2 body-xs">label</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-helpText" class="level2 body-xs">helpText</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-optionalLabel" class="level2 body-xs">optionalLabel</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-valueText" class="level2 body-xs">valueText</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-displayValue" class="level2 body-xs">displayValue</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-ariaLabel-bib-close" class="level2 body-xs">ariaLabel.bib.close</auro-anchorlink>
+<auro-anchorlink fluid href="#slot-bib-fullscreen-headline" class="level2 body-xs">bib.fullscreen.headline</auro-anchorlink>
 <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
 <auro-anchorlink fluid href="#hasFocus" class="level2 body-xs">hasFocus</auro-anchorlink>
 <auro-anchorlink fluid href="#isPopoverVisible" class="level2 body-xs">isPopoverVisible</auro-anchorlink>
@@ -31,8 +40,8 @@
 <div class="mainContent">
 <div class="scrollWrapper">
 <section>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/install/install.md) -->
-<!-- The below content is automatically added from ./../docs/pages/install/install.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/install.md) -->
+<!-- The below content is automatically added from ./../docs/pages/install.md -->
 <auro-header level="2" id="setup">Setup</auro-header>
 <auro-accordion-group Emphasis>
 <auro-accordion expanded class="section" id="recommendedAccordion">
@@ -47,10 +56,13 @@
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/customRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/customRegistrationDescription.md) -->
+<!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
 <p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
 <p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
 <p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
-<p>To do this, import the component class directly and call its `register(name)` method with a unique name:</p>
+<p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
+<!-- AURO-GENERATED-CONTENT:END -->
 
 <pre class="language-js"><code class="language-js">// Import the classes
 import { AuroSelect } from '@aurodesignsystem/auro-formkit/auro-select/class';
@@ -58,9 +70,9 @@ import { AuroMenu } from '@aurodesignsystem/auro-formkit/auro-menu/class';
 import { AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menuoption/class';
 ​
 // Register each component with a custom name
-AuroSelect.register('custom-select');
-AuroMenu.register('custom-menu');
-AuroMenuOption.register('custom-menuoption');</code></pre>
+AuroSelect.register('[custom]-select');
+AuroMenu.register('[custom]-menu');
+AuroMenuOption.register('[custom]-menuoption');</code></pre>
 
 The `<auro-menu>` and `<auro-menuoption>` components must also be custom registered when using a custom `<auro-select>` registration. All three components work together and need to be registered under the same custom naming convention.
 
@@ -92,8 +104,8 @@ This will create new custom elements that behave exactly like their standard cou
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/defaultRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/pages/getting-started/defaultRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/defaultRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/defaultRegistration.md -->
 <p>Once installed, the component can be used in your project by importing the component's registered module:</p>
 
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-select';</code></pre>
@@ -114,8 +126,8 @@ This will create new custom elements that behave exactly like their standard cou
 <div class="accordion-content">
 <p class="warning"><strong>Warning:</strong> CDN install & registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <auro-header level="3">Install & Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/cdnRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/pages/getting-started/cdnRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/cdnRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/cdnRegistration.md -->
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
 
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-select/+esm"&gt;&lt;/script&gt;</code></pre>
@@ -135,15 +147,15 @@ This will create new custom elements that behave exactly like their standard cou
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/frameworks.md) -->
-<!-- The below content is automatically added from ./../docs/pages/getting-started/frameworks.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/frameworks.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/frameworks.md -->
 <auro-header level="2" id="frameworks">Frameworks</auro-header>
 <auro-accordion-group Emphasis>
 <auro-accordion class="section" id="react">
 <span slot="trigger">React</span>
 <div class="accordion-content">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/react.md) -->
-<!-- The below content is automatically added from ./../docs/pages/getting-started/react.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/react.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/react.md -->
 React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so <code>&lt;auro-select&gt;</code> works directly in JSX without any wrapper library.
 
 <auro-header level="3" id="reactImport">Import the Component</auro-header>
@@ -225,8 +237,8 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <auro-accordion class="section" id="svelte">
 <span slot="trigger">Svelte</span>
 <div class="accordion-content">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/svelte.md) -->
-<!-- The below content is automatically added from ./../docs/pages/getting-started/svelte.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/svelte.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/svelte.md -->
 Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-select&gt;</code> works directly in Svelte templates without any wrapper or configuration.
 
 <auro-header level="3" id="svelteImport">Import the Component</auro-header>
@@ -321,8 +333,8 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/getting-started/minimal-config.md) -->
-<!-- The below content is automatically added from ./../docs/pages/getting-started/minimal-config.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
 Every <code>&lt;auro-select&gt;</code> implementation requires three things:
 
@@ -338,6 +350,29 @@ Every <code>&lt;auro-select&gt;</code> implementation requires three things:
     &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</section>
+<section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/slots.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/slots.md -->
+<auro-header level="2" id="slots">Slots</auro-header>
+<p>The following slots are available on the <code>&lt;auro-select&gt;</code> element.</p>
+<auro-header level="3" id="slot-default">(default)</auro-header>
+<p>Default slot for the menu content. Place <code>&lt;auro-menuoption&gt;</code> elements here.</p>
+<auro-header level="3" id="slot-label">label</auro-header>
+<p>Defines the content of the label.</p>
+<auro-header level="3" id="slot-helpText">helpText</auro-header>
+<p>Defines the content of the help text displayed below the select.</p>
+<auro-header level="3" id="slot-optionalLabel">optionalLabel</auro-header>
+<p>Allows overriding the optional display text <code>"(optional)"</code>, which appears next to the label.</p>
+<auro-header level="3" id="slot-valueText">valueText</auro-header>
+<p>Dropdown value text display.</p>
+<auro-header level="3" id="slot-displayValue">displayValue</auro-header>
+<p>Allows custom HTML content to display the selected value when the select is not focused.</p>
+<auro-header level="3" id="slot-ariaLabel-bib-close">ariaLabel.bib.close</auro-header>
+<p>Sets <code>aria-label</code> on the close button in the fullscreen bib.</p>
+<auro-header level="3" id="slot-bib-fullscreen-headline">bib.fullscreen.headline</auro-header>
+<p>Defines the headline to display above menu options in the fullscreen bib.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>

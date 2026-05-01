@@ -18,6 +18,8 @@
 <auro-anchorlink fluid href="#shift" class="level2 body-xs">Shift</auro-anchorlink>
 <auro-anchorlink fluid href="#largeHeader" class="level2 body-xs">Large Fullscreen Header</auro-anchorlink>
 <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
+<auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
+<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#autoComplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
 <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
@@ -35,7 +37,7 @@
 <auro-header level="2" id="appearance">Appearance</auro-header>
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
 <p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
-<p>See the <a href="./layout.html">Layout page</a> for a detailed breakdown.</p>
+<p>See the <a href="./design.html">Design page</a> for a detailed breakdown.</p>
 <auro-header level="3" id="background">Light vs. Dark Background</auro-header>
 <p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
 <div class="exampleWrapper">
@@ -537,6 +539,161 @@ width: 25%;
 &lt;/auro-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="3" id="cssTokens">Tokens</auro-header>
+<p>The component may be restyled by changing the values of the following token(s) for the dropown, input and menu</p>
+<auro-header level="4" id="cssTokensSelect">Select</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../src/styles/tokens.scss) -->
+<!-- The below code snippet is automatically added from ./../src/styles/tokens.scss -->
+<pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+​
+:host(:not([ondark])),
+:host(:not([appearance='inverse'])) {
+  --ds-auro-select-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-select-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-select-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+  --ds-auro-select-placeholder-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-select-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-select-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+  --ds-auro-select-outline-color: transparent;
+}
+​
+:host([ondark]),
+:host([appearance='inverse']) {
+  --ds-auro-select-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-select-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-select-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-select-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-select-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-select-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+  --ds-auro-select-outline-color: transparent;
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<auro-header level="4" id="cssTokensDropdown">Dropdown</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../dropdown/src/styles/tokens.scss) -->
+<!-- The below code snippet is automatically added from ./../../dropdown/src/styles/tokens.scss -->
+<pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+​
+:host(:not([ondark])),
+:host(:not([appearance="inverse"])) {
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+  --ds-auro-dropdown-trigger-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdown-trigger-hover-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdown-trigger-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-dropdown-trigger-outline-color: transparent;
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-dropdownbib-boxshadow-color: var(--ds-elevation-200, #{vac.$ds-elevation-200});
+  --ds-auro-dropdownbib-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdownbib-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdownbib-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+}
+​
+:host([ondark]),
+:host([appearance="inverse"]) {
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdown-trigger-hover-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-dropdown-trigger-outline-color: transparent;
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-dropdownbib-boxshadow-color: var(--ds-elevation-200, #{vac.$ds-elevation-200});
+  --ds-auro-dropdownbib-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdownbib-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdownbib-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<auro-header level="4" id="cssTokensMenu">Menu</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../menu/src/styles/default/tokens.scss) -->
+<!-- The below code snippet is automatically added from ./../../menu/src/styles/default/tokens.scss -->
+<pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+​
+:host {
+  --ds-auro-menu-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
+  --ds-auro-menu-loader-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+  --ds-auro-menu-loader-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-menuoption-container-color: transparent;
+  --ds-auro-menuoption-container-border-color: var(--ds-auro-menuoption-container-color);
+  --ds-auro-menuoption-icon-color: transparent;
+  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</section>
+<section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/css-parts.md) -->
+<!-- The below content is automatically added from ./../docs/partials/customize/css-parts.md -->
+<auro-header level="3" id="cssParts">CSS Shadow Parts</auro-header>
+<p>CSS Shadow Parts allow you to style elements inside a web component's shadow DOM using the <code>::part()</code> pseudo-element. The following parts are exposed by <code>&lt;auro-select&gt;</code>.</p>
+<table class="auro_table">
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>dropdownTrigger</code></td><td>The trigger content container.</td></tr>
+<tr><td><code>dropdownChevron</code></td><td>The collapsed/expanded state icon container.</td></tr>
+<tr><td><code>dropdownSize</code></td><td>The dropdown bib sizing container (height, width, maxHeight, maxWidth only).</td></tr>
+<tr><td><code>helpText</code></td><td>The help text element.</td></tr>
+</tbody>
+</table>
+<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
+<!-- The below content is automatically added from ../apiExamples/css-parts.html -->
+<style>
+auro-select.css-parts-demo::part(dropdownTrigger) {
+border-color: orange;
+}
+auro-select.css-parts-demo::part(dropdownChevron) {
+color: purple;
+}
+auro-select.css-parts-demo::part(helpText) {
+color: green;
+}
+auro-select.css-parts-demo::part(dropdownSize) {
+max-height: 200px;
+}
+</style>
+<auro-select class="css-parts-demo">
+<span slot="label">CSS Parts Example</span>
+<span slot="helpText">This select has custom styles applied via CSS Shadow Parts.</span>
+<auro-menuoption value="one">Option One</auro-menuoption>
+<auro-menuoption value="two">Option Two</auro-menuoption>
+<auro-menuoption value="three">Option Three</auro-menuoption>
+</auro-select>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/css-parts.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/css-parts.html -->
+<pre class="language-html"><code class="language-html">&lt;style&gt;
+  auro-select.css-parts-demo::part(dropdownTrigger) {
+    border-color: orange;
+  }
+  auro-select.css-parts-demo::part(dropdownChevron) {
+    color: purple;
+  }
+  auro-select.css-parts-demo::part(helpText) {
+    color: green;
+  }
+  auro-select.css-parts-demo::part(dropdownSize) {
+    max-height: 200px;
+  }
+&lt;/style&gt;
+&lt;auro-select class="css-parts-demo"&gt;
+  &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
+  &lt;span slot="helpText"&gt;This select has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
+  &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+&lt;/auro-select&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+</section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
 <auro-header level="3" id="autoComplete">Autocomplete</auro-header>
 <p>The <code>autocomplete</code> attribute enables browser autofill support for the select element. When set, the browser may offer saved values for the field based on the specified autocomplete token (e.g. <code>country-name</code> for country selection).</p>

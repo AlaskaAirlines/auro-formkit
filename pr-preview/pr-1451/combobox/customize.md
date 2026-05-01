@@ -12,6 +12,8 @@
 <auro-anchorlink fluid href="#placement" class="level2 body-xs">Bib Placement</auro-anchorlink>
 <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
 <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
+<auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
+<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
 <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#behaviorMode" class="level2 body-xs">Suggestion vs. Filter</auro-anchorlink>
 <auro-anchorlink fluid href="#inputType" class="level2 body-xs">Input Type</auro-anchorlink>
@@ -33,17 +35,15 @@
 <auro-header level="2" id="appearance">Appearance</auro-header>
 <auro-header level="3" id="layout">Shape, Size & Layout</auro-header>
 <p>The <code>shape</code>, <code>size</code> and <code>layout</code> attributes work in collaboration to control the overall architecture of the component.</p>
-<p>See the <a href="./layout.html">Layout page</a> for a detailed breakdown.</p>
+<p>See the <a href="./design.html">Design page</a> for a detailed breakdown.</p>
 <auro-header level="3" id="background">Light vs. Dark Background</auro-header>
 <p>The <code>appearance</code> attribute defines whether the component renders on lighter or darker backgrounds. Supported values are <code>default</code> and <code>inverse</code>. The default value is <code>default</code>.</p>
 <div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
-<!-- The below content is automatically added from ./../apiExamples/basic.html -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-default.html) -->
+<!-- The below content is automatically added from ./../apiExamples/appearance-default.html -->
 <auro-combobox>
-<span slot="ariaLabel.bib.close">Close combobox</span>
-<span slot="ariaLabel.input.clear">Clear All</span>
 <span slot="bib.fullscreen.headline">Bib Header</span>
-<span slot="label">Name</span>
+<span slot="label">Default Appearance</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -57,14 +57,12 @@
 </div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/basic.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/basic.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/appearance-default.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/appearance-default.html -->
 
 <pre class="language-html"><code class="language-html">&lt;auro-combobox&gt;
-  &lt;span slot="ariaLabel.bib.close"&gt;Close combobox&lt;/span&gt;
-  &lt;span slot="ariaLabel.input.clear"&gt;Clear All&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
-  &lt;span slot="label"&gt;Name&lt;/span&gt;
+  &lt;span slot="label"&gt;Default Appearance&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -81,7 +79,7 @@
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
 <auro-combobox appearance="inverse">
 <span slot="bib.fullscreen.headline">Bib Header</span>
-<span slot="label">Name</span>
+<span slot="label">Inverse Appearance</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -100,7 +98,7 @@
 
 <pre class="language-html"><code class="language-html">&lt;auro-combobox appearance="inverse"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
-  &lt;span slot="label"&gt;Name&lt;/span&gt;
+  &lt;span slot="label"&gt;Inverse Appearance&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
@@ -426,11 +424,179 @@ Cherries
 &lt;/auro-combobox&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+</section>
+<section>
+<auro-header level="3" id="cssTokens">Tokens</auro-header>
+<p>The component may be restyled by changing the values of the following token(s) for the dropown, input and menu</p>
+<auro-header level="4" id="cssTokensDropdown">Dropdown</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../dropdown/src/styles/tokens.scss) -->
+<!-- The below code snippet is automatically added from ./../../dropdown/src/styles/tokens.scss -->
+
+<pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
+​
+:host(:not([ondark])),
+:host(:not([appearance="inverse"])) {
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+  --ds-auro-dropdown-trigger-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdown-trigger-hover-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdown-trigger-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-dropdown-trigger-outline-color: transparent;
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-dropdownbib-boxshadow-color: var(--ds-elevation-200, #{vac.$ds-elevation-200});
+  --ds-auro-dropdownbib-background-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdownbib-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-dropdownbib-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+}
+​
+:host([ondark]),
+:host([appearance="inverse"]) {
+  --ds-auro-dropdown-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-dropdown-trigger-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdown-trigger-hover-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdown-trigger-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdown-trigger-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-dropdown-trigger-outline-color: transparent;
+  --ds-auro-dropdown-trigger-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-dropdownbib-boxshadow-color: var(--ds-elevation-200, #{vac.$ds-elevation-200});
+  --ds-auro-dropdownbib-background-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdownbib-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-dropdownbib-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<auro-header level="4" id="cssTokensInput">Input</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../input/src/styles/tokens.scss) -->
+<!-- The below code snippet is automatically added from ./../../input/src/styles/tokens.scss -->
+
+<pre class="language-scss"><code class="language-scss">/* stylelint-disable custom-property-empty-line-before */
+​
+@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+​
+:host(:not([ondark])),
+:host(:not([appearance="inverse"])) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-bold, #{v.$ds-basic-color-border-bold});
+  --ds-auro-input-container-color: var(--ds-basic-color-surface-default, #{v.$ds-basic-color-surface-default});
+  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused, #{v.$ds-advanced-color-state-focused});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-muted, #{v.$ds-basic-color-texticon-muted});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-input-error-icon-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});
+​
+  --ds-auro-input-outline-color: transparent;
+}
+​
+:host([ondark]),
+:host([appearance="inverse"]) {
+  --ds-auro-input-border-color: var(--ds-basic-color-border-inverse, #{v.$ds-basic-color-border-inverse});
+  --ds-auro-input-container-color: var(--ds-advanced-color-shared-background-inverse, #{v.$ds-advanced-color-shared-background-inverse});
+  --ds-auro-input-caret-color: var(--ds-advanced-color-state-focused-inverse, #{v.$ds-advanced-color-state-focused-inverse});
+  --ds-auro-input-label-text-color: var(--ds-basic-color-texticon-inverse-muted, #{v.$ds-basic-color-texticon-inverse-muted});
+  --ds-auro-input-placeholder-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-input-text-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --ds-auro-input-error-icon-color: var(--ds-advanced-color-state-error-inverse, #{v.$ds-advanced-color-state-error-inverse});
+​
+  --ds-auro-input-outline-color: transparent;
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<auro-header level="4" id="cssTokensMenu">Menu</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../menu/src/styles/default/tokens.scss) -->
+<!-- The below code snippet is automatically added from ./../../menu/src/styles/default/tokens.scss -->
+
+<pre class="language-scss"><code class="language-scss">@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
+​
+:host {
+  --ds-auro-menu-divider-color: var(--ds-basic-color-border-divider, #{v.$ds-basic-color-border-divider});
+  --ds-auro-menu-loader-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+  --ds-auro-menu-loader-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+  --ds-auro-menuoption-container-color: transparent;
+  --ds-auro-menuoption-container-border-color: var(--ds-auro-menuoption-container-color);
+  --ds-auro-menuoption-icon-color: transparent;
+  --ds-auro-menuoption-text-color: var(--ds-basic-color-texticon-default, #{v.$ds-basic-color-texticon-default});
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</section>
+<section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/css-parts.md) -->
+<!-- The below content is automatically added from ./../docs/partials/customize/css-parts.md -->
+<auro-header level="3" id="cssParts">CSS Shadow Parts</auro-header>
+<p>CSS Shadow Parts allow you to style elements inside a web component's shadow DOM using the <code>::part()</code> pseudo-element. The following parts are exposed by <code>&lt;auro-combobox&gt;</code>.</p>
+<table class="auro_table">
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>dropdownTrigger</code></td><td>The trigger content container.</td></tr>
+<tr><td><code>dropdownChevron</code></td><td>The collapsed/expanded state icon container.</td></tr>
+<tr><td><code>dropdownSize</code></td><td>The dropdown bib sizing container (height, width, maxHeight, maxWidth only).</td></tr>
+<tr><td><code>helpText</code></td><td>The help text element.</td></tr>
+</tbody>
+</table>
+<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
+<!-- The below content is automatically added from ../apiExamples/css-parts.html -->
+<style>
+auro-combobox.css-parts-demo::part(dropdownTrigger) {
+border-color: orange;
+}
+auro-combobox.css-parts-demo::part(dropdownChevron) {
+color: purple;
+}
+auro-combobox.css-parts-demo::part(helpText) {
+color: green;
+}
+auro-combobox.css-parts-demo::part(dropdownSize) {
+max-height: 200px;
+}
+</style>
+<auro-combobox class="css-parts-demo">
+<span slot="label">CSS Parts Example</span>
+<span slot="helpText">This combobox has custom styles applied via CSS Shadow Parts.</span>
+<auro-menuoption value="one">Option One</auro-menuoption>
+<auro-menuoption value="two">Option Two</auro-menuoption>
+<auro-menuoption value="three">Option Three</auro-menuoption>
+</auro-combobox>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/css-parts.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/css-parts.html -->
+
+<pre class="language-html"><code class="language-html">&lt;style&gt;
+  auro-combobox.css-parts-demo::part(dropdownTrigger) {
+    border-color: orange;
+  }
+  auro-combobox.css-parts-demo::part(dropdownChevron) {
+    color: purple;
+  }
+  auro-combobox.css-parts-demo::part(helpText) {
+    color: green;
+  }
+  auro-combobox.css-parts-demo::part(dropdownSize) {
+    max-height: 200px;
+  }
+&lt;/style&gt;
+&lt;auro-combobox class="css-parts-demo"&gt;
+  &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
+  &lt;span slot="helpText"&gt;This combobox has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
+  &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
+  &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+&lt;/auro-combobox&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+</section>
+<section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
 <auro-header level="3" id="behaviorMode">Suggestion vs. Filter</auro-header>
 <p>There are two behaviors available for the combobox: <code>suggestion</code> and <code>filter</code>. The default behavior is <code>suggestion</code>.</p>
 <p>With <code>behavior="suggestion"</code>, the menu options are displayed as suggestions, but the user may enter whatever value they like into the input.</p>
-<p>With <code>behavior="filter"</code>, the user is required to choose one of the menu options in order for the input to be considered valid.</p>
+<p>With <code>behavior="filter"</code>, the user is not required pick a value but if a value is typed into the input the user is required to choose one of the menu options in order for the input to be considered valid.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/suggestion.html) -->
 <!-- The below content is automatically added from ./../apiExamples/suggestion.html -->
@@ -989,10 +1155,6 @@ Cherries
 <auro-combobox
 id="dynamicMenuExample"
 value="TAN"
-layout="snowflake"
-shape="snowflake"
-size="lg"
-appearance="inverse"
 noFilter
 persistInput
 dvInputOnly
@@ -1010,10 +1172,6 @@ due to the requirements of auro-dropdown and auro-input
 <auro-combobox
 id="dynamicMenuExampleTwo"
 value="GER"
-layout="snowflake"
-shape="snowflake"
-size="lg"
-appearance="inverse"
 noFilter
 persistInput
 dvInputOnly
@@ -1046,10 +1204,6 @@ Toggle Persist Input
 &lt;auro-combobox
   id="dynamicMenuExample"
   value="TAN"
-  layout="snowflake"
-  shape="snowflake"
-  size="lg"
-  appearance="inverse"
   noFilter
   persistInput
   dvInputOnly
@@ -1067,10 +1221,6 @@ Toggle Persist Input
 &lt;auro-combobox
   id="dynamicMenuExampleTwo"
   value="GER"
-  layout="snowflake"
-  shape="snowflake"
-  size="lg"
-  appearance="inverse"
   noFilter
   persistInput
   dvInputOnly

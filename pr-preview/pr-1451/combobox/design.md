@@ -3,8 +3,8 @@
 <div class="mainContent">
 <div class="scrollWrapper">
 <auro-header level="3" id="anatomy">Component Anatomy</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/layout/layout.md) -->
-<!-- The below content is automatically added from ./../docs/pages/layout/layout.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout/layout.md) -->
+<!-- The below content is automatically added from ./../docs/partials/layout/layout.md -->
 <p>The component consists of the following elements:</p>
 <ul>
 <li>
@@ -87,7 +87,7 @@
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
 <auro-combobox appearance="inverse">
 <span slot="bib.fullscreen.headline">Bib Header</span>
-<span slot="label">Name</span>
+<span slot="label">Inverse Appearance</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
@@ -105,7 +105,7 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/appearance-inverse.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-combobox appearance="inverse"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
-  &lt;span slot="label"&gt;Name&lt;/span&gt;
+  &lt;span slot="label"&gt;Inverse Appearance&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
