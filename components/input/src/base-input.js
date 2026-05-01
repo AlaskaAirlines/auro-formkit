@@ -296,7 +296,8 @@ export default class BaseInput extends AuroElement {
        * The id global attribute defines an identifier (ID) which must be unique in the whole document.
        */
       id: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
