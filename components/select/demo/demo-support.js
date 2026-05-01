@@ -1,10 +1,10 @@
-import {unified} from 'https://esm.sh/unified';
-import remarkParse from 'https://esm.sh/remark-parse';
-import remarkGfm from 'https://esm.sh/remark-gfm';
-import remarkRehype from 'https://esm.sh/remark-rehype';
-import rehypeRaw from 'https://esm.sh/rehype-raw';
-import rehypeHighlight from 'https://esm.sh/rehype-highlight';
-import rehypeStringify from 'https://esm.sh/rehype-stringify';
+import {unified} from 'unified';
+import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import remarkRehype from 'remark-rehype';
+import rehypeRaw from 'rehype-raw';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeStringify from 'rehype-stringify';
 
 export async function renderPage(mdPath) {
   const response = await fetch(mdPath);
