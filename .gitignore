@@ -9,6 +9,7 @@ version.d.ts
 ## Demo support files
 components/**/demo/*.md
 components/**/demo/*.min.js
+components/**/demo/*.min.css
 
 ## CSS built from Sass process
 components/**/src/**/*.css
