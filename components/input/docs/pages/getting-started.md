@@ -12,6 +12,14 @@
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
       <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+      <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-label" class="level2 body-xs">label</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-helpText" class="level2 body-xs">helpText</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-optionalLabel" class="level2 body-xs">optionalLabel</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-displayValue" class="level2 body-xs">displayValue</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-clear" class="level2 body-xs">ariaLabel.clear</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-password-show" class="level2 body-xs">ariaLabel.password.show</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-password-hide" class="level2 body-xs">ariaLabel.password.hide</auro-anchorlink>
       <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
       <auro-anchorlink fluid href="#hasFocus" class="level2 body-xs">hasFocus</auro-anchorlink>
       <auro-anchorlink fluid href="#hasValue" class="level2 body-xs">hasValue</auro-anchorlink>
@@ -69,6 +77,10 @@
       </section>
       <section>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+      </section>
+      <section>
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/slots.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>

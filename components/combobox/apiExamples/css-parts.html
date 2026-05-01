@@ -1,0 +1,21 @@
+<style>
+  auro-combobox.css-parts-demo::part(dropdownTrigger) {
+    border-color: orange;
+  }
+  auro-combobox.css-parts-demo::part(dropdownChevron) {
+    color: purple;
+  }
+  auro-combobox.css-parts-demo::part(helpText) {
+    color: green;
+  }
+  auro-combobox.css-parts-demo::part(dropdownSize) {
+    max-height: 200px;
+  }
+</style>
+<auro-combobox class="css-parts-demo">
+  <span slot="label">CSS Parts Example</span>
+  <span slot="helpText">This combobox has custom styles applied via CSS Shadow Parts.</span>
+  <auro-menuoption value="one">Option One</auro-menuoption>
+  <auro-menuoption value="two">Option Two</auro-menuoption>
+  <auro-menuoption value="three">Option Three</auro-menuoption>
+</auro-combobox>

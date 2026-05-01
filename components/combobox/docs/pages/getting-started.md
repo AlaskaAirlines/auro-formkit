@@ -12,6 +12,15 @@
       <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
       <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
       <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
+      <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-default" class="level2 body-xs">(default)</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-label" class="level2 body-xs">label</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-helpText" class="level2 body-xs">helpText</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-optionalLabel" class="level2 body-xs">optionalLabel</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-displayValue" class="level2 body-xs">displayValue</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-input-clear" class="level2 body-xs">ariaLabel.input.clear</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-ariaLabel-bib-close" class="level2 body-xs">ariaLabel.bib.close</auro-anchorlink>
+      <auro-anchorlink fluid href="#slot-bib-fullscreen-headline" class="level2 body-xs">bib.fullscreen.headline</auro-anchorlink>
       <auro-anchorlink fluid href="#stateManagement">State Management</auro-anchorlink>
       <auro-anchorlink fluid href="#inputValue" class="level2 body-xs">inputValue</auro-anchorlink>
       <auro-anchorlink fluid href="#optionSelected" class="level2 body-xs">optionSelected</auro-anchorlink>
@@ -72,6 +81,10 @@
       </section>
       <section>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+      </section>
+      <section>
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/slots.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
