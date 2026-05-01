@@ -13,7 +13,8 @@
     "./rollup": "./src/rollup.config.mjs",
     "./stylelint": "./src/stylelintrc.config.json",
     "./wtr": "./src/web-test-runner.config.mjs",
-    "./wds": "./src/web-dev-server.config.mjs"
+    "./wds": "./src/web-dev-server.config.mjs",
+    "./demo-styles": "./src/demo-styles.scss"
   },
   "files": [
     "commitlint",

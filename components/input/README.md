@@ -33,8 +33,8 @@ The following sections are editable by making changes to the following files:
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
 <p>The <code>&lt;auro-input&gt;</code> element should be used in situations where users may:</p>
 <ul>
-<li>Need to enter information</li>
-<li>Be filling out a form</li>
+  <li>Need to enter information</li>
+  <li>Be filling out a form</li>
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
 
@@ -43,7 +43,9 @@ The following sections are editable by making changes to the following files:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
-<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
+```shell
+$ npm i @aurodesignsystem/
+```
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
 <!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->
@@ -52,11 +54,13 @@ The following sections are editable by making changes to the following files:
 
 When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
 
-<pre class="language-json"><code class="language-json">{
+```json
+{
     "compilerOptions": {
         "moduleResolution": "bundler"
     }
-}</code></pre>
+}
+```
 
 This configuration enables proper module resolution for the component's TypeScript files.
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -67,7 +71,9 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
-<pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-input/+esm"&gt;&lt;/script&gt;</code></pre>
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/@latest/auro-input/+esm"></script>
+```
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit Development
@@ -81,29 +87,30 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-<pre class="language-shell"><code class="language-shell">npx turbo dev --filter=@aurodesignsystem/auro-input</code></pre>
+```shell
+npx turbo dev --filter=@aurodesignsystem/auro-input
+```
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/customRegistrationDescription.md) -->
-<!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
-<p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
-<p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
-<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
-<p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-<pre class="language-js"><code class="language-js">// Import the class only
+```js
+// Import the class only
 import { AuroInput } from '@aurodesignsystem/auro-formkit/auro-input/class';
-​
+
 // Register with a custom name if desired
-AuroInput.register('[custom]-input');</code></pre>
+AuroInput.register('[custom]-input');
+```
 
 <p>This will create a new custom element <code>&lt;custom-input&gt;</code> that behaves exactly like <code>&lt;auro-input&gt;</code>, allowing both to coexist on the same page without interfering with each other.</p>
 
-<pre class="language-html"><code class="language-html">&lt;custom-input&gt;
-  &lt;span slot="label"&gt;Label&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-&lt;/custom-input&gt;</code></pre>
+```html
+  <custom-input>
+    <span slot="label">Label</span>
+    <span slot="helpText">Help Text</span>
+  </custom-input>
+```
 </auro-accordion>
 <!-- AURO-GENERATED-CONTENT:END -->
