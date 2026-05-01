@@ -13,6 +13,7 @@
     <auro-anchorlink fluid href="#noFlip" class="level2 body-xs">No Flip</auro-anchorlink>
     <auro-anchorlink fluid href="#breakpoint" class="level2 body-xs">Fullscreen Breakpoint</auro-anchorlink>
     <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
+    <auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
     <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
     <auro-anchorlink fluid href="#behaviorMode" class="level2 body-xs">Suggestion vs. Filter</auro-anchorlink>
     <auro-anchorlink fluid href="#inputType" class="level2 body-xs">Input Type</auro-anchorlink>
@@ -131,6 +132,19 @@
 <auro-header level="4" id="cssTokensMenu">Menu</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../menu/src/styles/default/tokens.scss) -->
 <!-- AURO-GENERATED-CONTENT:END -->
+</section>
+<section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/css-parts.md) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/css-parts.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 </section>
 <section>
 <auro-header level="2" id="customBehavior">Behavior</auro-header>
