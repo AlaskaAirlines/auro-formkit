@@ -6,11 +6,18 @@
       <span slot="mobileToggleExpanded">View Less</span>
       <auro-anchorlink fluid href="#appearance">Appearance</auro-anchorlink>
       <auro-anchorlink fluid href="#activeLabel" class="level2 body-xs">Active Label</auro-anchorlink>
+      <auro-anchorlink fluid href="#dvInputOnly" class="level2 body-xs">Display Value Input Only</auro-anchorlink>
+      <auro-anchorlink fluid href="#icon" class="level2 body-xs">Icon</auro-anchorlink>
       <auro-anchorlink fluid href="#lightDarkBackground" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
       <auro-anchorlink fluid href="#placeholder" class="level2 body-xs">Placeholder</auro-anchorlink>
-      <auro-anchorlink fluid href="#optionalFlag" class="level2 body-xs">No optional flag</auro-anchorlink>
+      <auro-anchorlink fluid href="#optionalFlag" class="level2 body-xs">Optional Flag</auro-anchorlink>
+      <auro-anchorlink fluid href="#simple" class="level2 body-xs">Simple</auro-anchorlink>
+      <auro-anchorlink fluid href="#nested" class="level2 body-xs">Nested</auro-anchorlink>
       <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
       <auro-anchorlink fluid href="#behavior">Behavior</auro-anchorlink>
+      <auro-anchorlink fluid href="#autocapitalize" class="level2 body-xs">Autocapitalize</auro-anchorlink>
+      <auro-anchorlink fluid href="#autocomplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
+      <auro-anchorlink fluid href="#autocorrect" class="level2 body-xs">Autocorrect</auro-anchorlink>
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
       <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
       <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
@@ -19,11 +26,12 @@
       <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
       <auro-anchorlink fluid href="#min" class="level2 body-xs">Min</auro-anchorlink>
       <auro-anchorlink fluid href="#minLength" class="level2 body-xs">Min Length</auro-anchorlink>
+      <auro-anchorlink fluid href="#name" class="level2 body-xs">Name</auro-anchorlink>
       <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validate</auro-anchorlink>
       <auro-anchorlink fluid href="#pattern" class="level2 body-xs">Pattern</auro-anchorlink>
       <auro-anchorlink fluid href="#readonly" class="level2 body-xs">Readonly</auro-anchorlink>
       <auro-anchorlink fluid href="#required" class="level2 body-xs">Required</auro-anchorlink>
-      <auro-anchorlink fluid href="#setCustomValidity" class="level2 body-xs">Set Custom Validity</auro-anchorlink>
+      <auro-anchorlink fluid href="#setCustomValidity" class="level2 body-xs">Custom Validation Messages</auro-anchorlink>
       <auro-anchorlink fluid href="#type" class="level2 body-xs">Type</auro-anchorlink>
       <auro-anchorlink fluid href="#validateOnInput" class="level2 body-xs">Validate on Input</auro-anchorlink>
       <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
@@ -42,6 +50,28 @@
         <auro-accordion alignRight>
           <span slot="trigger">See code</span>
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/active-label.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="dvInputOnly">Display Value Input Only</auro-header>
+        <p>Use the <code>dvInputOnly</code> attribute so that the <code>displayValue</code> slot content only masks the HTML5 input element. The input's label will not be masked. Without this attribute, the display value slot content covers both the label and the input.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/dv-input-only.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/dv-input-only.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="icon">Icon</auro-header>
+        <p>Use the <code>icon</code> attribute to render an icon inside the input to the left of the value. Support is limited to <code>auro-input</code> instances with credit card format.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/credit-card-icon.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/credit-card-icon.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="lightDarkBackground">Light vs. Dark Background</auro-header>
@@ -74,9 +104,9 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/placeholder.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-        <auro-header level="3" id="optionalFlag">No optional flag</auro-header>
+        <auro-header level="3" id="optionalFlag">Optional Flag</auro-header>
         <p>The <code>&lt;auro-input&gt;</code> supports an <code>optionalLabel</code> slot, where users can override the default <code>(optional)</code> notification text.</p>
-        <p>Providing the slot with no content will remove it.</p>
+        <p>Providing the slot with empty content will remove it.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/optional-label.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
@@ -84,6 +114,28 @@
         <auro-accordion alignRight>
           <span slot="trigger">See code</span>
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/optional-label.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="simple">Simple</auro-header>
+        <p>Use the <code>simple</code> attribute to render the input without a border. This is intended for use when the input is embedded inside the trigger of an auro-droopdown.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/simple.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/simple.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="nested">Nested</auro-header>
+        <p>Use the <code>nested</code> attribute to render the input without borders, help text, error text, or accents. This is intended for use when the input is embedded inside the trigger of an auro-droopdown.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nested.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>
@@ -95,6 +147,39 @@
       </section>
       <section>
         <auro-header level="2" id="behavior">Behavior</auro-header>
+        <auro-header level="3" id="autocapitalize">Autocapitalize</auro-header>
+        <p>Use the <code>autocapitalize</code> attribute to control whether and how text input is automatically capitalized as it is entered by the user. Supported values: <code>off</code>/<code>none</code>, <code>on</code>/<code>sentences</code>, <code>words</code>, <code>characters</code>.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/autocapitalize.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/autocapitalize.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="autocomplete">Autocomplete</auro-header>
+        <p>Use the <code>autocomplete</code> attribute to control what the browser can suggest for autofill. At this time, only <code>autocomplete="off"</code> is supported.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/autocomplete.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/autocomplete.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="autocorrect">Autocorrect</auro-header>
+        <p>Use the <code>autocorrect</code> attribute set to <code>off</code> to stop iOS from auto-correcting words when typed into a text box.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/autocorrect.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/autocorrect.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="disabled">Disabled</auro-header>
         <p>Use the <code>disable</code> attribute to prevent the user from interacting with the input.</p>
         <div class="exampleWrapper">
@@ -221,6 +306,18 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/min-length.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
+        <auro-header level="3" id="name">Name</auro-header>
+        <p>Use the <code>name</code> attribute to set the form field name for the input. This populates the <code>name</code> attribute on the internal HTML input element, which is used to identify the field when the form is submitted.</p>
+        <p>The <code>id</code> attribute is for identifying an element for client-side styling (CSS) and behavior (JavaScript), while <code>name</code> is for sending data to a server during form submission.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/name.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/name.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
         <auro-header level="3" id="noValidate">No Validate</auro-header>
         <p>For use cases where the field is <code>required</code>, but live validation is not wanted, use the <code>noValidate</code> attribute.</p>
         <div class="exampleWrapper">
@@ -270,9 +367,22 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/required.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-        <auro-header level="3" id="setCustomValidity">Set Custom Validity</auro-header>
-        <p>The <code>setCustomValidity</code> attribute can be used to set a custom string for all validityStates. When the component is first loaded, if this attribute is set on the element, all validityStates (except <code>valid</code>) will display the defined message.</p>
-        <p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using this element property.</p>
+        <auro-header level="3" id="setCustomValidity">Custom Validation Messages</auro-header>
+        <p>The input provides several properties to customize the error messages displayed for different validation states. When a validation error occurs, the component checks for a state-specific message first, then falls back to the general <code>setCustomValidity</code> message.</p>
+        <ul>
+          <li><strong><code>setCustomValidity</code></strong> — Sets a fallback error message displayed for any validation error. This message is used when no state-specific message is defined.</li>
+          <li><strong><code>setCustomValidityValueMissing</code></strong> — Displayed when the component is <code>required</code> and the user leaves it empty.</li>
+          <li><strong><code>setCustomValidityForType</code></strong> — Displayed when the value does not match the expected format for the declared <code>type</code> (e.g. invalid email, phone number).</li>
+          <li><strong><code>setCustomValidityBadInput</code></strong> — Displayed when the browser considers the input value to be malformed (e.g. non-numeric characters in a <code>number</code> field).</li>
+          <li><strong><code>setCustomValidityRangeOverflow</code></strong> — Displayed when the value exceeds the <code>max</code> constraint.</li>
+          <li><strong><code>setCustomValidityRangeUnderflow</code></strong> — Displayed when the value is below the <code>min</code> constraint.</li>
+          <li><strong><code>setCustomValidityTooLong</code></strong> — Displayed when the value exceeds the <code>maxlength</code> constraint.</li>
+          <li><strong><code>setCustomValidityTooShort</code></strong> — Displayed when the value is shorter than the <code>minlength</code> constraint.</li>
+        </ul>
+        <p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message.</p>
+        <p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using these properties.</p>
+        <auro-header level="4">Fallback Message</auro-header>
+        <p>Use <code>setCustomValidity</code> to set a single message for all validation states.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
@@ -280,6 +390,83 @@
         <auro-accordion alignRight>
           <span slot="trigger">See code</span>
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="4">Value Missing</auro-header>
+        <p>Use <code>setCustomValidityValueMissing</code> to customize the message when a <code>required</code> field is left empty.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-value-missing.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-value-missing.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="4">Type Validation</auro-header>
+        <p>Use <code>setCustomValidityForType</code> to customize the message when the value doesn't match the declared <code>type</code> format.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-for-type.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-for-type.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="4">Bad Input</auro-header>
+        <p>Use <code>setCustomValidityBadInput</code> to customize the message when the browser considers the input malformed.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-bad-input.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-bad-input.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="4">Range Overflow</auro-header>
+        <p>Use <code>setCustomValidityRangeOverflow</code> to customize the message when the value exceeds the <code>max</code> constraint.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="4">Range Underflow</auro-header>
+        <p>Use <code>setCustomValidityRangeUnderflow</code> to customize the message when the value is below the <code>min</code> constraint.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="4">Too Long</auro-header>
+        <p>Use <code>setCustomValidityTooLong</code> to customize the message when the value exceeds the <code>maxlength</code> constraint.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-too-long.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-too-long.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="4">Too Short</auro-header>
+        <p>Use <code>setCustomValidityTooShort</code> to customize the message when the value is shorter than the <code>minlength</code> constraint.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-too-short.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-too-short.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="type">Type</auro-header>
@@ -333,7 +520,6 @@
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <p>Use the <code>type="credit-card"</code> and <code>icon</code> attributes for a credit card formatted input with credit card icon support.</p>
-        <p><strong>Dependency</strong>: Please be sure to also install <a href="https://auro.alaskaair.com/components/auro/icon/install">auro-icon</a> as a peer dependency.</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/credit-card-icon.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
