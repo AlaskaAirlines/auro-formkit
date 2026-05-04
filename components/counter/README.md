@@ -21,7 +21,7 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-The `auro-counter` component is a ui element that enables a way to increment or decrement a single digit value. Common use case is inside the `auro-counter-group` to facilitate a collection of counters to add passenger types to a flight.
+The <code>auro-counter</code> component is a ui element that enables a way to increment or decrement a single digit value. Common use case is inside the <code>auro-counter-group</code> to facilitate a collection of counters to add passenger types to a flight.
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -85,10 +85,8 @@ To only develop a single component, use the `--filter` flag:
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
-
-## Custom Component Registration for Version Management
-
-There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
+<auro-header level="4">Custom Component Registration for Version Management</auro-header>
+There are two key parts to every Auro component: the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</auro-hyperlink> and the custom element definition. The class defines the component's behavior, while the custom element registers it under a specific name so it can be used in HTML.
 
 You can do this by importing only the component class and using the `register(name)` method with a unique name:
 
@@ -99,45 +97,21 @@ import { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/au
 AuroCounter.register('custom-counter');
 AuroCounterGroup.register('custom-counter-group');</code></pre>
 
-This will create a new custom element `<custom-counter>` and `<custom-counter-group>` that behaves exactly like `<auro-counter>` and `<auro-counter-group>`, allowing both to coexist on the same page without interfering with each other.
+This will create a new custom element <code>&lt;custom-counter&gt;</code> and <code>&lt;custom-counter-group&gt;</code> that behaves exactly like <code>&lt;auro-counter&gt;</code> and <code>&lt;auro-counter-group&gt;</code>, allowing both to coexist on the same page without interfering with each other.
 
-<div class="exampleWrapper exampleWrapper--flex">
-<custom-counter-group>
-<div slot="bib.fullscreen.headline">Passengers</div>
-<div slot="label">Passengers</div>
-<custom-counter>
-Adults
-<span slot="description">18 years or older</span>
-</custom-counter>
-<custom-counter>
-Children
-<span slot="description">2-17 years</span>
-</custom-counter>
-</custom-counter-group>
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-
-<pre class="language-html"><code class="language-html">  &lt;custom-counter-group&gt;
-    &lt;div slot="bib.fullscreen.headline"&gt;Passengers&lt;/div&gt;
-    &lt;div slot="label"&gt;Passengers&lt;/div&gt;
-    &lt;custom-counter&gt;
-      Adults
-      &lt;span slot="description"&gt;18 years or older&lt;/span&gt;
-    &lt;/custom-counter&gt;
-    &lt;custom-counter&gt;
-      Children
-      &lt;span slot="description"&gt;2-17 years&lt;/span&gt;
-    &lt;/custom-counter&gt;
-  &lt;/custom-counter-group&gt;
-​
-```html
-  &lt;custom-checkbox-group&gt;
-    &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-    &lt;custom-checkbox value="value1" name="custom" id="checkbox-custom1"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
-    &lt;custom-checkbox value="value2" name="custom" id="checkbox-custom2" checked&gt;Custom checkbox option&lt;/custom-checkbox&gt;
-    &lt;custom-checkbox value="value3" name="custom" id="checkbox-custom3"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
-    &lt;custom-checkbox value="value4" name="custom" id="checkbox-custom4"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
-  &lt;/custom-checkbox-group&gt;</code></pre>
-</auro-accordion>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/custom.html -->
+<pre class="language-html"><code class="language-html">&lt;custom-counter-group&gt;
+  &lt;div slot="bib.fullscreen.headline"&gt;Passengers&lt;/div&gt;
+  &lt;div slot="label"&gt;Passengers&lt;/div&gt;
+  &lt;custom-counter&gt;
+    Adults
+    &lt;span slot="description"&gt;18 years or older&lt;/span&gt;
+  &lt;/custom-counter&gt;
+  &lt;custom-counter&gt;
+    Children
+    &lt;span slot="description"&gt;2-17 years&lt;/span&gt;
+  &lt;/custom-counter&gt;
+&lt;/custom-counter-group&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:END -->

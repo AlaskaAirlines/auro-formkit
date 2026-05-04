@@ -1,0 +1,22 @@
+<style>
+  #cssPartsCounter auro-counter::part(counterControl) {
+    border: 2px dashed purple;
+    border-radius: 8px;
+    padding: 0.5rem;
+  }
+
+  #cssPartsCounter auro-counter::part(controlMinus),
+  #cssPartsCounter auro-counter::part(controlPlus) {
+    background-color: #e8d5f5;
+  }
+</style>
+<auro-counter-group id="cssPartsCounter">
+  <auro-counter>
+    Adults
+    <span slot="description">18 years or older</span>
+  </auro-counter>
+  <auro-counter>
+    Children
+    <span slot="description">2-17 years</span>
+  </auro-counter>
+</auro-counter-group>
