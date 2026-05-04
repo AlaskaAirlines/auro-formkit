@@ -15,6 +15,7 @@
     "update-stories": "node update-stories.js"
   },
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./demo-support": "./src/demo-support.js"
   }
 }
