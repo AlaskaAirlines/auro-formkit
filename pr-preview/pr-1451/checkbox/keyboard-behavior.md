@@ -30,9 +30,6 @@ Toggles the <code>checked</code> state. Calls <code>preventDefault()</code> to b
 </tr>
 </tbody>
 </table>
-<div class="note">
-<p><strong>Note:</strong> Arrow key navigation within a <code>&lt;auro-checkbox-group&gt;</code> is not currently supported. Each checkbox participates independently in the browser's default <code>tabindex</code> sequence.</p>
-</div>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </div>

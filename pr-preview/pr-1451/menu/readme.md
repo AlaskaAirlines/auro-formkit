@@ -36,7 +36,7 @@ The `<auro-menu>` element is designed for contextual menus, e.g. a dropdown menu
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-menu>` element should be used in situations where users may:
+The <code>&lt;auro-menu&gt;</code> element should be used in situations where users may:
 
 * A user needs to select one option from a list of options.
 <!-- AURO-GENERATED-CONTENT:END -->

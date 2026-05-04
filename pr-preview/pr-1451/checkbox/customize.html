@@ -3,9 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/api.md
-
-  With the exception of adding custom elements if needed for the demo.
+  All demo code should be added/edited in ./demo/customize.md
 
   ----------------------- DO NOT EDIT -----------------------------
 
@@ -16,7 +14,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-checkbox</title>
+    <title>Auro Web Component Demo | auro-checkbox | Customize</title>
 
     <!-- highlight.js Stylesheet -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"/>
@@ -39,12 +37,13 @@
 
     <!-- If additional elements are needed for the demo, add them here. -->
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-nav@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-header@latest/+esm" type="module"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/+esm" type="module"></script>
     <script type="module">
       import { renderPage } from './demo-support.js';
-      await renderPage('./api.md');
+      await renderPage('./customize.md');
       import { initExamples } from "./api.min.js";
       initExamples();
     </script>

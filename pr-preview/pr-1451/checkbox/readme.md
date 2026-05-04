@@ -21,7 +21,7 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-`<auro-checkbox>` is a [HTML custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) for the purpose of allowing users to select one or more options of a limited number of choices.
+<code>&lt;auro-checkbox&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> for the purpose of allowing users to select one or more options of a limited number of choices.
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -32,7 +32,7 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-checkbox>` element should be used in situations where users may:
+The <code>&lt;auro-checkbox&gt;</code> element should be used in situations where users may:
 
 * Be filling out a form
 * Need to select one or more options
@@ -85,9 +85,7 @@ To only develop a single component, use the `--filter` flag:
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
-
-## Custom Component Registration for Version Management
-
+<auro-header level="2" id="customRegistration">Custom Component Registration for Version Management</auro-header>
 There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
 
 When you install the component as described on the `Install` page, the class is imported automatically, and the component is registered globally for you.
@@ -105,18 +103,8 @@ AuroCheckboxGroup.register('custom-checkbox-group');</code></pre>
 
 This will create a new custom element `<custom-checkbox>` and `<custom-checkbox-group>` that behaves exactly like `<auro-checkbox>` and `<auro-checkbox-group>`, allowing both to coexist on the same page without interfering with each other.
 
-<div class="exampleWrapper exampleWrapper--flex">
-<custom-checkbox-group>
-<span slot="legend">Form label goes here</span>
-<custom-checkbox value="value1" name="custom" id="checkbox-custom1">Custom checkbox option</custom-checkbox>
-<custom-checkbox value="value2" name="custom" id="checkbox-custom2" checked>Custom checkbox option</custom-checkbox>
-<custom-checkbox value="value3" name="custom" id="checkbox-custom3">Custom checkbox option</custom-checkbox>
-<custom-checkbox value="value4" name="custom" id="checkbox-custom4">Custom checkbox option</custom-checkbox>
-</custom-checkbox-group>
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/custom.html -->
 <pre class="language-html"><code class="language-html">&lt;custom-checkbox-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
   &lt;custom-checkbox value="value1" name="custom" id="checkbox-custom1"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
@@ -124,5 +112,5 @@ This will create a new custom element `<custom-checkbox>` and `<custom-checkbox-
   &lt;custom-checkbox value="value3" name="custom" id="checkbox-custom3"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
   &lt;custom-checkbox value="value4" name="custom" id="checkbox-custom4"&gt;Custom checkbox option&lt;/custom-checkbox&gt;
 &lt;/custom-checkbox-group&gt;</code></pre>
-</auro-accordion>
+<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:END -->
