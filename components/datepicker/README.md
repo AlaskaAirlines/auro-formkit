@@ -21,7 +21,7 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-The `<auro-datepicker>` element allows users to select a date, or a pair of dates identifying a range, either with text input or by making a section in a calendar. The `<auro-datepicker>` element is the combination of [auro-dropdown](http://auro.alaskaair.com/components/auro/dropdown), [auro-input](http://auro.alaskaair.com/components/auro/input), and Auro's extension of [wc-range-datepicker](https://www.npmjs.com/package/wc-range-datepicker).
+The <code>&lt;auro-datepicker&gt;</code> element allows users to select a date, or a pair of dates identifying a range, either with text input or by making a section in a calendar. The <code>&lt;auro-datepicker&gt;</code> element is the combination of <auro-hyperlink href="http://auro.alaskaair.com/components/auro/dropdown">auro-dropdown</auro-hyperlink>, <auro-hyperlink href="http://auro.alaskaair.com/components/auro/input">auro-input</auro-hyperlink>, and Auro's extension of <auro-hyperlink href="https://www.npmjs.com/package/wc-range-datepicker" target="_blank">wc-range-datepicker</auro-hyperlink>.
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -32,7 +32,7 @@ The `<auro-datepicker>` element allows users to select a date, or a pair of date
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./docs/partials/useCases.md -->
-The `<auro-datepicker>` element should be used in situations where users may:
+The <code>&lt;auro-datepicker&gt;</code> element should be used in situations where users may:
 
 * select a single date
 * select a pair of dates which identify a calendar range
@@ -85,16 +85,13 @@ To only develop a single component, use the `--filter` flag:
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
-
-## Custom Component Registration for Version Management
-
-There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
-
-When you install the component as described on the `Install` page, the class is imported automatically, and the component is registered globally for you.
-
-However, if you need to load multiple versions of the same component on a single page (for example, when two projects depend on different versions), you can manually register the class under a custom element name to avoid conflicts.
-
-You can do this by importing only the component class and using the `register(name)` method with a unique name:
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/customRegistrationDescription.md) -->
+<!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
+<p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
+<p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
+<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
+<p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
+<!-- AURO-GENERATED-CONTENT:END -->
 
 <pre class="language-js"><code class="language-js">// Import the class only
 import { AuroDatepicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
@@ -104,20 +101,9 @@ AuroDatepicker.register('custom-datepicker');</code></pre>
 
 This will create a new custom element `<custom-datepicker>` that behaves exactly like `<auro-datepicker>`, allowing both to coexist on the same page without interfering with each other.
 
-<div class="exampleWrapper exampleWrapper--flex">
-<custom-datepicker>
-<span slot="bib.fullscreen.headline">custom-datepicker Example</span>
-<span slot="fromLabel">Choose a date</span>
-<span slot="bib.fullscreen.dateLabel">Choose a date</span>
-</custom-datepicker>
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-
 <pre class="language-html"><code class="language-html">&lt;custom-datepicker&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;custom-datepicker Example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.dateLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/custom-datepicker&gt;</code></pre>
-</auro-accordion>
 <!-- AURO-GENERATED-CONTENT:END -->
