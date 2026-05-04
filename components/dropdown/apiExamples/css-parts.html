@@ -1,0 +1,26 @@
+<style>
+  #cssPartsDropdown::part(trigger) {
+    border: 2px dashed #7b2d8e;
+    border-radius: 8px;
+    padding: var(--ds-size-100);
+  }
+  #cssPartsDropdown::part(chevron) {
+    color: #7b2d8e;
+  }
+  #cssPartsDropdown::part(helpText) {
+    font-style: italic;
+    color: #5b1a6e;
+  }
+  #cssPartsDropdown::part(size) {
+    max-height: 200px;
+  }
+</style>
+<auro-dropdown id="cssPartsDropdown" layout="classic" shape="classic" size="lg" chevron aria-label="CSS parts styled dropdown">
+  <div style="padding: var(--ds-size-150);">
+    Lorem ipsum solar
+  </div>
+  <span slot="helpText">Styled with ::part selectors</span>
+  <div slot="trigger">
+    Trigger
+  </div>
+</auro-dropdown>

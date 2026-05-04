@@ -14,27 +14,6 @@ AuroDropdown.register('custom-dropdown');
 
 This will create a new custom element `<custom-dropdown>` that behaves exactly like `<auro-dropdown>`, allowing both to coexist on the same page without interfering with each other.
 
-<div class="exampleWrapper exampleWrapper--flex">
-  <custom-dropdown id="customCommon" layout="classic" shape="classic" size="lg" aria-label="Label content for screen reader">
-    <div style="padding: var(--ds-size-150);">
-      Lorem ipsum solar
-      <br />
-      <auro-button id="customCommonButton">
-        Dismiss Dropdown
-      </auro-button>
-    </div>
-    <span slot="helpText">
-      Help text
-    </span>
-    <div slot="trigger">
-      Trigger
-    </div>
-  </custom-dropdown>
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
 ```html
   <custom-dropdown id="customCommon" layout="classic" shape="classic" size="lg" aria-label="Label content for screen reader">
     <div style="padding: var(--ds-size-150);">
@@ -52,4 +31,3 @@ This will create a new custom element `<custom-dropdown>` that behaves exactly l
     </div>
   </custom-dropdown>
 ```
-</auro-accordion>
