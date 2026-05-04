@@ -24,15 +24,15 @@ The following sections are editable by making changes to the following files:
 <p><code>&lt;auro-combobox&gt;</code> combines a text input with a filterable dropdown menu, letting users either type a value or pick one from a list. As the user types, the menu narrows to show only matching options.</p>
 <p>The component supports two modes:</p>
 <ul>
-  <li><strong>Suggestion (default)</strong> — The user may type any value. The menu provides suggestions but does not restrict input.</li>
-  <li><strong>Filter</strong> — The user must select from the menu. Typing filters the available options but does not set the component's value. The value is only set when a menu option is selected.</li>
+<li><strong>Suggestion (default)</strong> — The user may type any value. The menu provides suggestions but does not restrict input.</li>
+<li><strong>Filter</strong> — The user must select from the menu. Typing filters the available options but does not set the component's value. The value is only set when a menu option is selected.</li>
 </ul>
 <p>Common use cases:</p>
 <ul>
-  <li><strong>Airport or city search</strong> — Type a city name or airport code to filter a long list of destinations.</li>
-  <li><strong>Country or region selection</strong> — Quickly find and select from a large set of geographic options.</li>
-  <li><strong>Autocomplete fields</strong> — Provide type-ahead suggestions for form fields where the set of valid values is known.</li>
-  <li><strong>Search with suggestions</strong> — Offer recommended results while still allowing freeform input.</li>
+<li><strong>Airport or city search</strong> — Type a city name or airport code to filter a long list of destinations.</li>
+<li><strong>Country or region selection</strong> — Quickly find and select from a large set of geographic options.</li>
+<li><strong>Autocomplete fields</strong> — Provide type-ahead suggestions for form fields where the set of valid values is known.</li>
+<li><strong>Search with suggestions</strong> — Offer recommended results while still allowing freeform input.</li>
 </ul>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
@@ -60,9 +60,7 @@ The `<auro-combobox>` element should be used in situations where users may:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ../../docs/templates/componentInstall.md -->
 
-```shell
-$ npm i @aurodesignsystem/
-```
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
 <!-- The below content is automatically added from ../../docs/templates/gettingStarted.md -->
@@ -71,13 +69,11 @@ $ npm i @aurodesignsystem/
 
 When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
 
-```json
-{
+<pre class="language-json"><code class="language-json">{
     "compilerOptions": {
         "moduleResolution": "bundler"
     }
-}
-```
+}</code></pre>
 
 This configuration enables proper module resolution for the component's TypeScript files.
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -88,9 +84,7 @@ This configuration enables proper module resolution for the component's TypeScri
 <!-- The below content is automatically added from ../../docs/templates/bundleInstallDescription.md -->
 In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
 
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/@latest/auro-combobox/+esm"></script>
-```
+<pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-combobox/+esm"&gt;&lt;/script&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Formkit Development
@@ -104,37 +98,36 @@ Running the `dev` command will open a `localhost` development server for all com
 
 To only develop a single component, use the `--filter` flag:
 
-```shell
-npx turbo dev --filter=@aurodesignsystem/auro-input
-```
+<pre class="language-shell"><code class="language-shell">npx turbo dev --filter=@aurodesignsystem/auro-input</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/customRegistrationDescription.md) -->
+<!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
+<p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
+<p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
+<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
+<p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 
-```js
-// Import the class only
+<pre class="language-js"><code class="language-js">// Import the class only
 import { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';
-
+​
 // Register with a custom name if desired
-AuroCombobox.register('custom-combobox');
-```
+AuroCombobox.register('custom-combobox');</code></pre>
 
 This will create a new custom element `<custom-combobox>` that behaves exactly like `<auro-combobox>`, allowing both to coexist on the same page without interfering with each other.
 
-```html
-  <custom-combobox>
-    <span slot="bib.fullscreen.headline">Bib Header</span>
-    <span slot="label">Name</span>
-    <auro-menu>
-      <auro-menuoption value="Apples" id="option-0">Apples</auro-menuoption>
-      <auro-menuoption value="Oranges" id="option-1">Oranges</auro-menuoption>
-      <auro-menuoption value="Peaches" id="option-2">Peaches</auro-menuoption>
-      <auro-menuoption value="Grapes" id="option-3">Grapes</auro-menuoption>
-      <auro-menuoption value="Cherries" id="option-4">Cherries</auro-menuoption>
-      <auro-menuoption static nomatch>No matching option</auro-menuoption>
-    </auro-menu>
-  </custom-combobox>
-```
+<pre class="language-html"><code class="language-html">&lt;custom-combobox&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
+  &lt;span slot="label"&gt;Name&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Peaches" id="option-2"&gt;Peaches&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Grapes" id="option-3"&gt;Grapes&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Cherries" id="option-4"&gt;Cherries&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption static nomatch&gt;No matching option&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/custom-combobox&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->

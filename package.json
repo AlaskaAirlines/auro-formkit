@@ -97,7 +97,7 @@
     "@aurodesignsystem/typescript": "*",
     "@aurodesignsystem/utils": "*",
     "@aurodesignsystem/version": "*",
-    "@aurodesignsystem/auro-cli": "npm:@aurodesignsystem-dev/auro-cli@0.0.0-pr286.3",
+    "@aurodesignsystem/auro-cli": "npm:@aurodesignsystem-dev/auro-cli@0.0.0-pr286.4",
     "@aurodesignsystem/webcorestylesheets": "npm:@aurodesignsystem-dev/webcorestylesheets@^0.0.0-pr280.8",
     "@chromatic-com/storybook": "^5.1.2",
     "@commitlint/cli": "^20.5.0",
