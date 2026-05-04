@@ -1,4 +1,4 @@
-## Custom Component Registration for Version Management
+<auro-header level="2" id="customRegistration">Custom Component Registration for Version Management</auro-header>
 
 There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
 
@@ -19,26 +19,5 @@ AuroCheckboxGroup.register('custom-checkbox-group');
 
 This will create a new custom element `<custom-checkbox>` and `<custom-checkbox-group>` that behaves exactly like `<auro-checkbox>` and `<auro-checkbox-group>`, allowing both to coexist on the same page without interfering with each other.
 
-<div class="exampleWrapper exampleWrapper--flex">
-  <custom-checkbox-group>
-    <span slot="legend">Form label goes here</span>
-    <custom-checkbox value="value1" name="custom" id="checkbox-custom1">Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value2" name="custom" id="checkbox-custom2" checked>Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value3" name="custom" id="checkbox-custom3">Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value4" name="custom" id="checkbox-custom4">Custom checkbox option</custom-checkbox>
-  </custom-checkbox-group>
-</div>
-
-<auro-accordion alignRight>
-  <span slot="trigger">See code</span>
-
-```html
-  <custom-checkbox-group>
-    <span slot="legend">Form label goes here</span>
-    <custom-checkbox value="value1" name="custom" id="checkbox-custom1">Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value2" name="custom" id="checkbox-custom2" checked>Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value3" name="custom" id="checkbox-custom3">Custom checkbox option</custom-checkbox>
-    <custom-checkbox value="value4" name="custom" id="checkbox-custom4">Custom checkbox option</custom-checkbox>
-  </custom-checkbox-group>
-```
-</auro-accordion>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
