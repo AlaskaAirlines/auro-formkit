@@ -51,7 +51,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
 
-<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/</code></pre>
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
@@ -101,7 +101,7 @@ This will create new custom elements that behave exactly like their standard cou
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
 
-<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/</code></pre>
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/defaultRegistration.md) -->
