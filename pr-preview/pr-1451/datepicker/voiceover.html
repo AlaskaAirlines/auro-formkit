@@ -3,7 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/keyboard-behavior.md
+  All demo code should be added/edited in ./demo/voiceover.md
 
   With the exception of adding custom elements if needed for the demo.
 
@@ -16,7 +16,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-datepicker | Keyboard Behavior</title>
+    <title>Auro Web Component Demo | auro-datepicker | VoiceOver</title>
 
     <!-- highlight.js Stylesheet -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"/>
@@ -35,13 +35,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
     <link rel="stylesheet" type="text/css" href="./styles.css" />
     <style>
-      .note {
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 6px;
-        font-style: italic;
-        color: var(--ds-basic-color-texticon-muted);
-        background-color: var(--ds-basic-color-surface-neutral-subtle);
+      table {
+        --ds-color-container-secondary-default: transparent;
+      }
+
+      tr:not(:last-of-type) {
+        border-bottom: 1px solid var(--ds-color-border-tertiary-default);
       }
     </style>
   </head>
@@ -50,7 +49,7 @@
 
     <script type="module">
       import { renderPage } from './demo-support.js';
-      await renderPage('./keyboard-behavior.md');
+      await renderPage('./voiceover.md');
     </script>
 
     <!-- If additional elements are needed for the demo, add them here. -->

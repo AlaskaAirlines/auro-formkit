@@ -1069,7 +1069,7 @@ Cherries
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-validity-message.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-validity-message.html -->
-<auro-combobox required setCustomValidityValueMissing="Custom value missing message.">
+<auro-combobox required setCustomValidityValueMissing="Please select a fruit from the list.">
 <span slot="bib.fullscreen.headline">Bib Header</span>
 <span slot="label">Name</span>
 <auro-menu>
@@ -1089,7 +1089,7 @@ Cherries
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom-validity-message.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/custom-validity-message.html -->
 
-<pre class="language-html"><code class="language-html">&lt;auro-combobox required setCustomValidityValueMissing="Custom value missing message."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-combobox required setCustomValidityValueMissing="Please select a fruit from the list."&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
   &lt;span slot="label"&gt;Name&lt;/span&gt;
   &lt;auro-menu&gt;

@@ -3,9 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/keyboard-behavior.md
-
-  With the exception of adding custom elements if needed for the demo.
+  All demo code should be added/edited in ./demo/getting-started.md
 
   ----------------------- DO NOT EDIT -----------------------------
 
@@ -16,7 +14,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-datepicker | Keyboard Behavior</title>
+    <title>Auro Web Component Demo | auro-datepicker | Getting Started</title>
 
     <!-- highlight.js Stylesheet -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"/>
@@ -32,29 +30,24 @@
 
     <!-- Demo Specific Styles -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
     <link rel="stylesheet" type="text/css" href="./styles.css" />
-    <style>
-      .note {
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 6px;
-        font-style: italic;
-        color: var(--ds-basic-color-texticon-muted);
-        background-color: var(--ds-basic-color-surface-neutral-subtle);
-      }
-    </style>
   </head>
   <body class="auro-markdown">
     <main></main>
 
-    <script type="module">
-      import { renderPage } from './demo-support.js';
-      await renderPage('./keyboard-behavior.md');
-    </script>
-
     <!-- If additional elements are needed for the demo, add them here. -->
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-nav@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-header@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-icon@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/+esm" type="module"></script>
+    <script type="module">
+      import { renderPage } from './demo-support.js';
+      await renderPage('./getting-started.md');
+    </script>
+
+    <!-- Component scripts -->
+    <script type="module" src="./index.min.js"></script>
   </body>
 </html>
