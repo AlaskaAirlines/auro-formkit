@@ -336,18 +336,13 @@ export async function processDocFiles(componentName) {
           // Strip leading whitespace outside <pre> blocks
           const outputLines = outputContents.split('\n');
           let insidePre = false;
-          let wsModified = false;
 
           for (let i = 0; i < outputLines.length; i++) {
             if (/<pre[\s>]/i.test(outputLines[i])) {
               insidePre = true;
             }
             if (!insidePre) {
-              const stripped = outputLines[i].replace(/^[ \t]+/, '');
-              if (stripped !== outputLines[i]) {
-                outputLines[i] = stripped;
-                wsModified = true;
-              }
+              outputLines[i] = outputLines[i].replace(/^[ \t]+(?=<)/, '');
             }
             if (/<\/pre>/i.test(outputLines[i])) {
               insidePre = false;
