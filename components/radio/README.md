@@ -21,7 +21,9 @@ The following sections are editable by making changes to the following files:
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
-`<auro-radio>` is a [HTML custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) that is rendered as a small circle, which is filled or highlighted when selected. Only one `<auro-radio>` component in a given `<auro-radio-group>` can be selected at the same time.
+<code>&lt;auro-radio&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that is rendered as a small circle, which is filled or highlighted when selected. Only one <code>&lt;auro-radio&gt;</code> component in a given <code>&lt;auro-radio-group&gt;</code> can be selected at the same time.
+
+test
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
 <!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
@@ -86,14 +88,8 @@ To only develop a single component, use the `--filter` flag:
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
 <!-- The below content is automatically added from ./docs/partials/customRegistration.md -->
-
-## Custom Component Registration for Version Management
-
+<auro-header level="4" id="customRegistration">Custom Component Registration for Version Management</auro-header>
 There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
-
-When you install the component as described on the `Install` page, the class is imported automatically, and the component is registered globally for you.
-
-However, if you need to load multiple versions of the same component on a single page (for example, when two projects depend on different versions), you can manually register the class under a custom element name to avoid conflicts.
 
 You can do this by importing only the component class and using the `register(name)` method with a unique name:
 
@@ -106,22 +102,13 @@ AuroRadioGroup.register('custom-radio-group');</code></pre>
 
 This will create a new custom element `<custom-radio>` and `<custom-radio-group>` that behaves exactly like `<auro-radio>` and `<auro-radio-group>`, allowing both to coexist on the same page without interfering with each other.
 
-<div class="exampleWrapper exampleWrapper--flex">
-<custom-radio-group>
-<span slot="legend">Form label goes here</span>
-<custom-radio id="customRadio1" label="Yes" name="radioDemo" value="yes"></custom-radio>
-<custom-radio id="customRadio2" label="No" name="radioDemo" value="no"></custom-radio>
-<custom-radio id="customRadio3" label="Maybe" name="radioDemo" value="maybe"></custom-radio>
-</custom-radio-group>
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/custom.html -->
 <pre class="language-html"><code class="language-html">&lt;custom-radio-group&gt;
   &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
   &lt;custom-radio id="customRadio1" label="Yes" name="radioDemo" value="yes"&gt;&lt;/custom-radio&gt;
   &lt;custom-radio id="customRadio2" label="No" name="radioDemo" value="no"&gt;&lt;/custom-radio&gt;
   &lt;custom-radio id="customRadio3" label="Maybe" name="radioDemo" value="maybe"&gt;&lt;/custom-radio&gt;
 &lt;/custom-radio-group&gt;</code></pre>
-</auro-accordion>
+<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:END -->
