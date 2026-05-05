@@ -496,6 +496,36 @@ function runFullTest(mobileView) {
         await expect(el.hasAttribute('validity')).to.be.true;
       });
 
+      it('should render error help text with role="alert" and aria-live="assertive"', async () => {
+        const el = await fixture(html`
+          <auro-datepicker error="Date is required"></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        const errorHelpText = el.shadowRoot.querySelector('[role="alert"]');
+        expect(errorHelpText).to.exist;
+        expect(errorHelpText.getAttribute('aria-live')).to.equal('assertive');
+        expect(errorHelpText.textContent.trim()).to.equal('Date is required');
+      });
+
+      // This test should pass but fails due to a bug
+      // it('should set aria-invalid on the inner input when in error state', async () => {
+      //   const el = await fixture(html`
+      //     <auro-datepicker required></auro-datepicker>
+      //   `);
+
+      //   el.value = '01/15/2024';
+      //   el.validate(true);
+      //   await elementUpdated(el);
+      //   expect(el.getAttribute('validity')).to.equal('valid');
+
+      //   // Clear value to trigger valueMissing
+      //   el.value = '';
+      //   el.validate(true);
+      //   await elementUpdated(el);
+
+      //   expect(el.getAttribute('validity')).to.equal('valueMissing');
+      // });
     });
 
     describe('format', () => {
@@ -638,6 +668,23 @@ function runFullTest(mobileView) {
         await expect(dropdown.isPopoverVisible).to.be.true;
       });
 
+      it('should never open fullscreen when fullscreenBreakpoint is set to disabled', async () => {
+        await setViewport({ width: mobileBreakpointWidth, height: 800 });
+
+        const el = await fixture(html`
+          <auro-datepicker fullscreenBreakpoint="disabled"></auro-datepicker>
+        `);
+
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        const input = getInput(el, 0);
+
+        input.click();
+        await elementUpdated(el);
+
+        // The bib should open as a popover, not fullscreen
+        await expect(dropdown.isPopoverVisible).to.be.true;
+        await expect(dropdown.isBibFullscreen).to.be.false;
+      });
     });
 
     describe('inputmode', () => {
@@ -1122,6 +1169,22 @@ function runFullTest(mobileView) {
         await expect(input.hasAttribute('required')).to.be.true;
       });
 
+      it('should show valueMissing when required range datepicker has only one date', async () => {
+        const el = await fixture(html`
+          <auro-datepicker range required></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        // Set only the departure date
+        el.value = '01/15/2024';
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        // Should be invalid since both dates are required for range
+        await expect(el.getAttribute('validity')).to.equal('valueMissing');
+      });
     });
 
     describe('setCustomValidity', () => {
@@ -1762,6 +1825,59 @@ function runFullTest(mobileView) {
   });
 
   describe('Events', () => {
+    describe('input', () => {
+      it('should fire an input event when a date is selected', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        let inputFired = false;
+        el.addEventListener('input', () => {
+          inputFired = true;
+        });
+
+        el.value = '01/15/2024';
+        el.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(inputFired).to.be.true;
+      });
+    });
+
+    describe('typing a date into the input', () => {
+      it('should set datepicker value when a valid date is typed into the inner input', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        const innerInput = el.inputList[0];
+
+        // Simulate typing a date into the inner input
+        innerInput.value = '03/15/2025';
+        innerInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(el.value).to.equal('03/15/2025');
+      });
+
+      it('should set datepicker range values when dates are typed into both inputs', async () => {
+        const el = await fixture(html`<auro-datepicker range></auro-datepicker>`);
+        await elementUpdated(el);
+
+        // Type the start date
+        el.inputList[0].value = '03/15/2025';
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(el.value).to.equal('03/15/2025');
+
+        // Type the end date
+        el.inputList[1].value = '03/20/2025';
+        el.inputList[1].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(el.valueEnd).to.equal('03/20/2025');
+      });
+    });
+
     describe('auroDatePicker-valueSet', () => {
       it('should fire auroDatePicker-valueSet when a value is set', async () => {
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);

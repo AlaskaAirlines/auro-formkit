@@ -85,7 +85,11 @@ export default function DropdownInteraction() {
       <section data-testid="fullscreen">
         <auro-dropdown chevron fullscreenBreakpoint="sm">
           <span slot="trigger">Fullscreen dropdown</span>
-          <div style={{ padding: '1rem' }}>Fullscreen content</div>
+          <div style={{ padding: '1rem' }}>
+            <button id="fs-btn-1">First</button>
+            <button id="fs-btn-2">Second</button>
+            <button id="fs-btn-3">Third</button>
+          </div>
         </auro-dropdown>
       </section>
     </div>

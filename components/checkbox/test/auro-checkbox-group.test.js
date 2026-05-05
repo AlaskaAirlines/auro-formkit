@@ -395,6 +395,28 @@ function runFullTest(mobileView) {
         expect(el.noValidate).to.be.true;
         expect(el.hasAttribute('novalidate')).to.be.true;
       });
+
+      it('should not validate on blur when noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required noValidate>
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+            <auro-checkbox id="cb2" value="two">Two</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+
+        // Simulate focus entering then leaving the group without selecting
+        const cb1 = el.querySelector('#cb1');
+        cb1.shadowRoot.querySelector('input').focus();
+        await elementUpdated(el);
+
+        // Simulate focus leaving the group entirely
+        document.body.focus();
+        await elementUpdated(el);
+
+        // With noValidate, validity should NOT be set to valueMissing
+        expect(el.hasAttribute('validity')).to.be.false;
+      });
     });
 
     describe('onDark', () => {
@@ -483,6 +505,21 @@ function runFullTest(mobileView) {
 
         expect(el.setCustomValidityCustomError).to.equal('Custom error msg');
       });
+
+      it('should render custom error message in help text when validity is customError', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group error="generic error" setCustomValidityCustomError="Custom error text">
+            <auro-checkbox value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('customError');
+        const helpText = el.shadowRoot.querySelector('[part="helpText"]');
+        expect(helpText).to.exist;
+        expect(helpText.textContent.trim()).to.equal('Custom error text');
+      });
     });
 
     describe('setCustomValidityValueMissing', () => {
@@ -494,6 +531,24 @@ function runFullTest(mobileView) {
         `);
 
         expect(el.setCustomValidityValueMissing).to.equal('Please select one');
+      });
+
+      it('should render custom value missing message in help text when required and empty', async () => {
+        const el = await fixture(html`
+          <auro-checkbox-group required setCustomValidityValueMissing="Please select at least one">
+            <span slot="legend">Options</span>
+            <auro-checkbox id="cb1" value="one">One</auro-checkbox>
+          </auro-checkbox-group>
+        `);
+
+        // Force validation to trigger valueMissing
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.equal('valueMissing');
+        const helpText = el.shadowRoot.querySelector('[part="helpText"]');
+        expect(helpText).to.exist;
+        expect(helpText.textContent.trim()).to.equal('Please select at least one');
       });
     });
 
