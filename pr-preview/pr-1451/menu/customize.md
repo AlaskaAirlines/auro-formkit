@@ -99,7 +99,6 @@
 <hr>
 <auro-menuoption value="close window">Close window</auro-menuoption>
 <auro-menuoption value="close tab">Close tab</auro-menuoption>
-<auro-menuoption value="save page as...">Save page as 'option_10_redevelopment_hover_scenario.png'</auro-menuoption>
 <hr>
 <auro-menuoption value="share">Share</auro-menuoption>
 <hr>
@@ -119,7 +118,6 @@
   &lt;hr&gt;
   &lt;auro-menuoption value="close window"&gt;Close window&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="close tab"&gt;Close tab&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="save page as..."&gt;Save page as 'option_10_redevelopment_hover_scenario.png'&lt;/auro-menuoption&gt;
   &lt;hr&gt;
   &lt;auro-menuoption value="share"&gt;Share&lt;/auro-menuoption&gt;
   &lt;hr&gt;
