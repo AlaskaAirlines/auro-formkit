@@ -26,10 +26,17 @@
     }
   },
   "nodemonConfig": {
+    "ext": "scss,js,md",
+    "watch": ["src", "docs", "demo", "apiExamples"],
     "ignore": [
       "*-css.js",
-      "*.css"
-    ]
+      "*.css",
+      "*.min.css",
+      "*.min.js",
+      "docs/api.md",
+      "demo/*.md"
+    ],
+    "exec": "npm run build"
   },
   "publishConfig": {
     "access": "public"
@@ -39,15 +46,15 @@
     "sass": "run-s build:sass postCss:component sass:render",
     "build:version": "node ./scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
-    "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "build:watch": "nodemon",
     "bundler": "rollup -c node:@aurodesignsystem/config/internal.rollup",
     "clean": "rm -rf dist build",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7711",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./src/**/*.scss\"",
-    "esLint": "eslint \"./src/**/*.js\"",
-    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7711"
+    "esLint": "eslint \"./src/**/*.js\""
   }
 }
