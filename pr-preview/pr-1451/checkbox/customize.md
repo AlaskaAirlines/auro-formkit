@@ -118,14 +118,14 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
-#customTokensExample {
---ds-auro-checkbox-border-color: purple;
---ds-auro-checkbox-checkmark-color: white;
---ds-auro-checkbox-container-color: lavender;
---ds-auro-checkbox-label-color: purple;
---ds-auro-checkbox-outline-color: mediumpurple;
---ds-auro-checkbox-group-text-color: purple;
-}
+          #customTokensExample {
+            --ds-auro-checkbox-border-color: purple;
+            --ds-auro-checkbox-checkmark-color: white;
+            --ds-auro-checkbox-container-color: lavender;
+            --ds-auro-checkbox-label-color: purple;
+            --ds-auro-checkbox-outline-color: mediumpurple;
+            --ds-auro-checkbox-group-text-color: purple;
+          }
 </style>
 <auro-checkbox-group id="customTokensExample">
 <span slot="legend">Custom themed checkbox group</span>
@@ -179,15 +179,15 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ./../apiExamples/css-parts.html -->
 <style>
-#cssPartsExample::part(checkbox) {
-border: 2px solid mediumpurple;
-border-radius: 6px;
-}
+          #cssPartsExample::part(checkbox) {
+            border: 2px solid mediumpurple;
+            border-radius: 6px;
+          }
 
-#cssPartsExample::part(checkbox-label) {
-font-style: italic;
-color: purple;
-}
+          #cssPartsExample::part(checkbox-label) {
+            font-style: italic;
+            color: purple;
+          }
 </style>
 <auro-checkbox-group>
 <span slot="legend">CSS Shadow Parts example</span>

@@ -120,23 +120,23 @@
 <span slot="label">Name</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">
-Apples
+      Apples
 <span slot="displayValue">🍎</span>
 </auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">
-Oranges
+      Oranges
 <span slot="displayValue">🍊</span>
 </auro-menuoption>
 <auro-menuoption value="Peaches" id="option-2">
-Peaches
+      Peaches
 <span slot="displayValue">🍑</span>
 </auro-menuoption>
 <auro-menuoption value="Grapes" id="option-3">
-Grapes
+      Grapes
 <span slot="displayValue">🍇</span>
 </auro-menuoption>
 <auro-menuoption value="Cherries" id="option-4">
-Cherries
+      Cherries
 <span slot="displayValue">🍒</span>
 </auro-menuoption>
 <auro-menuoption static nomatch>No matching option</auro-menuoption>
@@ -540,18 +540,18 @@ Cherries
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ../apiExamples/css-parts.html -->
 <style>
-auro-combobox.css-parts-demo::part(dropdownTrigger) {
-border-color: orange;
-}
-auro-combobox.css-parts-demo::part(dropdownChevron) {
-color: purple;
-}
-auro-combobox.css-parts-demo::part(helpText) {
-color: green;
-}
-auro-combobox.css-parts-demo::part(dropdownSize) {
-max-height: 200px;
-}
+  auro-combobox.css-parts-demo::part(dropdownTrigger) {
+    border-color: orange;
+  }
+  auro-combobox.css-parts-demo::part(dropdownChevron) {
+    color: purple;
+  }
+  auro-combobox.css-parts-demo::part(helpText) {
+    color: green;
+  }
+  auro-combobox.css-parts-demo::part(dropdownSize) {
+    max-height: 200px;
+  }
 </style>
 <auro-combobox class="css-parts-demo">
 <span slot="label">CSS Parts Example</span>
@@ -688,23 +688,23 @@ max-height: 200px;
 <auro-menu>
 <auro-menuoption value="4500000000000000" id="option-cc-0">
 <auro-icon category="payment" customcolor name="cc-visa"></auro-icon>
-4000 0000 0000 0000
+      4000 0000 0000 0000
 </auro-menuoption>
 <auro-menuoption value="340000000000000" id="option-cc-1">
 <auro-icon category="payment" customcolor name="cc-amex"></auro-icon>
-3400 000000 00000
+      3400 000000 00000
 </auro-menuoption>
 <auro-menuoption value="30000000000000" id="option-cc-2">
 <auro-icon category="payment" customcolor name="credit-card"></auro-icon>
-3000 000000 0000
+      3000 000000 0000
 </auro-menuoption>
 <auro-menuoption value="5100000000000000" id="option-cc-4">
 <auro-icon category="payment" customcolor name="cc-mastercard"></auro-icon>
-5000 0000 0000 0000
+      5000 0000 0000 0000
 </auro-menuoption>
 <auro-menuoption value="6011000000000000" id="option-cc-5">
 <auro-icon category="payment" customcolor name="cc-discover"></auro-icon>
-6000 0000 0000 0000
+      6000 0000 0000 0000
 </auro-menuoption>
 <auro-menuoption static nomatch>No matching credit card saved</auro-menuoption>
 </auro-menu>
@@ -827,31 +827,31 @@ max-height: 200px;
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/persist-input.html) -->
 <!-- The below content is automatically added from ./../apiExamples/persist-input.html -->
 <auro-combobox
-required
-persistInput
-setCustomValidityValueMissing="Please select an option from the list."
->
+  required
+  persistInput
+  setCustomValidityValueMissing="Please select an option from the list."
+  >
 <span slot="bib.fullscreen.headline">Persistant Input</span>
 <span slot="label">Persistant Input</span>
 <auro-menu>
 <auro-menuoption value="Apples" id="option-0">
-Apples
+      Apples
 <div slot="displayValue">Apples</div>
 </auro-menuoption>
 <auro-menuoption value="Oranges" id="option-1">
-Oranges
+      Oranges
 <div slot="displayValue">Oranges</div>
 </auro-menuoption>
 <auro-menuoption value="Peaches" id="option-2">
-Peaches
+      Peaches
 <div slot="displayValue">Peaches</div>
 </auro-menuoption>
 <auro-menuoption value="Grapes" id="option-3">
-Grapes
+      Grapes
 <div slot="displayValue">Grapes</div>
 </auro-menuoption>
 <auro-menuoption value="Cherries" id="option-4">
-Cherries
+      Cherries
 <div slot="displayValue">Cherries</div>
 </auro-menuoption>
 </auro-menu>
@@ -1153,44 +1153,44 @@ Cherries
 <!-- HTML example file -->
 <!-- ----------------- -->
 <auro-combobox
-id="dynamicMenuExample"
-value="TAN"
-noFilter
-persistInput
-dvInputOnly
-setCustomValidityValueMissing="Please select an option from the list."
-required>
+  id="dynamicMenuExample"
+  value="TAN"
+  noFilter
+  persistInput
+  dvInputOnly
+  setCustomValidityValueMissing="Please select an option from the list."
+  required>
 <span slot="bib.fullscreen.headline">Dynamic Combobox Header</span>
 <span slot="label">First</span>
 <!--
-The auro-combobox element requires an empty auro-menu element
-due to the requirements of auro-dropdown and auro-input
--->
+    The auro-combobox element requires an empty auro-menu element
+    due to the requirements of auro-dropdown and auro-input
+  -->
 <auro-menu id="initMenu"></auro-menu>
 </auro-combobox>
 <br>
 <auro-combobox
-id="dynamicMenuExampleTwo"
-value="GER"
-noFilter
-persistInput
-dvInputOnly
-setCustomValidityValueMissing="Please select an option from the list."
-required>
+  id="dynamicMenuExampleTwo"
+  value="GER"
+  noFilter
+  persistInput
+  dvInputOnly
+  setCustomValidityValueMissing="Please select an option from the list."
+  required>
 <span slot="bib.fullscreen.headline">Dynamic Combobox Header</span>
 <span slot="label">Second</span>
 <!--
-The auro-combobox element requires an empty auro-menu element
-due to the requirements of auro-dropdown and auro-input
--->
+    The auro-combobox element requires an empty auro-menu element
+    due to the requirements of auro-dropdown and auro-input
+  -->
 <auro-menu id="initMenuTwo"></auro-menu>
 </auro-combobox>
 <br>
 <auro-button id="dynamicMenuSwapButton">
-Swap Values
+  Swap Values
 </auro-button>
 <auro-button id="dynamicMenuPersistButton">
-Toggle Persist Input
+  Toggle Persist Input
 </auro-button>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>

@@ -29,7 +29,7 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-standalone.html -->
 <auro-counter>
-Adults
+          Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -46,7 +46,7 @@ Adults
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
 <auro-counter appearance="inverse">
-Adults
+          Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -109,21 +109,21 @@ Adults
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
-#customTokensCounter {
---ds-auro-counter-control-background-color: #e8d5f5;
---ds-auro-counter-control-border-color: #7b2d8e;
---ds-auro-counter-icon-color: #7b2d8e;
---ds-auro-counter-quantity-text-color: #7b2d8e;
---ds-auro-counter-divider-color: #c9a4db;
-}
+          #customTokensCounter {
+            --ds-auro-counter-control-background-color: #e8d5f5;
+            --ds-auro-counter-control-border-color: #7b2d8e;
+            --ds-auro-counter-icon-color: #7b2d8e;
+            --ds-auro-counter-quantity-text-color: #7b2d8e;
+            --ds-auro-counter-divider-color: #c9a4db;
+          }
 </style>
 <auro-counter-group id="customTokensCounter">
 <auro-counter>
-Adults
+            Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+            Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -209,24 +209,24 @@ Children
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ./../apiExamples/css-parts.html -->
 <style>
-#cssPartsCounter auro-counter::part(counterControl) {
-border: 2px dashed purple;
-border-radius: 8px;
-padding: 0.5rem;
-}
+          #cssPartsCounter auro-counter::part(counterControl) {
+            border: 2px dashed purple;
+            border-radius: 8px;
+            padding: 0.5rem;
+          }
 
-#cssPartsCounter auro-counter::part(controlMinus),
-#cssPartsCounter auro-counter::part(controlPlus) {
-background-color: #e8d5f5;
-}
+          #cssPartsCounter auro-counter::part(controlMinus),
+          #cssPartsCounter auro-counter::part(controlPlus) {
+            background-color: #e8d5f5;
+          }
 </style>
 <auro-counter-group id="cssPartsCounter">
 <auro-counter>
-Adults
+            Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+            Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -271,11 +271,11 @@ Children
 <span slot="label">Label</span>
 <span slot="helpText">bottom-end bib with 20px offset</span>
 <auro-counter>
-Adults
+              Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+              Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -284,11 +284,11 @@ Children
 <span slot="label">Label</span>
 <span slot="helpText">bottom-end bib with 20px offset and noFlip</span>
 <auro-counter>
-Adults
+              Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+              Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -297,11 +297,11 @@ Children
 <span slot="label">Label</span>
 <span slot="helpText">right bib with 20px offset, noFlip and autoPlacement</span>
 <auro-counter>
-Adults
+              Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+              Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -310,11 +310,11 @@ Children
 <span slot="label">Label</span>
 <span slot="helpText">bottom-start with 20px offset, noFlip and shift enabled</span>
 <auro-counter>
-Adults
+              Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+              Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -393,15 +393,15 @@ Children
 <span slot="bib.fullscreen.headline">Passengers</span>
 <div slot="helpText">This is help text</div>
 <auro-counter>
-Adults
+              Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+              Children
 <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
 </auro-counter>
 <auro-counter>
-Lap Infants
+              Lap Infants
 <span slot="description">Under 2 years</span>
 </auro-counter>
 <div slot="bib.fullscreen.footer" style="display:flex; justify-content: stretch; gap: 1.5rem">
@@ -452,11 +452,11 @@ Lap Infants
 <!-- The below content is automatically added from ./../apiExamples/disabled-group.html -->
 <auro-counter-group disabled>
 <auro-counter>
-Adults
+            Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+            Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -484,7 +484,7 @@ Children
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-disabled.html) -->
 <!-- The below content is automatically added from ./../apiExamples/counter-disabled.html -->
 <auro-counter disabled value="0">
-Disabled counter
+          Disabled counter
 <span slot="description">This counter cannot be modified</span>
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -505,7 +505,7 @@ Disabled counter
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-minmax.html) -->
 <!-- The below content is automatically added from ./../apiExamples/counter-minmax.html -->
 <auro-counter min="2" max="5" value="2">
-Adults
+          Adults
 <span slot="description">Min: 2, Max: 5</span>
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -527,10 +527,10 @@ Adults
 <!-- The below content is automatically added from ./../apiExamples/group-counter-max.html -->
 <auro-counter-group max="12" min="0">
 <auro-counter max="5">
-This counter has a max value of 5
+            This counter has a max value of 5
 </auro-counter>
 <auro-counter max="8">
-This counter has a max value of 8
+            This counter has a max value of 8
 </auro-counter>
 </auro-counter-group>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -555,7 +555,7 @@ This counter has a max value of 8
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-error.html) -->
 <!-- The below content is automatically added from ./../apiExamples/counter-error.html -->
 <auro-counter error="There is an error with the counter">
-Adults
+          Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -578,11 +578,11 @@ Adults
 <div slot="bib.fullscreen.headline">Passengers</div>
 <div slot="label">Passengers</div>
 <auro-counter>
-Adults
+            Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter error="Custom error on Children counter">
-Children
+            Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -615,11 +615,11 @@ Children
 <div slot="bib.fullscreen.headline">Passengers</div>
 <div slot="label">Passengers</div>
 <auro-counter error="Custom error on Adults counter">
-Adults
+            Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter error="Custom error on Children counter">
-Children
+            Children
 <span slot="description">2-17 years</span>
 </auro-counter>
 </auro-counter-group>

@@ -52,7 +52,7 @@
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the next enabled option in the list. If the current <code>focused</code> option is the last enabled option, selection wraps to the first enabled option.
+            Advances the <code>focused</code> option to the next enabled option in the list. If the current <code>focused</code> option is the last enabled option, selection wraps to the first enabled option.
 </td>
 </tr>
 <tr>
@@ -65,7 +65,7 @@ Advances the <code>focused</code> option to the next enabled option in the list.
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the last enabled option in the list.
+            Advances the <code>focused</code> option to the last enabled option in the list.
 </td>
 </tr>
 <tr>
@@ -78,7 +78,7 @@ Advances the <code>focused</code> option to the last enabled option in the list.
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the last enabled option in the list.
+            Advances the <code>focused</code> option to the last enabled option in the list.
 </td>
 </tr>
 <tr>
@@ -92,7 +92,7 @@ Advances the <code>focused</code> option to the last enabled option in the list.
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the previous enabled option in the list. If the current <code>focused</code> option is the first enabled option, selection wraps to the last enabled option.
+            Advances the <code>focused</code> option to the previous enabled option in the list. If the current <code>focused</code> option is the first enabled option, selection wraps to the last enabled option.
 </td>
 </tr>
 <tr>
@@ -105,7 +105,7 @@ Advances the <code>focused</code> option to the previous enabled option in the l
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the first enabled option in the list.
+            Advances the <code>focused</code> option to the first enabled option in the list.
 </td>
 </tr>
 <tr>
@@ -118,7 +118,7 @@ Advances the <code>focused</code> option to the first enabled option in the list
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the first enabled option in the list.
+            Advances the <code>focused</code> option to the first enabled option in the list.
 </td>
 </tr>
 <tr>
@@ -127,27 +127,27 @@ Advances the <code>focused</code> option to the first enabled option in the list
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the last enabled option in the list.
+            Advances the <code>focused</code> option to the last enabled option in the list.
 </td>
 </tr>
 <tr>
 <td rowspan="2">Enter</td>
 <td rowspan="2">-</td>
 <td>
-Expanded, without <code>multiSelect</code>
+            Expanded, without <code>multiSelect</code>
 </td>
 <td>Trigger element</td>
 <td>
-The current <code>focused</code> option is selected, closes the bib.
+            The current <code>focused</code> option is selected, closes the bib.
 </td>
 </tr>
 <tr>
 <td>
-Expanded, with <code>multiSelect</code>
+            Expanded, with <code>multiSelect</code>
 </td>
 <td>Trigger element</td>
 <td>
-The current <code>focused</code> option is toggled, does not close the bib.
+            The current <code>focused</code> option is toggled, does not close the bib.
 </td>
 </tr>
 <tr>
@@ -156,7 +156,7 @@ The current <code>focused</code> option is toggled, does not close the bib.
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-Advances the <code>focused</code> option to the first enabled option in the list.
+            Advances the <code>focused</code> option to the first enabled option in the list.
 </td>
 </tr>
 <tr>
@@ -165,7 +165,7 @@ Advances the <code>focused</code> option to the first enabled option in the list
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-The current <code>focused</code> option is selected.
+            The current <code>focused</code> option is selected.
 <div class="note">
 <strong>Note:</strong> the page will also navigate to the next focusable element in the tabindex sequence.
 </div>
@@ -176,7 +176,7 @@ The current <code>focused</code> option is selected.
 <td>Expanded</td>
 <td>Trigger element</td>
 <td>
-The current <code>focused</code> option is selected.
+            The current <code>focused</code> option is selected.
 <div class="note">
 <strong>Note:</strong> the page will also navigate to the previous focusable element in the tabindex sequence.
 </div>
@@ -204,7 +204,7 @@ The current <code>focused</code> option is selected.
 <td>-</td>
 <td>Collapsed</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+            Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Opens the bib.</td>
 </tr>
@@ -212,7 +212,7 @@ Trigger or any <strong>focusable</strong> element within the trigger.
 <td>-</td>
 <td>Expanded</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+            Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Closes the bib.</td>
 </tr>
@@ -221,7 +221,7 @@ Trigger or any <strong>focusable</strong> element within the trigger.
 <td>-</td>
 <td>Expanded</td>
 <td>
-Component <code>:host</code> or any <strong>focusable</strong> element within the component.
+            Component <code>:host</code> or any <strong>focusable</strong> element within the component.
 </td>
 <td>Closes the bib.</td>
 </tr>
@@ -230,7 +230,7 @@ Component <code>:host</code> or any <strong>focusable</strong> element within th
 <td>-</td>
 <td>Collapsed</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+            Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Opens the bib.</td>
 </tr>
@@ -238,7 +238,7 @@ Trigger or any <strong>focusable</strong> element within the trigger.
 <td>-</td>
 <td>Expanded</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+            Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Closes the bib.</td>
 </tr>

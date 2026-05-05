@@ -255,7 +255,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-Every <code>&lt;auro-input&gt;</code> implementation requires a label in the <code>label</code> slot to provide an accessible label for the input element.
+        Every <code>&lt;auro-input&gt;</code> implementation requires a label in the <code>label</code> slot to provide an accessible label for the input element.
 
 <pre class="language-html"><code class="language-html">&lt;auro-input&gt;
   &lt;span slot="label"&gt;Label&lt;/span&gt;

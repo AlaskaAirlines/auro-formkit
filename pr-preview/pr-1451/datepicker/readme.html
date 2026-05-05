@@ -25,22 +25,21 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
 
     <!-- Design Token Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css?v=e9da760"/>
     
     <!-- Webcore Stylesheet Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css?v=e9da760" />
     
     <!-- Demo Specific Styles -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+    <link rel="stylesheet" type="text/css" href="../datepicker/styles.min.css?v=e9da760" />
 </head>
   <body class="auro-markdown">
     <main></main>
 
     <script type="module">
-      import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js';
+      import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js?v=e9da760';
       import 'https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js';
-      fetch('../datepicker/readme.md')
+      fetch('../datepicker/readme.md?v=e9da760')
         .then((response) => response.text())
         .then((text) => {
           const rawHtml = marked.parse(text);
@@ -48,9 +47,10 @@
           Prism.highlightAll();
         })
     </script>
-    <script src="../datepicker/index.min.js" data-demo-script="true" type="module"></script>
+    <script src="../datepicker/index.min.js?v=e9da760" data-demo-script="true" type="module"></script>
 
     <!-- If additional elements are needed for the demo, add them here. -->
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
   </body>
 </html>

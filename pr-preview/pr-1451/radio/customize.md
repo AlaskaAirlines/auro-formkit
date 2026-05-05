@@ -117,13 +117,13 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
-#customTokenRadioGroup {
---ds-auro-radio-btn-border-color: purple;
---ds-auro-radio-btn-fill-color: lavender;
---ds-auro-radio-btn-inset-color: purple;
---ds-auro-radio-label-color: purple;
---ds-auro-radio-group-label-color: purple;
-}
+          #customTokenRadioGroup {
+            --ds-auro-radio-btn-border-color: purple;
+            --ds-auro-radio-btn-fill-color: lavender;
+            --ds-auro-radio-btn-inset-color: purple;
+            --ds-auro-radio-label-color: purple;
+            --ds-auro-radio-group-label-color: purple;
+          }
 </style>
 <auro-radio-group id="customTokenRadioGroup">
 <span slot="legend">Custom themed radio group</span>
@@ -189,16 +189,16 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ./../apiExamples/css-parts.html -->
 <style>
-#cssPartsRadioGroup::part(radio-group) {
-border: 2px dashed purple;
-border-radius: 8px;
-padding: 1rem;
-}
+          #cssPartsRadioGroup::part(radio-group) {
+            border: 2px dashed purple;
+            border-radius: 8px;
+            padding: 1rem;
+          }
 
-#cssPartsRadioGroup auro-radio::part(radio-label) {
-font-weight: bold;
-color: purple;
-}
+          #cssPartsRadioGroup auro-radio::part(radio-label) {
+            font-weight: bold;
+            color: purple;
+          }
 </style>
 <auro-radio-group id="cssPartsRadioGroup">
 <span slot="legend">CSS Parts example</span>

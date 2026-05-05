@@ -65,7 +65,7 @@ import { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class
 // Register with a custom name if desired
 AuroCombobox.register('custom-combobox');</code></pre>
 
-This will create a new custom element `<custom-combobox>` that behaves exactly like `<auro-combobox>`, allowing both to coexist on the same page without interfering with each other.
+            This will create a new custom element `<custom-combobox>` that behaves exactly like `<auro-combobox>`, allowing both to coexist on the same page without interfering with each other.
 
 <pre class="language-html"><code class="language-html">&lt;custom-combobox&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
@@ -322,11 +322,11 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-Every <code>&lt;auro-combobox&gt;</code> implementation requires three things:
+        Every <code>&lt;auro-combobox&gt;</code> implementation requires three things:
 
-1. **A unique `id` attribute** — Required when the combobox is used within a form so it can be properly identified during submission and validation.
-2. **A label in the `label` slot** — Provides an accessible label for the combobox element.
-3. **One or more `<auro-menuoption>` elements** — Placed inside an `<auro-menu>` in the default slot to define the available choices.
+        1. **A unique `id` attribute** — Required when the combobox is used within a form so it can be properly identified during submission and validation.
+        2. **A label in the `label` slot** — Provides an accessible label for the combobox element.
+        3. **One or more `<auro-menuoption>` elements** — Placed inside an `<auro-menu>` in the default slot to define the available choices.
 
 <pre class="language-html"><code class="language-html">&lt;auro-combobox id="airportSearch"&gt;
   &lt;span slot="label"&gt;Search airports&lt;/span&gt;

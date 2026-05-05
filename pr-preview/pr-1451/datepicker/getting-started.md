@@ -66,7 +66,7 @@ import { AuroDatepicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/c
 // Register with a custom name if desired
 AuroDatepicker.register('custom-datepicker');</code></pre>
 
-This will create a new custom element `<custom-datepicker>` that behaves exactly like `<auro-datepicker>`, allowing both to coexist on the same page without interfering with each other.
+            This will create a new custom element `<custom-datepicker>` that behaves exactly like `<auro-datepicker>`, allowing both to coexist on the same page without interfering with each other.
 
 <pre class="language-html"><code class="language-html">&lt;custom-datepicker&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;custom-datepicker Example&lt;/span&gt;
@@ -149,11 +149,11 @@ The `<auro-datepicker>` custom element is compatible with Svelte. See the auro-f
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following:
+        Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following:
 
-1. **A label in the `fromLabel` slot** — Provides an accessible label for the date input.
-2. **A `bib.fullscreen.headline` slot** — Provides a headline for the fullscreen (mobile) calendar view.
-3. **A `bib.fullscreen.fromLabel` slot** — Provides a label for the date input in the fullscreen view.
+        1. **A label in the `fromLabel` slot** — Provides an accessible label for the date input.
+        2. **A `bib.fullscreen.headline` slot** — Provides a headline for the fullscreen (mobile) calendar view.
+        3. **A `bib.fullscreen.fromLabel` slot** — Provides a label for the date input in the fullscreen view.
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
@@ -161,7 +161,7 @@ Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 
-When using the `range` attribute, also provide `toLabel` and `bib.fullscreen.toLabel`:
+        When using the `range` attribute, also provide `toLabel` and `bib.fullscreen.toLabel`:
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker range&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;

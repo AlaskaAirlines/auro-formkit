@@ -318,39 +318,39 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
-auro-datepicker.token-demo {
-/* Datepicker tokens */
---ds-auro-datepicker-range-input-divider-color: mediumpurple;
---ds-auro-datepicker-label-text-color: darkslateblue;
---ds-auro-datepicker-outline-color: transparent;
-/* Dropdown tokens */
---ds-auro-dropdown-trigger-border-color: mediumpurple;
---ds-auro-dropdown-trigger-background-color: lavender;
---ds-auro-dropdown-trigger-hover-background-color: lavender;
---ds-auro-dropdown-trigger-container-color: lavender;
---ds-auro-dropdown-trigger-text-color: darkslateblue;
---ds-auro-dropdown-trigger-outline-color: transparent;
---ds-auro-dropdownbib-boxshadow-color: rgba(100, 100, 200, 0.3);
---ds-auro-dropdownbib-background-color: ghostwhite;
---ds-auro-dropdownbib-container-color: ghostwhite;
---ds-auro-dropdownbib-text-color: darkslateblue;
-/* Input tokens */
---ds-auro-input-border-color: mediumpurple;
---ds-auro-input-container-color: lavender;
---ds-auro-input-caret-color: mediumpurple;
---ds-auro-input-label-text-color: darkslateblue;
---ds-auro-input-placeholder-text-color: slategray;
---ds-auro-input-text-color: darkslateblue;
-/* Calendar tokens */
---ds-auro-calendar-nav-btn-chevron-color: mediumpurple;
---ds-auro-calendar-month-header-color: darkslateblue;
---ds-auro-calendar-month-container-color: ghostwhite;
---ds-auro-calendar-month-divider-color: mediumpurple;
---ds-auro-calendar-cell-text-color: darkslateblue;
---ds-auro-calendar-cell-in-range-color: lavender;
---ds-auro-calendar-cell-border-color: transparent;
---ds-auro-calendar-cell-container-color: transparent;
-}
+  auro-datepicker.token-demo {
+    /* Datepicker tokens */
+    --ds-auro-datepicker-range-input-divider-color: mediumpurple;
+    --ds-auro-datepicker-label-text-color: darkslateblue;
+    --ds-auro-datepicker-outline-color: transparent;
+    /* Dropdown tokens */
+    --ds-auro-dropdown-trigger-border-color: mediumpurple;
+    --ds-auro-dropdown-trigger-background-color: lavender;
+    --ds-auro-dropdown-trigger-hover-background-color: lavender;
+    --ds-auro-dropdown-trigger-container-color: lavender;
+    --ds-auro-dropdown-trigger-text-color: darkslateblue;
+    --ds-auro-dropdown-trigger-outline-color: transparent;
+    --ds-auro-dropdownbib-boxshadow-color: rgba(100, 100, 200, 0.3);
+    --ds-auro-dropdownbib-background-color: ghostwhite;
+    --ds-auro-dropdownbib-container-color: ghostwhite;
+    --ds-auro-dropdownbib-text-color: darkslateblue;
+    /* Input tokens */
+    --ds-auro-input-border-color: mediumpurple;
+    --ds-auro-input-container-color: lavender;
+    --ds-auro-input-caret-color: mediumpurple;
+    --ds-auro-input-label-text-color: darkslateblue;
+    --ds-auro-input-placeholder-text-color: slategray;
+    --ds-auro-input-text-color: darkslateblue;
+    /* Calendar tokens */
+    --ds-auro-calendar-nav-btn-chevron-color: mediumpurple;
+    --ds-auro-calendar-month-header-color: darkslateblue;
+    --ds-auro-calendar-month-container-color: ghostwhite;
+    --ds-auro-calendar-month-divider-color: mediumpurple;
+    --ds-auro-calendar-cell-text-color: darkslateblue;
+    --ds-auro-calendar-cell-in-range-color: lavender;
+    --ds-auro-calendar-cell-border-color: transparent;
+    --ds-auro-calendar-cell-container-color: transparent;
+  }
 </style>
 <auro-datepicker class="token-demo" range>
 <span slot="fromLabel">Departure</span>
@@ -438,15 +438,15 @@ auro-datepicker.token-demo {
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ../apiExamples/css-parts.html -->
 <style>
-auro-datepicker.css-parts-demo::part(trigger) {
-border-color: orange;
-}
-auro-datepicker.css-parts-demo::part(helpText) {
-color: green;
-}
-auro-datepicker.css-parts-demo::part(calendarWrapper) {
-max-height: 400px;
-}
+  auro-datepicker.css-parts-demo::part(trigger) {
+    border-color: orange;
+  }
+  auro-datepicker.css-parts-demo::part(helpText) {
+    color: green;
+  }
+  auro-datepicker.css-parts-demo::part(calendarWrapper) {
+    max-height: 400px;
+  }
 </style>
 <auro-datepicker class="css-parts-demo">
 <span slot="fromLabel">CSS Parts Example</span>

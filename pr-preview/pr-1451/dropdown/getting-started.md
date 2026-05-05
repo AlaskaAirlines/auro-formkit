@@ -270,9 +270,9 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-dropdown aria-label="custom label">
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -298,10 +298,10 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-button.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-button.html -->
 <auro-dropdown aria-label="custom label">
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
 <auro-button slot="trigger">
-Dropdown
+              Dropdown
 </auro-button>
 </div>
 </auro-dropdown>
@@ -327,16 +327,16 @@ Dropdown
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/help-text.html) -->
 <!-- The below content is automatically added from ./../apiExamples/help-text.html -->
 <auro-dropdown
-aria-label="custom label"
-inset
-bordered
-rounded>
-Lorem ipsum solar
+          aria-label="custom label"
+          inset
+          bordered
+          rounded>
+          Lorem ipsum solar
 <span slot="helpText">
-Helper text
+            Helper text
 </span>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -374,7 +374,7 @@ Trigger
 <br />
 <auro-dropdown id="showMethodExample" aria-label="custom label" layout="classic" shape="classic" size="lg">
 <p>
-Lorem ipsum solar
+            Lorem ipsum solar
 </p>
 <span slot="trigger">Trigger Label</span>
 </auro-dropdown>
@@ -414,15 +414,15 @@ Lorem ipsum solar
 <!-- The below content is automatically added from ./../apiExamples/programmatically-hide.html -->
 <auro-dropdown id="hideExample" aria-label="custom label" layout="classic" shape="classic" size="lg">
 <p>
-Lorem ipsum solar
+            Lorem ipsum solar
 </p>
 <div style="padding: var(--ds-size-150);">
 <auro-button id="hideExampleBtn">
-Hide Dropdown
+              Hide Dropdown
 </auro-button>
 </div>
 <span slot="trigger">
-Trigger
+            Trigger
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
