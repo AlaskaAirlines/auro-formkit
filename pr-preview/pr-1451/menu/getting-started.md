@@ -8,6 +8,9 @@
 <auro-anchorlink fluid href="#recommendedAccordion" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
 <auro-anchorlink fluid href="#autoAccordion" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
 <auro-anchorlink fluid href="#cdnAccordion" class="level2 body-xs" onclick="openAccordion('cdnAccordion')">CDN</auro-anchorlink>
+<auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
+<auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
+<auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
 <auro-anchorlink fluid href="#minimalConfig">Minimal Configuration</auro-anchorlink>
 <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
 <auro-anchorlink fluid href="#slotDefault" class="level2 body-xs">Default Slot</auro-anchorlink>
@@ -111,6 +114,156 @@ Then use the element in your HTML:
   &lt;auro-menuoption value="option2"&gt;Option 2&lt;/auro-menuoption&gt;
   &lt;auro-menuoption value="option3"&gt;Option 3&lt;/auro-menuoption&gt;
 &lt;/auro-menu&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+</auro-accordion-group>
+<!-- AURO-GENERATED-CONTENT:END -->
+</section>
+<section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/frameworks.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/frameworks.md -->
+<auro-header level="2" id="frameworks">Frameworks</auro-header>
+<auro-accordion-group Emphasis>
+<auro-accordion class="section" id="react">
+<span slot="trigger">React</span>
+<div class="accordion-content">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/react.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/react.md -->
+React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so <code>&lt;auro-menu&gt;</code> works directly in JSX without any wrapper library.
+
+<auro-header level="3" id="reactImport">Import the Component</auro-header>
+Import and register the components at the top level of your application (e.g. in your root `main.tsx` or `App.tsx`):
+
+<pre class="language-js"><code class="language-js">import { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
+​
+AuroMenu.register('[custom]-menu');
+AuroMenuOption.register('[custom]-menuoption');</code></pre>
+
+<auro-header level="3" id="reactTypeScript">TypeScript Declarations</auro-header>
+The component ships with TypeScript type definitions for the `AuroMenu` class. However, React's JSX does not automatically map custom element tag names to their types. To get type checking for `<auro-menu>` in JSX, add the following declaration to a `.d.ts` file in your project:
+
+<pre class="language-js"><code class="language-js">import type { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
+​
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      '[custom]-menu': React.HTMLAttributes&lt;AuroMenu&gt; &amp; Partial&lt;AuroMenu&gt;;
+      '[custom]-menuoption': React.HTMLAttributes&lt;AuroMenuOption&gt; &amp; Partial&lt;AuroMenuOption&gt;;
+    }
+  }
+}</code></pre>
+
+<auro-header level="3" id="reactEvents">Event Handling</auro-header>
+Auro components emit native `CustomEvent`s. Use a `ref` to attach event listeners in a `useEffect`:
+
+<pre class="language-js"><code class="language-js">import { useRef, useEffect } from 'react';
+​
+function MyMenu() {
+  const menuRef = useRef&lt;HTMLElement&gt;(null);
+​
+  useEffect(() =&gt; {
+    const el = menuRef.current;
+    if (!el) return;
+​
+    const handleSelect = () =&gt; {
+      console.log('Selected value:', (el as any).value);
+    };
+​
+    el.addEventListener('selectedOption', handleSelect);
+    return () =&gt; el.removeEventListener('selectedOption', handleSelect);
+  }, []);
+​
+  return (
+    &lt;custom-menu ref={menuRef}&gt;
+      &lt;custom-menuoption value="option1"&gt;Option 1&lt;/custom-menuoption&gt;
+      &lt;custom-menuoption value="option2"&gt;Option 2&lt;/custom-menuoption&gt;
+      &lt;custom-menuoption value="option3"&gt;Option 3&lt;/custom-menuoption&gt;
+    &lt;/custom-menu&gt;
+  );
+}</code></pre>
+
+<auro-header level="3" id="reactModuleResolution">Module Resolution</auro-header>
+Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+<auro-accordion class="section" id="svelte">
+<span slot="trigger">Svelte</span>
+<div class="accordion-content">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/svelte.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/svelte.md -->
+Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-menu&gt;</code> works directly in Svelte templates without any wrapper or configuration.
+
+<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+Import and register the components in the `<script>` block:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
+​
+  AuroMenu.register('[custom]-menu');
+  AuroMenuOption.register('[custom]-menuoption');
+&lt;/script&gt;</code></pre>
+
+<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+Use `<auro-menu>` directly in your Svelte template:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
+​
+  AuroMenu.register('[custom]-menu');
+  AuroMenuOption.register('[custom]-menuoption');
+&lt;/script&gt;
+&lt;custom-menu&gt;
+  &lt;custom-menuoption value="option1"&gt;Option 1&lt;/custom-menuoption&gt;
+  &lt;custom-menuoption value="option2"&gt;Option 2&lt;/custom-menuoption&gt;
+  &lt;custom-menuoption value="option3"&gt;Option 3&lt;/custom-menuoption&gt;
+&lt;/custom-menu&gt;</code></pre>
+
+<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
+Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-menu>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+
+<pre class="language-js"><code class="language-js">import type { AuroMenu, AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menu/class';
+​
+declare namespace svelteHTML {
+  interface IntrinsicElements {
+    '[custom]-menu': Partial&lt;AuroMenu&gt; &amp; svelteHTML.HTMLAttributes&lt;AuroMenu&gt;;
+    '[custom]-menuoption': Partial&lt;AuroMenuOption&gt; &amp; svelteHTML.HTMLAttributes&lt;AuroMenuOption&gt;;
+  }
+}</code></pre>
+
+This enables prop hinting for attributes like `value`, `disabled`, and others directly in Svelte templates.
+
+<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+Auro components emit native `CustomEvent`s. Listen for the `selectedOption` event on the element:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  let value = $state('');
+​
+  function handleSelect(e: Event) {
+    value = (e.target as HTMLElement &amp; { value: string }).value;
+  }
+&lt;/script&gt;
+&lt;custom-menu on:selectedOption={handleSelect}&gt;
+  &lt;custom-menuoption value="option1"&gt;Option 1&lt;/custom-menuoption&gt;
+  &lt;custom-menuoption value="option2"&gt;Option 2&lt;/custom-menuoption&gt;
+&lt;/custom-menu&gt;
+&lt;p&gt;Selected: {value}&lt;/p&gt;</code></pre>
+
+<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>

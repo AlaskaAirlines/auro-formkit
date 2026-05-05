@@ -5,6 +5,9 @@
 <span slot="mobileToggleCollapsed">View More</span>
 <span slot="mobileToggleExpanded">View Less</span>
 <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
+<auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
+<auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
+<auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
 <auro-anchorlink fluid href="#minimalConfig">Minimal Configuration</auro-anchorlink>
 <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
 <auro-anchorlink fluid href="#slotTrigger" class="level2 body-xs">Trigger</auro-anchorlink>
@@ -111,6 +114,149 @@ Then use the element in your HTML:
     Trigger
   &lt;/div&gt;
 &lt;/auro-dropdown&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+</auro-accordion-group>
+<!-- AURO-GENERATED-CONTENT:END -->
+</section>
+<section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/frameworks.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/frameworks.md -->
+<auro-header level="2" id="frameworks">Frameworks</auro-header>
+<auro-accordion-group Emphasis>
+<auro-accordion class="section" id="react">
+<span slot="trigger">React</span>
+<div class="accordion-content">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/react.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/react.md -->
+React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so <code>&lt;auro-dropdown&gt;</code> works directly in JSX without any wrapper library.
+
+<auro-header level="3" id="reactImport">Import the Component</auro-header>
+Import and register the components at the top level of your application (e.g. in your root `main.tsx` or `App.tsx`):
+
+<pre class="language-js"><code class="language-js">import { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class';
+​
+AuroDropdown.register('[custom]-dropdown');</code></pre>
+
+<auro-header level="3" id="reactTypeScript">TypeScript Declarations</auro-header>
+The component ships with TypeScript type definitions for the `AuroDropdown` class. However, React's JSX does not automatically map custom element tag names to their types. To get type checking for `<auro-dropdown>` in JSX, add the following declaration to a `.d.ts` file in your project:
+
+<pre class="language-js"><code class="language-js">import type { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class';
+​
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      '[custom]-dropdown': React.HTMLAttributes&lt;AuroDropdown&gt; &amp; Partial&lt;AuroDropdown&gt;;
+    }
+  }
+}</code></pre>
+
+<auro-header level="3" id="reactEvents">Event Handling</auro-header>
+Auro components emit native `CustomEvent`s. Use a `ref` to attach event listeners in a `useEffect`:
+
+<pre class="language-js"><code class="language-js">import { useRef, useEffect } from 'react';
+​
+function MyDropdown() {
+  const dropdownRef = useRef&lt;HTMLElement&gt;(null);
+​
+  useEffect(() =&gt; {
+    const el = dropdownRef.current;
+    if (!el) return;
+​
+    const handleToggle = () =&gt; {
+      console.log('Dropdown toggled, isPopoverVisible:', (el as any).isPopoverVisible);
+    };
+​
+    el.addEventListener('auroDropdown-toggled', handleToggle);
+    return () =&gt; el.removeEventListener('auroDropdown-toggled', handleToggle);
+  }, []);
+​
+  return (
+    &lt;custom-dropdown ref={dropdownRef}&gt;
+      &lt;span slot="trigger"&gt;Open dropdown&lt;/span&gt;
+      &lt;p&gt;Dropdown content goes here&lt;/p&gt;
+    &lt;/custom-dropdown&gt;
+  );
+}</code></pre>
+
+<auro-header level="3" id="reactModuleResolution">Module Resolution</auro-header>
+Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+<auro-accordion class="section" id="svelte">
+<span slot="trigger">Svelte</span>
+<div class="accordion-content">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/svelte.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/svelte.md -->
+Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-dropdown&gt;</code> works directly in Svelte templates without any wrapper or configuration.
+
+<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+Import and register the components in the `<script>` block:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class';
+​
+  AuroDropdown.register('[custom]-dropdown');
+&lt;/script&gt;</code></pre>
+
+<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+Use `<auro-dropdown>` directly in your Svelte template:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class';
+​
+  AuroDropdown.register('[custom]-dropdown');
+&lt;/script&gt;
+&lt;custom-dropdown&gt;
+  &lt;span slot="trigger"&gt;Open dropdown&lt;/span&gt;
+  &lt;p&gt;Dropdown content goes here&lt;/p&gt;
+&lt;/custom-dropdown&gt;</code></pre>
+
+<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
+Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-dropdown>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+
+<pre class="language-js"><code class="language-js">import type { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class';
+​
+declare namespace svelteHTML {
+  interface IntrinsicElements {
+    '[custom]-dropdown': Partial&lt;AuroDropdown&gt; &amp; svelteHTML.HTMLAttributes&lt;AuroDropdown&gt;;
+  }
+}</code></pre>
+
+This enables prop hinting for attributes like `disabled`, `chevron`, and others directly in Svelte templates.
+
+<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+Auro components emit native `CustomEvent`s. Listen for the `auroDropdown-toggled` event on the element:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  let isOpen = $state(false);
+​
+  function handleToggle(e: Event) {
+    isOpen = (e.target as HTMLElement &amp; { isPopoverVisible: boolean }).isPopoverVisible;
+  }
+&lt;/script&gt;
+&lt;custom-dropdown on:auroDropdown-toggled={handleToggle}&gt;
+  &lt;span slot="trigger"&gt;Open dropdown&lt;/span&gt;
+  &lt;p&gt;Dropdown content goes here&lt;/p&gt;
+&lt;/custom-dropdown&gt;
+&lt;p&gt;Dropdown is {isOpen ? 'open' : 'closed'}&lt;/p&gt;</code></pre>
+
+<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>

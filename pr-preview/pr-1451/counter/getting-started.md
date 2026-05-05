@@ -8,6 +8,9 @@
 <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
 <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
 <auro-anchorlink fluid href="#cdnSetup" class="level2 body-xs" onclick="openAccordion('cdnAccordion')">CDN</auro-anchorlink>
+<auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
+<auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
+<auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
 <auro-anchorlink fluid href="#minimalConfig">Minimal Config</auro-anchorlink>
 <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
 <auro-anchorlink fluid href="#slotsGroup" class="level2 body-xs">auro-counter-group</auro-anchorlink>
@@ -118,6 +121,153 @@ Then use the elements in your HTML:
   &lt;auro-counter&gt;Adults&lt;/auro-counter&gt;
   &lt;auro-counter&gt;Children&lt;/auro-counter&gt;
 &lt;/auro-counter-group&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+</auro-accordion-group>
+<!-- AURO-GENERATED-CONTENT:END -->
+</section>
+<section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/frameworks.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/frameworks.md -->
+<auro-header level="2" id="frameworks">Frameworks</auro-header>
+<auro-accordion-group Emphasis>
+<auro-accordion class="section" id="react">
+<span slot="trigger">React</span>
+<div class="accordion-content">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/react.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/react.md -->
+React 19 includes <a href="https://react.dev/blog/2024/12/05/react-19#support-for-custom-elements">native support for custom elements</a>, so <code>&lt;auro-counter&gt;</code> works directly in JSX without any wrapper library.
+
+<auro-header level="3" id="reactImport">Import the Component</auro-header>
+Import and register the components at the top level of your application (e.g. in your root `main.tsx` or `App.tsx`):
+
+<pre class="language-js"><code class="language-js">import { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
+​
+AuroCounter.register('[custom]-counter');
+AuroCounterGroup.register('[custom]-counter-group');</code></pre>
+
+<auro-header level="3" id="reactTypeScript">TypeScript Declarations</auro-header>
+The component ships with TypeScript type definitions for the `AuroCounter` class. However, React's JSX does not automatically map custom element tag names to their types. To get type checking for `<auro-counter>` in JSX, add the following declaration to a `.d.ts` file in your project:
+
+<pre class="language-js"><code class="language-js">import type { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
+​
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      '[custom]-counter': React.HTMLAttributes&lt;AuroCounter&gt; &amp; Partial&lt;AuroCounter&gt;;
+      '[custom]-counter-group': React.HTMLAttributes&lt;AuroCounterGroup&gt; &amp; Partial&lt;AuroCounterGroup&gt;;
+    }
+  }
+}</code></pre>
+
+<auro-header level="3" id="reactEvents">Event Handling</auro-header>
+Auro components emit native `CustomEvent`s. Use a `ref` to attach event listeners in a `useEffect`:
+
+<pre class="language-js"><code class="language-js">import { useRef, useEffect } from 'react';
+​
+function MyCounterGroup() {
+  const groupRef = useRef&lt;HTMLElement&gt;(null);
+​
+  useEffect(() =&gt; {
+    const el = groupRef.current;
+    if (!el) return;
+​
+    const handleInput = () =&gt; {
+      console.log('Counter value:', (el as any).value);
+    };
+​
+    el.addEventListener('countChanged', handleInput);
+    return () =&gt; el.removeEventListener('countChanged', handleInput);
+  }, []);
+​
+  return (
+    &lt;custom-counter-group&gt;
+      &lt;span slot="label"&gt;Passengers&lt;/span&gt;
+      &lt;custom-counter ref={groupRef}&gt;Adults&lt;/custom-counter&gt;
+      &lt;custom-counter&gt;Children&lt;/custom-counter&gt;
+    &lt;/custom-counter-group&gt;
+  );
+}</code></pre>
+
+<auro-header level="3" id="reactModuleResolution">Module Resolution</auro-header>
+Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+<auro-accordion class="section" id="svelte">
+<span slot="trigger">Svelte</span>
+<div class="accordion-content">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/svelte.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/svelte.md -->
+Svelte has <a href="https://svelte.dev/docs/svelte/custom-elements">native support for custom elements</a>, so <code>&lt;auro-counter&gt;</code> works directly in Svelte templates without any wrapper or configuration.
+
+<auro-header level="3" id="svelteImport">Import the Component</auro-header>
+Import and register the components in the `<script>` block:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
+​
+  AuroCounter.register('[custom]-counter');
+  AuroCounterGroup.register('[custom]-counter-group');
+&lt;/script&gt;</code></pre>
+
+<auro-header level="3" id="svelteUsage">Basic Usage</auro-header>
+Use `<auro-counter-group>` directly in your Svelte template:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  import { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
+​
+  AuroCounter.register('[custom]-counter');
+  AuroCounterGroup.register('[custom]-counter-group');
+&lt;/script&gt;
+&lt;custom-counter-group&gt;
+  &lt;span slot="label"&gt;Passengers&lt;/span&gt;
+  &lt;custom-counter&gt;Adults&lt;/custom-counter&gt;
+  &lt;custom-counter&gt;Children&lt;/custom-counter&gt;
+&lt;/custom-counter-group&gt;</code></pre>
+
+<auro-header level="3" id="svelteTypeScript">TypeScript Declarations</auro-header>
+Svelte does not automatically know about custom element attributes. To get autocomplete and type checking for `<auro-counter>` props in templates, add the following to a `.d.ts` file in your project (e.g. `src/auro-elements.d.ts`):
+
+<pre class="language-js"><code class="language-js">import type { AuroCounter, AuroCounterGroup } from '@aurodesignsystem/auro-formkit/auro-counter/class';
+​
+declare namespace svelteHTML {
+  interface IntrinsicElements {
+    '[custom]-counter': Partial&lt;AuroCounter&gt; &amp; svelteHTML.HTMLAttributes&lt;AuroCounter&gt;;
+    '[custom]-counter-group': Partial&lt;AuroCounterGroup&gt; &amp; svelteHTML.HTMLAttributes&lt;AuroCounterGroup&gt;;
+  }
+}</code></pre>
+
+This enables prop hinting for attributes like `value`, `min`, `max`, `disabled`, and others directly in Svelte templates.
+
+<auro-header level="3" id="svelteEvents">Event Handling</auro-header>
+Auro components emit native `CustomEvent`s. Listen for the `countChanged` event on the element:
+
+<pre class="language-html"><code class="language-html">&lt;script lang="ts"&gt;
+  let count = $state(0);
+​
+  function handleChange(e: Event) {
+    count = (e.target as HTMLElement &amp; { value: number }).value;
+  }
+&lt;/script&gt;
+&lt;custom-counter on:countChanged={handleChange}&gt;Adults&lt;/custom-counter&gt;
+&lt;p&gt;Count: {count}&lt;/p&gt;</code></pre>
+
+<auro-header level="3" id="svelteModuleResolution">Module Resolution</auro-header>
+Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript can resolve the component's package exports:
+
+<pre class="language-js"><code class="language-js">{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
