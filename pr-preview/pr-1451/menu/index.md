@@ -1,70 +1,33 @@
-<!--
-THIS PAGE'S CONTENT SHOULD BE KEPT MINIMAL.
-ONLY ADD EXAMPLES THAT ARE TRULY NECESSARY FOR THE INDEX PAGE — THE BASIC EXAMPLE IS USUALLY ENOUGH.
-ALL OTHER EXAMPLES SHOULD GO IN THE API DOCUMENTATION.
--->
-
-# Menu
-
+<auro-header level="1" id="overview">Menu</auro-header>
+<div class="contentWrapper">
+<nav>
+<auro-nav anchorNavContent=".scrollWrapper">
+<span slot="mobileToggleCollapsed">View More</span>
+<span slot="mobileToggleExpanded">View Less</span>
+<auro-anchorlink fluid href="#description">Description</auro-anchorlink>
+<auro-anchorlink fluid href="#useCases">User Stories</auro-anchorlink>
+</auro-nav>
+</nav>
+<div class="mainContent">
+<div class="scrollWrapper">
+<section>
+<auro-header level="2" id="description">Description</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- The below content is automatically added from ./../docs/partials/description.md -->
-The `<auro-menu>` element provides a list of options for a user to select from.
+The <code>&lt;auro-menu&gt;</code> element provides a list of options for a user to select from.
 
-A list of options is created within the `<slot>` of the `<auro-menu>` element by using the `<auro-menuoption>` element to define options. Use a standard `<hr>` element to create dividers within the list of options.
+A list of options is created within the <code>&lt;slot&gt;</code> of the <code>&lt;auro-menu&gt;</code> element by using the <code>&lt;auro-menuoption&gt;</code> element to define options. Use a standard <code>&lt;hr&gt;</code> element to create dividers within the list of options.
 
-The `<auro-menu>` element is designed for contextual menus, e.g. a dropdown menus. They are not intended to be used for navigation menus which have a different semantic meaning. The `<auro-menu>` element does not support hide/show functionality within its scope. This functionality will be managed by a wrapping element such as a drop-down menu composite element.
+The <code>&lt;auro-menu&gt;</code> element is designed for contextual menus, e.g. a dropdown menus. They are not intended to be used for navigation menus which have a different semantic meaning. The <code>&lt;auro-menu&gt;</code> element does not support hide/show functionality within its scope. This functionality will be managed by a wrapping element such as a drop-down menu composite element.
 <!-- AURO-GENERATED-CONTENT:END -->
-
-## Use Cases
-
+</section>
+<section>
+<auro-header level="2" id="useCases">User Stories</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./../docs/partials/useCases.md -->
-The <code>&lt;auro-menu&gt;</code> element should be used in situations where users may:
-
-* A user needs to select one option from a list of options.
+The <code>&lt;auro-menu&gt;</code> element is not intended for stand-alone use. It serves as the options list within <auro-hyperlink href="https://auro.alaskaair.com/components/auro/select" target="_blank">auro-select</auro-hyperlink> and <auro-hyperlink href="https://auro.alaskaair.com/components/auro/combobox" target="_blank">auro-combobox</auro-hyperlink>. Refer to those components for use cases and implementation guidance.
 <!-- AURO-GENERATED-CONTENT:END -->
-
-## Example(s)
-
-### Basic
-
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/preselect.html) -->
-<!-- The below content is automatically added from ./../apiExamples/preselect.html -->
-<auro-menu>
-<auro-menuoption value="new tab">New tab</auro-menuoption>
-<auro-menuoption value="new window" selected>New window</auro-menuoption>
-<auro-menuoption value="open file">Open file</auro-menuoption>
-<auro-menuoption value="open location">Open location</auro-menuoption>
-<hr>
-<auro-menuoption value="close window">Close window</auro-menuoption>
-<auro-menuoption value="close tab" disabled>Close tab</auro-menuoption>
-<auro-menuoption value="save page as...">Save page as...</auro-menuoption>
-<hr>
-<auro-menuoption value="share" disabled>Share</auro-menuoption>
-<hr>
-<auro-menuoption value="print">Print</auro-menuoption>
-</auro-menu>
-<!-- AURO-GENERATED-CONTENT:END -->
+</section>
 </div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/preselect.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/preselect.html -->
-
-<pre class="language-html"><code class="language-html">&lt;auro-menu&gt;
-  &lt;auro-menuoption value="new tab"&gt;New tab&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="new window" selected&gt;New window&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="open file"&gt;Open file&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="open location"&gt;Open location&lt;/auro-menuoption&gt;
-  &lt;hr&gt;
-  &lt;auro-menuoption value="close window"&gt;Close window&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="close tab" disabled&gt;Close tab&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="save page as..."&gt;Save page as...&lt;/auro-menuoption&gt;
-  &lt;hr&gt;
-  &lt;auro-menuoption value="share" disabled&gt;Share&lt;/auro-menuoption&gt;
-  &lt;hr&gt;
-  &lt;auro-menuoption value="print"&gt;Print&lt;/auro-menuoption&gt;
-&lt;/auro-menu&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
+</div>
+</div>
