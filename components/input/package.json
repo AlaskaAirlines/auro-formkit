@@ -38,10 +38,17 @@
     }
   },
   "nodemonConfig": {
+    "ext": "scss,js,md",
+    "watch": ["src", "docs", "demo", "apiExamples"],
     "ignore": [
       "*-css.js",
-      "*.css"
-    ]
+      "*.css",
+      "*.min.css",
+      "*.min.js",
+      "docs/api.md",
+      "demo/*.md"
+    ],
+    "exec": "npm run build"
   },
   "publishConfig": {
     "access": "public"
@@ -51,15 +58,15 @@
     "sass": "run-s build:sass postCss:component sass:render",
     "build:version": "node ./scripts/version.mjs",
     "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
-    "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "build:watch": "nodemon",
     "bundler": "rollup -c node:@aurodesignsystem/config/rollup",
-    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; npm run docs",
+    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; npm run docs; node ../../packages/build-tools/src/generatePageManifest.mjs",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "dev:closed": "concurrently \"npm run build:watch\" \"npm run serve:closed\"",
     "serve": "npm run docs -- -s -w --open",
     "serve:closed": "npm run docs -- -s -w",
-    "docs": "auro docs -r '../../docs/templates/componentReadmeTemplate.md'",
+    "docs": "auro docs -r '../../docs/templates/componentReadmeTemplate.md' -p 8803",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
     "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7703",
@@ -70,3 +77,5 @@
     "esLint": "eslint \"./src/**/*.js\""
   }
 }
+
+

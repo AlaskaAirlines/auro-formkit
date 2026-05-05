@@ -18,12 +18,25 @@
     "rollup-plugin-serve": "^3.0.0",
     "wc-sass-render": "^1.4.0"
   },
+  "nodemonConfig": {
+    "ext": "scss,js,md",
+    "watch": ["src", "docs", "demo", "apiExamples"],
+    "ignore": [
+      "*-css.js",
+      "*.css",
+      "*.min.css",
+      "*.min.js",
+      "docs/api.md",
+      "demo/*.md"
+    ],
+    "exec": "npm run build"
+  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "run-s types bundler",
-    "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "build:watch": "nodemon",
     "bundler": "rollup -c node:@aurodesignsystem/config/internal.rollup",
     "clean": "rm -rf dist build",
     "test": "wtr --config \"web-test-runner.config.mjs\" --coverage --port 7710",
