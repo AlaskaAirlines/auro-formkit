@@ -31,8 +31,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
     
     <!-- Demo Specific Styles -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+    <link rel="stylesheet" type="text/css" href="../datepicker/styles.min.css" />
 </head>
   <body class="auro-markdown">
     <main></main>
@@ -51,12 +50,13 @@
 
     <!-- If additional elements are needed for the demo, add them here. -->
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-dialog@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-drawer@latest/+esm" type="module"></script>
 
     <script type="module" data-demo-script="true">
-      import { initExamples } from "./api.min.js";
+      import { initExamples } from "../datepicker/api.min.js";
 
       initExamples();
     </script>

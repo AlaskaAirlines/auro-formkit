@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
 
     <!-- Demo Specific Styles -->
-    <link rel="stylesheet" type="text/css" href="./styles.min.css" />
+    <link rel="stylesheet" type="text/css" href="../input/styles.min.css" />
   </head>
   <body class="auro-markdown">
     <main></main>
@@ -32,9 +32,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-button@latest/+esm" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-radio/+esm" type="module"></script>
     <script type="module">
-      import { renderPage } from './demo-support.js';
-      await renderPage('./api.md');
-      import { initExamples } from "./api.min.js";
+      import { renderPage } from '../input/demo-support.min.js';
+      await renderPage('../input/api.md');
+      import { initExamples } from "../input/api.min.js";
       initExamples();
     </script>
     <script src="../input/api.min.js" data-demo-script="true" type="module"></script>
