@@ -8,6 +8,9 @@
       <auro-anchorlink fluid href="#recommendedSetup" class="level2 body-xs" onclick="openAccordion('recommendedAccordion')">Recommended</auro-anchorlink>
       <auro-anchorlink fluid href="#autoSetup" class="level2 body-xs" onclick="openAccordion('autoAccordion')">Auto</auro-anchorlink>
       <auro-anchorlink fluid href="#cdnSetup" class="level2 body-xs" onclick="openAccordion('cdnAccordion')">CDN</auro-anchorlink>
+      <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
+      <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
+      <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
       <auro-anchorlink fluid href="#minimalConfig">Minimal Configuration</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#functions">Functions</auro-anchorlink>
@@ -19,6 +22,10 @@
     <div class="scrollWrapper">
       <section>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/install.md) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+      </section>
+      <section>
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/frameworks.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>

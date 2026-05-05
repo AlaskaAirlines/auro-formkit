@@ -5,6 +5,9 @@
       <span slot="mobileToggleCollapsed">View More</span>
       <span slot="mobileToggleExpanded">View Less</span>
       <auro-anchorlink fluid href="#setup">Setup</auro-anchorlink>
+      <auro-anchorlink fluid href="#frameworks">Frameworks</auro-anchorlink>
+      <auro-anchorlink fluid href="#react" class="level2 body-xs" onclick="openAccordion('react')">React</auro-anchorlink>
+      <auro-anchorlink fluid href="#svelte" class="level2 body-xs" onclick="openAccordion('svelte')">Svelte</auro-anchorlink>
       <auro-anchorlink fluid href="#minimalConfig">Minimal Configuration</auro-anchorlink>
       <auro-anchorlink fluid href="#slots">Slots</auro-anchorlink>
       <auro-anchorlink fluid href="#slotTrigger" class="level2 body-xs">Trigger</auro-anchorlink>
@@ -18,6 +21,10 @@
     <div class="scrollWrapper">
       <section>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/install.md) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+      </section>
+      <section>
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/frameworks.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>
