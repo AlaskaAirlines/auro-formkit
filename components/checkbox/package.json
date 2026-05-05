@@ -73,5 +73,3 @@
     "esLint": "eslint \"./src/**/*.js\""
   }
 }
-
-
