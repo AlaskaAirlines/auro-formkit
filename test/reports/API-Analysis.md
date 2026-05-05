@@ -456,6 +456,7 @@ Some components fire a component-specific `*-valueSet` custom event when a value
 **Issues:**
 - `auro-input` does not fire a `*-valueSet` event, while `auro-combobox`, `auro-datepicker`, and `auro-select` do. If a consumer is listening for `*-valueSet` as a "value committed" signal, `auro-input` provides no equivalent.
 - `auro-checkbox-group`, `auro-radio-group`, `auro-counter-group`, and `auro-counter` also lack a `*-valueSet` event. Only the three dropdown-based components (combobox, datepicker, select) fire one.
+- The `*-valueSet` events need to be marked as deprecated and all events need an `input` event.
 - The `*-valueSet` events serve a different semantic purpose than `input` — they signal that a final value has been committed (e.g., an option selected in a dropdown) rather than an intermediate change. However, since only 3 of 8 form elements emit this event, consumers cannot rely on it as a universal pattern.
 
 ### Additional `input`-adjacent Event Inconsistencies
