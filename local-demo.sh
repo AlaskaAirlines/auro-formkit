@@ -25,6 +25,9 @@ for arg in "$@"; do
   fi
 done
 
+# Cache-busting token derived from the current git commit (falls back to timestamp)
+cache_buster=$(git rev-parse --short HEAD 2>/dev/null || date +%s)
+
 # Simple array of component names
 components="checkbox combobox counter datepicker dropdown form input menu radio select"
 
@@ -74,6 +77,14 @@ for component in $components; do
         find "$dst_dir" -name "*.html" -type f -exec sed -i '' \
             -e "s|'\./|'../$component/|g" \
             -e "s|\"\./|\"../$component/|g" \
+            {} \;
+
+        # Append cache-busting query string to local versioned assets (.min.js, .min.css, .md).
+        # CDN URLs already contain version info and are left untouched.
+        find "$dst_dir" -name "*.html" -type f -exec sed -i '' \
+            -e "s|\(\.min\.js\)\(['\"]\)|\1?v=$cache_buster\2|g" \
+            -e "s|\(\.min\.css\)\(['\"]\)|\1?v=$cache_buster\2|g" \
+            -e "s|\(\.md\)\(['\"]\)|\1?v=$cache_buster\2|g" \
             {} \;
 
         echo "✓ Copied to $dst_dir"
