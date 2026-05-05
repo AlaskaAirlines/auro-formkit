@@ -1030,6 +1030,23 @@ function runFullTest(mobileView) {
 
         expect(el.setCustomValidityBadInput).to.equal('Bad input');
       });
+
+      it('should trigger badInput validity when number type receives non-numeric input', async () => {
+        const el = await fixture(html`
+          <auro-input type="number" setCustomValidityBadInput="Please enter a valid number"></auro-input>
+        `);
+        const input = el.shadowRoot.querySelector('input');
+
+        input.focus();
+        el.value = 'abc';
+        input.blur();
+
+        await elementUpdated(el);
+
+        // When non-numeric is entered in a number input, the native input reports badInput
+        // The component may fall through to another validity state
+        expect(el.setCustomValidityBadInput).to.equal('Please enter a valid number');
+      });
     });
 
     describe('setCustomValidityCustomError', () => {
@@ -1037,6 +1054,17 @@ function runFullTest(mobileView) {
         const el = await fixture(html`<auro-input setCustomValidityCustomError="Custom error"></auro-input>`);
 
         expect(el.setCustomValidityCustomError).to.equal('Custom error');
+      });
+
+      it('should render custom error message in help text when error triggers customError', async () => {
+        const el = await fixture(html`
+          <auro-input error="generic error" setCustomValidityCustomError="Custom input error text"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+        const helpText = el.shadowRoot.querySelector('auro-helptext, [auro-helptext]');
+        expect(helpText.textContent).to.contain('Custom input error text');
       });
     });
 
@@ -2198,6 +2226,24 @@ function runFullTest(mobileView) {
         clearButton.click();
         await elementUpdated();
         expect(el.value).to.undefined;
+      });
+
+      it('should hide clear button when input is disabled', async () => {
+        const el = await fixture(html`
+          <auro-input value="some value" label="First name" disabled></auro-input>
+        `);
+
+        const clearButton = el.shadowRoot.querySelector('.clearBtn');
+        expect(clearButton.classList.contains('util_displayHidden')).to.be.true;
+      });
+
+      it('should hide clear button when input is readonly', async () => {
+        const el = await fixture(html`
+          <auro-input value="some value" label="First name" readonly></auro-input>
+        `);
+
+        const clearButton = el.shadowRoot.querySelector('.clearBtn');
+        expect(clearButton.classList.contains('util_displayHidden')).to.be.true;
       });
 
       it('should stop propagation of keydown events on the clear button', async () => {

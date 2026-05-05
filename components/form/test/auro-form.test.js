@@ -694,6 +694,30 @@ function runFullTest(mobileView) {
   });
 
   describe('Events', () => {
+    describe('input', () => {
+      it('should fire input event when child element dispatches input event', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput"></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        const inputEl = el.querySelector('auro-input');
+
+        let inputEventFired = false;
+        el.addEventListener('input', () => {
+          inputEventFired = true;
+        });
+
+        inputEl.value = 'test value';
+        inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        await expect(inputEventFired).to.be.true;
+      });
+    });
+
     describe('change', () => {
       it('should fire change event when an input value changes', async () => {
         const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);

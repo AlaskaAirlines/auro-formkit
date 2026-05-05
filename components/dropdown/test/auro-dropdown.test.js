@@ -299,6 +299,46 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
       expectPopoverHidden(el);
     });
+
+    it('should close the bib when clicking outside the dropdown', async () => {
+      const el = await fixture(html`
+        <div>
+          <auro-dropdown>
+            <div slot="trigger">Trigger</div>
+            <div>Bib content</div>
+          </auro-dropdown>
+          <button id="outside">Outside</button>
+        </div>
+      `);
+
+      const dropdown = el.querySelector('auro-dropdown');
+      dropdown.show();
+      await elementUpdated(dropdown);
+      expectPopoverShown(dropdown);
+
+      // The window click handler is installed via setTimeout(0) in setupHideHandlers,
+      // so wait a tick for it to be registered before clicking outside.
+      await new Promise((r) => setTimeout(r, 0));
+      el.querySelector('#outside').click();
+      await elementUpdated(dropdown);
+
+      expectPopoverHidden(dropdown);
+    });
+
+    it('should keep the bib hidden from screen readers when closed', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <div slot="trigger">Trigger</div>
+          <div>Bib content</div>
+        </auro-dropdown>
+      `);
+
+      expectPopoverHidden(el);
+
+      const bibEl = el.bibElement.value;
+      const dialog = bibEl.shadowRoot.querySelector('dialog');
+      expect(dialog.open).to.be.false;
+    });
   });
 
   describe('Properties', () => {
@@ -470,6 +510,24 @@ function runFullTest(mobileView) {
         await expect(el.focusShow).to.be.true;
         await expect(el.hasAttribute('focusshow')).to.be.true;
       });
+
+      it('should open the bib when the trigger receives focus', async () => {
+        const el = await fixture(html`
+          <auro-dropdown focusshow>
+            <div slot="trigger" tabindex="0">Trigger</div>
+            <div>Bib content</div>
+          </auro-dropdown>
+        `);
+
+        expectPopoverHidden(el);
+
+        // The floater attaches a 'focus' listener (not 'focusin') on el.trigger
+        const trigger = el.shadowRoot.querySelector('#trigger');
+        trigger.dispatchEvent(new FocusEvent('focus'));
+        await elementUpdated(el);
+
+        expectPopoverShown(el);
+      });
     });
 
     describe('fullscreenBreakpoint', () => {
@@ -495,6 +553,49 @@ function runFullTest(mobileView) {
         el.hoverToggle = true;
         await elementUpdated(el);
         await expect(el.hoverToggle).to.be.true;
+      });
+
+      it('should open the bib on mouseenter when hoverToggle is set', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <div slot="trigger">Trigger</div>
+            <div>Bib content</div>
+          </auro-dropdown>
+        `);
+
+        el.hoverToggle = true;
+        await elementUpdated(el);
+
+        expectPopoverHidden(el);
+
+        const trigger = el.shadowRoot.querySelector('#trigger');
+        trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+        await elementUpdated(el);
+
+        expectPopoverShown(el);
+      });
+
+      it('should close the bib on mouseleave when hoverToggle is set', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <div slot="trigger">Trigger</div>
+            <div>Bib content</div>
+          </auro-dropdown>
+        `);
+
+        el.hoverToggle = true;
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        expectPopoverShown(el);
+
+        await new Promise((r) => setTimeout(r, 0));
+        const trigger = el.shadowRoot.querySelector('#trigger');
+        trigger.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+        await elementUpdated(el);
+
+        expectPopoverHidden(el);
       });
     });
 

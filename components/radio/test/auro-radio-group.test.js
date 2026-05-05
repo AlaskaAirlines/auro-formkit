@@ -228,6 +228,27 @@ function runFullTest(mobileView) {
         expect(el.noValidate).to.be.true;
         expect(el.hasAttribute('novalidate')).to.be.true;
       });
+
+      it('should not validate on blur when noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required noValidate>
+            <span slot="legend">Pick one</span>
+            <auro-radio id="r1" name="test" value="one">One</auro-radio>
+            <auro-radio id="r2" name="test" value="two">Two</auro-radio>
+          </auro-radio-group>
+        `);
+
+        // Simulate focus entering and leaving without selecting
+        const r1 = el.querySelector('#r1');
+        r1.shadowRoot.querySelector('input').focus();
+        await elementUpdated(el);
+
+        document.body.focus();
+        await elementUpdated(el);
+
+        // With noValidate, validity should NOT be set to valueMissing
+        expect(el.hasAttribute('validity')).to.be.false;
+      });
     });
 
     describe('onDark', () => {
@@ -306,6 +327,22 @@ function runFullTest(mobileView) {
         `);
 
         expect(el.setCustomValidity).to.equal('Custom message');
+      });
+
+      it('should display setCustomValidity message in rendered help text', async () => {
+        const el = await fixture(html`
+          <auro-radio-group required setCustomValidity="Custom validation message">
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+          </auro-radio-group>
+        `);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        const helpText = el.shadowRoot.querySelector('[part="helpText"]');
+        expect(helpText).to.exist;
+        expect(helpText.textContent.trim()).to.include('Custom validation message');
       });
     });
 
@@ -558,6 +595,28 @@ function runFullTest(mobileView) {
         expect(slot).to.exist;
         const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE);
         expect(assigned.length).to.be.greaterThan(0);
+      });
+    });
+
+    describe('content', () => {
+      it('should render content in the content slot on auro-radio', async () => {
+        const el = await fixture(html`
+          <auro-radio-group>
+            <span slot="legend">Pick one</span>
+            <auro-radio value="one" name="test">
+              One
+              <span slot="content">Additional content for radio</span>
+            </auro-radio>
+          </auro-radio-group>
+        `);
+
+        const radio = el.querySelector('auro-radio');
+        const contentSlot = radio.shadowRoot.querySelector('slot[name="content"]');
+        expect(contentSlot).to.exist;
+
+        const assignedNodes = contentSlot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE);
+        expect(assignedNodes.length).to.equal(1);
+        expect(assignedNodes[0].textContent.trim()).to.equal('Additional content for radio');
       });
     });
 
