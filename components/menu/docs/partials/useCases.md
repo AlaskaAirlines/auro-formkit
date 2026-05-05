@@ -1,3 +1,1 @@
-The <code>&lt;auro-menu&gt;</code> element should be used in situations where users may:
-
-* A user needs to select one option from a list of options.
+The <code>&lt;auro-menu&gt;</code> element is not intended for stand-alone use. It serves as the options list within <auro-hyperlink href="https://auro.alaskaair.com/components/auro/select" target="_blank">auro-select</auro-hyperlink> and <auro-hyperlink href="https://auro.alaskaair.com/components/auro/combobox" target="_blank">auro-combobox</auro-hyperlink>. Refer to those components for use cases and implementation guidance.
