@@ -9,12 +9,11 @@ and copied to `./componentDocs/README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
-| SECTION                | DESCRIPTION                                       | FILE LOCATION                       |
-|------------------------|---------------------------------------------------|-------------------------------------|
-| Description            | Description of the component                      | `./docs/partials/description.md`    |
-| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`       |
-| Additional Information | For use to add any component specific information | `./docs/partials/readmeAddlInfo.md` |
-| Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
+| SECTION                | DESCRIPTION                                       | FILE LOCATION                              |
+|------------------------|---------------------------------------------------|--------------------------------------------|
+| Description            | Description of the component                      | `./docs/partials/description.md`           |
+| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`              |
+| Getting Started        | Getting started link for this component           | `./docs/partials/readmeGettingStarted.md`  |
 -->
 
 # Combobox
@@ -34,10 +33,6 @@ The following sections are editable by making changes to the following files:
 <li><strong>Autocomplete fields</strong> — Provide type-ahead suggestions for form fields where the set of valid values is known.</li>
 <li><strong>Search with suggestions</strong> — Offer recommended results while still allowing freeform input.</li>
 </ul>
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
-<!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
-<!-- AURO-GENERATED-CONTENT This file is to be used for any additional content that should be included in the README.md which is specific to this component. -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Combobox Use Cases

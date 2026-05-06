@@ -3,7 +3,7 @@
   <div class="mainContent">
     <div class="scrollWrapper">
       <auro-header level="3" id="anatomy">Component Anatomy</auro-header>
-      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout/layout.md) -->
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/design/layout.md) -->
       <!-- AURO-GENERATED-CONTENT:END -->
       <auro-header level="3" id="shapeSizeLayout">Shape | Size | Layout Support</auro-header>
       <p>The <code>auro-select</code> component supports the <code>shape</code>, <code>size</code> and <code>layout</code> feature set. The component defaults to the <code>layout="classic"</code>, <code>shape="classic"</code> and <code>size="lg"</code>.</p>

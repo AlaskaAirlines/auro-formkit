@@ -30,7 +30,7 @@
   <div class="mainContent">
     <div class="scrollWrapper">
       <section>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/install.md) -->
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/install.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>
       <section>

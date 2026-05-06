@@ -11,10 +11,10 @@ The following sections are editable by making changes to the following files:
 
 | SECTION                | DESCRIPTION                                       | FILE LOCATION                       |
 |------------------------|---------------------------------------------------|-------------------------------------|
-| Description            | Description of the kit                      | `./docs/partials/description.md`    |
-| Use Cases              | Examples for when to use this kit           | `./docs/partials/useCases.md`       |
-| Additional Information | For use to add any kit specific information | `./docs/partials/readmeAddlInfo.md` |
-| kit Example Code | HTML sample code of the kits use            | `./apiExamples/basic.html`          |
+| Description            | Description of the kit                            | `./docs/partials/description.md`    |
+| Use Cases              | Examples for when to use this kit                 | `./docs/partials/useCases.md`       |
+| Install                | Installation instructions                         | `./docs/partials/kitInstall.md`     |
+| Getting Started        | Getting started links for each component          | `./docs/partials/gettingStarted.md` |
 -->
 
 # {{ capitalize name }} TESTING

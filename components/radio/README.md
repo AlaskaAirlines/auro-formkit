@@ -9,12 +9,11 @@ and copied to `./componentDocs/README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
-| SECTION                | DESCRIPTION                                       | FILE LOCATION                       |
-|------------------------|---------------------------------------------------|-------------------------------------|
-| Description            | Description of the component                      | `./docs/partials/description.md`    |
-| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`       |
-| Additional Information | For use to add any component specific information | `./docs/partials/readmeAddlInfo.md` |
-| Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
+| SECTION                | DESCRIPTION                                       | FILE LOCATION                              |
+|------------------------|---------------------------------------------------|--------------------------------------------|
+| Description            | Description of the component                      | `./docs/partials/description.md`           |
+| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`              |
+| Getting Started        | Getting started link for this component           | `./docs/partials/readmeGettingStarted.md`  |
 -->
 
 # Radio
@@ -24,10 +23,6 @@ The following sections are editable by making changes to the following files:
 <code>&lt;auro-radio&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that is rendered as a small circle, which is filled or highlighted when selected. Only one <code>&lt;auro-radio&gt;</code> component in a given <code>&lt;auro-radio-group&gt;</code> can be selected at the same time.
 
 test
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
-<!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
-<!-- AURO-GENERATED-CONTENT This file is to be used for any additional content that should be included in the README.md which is specific to this component. -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Radio Use Cases
