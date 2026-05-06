@@ -45,30 +45,6 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/customRegistration.md -->
-<auro-header level="4" id="customRegistration">Custom Component Registration for Version Management</auro-header>
-There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
-
-You can do this by importing only the component class and using the `register(name)` method with a unique name:
-
-<pre class="language-js"><code class="language-js">// Import the class only
-import { AuroRadio, AuroRadioGroup } from '@aurodesignsystem/auro-formkit/auro-radio/class';
-​
-// Register with a custom name if desired
-AuroRadio.register('custom-radio');
-AuroRadioGroup.register('custom-radio-group');</code></pre>
-
-This will create a new custom element `<custom-radio>` and `<custom-radio-group>` that behaves exactly like `<auro-radio>` and `<auro-radio-group>`, allowing both to coexist on the same page without interfering with each other.
-
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/custom.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/custom.html -->
-<pre class="language-html"><code class="language-html">&lt;custom-radio-group&gt;
-  &lt;span slot="legend"&gt;Form label goes here&lt;/span&gt;
-  &lt;custom-radio id="customRadio1" label="Yes" name="radioDemo" value="yes"&gt;&lt;/custom-radio&gt;
-  &lt;custom-radio id="customRadio2" label="No" name="radioDemo" value="no"&gt;&lt;/custom-radio&gt;
-  &lt;custom-radio id="customRadio3" label="Maybe" name="radioDemo" value="maybe"&gt;&lt;/custom-radio&gt;
-&lt;/custom-radio-group&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>

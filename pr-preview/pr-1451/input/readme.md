@@ -9,12 +9,11 @@ and copied to `./componentDocs/README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
-| SECTION                | DESCRIPTION                                       | FILE LOCATION                       |
-|------------------------|---------------------------------------------------|-------------------------------------|
-| Description            | Description of the component                      | `./docs/partials/description.md`    |
-| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`       |
-| Additional Information | For use to add any component specific information | `./docs/partials/readmeAddlInfo.md` |
-| Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
+| SECTION                | DESCRIPTION                                       | FILE LOCATION                              |
+|------------------------|---------------------------------------------------|--------------------------------------------|
+| Description            | Description of the component                      | `./docs/partials/description.md`           |
+| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`              |
+| Getting Started        | Getting started link for this component           | `./docs/partials/readmeGettingStarted.md`  |
 -->
 
 # Input
@@ -22,9 +21,6 @@ The following sections are editable by making changes to the following files:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
 <p><code>&lt;auro-input&gt;</code> is a customizable text input component for single-line data entry. It supports types <code>text</code>, <code>password</code>, and <code>email</code> with built-in validation, required input, error states, and a secondary <code>bordered</code> theme. Use the <code>label</code> and <code>helpText</code> slots for additional content support.</p>
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
-<!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Input Use Cases

@@ -30,8 +30,8 @@
 <div class="mainContent">
 <div class="scrollWrapper">
 <section>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/pages/install.md) -->
-<!-- The below content is automatically added from ./../docs/pages/install.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/install.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/install.md -->
 <auro-header level="2" id="setup">Setup</auro-header>
 <auro-accordion-group Emphasis>
 <auro-accordion expanded class="section" id="recommendedAccordion">

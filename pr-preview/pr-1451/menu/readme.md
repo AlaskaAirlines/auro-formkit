@@ -9,12 +9,11 @@ and copied to `./componentDocs/README.md` each time the docs are compiled.
 
 The following sections are editable by making changes to the following files:
 
-| SECTION                | DESCRIPTION                                       | FILE LOCATION                       |
-|------------------------|---------------------------------------------------|-------------------------------------|
-| Description            | Description of the component                      | `./docs/partials/description.md`    |
-| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`       |
-| Additional Information | For use to add any component specific information | `./docs/partials/readmeAddlInfo.md` |
-| Component Example Code | HTML sample code of the components use            | `./apiExamples/basic.html`          |
+| SECTION                | DESCRIPTION                                       | FILE LOCATION                              |
+|------------------------|---------------------------------------------------|--------------------------------------------|
+| Description            | Description of the component                      | `./docs/partials/description.md`           |
+| Use Cases              | Examples for when to use this component           | `./docs/partials/useCases.md`              |
+| Getting Started        | Getting started link for this component           | `./docs/partials/readmeGettingStarted.md`  |
 -->
 
 # Menu
@@ -26,10 +25,6 @@ The <code>&lt;auro-menu&gt;</code> element provides a list of options for a user
 A list of options is created within the <code>&lt;slot&gt;</code> of the <code>&lt;auro-menu&gt;</code> element by using the <code>&lt;auro-menuoption&gt;</code> element to define options. Use a standard <code>&lt;hr&gt;</code> element to create dividers within the list of options.
 
 The <code>&lt;auro-menu&gt;</code> element is designed for contextual menus, e.g. a dropdown menus. They are not intended to be used for navigation menus which have a different semantic meaning. The <code>&lt;auro-menu&gt;</code> element does not support hide/show functionality within its scope. This functionality will be managed by a wrapping element such as a drop-down menu composite element.
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
-<!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
-<!-- AURO-GENERATED-CONTENT This file is to be used for any additional content that should be included in the README.md which is specific to this component. -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Menu Use Cases
