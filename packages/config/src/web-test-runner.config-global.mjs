@@ -2,11 +2,12 @@ import { defaultReporter } from '@web/test-runner';
 import { jsonSummaryReporter } from './wtr-json-summary-reporter.mjs';
 
 export default {
-  rootDir: '../../',
   files: [
-    'test/**/*.test.js',
+    'components/**/test/**/*.test.js',
     '!**/node_modules/**'
   ],
+  concurrency: 1,
+  testsFinishTimeout: 300000,
   reporters: [defaultReporter(), jsonSummaryReporter()],
   nodeResolve: {
     moduleDirectories: [
@@ -19,7 +20,7 @@ export default {
     ]
   },
   coverageConfig: {
-    include: ['src/**/*.js'],
+    include: ['components/**/src/**/*.js'],
     exclude: [
       '**/node_modules/**',
       '**/vendor/**'
