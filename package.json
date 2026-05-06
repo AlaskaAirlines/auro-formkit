@@ -72,7 +72,9 @@
     "test:watch": "turbo run test:watch",
     "test:wtr": "turbo run test --concurrency=3",
     "test:wtr:force": "npm run test:wtr -- --force",
-    "update-stories": "node ./packages/utils/update-stories.js"
+    "update-stories": "node ./packages/utils/update-stories.js",
+    "test:global": "wtr --config \"./packages/config/src/web-test-runner.config-global.mjs\" --coverage --port 7725",
+    "test:global:watch": "wtr --config \"./packages/config/src/web-test-runner.config-global.mjs\" --watch --port 7725"
   },
   "dependencies": {
     "@lit/context": "^1.1.6",
