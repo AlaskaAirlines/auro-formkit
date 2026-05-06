@@ -32,21 +32,5 @@ The following sections are editable by making changes to the following files:
 
 ## Getting Started
 
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/componentInstall.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/gettingStarted.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Install from CDN
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/templates/bundleInstallDescription.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Formkit Development
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../../docs/partials/developmentDescription.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/customRegistration.md) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeGettingStarted.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
