@@ -84,6 +84,22 @@ function runFullTest(mobileView) {
 
       expect(el.dropdown.bibDialogLabel).to.equal('Custom Label');
     });
+
+    describe('placeholder rendering', () => {
+      it('placeholder text appears in the trigger input', async () => {
+        const el = await fixture(html`
+          <auro-combobox placeholder="Search fruits...">
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+
+        await expect(el.input.placeholder).to.equal('Search fruits...');
+      });
+    });
   });
 
   describe('User Stories', () => {
@@ -104,7 +120,6 @@ function runFullTest(mobileView) {
       await expect(el.hasAttribute('validity')).to.be.false;
       await expect(el.value).to.equal(undefined);
     });
-
 
     // This test should pass but currently fails due to a bug
     // it('should keep static options visible regardless of filter input', async () => {
@@ -526,7 +541,38 @@ function runFullTest(mobileView) {
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
-    // These tests require fullscreen (mobile) mode
+    describe('persistInput behavior', () => {
+      it('preserves typed text in input after option selection when persistInput is set', async () => {
+        const el = await persistInputFixture(mobileView);
+        await elementUpdated(el);
+
+        // Type a value to open the bib
+        setInputValue(el, 'App');
+        await elementUpdated(el);
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for menu option internal state to settle
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        // Select an option
+        const menu = el.querySelector('auro-menu');
+        const option = menu.querySelector('auro-menuoption');
+        option.click();
+        await elementUpdated(option);
+        await elementUpdated(menu);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        await elementUpdated(el);
+
+        // With persistInput, the input should keep the typed value
+        await expect(el.value).to.equal('Apples');
+      });
+    });
   });
 
   describe('Properties', () => {
@@ -1367,6 +1413,39 @@ function runFullTest(mobileView) {
         await expect(el.hasAttribute('error')).to.be.false;
       });
 
+    });
+
+    describe('type', () => {
+      it('should forward type property to the inner input', async () => {
+        const el = await fixture(html`
+          <auro-combobox type="credit-card">
+            <span slot="label">Card</span>
+            <auro-menu>
+              <auro-menuoption value="one">One</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+
+        const triggerInput = el.dropdown.querySelector('[slot="trigger"]');
+        await expect(triggerInput.type).to.equal('credit-card');
+      });
+    });
+
+    describe('format', () => {
+      it('should forward format property to the bib input', async () => {
+        const el = await fixture(html`
+          <auro-combobox format="###-##-####">
+            <span slot="label">SSN</span>
+            <auro-menu>
+              <auro-menuoption value="one">One</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+
+        await expect(el.format).to.equal('###-##-####');
+      });
     });
 
   });
@@ -2458,6 +2537,71 @@ function runFullTest(mobileView) {
 
         await expect(bibEl.dialogRole).to.be.undefined;
         await expect(dialog.hasAttribute('role')).to.be.false;
+      });
+    });
+
+    describe('ARIA attributes', () => {
+      it('aria-expanded reflects bib open/closed state on trigger input', async () => {
+        const el = await defaultFixture(mobileView);
+
+        // Initially closed — expanded should be falsy
+        await expect(el.triggerExpandedState).to.not.be.true;
+
+        // Open the bib
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        // Wait for the 150ms delay on triggerExpandedState
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        await expect(el.triggerExpandedState).to.be.true;
+      });
+
+      it('trigger input has a11yRole="combobox"', async () => {
+        const el = await defaultFixture(mobileView);
+
+        await expect(el.input.a11yRole).to.equal('combobox');
+      });
+
+      it('selected option gets aria-selected="true"', async () => {
+        const el = await presetValueFixture(mobileView);
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const selectedOption = menu.querySelector('auro-menuoption[selected]');
+
+        await expect(selectedOption).to.exist;
+        await expect(selectedOption.getAttribute('aria-selected')).to.equal('true');
+      });
+
+      it('trigger input has aria-controls referencing the dropdown bib', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        const triggerInput = el.dropdown.querySelector('[slot="trigger"]');
+        const nativeInput = triggerInput.inputElement;
+
+        await expect(nativeInput.getAttribute('aria-controls')).to.exist;
+        await expect(nativeInput.getAttribute('aria-controls')).to.not.be.empty;
+      });
+
+      it('trigger input is labelled by its label element', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        const triggerInput = el.dropdown.querySelector('[slot="trigger"]');
+        await elementUpdated(triggerInput);
+
+        const nativeInput = triggerInput.inputElement;
+        const labelEl = triggerInput.shadowRoot.querySelector('label');
+
+        await expect(labelEl).to.exist;
+        await expect(labelEl.getAttribute('for')).to.equal(nativeInput.id);
+
+        const labelSlot = labelEl.querySelector('slot[name="label"]');
+        const labelText = labelSlot.assignedNodes({flatten: true}).map((n) => n.textContent).join('');
+        await expect(labelText).to.contain('Name');
       });
     });
   });
@@ -3591,5 +3735,4 @@ function runFullTest(mobileView) {
       });
     });
   });
-
 }

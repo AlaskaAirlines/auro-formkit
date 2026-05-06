@@ -217,6 +217,15 @@ export function dropdownInteractionSuite(framework: string) {
     });
 
     test.describe('Tab navigation', () => {
+      test('Tab key closes the bib when open', async ({ page }) => {
+        await focusTrigger(page, 'default');
+        await page.keyboard.press('Enter');
+        await waitForBibOpen(page, 'default');
+
+        await page.keyboard.press('Tab');
+        await waitForBibClosed(page, 'default');
+      });
+
       // This test should pass but is currently failing due to a bug in the focus trap implementation
       // test('Tab moves focus from trigger into bib content', async ({ page }) => {
       //   await focusTrigger(page, 'with-bib-content');

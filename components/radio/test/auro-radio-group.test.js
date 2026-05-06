@@ -52,6 +52,37 @@ function runFullTest(mobileView) {
       const helpText = el.shadowRoot.querySelector('[part="helpText"]');
       expect(helpText).to.exist;
     });
+
+    it('shows "(optional)" when not required', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Choose one</span>
+          <auro-radio value="one">One</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      const optionalSlot = el.shadowRoot.querySelector('slot[name="optionalLabel"]');
+      expect(optionalSlot).to.exist;
+      expect(optionalSlot.textContent.trim()).to.equal('(optional)');
+    });
+
+    it('renders custom optionalLabel slot content', async () => {
+      const el = await fixture(html`
+        <auro-radio-group>
+          <span slot="legend">Choose one</span>
+          <span slot="optionalLabel">not required</span>
+          <auro-radio value="one">One</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      const optionalSlot = el.shadowRoot.querySelector('slot[name="optionalLabel"]');
+      expect(optionalSlot).to.exist;
+      const assigned = optionalSlot.assignedNodes();
+      expect(assigned.length).to.equal(1);
+      expect(assigned[0].textContent.trim()).to.equal('not required');
+    });
   });
 
   describe('User Stories', () => {
@@ -691,6 +722,21 @@ function runFullTest(mobileView) {
       it('should have a static register method', () => {
         expect(typeof customElements.get('auro-radio-group').register).to.equal('function');
       });
+
+      it('should register and render a custom-named radio-group element', async () => {
+        customElements.get('auro-radio-group').register('custom-radio-group');
+
+        const el = await fixture(html`
+          <custom-radio-group>
+            <span slot="legend">Choose one</span>
+            <auro-radio value="one" name="test">One</auro-radio>
+            <auro-radio value="two" name="test">Two</auro-radio>
+          </custom-radio-group>
+        `);
+
+        expect(el.shadowRoot).to.exist;
+        expect(el.shadowRoot.querySelector('fieldset')).to.exist;
+      });
     });
 
     describe('reset', () => {
@@ -1064,6 +1110,34 @@ function runFullTest(mobileView) {
 
       const errorHelpText = el.shadowRoot.querySelector('[part="helpText"][role="alert"]');
       expect(errorHelpText).to.exist;
+    });
+
+    it('should set aria-live="assertive" on error help text', async () => {
+      const el = await fixture(html`
+        <auro-radio-group error="Error message">
+          <span slot="legend">Pick one</span>
+          <auro-radio value="one" name="test">One</auro-radio>
+        </auro-radio-group>
+      `);
+
+      const errorHelpText = el.shadowRoot.querySelector('[role="alert"]');
+      expect(errorHelpText).to.exist;
+      expect(errorHelpText.getAttribute('aria-live')).to.equal('assertive');
+    });
+
+    it('disabled radio inputs have tabindex -1', async () => {
+      const el = await fixture(html`
+        <auro-radio-group disabled>
+          <span slot="legend">Pick one</span>
+          <auro-radio id="r1" value="one" name="test">One</auro-radio>
+          <auro-radio id="r2" value="two" name="test">Two</auro-radio>
+        </auro-radio-group>
+      `);
+      await elementUpdated(el);
+
+      const radio = el.querySelector('#r1');
+      const nativeInput = radio.shadowRoot.querySelector('input');
+      expect(nativeInput.tabIndex).to.equal(-1);
     });
   });
 

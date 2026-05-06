@@ -690,6 +690,20 @@ function runFullTest(mobileView) {
 
         await expect(FormClass.register).to.be.a('function');
       });
+
+      it('should register and render a custom-named form element', async () => {
+        customElements.get('auro-form').register('custom-form');
+
+        const el = await fixture(html`
+          <custom-form>
+            <auro-input name="testField" value="hello"></auro-input>
+          </custom-form>
+        `);
+
+        expect(el.shadowRoot).to.exist;
+        expect(el.shadowRoot.querySelector('form')).to.exist;
+        expect(el.formState).to.have.property('testField');
+      });
     });
   });
 
@@ -737,6 +751,24 @@ function runFullTest(mobileView) {
 
         await expect(changeFired).to.be.true;
       });
+    });
+
+    it('dispatches change event when initializeState runs', async () => {
+      let changeFired = false;
+
+      const container = document.createElement('div');
+      container.addEventListener('change', () => {
+        changeFired = true;
+      });
+
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="field1"></auro-input>
+        </auro-form>
+      `, { parentNode: container });
+      await elementUpdated(el);
+
+      expect(changeFired).to.be.true;
     });
 
     describe('reset', () => {
@@ -788,6 +820,37 @@ function runFullTest(mobileView) {
         await expect(submitDetail).to.not.be.null;
         await expect(submitDetail.value).to.have.property('testInput');
         await expect(submitDetail.value.testInput).to.equal('hello');
+      });
+
+      it('elements without name are excluded from form state', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="named-field" value="hello"></auro-input>
+            <auro-input value="no-name"></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        // Named field should be in form state
+        expect(el.formState['named-field']).to.exist;
+
+        // Unnamed field should not be tracked
+        const stateKeys = Object.keys(el.formState);
+        expect(stateKeys.length).to.equal(1);
+      });
+
+      it('attribute-based element matching registers elements with tag-name attribute', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <custom-element auro-input name="customField" value="test"></custom-element>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        // The form's _isElementTag checks hasAttribute(tagName),
+        // so a <custom-element auro-input> should match the 'auro-input' tag selector
+        const matches = el._elements.some((element) => element.getAttribute('name') === 'customField');
+        expect(matches).to.be.true;
       });
     });
   });
