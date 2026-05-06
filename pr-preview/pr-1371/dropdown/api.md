@@ -7,35 +7,35 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 
 ## Properties
 
-| Property                | Attribute               | Type                                             | Default          | Description                                      |
-|-------------------------|-------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
-| `a11yRole`              |                         | `string`                                         |                  | The value for the role attribute of the trigger element. |
-| [appearance](#appearance)            | `appearance`            | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
-| [autoPlacement](#autoPlacement)         | `autoPlacement`         | `boolean`                                        |                  | If declared, bib's position will be automatically calculated where to appear. |
-| [chevron](#chevron)               | `chevron`               | `boolean`                                        |                  | If declared, the dropdown displays a chevron on the right. |
-| [disableEventShow](#disableEventShow)      | `disableEventShow`      | `boolean`                                        |                  | If declared, the dropdown will only show by calling the API .show() public method. |
-| [disableFocusTrap](#disableFocusTrap)      | `disableFocusTrap`      | `boolean`                                        |                  | If declared, the focus trap inside of bib will be turned off. |
-| [disabled](#disabled)              | `disabled`              | `boolean`                                        |                  | If declared, the dropdown is not interactive.    |
-| [error](#error)                 | `error`                 | `boolean`                                        |                  | If declared, will apply error UI to the dropdown. |
-| [errorMessage](#errorMessage)          | `errorMessage`          | `string`                                         | "undefined"      | Contains the help text message for the current validity error. |
-| [focusShow](#focusShow)             | `focusShow`             | `boolean`                                        |                  | If declared, the bib will display when focus is applied to the trigger. |
-| [fullscreenBreakpoint](#fullscreenBreakpoint)  | `fullscreenBreakpoint`  | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
-| [hoverToggle](#hoverToggle)           | `hoverToggle`           | `boolean`                                        |                  | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
-| [isBibFullscreen](#isBibFullscreen)       | `isBibFullscreen`       | `boolean`                                        | false            | If true, the dropdown bib is taking the fullscreen when it's open. |
-| [isPopoverVisible](#isPopoverVisible)      | `open`                  | `boolean`                                        | false            | If true, the dropdown bib is displayed.          |
-| [layout](#layout)                | `layout`                | `'classic' \| 'emphasized' \| 'snowflake'`       | "'classic'"      | Sets the layout of the dropdown.                 |
-| [matchWidth](#matchWidth)            | `matchWidth`            | `boolean`                                        | false            | If declared, the popover and trigger will be set to the same width. |
-| [noFlip](#noFlip)                | `noFlip`                | `boolean`                                        |                  | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
-| [noHideOnThisFocusLoss](#noHideOnThisFocusLoss) | `noHideOnThisFocusLoss` | `boolean`                                        | false            | If declared, the dropdown will not hide when moving focus outside the element. |
-| [noToggle](#noToggle)              | `noToggle`              | `boolean`                                        |                  | If declared, the trigger will only show the dropdown bib. |
-| [offset](#offset)                | `offset`                | `number`                                         | "0"              | Gap between the trigger element and bib.         |
-| [onDark](#onDark)                | `onDark`                | `boolean`                                        |                  | DEPRECATED - use `appearance="inverse"` instead. |
-| [onSlotChange](#onSlotChange)          | `onSlotChange`          |                                                  |                  | If declared, and a function is set, that function will execute when the slot content is updated. |
-| [placement](#placement)             | `placement`             | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
-| [shape](#shape)                 |                         |                                                  | "undefined"      |                                                  |
-| [shift](#shift)                 | `shift`                 | `boolean`                                        |                  | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
-| [simple](#simple)                | `simple`                | `boolean`                                        |                  | If declared, applies a border around the trigger slot. |
-| [size](#size)                  |                         |                                                  | "undefined"      |                                                  |
+| Property                  | Attribute                 | Type                                             | Default          | Description                                      |
+|---------------------------|---------------------------|--------------------------------------------------|------------------|--------------------------------------------------|
+| `a11yRole`                |                           | `string`                                         |                  | The value for the role attribute of the trigger element. |
+| [appearance](#appearance)              | `appearance`              | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
+| [autoPlacement](#autoPlacement)           | `autoPlacement`           | `boolean`                                        |                  | If declared, bib's position will be automatically calculated where to appear. |
+| [chevron](#chevron)                 | `chevron`                 | `boolean`                                        |                  | If declared, the dropdown displays a chevron on the right. |
+| [disableEventShow](#disableEventShow)        | `disableEventShow`        | `boolean`                                        |                  | If declared, the dropdown will only show by calling the API .show() public method. |
+| [disableKeyboardHandling](#disableKeyboardHandling) | `disableKeyboardHandling` | `boolean`                                        |                  | If declared, the dropdown will not handle keyboard events and will require the consumer to manage this behavior. |
+| [disabled](#disabled)                | `disabled`                | `boolean`                                        |                  | If declared, the dropdown is not interactive.    |
+| [error](#error)                   | `error`                   | `boolean`                                        |                  | If declared, will apply error UI to the dropdown. |
+| [errorMessage](#errorMessage)            | `errorMessage`            | `string`                                         | "undefined"      | Contains the help text message for the current validity error. |
+| [focusShow](#focusShow)               | `focusShow`               | `boolean`                                        |                  | If declared, the bib will display when focus is applied to the trigger. |
+| [fullscreenBreakpoint](#fullscreenBreakpoint)    | `fullscreenBreakpoint`    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
+| [hoverToggle](#hoverToggle)             | `hoverToggle`             | `boolean`                                        |                  | If declared, the trigger will toggle the dropdown on mouseover/mouseout. |
+| [isBibFullscreen](#isBibFullscreen)         | `isBibFullscreen`         | `boolean`                                        | false            | If true, the dropdown bib is taking the fullscreen when it's open. |
+| [isPopoverVisible](#isPopoverVisible)        | `open`                    | `boolean`                                        | false            | If true, the dropdown bib is displayed.          |
+| [layout](#layout)                  | `layout`                  | `'classic' \| 'emphasized' \| 'snowflake'`       | "'classic'"      | Sets the layout of the dropdown.                 |
+| [matchWidth](#matchWidth)              | `matchWidth`              | `boolean`                                        | false            | If declared, the popover and trigger will be set to the same width. |
+| [noFlip](#noFlip)                  | `noFlip`                  | `boolean`                                        |                  | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
+| [noHideOnThisFocusLoss](#noHideOnThisFocusLoss)   | `noHideOnThisFocusLoss`   | `boolean`                                        | false            | If declared, the dropdown will not hide when moving focus outside the element. |
+| [noToggle](#noToggle)                | `noToggle`                | `boolean`                                        |                  | If declared, the trigger will only show the dropdown bib. |
+| [offset](#offset)                  | `offset`                  | `number`                                         | "0"              | Gap between the trigger element and bib.         |
+| [onDark](#onDark)                  | `onDark`                  | `boolean`                                        |                  | DEPRECATED - use `appearance="inverse"` instead. |
+| [onSlotChange](#onSlotChange)            | `onSlotChange`            |                                                  |                  | If declared, and a function is set, that function will execute when the slot content is updated. |
+| [placement](#placement)               | `placement`               | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'" | Position where the bib should appear relative to the trigger. |
+| [shape](#shape)                   |                           |                                                  | "undefined"      |                                                  |
+| [shift](#shift)                   | `shift`                   | `boolean`                                        |                  | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
+| [simple](#simple)                  | `simple`                  | `boolean`                                        |                  | If declared, applies a border around the trigger slot. |
+| [size](#size)                    |                           |                                                  | "undefined"      |                                                  |
 
 ## Methods
 
@@ -56,11 +56,11 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 
 ## Slots
 
-| Name       | Description                           |
-|------------|---------------------------------------|
-|            | Default slot for the popover content. |
-| [helpText](#helpText) | Defines the content of the helpText.  |
-| [trigger](#trigger)  | Defines the content of the trigger.   |
+| Name       | Description                                |
+|------------|--------------------------------------------|
+|            | Default slot for the dropdown bib content. |
+| [helpText](#helpText) | Defines the content of the helpText.       |
+| [trigger](#trigger)  | Defines the content of the trigger.        |
 
 ## CSS Shadow Parts
 
@@ -721,12 +721,11 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
   <!-- The below content is automatically added from ./../apiExamples/floater-config.html -->
   <style>
     .floaterConfigDropdown::part(size) {
-      width: 300px;
       max-height: 200px;
     }
   </style>
   <div aria-label="custom label">
-    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20" noFlip>
+    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20" noFlip>
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -745,7 +744,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
     </auro-dropdown>
   </div>
   <div aria-label="custom label">
-    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20">
+    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20">
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -766,7 +765,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
     </auro-dropdown>
   </div>
   <div aria-label="custom label">
-    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron autoPlacement noFlip placement="right" offset="20">
+    <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="right" offset="20">
       <div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -782,12 +781,12 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
         Trigger
       </div>
       <div slot="helpText">
-        Trigger for right bib with 20px offset, autoPlacement and noFlip
+        Trigger for right bib with 20px offset and noFlip
       </div>
     </auro-dropdown>
   </div>
   <div aria-label="custom label">
-    <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron noFlip placement="bottom-start" shift offset="20">
+    <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20">
       <div width="500px">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -817,12 +816,11 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
 ```html
 <style>
   .floaterConfigDropdown::part(size) {
-    width: 300px;
     max-height: 200px;
   }
 </style>
 <div aria-label="custom label">
-  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20" noFlip>
+  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20" noFlip>
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -841,7 +839,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
   </auro-dropdown>
 </div>
 <div aria-label="custom label">
-  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron placement="bottom-end" offset="20">
+  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20">
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -862,7 +860,7 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
   </auro-dropdown>
 </div>
 <div aria-label="custom label">
-  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron autoPlacement noFlip placement="right" offset="20">
+  <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="right" offset="20">
     <div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -878,12 +876,12 @@ The bib position can be customized with `placement`, `offset`, `flip`, `autoPlac
       Trigger
     </div>
     <div slot="helpText">
-      Trigger for right bib with 20px offset, autoPlacement and noFlip
+      Trigger for right bib with 20px offset and noFlip
     </div>
   </auro-dropdown>
 </div>
 <div aria-label="custom label">
-  <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron noFlip placement="bottom-start" shift offset="20">
+  <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20">
     <div width="500px">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -1306,6 +1304,101 @@ export function inDialogExample() {
   openBtn?.addEventListener("click", () => {
     const dialog = document.querySelector("#dropdown-dialog");
     dialog.open = true;
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    dropdown?.hide();
+  });
+};
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+
+### Dropdown in Drawer
+
+The element used within an `auro-drawer`.
+
+<div class="exampleWrapper">
+  <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/in-drawer.html) -->
+  <!-- The below content is automatically added from ./../apiExamples/in-drawer.html -->
+  <div>
+    <auro-button id="dropdown-drawer-opener">Dropdown in Drawer</auro-button>
+    <auro-drawer id="dropdown-drawer">
+      <span slot="header">Dropdown in Drawer</span>
+      <div slot="content">
+        <auro-dropdown id="in-drawer-dropdown" layout="classic" shape="classic" size="lg">
+          <div style="padding: var(--ds-size-150);">
+            Lorem ipsum dolor
+            <br />
+            <auro-button id="in-drawer-dismiss-btn">
+              Dismiss Dropdown
+            </auro-button>
+          </div>
+          <span slot="helpText">
+            Help text
+          </span>
+          <span slot="label">
+            Element label (default text will be read by screen reader)
+          </span>
+          <div slot="trigger">
+            Dropdown Trigger in Drawer
+          </div>
+        </auro-dropdown>
+      </div>
+    </auro-drawer>
+  </div>
+  <!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.html -->
+
+```html
+<div>
+  <auro-button id="dropdown-drawer-opener">Dropdown in Drawer</auro-button>
+  <auro-drawer id="dropdown-drawer">
+    <span slot="header">Dropdown in Drawer</span>
+    <div slot="content">
+      <auro-dropdown id="in-drawer-dropdown" layout="classic" shape="classic" size="lg">
+        <div style="padding: var(--ds-size-150);">
+          Lorem ipsum dolor
+          <br />
+          <auro-button id="in-drawer-dismiss-btn">
+            Dismiss Dropdown
+          </auro-button>
+        </div>
+        <span slot="helpText">
+          Help text
+        </span>
+        <span slot="label">
+          Element label (default text will be read by screen reader)
+        </span>
+        <div slot="trigger">
+          Dropdown Trigger in Drawer
+        </div>
+      </auro-dropdown>
+    </div>
+  </auro-drawer>
+</div>
+```
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/in-drawer.js) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/in-drawer.js -->
+
+```js
+export function inDrawerExample() {
+  const openBtn = document.querySelector("#dropdown-drawer-opener");
+  const closeBtn = document.querySelector("#in-drawer-dismiss-btn");
+  const dropdown = document.querySelector("#in-drawer-dropdown");
+
+  openBtn?.addEventListener("click", () => {
+    const drawer = document.querySelector("#dropdown-drawer");
+    if (drawer.hasAttribute('open')) {
+      drawer.removeAttribute('open');
+    } else {
+      drawer.setAttribute('open', true);
+    }
   });
 
   closeBtn?.addEventListener("click", () => {

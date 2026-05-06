@@ -32,7 +32,7 @@ The `<auro-datepicker>` element should be used in situations where users may:
     <span slot="ariaLabel.bib.close">Close Calendar</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -46,7 +46,7 @@ The `<auro-datepicker>` element should be used in situations where users may:
   <span slot="ariaLabel.bib.close">Close Calendar</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -64,7 +64,8 @@ The datepicker can also be used to select a range between two dates by adding th
     <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
     <span slot="fromLabel">Departure</span>
     <span slot="toLabel">Return</span>
-    <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+    <span slot="bib.fullscreen.fromLabel">Departure</span>
+    <span slot="bib.fullscreen.toLabel">Return</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -79,7 +80,8 @@ The datepicker can also be used to select a range between two dates by adding th
   <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
   <span slot="fromLabel">Departure</span>
   <span slot="toLabel">Return</span>
-  <span slot="bib.fullscreen.dateLabel">Roundtrip</span>
+  <span slot="bib.fullscreen.fromLabel">Departure</span>
+  <span slot="bib.fullscreen.toLabel">Return</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -97,7 +99,7 @@ Use `layout="snowflake"`, with `shape="snowflake"` and `appearance="inverse"` to
     <span slot="label">Date</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
     <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -112,7 +114,7 @@ Use `layout="snowflake"`, with `shape="snowflake"` and `appearance="inverse"` to
   <span slot="label">Date</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
   <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -127,10 +129,12 @@ Ranged variation of the snowflake layout.
   <!-- The below content is automatically added from ./../apiExamples/snowflake/range.html -->
   <auro-datepicker range layout="snowflake" shape="snowflake" appearance="inverse" placeholder="MM/DD/YYYY">
     <span slot="ariaLabel.bib.close">Close Calendar</span>
-    <span slot="label">Dates</span>
+    <span slot="fromLabel">From Date Test</span>
+    <span slot="toLabel">To Date Test</span>
+    <span slot="label">Testing Date Label</span>
     <span slot="bib.fullscreen.headline">Datepicker Headline</span>
-    <span slot="fromLabel">Choose a date</span>
-    <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+    <span slot="bib.fullscreen.fromLabel">Choose a departing date</span>
+    <span slot="bib.fullscreen.toLabel">Choose a returning date</span>
   </auro-datepicker>
   <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -142,10 +146,12 @@ Ranged variation of the snowflake layout.
 ```html
 <auro-datepicker range layout="snowflake" shape="snowflake" appearance="inverse" placeholder="MM/DD/YYYY">
   <span slot="ariaLabel.bib.close">Close Calendar</span>
-  <span slot="label">Dates</span>
+  <span slot="fromLabel">From Date Test</span>
+  <span slot="toLabel">To Date Test</span>
+  <span slot="label">Testing Date Label</span>
   <span slot="bib.fullscreen.headline">Datepicker Headline</span>
-  <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+  <span slot="bib.fullscreen.fromLabel">Choose a departing date</span>
+  <span slot="bib.fullscreen.toLabel">Choose a returning date</span>
 </auro-datepicker>
 ```
 <!-- AURO-GENERATED-CONTENT:END -->

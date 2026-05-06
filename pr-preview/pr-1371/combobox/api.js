@@ -5,6 +5,7 @@ import { resetStateExample } from '../apiExamples/reset-state';
 import { setupExternalSelectionExample } from '../apiExamples/external-selection';
 import { valueExample } from '../apiExamples/value';
 import { inDialogExample } from '../apiExamples/in-dialog';
+import { inDrawerExample } from '../apiExamples/in-drawer';
 import { persistentExample } from '../apiExamples/persistent';
 import { swapValueExample } from '../apiExamples/swap-value';
 
@@ -22,7 +23,8 @@ export function initExamples(initCount) {
     resetStateExample();
     setupExternalSelectionExample();
     valueExample();
-    inDialogExample();  
+    inDialogExample();
+    inDrawerExample();
     persistentExample();
     swapValueExample();
   } catch (err) {

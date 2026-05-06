@@ -21,7 +21,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 | [noCheckmark](#noCheckmark)              | `nocheckmark`              |           | `boolean`             | false       | When true, selected option will not show the checkmark. |
 | [optionActive](#optionActive)             | `optionactive`             |           | `object`              | "undefined" | Specifies the current active menuOption.         |
 | [optionSelected](#optionSelected)           | `optionSelected`           |           | `object`              | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| [options](#options)                  |                            | readonly  | `array`               |             | Available menu options                           |
+| [options](#options)                  |                            | readonly  | `array`               |             | Available menu options.                          |
 | [selectAllMatchingOptions](#selectAllMatchingOptions) | `selectAllMatchingOptions` |           | `boolean`             | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
 | [selectedOption](#selectedOption)           |                            | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
 | [selectedOptions](#selectedOptions)          |                            | readonly  | `HTMLElement[]`       |             | Gets the currently selected options.             |
@@ -40,6 +40,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 |-------------------------------|--------------------------------------------------|--------------------------------------------------|
 | `auroMenu-activatedOption`    | `CustomEvent<Element>`                           | Notifies that a menuoption has been made `active`. |
 | `auroMenu-customEventFired`   | `CustomEvent<any>`                               | Notifies that a custom event has been fired.     |
+| `auroMenu-deselectPrevented`  | `CustomEvent<{ values: HTMLElement[] }>`         | Notifies that deselection was prevented and includes the affected options in `detail.values`. |
 | `auroMenu-loadingChange`      | `CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>` | Notifies when the loading attribute is changed.  |
 | `auroMenu-optionsChange`      | `CustomEvent<{ options: any; }>`                 |                                                  |
 | `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that an attempt to select a menuoption by matching a value has failed. |
@@ -66,6 +67,7 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | [iconTag](#iconTag)     |            |           | `string`  |         |                                                  |
 | [isActive](#isActive)    |            | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable.<br />An option is considered active if it is not hidden, not disabled, and not static. |
 | [key](#key)         | `key`      |           | `string`  |         | Allows users to set a unique key for the menu option for specified option selection. If no key is provided, the value property will be used. |
+| [noMatch](#noMatch)     | `nomatch`  |           | `boolean` | false   | When true, marks this option as the "no matching results" placeholder shown by combobox when the user's input does not match any available options. Enables distinct styling and prevents the option from being treated as a selectable match. |
 | [selected](#selected)    | `selected` |           | `boolean` | false   | Specifies that an option is selected.            |
 | [tabIndex](#tabIndex)    | `tabIndex` |           | `number`  |         | Specifies the tab index of the menu option.      |
 | [unsubscribe](#unsubscribe) |            |           |           | null    |                                                  |
