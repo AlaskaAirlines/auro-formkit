@@ -897,6 +897,66 @@ function runFullTest(mobileView) {
         await expect(trigger.getAttribute('role')).to.equal('combobox');
       });
     });
+
+    it('inset attribute is reflected on the bib element', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+
+      const bib = el.bibElement.value;
+      if (bib) {
+        bib.inset = true;
+        await elementUpdated(bib);
+        expect(bib.hasAttribute('inset')).to.be.true;
+      }
+    });
+
+    it('rounded attribute is reflected on the bib element', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+
+      const bib = el.bibElement.value;
+      if (bib) {
+        bib.rounded = true;
+        await elementUpdated(bib);
+        expect(bib.hasAttribute('rounded')).to.be.true;
+      }
+    });
+
+    it('common attribute is reflected on the bib element', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <div slot="trigger">Trigger</div>
+          <div>Content</div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+
+      const bib = el.bibElement.value;
+      if (bib) {
+        bib.common = true;
+        await elementUpdated(bib);
+        expect(bib.hasAttribute('common')).to.be.true;
+      }
+    });
   });
 
   describe('Slots', () => {

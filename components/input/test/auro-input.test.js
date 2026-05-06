@@ -26,7 +26,6 @@ function runFullTest(mobileView) {
     await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
   });
 
-
   describe('Rendering', () => {
     it('should be successfully created in the document', async () => {
       // This test fails when attributes are put onto the component before it is attached to the DOM
@@ -482,6 +481,17 @@ function runFullTest(mobileView) {
       expect(result).to.equal(undefined);
     });
 
+    it('focusing the host element should delegate focus to the inner input', async () => {
+      const el = await fixture(html`<auro-input><span slot="label">Name</span></auro-input>`);
+      await elementUpdated(el);
+
+      el.focus();
+      await elementUpdated(el);
+
+      // Verify the inner <input> actually received focus via delegatesFocus
+      const innerInput = el.shadowRoot.querySelector('input');
+      expect(el.shadowRoot.activeElement).to.equal(innerInput);
+    });
   });
 
   describe('Properties', () => {

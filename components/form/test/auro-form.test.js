@@ -20,11 +20,53 @@ function runFullTest(mobileView) {
     await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
   });
 
-  it('should have a custom element definition', async () => {
-    await customElements.whenDefined("auro-form");
-    const el = Boolean(customElements.get("auro-form"));
+  describe('Rendering', () => {
+    it('should have a custom element definition', async () => {
+      await customElements.whenDefined("auro-form");
+      const el = Boolean(customElements.get("auro-form"));
 
-    await expect(el).to.be.true;
+      await expect(el).to.be.true;
+    });
+
+    describe('Empty form', () => {
+      it('should have empty formState with zero elements', async () => {
+        const el = await fixture(html`<auro-form></auro-form>`);
+        await elementUpdated(el);
+
+        expect(Object.keys(el.formState).length).to.equal(0);
+      });
+
+      it('should report valid validity with zero elements', async () => {
+        const el = await fixture(html`<auro-form></auro-form>`);
+        await elementUpdated(el);
+
+        expect(el.validity).to.not.equal('invalid');
+      });
+
+      it('should be in initial state with zero elements', async () => {
+        const el = await fixture(html`<auro-form></auro-form>`);
+        await elementUpdated(el);
+
+        expect(el.isInitialState).to.be.true;
+      });
+    });
+
+    describe('Deeply nested form elements', () => {
+      it('should discover elements nested more than one level deep', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <div>
+              <div>
+                <auro-input name="deepField" value="nested"></auro-input>
+              </div>
+            </div>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        expect(el.formState['deepField']).to.exist;
+      });
+    });
   });
 
   // Automatic input state behavior
@@ -729,6 +771,29 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         await expect(inputEventFired).to.be.true;
+      });
+
+      it('input event should bubble and be composed', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="field1"></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        let eventProps = null;
+        el.addEventListener('input', (e) => {
+          eventProps = { bubbles: e.bubbles, composed: e.composed };
+        });
+
+        const input = el.querySelector('auro-input');
+        input.value = 'test';
+        input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(eventProps).to.exist;
+        expect(eventProps.bubbles).to.be.true;
+        expect(eventProps.composed).to.be.true;
       });
     });
 

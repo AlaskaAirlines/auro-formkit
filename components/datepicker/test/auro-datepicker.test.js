@@ -537,6 +537,24 @@ function runFullTest(mobileView) {
         await expect(el.hasAttribute('validity')).to.be.true;
       });
 
+      it('hasError is true when error attribute is set', async () => {
+        const el = await fixture(html`
+          <auro-datepicker error="This is an error"></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        expect(el.hasError).to.be.true;
+      });
+
+      it('hasError is false when no error', async () => {
+        const el = await fixture(html`
+          <auro-datepicker></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        expect(el.hasError).to.not.be.true;
+      });
+
       it('should render error help text with role="alert" and aria-live="assertive"', async () => {
         const el = await fixture(html`
           <auro-datepicker error="Date is required"></auro-datepicker>
