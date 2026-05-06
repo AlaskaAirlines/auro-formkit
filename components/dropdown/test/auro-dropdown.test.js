@@ -446,6 +446,19 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         expectPopoverHidden(el);
       });
+
+      it('disabled dropdown has aria-disabled="true" on trigger', async () => {
+        const el = await fixture(html`
+          <auro-dropdown disabled>
+            <div slot="trigger">Trigger</div>
+            <div>Bib content</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        const trigger = el.shadowRoot.querySelector('#trigger');
+        expect(trigger.getAttribute('aria-disabled')).to.equal('true');
+      });
     });
 
     describe('disableEventShow', () => {
@@ -496,6 +509,13 @@ function runFullTest(mobileView) {
       it('should default to undefined', async () => {
         const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
         await expect(el.errorMessage).to.be.undefined;
+      });
+
+      it('should store the error message string when set', async () => {
+        const el = await fixture(html`<auro-dropdown error errorMessage="Something went wrong"><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await elementUpdated(el);
+
+        await expect(el.errorMessage).to.equal('Something went wrong');
       });
     });
 
@@ -2143,6 +2163,30 @@ function runFullTest(mobileView) {
         expect(result).to.equal(undefined);
       });
     });
+
+    it('clicking inside the bib keeps it open', async () => {
+      const el = await fixture(html`
+        <auro-dropdown>
+          <div slot="trigger">Trigger</div>
+          <div id="bibContent">
+            <button id="bib-btn">Click me</button>
+          </div>
+        </auro-dropdown>
+      `);
+      await elementUpdated(el);
+
+      el.show();
+      await elementUpdated(el);
+      expectPopoverShown(el);
+
+      // Click the button inside the bib
+      const btn = el.querySelector('#bib-btn');
+      btn.click();
+      await elementUpdated(el);
+
+      // Bib should still be open
+      expectPopoverShown(el);
+    });
   });
 
   describe('Keyboard Behavior', () => {
@@ -2165,6 +2209,29 @@ function runFullTest(mobileView) {
         );
 
         expectPopoverShown(el);
+      });
+
+      it('Enter key toggles bib closed when open', async () => {
+        const el = await fixture(html`
+          <auro-dropdown>
+            <div slot="trigger">Trigger</div>
+            <div>Bib content</div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        const trigger = el.shadowRoot.querySelector('#trigger');
+
+        // Open the bib
+        el.show();
+        await elementUpdated(el);
+        expectPopoverShown(el);
+
+        // Press Enter on trigger
+        trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        await elementUpdated(el);
+
+        expectPopoverHidden(el);
       });
 
       it('should show the popover when pressed on trigger', async () => {

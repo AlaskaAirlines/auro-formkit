@@ -90,4 +90,5 @@ export const OptionalLabel = stories.OptionalLabel;
 export const MultilineGroup = stories.MultilineGroup; 
 export const Error = stories.Error; 
 export const Horizontal = stories.Horizontal; 
+export const HorizontalOverflow = stories.HorizontalOverflow;
 export const Dynamic = stories.Dynamic;

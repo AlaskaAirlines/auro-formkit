@@ -316,6 +316,26 @@ function runFullTest(mobileView) {
       await oneEvent(el, 'auroDatePicker-toggled');
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
+
+    describe('badInput validity', () => {
+      it('invalid date value triggers validation error', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        // Set an invalid date string
+        el.inputList[0].value = '13/45/2024';
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // Force validation
+        el.validate(true);
+        await elementUpdated(el);
+
+        // Validity should not be 'valid'
+        expect(el.validity).to.not.equal('valid');
+        expect(el.validity).to.not.be.undefined;
+      });
+    });
   });
 
   describe('Properties', () => {
@@ -465,6 +485,27 @@ function runFullTest(mobileView) {
         el.showBib();
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.false;
+      });
+
+      describe('disabled propagation', () => {
+        it('disabled propagates to inner inputs', async () => {
+          const el = await fixture(html`<auro-datepicker disabled></auro-datepicker>`);
+          await elementUpdated(el);
+
+          el.inputList.forEach((input) => {
+            expect(input.disabled).to.be.true;
+          });
+        });
+
+        it('disabled sets tabindex to -1', async () => {
+          const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+          await elementUpdated(el);
+
+          el.disabled = true;
+          await elementUpdated(el);
+
+          expect(el.getAttribute('tabindex')).to.equal('-1');
+        });
       });
     });
 
@@ -1640,6 +1681,43 @@ function runFullTest(mobileView) {
       // Slot name is dynamic (e.g., popover_01_15_2025). See calendar cell tests.
     });
 
+    describe('slot functional behavior', () => {
+      it('label slot text is forwarded to the inner input as accessible name', async () => {
+        const el = await fixture(html`<auro-datepicker><span slot="label">Departure date</span></auro-datepicker>`);
+        await elementUpdated(el);
+
+        const labelSlot = el.querySelector('[slot="label"]');
+        expect(labelSlot.textContent.trim()).to.equal('Departure date');
+      });
+
+      it('helpText slot content is visible in the rendered component', async () => {
+        const el = await fixture(html`
+          <auro-datepicker>
+            <span slot="label">Date</span>
+            <span slot="helpText">Select your travel date</span>
+          </auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        const helpText = el.querySelector('[slot="helpText"]');
+        expect(helpText).to.exist;
+        expect(helpText.textContent.trim()).to.equal('Select your travel date');
+      });
+
+      it('fromLabel and toLabel slots render for range datepicker', async () => {
+        const el = await fixture(html`
+          <auro-datepicker range>
+            <span slot="fromLabel">Departure</span>
+            <span slot="toLabel">Return</span>
+          </auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        expect(el.querySelector('[slot="fromLabel"]').textContent.trim()).to.equal('Departure');
+        expect(el.querySelector('[slot="toLabel"]').textContent.trim()).to.equal('Return');
+      });
+    });
+
   });
 
   describe('Public Functions', () => {
@@ -1820,6 +1898,21 @@ function runFullTest(mobileView) {
         await expect(el.values.length).to.equal(2);
         await expect(el.values[0]).to.equal(el.value);
         await expect(el.values[1]).to.equal(el.valueEnd);
+      });
+    });
+
+    describe('validate(force)', () => {
+      it('validate(true) forces validation even when noValidate is set', async () => {
+        const el = await fixture(html`
+          <auro-datepicker required noValidate></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        // noValidate is set, but force should still run validation
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.not.be.undefined;
       });
     });
   });

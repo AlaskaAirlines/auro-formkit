@@ -96,6 +96,7 @@ export const Basic = stories.Basic;
 export const Checkmark = stories.Checkmark;
 export const Custom = stories.Custom;
 export const Disabled = stories.Disabled;
+export const DisabledError = stories.DisabledError;
 export const DisplayValue = stories.DisplayValue;
 export const DynamicMenu = stories.DynamicMenu;
 export const Error = stories.Error;

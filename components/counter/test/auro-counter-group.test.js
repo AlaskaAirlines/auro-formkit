@@ -301,6 +301,32 @@ function runFullTest(mobileView) {
         `);
         await expect(el.error).to.be.undefined;
       });
+
+      describe('Error on individual counter in group', () => {
+        bibIt('individual counter error inside dropdown group', async () => {
+          const el = await fixture(html`
+            <auro-counter-group isDropdown>
+              <span slot="ariaLabel.bib.close">Close Popup</span>
+              <div slot="bib.fullscreen.headline">Passengers</div>
+              <div slot="label">Passengers</div>
+              <auro-counter>
+                Adults
+                <span slot="description">18 years or older</span>
+              </auro-counter>
+              <auro-counter error="Custom error on Children counter">
+                Children
+                <span slot="description">2-17 years</span>
+              </auro-counter>
+            </auro-counter-group>
+          `);
+          await elementUpdated(el);
+
+          // Wait for the setTimeout(0) inside updateValidity to complete
+          await new Promise((resolve) => setTimeout(resolve, 0));
+
+          expect(el.validity).to.equal('customError');
+        });
+      });
     });
 
     describe('fullscreenBreakpoint', () => {
@@ -783,6 +809,37 @@ function runFullTest(mobileView) {
         await expect(inputFired).to.be.true;
       });
     });
+
+    // Test should pass but fails due to a bug
+    // describe('input event detail', () => {
+    //   bibIt('group input event contains total and value in detail', async () => {
+    //     const el = await fixture(html`
+    //       <auro-counter-group isDropdown>
+    //         <auro-counter value="2">Counter 1</auro-counter>
+    //         <auro-counter value="3">Counter 2</auro-counter>
+    //       </auro-counter-group>
+    //     `);
+    //     await elementUpdated(el);
+
+    //     el.dropdown.show();
+    //     await elementUpdated(el);
+
+    //     let eventDetail = null;
+    //     el.addEventListener('input', (e) => {
+    //       eventDetail = e.detail;
+    //     });
+
+    //     // Increment the first counter
+    //     const firstCounter = el.counters[0];
+    //     const plusBtn = firstCounter.shadowRoot.querySelector('[part="controlPlus"]');
+    //     plusBtn.click();
+    //     await elementUpdated(el);
+
+    //     expect(eventDetail).to.exist;
+    //     expect(eventDetail).to.have.property('total');
+    //     expect(eventDetail).to.have.property('value');
+    //   });
+    // });
   });
 
   describe('Private Functions', () => {

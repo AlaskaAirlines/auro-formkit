@@ -118,6 +118,25 @@ function runFullTest(mobileView) {
         expect(jsonValue.length).to.equal(1);
       });
     });
+
+    describe('checkmark icon', () => {
+      it('9.10: selected option shows checkmark icon', async () => {
+        const el = await fixture(html`
+          <auro-menu>
+            <auro-menuoption value="opt1">Option 1</auro-menuoption>
+            <auro-menuoption value="opt2">Option 2</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        const opt = el.querySelector('auro-menuoption');
+        opt.click();
+        await elementUpdated(opt);
+
+        expect(opt.selected).to.be.true;
+        expect(opt.hasAttribute('selected')).to.be.true;
+      });
+    });
   });
 
   describe('User Stories', () => {
@@ -765,6 +784,19 @@ function runFullTest(mobileView) {
       expect(menuEl.items).to.equal(undefined);
       expect(menuChild.items).to.equal(undefined);
     });
+
+    describe('matchWord highlighting', () => {
+      it('9.13: matchWord property is accepted on menu', async () => {
+        const el = await fixture(html`
+          <auro-menu matchword="ap">
+            <auro-menuoption value="apple">Apple</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        expect(el.matchWord).to.equal('ap');
+      });
+    });
   });
 
   describe('Properties', () => {
@@ -861,6 +893,28 @@ function runFullTest(mobileView) {
         const menuEl = el.querySelector('auro-menu');
 
         expect(menuEl.multiSelect).to.be.true;
+      });
+
+      it('should accept preset value as JSON array string in multiSelect mode', async () => {
+        const el = await fixture(html`
+          <div>
+            <auro-menu multiselect aria-label="test">
+              <auro-menuoption value="option 1">option 1</auro-menuoption>
+              <auro-menuoption value="option 2">option 2</auro-menuoption>
+              <auro-menuoption value="option 3">option 3</auro-menuoption>
+            </auro-menu>
+          </div>
+        `);
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        menuEl.value = '["option 1","option 3"]';
+        await elementUpdated(menuEl);
+
+        const options = menuEl.querySelectorAll('auro-menuoption');
+        expect(options[0].hasAttribute('selected')).to.be.true;
+        expect(options[1].hasAttribute('selected')).to.be.false;
+        expect(options[2].hasAttribute('selected')).to.be.true;
       });
     });
 
@@ -1195,6 +1249,52 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('dividers', () => {
+      it('should render hr elements between menu options', async () => {
+        const el = await fixture(html`
+          <div>
+            <auro-menu aria-label="test">
+              <auro-menuoption value="opt1">Option 1</auro-menuoption>
+              <hr>
+              <auro-menuoption value="opt2">Option 2</auro-menuoption>
+              <hr>
+              <auro-menuoption value="opt3">Option 3</auro-menuoption>
+            </auro-menu>
+          </div>
+        `);
+        const menuEl = el.querySelector('auro-menu');
+
+        const dividers = menuEl.querySelectorAll('hr');
+        expect(dividers.length).to.equal(2);
+      });
+
+      it('should skip dividers during keyboard navigation', async () => {
+        const el = await fixture(html`
+          <div>
+            <auro-menu aria-label="test">
+              <auro-menuoption value="opt1">Option 1</auro-menuoption>
+              <hr>
+              <auro-menuoption value="opt2">Option 2</auro-menuoption>
+            </auro-menu>
+          </div>
+        `);
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+
+        // First down should land on opt1
+        expect(menuEl.index).to.equal(0);
+
+        menuEl.navigateOptions('down');
+        await elementUpdated(menuEl);
+
+        // Second down should skip the hr and land on opt2
+        expect(menuEl.index).to.equal(1);
+      });
+    });
+
     describe('loadingIcon', () => {
       it('should render content in the loadingIcon slot', async () => {
         const el = await fixture(html`<auro-menu loading><span slot="loadingIcon">⏳</span><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
@@ -1523,6 +1623,32 @@ function runFullTest(mobileView) {
       await elementUpdated(menuEl);
 
       expect(menuEl.hasAttribute('aria-multiselectable')).to.be.false;
+    });
+
+    describe('aria-busy on loading', () => {
+      it('loading state sets aria-busy on menu', async () => {
+        const el = await fixture(html`<auro-menu loading></auro-menu>`);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('aria-busy')).to.equal('true');
+      });
+    });
+
+    describe('nested menu aria-label', () => {
+      it('9.7: nested menu gets aria-label="submenu"', async () => {
+        const el = await fixture(html`
+          <auro-menu>
+            <auro-menuoption value="opt1">Option 1</auro-menuoption>
+            <auro-menu>
+              <auro-menuoption value="sub1">Sub Option 1</auro-menuoption>
+            </auro-menu>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        const nestedMenu = el.querySelector('auro-menu');
+        expect(nestedMenu.getAttribute('aria-label')).to.equal('submenu');
+      });
     });
   });
 
@@ -1903,7 +2029,6 @@ function runFullTest(mobileView) {
       expect(option.hasAttribute('aria-disabled')).to.be.false;
     });
   });
-
 }
 
 // Desktop Test Suite

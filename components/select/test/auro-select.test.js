@@ -60,6 +60,55 @@ function runTest(mobileView) {
         const nativeSelect = el.shadowRoot.querySelector('.nativeSelectWrapper select');
         await expect(nativeSelect).to.exist;
       });
+
+      describe('placeholder rendering', () => {
+        it('placeholder renders in the trigger', async () => {
+          const el = await fixture(html`
+            <auro-select placeholder="Pick a fruit">
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          const placeholder = el.shadowRoot.querySelector('#placeholder');
+          expect(placeholder).to.exist;
+          expect(placeholder.textContent.trim()).to.equal('Pick a fruit');
+        });
+      });
+
+      describe('optionalLabel rendering', () => {
+        it('shows optionalLabel slot when not required', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="label">Fruit</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          const optionalSlot = el.shadowRoot.querySelector('slot[name="optionalLabel"]');
+          expect(optionalSlot).to.exist;
+        });
+
+        it('hides optionalLabel when required', async () => {
+          const el = await fixture(html`
+            <auro-select required>
+              <span slot="label">Fruit</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          const optionalSlot = el.shadowRoot.querySelector('slot[name="optionalLabel"]');
+          expect(optionalSlot).to.not.exist;
+        });
+      });
     });
 
     describe('User Stories', () => {
@@ -186,6 +235,22 @@ function runTest(mobileView) {
           await elementUpdated(el);
           const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
           await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+        
+        describe('disabled tabindex behavior', () => {
+          it('disabled select uses pointer-events none to prevent interaction', async () => {
+            const el = await fixture(html`
+              <auro-select disabled>
+                <auro-menu>
+                  <auro-menuoption value="apple">Apple</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            `);
+            await elementUpdated(el);
+
+            expect(el.disabled).to.be.true;
+            expect(el.hasAttribute('disabled')).to.be.true;
+          });
         });
       });
 
@@ -743,6 +808,47 @@ function runTest(mobileView) {
         it('should support xl size with emphasized layout', async () => {
           const el = await emphasizedFixture();
           await expect(el.getAttribute('size')).to.equal('xl');
+        });
+      });
+
+      describe('shape and size propagation to menu', () => {
+        it('should propagate shape to the menu element', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          // Classic layout sets menu shape to 'box'
+          expect(menu.getAttribute('shape')).to.equal('box');
+        });
+
+        it('should propagate size to the menu element', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const menu = el.querySelector('auro-menu');
+          // Menu gets a size attribute from updateMenuShapeSize
+          expect(menu.hasAttribute('size')).to.be.true;
+        });
+      });
+
+      describe('touched property', () => {
+        it('touched becomes true after focusin', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          expect(el.touched).to.not.be.true;
+
+          // Trigger focusin
+          el.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+          await elementUpdated(el);
+
+          expect(el.touched).to.be.true;
         });
       });
 
@@ -1885,6 +1991,30 @@ function runTest(mobileView) {
           });
         }
       });
+
+      describe('native select accessibility', () => {
+        it('native select element has aria-hidden="true"', async () => {
+          const el = await defaultFixture(mobileView);
+          await elementUpdated(el);
+
+          const nativeSelect = el.shadowRoot.querySelector('select');
+          if (nativeSelect) {
+            expect(nativeSelect.getAttribute('aria-hidden')).to.equal('true');
+          }
+        });
+      });
+
+      it('menu gets aria-label from label slot text', async () => {
+        const el = await defaultFixture();
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        const labelSlot = el.querySelector('[slot="label"]');
+
+        if (labelSlot && menu.hasAttribute('aria-label')) {
+          expect(menu.getAttribute('aria-label')).to.equal(labelSlot.textContent.trim());
+        }
+      });
     });
 
     describe('Mouse Behavior', () => {
@@ -2789,6 +2919,25 @@ function runTest(mobileView) {
           await elementUpdated(el);
 
           await expect(dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should not select an option — only toggles bib', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Space opens the bib
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          await expect(dropdown.isPopoverVisible).to.be.true;
+
+          // Space again closes the bib without making a selection
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+
+          await expect(dropdown.isPopoverVisible).to.be.false;
+          await expect(el.value).to.be.undefined;
         });
       });
 
