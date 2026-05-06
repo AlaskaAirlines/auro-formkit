@@ -17,7 +17,7 @@ The following sections are editable by making changes to the following files:
 | kit Example Code | HTML sample code of the kits use            | `./apiExamples/basic.html`          |
 -->
 
-# Formkit
+# Formkit TESTING
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
@@ -108,157 +108,20 @@ $ npm i @aurodesignsystem/auro-formkit
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/gettingStarted.md) -->
 <!-- The below content is automatically added from ./docs/partials/gettingStarted.md -->
 
-### TypeScript Module Resolution
+### Getting Started
 
-When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
+Each component contains its own Getting Started documentation.
 
-```json
-{
-    "compilerOptions": {
-        "moduleResolution": "bundler"
-    }
-}
-```
-
-This configuration enables proper module resolution for the component's TypeScript files.
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Install from CDN
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/bundleInstallDescription.md) -->
-<!-- The below content is automatically added from ./docs/partials/bundleInstallDescription.md -->
-In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
-
-Each component is imported individually by its export path:
-
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-checkbox/+esm"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-input/+esm"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-select/+esm"></script>
-```
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Additional Information
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/readmeAddlInfo.md) -->
-<!-- The below content is automatically added from ./docs/partials/readmeAddlInfo.md -->
-
-### Turborepo Overview
-
-This monorepo is managed using [Turborepo](https://turborepo.org/).
-
-### Managing dependencies
-
-#### Best practices for dependency installation
-
-When you install a dependency in a component or package in `auro-formkit`, you should install it directly in the package that uses it. 
-
-The package's `package.json` will have every dependency that it needs. This is true for both external and internal dependencies.
-
-### Types of Dependencies by Source
-
-#### External Dependencies
-- These are packages fetched from the `npm` registry (e.g., Lit, Rollup, Sass)
-- Declared in `package.json` using exact versions or version ranges
-- Installed in `node_modules` during `npm install` or `yarn install`
-
-#### Internal Dependencies
-- These are packages from within the `auro-formkit` monorepo
-- Allow sharing code between different packages in your repository
-- Example: The `@aurodesignsystem/combobox` package might depend on `@aurodesignsystem/input`
-- Must be declared in `package.json` just like external dependencies
-- Use workspace protocols (e.g., `"workspace:*"` or `"workspace:^1.0.0"`)
-
-### Types of Dependencies by Purpose
-
-#### Dependencies (`dependencies`)
-- Required for the package to function in production
-- Example:
-  ```json
-  {
-    "dependencies": {
-      "lit": "^3.0.0"
-    }
-  }
-  ```
-
-### Development Dependencies (`devDependencies`)
-- Only needed during development, testing, or building
-- Not included in the production bundle
-- Example:
-  ```json
-  {
-    "devDependencies": {
-      "@aurodesignsystem/auro-dropdown": "*",
-      "@aurodesignsystem/build-tools": "*",
-      "rollup": "^4.24.4"
-    }
-  }
-  ```
-
-### Example: Component Dependencies
-
-Let's use `@aurodesignsystem/combobox` as an example to illustrate these concepts:
-
-```json
-{
-  "name": "@aurodesignsystem/combobox",
-  "dependencies": {
-    "lit": "^3.2.1"
-  },
-  "devDependencies": {
-    // Internal component dependencies
-    "@aurodesignsystem/auro-dropdown": "*",
-    "@aurodesignsystem/auro-input": "*",
-    // Build utilities
-    "rollup": "^4.24.4",
-    "@aurodesignsystem/build-tools": "*"
-  }
-}
-```
-
-This structure ensures that:
-1. The package explicitly declares all its dependencies
-2. Internal dependencies are properly tracked and versioned
-3. Development tools are separated from production dependencies
-
-- External dependencies come from the `npm` registry.
-
-- Internal dependencies let you share functionality within your repository.
-
-This practice has several benefits:
-
-- **Improved clarity:** It's easier to understand what a package depends on when its dependencies are listed in its `package.json`. Developers working in the repository can see at a glance what dependencies are used within the package.
-
-- **Enhanced flexibility:** In a monorepo at scale, it can be unrealistic to expect each package to use the same version of an external dependency.
-
-- **Better caching ability:** If you install too many dependencies in the root of your repository, you'll be changing the workspace root whenever you add, update, or delete a dependency, leading to unnecessary cache misses.
-
-- **Pruning unused dependencies:** When dependencies are installed in the packages that they are meant for, Turborepo can read your lockfile and remove dependencies that aren't used in the packages you need.
-
-For more information, see the [Turborepo docs](https://turbo.build/repo/docs/crafting-your-repository/managing-dependencies).
-
-### Root `package.json`
-
-The only dependencies that belong in the root `package.json` are **tools for managing the repository**.
-
-Some examples of dependencies that make sense to install in the root are `turbo`, `husky`, or `stylelint`.
-
-Conversely, dependencies Auro components rely on should be installed in their respective packages, such as `Lit`, `Rollup`, or other `auro-formkit` dependencies.
-<!-- AURO-GENERATED-CONTENT:END -->
-
-## Formkit Development
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/developmentDescription.md) -->
-<!-- The below content is automatically added from ./docs/partials/developmentDescription.md -->
-
-### Filtering
-
-Running the `dev` command will open a `localhost` development server for all components in the monorepo at once.
-
-To only develop a single component, use the `--filter` flag:
-
-```shell
-npx turbo dev --filter=@aurodesignsystem/auro-input
-```
+<ul>
+  <li><a href="https://auro.alaskaair.com/components/auro/checkbox/getting-started">checkbox</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/combobox/getting-started">combobox</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/counter/getting-started">counter</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/datepicker/getting-started">datepicker</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/dropdown/getting-started">dropdown</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/form/getting-started">form</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/input/getting-started">input</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/menu/getting-started">menu</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/radio/getting-started">radio</a></li>
+  <li><a href="https://auro.alaskaair.com/components/auro/select/getting-started">select</a></li>
+</ul>
 <!-- AURO-GENERATED-CONTENT:END -->
