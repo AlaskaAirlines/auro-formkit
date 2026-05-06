@@ -282,3 +282,20 @@ export const InputInverseError: Story = {
 </div>
   `,
 };
+
+// ─── Icon renders in DOM for credit-card type ────────────────────────────────
+export const InputCreditCardIcon: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-input icon type="credit-card">
+  <span slot="label">Card Number</span>
+</auro-input>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-input') as any;
+    await el.updateComplete;
+
+    const iconEl = el.shadowRoot.querySelector('auro-icon, [auro-icon], .accentIcon');
+    await expect(iconEl).not.toBeNull();
+  },
+};
