@@ -12,4 +12,6 @@ const pages = fs.readdirSync(pagesDir)
   .filter((f) => f.endsWith('.md'))
   .sort();
 
+pages.push('readme.md');
+
 fs.writeFileSync(outFile, JSON.stringify(pages));
