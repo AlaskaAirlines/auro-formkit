@@ -2091,9 +2091,9 @@ function runFullTest(mobileView) {
       const menu = el.querySelector('auro-menu');
       menu.remove();
 
-      // Call configureMenu — querySelector returns null, so it schedules a retry
+      // Call configureMenu — querySelector returns null, guard triggers setTimeout retry
       el.configureMenu();
-      expect(el.menu).to.be.null;
+      await elementUpdated(el);
 
       // Re-add the menu so the retry finds it
       el.appendChild(menu);

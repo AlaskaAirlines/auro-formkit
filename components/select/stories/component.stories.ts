@@ -735,6 +735,39 @@ export const SelectInverseDisabled: Story = {
   `,
 };
 
+// ─── forceDisplayValue — selects option and verifies value ───────────────────
+export const SelectForceDisplayValue: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-select forcedisplayvalue>
+  <span slot="label">Travel</span>
+  <auro-menu>
+    <auro-menuoption value="flights">
+      Flights
+      <span slot="displayValue">✈️</span>
+    </auro-menuoption>
+    <auro-menuoption value="cars">
+      Cars
+      <span slot="displayValue">🚗</span>
+    </auro-menuoption>
+  </auro-menu>
+</auro-select>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const el = canvasElement.querySelector('auro-select') as any;
+    await el.updateComplete;
+
+    const menu = el.querySelector('auro-menu');
+    const option = menu.querySelector('auro-menuoption');
+    option.click();
+    await wait(100);
+
+    const displayValueEl = el.querySelector('[slot="displayValue"]');
+    await expect(displayValueEl).not.toBeNull();
+    await expect(displayValueEl.textContent.trim()).toBe('✈️');
+  },
+};
+
 // ─── Inverse error ───────────────────────────────────────────────────────────
 export const SelectInverseError: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
