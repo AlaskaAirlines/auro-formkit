@@ -26,7 +26,6 @@ import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import BaseInput from './base-input.js';
-import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
@@ -370,30 +369,6 @@ export class AuroInput extends BaseInput {
   }
 
   /**
-   * Determines default help text string.
-   * @private
-   * @returns {string} Evaluates pre-determined help text.
-   */
-  getHelpText() {
-    const typeHelpText = [
-      'password',
-      'email',
-      'credit-card',
-      'tel'
-    ];
-
-    if (typeHelpText.includes(this.type)) {
-      return i18n(this.lang, this.type);
-    }
-
-    if (this.type === 'date') {
-      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
-    }
-
-    return '';
-  }
-
-  /**
    * Function to support show-password feature.
    * @private
    * @returns {void}
@@ -413,17 +388,6 @@ export class AuroInput extends BaseInput {
     }
 
     return this.pattern;
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-
-    notifyOnLangChange(this);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    stopNotifyingOnLangChange(this);
   }
 
   /**
@@ -631,7 +595,7 @@ export class AuroInput extends BaseInput {
           <${this.helpTextTag}
             appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
-              <slot name="helpText">${this.getHelpText()}</slot>
+              <slot name="helpText"></slot>
             </p>
           </${this.helpTextTag}>
         `
