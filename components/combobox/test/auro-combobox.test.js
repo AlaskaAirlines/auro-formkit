@@ -1826,61 +1826,23 @@ function runFullTest(mobileView) {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
-      const origMenu = el.menu;
+      // Save the real menu, remove it so querySelector returns null
       const menu = el.querySelector('auro-menu');
       menu.remove();
 
-      // configureMenu() does:
-      //   this.menu = this.querySelector(...)  → assign null
-      //   this.defaultMenuShape = this.menu.getAttribute('shape') → reads this.menu
-      //   if (!this.menu) { setTimeout(retry); return; }          → reads this.menu
-      //
-      // To reach the guard without crashing on getAttribute, use a getter
-      // that returns a stub for the 1st read (getAttribute) then null for
-      // the 2nd read (the guard).
-      let readCount = 0;
-      const menuStub = { getAttribute: () => null };
-
-      const origQuerySelector = el.querySelector.bind(el);
-      el.querySelector = () => null;
-
-      Object.defineProperty(el, 'menu', {
-        get() {
-          readCount += 1;
-          return readCount <= 1 ? menuStub : null;
-        },
-        set() {
-          readCount = 0;
-        },
-        configurable: true,
-      });
-
-      // Capture the retry callback so we can execute it after restoring state
-      let retryFn = null;
-      const origSetTimeout = window.setTimeout;
-      window.setTimeout = (fn, delay) => {
-        if (delay === 0) {
-          retryFn = fn;
-          return 0;
-        }
-        return origSetTimeout(fn, delay);
-      };
-
+      // Call configureMenu — querySelector returns null, so it schedules a retry
       el.configureMenu();
+      expect(el.menu).to.be.null;
 
-      expect(retryFn).to.not.be.null;
-
-      // Restore state so the retry succeeds: put menu back and remove overrides
-      window.setTimeout = origSetTimeout;
-      delete el.menu;
-      el.querySelector = origQuerySelector;
+      // Re-add the menu so the retry finds it
       el.appendChild(menu);
       await elementUpdated(el);
 
-      // Execute the captured retry callback — this covers line 1001
-      retryFn();
+      // The setTimeout retry should now find the menu
+      await new Promise((resolve) => setTimeout(resolve, 50)); // eslint-disable-line no-magic-numbers
+      await elementUpdated(el);
 
-      expect(el.menu).to.exist;
+      expect(el.menu).to.not.be.null;
     });
 
     it('scrollIntoView uses auto behavior when prefers-reduced-motion is enabled', async () => {

@@ -1261,40 +1261,11 @@ function runTest(mobileView) {
         const menu = el.querySelector('auro-menu');
         menu.remove();
 
-        // Override querySelector so it returns a stub for the first call
-        // (to avoid the getAttribute crash on lines 778-779), then make
-        // this.menu falsy before the guard check on line 781 using a getter.
-        const origQS = el.querySelector;
-        let menuStub = { getAttribute: () => null };
-
-        el.querySelector = function(selector) {
-          if (selector === 'auro-menu, [auro-menu]') {
-            // Return the stub so getAttribute doesn't crash
-            this.menu = menuStub;
-            return menuStub;
-          }
-          return origQS.call(this, selector);
-        };
-
-        // After the stub is assigned on line 776, getAttribute runs on 778-779.
-        // Then we need this.menu to be falsy on line 781.
-        // Use defineProperty to make menu a getter that returns null after getAttribute calls.
-        let getAttrCalls = 0;
-        menuStub.getAttribute = () => {
-          getAttrCalls++;
-          if (getAttrCalls >= 2) { // eslint-disable-line no-magic-numbers
-            // After both getAttribute calls, make el.menu falsy for the guard
-            el.menu = null;
-          }
-          return null;
-        };
-
-        // Call configureMenu — it will: querySelector → stub, getAttribute×2 → null el.menu, guard → retry
+        // Call configureMenu — querySelector returns null, so it schedules a retry
         el.configureMenu();
-        await elementUpdated(el);
+        expect(el.menu).to.be.null;
 
-        // Restore querySelector and re-add the menu
-        el.querySelector = origQS;
+        // Re-add the menu so the retry finds it
         el.appendChild(menu);
         await elementUpdated(el);
 

@@ -995,7 +995,6 @@ export class AuroCombobox extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
-    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     // racing condition on custom-combobox with custom-menu
     if (!this.menu) {
@@ -1004,6 +1003,8 @@ export class AuroCombobox extends AuroElement {
       }, 0);
       return;
     }
+
+    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     this.updateMenuShapeSize();
 
@@ -1444,7 +1445,7 @@ export class AuroCombobox extends AuroElement {
       // branch from calling hideBib() when the dropdown was just opened but
       // :focus-within hasn't propagated through the top-layer dialog's nested
       // shadow DOM boundaries.
-      if ((this.availableOptions.length > 0 && (this.componentHasFocus || this.dropdownOpen)) || this.menu.loading || (this.availableOptions.length === 0 && this.noMatchOption)) {
+      if ((this.availableOptions.length > 0 && (this.componentHasFocus || this.dropdownOpen)) || (this.menu && this.menu.loading) || (this.availableOptions.length === 0 && this.noMatchOption)) {
         this.showBib();
         if (!this.availableOptions.includes(this.menu.optionActive)) {
           this.activateFirstEnabledAvailableOption();
@@ -1524,6 +1525,10 @@ export class AuroCombobox extends AuroElement {
       case '':
         if (!this.menu || this.menu !== this.querySelector('auro-menu, [auro-menu]')) {
           this.configureMenu();
+        }
+
+        if (!this.menu) {
+          return;
         }
 
         // Treat only generic menuoptions.

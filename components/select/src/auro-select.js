@@ -774,8 +774,6 @@ export class AuroSelect extends AuroElement {
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
-    this.defaultMenuSize = this.menu.getAttribute('size');
-    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     // racing condition on custom-select with custom-menu
     if (!this.menu) {
@@ -784,6 +782,9 @@ export class AuroSelect extends AuroElement {
       }, 0);
       return;
     }
+
+    this.defaultMenuSize = this.menu.getAttribute('size');
+    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     this.updateMenuShapeSize();
     this.setMenuValue(this.value);
