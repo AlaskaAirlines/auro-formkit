@@ -35,8 +35,8 @@
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/customRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/customRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/customRegistration.md -->
 
 ## Custom Component Registration for Version Management
 
@@ -106,10 +106,9 @@ Then use the element in your HTML:
 </div>
 </auro-accordion>
 <auro-accordion class="section" id="cdnAccordion">
-<span slot="trigger">CDN Installation and Implementation</span>
+<span slot="trigger">CDN Installation</span>
 <div class="accordion-content">
-<p class="warning"><strong>Warning:</strong> CDN install & registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
-<auro-header level="3">Install & Implementation</auro-header>
+<p class="warning"><strong>Warning:</strong> CDN registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/cdnRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/cdnRegistration.md -->
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>

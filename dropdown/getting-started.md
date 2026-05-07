@@ -34,7 +34,38 @@
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/customRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/customRegistration.md -->
+
+## Custom Component Registration for Version Management
+
+There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
+
+You can do this by importing only the component class and using the `register(name)` method with a unique name:
+
+<pre class="language-js"><code class="language-js">// Import the class only
+import { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class';
+​
+// Register with a custom name if desired
+AuroDropdown.register('custom-dropdown');</code></pre>
+
+This will create a new custom element `<custom-dropdown>` that behaves exactly like `<auro-dropdown>`, allowing both to coexist on the same page without interfering with each other.
+
+<pre class="language-html"><code class="language-html">&lt;custom-dropdown id="customCommon" layout="classic" shape="classic" size="lg" aria-label="Label content for screen reader"&gt;
+  &lt;div style="padding: var(--ds-size-150);"&gt;
+    Lorem ipsum solar
+    &lt;br /&gt;
+    &lt;auro-button id="customCommonButton"&gt;
+      Dismiss Dropdown
+    &lt;/auro-button&gt;
+  &lt;/div&gt;
+  &lt;span slot="helpText"&gt;
+    Help text
+  &lt;/span&gt;
+  &lt;div slot="trigger"&gt;
+    Trigger
+  &lt;/div&gt;
+&lt;/custom-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
@@ -69,6 +100,7 @@ Then use the element in your HTML:
 <auro-accordion class="section" id="cdnAccordion">
 <span slot="trigger">CDN Installation</span>
 <div class="accordion-content">
+<p class="warning"><strong>Warning:</strong> CDN registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/cdnRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/cdnRegistration.md -->
 The dropdown component can be loaded via CDN without a build step:
