@@ -22,6 +22,7 @@
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
       <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
       <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
+      <auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
       <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
       <auro-anchorlink fluid href="#max" class="level2 body-xs">Max</auro-anchorlink>
       <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
@@ -235,6 +236,18 @@
         <auro-accordion alignRight>
           <span slot="trigger">See code</span>
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="regionalDateFormat">Regional Date Format Support</auro-header>
+        <p>When <code>type="date"</code> is used with the <code>locale</code> attribute, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
+        <p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
+        <div class="exampleWrapper">
+          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/locale.html) -->
+          <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+          <span slot="trigger">See code</span>
+          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/locale.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="inputMode">Input Mode</auro-header>
