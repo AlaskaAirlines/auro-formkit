@@ -3,7 +3,7 @@
   <div class="mainContent">
     <div class="scrollWrapper">
 
-The `auro-input` component renders a native HTML `<input>` element inside its shadow DOM and augments it with custom label, help text, and validation UI. This page documents the ARIA semantics, screen reader announcements, and other accessibility behaviors built into the component.
+The `auro-input` component renders a native HTML <code>&lt;input&gt;</code> element inside its shadow DOM and augments it with custom label, help text, and validation UI. This page documents the ARIA semantics, screen reader announcements, and other accessibility behaviors built into the component.
 
 For keyboard interaction details, see the <auro-hyperlink href="./keyboard-behavior.html">Keyboard Behavior</auro-hyperlink> page.
 
