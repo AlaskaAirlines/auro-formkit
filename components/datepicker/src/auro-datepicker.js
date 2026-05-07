@@ -969,18 +969,13 @@ export class AuroDatePicker extends AuroElement {
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
-    this.handleReadOnly();
-
-
     this.inputList.forEach((input, index) => {
       input.addEventListener('input', (event) => {
         event.stopPropagation();
 
         if (index === 0) {
-          // NOTE: input.formattedDate is available here as well
           this.value = input.value;
         } else if (index === 1) {
-          // NOTE: input.formattedDate is available here as well
           this.valueEnd = input.value;
         }
 
@@ -1019,16 +1014,10 @@ export class AuroDatePicker extends AuroElement {
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
       if (this.inputList[0].value !== this.calendar.dateFrom && this.calendar.dateFrom !== undefined) {
         this.inputList[0].value = this.convertWcTimeToDate(this.calendar.dateFrom);
-
-        // Below code demonstrates how to set the input value to a localized format
-        // this.inputList[0].value = this.inputList[0].util.toLocaleFormat(this.convertWcTimeToDate(this.calendar.dateFrom));
       }
 
       if (this.inputList[1] && this.calendar.dateTo && this.inputList[1].value !== this.calendar.dateTo) {
         this.inputList[1].value = this.convertWcTimeToDate(this.calendar.dateTo);
-
-        // Below code demonstrates how to set the input value to a localized format
-        // this.inputList[1].value = this.inputList[1].util.toLocaleFormat(this.convertWcTimeToDate(this.calendar.dateTo));
       }
     });
 
@@ -1726,7 +1715,6 @@ export class AuroDatePicker extends AuroElement {
           setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
           setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
           setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-          .format="${this.format}"
           type="date"
         >
           ${this.layout !== "classic"
@@ -1770,7 +1758,6 @@ export class AuroDatePicker extends AuroElement {
             setCustomValidityValueMissing="${this.setCustomValidityValueMissing}"
             setCustomValidityRangeOverflow="${this.setCustomValidityRangeOverflow}"
             setCustomValidityRangeUnderflow="${this.setCustomValidityRangeUnderflow}"
-            .format="${this.format}"
             type="date"
           >
             ${this.layout !== "classic"
