@@ -3,7 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/index.md
+  All demo code should be added/edited in ./demo/keyboard-behavior.md
 
   With the exception of adding custom elements if needed for the demo.
 
@@ -16,39 +16,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-datepicker</title>
+    <title>Auro Web Component Demo | auro-datepicker | Keyboard Behavior</title>
 
-    <!-- Prism.js Stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css"/>
+    <!-- highlight.js Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css?v=ec10fe1"/>
 
     <!-- Legacy reference is still needed to support auro-datepicker's use of legacy token values at this time -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
 
     <!-- Design Token Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css"/>
-    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css?v=ec10fe1"/>
+
     <!-- Webcore Stylesheet Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css?v=ec10fe1" />
+
     <!-- Demo Specific Styles -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
+    <link rel="stylesheet" type="text/css" href="../datepicker/styles.min.css?v=ec10fe1" />
     <style>
-      table {
-        --ds-color-container-secondary-default: transparent;
-      }
-
-      tr:not(:last-of-type) {
-        border-bottom: 1px solid var(--ds-color-border-tertiary-default);
-      }
-
-      sup {
-        font-size: 60%;
-        font-style: italic;
-        opacity: 0.6;
-        top: -.5rem;
-      }
-
       .note {
         margin: 10px 0;
         padding: 10px;
@@ -58,24 +42,17 @@
         background-color: var(--ds-basic-color-surface-neutral-subtle);
       }
     </style>
-</head>
+  </head>
   <body class="auro-markdown">
     <main></main>
 
     <script type="module">
-      import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js';
-      import 'https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js';
-      fetch('../datepicker/keyboardBehavior.md')
-        .then((response) => response.text())
-        .then((text) => {
-          const rawHtml = marked.parse(text);
-          document.querySelector('main').innerHTML = rawHtml;
-          Prism.highlightAll();
-        })
+      import { renderPage } from '../datepicker/demo-support.min.js?v=ec10fe1';
+      await renderPage('../datepicker/keyboard-behavior.md?v=ec10fe1');
     </script>
 
     <!-- If additional elements are needed for the demo, add them here. -->
-     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-header@latest/+esm" type="module"></script>
-     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-header@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
   </body>
 </html>
