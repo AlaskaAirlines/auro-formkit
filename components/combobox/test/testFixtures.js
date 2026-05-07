@@ -467,3 +467,42 @@ export async function inDrawerFixture() {
     </auro-drawer>
   `);
 }
+
+/**
+ * Testing fixture with two comboboxes for value swapping tests.
+ * @param {boolean} mobileView - Whether to render the fixture in mobile viewport.
+ * @returns {Promise<HTMLElement>} A wrapper div containing two auro-combobox elements (#left and #right).
+ */
+export async function swapFixture(mobileView) {
+  if (mobileView) {
+    await setViewport({
+      width: 500,
+      height: 800
+    });
+  } else {
+    await setViewport({
+      width: 800,
+      height: 800
+    });
+  }
+  return fixture(html`
+  <div>
+    <auro-combobox id="left">
+      <span slot="label">Left</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+        <auro-menuoption value="Peaches">Peaches</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+    <auro-combobox id="right">
+      <span slot="label">Right</span>
+      <auro-menu>
+        <auro-menuoption value="Apples">Apples</auro-menuoption>
+        <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+        <auro-menuoption value="Peaches">Peaches</auro-menuoption>
+      </auro-menu>
+    </auro-combobox>
+  </div>
+  `);
+}

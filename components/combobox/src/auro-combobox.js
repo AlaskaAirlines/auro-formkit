@@ -1408,6 +1408,8 @@ export class AuroCombobox extends AuroElement {
           this.setMenuValue(this.value);
         } else {
           this.menu.value = undefined;
+          // Sync the input display for freeform values that don't match any option
+          this.input.value = this.value;
         }
       } else {
         // Use setMenuValue like select does instead of direct assignment
