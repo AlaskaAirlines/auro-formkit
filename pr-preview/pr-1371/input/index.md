@@ -132,9 +132,8 @@
 <li><strong><code>type="date"</code></strong> — Formats the input as a date. The default format is <code>mm/dd/yyyy</code>. Custom date formats may be specified using the <code>format</code> attribute with any combination of <code>mm</code>, <code>dd</code>, <code>yyyy</code>, or <code>yy</code>.</li>
 </ul>
 <p class="note">
-          **
+<strong>Note:</strong>
           Custom masking is also available via the <code>format</code> attribute using <auro-hyperlink href="https://imask.js.org/">IMask</auro-hyperlink> definitions: <code>0</code> for digit, <code>a</code> for letter, <code>*</code> for any character.
-          **
 </p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/credit-card-icon.html) -->
