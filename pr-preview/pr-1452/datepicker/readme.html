@@ -25,29 +25,21 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
 
     <!-- Design Token Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css?v=5ae25ae"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css?v=946c8b8"/>
     
     <!-- Webcore Stylesheet Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css?v=5ae25ae" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css?v=946c8b8" />
     
     <!-- Demo Specific Styles -->
-    <link rel="stylesheet" type="text/css" href="../datepicker/styles.min.css?v=5ae25ae" />
+    <link rel="stylesheet" type="text/css" href="../datepicker/styles.min.css?v=946c8b8" />
 </head>
   <body class="auro-markdown">
     <main></main>
 
     <script type="module">
-      import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js?v=5ae25ae';
-      import 'https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js';
-      fetch('../datepicker/readme.md?v=5ae25ae')
-        .then((response) => response.text())
-        .then((text) => {
-          const rawHtml = marked.parse(text);
-          document.querySelector('main').innerHTML = rawHtml;
-          Prism.highlightAll();
-        })
+      import { renderPage } from '../datepicker/demo-support.min.js?v=946c8b8';
+      await renderPage('../datepicker/readme.md?v=946c8b8');
     </script>
-    <script src="../datepicker/index.min.js?v=5ae25ae" data-demo-script="true" type="module"></script>
 
     <!-- If additional elements are needed for the demo, add them here. -->
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
