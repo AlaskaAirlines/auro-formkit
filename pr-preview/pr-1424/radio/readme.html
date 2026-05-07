@@ -3,7 +3,7 @@
   See LICENSE in the project root for license information.
 
   HTML in this document is standardized and NOT to be edited.
-  All demo code should be added/edited in ./demo/index.md
+  All demo code should be added/edited in ./demo/readme.md
 
   With the exception of adding custom elements if needed for the demo.
 
@@ -16,41 +16,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auro Web Component Demo | auro-radio</title>
+    <title>Auro Web Component Demo | auro-radio | README</title>
 
-    <!-- Prism.js Stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism.css"/>
+    <!-- highlight.js Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css?v=e1e17a4"/>
 
     <!-- Legacy reference is still needed to support auro-radio's use of legacy token values at this time -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css"/>
 
     <!-- Design Token Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css"/>
-    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/themes/alaska/CSSCustomProperties--alaska.min.css?v=e1e17a4"/>
+
     <!-- Webcore Stylesheet Alaska Theme -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/bundled/themes/alaska.global.min.css?v=e1e17a4" />
+
     <!-- Demo Specific Styles -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/demoWrapper.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/webcorestylesheets@latest/dist/elementDemoStyles.css" />
-</head>
+    <link rel="stylesheet" type="text/css" href="../radio/styles.min.css?v=e1e17a4" />
+  </head>
   <body class="auro-markdown">
     <main></main>
 
     <script type="module">
-      import 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js';
-      import 'https://cdn.jsdelivr.net/npm/prismjs@latest/prism.js';
-      fetch('../radio/readme.md')
-        .then((response) => response.text())
-        .then((text) => {
-          const rawHtml = marked.parse(text);
-          document.querySelector('main').innerHTML = rawHtml;
-          Prism.highlightAll();
-        })
+      import { renderPage } from '../radio/demo-support.min.js?v=e1e17a4';
+      await renderPage('../radio/readme.md?v=e1e17a4');
     </script>
-    <script src="../radio/index.min.js" data-demo-script="true" type="module"></script>
+
+    <script src="../radio/index.min.js?v=e1e17a4" data-demo-script="true" type="module"></script>
 
     <!-- If additional elements are needed for the demo, add them here. -->
     <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-accordion@latest/+esm" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-hyperlink@latest/+esm" type="module"></script>
   </body>
 </html>
