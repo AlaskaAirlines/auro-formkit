@@ -22,6 +22,7 @@
 <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
 <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
 <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
+<auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
 <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
 <auro-anchorlink fluid href="#max" class="level2 body-xs">Max</auro-anchorlink>
 <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
@@ -525,6 +526,72 @@
   &lt;span slot="label"&gt;Custom format&lt;/span&gt;
   &lt;span slot="helpText"&gt;Format is: 47440000&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="regionalDateFormat">Regional Date Format Support</auro-header>
+<p>When <code>type="date"</code> is used with the <code>locale</code> attribute, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
+<p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/locale.html) -->
+<!-- The below content is automatically added from ../apiExamples/locale.html -->
+<div data-locale="de-DE">
+<auro-input type="date" locale="en-GB">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-GB Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-input type="date" locale="en-US">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-US Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-input type="date" locale="zh-CN">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">zh-CN Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-input type="date">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-input type="date" locale="en-US" format="yyyy.mm.dd">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-US with yyyy.mm.dd format</span>
+<span slot="helpText">Help Text</span>
+</div>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/locale.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/locale.html -->
+<pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
+  &lt;auro-input type="date" locale="en-GB"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-GB Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-input type="date" locale="en-US"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-US Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-input type="date" locale="zh-CN"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;zh-CN Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-input type="date"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;Nearest `data-locale` attribute format (`de-DE` in this case)&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="inputMode">Input Mode</auro-header>
