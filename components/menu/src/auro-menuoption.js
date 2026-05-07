@@ -459,7 +459,7 @@ export class AuroMenuOption extends AuroElement {
    * @private
    */
   handleClick() {
-    if (!this.disabled) {
+    if (!this.disabled && !this.menuService?.disabled) {
       this.dispatchClickEvent();
       this.selected = !this.selected;
     }
