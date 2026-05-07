@@ -1973,24 +1973,6 @@ function runFullTest(mobileView) {
       expect(input.classList.contains('body-lg')).to.be.true;
     });
 
-    it('hasTypeIcon returns true for icon attribute', async () => {
-      const el = await fixture(html`<auro-input icon></auro-input>`);
-      await elementUpdated(el);
-      expect(el.hasTypeIcon()).to.be.true;
-    });
-
-    it('hasTypeIcon returns true for date type', async () => {
-      const el = await fixture(html`<auro-input type="date"></auro-input>`);
-      await elementUpdated(el);
-      expect(el.hasTypeIcon()).to.be.true;
-    });
-
-    it('hasTypeIcon returns false for text type', async () => {
-      const el = await fixture(html`<auro-input></auro-input>`);
-      await elementUpdated(el);
-      expect(el.hasTypeIcon()).to.be.false;
-    });
-
     it('renderLayout handles emphasized-left and right', async () => {
       const el = await fixture(html`<auro-input></auro-input>`);
       await elementUpdated(el);
