@@ -11,29 +11,6 @@
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-select"
   },
-  "dependencies": {
-    "@aurodesignsystem/auro-dropdown": "*",
-    "@aurodesignsystem/auro-menu": "*",
-    "chalk": "^5.4.1",
-    "lit-element": "^4.1.1",
-    "lit-html": "^3.2.1"
-  },
-  "devDependencies": {
-    "@alaskaairux/icons": "^5.14.0",
-    "@aurodesignsystem/auro-dialog": "^4.1.1",
-    "@aurodesignsystem/auro-drawer": "^5.1.2",
-    "@aurodesignsystem/build-tools": "*",
-    "@aurodesignsystem/config": "*",
-    "@aurodesignsystem/form-validation": "*",
-    "@aurodesignsystem/typescript": "*",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "compression": "^1.8.0",
-    "rollup": "^4.39.0",
-    "rollup-plugin-serve": "^3.0.0",
-    "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0"
-  },
   "nodemonConfig": {
     "ext": "scss,js,md",
     "watch": ["src", "docs", "demo", "apiExamples"],
@@ -53,7 +30,7 @@
   "scripts": {
     "build": "run-s sass bundler types build:docs",
     "sass": "run-s build:sass postCss:component sass:render",
-    "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
+    "build:sass": "sass --no-source-map --quiet-deps --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
     "build:watch": "nodemon",
     "bundler": "rollup -c node:@aurodesignsystem/config/rollup",
     "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; npm run docs; node ../../packages/build-tools/src/generatePageManifest.mjs",
@@ -64,7 +41,7 @@
     "serve:closed": "npm run docs -- -s -w",
     "docs": "auro docs -r '../../docs/templates/componentReadmeTemplate.md' -p 8800",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
-    "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "sass:render": "sass-render -i ../../node_modules --suffix=-css.js 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "test": "wtr --config \"./web-test-runner.config.mjs\" --coverage --port 7700",
     "test:watch": "wtr --config \"./web-test-runner.config.mjs\" --watch --port 7700",
     "types": "tsc --project tsconfig.json",
