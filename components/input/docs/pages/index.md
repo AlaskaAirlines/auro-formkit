@@ -11,6 +11,7 @@
       <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
       <auro-anchorlink fluid href="#passwordToggle" class="level2 body-xs">Password Input</auro-anchorlink>
       <auro-anchorlink fluid href="#formattedInput" class="level2 body-xs">Formatted Input</auro-anchorlink>
+      <auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
