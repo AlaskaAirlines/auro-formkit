@@ -1,5 +1,4 @@
 <auro-header level="2" id="setup">Setup</auro-header>
-
 <auro-accordion-group Emphasis>
   <auro-accordion expanded class="section" id="recommendedAccordion">
     <span slot="trigger">Recommended Installation and Implementation</span>
