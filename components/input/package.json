@@ -11,33 +11,6 @@
     "type": "git",
     "url": "https://github.com/AlaskaAirlines/auro-input"
   },
-  "dependencies": {
-    "@aurodesignsystem/auro-helptext": "*",
-    "@aurodesignsystem/auro-icon": "^9.1.1",
-    "@aurodesignsystem/auro-layout-element": "*",
-    "chalk": "^5.4.1",
-    "date-fns": "^4.1.0",
-    "imask": "^7.6.1"
-  },
-  "devDependencies": {
-    "@alaskaairux/icons": "^5.14.0",
-    "@aurodesignsystem/build-tools": "*",
-    "@aurodesignsystem/config": "*",
-    "@aurodesignsystem/form-validation": "*",
-    "@aurodesignsystem/typescript": "*",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "backstopjs": "^6.3.25",
-    "rollup": "^4.40.1",
-    "rollup-plugin-serve": "^3.0.0",
-    "sinon": "^20.0.0",
-    "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0"
-  },
-  "overrides": {
-    "wc-sass-render": {
-      "sass": "$sass"
-    }
-  },
   "nodemonConfig": {
     "ext": "scss,js,md",
     "watch": ["src", "docs", "demo", "apiExamples"],
