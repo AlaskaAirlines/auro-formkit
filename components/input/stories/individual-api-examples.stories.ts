@@ -21,48 +21,6 @@ const specialConfigs = {
     },
     tags: ['!autodocs'],
   },
-  'appearance-inverse-description': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-disabled': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-dropdown': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-error': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-group': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-helptext': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
-  'appearance-inverse-snowflake': {
-    globals: {
-      backgrounds: { value: 'dark' },
-    },
-    tags: ['!autodocs'],
-  },
 };
 
 const ApiExamples: Meta = {
@@ -88,9 +46,6 @@ const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialC
 // eslint-disable-next-line @typescript-eslint/prefer-destructuring-assignment
 // sourcery skip: use-object-destructuring
 export const ActiveLabel = stories.ActiveLabel;
-export const AppearanceInverseDisabled = stories.AppearanceInverseDisabled;
-export const AppearanceInverseError = stories.AppearanceInverseError;
-export const AppearanceInversePassword = stories.AppearanceInversePassword;
 export const AppearanceInverse = stories.AppearanceInverse;
 export const Basic = stories.Basic;
 export const CreditCardIcon = stories.CreditCardIcon;
