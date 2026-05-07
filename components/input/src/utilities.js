@@ -237,6 +237,7 @@ export class AuroInputUtilities {
 
   /**
    * @private
+   * TODO: This needs to be removed after datepicker, form updated with locale support
    * @param {string} dateStr - Date string to format.
    * @param {string?} [format] - DEPRECATED: Date format to use.
    * @returns {{ formattedDate: string, dateForComparison: string }}
