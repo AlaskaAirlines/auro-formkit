@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { createContext } from "@lit/context";
-import { AuroMenuOption } from "./auro-menuoption.js";
 
 export class MenuService {
 
