@@ -21,6 +21,7 @@ import {
   noFilterFixture,
   inDialogFixture,
   inDrawerFixture,
+  swapFixture,
 } from './testFixtures.js';
 import { setInputValue, getAnnouncementRoot } from './testFunctions.js';
 import { comboboxKeyboardStrategy } from '../src/comboboxKeyboardStrategy.js';
@@ -575,26 +576,7 @@ function runFullTest(mobileView) {
     });
 
     it('should swap values between two comboboxes', async () => {
-      const wrapper = await fixture(html`
-        <div>
-          <auro-combobox id="left">
-            <span slot="label">Left</span>
-            <auro-menu>
-              <auro-menuoption value="Apples">Apples</auro-menuoption>
-              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
-              <auro-menuoption value="Peaches">Peaches</auro-menuoption>
-            </auro-menu>
-          </auro-combobox>
-          <auro-combobox id="right">
-            <span slot="label">Right</span>
-            <auro-menu>
-              <auro-menuoption value="Apples">Apples</auro-menuoption>
-              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
-              <auro-menuoption value="Peaches">Peaches</auro-menuoption>
-            </auro-menu>
-          </auro-combobox>
-        </div>
-      `);
+      const wrapper = await swapFixture(mobileView);
 
       const left = wrapper.querySelector('#left');
       const right = wrapper.querySelector('#right');
@@ -620,6 +602,35 @@ function runFullTest(mobileView) {
       await expect(right.value).to.equal('Apples');
       await expect(left.input.value).to.equal('Oranges');
       await expect(right.input.value).to.equal('Apples');
+    });
+
+    it('should swap freeform typed values between two comboboxes', async () => {
+      const wrapper = await swapFixture(mobileView);
+
+      const left = wrapper.querySelector('#left');
+      const right = wrapper.querySelector('#right');
+
+      // Type freeform values without selecting from menu
+      setInputValue(left, 'a');
+      setInputValue(right, 'b');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      await expect(left.value).to.equal('a');
+      await expect(right.value).to.equal('b');
+
+      // Swap values programmatically (like the demo swap button)
+      const leftVal = left.value;
+      const rightVal = right.value;
+      left.value = rightVal;
+      right.value = leftVal;
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      await expect(left.value).to.equal('b');
+      await expect(right.value).to.equal('a');
+      await expect(left.input.value).to.equal('b');
+      await expect(right.input.value).to.equal('a');
     });
 
     // These tests require fullscreen (mobile) mode
