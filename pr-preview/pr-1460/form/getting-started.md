@@ -306,21 +306,21 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/complex.html) -->
 <!-- The below content is automatically added from ./../apiExamples/complex.html -->
 <style>
-.submitBlock {
-margin-top: 1rem;
-display: flex;
-justify-content: flex-end;
-gap: 1rem;
-}
-.datepickerBlock {
-margin-top: 1rem;
-}
-.complex-form {
-display: block;
-padding: 1rem;
-border: 1px solid #2a2a2a;
-border-radius: 1rem;
-}
+          .submitBlock {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+          }
+          .datepickerBlock {
+            margin-top: 1rem;
+          }
+          .complex-form {
+            display: block;
+            padding: 1rem;
+            border: 1px solid #2a2a2a;
+            border-radius: 1rem;
+          }
 </style>
 <auro-form class="complex-form">
 <auro-input id="first-name" name="firstName" required>

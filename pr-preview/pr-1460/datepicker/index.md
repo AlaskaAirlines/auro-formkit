@@ -18,50 +18,50 @@
 <auro-header level="2" id="description">Description</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- The below content is automatically added from ./../docs/partials/description.md -->
-The <code>&lt;auro-datepicker&gt;</code> element allows users to select a date, or a pair of dates identifying a range, either with text input or by making a section in a calendar. The <code>&lt;auro-datepicker&gt;</code> element is the combination of <auro-hyperlink href="http://auro.alaskaair.com/components/auro/dropdown">auro-dropdown</auro-hyperlink>, <auro-hyperlink href="http://auro.alaskaair.com/components/auro/input">auro-input</auro-hyperlink>, and Auro's extension of <auro-hyperlink href="https://www.npmjs.com/package/wc-range-datepicker" target="_blank">wc-range-datepicker</auro-hyperlink>.
+      The <code>&lt;auro-datepicker&gt;</code> element allows users to select a date, or a pair of dates identifying a range, either with text input or by making a section in a calendar. The <code>&lt;auro-datepicker&gt;</code> element is the combination of <auro-hyperlink href="http://auro.alaskaair.com/components/auro/dropdown">auro-dropdown</auro-hyperlink>, <auro-hyperlink href="http://auro.alaskaair.com/components/auro/input">auro-input</auro-hyperlink>, and Auro's extension of <auro-hyperlink href="https://www.npmjs.com/package/wc-range-datepicker" target="_blank">wc-range-datepicker</auro-hyperlink>.
 <!-- AURO-GENERATED-CONTENT:END -->
 <section>
 <auro-header level="2" id="userStories">User Stories</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
 <!-- The below content is automatically added from ./../docs/partials/useCases.md -->
-The <code>&lt;auro-datepicker&gt;</code> element should be used in situations where users may:
+        The <code>&lt;auro-datepicker&gt;</code> element should be used in situations where users may:
 
-* select a single date
-* select a pair of dates which identify a calendar range
+        * select a single date
+        * select a pair of dates which identify a calendar range
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
 <!-- The below content is automatically added from ./../docs/partials/index/userStories.md -->
 <auro-header level="3" id="selectDate">Select a date</auro-header>
 <ol>
 <li>
-Move focus to the datepicker input
+            Move focus to the datepicker input
 <div class="note">
 <p>
-The label moves from the placeholder position to the active position above the input area. The input is ready to accept a typed date value.
+                The label moves from the placeholder position to the active position above the input area. The input is ready to accept a typed date value.
 </p>
 </div>
 </li>
 <li>
-Click the input or press <kbd>Enter</kbd> / <kbd>Space</kbd> to open the calendar
+            Click the input or press <kbd>Enter</kbd> / <kbd>Space</kbd> to open the calendar
 <div class="note">
 <p>
-The calendar bib opens and displays the current month. Focus moves into the calendar on the current date or, if a <code>calendarFocusDate</code> is set, on that date.
+                The calendar bib opens and displays the current month. Focus moves into the calendar on the current date or, if a <code>calendarFocusDate</code> is set, on that date.
 </p>
 </div>
 </li>
 <li>
-Select a date by clicking a calendar cell or by typing a date directly into the input
+            Select a date by clicking a calendar cell or by typing a date directly into the input
 <div class="note">
 <p>
-When a valid date is selected, the <code>value</code> property is updated and the calendar closes (on desktop). If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
+                When a valid date is selected, the <code>value</code> property is updated and the calendar closes (on desktop). If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
 </p>
 </div>
 </li>
 <li>
-Move focus away from the datepicker
+            Move focus away from the datepicker
 <div class="note">
 <p>
-Validation is triggered on blur by default. If the value does not meet the configured constraints (e.g. <code>required</code>, <code>minDate</code>, <code>maxDate</code>), the component renders an error state with a help text message.
+                Validation is triggered on blur by default. If the value does not meet the configured constraints (e.g. <code>required</code>, <code>minDate</code>, <code>maxDate</code>), the component renders an error state with a help text message.
 </p>
 </div>
 </li>

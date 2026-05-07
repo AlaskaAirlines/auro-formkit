@@ -27,32 +27,32 @@
 <auro-header level="3" id="enterValue">Enter a value</auro-header>
 <ol>
 <li>
-Move focus to the auro-input element
+            Move focus to the auro-input element
 <div class="note">
 <p>
-The label animates from the placeholder position to the active position above the input area. If the <code>activeLabel</code> attribute is set, the label remains fixed in the active position at all times.
+                The label animates from the placeholder position to the active position above the input area. If the <code>activeLabel</code> attribute is set, the label remains fixed in the active position at all times.
 </p>
 </div>
 </li>
 <li>
-Type a value into the input
+            Type a value into the input
 <div class="note">
 <p>
-As the user types, the component tracks the current value via the <code>value</code> property. The <code>hasValue</code> flag is set to <code>true</code> once the input contains any content.
+                As the user types, the component tracks the current value via the <code>value</code> property. The <code>hasValue</code> flag is set to <code>true</code> once the input contains any content.
 </p>
 <p>
-If the input has a <code>type</code> attribute (e.g. <code>credit-card</code>, <code>tel</code>, <code>date</code>), formatting is automatically applied as the user types.
+                If the input has a <code>type</code> attribute (e.g. <code>credit-card</code>, <code>tel</code>, <code>date</code>), formatting is automatically applied as the user types.
 </p>
 </div>
 </li>
 <li>
-Move focus away from the input
+            Move focus away from the input
 <div class="note">
 <p>
-Validation is triggered on blur by default. If the value does not meet the configured constraints (e.g. <code>required</code>, <code>minlength</code>, <code>pattern</code>), the component renders an error state with a help text message describing the issue.
+                Validation is triggered on blur by default. If the value does not meet the configured constraints (e.g. <code>required</code>, <code>minlength</code>, <code>pattern</code>), the component renders an error state with a help text message describing the issue.
 </p>
 <p>
-If the <code>noValidate</code> attribute is set, no validation occurs on blur. If the <code>validateOnInput</code> attribute is set, validation occurs on every keystroke instead of on blur.
+                If the <code>noValidate</code> attribute is set, no validation occurs on blur. If the <code>validateOnInput</code> attribute is set, validation occurs on every keystroke instead of on blur.
 </p>
 </div>
 </li>
@@ -131,7 +131,7 @@ If the <code>noValidate</code> attribute is set, no validation occurs on blur. I
 <li><strong><code>type="date"</code></strong> — Formats the input as a date. The default format is <code>mm/dd/yyyy</code>. Custom date formats may be specified using the <code>format</code> attribute with any combination of <code>mm</code>, <code>dd</code>, <code>yyyy</code>, or <code>yy</code>.</li>
 </ul>
 <div class="note">
-Custom masking is also available via the <code>format</code> attribute using <a href="https://imask.js.org/">IMask</a> definitions: <code>0</code> for digit, <code>a</code> for letter, <code>*</code> for any character.
+          Custom masking is also available via the <code>format</code> attribute using <a href="https://imask.js.org/">IMask</a> definitions: <code>0</code> for digit, <code>a</code> for letter, <code>*</code> for any character.
 </div>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/credit-card-icon.html) -->

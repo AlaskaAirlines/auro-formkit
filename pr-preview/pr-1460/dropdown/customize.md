@@ -28,9 +28,9 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-dropdown aria-label="custom label">
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -51,9 +51,9 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
 <auro-dropdown appearance="inverse" aria-label="custom label">
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -111,27 +111,27 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
-#customTokensDropdown {
---ds-auro-dropdown-label-text-color: #5b1a6e;
---ds-auro-dropdown-trigger-background-color: #e8d5f5;
---ds-auro-dropdown-trigger-hover-background-color: #d4b8e8;
---ds-auro-dropdown-trigger-container-color: #f3eaf8;
---ds-auro-dropdown-trigger-border-color: #7b2d8e;
---ds-auro-dropdown-trigger-outline-color: #c9a4db;
---ds-auro-dropdown-trigger-text-color: #7b2d8e;
---ds-auro-dropdownbib-boxshadow-color: rgba(123, 45, 142, 0.3);
---ds-auro-dropdownbib-background-color: #f3eaf8;
---ds-auro-dropdownbib-container-color: #f3eaf8;
---ds-auro-dropdownbib-text-color: #5b1a6e;
-}
+          #customTokensDropdown {
+            --ds-auro-dropdown-label-text-color: #5b1a6e;
+            --ds-auro-dropdown-trigger-background-color: #e8d5f5;
+            --ds-auro-dropdown-trigger-hover-background-color: #d4b8e8;
+            --ds-auro-dropdown-trigger-container-color: #f3eaf8;
+            --ds-auro-dropdown-trigger-border-color: #7b2d8e;
+            --ds-auro-dropdown-trigger-outline-color: #c9a4db;
+            --ds-auro-dropdown-trigger-text-color: #7b2d8e;
+            --ds-auro-dropdownbib-boxshadow-color: rgba(123, 45, 142, 0.3);
+            --ds-auro-dropdownbib-background-color: #f3eaf8;
+            --ds-auro-dropdownbib-container-color: #f3eaf8;
+            --ds-auro-dropdownbib-text-color: #5b1a6e;
+          }
 </style>
 <auro-dropdown id="customTokensDropdown" layout="classic" shape="classic" size="lg" chevron aria-label="Custom styled dropdown">
 <div style="padding: var(--ds-size-150);">
-Lorem ipsum solar
+            Lorem ipsum solar
 </div>
 <span slot="helpText">Help text</span>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -201,29 +201,29 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ./../apiExamples/css-parts.html -->
 <style>
-#cssPartsDropdown::part(trigger) {
-border: 2px dashed #7b2d8e;
-border-radius: 8px;
-padding: var(--ds-size-100);
-}
-#cssPartsDropdown::part(chevron) {
-color: #7b2d8e;
-}
-#cssPartsDropdown::part(helpText) {
-font-style: italic;
-color: #5b1a6e;
-}
-#cssPartsDropdown::part(size) {
-max-height: 200px;
-}
+          #cssPartsDropdown::part(trigger) {
+            border: 2px dashed #7b2d8e;
+            border-radius: 8px;
+            padding: var(--ds-size-100);
+          }
+          #cssPartsDropdown::part(chevron) {
+            color: #7b2d8e;
+          }
+          #cssPartsDropdown::part(helpText) {
+            font-style: italic;
+            color: #5b1a6e;
+          }
+          #cssPartsDropdown::part(size) {
+            max-height: 200px;
+          }
 </style>
 <auro-dropdown id="cssPartsDropdown" layout="classic" shape="classic" size="lg" chevron aria-label="CSS parts styled dropdown">
 <div style="padding: var(--ds-size-150);">
-Lorem ipsum solar
+            Lorem ipsum solar
 </div>
 <span slot="helpText">Styled with ::part selectors</span>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -266,25 +266,25 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/floater-config.html) -->
 <!-- The below content is automatically added from ./../apiExamples/floater-config.html -->
 <style>
-.floaterConfigDropdown::part(size) {
-max-height: 200px;
-}
+          .floaterConfigDropdown::part(size) {
+            max-height: 200px;
+          }
 </style>
 <div aria-label="custom label">
 <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20" noFlip>
 <div>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 </div>
 <div slot="trigger">
-Trigger
+              Trigger
 </div>
 <span slot="helpText">Trigger for bottom-end bib with 20px offset and noFlip</span>
 </auro-dropdown>
@@ -293,20 +293,20 @@ Trigger
 <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth placement="bottom-end" offset="20">
 <div>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 </div>
 <div slot="trigger">
-Trigger
+              Trigger
 </div>
 <div slot="helpText">
-Trigger for bottom-end bib with 20px offset and flip
+              Trigger for bottom-end bib with 20px offset and flip
 </div>
 </auro-dropdown>
 </div>
@@ -314,20 +314,20 @@ Trigger for bottom-end bib with 20px offset and flip
 <auro-dropdown class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="right" offset="20">
 <div>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 </div>
 <div slot="trigger">
-Trigger
+              Trigger
 </div>
 <div slot="helpText">
-Trigger for right bib with 20px offset and noFlip
+              Trigger for right bib with 20px offset and noFlip
 </div>
 </auro-dropdown>
 </div>
@@ -335,20 +335,20 @@ Trigger for right bib with 20px offset and noFlip
 <auro-dropdown width="350px" class="floaterConfigDropdown" layout="classic" shape="classic" size="lg" chevron matchWidth noFlip placement="bottom-start" shift offset="20">
 <div width="500px">
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 </div>
 <div slot="trigger">
-Trigger
+              Trigger
 </div>
 <div slot="helpText">
-Trigger for bottom-start bib with 20px offset, shift and noFlip
+              Trigger for bottom-start bib with 20px offset, shift and noFlip
 </div>
 </auro-dropdown>
 </div>
@@ -455,20 +455,20 @@ Trigger for bottom-start bib with 20px offset, shift and noFlip
 <auro-dropdown id="fullscreen" fullscreenBreakpoint="sm" layout="classic" shape="classic" size="lg" chevron>
 <div>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
 </div>
 <auro-button id="fullscreenButton">
-Dismiss Dropdown
+            Dismiss Dropdown
 </auro-button>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -505,17 +505,17 @@ Trigger
 <!-- The below content is automatically added from ./../apiExamples/match-width.html -->
 <auro-dropdown id="matchWidth" layout="classic" shape="classic" size="lg" matchWidth aria-label="Label content for screen reader">
 <div style="padding: var(--ds-size-150);">
-Lorem ipsum solar
+            Lorem ipsum solar
 <br />
 <auro-button id="matchWidthButton">
-Dismiss Dropdown
+              Dismiss Dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-Help text
+            Help text
 </span>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -550,9 +550,9 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/chevron.html) -->
 <!-- The below content is automatically added from ./../apiExamples/chevron.html -->
 <auro-dropdown aria-label="custom label" chevron>
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -575,19 +575,19 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
 <!-- The below content is automatically added from ./../apiExamples/disabled.html -->
 <auro-dropdown
-aria-label="custom label"
-disabled
-chevron
-layout="classic" shape="classic" size="lg">
-Lorem ipsum solar
+          aria-label="custom label"
+          disabled
+          chevron
+          layout="classic" shape="classic" size="lg">
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 <span slot="helpText">
-Help text
+            Help text
 </span>
 <span slot="label">
-Name
+            Name
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -596,20 +596,20 @@ Name
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse-disabled.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse-disabled.html -->
 <auro-dropdown
-aria-label="custom label"
-disabled
-appearance="inverse"
-chevron
-layout="classic" shape="classic" size="lg">
-Lorem ipsum solar
+          aria-label="custom label"
+          disabled
+          appearance="inverse"
+          chevron
+          layout="classic" shape="classic" size="lg">
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 <span slot="helpText">
-Help text
+            Help text
 </span>
 <span slot="label">
-Name
+            Name
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -663,20 +663,20 @@ Name
 <!-- The below content is automatically added from ./../apiExamples/error.html -->
 <auro-dropdown id="error" layout="classic" shape="classic" size="lg" error id="errorDropdownExample">
 <div style="padding: var(--ds-size-150);">
-Lorem ipsum solar
+            Lorem ipsum solar
 <br />
 <auro-button id="errorButton">
-Dismiss Dropdown
+              Dismiss Dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-Help text
+            Help text
 </span>
 <span slot="label">
-Element label (default text will be read by screen reader)
+            Element label (default text will be read by screen reader)
 </span>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -686,20 +686,20 @@ Trigger
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse-error.html -->
 <auro-dropdown id="inverseError" appearance="inverse" layout="classic" shape="classic" size="lg" error>
 <div style="padding: var(--ds-size-150);">
-Lorem ipsum solar
+            Lorem ipsum solar
 <br />
 <auro-button id="inverseErrorButton">
-Dismiss Dropdown
+              Dismiss Dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-Help text
+            Help text
 </span>
 <span slot="label">
-Element label (default text will be read by screen reader)
+            Element label (default text will be read by screen reader)
 </span>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -755,9 +755,9 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-toggle.html) -->
 <!-- The below content is automatically added from ./../apiExamples/no-toggle.html -->
 <auro-dropdown aria-label="custom label" noToggle>
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->

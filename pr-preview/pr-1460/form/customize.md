@@ -20,24 +20,24 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/column-layout.html) -->
 <!-- The below content is automatically added from ./../apiExamples/column-layout.html -->
 <style>
-.columned-form {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 1rem;
-}
+          .columned-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+          }
 
-.columned-form div {
-display: flex;
-flex-direction: column;
-padding: 1rem;
-gap: 1rem;
-}
+          .columned-form div {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 1rem;
+          }
 
-.controls {
-display: flex;
-justify-content: flex-end;
-margin-top: 1rem;
-}
+          .controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+          }
 </style>
 <auro-form>
 <div class="columned-form">
@@ -125,21 +125,21 @@ margin-top: 1rem;
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/complex.html) -->
 <!-- The below content is automatically added from ./../apiExamples/complex.html -->
 <style>
-.submitBlock {
-margin-top: 1rem;
-display: flex;
-justify-content: flex-end;
-gap: 1rem;
-}
-.datepickerBlock {
-margin-top: 1rem;
-}
-.complex-form {
-display: block;
-padding: 1rem;
-border: 1px solid #2a2a2a;
-border-radius: 1rem;
-}
+          .submitBlock {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+          }
+          .datepickerBlock {
+            margin-top: 1rem;
+          }
+          .complex-form {
+            display: block;
+            padding: 1rem;
+            border: 1px solid #2a2a2a;
+            border-radius: 1rem;
+          }
 </style>
 <auro-form class="complex-form">
 <auro-input id="first-name" name="firstName" required>

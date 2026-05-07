@@ -25,7 +25,7 @@
 <td>-</td>
 <td>Collapsed</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+        Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Opens the bib.</td>
 </tr>
@@ -33,7 +33,7 @@ Trigger or any <strong>focusable</strong> element within the trigger.
 <td>-</td>
 <td>Expanded</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+        Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Closes the bib.</td>
 </tr>
@@ -42,7 +42,7 @@ Trigger or any <strong>focusable</strong> element within the trigger.
 <td>-</td>
 <td>Expanded</td>
 <td>
-Component <code>:host</code> or any <strong>focusable</strong> element within the component.
+        Component <code>:host</code> or any <strong>focusable</strong> element within the component.
 </td>
 <td>Closes the bib.</td>
 </tr>
@@ -51,7 +51,7 @@ Component <code>:host</code> or any <strong>focusable</strong> element within th
 <td>-</td>
 <td>Collapsed</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+        Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Opens the bib.</td>
 </tr>
@@ -59,7 +59,7 @@ Trigger or any <strong>focusable</strong> element within the trigger.
 <td>-</td>
 <td>Expanded</td>
 <td>
-Trigger or any <strong>focusable</strong> element within the trigger.
+        Trigger or any <strong>focusable</strong> element within the trigger.
 </td>
 <td>Closes the bib.</td>
 </tr>

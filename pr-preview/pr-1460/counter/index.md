@@ -17,13 +17,13 @@
 <auro-header level="2" id="description">Description</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- The below content is automatically added from ./../docs/partials/description.md -->
-The <code>auro-counter</code> component is a ui element that enables a way to increment or decrement a single digit value. Common use case is inside the <code>auro-counter-group</code> to facilitate a collection of counters to add passenger types to a flight.
+      The <code>auro-counter</code> component is a ui element that enables a way to increment or decrement a single digit value. Common use case is inside the <code>auro-counter-group</code> to facilitate a collection of counters to add passenger types to a flight.
 <!-- AURO-GENERATED-CONTENT:END -->
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-standalone.html -->
 <auro-counter>
-Adults
+          Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -46,7 +46,7 @@ Adults
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-standalone.html -->
 <auro-counter>
-Adults
+  Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -66,13 +66,13 @@ Adults
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-counter-group>
 <auro-counter>
-Short label
+    Short label
 </auro-counter>
 <auro-counter>
-Another short label
+    Another short label
 </auro-counter>
 <auro-counter>
-This is an example of the wrapping behavior for a long label
+    This is an example of the wrapping behavior for a long label
 </auro-counter>
 </auro-counter-group>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -104,15 +104,15 @@ This is an example of the wrapping behavior for a long label
 <span slot="bib.fullscreen.headline">Passengers</span>
 <div slot="label">Passengers</div>
 <auro-counter>
-Adults
+    Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+    Children
 <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
 </auro-counter>
 <auro-counter>
-Lap Infants
+    Lap Infants
 <span slot="description">Under 2 years</span>
 </auro-counter>
 </auro-counter-group>

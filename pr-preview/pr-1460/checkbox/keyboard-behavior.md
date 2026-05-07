@@ -25,7 +25,7 @@
 <td>Not disabled</td>
 <td>Checkbox element</td>
 <td>
-Toggles the <code>checked</code> state. Calls <code>preventDefault()</code> to block page scroll.
+              Toggles the <code>checked</code> state. Calls <code>preventDefault()</code> to block page scroll.
 </td>
 </tr>
 </tbody>

@@ -190,7 +190,7 @@
 <auro-menuoption static nomatch>No matching option</auro-menuoption>
 </auro-menu>
 <span slot="helpText">
-Help text - Lorem ipsum solar lorem ipsum solar
+          Help text - Lorem ipsum solar lorem ipsum solar
 </span>
 <span slot="displayValue">
 <div>
@@ -250,7 +250,7 @@ Help text - Lorem ipsum solar lorem ipsum solar
 <auro-menuoption static nomatch>No matching option</auro-menuoption>
 </auro-menu>
 <span slot="helpText">
-Help text - Lorem ipsum solar lorem ipsum solar
+          Help text - Lorem ipsum solar lorem ipsum solar
 </span>
 </auro-combobox>
 <!-- AURO-GENERATED-CONTENT:END -->

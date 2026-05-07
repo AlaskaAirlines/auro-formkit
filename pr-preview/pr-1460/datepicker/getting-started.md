@@ -40,6 +40,8 @@
 <div class="mainContent">
 <div class="scrollWrapper">
 <section>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/install.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/install.md -->
 <auro-header level="2" id="setup">Setup</auro-header>
 <auro-accordion-group Emphasis>
 <auro-accordion expanded class="section" id="recommendedAccordion">
@@ -48,31 +50,11 @@
 <auro-header level="3">Install</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
+
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/customRegistration.md -->
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/customRegistrationDescription.md) -->
-<!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
-<p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
-<p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
-<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
-<p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
-<!-- AURO-GENERATED-CONTENT:END -->
-<pre class="language-js"><code class="language-js">// Import the class only
-import { AuroDatepicker } from '@aurodesignsystem/auro-formkit/auro-datepicker/class';
-​
-// Register with a custom name if desired
-AuroDatepicker.register('custom-datepicker');</code></pre>
-
-This will create a new custom element `<custom-datepicker>` that behaves exactly like `<auro-datepicker>`, allowing both to coexist on the same page without interfering with each other.
-
-<pre class="language-html"><code class="language-html">&lt;custom-datepicker&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;custom-datepicker Example&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.dateLabel"&gt;Choose a date&lt;/span&gt;
-&lt;/custom-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
@@ -83,14 +65,17 @@ This will create a new custom element `<custom-datepicker>` that behaves exactly
 <auro-header level="3">Install</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
+
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/defaultRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/defaultRegistration.md -->
 <p>Once installed, the component can be used in your project by importing the component's registered module:</p>
+
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-datepicker';</code></pre>
 <p>This import registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. You can then use it in your HTML:</p>
+
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Select Date&lt;/span&gt;
@@ -100,15 +85,15 @@ This will create a new custom element `<custom-datepicker>` that behaves exactly
 </div>
 </auro-accordion>
 <auro-accordion class="section" id="cdnAccordion">
-<span slot="trigger">CDN Installation and Implementation</span>
+<span slot="trigger">CDN Installation</span>
 <div class="accordion-content">
-<p class="warning"><strong>Warning:</strong> CDN install & registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
-<auro-header level="3">Install & Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/cdnRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/cdnRegistration.md -->
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
+
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-datepicker/+esm"&gt;&lt;/script&gt;</code></pre>
 <p>This script registers the <code>&lt;auro-datepicker&gt;</code> custom element globally. You can then use it in your HTML:</p>
+
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Select Date&lt;/span&gt;
@@ -118,6 +103,7 @@ This will create a new custom element `<custom-datepicker>` that behaves exactly
 </div>
 </auro-accordion>
 </auro-accordion-group>
+<!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/frameworks.md) -->
@@ -149,11 +135,11 @@ The `<auro-datepicker>` custom element is compatible with Svelte. See the auro-f
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following:
+        Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following:
 
-1. **A label in the `fromLabel` slot** — Provides an accessible label for the date input.
-2. **A `bib.fullscreen.headline` slot** — Provides a headline for the fullscreen (mobile) calendar view.
-3. **A `bib.fullscreen.fromLabel` slot** — Provides a label for the date input in the fullscreen view.
+        1. **A label in the `fromLabel` slot** — Provides an accessible label for the date input.
+        2. **A `bib.fullscreen.headline` slot** — Provides a headline for the fullscreen (mobile) calendar view.
+        3. **A `bib.fullscreen.fromLabel` slot** — Provides a label for the date input in the fullscreen view.
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
@@ -161,7 +147,7 @@ Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 
-When using the `range` attribute, also provide `toLabel` and `bib.fullscreen.toLabel`:
+        When using the `range` attribute, also provide `toLabel` and `bib.fullscreen.toLabel`:
 
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker range&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;

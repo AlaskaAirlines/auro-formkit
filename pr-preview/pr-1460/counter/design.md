@@ -6,16 +6,16 @@
 <auro-header level="2" id="anatomy">Anatomy</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout/layout.md) -->
 <!-- The below content is automatically added from ./../docs/partials/layout/layout.md -->
-The counter component consists of the following key elements:
+        The counter component consists of the following key elements:
 
-- **Counter Label** — The main label text (default slot) identifying what is being counted
-- **Description** — Optional supplementary text below the label (description slot)
-- **Increment Button** — Increases the counter value by 1
-- **Decrement Button** — Decreases the counter value by 1
-- **Value Display** — Shows the current numeric value
-- **Help Text** — Optional guidance text below the counter (helpText slot)
+        - **Counter Label** — The main label text (default slot) identifying what is being counted
+        - **Description** — Optional supplementary text below the label (description slot)
+        - **Increment Button** — Increases the counter value by 1
+        - **Decrement Button** — Decreases the counter value by 1
+        - **Value Display** — Shows the current numeric value
+        - **Help Text** — Optional guidance text below the counter (helpText slot)
 
-In a **counter group**, multiple counters are rendered together. When used with the `isDropdown` attribute, the group appears as a collapsible dropdown with a trigger element showing a label and summary of values.
+        In a **counter group**, multiple counters are rendered together. When used with the `isDropdown` attribute, the group appears as a collapsible dropdown with a trigger element showing a label and summary of values.
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
@@ -24,7 +24,7 @@ In a **counter group**, multiple counters are rendered together. When used with 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-standalone.html -->
 <auro-counter>
-Adults
+          Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -36,13 +36,13 @@ Adults
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-counter-group>
 <auro-counter>
-Short label
+            Short label
 </auro-counter>
 <auro-counter>
-Another short label
+            Another short label
 </auro-counter>
 <auro-counter>
-This is an example of the wrapping behavior for a long label
+            This is an example of the wrapping behavior for a long label
 </auro-counter>
 </auro-counter-group>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -58,15 +58,15 @@ This is an example of the wrapping behavior for a long label
 <span slot="bib.fullscreen.headline">Passengers</span>
 <div slot="label">Passengers</div>
 <auro-counter>
-Adults
+            Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+            Children
 <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
 </auro-counter>
 <auro-counter>
-Lap Infants
+            Lap Infants
 <span slot="description">Under 2 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -80,7 +80,7 @@ Lap Infants
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-standalone.html -->
 <auro-counter>
-Adults
+          Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -89,7 +89,7 @@ Adults
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/appearance-inverse.html) -->
 <!-- The below content is automatically added from ./../apiExamples/appearance-inverse.html -->
 <auro-counter appearance="inverse">
-Adults
+          Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -107,15 +107,15 @@ Adults
 <span slot="bib.fullscreen.headline">Passengers</span>
 <div slot="label">Passengers</div>
 <auro-counter>
-Adults
+            Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+            Children
 <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
 </auro-counter>
 <auro-counter>
-Lap Infants
+            Lap Infants
 <span slot="description">Under 2 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -158,10 +158,10 @@ Lap Infants
 <div slot="label">Snowflake Dropdown Group</div>
 <div slot="helpText">Total must be between 2-10</div>
 <auro-counter>
-Counter 1
+            Counter 1
 </auro-counter>
 <auro-counter>
-Counter 2
+            Counter 2
 </auro-counter>
 </auro-counter-group>
 <!-- AURO-GENERATED-CONTENT:END -->

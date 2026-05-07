@@ -45,13 +45,13 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/custom-tokens.html) -->
 <!-- The below content is automatically added from ./../apiExamples/custom-tokens.html -->
 <style>
-#customTokensMenu {
---ds-auro-menu-divider-color: #c9a4db;
---ds-auro-menuoption-container-color: #f3eaf8;
---ds-auro-menuoption-container-border-color: #7b2d8e;
---ds-auro-menuoption-icon-color: #5b1a6e;
---ds-auro-menuoption-text-color: #5b1a6e;
-}
+          #customTokensMenu {
+            --ds-auro-menu-divider-color: #c9a4db;
+            --ds-auro-menuoption-container-color: #f3eaf8;
+            --ds-auro-menuoption-container-border-color: #7b2d8e;
+            --ds-auro-menuoption-icon-color: #5b1a6e;
+            --ds-auro-menuoption-text-color: #5b1a6e;
+          }
 </style>
 <auro-menu id="customTokensMenu">
 <auro-menuoption value="stops">Stops</auro-menuoption>

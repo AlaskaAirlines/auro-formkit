@@ -76,32 +76,32 @@
 <auro-header level="3" id="select">Select an option from the list</auro-header>
 <ol>
 <li>
-Move focus to the auro-select element
+              Move focus to the auro-select element
 </li>
 <li>
-Activate the trigger (e.g. mouse click, tap or keyboard event)
+              Activate the trigger (e.g. mouse click, tap or keyboard event)
 <div class="note">
 <p>
-While in desktop view the list of options will render in a dropdown style bib that appears below the trigger. The bib may render above the trigger if there is not enough space in the viewport below the trigger.
+                  While in desktop view the list of options will render in a dropdown style bib that appears below the trigger. The bib may render above the trigger if there is not enough space in the viewport below the trigger.
 </p>
 <p>
-While in mobile device view the list of options will appear in a fullscreen modal dialog. Focus will shift to the close button in the top right of this dialog.
-</p>
-</div>
-</li>
-<li>
-Choose an option
-<div class="note">
-<p>
-The guest may navigate through the list of options to make their choice. An option may become active through pointer hover, keyboard navigation (e.g., arrow keys), or assistive technologies that emulate keyboard navigation through gestures.
+                  While in mobile device view the list of options will appear in a fullscreen modal dialog. Focus will shift to the close button in the top right of this dialog.
 </p>
 </div>
 </li>
 <li>
-Select the option
+              Choose an option
 <div class="note">
 <p>
-Any previously selected option will be un-selected. The current active option may be selected through click, tap or keyboard events (e.g. <code>Enter</code> or <code>Tab</code> while focus is within the component).
+                  The guest may navigate through the list of options to make their choice. An option may become active through pointer hover, keyboard navigation (e.g., arrow keys), or assistive technologies that emulate keyboard navigation through gestures.
+</p>
+</div>
+</li>
+<li>
+              Select the option
+<div class="note">
+<p>
+                  Any previously selected option will be un-selected. The current active option may be selected through click, tap or keyboard events (e.g. <code>Enter</code> or <code>Tab</code> while focus is within the component).
 </p>
 </div>
 </li>

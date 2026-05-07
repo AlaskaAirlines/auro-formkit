@@ -35,37 +35,6 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
-<!-- The below content is automatically added from ./../docs/partials/customRegistration.md -->
-
-## Custom Component Registration for Version Management
-
-There are two key parts to every Auro component: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and the custom element definition. The class defines the component’s behavior, while the custom element registers it under a specific name so it can be used in HTML.
-
-You can do this by importing only the component class and using the `register(name)` method with a unique name:
-
-<pre class="language-js"><code class="language-js">// Import the class only
-import { AuroDropdown } from '@aurodesignsystem/auro-formkit/auro-dropdown/class';
-​
-// Register with a custom name if desired
-AuroDropdown.register('custom-dropdown');</code></pre>
-
-This will create a new custom element `<custom-dropdown>` that behaves exactly like `<auro-dropdown>`, allowing both to coexist on the same page without interfering with each other.
-
-<pre class="language-html"><code class="language-html">&lt;custom-dropdown id="customCommon" layout="classic" shape="classic" size="lg" aria-label="Label content for screen reader"&gt;
-  &lt;div style="padding: var(--ds-size-150);"&gt;
-    Lorem ipsum solar
-    &lt;br /&gt;
-    &lt;auro-button id="customCommonButton"&gt;
-      Dismiss Dropdown
-    &lt;/auro-button&gt;
-  &lt;/div&gt;
-  &lt;span slot="helpText"&gt;
-    Help text
-  &lt;/span&gt;
-  &lt;div slot="trigger"&gt;
-    Trigger
-  &lt;/div&gt;
-&lt;/custom-dropdown&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
@@ -270,9 +239,9 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic.html -->
 <auro-dropdown aria-label="custom label">
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -298,10 +267,10 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-button.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-button.html -->
 <auro-dropdown aria-label="custom label">
-Lorem ipsum solar
+          Lorem ipsum solar
 <div slot="trigger">
 <auro-button slot="trigger">
-Dropdown
+              Dropdown
 </auro-button>
 </div>
 </auro-dropdown>
@@ -327,16 +296,16 @@ Dropdown
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/help-text.html) -->
 <!-- The below content is automatically added from ./../apiExamples/help-text.html -->
 <auro-dropdown
-aria-label="custom label"
-inset
-bordered
-rounded>
-Lorem ipsum solar
+          aria-label="custom label"
+          inset
+          bordered
+          rounded>
+          Lorem ipsum solar
 <span slot="helpText">
-Helper text
+            Helper text
 </span>
 <div slot="trigger">
-Trigger
+            Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -374,7 +343,7 @@ Trigger
 <br />
 <auro-dropdown id="showMethodExample" aria-label="custom label" layout="classic" shape="classic" size="lg">
 <p>
-Lorem ipsum solar
+            Lorem ipsum solar
 </p>
 <span slot="trigger">Trigger Label</span>
 </auro-dropdown>
@@ -414,15 +383,15 @@ Lorem ipsum solar
 <!-- The below content is automatically added from ./../apiExamples/programmatically-hide.html -->
 <auro-dropdown id="hideExample" aria-label="custom label" layout="classic" shape="classic" size="lg">
 <p>
-Lorem ipsum solar
+            Lorem ipsum solar
 </p>
 <div style="padding: var(--ds-size-150);">
 <auro-button id="hideExampleBtn">
-Hide Dropdown
+              Hide Dropdown
 </auro-button>
 </div>
 <span slot="trigger">
-Trigger
+            Trigger
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->

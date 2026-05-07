@@ -304,15 +304,15 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <span slot="bib.fullscreen.headline">Passengers</span>
 <div slot="label">Passengers</div>
 <auro-counter>
-Adults
+    Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+    Children
 <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
 </auro-counter>
 <auro-counter>
-Lap Infants
+    Lap Infants
 <span slot="description">Under 2 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -355,15 +355,15 @@ Lap Infants
 <div slot="valueText">Custom value text</div>
 <div slot="label"></div>
 <auro-counter>
-Adults
+      Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <auro-counter>
-Children
+      Children
 <span slot="description">Under 17 years old. Restrictions apply if traveling without an adult.</span>
 </auro-counter>
 <auro-counter>
-Lap Infants
+      Lap Infants
 <span slot="description">Under 2 years</span>
 </auro-counter>
 </auro-counter-group>
@@ -404,7 +404,7 @@ Lap Infants
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic-standalone.html) -->
 <!-- The below content is automatically added from ./../apiExamples/basic-standalone.html -->
 <auro-counter>
-Adults
+  Adults
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -423,7 +423,7 @@ Adults
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/description.html) -->
 <!-- The below content is automatically added from ./../apiExamples/description.html -->
 <auro-counter>
-Adults
+  Adults
 <span slot="description">18 years or older</span>
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -444,7 +444,7 @@ Adults
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/counter-helptext.html) -->
 <!-- The below content is automatically added from ./../apiExamples/counter-helptext.html -->
 <auro-counter>
-Adults
+  Adults
 <span slot="helpText">This is help text for the counter</span>
 </auro-counter>
 <!-- AURO-GENERATED-CONTENT:END -->

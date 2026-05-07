@@ -122,15 +122,15 @@
 <span slot="label">Travel type</span>
 <auro-menu>
 <auro-menuoption value="flights">
-Flights
+              Flights
 <auro-icon slot="displayValue" category="terminal" name="plane-diag-fill" customcolor></auro-icon>
 </auro-menuoption>
 <auro-menuoption value="cars">
-Cars
+              Cars
 <auro-icon slot="displayValue" category="destination" name="car-rental-stroke" customcolor></auro-icon>
 </auro-menuoption>
 <auro-menuoption value="hotels">
-Hotels
+              Hotels
 <auro-icon slot="displayValue" category="destination" name="hotel-filled" customcolor></auro-icon>
 </auro-menuoption>
 </auro-menu>
@@ -251,9 +251,9 @@ Hotels
 </auro-menu>
 </auro-select>
 <style>
-#flexMenuWidthExample::part(dropdownTrigger) {
-width: 25%;
-}
+          #flexMenuWidthExample::part(dropdownTrigger) {
+            width: 25%;
+          }
 </style>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -644,18 +644,18 @@ width: 25%;
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ../apiExamples/css-parts.html -->
 <style>
-auro-select.css-parts-demo::part(dropdownTrigger) {
-border-color: orange;
-}
-auro-select.css-parts-demo::part(dropdownChevron) {
-color: purple;
-}
-auro-select.css-parts-demo::part(helpText) {
-color: green;
-}
-auro-select.css-parts-demo::part(dropdownSize) {
-max-height: 200px;
-}
+          auro-select.css-parts-demo::part(dropdownTrigger) {
+            border-color: orange;
+          }
+          auro-select.css-parts-demo::part(dropdownChevron) {
+            color: purple;
+          }
+          auro-select.css-parts-demo::part(helpText) {
+            color: green;
+          }
+          auro-select.css-parts-demo::part(dropdownSize) {
+            max-height: 200px;
+          }
 </style>
 <auro-select class="css-parts-demo">
 <span slot="label">CSS Parts Example</span>
@@ -838,17 +838,17 @@ max-height: 200px;
 <li>Activate the trigger (e.g. mouse click, tap or keyboard event)</li>
 <li>Navigate the list of options</li>
 <li>
-Collapse the bib without making a selection
+            Collapse the bib without making a selection
 <p class="note">
-This will re-render the component in a state reflecting the validation error. To resolve the error, the guest may continue to the following steps.
+            This will re-render the component in a state reflecting the validation error. To resolve the error, the guest may continue to the following steps.
 </p>
 </li>
 <li>Activate the trigger</li>
 <li>Navigate the list of options marking any option as active</li>
 <li>
-Select the active option
+            Select the active option
 <p class="note">
-This will re-render the component and the validation error state will be removed.
+            This will re-render the component and the validation error state will be removed.
 </p>
 </li>
 </ol>

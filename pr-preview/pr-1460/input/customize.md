@@ -310,18 +310,18 @@
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
 <!-- The below content is automatically added from ../apiExamples/css-parts.html -->
 <style>
-auro-input.css-parts-demo::part(wrapper) {
-border-color: orange;
-}
-auro-input.css-parts-demo::part(label) {
-color: purple;
-}
-auro-input.css-parts-demo::part(helpText) {
-color: green;
-}
-auro-input.css-parts-demo::part(input) {
-font-style: italic;
-}
+            auro-input.css-parts-demo::part(wrapper) {
+              border-color: orange;
+            }
+            auro-input.css-parts-demo::part(label) {
+              color: purple;
+            }
+            auro-input.css-parts-demo::part(helpText) {
+              color: green;
+            }
+            auro-input.css-parts-demo::part(input) {
+              font-style: italic;
+            }
 </style>
 <auro-input class="css-parts-demo" required>
 <span slot="label">CSS Parts Example</span>

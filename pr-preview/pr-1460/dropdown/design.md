@@ -3,8 +3,8 @@
 <div class="mainContent">
 <div class="scrollWrapper">
 <auro-header level="3" id="anatomy">Component Anatomy</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout/layout.md) -->
-<!-- The below content is automatically added from ./../docs/partials/layout/layout.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/design/layout.md) -->
+<!-- The below content is automatically added from ./../docs/partials/design/layout.md -->
 <p>The component consists of the following elements:</p>
 <ul>
 <li>
@@ -36,17 +36,17 @@
 <!-- The below content is automatically added from ./../apiExamples/classic/basic.html -->
 <auro-dropdown id="classic" layout="classic" shape="classic" size="lg" chevron aria-label="Label content for screen reader">
 <div style="padding: var(--ds-size-150);">
-Lorem ipsum solar
+          Lorem ipsum solar
 <br />
 <auro-button id="classicButton">
-Dismiss Dropdown
+            Dismiss Dropdown
 </auro-button>
 </div>
 <span slot="helpText">
-Help text
+          Help text
 </span>
 <div slot="trigger">
-Trigger
+          Trigger
 </div>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -88,30 +88,30 @@ Trigger
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/emphasized/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/emphasized/basic.html -->
 <auro-dropdown aria-label="custom label" shape="pill" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
-Lorem ipsum solar
+        Lorem ipsum solar
 <div slot="trigger">
-Trigger
+          Trigger
 </div>
 <span slot="helpText">
-Help text - Lorem ipsum solar lorem ipsum solar
+          Help text - Lorem ipsum solar lorem ipsum solar
 </span>
 </auro-dropdown>
 <auro-dropdown aria-label="custom label" shape="pill-left" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
-Lorem ipsum solar
+        Lorem ipsum solar
 <div slot="trigger">
-Trigger
+          Trigger
 </div>
 <span slot="helpText">
-Help text - Lorem ipsum solar lorem ipsum solar
+          Help text - Lorem ipsum solar lorem ipsum solar
 </span>
 </auro-dropdown>
 <auro-dropdown aria-label="custom label" shape="pill-right" size="xl" layout="emphasized" style="width: 249px;" appearance="inverse">
-Lorem ipsum solar
+        Lorem ipsum solar
 <div slot="trigger">
-Trigger
+          Trigger
 </div>
 <span slot="helpText">
-Help text - Lorem ipsum solar lorem ipsum solar
+          Help text - Lorem ipsum solar lorem ipsum solar
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -156,12 +156,12 @@ Help text - Lorem ipsum solar lorem ipsum solar
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake/basic.html) -->
 <!-- The below content is automatically added from ./../apiExamples/snowflake/basic.html -->
 <auro-dropdown aria-label="custom label" shape="snowflake" size="lg" layout="snowflake" style="width: 249px;" appearance="inverse">
-Lorem ipsum solar
+        Lorem ipsum solar
 <div slot="trigger">
-Trigger
+          Trigger
 </div>
 <span slot="helpText">
-Help text - Lorem ipsum solar lorem ipsum solar
+          Help text - Lorem ipsum solar lorem ipsum solar
 </span>
 </auro-dropdown>
 <!-- AURO-GENERATED-CONTENT:END -->
