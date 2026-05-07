@@ -4,6 +4,7 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-counter custom element to be fully registered. */
 async function waitForCounter(page: Page) {
+  await page.waitForLoadState('networkidle');
   await page.waitForFunction(
     () => customElements.get('auro-counter') !== undefined,
     { timeout: 10_000 },
@@ -80,6 +81,18 @@ async function waitForBibOpen(page: Page, fixture: string) {
 /** Wait for the dropdown bib to close. */
 async function waitForBibClosed(page: Page, fixture: string) {
   await expect.poll(() => isBibVisible(page, fixture), { timeout: 5_000 }).toBe(false);
+}
+
+/** Open the dropdown in a counter-group, waiting for the dropdown to be initialized first. */
+async function openDropdown(page: Page, fixture: string) {
+  await expect.poll(
+    () => counterGroup(page, fixture).evaluate((el: any) => el.dropdown != null),
+    { timeout: 5_000 },
+  ).toBe(true);
+  await counterGroup(page, fixture).evaluate((el: any) => {
+    el.dropdown.querySelector('#triggerFocus')?.click();
+  });
+  await waitForBibOpen(page, fixture);
 }
 
 // ─── Suite ────────────────────────────────────────────────────────────────────
@@ -217,27 +230,18 @@ export function counterInteractionSuite(framework: string) {
 
     test.describe('Dropdown open/close', () => {
       test('clicking the trigger opens the dropdown', async ({ page }) => {
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
       });
 
       test('Escape closes the dropdown', async ({ page }) => {
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         await page.keyboard.press('Escape');
         await waitForBibClosed(page, 'dropdown-group');
       });
 
       test('clicking outside closes the dropdown', async ({ page }) => {
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         // Focus an element outside the dropdown to trigger focus-loss close
         await page.locator('#outside-element').focus();
@@ -248,10 +252,7 @@ export function counterInteractionSuite(framework: string) {
     test.describe('Keyboard interaction in dropdown', () => {
       test('ArrowUp increments a counter inside the dropdown', async ({ page }) => {
         // Open the dropdown
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         // Tab to the first counter and confirm focus landed
         await page.keyboard.press('Tab');
@@ -263,10 +264,7 @@ export function counterInteractionSuite(framework: string) {
 
       test('ArrowDown decrements a counter inside the dropdown', async ({ page }) => {
         // Open the dropdown
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         // Tab to the first counter, increment then decrement
         await page.keyboard.press('Tab');
@@ -279,10 +277,7 @@ export function counterInteractionSuite(framework: string) {
       });
 
       test('Tab navigates between counters in the dropdown', async ({ page }) => {
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         // Tab to first counter
         await page.keyboard.press('Tab');
@@ -300,10 +295,7 @@ export function counterInteractionSuite(framework: string) {
 
     test.describe('Mouse interaction in dropdown', () => {
       test('clicking plus on a counter inside the dropdown increments it', async ({ page }) => {
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         const before = await counterValue(page, 'dropdown-group', 0);
         await clickPlus(page, 'dropdown-group', 0);
@@ -311,10 +303,7 @@ export function counterInteractionSuite(framework: string) {
       });
 
       test('clicking minus on a counter inside the dropdown decrements it', async ({ page }) => {
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         // Increment first then decrement
         await clickPlus(page, 'dropdown-group', 0);
@@ -328,10 +317,7 @@ export function counterInteractionSuite(framework: string) {
     test.describe('Group max constraint', () => {
       test('incrementing counters up to group max disables all plus buttons', async ({ page }) => {
         // Group max is 6, start all at 0
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         // Increment the first counter 6 times to hit group max
         for (let i = 0; i < 6; i++) {
@@ -347,10 +333,7 @@ export function counterInteractionSuite(framework: string) {
       });
 
       test('group total reflects sum of all counters', async ({ page }) => {
-        await counterGroup(page, 'dropdown-group').evaluate((el: any) => {
-          el.dropdown?.querySelector('#triggerFocus')?.click();
-        });
-        await waitForBibOpen(page, 'dropdown-group');
+        await openDropdown(page, 'dropdown-group');
 
         // Increment first counter twice, second counter once
         await clickPlus(page, 'dropdown-group', 0);

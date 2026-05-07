@@ -4,17 +4,19 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-radio and auro-radio-group to be registered and shadow DOM rendered. */
 async function waitForRadio(page: Page) {
+  await page.waitForLoadState('networkidle');
   await page.waitForFunction(
     () =>
       customElements.get('auro-radio') !== undefined &&
       customElements.get('auro-radio-group') !== undefined,
     { timeout: 10_000 },
   );
-  // Wait for the first radio's shadow DOM input to be rendered
+  // Wait for all radios to have their shadow DOM input rendered
+  // (indicates firstUpdated has run and click listeners are attached)
   await page.waitForFunction(
     () => {
-      const el = document.querySelector('auro-radio');
-      return !!el?.shadowRoot?.querySelector('input');
+      const radios = document.querySelectorAll('auro-radio');
+      return radios.length > 0 && [...radios].every((el: any) => !!el.shadowRoot?.querySelector('input'));
     },
     { timeout: 10_000 },
   );

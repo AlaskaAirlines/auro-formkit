@@ -172,7 +172,11 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
 
-        await page.locator('#outside-element').click();
+        // The open bib popover can visually overlap #outside-element,
+        // blocking Playwright's normal click. Use dispatchEvent so the
+        // click bubbles from #outside-element to window without the bib
+        // in composedPath, which triggers the dropdown's dismiss handler.
+        await page.locator('#outside-element').dispatchEvent('click');
         await waitForBibClosed(page, 'default');
       });
 

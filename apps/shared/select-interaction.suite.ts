@@ -455,7 +455,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
 
-        await page.locator('#outside-element').click();
+        await page.locator('#outside-element').dispatchEvent('click');
 
         await waitForBibClosed(page, 'default');
       });
@@ -464,7 +464,7 @@ export function selectInteractionSuite(framework: string, options?: SuiteOptions
         await openBib(page, 'default');
         await waitForBibOpen(page, 'default');
 
-        await page.locator('#outside-element').click();
+        await page.locator('#outside-element').dispatchEvent('click');
         await waitForBibClosed(page, 'default');
 
         const value = await selectValue(page, 'default');

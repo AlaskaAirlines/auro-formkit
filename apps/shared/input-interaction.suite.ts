@@ -4,6 +4,7 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-input custom element to be fully registered and shadow DOM rendered. */
 async function waitForInput(page: Page) {
+  await page.waitForLoadState('networkidle');
   await page.waitForFunction(
     () => customElements.get('auro-input') !== undefined,
     { timeout: 10_000 },

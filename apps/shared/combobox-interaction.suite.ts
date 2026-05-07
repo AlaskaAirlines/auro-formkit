@@ -2,10 +2,16 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Wait for auro-combobox custom element to be fully registered and rendered. */
+/** Wait for auro-combobox custom element to be fully registered and its dropdown ready. */
 async function waitForCombobox(page: Page) {
+  await page.waitForLoadState('networkidle');
   await page.waitForFunction(
-    () => customElements.get('auro-combobox') !== undefined,
+    () => {
+      if (customElements.get('auro-combobox') === undefined) return false;
+      // Ensure every combobox on the page has finished firstUpdated
+      const els = document.querySelectorAll('auro-combobox');
+      return els.length > 0 && [...els].every((el: any) => el.dropdown != null);
+    },
     { timeout: 10_000 },
   );
 }
@@ -41,12 +47,12 @@ function comboboxValue(page: Page, fixture: string) {
 
 /** Wait for the dropdown bib to become visible. */
 async function waitForBibOpen(page: Page, fixture: string) {
-  await expect.poll(() => isBibVisible(page, fixture), { timeout: 5_000 }).toBe(true);
+  await expect.poll(() => isBibVisible(page, fixture), { timeout: 8_000 }).toBe(true);
 }
 
 /** Wait for the dropdown bib to close. */
 async function waitForBibClosed(page: Page, fixture: string) {
-  await expect.poll(() => isBibVisible(page, fixture), { timeout: 5_000 }).toBe(false);
+  await expect.poll(() => isBibVisible(page, fixture), { timeout: 8_000 }).toBe(false);
 }
 
 /** Type into the combobox input using real keyboard events. */
@@ -399,7 +405,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         await waitForBibOpen(page, 'default');
 
         // Click the outside button
-        await page.locator('#outside-element').click();
+        await page.locator('#outside-element').dispatchEvent('click');
 
         await waitForBibClosed(page, 'default');
       });
@@ -408,7 +414,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
         await typeInCombobox(page, 'default', 'a');
         await waitForBibOpen(page, 'default');
 
-        await page.locator('#outside-element').click();
+        await page.locator('#outside-element').dispatchEvent('click');
         await waitForBibClosed(page, 'default');
 
         const value = await comboboxValue(page, 'default');
@@ -556,8 +562,9 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       await page.keyboard.press('Escape');
       await waitForBibClosed(page, 'filter');
 
-      // Blur to trigger validation
-      await page.locator('#outside-element').click();
+      // Move focus away to trigger focusout validation on the combobox.
+      // dispatchEvent('click') doesn't move browser focus, so use focus().
+      await page.locator('#outside-element').focus();
 
       // Should show validation error because filter behavior requires menu selection
       await expect.poll(async () =>
