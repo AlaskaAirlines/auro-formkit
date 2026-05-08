@@ -25,6 +25,9 @@ import { html } from 'lit/static-html.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+
+import i18n from './i18n.js';
+
 import BaseInput from './base-input.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -355,6 +358,30 @@ export class AuroInput extends BaseInput {
   }
 
   /**
+   * Determines default help text string.
+   * @private
+   * @returns {string} Evaluates pre-determined help text.
+   */
+  getHelpText() {
+    const typeHelpText = [
+      'password',
+      'email',
+      'credit-card',
+      'tel'
+    ];
+
+    if (typeHelpText.includes(this.type)) {
+      return i18n(this.lang, this.type);
+    }
+
+    if (this.type === 'date') {
+      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
+    }
+
+    return '';
+  }
+
+  /**
    * Validates against list of supported this.allowedInputTypes; return type=text if invalid request.
    * @private
    * @param {string} type Value entered into component prop.
@@ -595,7 +622,7 @@ export class AuroInput extends BaseInput {
           <${this.helpTextTag}
             appearance="${this.onDark ? 'inverse' : this.appearance}">
             <p id="${this.uniqueId}" part="helpText">
-              <slot name="helpText"></slot>
+              <slot name="helpText">${this.getHelpText()}</slot>
             </p>
           </${this.helpTextTag}>
         `
