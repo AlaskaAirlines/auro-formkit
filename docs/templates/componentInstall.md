@@ -1,5 +1,3 @@
-#### NPM Installation
-
 ```shell
-$ npm i @aurodesignsystem/{{monorepoName}}
+$ npm i @aurodesignsystem/{{ monorepoName }}
 ```

@@ -24,6 +24,8 @@ import { MenuContext } from './auro-menu.context.js';
 import { ContextConsumer } from '@lit/context';
 import { dispatchMenuEvent } from './auro-menu-utils.js';
 
+let menuOptionIdCounter = 0;
+
 /**
  * The `auro-menuoption` element provides users a way to define a menu option.
  * @customElement auro-menuoption
@@ -32,8 +34,6 @@ import { dispatchMenuEvent } from './auro-menu-utils.js';
  *
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
  */
-let menuOptionIdCounter = 0;
-
 export class AuroMenuOption extends AuroElement {
 
   /**
@@ -83,6 +83,7 @@ export class AuroMenuOption extends AuroElement {
     this.selected = false;
     this.noCheckmark = false;
     this.disabled = false;
+    this.noMatch = false;
 
     /**
      * @private
@@ -159,6 +160,15 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
+       * When true, marks this option as the "no matching results" placeholder shown by combobox when the user's input does not match any available options. Enables distinct styling and prevents the option from being treated as a selectable match.
+       */
+      noMatch: {
+        type: Boolean,
+        reflect: true,
+        attribute: 'nomatch'
+      },
+
+      /**
        * Specifies that an option is selected.
        */
       selected: {
@@ -206,10 +216,20 @@ export class AuroMenuOption extends AuroElement {
       subscribe: true
     });
 
-    // Establish the key property as early as possible
+    // Establish the key property as early as possible.
+    // When a framework (e.g. Svelte) inserts the element into the DOM before
+    // setting its `value` property, both `getAttribute('value')` and
+    // `getAttribute('key')` return null here. Setting `this.key = null`
+    // would block the fallback in `updated()` that assigns key from the
+    // value property (the guard checked `=== undefined`). Only assign key
+    // if at least one source attribute is actually present so that the
+    // `updated()` fallback can run when the value property arrives later.
     const valueAttr = this.getAttribute('value');
     const keyAttr = this.getAttribute('key');
-    this.key = keyAttr !== null ? keyAttr : valueAttr;
+    const resolvedKey = keyAttr !== null ? keyAttr : valueAttr;
+    if (resolvedKey !== null) {
+      this.key = resolvedKey;
+    }
   }
 
   firstUpdated() {
@@ -245,8 +265,16 @@ export class AuroMenuOption extends AuroElement {
       this.setAttribute('aria-selected', this.selected.toString());
 
       // Update menu service selection state if this isn't an internal update
-      if (this.internalUpdateInProgress !== true) {
+      if (this.internalUpdateInProgress !== true && this.menuService) {
         this.menuService[this.selected ? 'selectOption' : 'deselectOption'](this);
+      }
+    }
+
+    if (changedProperties.has('disabled')) {
+      if (this.disabled) {
+        this.setAttribute('aria-disabled', 'true');
+      } else {
+        this.removeAttribute('aria-disabled');
       }
     }
 
@@ -259,8 +287,14 @@ export class AuroMenuOption extends AuroElement {
       this.updateTextHighlight();
     }
 
-    // Set the key to be the passed value if no key is provided
-    if (changedProperties.has('value') && this.key === undefined) {
+    // Set the key to be the passed value if no key is provided.
+    // Loose equality (== null) is intentional: it catches both null AND
+    // undefined. When a framework (e.g. Svelte, React) inserts the element
+    // before setting its value property, connectedCallback skips key
+    // assignment because both attributes are null at that point. The Lit
+    // property default for `key` is undefined (not null), so strict
+    // === null would miss the case and the fallback would never run.
+    if (changedProperties.has('value') && this.key == null) { // eslint-disable-line eqeqeq, no-eq-null
       this.key = this.value;
     }
   }
@@ -425,7 +459,7 @@ export class AuroMenuOption extends AuroElement {
    * @private
    */
   handleClick() {
-    if (!this.disabled) {
+    if (!this.disabled && !this.menuService?.disabled) {
       this.dispatchClickEvent();
       this.selected = !this.selected;
     }

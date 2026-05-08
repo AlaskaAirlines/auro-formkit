@@ -296,7 +296,8 @@ export default class BaseInput extends AuroElement {
        * The id global attribute defines an identifier (ID) which must be unique in the whole document.
        */
       id: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**
@@ -792,18 +793,6 @@ export default class BaseInput extends AuroElement {
   }
 
   /**
-   * Required to convert SVG icons from data to HTML string.
-   * @private
-   * @param {string} icon HTML string for requested icon.
-   * @returns {object} Appended HTML for SVG.
-   */
-  getIconAsHtml(icon) {
-    const dom = new DOMParser().parseFromString(icon.svg, 'text/html');
-
-    return dom.body.firstChild;
-  }
-
-  /**
    * Sends event notifying that the input has changed it's value.
    * @private
    * @returns {void}
@@ -845,11 +834,10 @@ export default class BaseInput extends AuroElement {
    */
   handleClickClear() {
     this.inputElement.value = "";
-    this.value = "";
     this.labelElement.classList.remove('inputElement-label--sticky');
+    this.validation.reset(this);
     this.notifyValueChanged();
     this.focus();
-    this.validation.validate(this);
   }
 
   /**

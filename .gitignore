@@ -9,6 +9,7 @@ version.d.ts
 ## Demo support files
 components/**/demo/*.md
 components/**/demo/*.min.js
+components/**/demo/*.min.css
 
 ## CSS built from Sass process
 components/**/src/**/*.css
@@ -23,6 +24,8 @@ build/
 
 ## Code coverage reports
 coverage/
+!test/coverage/
+test/coverage/index.html
 
 ## Turbo repo
 .turbo
@@ -38,3 +41,11 @@ custom-elements.json
 storybook-static
 debug-storybook.log
 build-storybook.log
+
+## Playwright files
+.playwright-cli
+.playwright
+apps/svelte-framework/test-results/.last-run.json
+test-results
+/apps/**/playwright-report
+/apps/**/coverage-code

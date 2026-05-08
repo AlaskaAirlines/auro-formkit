@@ -10,9 +10,12 @@
     "update-stories": "./update-stories.js"
   },
   "scripts": {
+    "test": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --coverage --port 7750",
+    "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --watch --port 7750",
     "update-stories": "node update-stories.js"
   },
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./demo-support": "./src/demo-support.js"
   }
 }

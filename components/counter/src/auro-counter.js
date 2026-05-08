@@ -16,7 +16,7 @@ import { AuroIcon } from "@aurodesignsystem/auro-icon/class";
 import iconVersion from "./iconVersion.js";
 import AuroFormValidation from "@aurodesignsystem/form-validation";
 
-import { IconUtil } from "@aurodesignsystem/utils";
+import { applyKeyboardStrategy, IconUtil } from "@aurodesignsystem/utils";
 import plusIcon from '@alaskaairux/icons/dist/icons/interface/plus-lg.mjs';
 import minusIcon from '@alaskaairux/icons/dist/icons/interface/minus-lg.mjs';
 
@@ -25,6 +25,8 @@ import colorCss from "./styles/color-css.js";
 import styleCss from "./styles/style-css.js";
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
 import formkitVersion from '@aurodesignsystem/version';
+
+import { keyboardStrategy } from './keyboardStrategy.js';
 
 /**
  * The `auro-counter` element provides a flexible counter interface with increment and decrement buttons, supporting optional sub-labels and disabled states.
@@ -94,12 +96,34 @@ export class AuroCounter extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('keydown', this.handleKeyDown);
+    applyKeyboardStrategy(this, keyboardStrategy);
   }
 
   disconnectedCallback() {
-    this.removeEventListener('keydown', this.handleKeyDown);
     super.disconnectedCallback();
+  }
+
+  /**
+   * Gets the current value of the counter.
+   * @returns {number|undefined} The current value of the counter, or undefined if the value is not set or invalid.
+   */
+  get value() {
+    return this._value;
+  }
+
+  /**
+   * Sets the value of the counter. If the provided value is undefined, null, or cannot be converted to a number, the internal value will be set to undefined.
+   * @param {number|string|undefined|null} val - The value to set for the counter. Can be a number, a string that can be converted to a number, undefined, or null.
+   */
+  set value(val) {
+    const old = this._value;
+    if (val === undefined || val === null) {
+      this._value = undefined;
+    } else {
+      const num = Number(val);
+      this._value = Number.isNaN(num) ? undefined : num;
+    }
+    this.requestUpdate('value', old);
   }
 
   /**
@@ -286,31 +310,6 @@ export class AuroCounter extends LitElement {
     this.validation.validate(this, force);
   }
 
-  /**
-   * Handles the keydown event for the counter component.
-   * @param {KeyboardEvent} event - The keyboard event object.
-   * @returns {void}
-   * @private
-   */
-  handleKeyDown(event) {
-    if (this.disabled) {
-      return;
-    }
-
-    switch (event.key) {
-      case 'ArrowUp':
-        event.preventDefault();
-        this.increment();
-        break;
-      case 'ArrowDown':
-        event.preventDefault();
-        this.decrement();
-        break;
-      default:
-        break;
-    }
-  }
-
   firstUpdated() {
     this.initValue();
     this.setTagAttribute("auro-counter");
@@ -338,6 +337,21 @@ export class AuroCounter extends LitElement {
     const assignedNodes = event.target.assignedNodes();
     if (assignedNodes.length > 0) {
       this.defaultSlot = assignedNodes[0].textContent.trim();
+    }
+  }
+
+  /**
+   * Handles the slotchange event for the description slot.
+   * Updates ariaDescribedByElements on the spinbutton.
+   *
+   * @param {Event} event - The slotchange event.
+   * @private
+   */
+  onDescriptionSlotChange(event) {
+    const spinbutton = this.shadowRoot.querySelector('[role="spinbutton"]');
+    if (spinbutton) {
+      const assigned = event.target.assignedElements();
+      spinbutton.ariaDescribedByElements = assigned.length > 0 ? assigned : [];
     }
   }
 
@@ -392,23 +406,22 @@ export class AuroCounter extends LitElement {
 
       <div class="counterWrapper">
         <div class="counter">
-          <div class="content" >
-            <label id="counter-label" class="label">
+          <div class="content" id="counter-label">
+            <label class="label">
               <slot @slotchange="${this.onDefaultSlotChange}"></slot>
             </label>
-            <slot id="counter-description" name="description" class="body-xs"></slot>
+            <slot name="description" class="body-xs" @slotchange="${this.onDescriptionSlotChange}"></slot>
           </div>
-          <div 
-            part="counterControl" 
-            aria-describedby="counter-description" 
-            aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}" 
-            aria-labelledby="counter-label" 
-            aria-valuemax="${this.max}" 
-            aria-valuemin="${this.min}" 
+          <div
+            part="counterControl"
+            aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}"
+            aria-labelledby="counter-label"
+            aria-valuemax="${this.max}"
+            aria-valuemin="${this.min}"
             aria-valuenow="${this.value}"
-            aria-valuetext="'${this.value !== undefined ? this.value : this.min}'"
-            role="spinbutton" 
-            tabindex="${this.disabled ? '-1' : '0'}" 
+            aria-valuetext="${this.value !== undefined ? this.value : this.min}"
+            role="spinbutton"
+            tabindex="${this.disabled ? '-1' : '0'}"
           >
             <auro-counter-button
               aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.minus') || '−'}"

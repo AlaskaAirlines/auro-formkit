@@ -1,148 +1,79 @@
-/* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
+/* eslint-disable no-undef, no-underscore-dangle,max-lines,array-element-newline, dot-notation */
 
 import {fixture, html, expect, elementUpdated} from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 import '../demo/registerDemoDeps.js';
 import '../src/registered.js';
 
-describe('auro-form', () => {
-  it('is accessible', async () => {
-    const el = await fixture(html`
-      <auro-form></auro-form>
-    `);
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
-    await expect(el).to.be.accessible();
+/**
+ * Runs the full form test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
   });
 
-  it('has a customElement definition', async () => {
-    await customElements.whenDefined("auro-form");
-    const el = Boolean(customElements.get("auro-form"));
+  describe('Rendering', () => {
+    it('should have a custom element definition', async () => {
+      await customElements.whenDefined("auro-form");
+      const el = Boolean(customElements.get("auro-form"));
 
-    await expect(el).to.be.true;
+      await expect(el).to.be.true;
+    });
+
+    describe('Empty form', () => {
+      it('should have empty formState with zero elements', async () => {
+        const el = await fixture(html`<auro-form></auro-form>`);
+        await elementUpdated(el);
+
+        expect(Object.keys(el.formState).length).to.equal(0);
+      });
+
+      it('should report valid validity with zero elements', async () => {
+        const el = await fixture(html`<auro-form></auro-form>`);
+        await elementUpdated(el);
+
+        expect(el.validity).to.not.equal('invalid');
+      });
+
+      it('should be in initial state with zero elements', async () => {
+        const el = await fixture(html`<auro-form></auro-form>`);
+        await elementUpdated(el);
+
+        expect(el.isInitialState).to.be.true;
+      });
+    });
+
+    describe('Deeply nested form elements', () => {
+      it('should discover elements nested more than one level deep', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <div>
+              <div>
+                <auro-input name="deepField" value="nested"></auro-input>
+              </div>
+            </div>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        expect(el.formState['deepField']).to.exist;
+      });
+    });
   });
 
   // Automatic input state behavior
   // -------------------------------------
 
-  it('automatically finds specified auro elements in slot and adds to state', async () => {
-    const defaultFormState = {
-      testInput: {
-        value: null,
-        validity: null,
-        required: true
-      },
-      dateExample: {
-        value: null,
-        validity: null,
-        required: true
-      }
-    };
-
-    const defaultFormValue = {
-      testInput: null,
-      dateExample: null
-    };
-
-    const el = await fixture(html`
-      <auro-form>
-        <auro-input name="testInput" required></auro-input>
-        <auro-datepicker id="date-example" name="dateExample" required>
-          <span slot="fromLabel">Choose a date</span>
-          <span slot="bib.fullscreen.dateLabel">Choose a date</span>
-        </auro-datepicker>
-      </auro-form>
-    `);
-
-    await el.updateComplete;
-    await expect(el.formState).to.deep.equal(defaultFormState);
-    await expect(el.value).to.deep.equal(defaultFormValue);
-    await expect(el.validity).to.equal(null);
-  });
-
-  it('automatically populates inputs with preset values', async () => {
-    const expectedFormState = {
-      testInput: {
-        value: "some-preset-value",
-        validity: "valid",
-        required: true
-      }
-    };
-
-    const expectedFormValue = {
-      testInput: "some-preset-value"
-    };
-
-    const el = await fixture(html`
-      <auro-form>
-        <auro-input name="testInput" value="some-preset-value" required></auro-input>
-      </auro-form>
-    `);
-
-    await el.updateComplete;
-    await expect(el.formState).to.deep.equal(expectedFormState);
-    await expect(el.value).to.deep.equal(expectedFormValue);
-    await expect(el.validity).to.equal("valid");
-  });
-
-  it('updates values when input events are emitted by form elements', async () => {
-    const expectedFormState = {
-      testInput: {
-        value: "zzz",
-        validity: "valid",
-        required: true
-      }
-    };
-
-    const expectedFormValue = {
-      testInput: "zzz"
-    };
-
-    const el = await fixture(html`
-      <auro-form>
-        <auro-input name="testInput" value="some-preset-value" required></auro-input>
-      </auro-form>
-    `);
-
-    // INTERNAL STATE KEY - FOR TESTING ONLY :)
-    const [inputEl] = el._elements;
-
-    inputEl.focus();
-    inputEl.value = 'zzz';
-    inputEl.blur();
-
-    await elementUpdated(el);
-    await expect(el.formState).to.deep.equal(expectedFormState);
-    await expect(el.value).to.deep.equal(expectedFormValue);
-    await expect(el.validity).to.equal("valid");
-  });
-
-  it('updates validity when events are submitted by form elements', async () => {
-    const el = await fixture(html`
-      <auro-form>
-        <auro-input name="testInput" required></auro-input>
-      </auro-form>
-    `);
-
-    await expect(el.formState).to.have.key('testInput');
-    await expect(el.formState.testInput.validity).to.be.null;
-    await expect(el.validity).to.be.null;
-
-    // INTERNAL STATE KEY - used externally for testing only!
-    const [inputEl] = el._elements;
-
-    inputEl.focus();
-    inputEl.value = 'zzz';
-    inputEl.blur();
-
-    await elementUpdated(el);
-
-    await expect(el.formState.testInput.validity).to.equal('valid');
-    await expect(el.validity).to.equal('valid');
-  });
-
   describe('when given multiple inputs', () => {
-    it('has INVALID state when two or more required inputs are present, and only one is populated', async () => {
+    it('should have INVALID state when multiple required inputs exist and only one is populated', async () => {
       const el = await fixture(html`
       <auro-form>
         <auro-input name="testInput" required></auro-input>
@@ -167,7 +98,7 @@ describe('auro-form', () => {
       await expect(el.validity).to.equal('invalid');
     });
 
-    it('has VALID state when two or more inputs are present, and only one is required', async () => {
+    it('should have VALID state when multiple inputs exist and only one is required', async () => {
       const el = await fixture(html`
       <auro-form>
         <auro-input name="testInput" required></auro-input>
@@ -194,6 +125,11 @@ describe('auro-form', () => {
   });
 
   describe('when elements are added to the DOM after initial render', () => {
+
+    /**
+     * Creates a required auro-input element for testing dynamic DOM insertion.
+     * @returns {HTMLElement} A configured auro-input element.
+     */
     function createInput() {
       const inputEl = document.createElement('auro-input');
       inputEl.setAttribute('name', 'testInput');
@@ -204,7 +140,7 @@ describe('auro-form', () => {
 
     // Detect slot change
     describe('in the case of direct children', () => {
-      it('should handle slot updates', async () => {
+      it('should handle slot updates for direct children', async () => {
         const el = await fixture(html`
           <auro-form>
           </auro-form>
@@ -219,7 +155,7 @@ describe('auro-form', () => {
         await expect(el.formState).to.have.keys('testInput');
       });
 
-      it('has the same form state before and after slot updates', async () => {
+      it('should have the same form state before and after slot updates', async () => {
         const el = await fixture(html`
           <auro-form>
             <auro-input name="existingInput" required></auro-input>
@@ -249,7 +185,7 @@ describe('auro-form', () => {
 
     // MutationObserver test
     describe('in the case of nested children', () => {
-      it('should handle insert updates', async () => {
+      it('should handle insert updates for nested children', async () => {
         const el = await fixture(html`
           <auro-form>
             <div id="target"></div>
@@ -269,7 +205,7 @@ describe('auro-form', () => {
   });
 
   describe('when elements are removed from the DOM after initial render', () => {
-    it('should update internal state and formState when an element is removed', async () => {
+    it('should update internal state and formState when a form element is removed', async () => {
       const el = await fixture(html`
         <auro-form>
         </auro-form>
@@ -299,7 +235,7 @@ describe('auro-form', () => {
   });
 
   describe('when auro-buttons are present', () => {
-    it('picks up type=submit buttons automatically', async () => {
+    it('should automatically detect type=submit buttons', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-button type="submit">Submit</auro-button>
@@ -310,7 +246,7 @@ describe('auro-form', () => {
       expect(el.submitElements).to.have.length(1);
     });
 
-    it('picks up type=reset buttons automatically', async () => {
+    it('should automatically detect type=reset buttons', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-button type="reset">Reset</auro-button>
@@ -321,7 +257,7 @@ describe('auro-form', () => {
       expect(el.resetElements).to.have.length(1);
     });
 
-    it('disables buttons when form is in initial state', async () => {
+    it('should disable buttons when form is in initial state', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="tester"></auro-input>
@@ -341,7 +277,7 @@ describe('auro-form', () => {
       await expect(resetButton.hasAttribute("disabled")).to.be.true;
     });
 
-    it('enables reset buttons when form is not in initial state', async () => {
+    it('should enable reset buttons when form is not in initial state', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="tester" value="some value"></auro-input>
@@ -356,7 +292,7 @@ describe('auro-form', () => {
       await expect(button.hasAttribute("disabled")).to.be.false;
     });
 
-    it('enables submit buttons when form is valid', async () => {
+    it('should enable submit buttons when form is valid', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="tester" value="some value"></auro-input>
@@ -372,7 +308,21 @@ describe('auro-form', () => {
       await expect(button.hasAttribute("disabled")).to.be.false;
     });
 
-    it('attaches submit click handler to submit elements', async () => {
+    it('should use the reactive _submitElements property declared in properties', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="tester" value="some value"></auro-input>
+          <auro-button type="submit">Submit</auro-button>
+        </auro-form>
+      `);
+
+      await elementUpdated(el);
+
+      // Verify submitElements returns the button via the reactive property
+      expect(el.submitElements).to.have.length(1);
+    });
+
+    it('should attach a submit click handler to submit elements', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="tester" value="some value"></auro-input>
@@ -395,7 +345,7 @@ describe('auro-form', () => {
       await expect(eventSubmitted).to.be.true;
     });
 
-    it('attaches reset click handler to reset elements', async () => {
+    it('should attach a reset click handler to reset elements', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="tester" value="some value"></auro-input>
@@ -419,7 +369,7 @@ describe('auro-form', () => {
   });
 
   describe('when calling submit() method', () => {
-    it('emits a "submit" event and has the expected `<element>.value` JSON object', async () => {
+    it('should emit a submit event with the expected form values as JSON', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="testInput" value="test" required></auro-input>
@@ -442,102 +392,651 @@ describe('auro-form', () => {
     });
   });
 
-  describe('when calling reset() method', () => {
-    it.skip('emits a "reset" event', async () => {
-      const el = await fixture(html`
-        <auro-form>
-          <auro-input name="testInput" required></auro-input>
-          <auro-input name="testInput2" value="prefilled-value" required></auro-input>
-        </auro-form>
-      `);
+  describe('Mouse Behavior', () => {
+    describe('Click', () => {
+      it('should submit when submit button is clicked', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="tester" value="some value"></auro-input>
+            <auro-button type="submit">Submit</auro-button>
+          </auro-form>
+        `);
 
-      const resetEventPromise = new Promise((res) => {
-        el.addEventListener('reset', (event) => {
-          res(event.detail.previousValue);
+        await elementUpdated(el);
+
+        const [button] = el.submitElements;
+
+        const submitEvent = new Promise((res) => {
+          el.addEventListener('submit', () => res(true));
         });
+
+        await button.click();
+
+        const eventSubmitted = await submitEvent;
+        await expect(eventSubmitted).to.be.true;
       });
 
-      const [inputEl, inputEl2] = el._elements;
+      it('should reset when reset button is clicked', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="tester" value="some value"></auro-input>
+            <auro-button type="reset">Reset</auro-button>
+          </auro-form>
+        `);
 
-      inputEl.focus();
-      inputEl.value = 'zzz';
-      inputEl.blur();
+        await elementUpdated(el);
 
-      inputEl2.focus();
-      inputEl.value = 'zzzzz';
-      inputEl.blur();
+        const [button] = el.resetElements;
 
-      el.reset();
+        const resetEvent = new Promise((res) => {
+          el.addEventListener('reset', () => res(true));
+        });
 
-      await elementUpdated(el);
+        await button.click();
 
-      await resetEventPromise;
-      await expect(el.value).to.have.keys('testInput', 'testInput2');
-      await expect(el.value.testInput).to.equal(null);
-      await expect(el.value.testInput2).to.equal('prefilled-value');
+        const eventSubmitted = await resetEvent;
+        await expect(eventSubmitted).to.be.true;
+      });
     });
   });
 
-  describe('when Enter key is pressed on form elements', () => {
-    it('should submit the form when Enter is pressed on an input element', async () => {
-      const el = await fixture(html`
-        <auro-form>
-          <auro-input name="testInput" value="test value" required></auro-input>
-          <auro-input name="testInput2" value="test value 2" required></auro-input>
-        </auro-form>
-      `);
+  describe('Keyboard Behavior', () => {
+    describe('Enter', () => {
+      it('should submit the form when Enter is pressed on an input element', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput" value="test value" required></auro-input>
+            <auro-input name="testInput2" value="test value 2" required></auro-input>
+          </auro-form>
+        `);
 
-      const [inputEl] = el._elements;
-      await elementUpdated(el);
+        const [inputEl] = el._elements;
+        await elementUpdated(el);
 
-      const submitPromise = new Promise((res) => {
+        const submitPromise = new Promise((res) => {
+          el.addEventListener('submit', (event) => {
+            res(event.target.value);
+          });
+        });
+
+        // Simulate Enter key press on the input
+        const enterEvent = new KeyboardEvent('keydown', {
+          key: 'Enter',
+          bubbles: true,
+          cancelable: true
+        });
+        inputEl.dispatchEvent(enterEvent);
+
+        const formSubmissionValue = await submitPromise;
+        await expect(formSubmissionValue).to.have.keys('testInput', 'testInput2');
+        await expect(formSubmissionValue.testInput).to.equal('test value');
+        await expect(formSubmissionValue.testInput2).to.equal('test value 2');
+      });
+
+      it('should prevent default Enter behavior on input elements', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput" value="test" required></auro-input>
+          </auro-form>
+        `);
+
+        const [inputEl] = el._elements;
+        await elementUpdated(el);
+
+        let defaultPrevented = false;
+        const enterEvent = new KeyboardEvent('keydown', {
+          key: 'Enter',
+          bubbles: true,
+          cancelable: true
+        });
+
+        // Override preventDefault to track if it was called
+        const originalPreventDefault = enterEvent.preventDefault.bind(enterEvent);
+        enterEvent.preventDefault = () => {
+          defaultPrevented = true;
+          originalPreventDefault();
+        };
+
+        inputEl.dispatchEvent(enterEvent);
+
+        await elementUpdated(el);
+        await expect(defaultPrevented).to.be.true;
+      });
+    });
+  });
+
+  describe('Properties', () => {
+    describe('value', () => {
+      it('should automatically find auro elements in slot and add them to state', async () => {
+        const defaultFormState = {
+          testInput: {
+            value: null,
+            validity: null,
+            required: true
+          },
+          dateExample: {
+            value: null,
+            validity: null,
+            required: true
+          }
+        };
+
+        const defaultFormValue = {
+          testInput: null,
+          dateExample: null
+        };
+
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput" required></auro-input>
+            <auro-datepicker id="date-example" name="dateExample" required>
+              <span slot="fromLabel">Choose a date</span>
+              <span slot="bib.fullscreen.dateLabel">Choose a date</span>
+            </auro-datepicker>
+          </auro-form>
+        `);
+
+        await el.updateComplete;
+        await expect(el.formState).to.deep.equal(defaultFormState);
+        await expect(el.value).to.deep.equal(defaultFormValue);
+        await expect(el.validity).to.equal(null);
+      });
+
+      it('should automatically populate inputs with preset values', async () => {
+        const expectedFormState = {
+          testInput: {
+            value: "some-preset-value",
+            validity: "valid",
+            required: true
+          }
+        };
+
+        const expectedFormValue = {
+          testInput: "some-preset-value"
+        };
+
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput" value="some-preset-value" required></auro-input>
+          </auro-form>
+        `);
+
+        await el.updateComplete;
+        await expect(el.formState).to.deep.equal(expectedFormState);
+        await expect(el.value).to.deep.equal(expectedFormValue);
+        await expect(el.validity).to.equal("valid");
+      });
+
+      it('should update values when input events are emitted by form elements', async () => {
+        const expectedFormState = {
+          testInput: {
+            value: "zzz",
+            validity: "valid",
+            required: true
+          }
+        };
+
+        const expectedFormValue = {
+          testInput: "zzz"
+        };
+
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput" value="some-preset-value" required></auro-input>
+          </auro-form>
+        `);
+
+        // INTERNAL STATE KEY - FOR TESTING ONLY :)
+        const [inputEl] = el._elements;
+
+        inputEl.focus();
+        inputEl.value = 'zzz';
+        inputEl.blur();
+
+        await elementUpdated(el);
+        await expect(el.formState).to.deep.equal(expectedFormState);
+        await expect(el.value).to.deep.equal(expectedFormValue);
+        await expect(el.validity).to.equal("valid");
+      });
+    });
+
+    describe('validity', () => {
+      it('should update validity when events are submitted by form elements', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput" required></auro-input>
+          </auro-form>
+        `);
+
+        await expect(el.formState).to.have.key('testInput');
+        await expect(el.formState.testInput.validity).to.be.null;
+        await expect(el.validity).to.be.null;
+
+        // INTERNAL STATE KEY - used externally for testing only!
+        const [inputEl] = el._elements;
+
+        inputEl.focus();
+        inputEl.value = 'zzz';
+        inputEl.blur();
+
+        await elementUpdated(el);
+
+        await expect(el.formState.testInput.validity).to.equal('valid');
+        await expect(el.validity).to.equal('valid');
+      });
+    });
+
+    describe('isInitialState', () => {
+      it('should return true when form is first created', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);
+
+        await expect(el.isInitialState).to.be.true;
+      });
+
+      it('should return false after an input value changes', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);
+
+        const [inputEl] = el._elements;
+
+        inputEl.focus();
+        inputEl.value = 'hello';
+        inputEl.blur();
+
+        await elementUpdated(el);
+
+        await expect(el.isInitialState).to.be.false;
+      });
+    });
+  });
+
+  describe('Slots', () => {
+    describe('default', () => {
+      it('should render content in the default slot', async () => {
+        const el = await fixture(html`<auro-form><auro-input><span slot="label">Name</span></auro-input></auro-form>`);
+
+        const slot = el.shadowRoot.querySelector('slot:not([name])');
+
+        await expect(slot).to.exist;
+        const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE);
+
+        await expect(assigned.length).to.be.greaterThan(0);
+      });
+    });
+
+  });
+
+  describe('Public Functions', () => {
+    describe('reset', () => {
+      it('should reset all form elements to their initial state', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);
+
+        const [inputEl] = el._elements;
+
+        inputEl.focus();
+        inputEl.value = 'hello';
+        inputEl.blur();
+
+        await elementUpdated(el);
+        await expect(el.isInitialState).to.be.false;
+
+        el.reset();
+        await elementUpdated(el);
+        // Wait for the nested updateComplete chain in reset()
+        await el.updateComplete;
+        await el.updateComplete;
+
+        await expect(el.isInitialState).to.be.true;
+      });
+    });
+
+    describe('submit', () => {
+      it('should dispatch submit event with form values when form is valid', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);
+
+        const [inputEl] = el._elements;
+
+        inputEl.focus();
+        inputEl.value = 'hello';
+        inputEl.blur();
+
+        await elementUpdated(el);
+
+        let submitDetail = null;
         el.addEventListener('submit', (event) => {
-          res(event.target.value);
+          submitDetail = event.detail;
         });
+
+        await el.submit();
+
+        await expect(submitDetail).to.not.be.null;
+        await expect(submitDetail.value).to.have.property('testInput');
       });
 
-      // Simulate Enter key press on the input
-      const enterEvent = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        bubbles: true,
-        cancelable: true
-      });
-      inputEl.dispatchEvent(enterEvent);
+      it('should not dispatch submit event when form is invalid', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput" required></auro-input></auro-form>`);
 
-      const formSubmissionValue = await submitPromise;
-      await expect(formSubmissionValue).to.have.keys('testInput', 'testInput2');
-      await expect(formSubmissionValue.testInput).to.equal('test value');
-      await expect(formSubmissionValue.testInput2).to.equal('test value 2');
+        let submitFired = false;
+        el.addEventListener('submit', () => {
+          submitFired = true;
+        });
+
+        await el.submit();
+
+        await expect(submitFired).to.be.false;
+      });
     });
 
-    it('should prevent default behavior when Enter is pressed on input', async () => {
-      const el = await fixture(html`
-        <auro-form>
-          <auro-input name="testInput" value="test" required></auro-input>
-        </auro-form>
-      `);
+    describe('register', () => {
+      it('should have a static register method', async () => {
+        const FormClass = customElements.get('auro-form');
 
-      const [inputEl] = el._elements;
-      await elementUpdated(el);
-
-      let defaultPrevented = false;
-      const enterEvent = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        bubbles: true,
-        cancelable: true
+        await expect(FormClass.register).to.be.a('function');
       });
 
-      // Override preventDefault to track if it was called
-      const originalPreventDefault = enterEvent.preventDefault.bind(enterEvent);
-      enterEvent.preventDefault = () => {
-        defaultPrevented = true;
-        originalPreventDefault();
-      };
+      it('should register and render a custom-named form element', async () => {
+        customElements.get('auro-form').register('custom-form');
 
-      inputEl.dispatchEvent(enterEvent);
+        const el = await fixture(html`
+          <custom-form>
+            <auro-input name="testField" value="hello"></auro-input>
+          </custom-form>
+        `);
 
-      await elementUpdated(el);
-      await expect(defaultPrevented).to.be.true;
+        expect(el.shadowRoot).to.exist;
+        expect(el.shadowRoot.querySelector('form')).to.exist;
+        expect(el.formState).to.have.property('testField');
+      });
     });
   });
+
+  describe('Events', () => {
+    describe('input', () => {
+      it('should fire input event when child element dispatches input event', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput"></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        const inputEl = el.querySelector('auro-input');
+
+        let inputEventFired = false;
+        el.addEventListener('input', () => {
+          inputEventFired = true;
+        });
+
+        inputEl.value = 'test value';
+        inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        await expect(inputEventFired).to.be.true;
+      });
+
+      it('input event should bubble and be composed', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="field1"></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        let eventProps = null;
+        el.addEventListener('input', (e) => {
+          eventProps = { bubbles: e.bubbles, composed: e.composed };
+        });
+
+        const input = el.querySelector('auro-input');
+        input.value = 'test';
+        input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(eventProps).to.exist;
+        expect(eventProps.bubbles).to.be.true;
+        expect(eventProps.composed).to.be.true;
+      });
+    });
+
+    describe('change', () => {
+      it('should fire change event when an input value changes', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);
+
+        const [inputEl] = el._elements;
+
+        let changeFired = false;
+        el.addEventListener('change', () => {
+          changeFired = true;
+        });
+
+        inputEl.focus();
+        inputEl.value = 'hello';
+        inputEl.blur();
+
+        await elementUpdated(el);
+
+        await expect(changeFired).to.be.true;
+      });
+    });
+
+    it('dispatches change event when initializeState runs', async () => {
+      let changeFired = false;
+
+      const container = document.createElement('div');
+      container.addEventListener('change', () => {
+        changeFired = true;
+      });
+
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="field1"></auro-input>
+        </auro-form>
+      `, { parentNode: container });
+      await elementUpdated(el);
+
+      expect(changeFired).to.be.true;
+    });
+
+    describe('reset', () => {
+      it('should fire reset event with previousValue detail', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);
+
+        const [inputEl] = el._elements;
+
+        inputEl.focus();
+        inputEl.value = 'hello';
+        inputEl.blur();
+
+        await elementUpdated(el);
+
+        let resetDetail = null;
+        el.addEventListener('reset', (event) => {
+          resetDetail = event.detail;
+        });
+
+        el.reset();
+        await elementUpdated(el);
+        await el.updateComplete;
+        await el.updateComplete;
+
+        await expect(resetDetail).to.not.be.null;
+        await expect(resetDetail.previousValue).to.have.property('testInput');
+      });
+    });
+
+    describe('submit', () => {
+      it('should fire submit event with value detail when form is valid', async () => {
+        const el = await fixture(html`<auro-form><auro-input name="testInput"></auro-input></auro-form>`);
+
+        const [inputEl] = el._elements;
+
+        inputEl.focus();
+        inputEl.value = 'hello';
+        inputEl.blur();
+
+        await elementUpdated(el);
+
+        let submitDetail = null;
+        el.addEventListener('submit', (event) => {
+          submitDetail = event.detail;
+        });
+
+        await el.submit();
+
+        await expect(submitDetail).to.not.be.null;
+        await expect(submitDetail.value).to.have.property('testInput');
+        await expect(submitDetail.value.testInput).to.equal('hello');
+      });
+
+      it('elements without name are excluded from form state', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="named-field" value="hello"></auro-input>
+            <auro-input value="no-name"></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        // Named field should be in form state
+        expect(el.formState['named-field']).to.exist;
+
+        // Unnamed field should not be tracked
+        const stateKeys = Object.keys(el.formState);
+        expect(stateKeys.length).to.equal(1);
+      });
+
+      it('attribute-based element matching registers elements with tag-name attribute', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <custom-element auro-input name="customField" value="test"></custom-element>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        // The form's _isElementTag checks hasAttribute(tagName),
+        // so a <custom-element auro-input> should match the 'auro-input' tag selector
+        const matches = el._elements.some((element) => element.getAttribute('name') === 'customField');
+        expect(matches).to.be.true;
+      });
+    });
+  });
+
+  describe('Private Functions', () => {
+    // ─── _addElementToState deduplication guard ────────────────────────
+    it('_addElementToState does not overwrite existing element', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="dupInput"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      // The element is already registered in formState
+      const originalState = el.formState['dupInput'];
+      await expect(originalState).to.exist;
+
+      // Call _addElementToState again with same name - should be a no-op
+      const inputEl = el.querySelector('auro-input[name="dupInput"]');
+      el._addElementToState(inputEl);
+
+      // State should remain the same reference
+      await expect(el.formState['dupInput']).to.equal(originalState);
+    });
+
+    // ─── handleKeyDown textarea exemption ──────────────────────────────
+    it('handleKeyDown does not submit when Enter is pressed on textarea', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="testInput" textarea></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      let submitted = false;
+      el.addEventListener('submit', () => {
+        submitted = true;
+      });
+
+      const inputEl = el.querySelector('auro-input');
+      inputEl.value = 'test';
+      await elementUpdated(el);
+
+      // Dispatch Enter on the textarea element
+      inputEl.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true
+      }));
+      await elementUpdated(el);
+
+      await expect(submitted).to.be.false;
+    });
+
+    // ─── sharedInputListener range datepicker values ───────────────────
+    it('sharedInputListener stores values for range datepicker', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-datepicker name="dates" range></auro-datepicker>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      const datepicker = el.querySelector('auro-datepicker');
+      datepicker.value = '01/15/2024';
+      datepicker.valueEnd = '01/20/2024';
+
+      // Fire input event to trigger sharedInputListener
+      datepicker.dispatchEvent(new Event('input', {
+        bubbles: true,
+        composed: true
+      }));
+      await elementUpdated(el);
+
+      // formState should use .values for range datepicker
+      await expect(el.formState['dates']).to.exist;
+    });
+
+    // ─── sharedInputListener adds unknown element to state ─────────────
+    it('sharedInputListener adds element to state when not already tracked', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="field1" label="Field"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      const input = el.querySelector('auro-input');
+
+      // Remove from formState to simulate an element that fires input before initializeState runs
+      delete el.formState['field1'];
+
+      // Fire input event — sharedInputListener should re-add to formState
+      input.dispatchEvent(new Event('input', {
+        bubbles: true,
+        composed: true
+      }));
+      await elementUpdated(el);
+
+      await expect(el.formState['field1']).to.exist;
+    });
+  });
+
+  describe('A11Y', () => {
+    it('should be accessible', async () => {
+      const el = await fixture(html`
+        <auro-form></auro-form>
+      `);
+
+      await expect(el).to.be.accessible();
+    });
+  });
+}
+
+// Desktop Test Suite
+describe('auro-form', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-form in small viewport', () => {
+  runFullTest(true);
 });

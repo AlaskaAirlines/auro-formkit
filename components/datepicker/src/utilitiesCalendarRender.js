@@ -14,6 +14,8 @@ export class UtilitiesCalendarRender {
    */
   updateCentralDate(elem, date) {
     const dateObj = new Date(date);
+    dateObj.setDate(1);
+    dateObj.setHours(0, 0, 0, 0);
 
     if (!isNaN(dateObj)) {
       elem.centralDate = dateObj;

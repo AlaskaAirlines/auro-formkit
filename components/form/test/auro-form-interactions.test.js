@@ -1,10 +1,14 @@
-/* eslint-disable no-underscore-dangle,max-lines,array-element-newline */
+/* eslint-disable no-underscore-dangle,max-lines,array-element-newline, no-undef */
 
 import {fixture, html, expect, elementUpdated, oneEvent} from '@open-wc/testing';
+import { setViewport } from '@web/test-runner-commands';
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 
 // !AURO ELEMENT REGISTRATION MUST BE DONE BEFORE AURO FORM REGISTRATION! //
 import '../demo/registerDemoDeps.js';
 import '../src/registered.js';
+
+const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10) - 1;
 
 /**
  * Shared tests to dedupe maintenance effort.
@@ -15,17 +19,12 @@ function useSharedTestBehavior(name, markup) {
   const getElement = () => fixture(markup);
 
   describe(`${name} automatic form behavior`, () => {
-    it.skip('should be accessible', async () => {
-      const form = await getElement();
-      await expect(form).to.be.accessible();
-    });
-
-    it('should get included as an auro form element', async () => {
+    it('should be included as an auro form element in the form state', async () => {
       const form = await getElement();
       await expect(form._elements).to.have.length(1);
     });
 
-    it('value should be available on form.value via name attribute', async () => {
+    it('should expose value on form.value via the name attribute', async () => {
       const form = await getElement();
       const formMemberName = form._elements[0].getAttribute('name');
 
@@ -34,7 +33,16 @@ function useSharedTestBehavior(name, markup) {
   });
 }
 
-describe('auro-form', () => {
+/**
+ * Runs the full form interactions test suite for a given viewport mode.
+ * @param {boolean} mobileView - Whether tests should run in small or large viewport mode.
+ * @returns {void}
+ */
+function runFullTest(mobileView) {
+  before(async () => {
+    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+  });
+
   describe('when an auro-input is present', () => {
     useSharedTestBehavior('auro-input', html`
       <auro-form>
@@ -60,7 +68,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-checkbox-group', componentTemplate);
 
-    it('should surface checkbox group values as an array', async () => {
+    it('should surface checkbox group values as an array in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [checkboxGroup] = form._elements;
 
@@ -81,19 +89,20 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-datepicker', template);
 
-    it.skip('should surface values from datepicker without `range` attribute as a string', async () => {
+    it('should surface values from datepicker without `range` attribute as a string', async () => {
       const form = await fixture(template);
       const [datePicker] = form._elements;
       const [input] = datePicker.inputList;
 
       await expect(form.value.dateExample).to.equal(null);
 
-      input.value = '04/03/2023';
-      await elementUpdated(form);
+      setTimeout(() => { input.value = '04/03/2023'; }, 0);
+      await oneEvent(form, 'change');
+
       await expect(form.value.dateExample).to.equal('04/03/2023');
     });
 
-    it.skip('should surface values from datepicker with `range` attribute as a string array', async () => {
+    it('should surface values from datepicker with `range` attribute as a string array', async () => {
       const form = await fixture(html`
         <auro-form>
           <auro-datepicker id="date-example" name="dateExample" range required>
@@ -107,10 +116,12 @@ describe('auro-form', () => {
 
       await expect(form.value.dateExample).to.equal(null);
 
-      input.value = '04/03/2023';
-      input2.value = '04/04/2023';
+      setTimeout(() => { input.value = '04/03/2023'; }, 0);
+      await oneEvent(form, 'change');
 
-      await elementUpdated(form);
+      setTimeout(() => { input2.value = '04/04/2023'; }, 0);
+      await oneEvent(form, 'change');
+
       await expect(form.value.dateExample).to.deep.equal(['04/03/2023', '04/04/2023']);
     });
   });
@@ -130,7 +141,7 @@ describe('auro-form', () => {
     useSharedTestBehavior('auro-radio-group', componentTemplate);
 
     // DOES NOT WORK. radio group needs to emit an input event!
-    it('should surface radio group value as a string', async () => {
+    it('should surface radio group value as a string in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [radioGroup] = form._elements;
       const [radioOne] = [...form.querySelectorAll('auro-radio')];
@@ -175,7 +186,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-combobox', componentTemplate);
 
-    it('should store combobox value as a string array', async () => {
+    it('should store combobox value as a string array in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [combobox] = form._elements;
 
@@ -203,7 +214,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-counter-group', componentTemplate);
 
-    it('should store counter group value as an object', async () => {
+    it('should store counter group value as an object in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [counterGroup] = form._elements;
       const someNumber = 5;
@@ -234,7 +245,7 @@ describe('auro-form', () => {
 
     useSharedTestBehavior('auro-select', componentTemplate);
 
-    it('should store select value as a string', async () => {
+    it('should store single-select value as a string in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [select] = form._elements;
 
@@ -254,7 +265,7 @@ describe('auro-form', () => {
       await expect(form.value.selectExample).to.deep.equal('stops');
     });
 
-    it('should store select value as a string', async () => {
+    it('should store multi-select value as a string in form.value', async () => {
       const form = await fixture(componentTemplate);
       const [select] = form._elements;
       select.multiSelect = true;
@@ -276,4 +287,14 @@ describe('auro-form', () => {
       await expect(form.value.selectExample).to.deep.equal(JSON.stringify(['stops']));
     });
   });
+}
+
+// Desktop Test Suite
+describe('auro-form', () => {
+  runFullTest(false);
+});
+
+// Mobile Test Suite
+describe('auro-form in small viewport', () => {
+  runFullTest(true);
 });

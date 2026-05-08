@@ -1,3 +1,15 @@
-`<auro-combobox>` is the combination of [dropdown](http://auro.alaskaair.com/components/auro/dropdown), [input](http://auro.alaskaair.com/components/auro/input), and [menu](http://auro.alaskaair.com/components/auro/menu) and allows users to filter search results from a predefined list as they type. When the user starts typing in the text input, a dropdown of a menu shows up to display options that match the user’s search.
+<p><code>&lt;auro-combobox&gt;</code> combines a text input with a filterable dropdown menu, letting users either type a value or pick one from a list. As the user types, the menu narrows to show only matching options.</p>
 
-By default, `auro-combobox` behaves as a suggestion list. This means any value may be typed into the combobox and the menu list presented effectively provides sample or suggestion options. With the use of the `persistInput` attribute the `auro-combobox` behaves as a filter of menu options. In this mode. typing into the input field will execute the filter but will not set the `value` of the combobox. The combobox value is set by selecting a menu option. Clicking the `X` clear button in the input will remove the current value of the HTML5 input causing the menu filter to reset as well as remove the current value of the combobox.
+<p>The component supports two modes:</p>
+<ul>
+  <li><strong>Suggestion (default)</strong> — The user may type any value. The menu provides suggestions but does not restrict input.</li>
+  <li><strong>Filter</strong> — The user must select from the menu. Typing filters the available options but does not set the component's value. The value is only set when a menu option is selected.</li>
+</ul>
+
+<p>Common use cases:</p>
+<ul>
+  <li><strong>Airport or city search</strong> — Type a city name or airport code to filter a long list of destinations.</li>
+  <li><strong>Country or region selection</strong> — Quickly find and select from a large set of geographic options.</li>
+  <li><strong>Autocomplete fields</strong> — Provide type-ahead suggestions for form fields where the set of valid values is known.</li>
+  <li><strong>Search with suggestions</strong> — Offer recommended results while still allowing freeform input.</li>
+</ul>

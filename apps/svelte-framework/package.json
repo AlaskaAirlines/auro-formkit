@@ -1,0 +1,34 @@
+{
+	"name": "@aurodesignsystem/svelte-framework",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev:app": "vite dev",
+		"dev:app:open": "npm run dev:app -- --open",
+		"build:app": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"clean:cache": "rm -rf .svelte-kit node_modules/.vite",
+		"pretest:framework": "npm run clean:cache && npx playwright install chromium",
+		"test:framework": "playwright test",
+		"pretest:framework:report": "npm run clean:cache && npx playwright install chromium",
+		"test:framework:report": "playwright test --config=playwright.report.config.ts"
+	},
+	"dependencies": {
+		"@aurodesignsystem/auro-formkit": "file:../../"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.59.1",
+		"@sveltejs/adapter-auto": "^7.0.1",
+		"@sveltejs/kit": "^2.56.1",
+		"@sveltejs/vite-plugin-svelte": "^7.0.0",
+		"monocart-reporter": "^2.10.1",
+		"svelte": "^5.55.1",
+		"svelte-check": "^4.4.6",
+		"typescript": "^6.0.2",
+		"vite": "^8.0.5"
+	}
+}

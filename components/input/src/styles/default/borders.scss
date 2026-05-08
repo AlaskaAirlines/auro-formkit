@@ -3,7 +3,9 @@
   max-nesting-depth,
   no-descending-specificity,
   selector-not-notation,
-  selector-max-class
+  selector-max-class,
+  selector-max-attribute,
+  selector-max-pseudo-class
   */
 
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as v;

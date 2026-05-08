@@ -11,42 +11,42 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
-  "dependencies": {
-    "@aurodesignsystem/auro-helptext": "*",
-    "@aurodesignsystem/auro-icon": "^9.1.1",
-    "@floating-ui/dom": "^1.6.13",
-    "@popperjs/core": "^2.11.8",
-    "chalk": "^5.4.1",
-    "lit": "^3.2.1"
-  },
-  "devDependencies": {
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "postcss-selector-replace": "^1.0.2",
-    "rollup": "^4.39.0",
-    "rollup-plugin-serve": "^3.0.0",
-    "wc-sass-render": "^1.4.0",
-    "web-component-analyzer": "^2.0.0"
+  "nodemonConfig": {
+    "ext": "scss,js,md",
+    "watch": ["src", "docs", "demo", "apiExamples"],
+    "ignore": [
+      "*-css.js",
+      "*.css",
+      "*.min.css",
+      "*.min.js",
+      "docs/api.md",
+      "demo/*.md"
+    ],
+    "exec": "npm run build"
   },
   "scripts": {
     "build": "run-s sass bundler types build:docs",
     "sass": "run-s build:sass postCss:component sass:render",
     "build:version": "node ./scripts/version.mjs",
-    "build:sass": "sass --no-source-map --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
-    "build:watch": "nodemon -e scss,js --watch src --ignore \"*.css\" --ignore \"*-css.js\" --exec \"npm run build\"",
+    "build:sass": "sass --no-source-map --quiet-deps --load-path=../../node_modules \"./src/styles/:./src/styles/\"",
+    "build:watch": "nodemon",
     "bundler": "rollup -c node:@aurodesignsystem/config/rollup",
-    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; node ../../packages/build-tools/src/docProcessor.mjs --component dropdown",
+    "build:docs": "wca analyze 'scripts/wca/*.js' --outFiles docs/api.md; npm run docs; node ../../packages/build-tools/src/generatePageManifest.mjs",
     "clean": "rm -rf dist build",
     "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "dev:closed": "concurrently \"npm run build:watch\" \"npm run serve:closed\"",
-    "serve": "web-dev-server --open",
-    "serve:closed": "web-dev-server",
+    "serve": "npm run docs -- -s -w --open",
+    "serve:closed": "npm run docs -- -s -w",
+    "docs": "auro docs -r '../../docs/templates/componentReadmeTemplate.md' -p 8805",
     "postCss:component": "node ../../node_modules/@aurodesignsystem/auro-library/scripts/build/postCss.mjs",
-    "sass:render": "sass-render --load-path=../../node_modules 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
-    "test": "wtr --config \"web-test-runner.config.mjs\" --coverage --port 7705",
-    "test:watch": "wtr --config \"../../packages/config/src/web-test-runner.config.mjs\" --watch --port 7705",
+    "sass:render": "sass-render -i ../../node_modules --suffix=-css.js 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
+    "test": "wtr --config \"./web-test-runner.config.mjs\" --coverage --port 7705",
+    "test:watch": "wtr --config \"./web-test-runner.config.mjs\" --watch --port 7705",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./src/**/*.scss\"",
     "esLint": "eslint \"./src/**/*.js\""
   }
 }
+
+

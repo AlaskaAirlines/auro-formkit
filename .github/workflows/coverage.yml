@@ -1,0 +1,55 @@
+name: Coverage
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches-ignore:
+      - 'rc/**'
+      - 'main'
+
+permissions:
+  pull-requests: write
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run WTR tests with coverage
+        run: npm run test:wtr
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: >-
+            components/bibtemplate/coverage/lcov.info,
+            components/checkbox/coverage/lcov.info,
+            components/combobox/coverage/lcov.info,
+            components/counter/coverage/lcov.info,
+            components/datepicker/coverage/lcov.info,
+            components/dropdown/coverage/lcov.info,
+            components/form/coverage/lcov.info,
+            components/helptext/coverage/lcov.info,
+            components/input/coverage/lcov.info,
+            components/layoutElement/coverage/lcov.info,
+            components/menu/coverage/lcov.info,
+            components/radio/coverage/lcov.info,
+            components/select/coverage/lcov.info
+          flags: >-
+            bibtemplate,checkbox,combobox,counter,datepicker,
+            dropdown,form,helptext,input,layoutElement,
+            menu,radio,select
+          fail_ci_if_error: false
+          verbose: true

@@ -1,4 +1,5 @@
-The `<auro-input>` element should be used in situations where users may:
-
-* needs to enter information
-* be filling out a form
+<p>The <code>&lt;auro-input&gt;</code> element should be used in situations where users may:</p>
+<ul>
+  <li>Need to enter information</li>
+  <li>Be filling out a form</li>
+</ul>

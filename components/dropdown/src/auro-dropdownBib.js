@@ -11,10 +11,12 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+import { applyKeyboardStrategy } from '@aurodesignsystem/utils';
 
 import styleCss from "./styles/classic/bibStyles-css.js";
 import colorCss from "./styles/classic/bibColors-css.js";
 import tokensCss from "./styles/tokens-css.js";
+import { createDropdownBibKeyboardStrategy } from './dropdownBibKeyboardStrategy.js';
 
 const DESIGN_TOKEN_BREAKPOINT_PREFIX = '--ds-grid-breakpoint-';
 const DESIGN_TOKEN_BREAKPOINT_OPTIONS = [
@@ -38,12 +40,13 @@ export class AuroDropdownBib extends LitElement {
     /**
      * @private
      */
-    this._mobileBreakpointValue = undefined;
+    this._mobileBreakpointName = undefined;
 
     AuroLibraryRuntimeUtils.prototype.handleComponentTagRename(this, 'auro-dropdownbib');
 
     this.shape = "rounded";
     this.matchWidth = false;
+    this.hasActiveDescendant = false;
   }
 
   static get styles() {
@@ -130,6 +133,14 @@ export class AuroDropdownBib extends LitElement {
        */
       dialogRole: {
         type: String
+      },
+
+      /**
+       * Tracks whether a menu option is currently highlighted.
+       * @private
+       */
+      hasActiveDescendant: {
+        type: Boolean
       }
     };
   }
@@ -138,17 +149,22 @@ export class AuroDropdownBib extends LitElement {
     // verify the defined breakpoint is valid and exit out if not
     // 'disabled' is a design token breakpoint so it acts as our "undefined" value
     const validatedValue = DESIGN_TOKEN_BREAKPOINT_OPTIONS.includes(value) ? value : undefined;
-    if (!validatedValue) {
-      this._mobileBreakpointValue = undefined;
-    } else {
-      // get the pixel value for the defined breakpoint
-      const docStyle = getComputedStyle(document.documentElement);
-      this._mobileBreakpointValue = docStyle.getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + value);
-    }
+    // Store the breakpoint NAME only. The CSS token pixel value is read lazily
+    // in the getter so it is always resolved against the current document styles.
+    // Caching the pixel value here races against stylesheet load in WebKit —
+    // external CDN stylesheets may not yet be applied when the component upgrades,
+    // causing getPropertyValue() to return "" and fullscreen mode to never activate.
+    this._mobileBreakpointName = validatedValue;
   }
 
   get mobileFullscreenBreakpoint() {
-    return this._mobileBreakpointValue;
+    if (!this._mobileBreakpointName) {
+      return undefined;
+    }
+    const value = getComputedStyle(document.documentElement).
+      getPropertyValue(DESIGN_TOKEN_BREAKPOINT_PREFIX + this._mobileBreakpointName).
+      trim();
+    return value || undefined;
   }
 
   updated(changedProperties) {
@@ -199,7 +215,7 @@ export class AuroDropdownBib extends LitElement {
 
     const dialog = this.shadowRoot.querySelector('dialog');
     this._setupCancelHandler(dialog);
-    this._setupKeyboardBridge(dialog);
+    applyKeyboardStrategy(dialog, createDropdownBibKeyboardStrategy(this));
 
     this.dispatchEvent(new CustomEvent('auro-dropdownbib-connected', {
       bubbles: true,
@@ -213,7 +229,7 @@ export class AuroDropdownBib extends LitElement {
   /**
    * Forwards the dialog's native `cancel` event (fired on ESC) as
    * an `auro-bib-cancel` custom event so parent components can close.
-   * @param {HTMLDialogElement} dialog
+   * @param {HTMLDialogElement} dialog - The dialog element to attach the cancel listener to.
    * @private
    */
   _setupCancelHandler(dialog) {
@@ -226,84 +242,6 @@ export class AuroDropdownBib extends LitElement {
     });
   }
 
-  /**
-   * showModal() creates a closed focus scope — keyboard events inside
-   * the dialog's shadow DOM do NOT bubble out to the combobox/select
-   * keydown handlers in the parent shadow DOM. This handler bridges
-   * that gap by re-dispatching navigation keys so they cross the
-   * shadow boundary and reach the menu navigation logic in the parent
-   * component.
-   *
-   * The trade-off: intercepting these keys means native keyboard
-   * behaviors that would normally "just work" must be manually
-   * re-implemented here:
-   *
-   * - Enter on buttons: Custom elements (auro-button) don't get the
-   *   native Enter→click that <button> provides, so we call .click()
-   *   directly when Enter is pressed on a button-like element.
-   *
-   * - Tab: Intercepted and re-dispatched so parent components
-   *   (select/combobox) can select the active option and close the
-   *   dialog. The <dialog> provides containment and isolation
-   *   (inert background, VoiceOver focus trapping, top layer), while
-   *   the content inside is a role="listbox" navigated via
-   *   aria-activedescendant (options are not focusable). Tab keyboard
-   *   behavior follows listbox conventions (select + close) because
-   *   the dialog's native Tab trap only cycles between the close
-   *   button and browser chrome.
-   *
-   * - Escape: The native <dialog> fires a `cancel` event on ESC
-   *   (handled by _setupCancelHandler), so the re-dispatched Escape
-   *   is a secondary path for parent components that also listen for
-   *   Escape keydown.
-   *
-   * @param {HTMLDialogElement} dialog
-   * @private
-   */
-  _setupKeyboardBridge(dialog) {
-    const navKeys = new Set([
-      'ArrowUp',
-      'ArrowDown',
-      'Enter',
-      'Escape',
-      'Tab'
-    ]);
-
-    dialog.addEventListener('keydown', (event) => {
-      if (!navKeys.has(event.key)) {
-        return;
-      }
-
-      // Custom elements (auro-button) don't get the native Enter→click
-      // behavior that <button> has. Find the button in the composed path
-      // and click it directly.
-      if (event.key === 'Enter') {
-        const buttonSelector = 'button, [role="button"], auro-button, [auro-button]';
-        const btn = event.composedPath().find((el) => el.matches && el.matches(buttonSelector));
-        if (btn) {
-          event.preventDefault();
-          event.stopPropagation();
-          btn.click();
-          return;
-        }
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-      const newEvent = new KeyboardEvent('keydown', {
-        key: event.key,
-        code: event.code,
-        shiftKey: event.shiftKey,
-        altKey: event.altKey,
-        ctrlKey: event.ctrlKey,
-        metaKey: event.metaKey,
-        bubbles: true,
-        composed: true,
-        cancelable: true
-      });
-      this.dispatchEvent(newEvent);
-    });
-  }
 
   /**
    * Blocks touch-driven page scroll while a fullscreen modal dialog is open.
@@ -357,6 +295,7 @@ export class AuroDropdownBib extends LitElement {
 
   open(modal = true) {
     const dialog = this.shadowRoot.querySelector('dialog');
+
     if (dialog && !dialog.open) {
       if (modal) {
         // Prevent showModal() from scrolling the page to bring the dialog
@@ -367,17 +306,29 @@ export class AuroDropdownBib extends LitElement {
         const prevOverflow = documentElement.style.overflow;
         documentElement.style.overflow = 'hidden';
 
-        dialog.showModal();
-
-        documentElement.style.overflow = prevOverflow;
+        try {
+          dialog.showModal();
+        } finally {
+          // Restore overflow immediately — the lock was only needed to
+          // suppress the browser's native scroll-into-view behavior
+          // triggered by showModal(). Keeping it locked would block
+          // scrolling inside the modal.
+          documentElement.style.overflow = prevOverflow;
+        }
 
         this._lockTouchScroll();
 
       } else {
-        // Use setAttribute instead of dialog.show() to avoid the dialog
-        // focusing steps which steal focus from the trigger and cause
-        // the floater's handleFocusLoss() to immediately hide the bib.
+        // Open the inner dialog so slotted content renders.
         dialog.setAttribute('open', '');
+
+        // Use popover on the host for top-layer placement without focus
+        // management or inertness. This escapes ancestor container-type
+        // containment that would trap position:fixed relative to the container.
+        // Set popover dynamically to avoid UA [popover]:not(:popover-open) { display: none }
+        // interfering with Floating UI measurement before showPopover().
+        this.setAttribute('popover', 'manual');
+        this.showPopover();
       }
     }
   }
@@ -386,10 +337,21 @@ export class AuroDropdownBib extends LitElement {
    * Closes the dialog.
    */
   close() {
+    this.hasActiveDescendant = false;
+
     const dialog = this.shadowRoot.querySelector('dialog');
+
     if (dialog && dialog.open) {
       this._unlockTouchScroll();
       dialog.close();
+    }
+    // Clean up the popover used for desktop top-layer placement.
+    // Remove the attribute entirely so the UA rule
+    // [popover]:not(:popover-open) { display: none } doesn't hide
+    // the host while Floating UI measures it for the next open.
+    if (this.matches(':popover-open')) {
+      this.hidePopover();
+      this.removeAttribute('popover');
     }
   }
 
@@ -405,8 +367,9 @@ export class AuroDropdownBib extends LitElement {
 
     return html`
       <dialog class="${classMap(classes)}" part="bibContainer" role="${ifDefined(this.dialogRole)}" aria-labelledby="${ifDefined(this.dialogLabel ? 'dialogLabel' : undefined)}">
-        ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually" aria-hidden="true">${this.dialogLabel}</span>` : ''}
+        ${this.dialogLabel ? html`<span id="dialogLabel" class="util_displayHiddenVisually">${this.dialogLabel}</span>` : ''}
         <slot></slot>
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
       </dialog>
     `;
   }

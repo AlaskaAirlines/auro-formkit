@@ -35,7 +35,7 @@ const ApiExamples: Meta = {
   component: 'auro-checkbox-group',
   subcomponents: { AuroCheckbox: 'auro-checkbox' },
   tags: ['autodocs'],
-  title: 'Checkbox & Checkbox Group',
+  title: 'Checkbox & Checkbox Group/Individual Examples',
   args,
   argTypes,
   parameters: {
@@ -70,3 +70,7 @@ export const Horizontal = stories.Horizontal;
 export const OptionalLabel = stories.OptionalLabel;
 export const Required = stories.Required;
 export const ResetState = stories.ResetState;
+export const CssParts = stories.CssParts;
+export const CustomTokens = stories.CustomTokens;
+export const NoValidate = stories.NoValidate;
+export const PresetChecked = stories.PresetChecked;

@@ -1,37 +1,42 @@
 import { Viewport } from "storybook/viewport";
+import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json';
 
 /**
  * This file defines the available modes for the Storybook configuration.
+ *
+ * Breakpoint values are sourced from the design tokens package to stay
+ * in sync with the WTR unit tests, which derive `mobileBreakpointWidth`
+ * from `ds-grid-breakpoint-sm`.
  */
 
 const breakpoints = {
   "gridBreakpoint": {
     "xs": {
-      "value": "320px",
+      "value": designTokens['ds-grid-breakpoint-xs'],
       "type": "semantic",
       "public": true,
       "deprecated": true
     },
     "sm": {
-      "value": "576px",
+      "value": designTokens['ds-grid-breakpoint-sm'],
       "type": "semantic",
       "public": true,
       "deprecated": true
     },
     "md": {
-      "value": "768px",
+      "value": designTokens['ds-grid-breakpoint-md'],
       "type": "semantic",
       "public": true,
       "deprecated": true
     },
     "lg": {
-      "value": "1024px",
+      "value": designTokens['ds-grid-breakpoint-lg'],
       "type": "semantic",
       "public": true,
       "deprecated": true
     },
     "xl": {
-      "value": "1232px",
+      "value": designTokens['ds-grid-breakpoint-xl'],
       "type": "semantic",
       "public": true,
       "deprecated": true

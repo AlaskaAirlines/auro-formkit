@@ -1,6 +1,6 @@
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 
-/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-class-pattern, selector-max-attribute */
 
 :host([error]) {
   --ds-auro-helptext-color: var(--ds-basic-color-status-error, #{v.$ds-basic-color-status-error});

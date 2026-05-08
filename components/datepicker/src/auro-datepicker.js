@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -46,14 +46,15 @@ import iconVersion from './iconVersion.js';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
-import { doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
+import { doubleRaf, guardTouchPassthrough, applyKeyboardStrategy } from '@aurodesignsystem/utils';
+import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 /**
  * The `auro-datepicker` component provides users with a way to select a date or date range from a calendar popup or fullscreen calendar on mobile.
  * @customElement auro-datepicker
- * 
+ *
  * @slot helpText - Defines the content of the helpText.
  * @slot ariaLabel.bib.close - Sets aria-label on close button in fullscreen bib
  * @slot ariaLabel.input.clear - Sets aria-label on clear button
@@ -218,8 +219,15 @@ export class AuroDatePicker extends AuroElement {
      */
     this.helpTextTag = versioning.generateTag('auro-formkit-input-helptext', formkitVersion, AuroHelpText);
 
-    /** @private */
+    /**
+     * @private
+     */
     this.handleClick = this.handleClick.bind(this);
+
+    /**
+     * @private
+     */
+    this.handleClearClick = this.handleClearClick.bind(this);
 
     // Layout Config
     this.layout = 'classic';
@@ -460,7 +468,7 @@ export class AuroDatePicker extends AuroElement {
       /**
        * Optional placeholder text to display in the second input when using date range.
        * By default, datepicker will use `placeholder` for both inputs if placeholder is
-       * specified, but placeholderendDate is not.
+       * specified, but placeholderEndDate is not.
        */
       placeholderEndDate: {
         type: String,
@@ -487,7 +495,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Dates that the user should have for reference as part of their decision making when selecting a date.
-       * This should be a JSON string array of dates in the format of `MM-DD-YYYY`.
+       * This should be a JSON string array of dates in the format of `MM/DD/YYYY`.
        */
       referenceDates: {
         type: Array,
@@ -778,15 +786,16 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   notifyValueChanged() {
-    let inputEvent = null;
-
-    inputEvent = new Event('auroDatePicker-valueSet', {
+    this.dispatchEvent(new Event('auroDatePicker-valueSet', {
       bubbles: true,
       composed: true,
-    });
+    }));
 
-    // Dispatched event to alert outside shadow DOM context of event firing.
-    this.dispatchEvent(inputEvent);
+    // Standard input event so auro-form can track datepicker value changes.
+    this.dispatchEvent(new Event('input', {
+      bubbles: true,
+      composed: true,
+    }));
   }
 
   /**
@@ -839,13 +848,6 @@ export class AuroDatePicker extends AuroElement {
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
 
-    // Prevent dropdown from closing on focus loss during fullscreen transitions.
-    // When trigger.inert is set to true (to hide the trigger from assistive
-    // technology behind the fullscreen dialog), focus leaves the trigger, which
-    // fires a focusout event. The floater's handleFocusLoss() would interpret
-    // this as "close the bib" without this flag.
-    this.dropdown.noHideOnThisFocusLoss = true;
-
     // Pass label text to the dropdown bib for accessible dialog naming.
     // Without this, the fullscreen <dialog> has no accessible name and
     // screen readers announce it as just "dialog" with no context.
@@ -853,15 +855,6 @@ export class AuroDatePicker extends AuroElement {
     if (labelElement) {
       this.dropdown.bibDialogLabel = labelElement.textContent.trim() || undefined;
     }
-
-    // Tab closes the fullscreen dialog (same pattern as select).
-    // The dialog event bridge intercepts Tab and re-dispatches it as a
-    // composed keydown; this listener catches the re-dispatched event.
-    this.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-        this.dropdown.hide();
-      }
-    });
 
     this.dropdown.addEventListener('auroDropdown-triggerClick', () => {
       if (!this.isPopoverVisible) {
@@ -912,7 +905,17 @@ export class AuroDatePicker extends AuroElement {
           guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
         }
       } else {
-        restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
+        // Always clear the inert flag. Only restore focus to the input when the datepicker
+        // still has focus (e.g. Escape, date selected) — not when the user tabbed away,
+        // which would pull them back and require extra Tab presses to escape.
+        this.dropdown.trigger.inert = false;
+        if (this.hasFocus) {
+          requestAnimationFrame(() => {
+            if (!this.dropdown.isPopoverVisible) {
+              this.inputList[0].focus();
+            }
+          });
+        }
       }
 
       // If on mobile, and the calendar is opened, scroll the focus date into view if the flag is set
@@ -966,17 +969,10 @@ export class AuroDatePicker extends AuroElement {
 
     this.inputList = [...this.dropdown.querySelectorAll(this.inputTag._$litStatic$)];
 
-    this.handleReadOnly();
-
     this.inputList.forEach((input, index) => {
-      // auto-show bib when manually editing the input value
-      input.addEventListener('keyup', (evt) => {
-        if (evt.key.length === 1 || evt.key === 'Delete' || evt.key === 'Backspace') {
-          this.dropdown.show();
-        }
-      });
+      input.addEventListener('input', (event) => {
+        event.stopPropagation();
 
-      input.addEventListener('input', () => {
         if (index === 0) {
           this.value = input.value;
         } else if (index === 1) {
@@ -1103,28 +1099,6 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Sets the readonly attribute on the inputs based on the window width.
-   * @private
-   * @returns {void}
-   */
-  handleReadOnly() {
-    // --ds-grid-breakpoint-sm
-    const docStyle = getComputedStyle(document.documentElement);
-
-    // We need to store this so that we can pass it to calendar
-    this.mobileBreakpoint = Number(docStyle.getPropertyValue('--ds-grid-breakpoint-sm').replace("px", ""));
-    const isMobile = window.innerWidth < this.mobileBreakpoint;
-
-    this.inputList.forEach((input) => {
-      if (isMobile) {
-        input.setAttribute('readonly', true);
-      } else {
-        input.removeAttribute('readonly');
-      }
-    });
-  }
-
-  /**
    * Keep the datepicker in sync with the calendar's central date.
    * @private
    * @param {Number} event - Event received from calendar with the new central date.
@@ -1191,18 +1165,6 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * Handle enter/space keydown on the reset button.
-   * @private
-   * @param {KeyboardEvent} event - The keydown event.
-   */
-  handleKeydownReset(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      this.resetInputs();
-      this.focus();
-    }
-  }
-
-  /**
    * Resets values without resetting validation.
    */
   resetInputs() {
@@ -1264,6 +1226,14 @@ export class AuroDatePicker extends AuroElement {
   updated(changedProperties) {
     if (changedProperties.has('format')) {
       this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    }
+
+    if (changedProperties.has('referenceDates')) {
+      // backward compatibility for old format of referenceDates which is a stringified array with - instead of / as separator, e.g. ["10-22-2025","10-23-2025"]
+      const stringfiedDates = JSON.stringify(this.referenceDates);
+      if (stringfiedDates.includes('-')) {
+        this.referenceDates = this.referenceDates.map(date => date.replace(/-/gu, '/' ));
+      }
     }
 
     if (changedProperties.has('disabled')) {
@@ -1543,10 +1513,7 @@ export class AuroDatePicker extends AuroElement {
     this.configureCalendar();
     this.configureDatepicker();
     this.configureClickHandler();
-
-    window.addEventListener('resize', () => {
-      this.handleReadOnly();
-    });
+    applyKeyboardStrategy(this, datepickerKeyboardStrategy);
   }
 
   connectedCallback() {
@@ -1816,6 +1783,18 @@ export class AuroDatePicker extends AuroElement {
   // ------------------------------------
 
   /**
+   * Handles click on the clear button.
+   * @private
+   * @param {MouseEvent} event
+   * @returns {void}
+   */
+  handleClearClick(event) {
+    event.stopPropagation();
+    this.resetInputs();
+    this.focus();
+  }
+
+  /**
    * Renders the clear action button.
    * @private
    * @returns {import('lit').TemplateResult}
@@ -1829,8 +1808,7 @@ export class AuroDatePicker extends AuroElement {
     return html`
       <div class="${classMap(clearActionClassMap)}">
         <${this.buttonTag}
-          @click="${this.resetInputs}"
-          @keydown="${this.handleKeydownReset}"
+          @click="${this.handleClearClick}"
           ?onDark="${this.onDark}"
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           aria-label="${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}"
@@ -1974,7 +1952,6 @@ export class AuroDatePicker extends AuroElement {
           .size="${this.size}"
           class="${classMap(dropdownElementClassMap)}"
           disableEventShow
-          disableFocusTrap
           for="dropdownMenu"
           part="dropdown"
         >

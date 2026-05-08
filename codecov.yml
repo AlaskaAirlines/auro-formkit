@@ -1,0 +1,70 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: 80%
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+
+flags:
+  bibtemplate:
+    paths:
+      - components/bibtemplate/src/
+    carryforward: true
+  checkbox:
+    paths:
+      - components/checkbox/src/
+    carryforward: true
+  combobox:
+    paths:
+      - components/combobox/src/
+    carryforward: true
+  counter:
+    paths:
+      - components/counter/src/
+    carryforward: true
+  datepicker:
+    paths:
+      - components/datepicker/src/
+    carryforward: true
+  dropdown:
+    paths:
+      - components/dropdown/src/
+    carryforward: true
+  form:
+    paths:
+      - components/form/src/
+    carryforward: true
+  helptext:
+    paths:
+      - components/helptext/src/
+    carryforward: true
+  input:
+    paths:
+      - components/input/src/
+    carryforward: true
+  layoutElement:
+    paths:
+      - components/layoutElement/src/
+    carryforward: true
+  menu:
+    paths:
+      - components/menu/src/
+    carryforward: true
+  radio:
+    paths:
+      - components/radio/src/
+    carryforward: true
+  select:
+    paths:
+      - components/select/src/
+    carryforward: true

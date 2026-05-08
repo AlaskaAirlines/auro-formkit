@@ -18,11 +18,11 @@ The `auro-menu` element provides users a way to select from a list of options.
 | `noCheckmark`              | `nocheckmark`              |           | `boolean`             | false       | When true, selected option will not show the checkmark. |
 | `optionActive`             | `optionactive`             |           | `object`              | "undefined" | Specifies the current active menuOption.         |
 | `optionSelected`           | `optionSelected`           |           | `object`              | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `options`                  |                            | readonly  | `array`               |             | Available menu options                           |
+| `options`                  |                            | readonly  | `array`               |             | Available menu options.                          |
 | `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`             | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
 | `selectedOption`           |                            | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
 | `selectedOptions`          |                            | readonly  | `HTMLElement[]`       |             | Gets the currently selected options.             |
-| `value`                    | `value`                    |           | `string`              | "undefined" | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values. |
+| `value`                    | `value`                    |           | `string`              |             | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values. |
 
 ## Methods
 
@@ -37,6 +37,7 @@ The `auro-menu` element provides users a way to select from a list of options.
 |-------------------------------|--------------------------------------------------|--------------------------------------------------|
 | `auroMenu-activatedOption`    | `CustomEvent<Element>`                           | Notifies that a menuoption has been made `active`. |
 | `auroMenu-customEventFired`   | `CustomEvent<any>`                               | Notifies that a custom event has been fired.     |
+| `auroMenu-deselectPrevented`  | `CustomEvent<{ values: HTMLElement[] }>`         | Notifies that deselection was prevented and includes the affected options in `detail.values`. |
 | `auroMenu-loadingChange`      | `CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>` | Notifies when the loading attribute is changed.  |
 | `auroMenu-optionsChange`      | `CustomEvent<{ options: any; }>`                 |                                                  |
 | `auroMenu-selectValueFailure` | `CustomEvent<any>`                               | Notifies that an attempt to select a menuoption by matching a value has failed. |
@@ -61,12 +62,13 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | Property      | Attribute  | Modifiers | Type      | Default | Description                                      |
 |---------------|------------|-----------|-----------|---------|--------------------------------------------------|
 | `disabled`    | `disabled` |           | `boolean` | false   | When true, disables the menu option.             |
-| `iconTag`     |            |           | `string`  |         |                                                  |
+| `iconTag`     |            |           |           |         |                                                  |
 | `isActive`    |            | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable.<br />An option is considered active if it is not hidden, not disabled, and not static. |
 | `key`         | `key`      |           | `string`  |         | Allows users to set a unique key for the menu option for specified option selection. If no key is provided, the value property will be used. |
+| `noMatch`     | `nomatch`  |           | `boolean` | false   | When true, marks this option as the "no matching results" placeholder shown by combobox when the user's input does not match any available options. Enables distinct styling and prevents the option from being treated as a selectable match. |
 | `selected`    | `selected` |           | `boolean` | false   | Specifies that an option is selected.            |
 | `tabIndex`    | `tabIndex` |           | `number`  |         | Specifies the tab index of the menu option.      |
-| `unsubscribe` |            |           |           | null    |                                                  |
+| `unsubscribe` |            |           | `number`  | null    |                                                  |
 | `value`       | `value`    |           | `string`  |         | Specifies the value to be sent to a server.      |
 
 ## Methods
@@ -82,7 +84,13 @@ The `auro-menuoption` element provides users a way to define a menu option.
 
 ## Events
 
-| Event                      | Type                |
-|----------------------------|---------------------|
-| `auroMenuOption-click`     | `CustomEvent<this>` |
-| `auroMenuOption-mouseover` | `CustomEvent<this>` |
+| Event                      | Type                | Description                                      |
+|----------------------------|---------------------|--------------------------------------------------|
+| `auroMenuOption-click`     | `CustomEvent<this>` |                                                  |
+| `auroMenuOption-mouseover` | `CustomEvent<this>` | Notifies that this option has been hovered over. |
+
+## Slots
+
+| Name      | Description                                |
+|-----------|--------------------------------------------|
+| `default` | The default slot for the menu option text. |

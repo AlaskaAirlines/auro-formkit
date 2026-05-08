@@ -5,6 +5,8 @@ import { expect, userEvent } from 'storybook/test';
 import { html } from 'lit-html';
 
 import '../src/registered';
+import '@aurodesignsystem/auro-dialog';
+import '@aurodesignsystem/auro-drawer';
 
 const meta: Meta = {
   component: 'auro-counter-group',
@@ -18,6 +20,10 @@ const meta: Meta = {
 export default meta;
 
 type Story = StoryObj;
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export const CounterAtMax: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
@@ -39,8 +45,14 @@ export const CounterAtMax: Story = {
 
 export const DropdownOpenWithCount: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group isDropdown>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
   <span slot="bib.fullscreen.headline">Passengers</span>
   <div slot="label">Passengers</div>
   <div slot="valueText">Select passengers</div>
@@ -57,10 +69,12 @@ export const DropdownOpenWithCount: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/Select passengers/i);
     await userEvent.click(trigger);
+    await wait(100);
     const plusButtons = await canvas.findAllByShadowRole('button', { name: '+' });
     // Increment Adults (first plus button) twice
     await userEvent.click(plusButtons[0]);
     await userEvent.click(plusButtons[0]);
+    await wait(50);
   },
 };
 
@@ -89,8 +103,14 @@ export const GroupMaxReached: Story = {
 
 export const DropdownOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group isDropdown>
+  <span slot="ariaLabel.bib.close">Close Popup</span>
   <span slot="bib.fullscreen.headline">Passengers</span>
   <div slot="label">Passengers</div>
   <div slot="valueText">Open dropdown</div>
@@ -107,11 +127,18 @@ export const DropdownOpen: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/Open dropdown/i);
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
   },
 };
 
 export const DropdownOpenWithError: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group isDropdown>
   <span slot="ariaLabel.bib.close">Close Popup</span>
@@ -131,11 +158,18 @@ export const DropdownOpenWithError: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/View errors/i);
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
   },
 };
 
 export const DropdownSnowflakeOpen: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: {
+      delay: 200,
+    },
+  },
   render: () => html`
 <auro-counter-group max="10" min="2" isDropdown layout="snowflake">
   <span slot="ariaLabel.bib.close">Close Popup</span>
@@ -150,6 +184,8 @@ export const DropdownSnowflakeOpen: Story = {
   async play({ canvas }: { canvas: any }) {
     const trigger = await canvas.findByShadowText(/Snowflake Dropdown Group/i);
     await userEvent.click(trigger);
+    await wait(100);
+    await wait(50);
   },
 };
 
@@ -167,4 +203,189 @@ CounterWithHover.parameters = {
     hover: true,
     active: true,
   }
+};
+
+// ─── Focus-within pseudo-state on a counter ──────────────────────────────────
+export const CounterFocusWithin: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-counter min="0" max="3">
+  Adults
+  <span slot="description">Max: 3</span>
+</auro-counter>
+  `,
+};
+CounterFocusWithin.parameters = {
+  pseudo: {
+    focusWithin: true,
+  },
+};
+
+// ─── Counter-group inside auro-dialog — bib closed ──────────────────────────
+export const CounterInDialogBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Counter in Dialog</span>
+  <div slot="content">
+    <auro-counter-group isDropdown>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+      <div slot="label">Counter Group</div>
+      <auro-counter>Counter 1</auro-counter>
+      <auro-counter>Counter 2</auro-counter>
+    </auro-counter-group>
+  </div>
+</auro-dialog>
+  `,
+};
+
+// ─── Counter-group inside auro-dialog — bib open ────────────────────────────
+export const CounterInDialogBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-dialog open>
+  <span slot="header">Counter in Dialog</span>
+  <div slot="content">
+    <auro-counter-group isDropdown>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+      <div slot="label">Counter Group</div>
+      <auro-counter>Counter 1</auro-counter>
+      <auro-counter>Counter 2</auro-counter>
+    </auro-counter-group>
+  </div>
+</auro-dialog>
+  `,
+  async play({ canvas }: { canvas: any }) {
+    const trigger = await canvas.findByShadowText(/Counter Group/i);
+    await userEvent.click(trigger);
+    await wait(100);
+  },
+};
+
+// ─── Counter-group inside auro-drawer — bib closed ──────────────────────────
+export const CounterInDrawerBibClosed: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Counter in Drawer">
+  <span slot="header">Counter in Drawer</span>
+  <div slot="content">
+    <auro-counter-group isDropdown>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+      <div slot="label">Counter Group</div>
+      <auro-counter>Counter 1</auro-counter>
+      <auro-counter>Counter 2</auro-counter>
+    </auro-counter-group>
+  </div>
+</auro-drawer>
+  `,
+};
+
+// ─── Counter-group inside auro-drawer — bib open ────────────────────────────
+export const CounterInDrawerBibOpen: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: { chromatic: { delay: 200 } },
+  render: () => html`
+<auro-drawer open aria-label="Counter in Drawer">
+  <span slot="header">Counter in Drawer</span>
+  <div slot="content">
+    <auro-counter-group isDropdown>
+      <span slot="ariaLabel.bib.close">Close Popup</span>
+      <div slot="bib.fullscreen.headline">Group fullscreen label</div>
+      <div slot="label">Counter Group</div>
+      <auro-counter>Counter 1</auro-counter>
+      <auro-counter>Counter 2</auro-counter>
+    </auro-counter-group>
+  </div>
+</auro-drawer>
+  `,
+  async play({ canvas }: { canvas: any }) {
+    const trigger = await canvas.findByShadowText(/Counter Group/i);
+    await userEvent.click(trigger);
+    await wait(100);
+  },
+};
+
+// ─── Disabled counter ────────────────────────────────────────────────────────
+export const CounterDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-counter-group>
+  <auro-counter disabled>Short label</auro-counter>
+  <auro-counter disabled>
+    Long label example
+    <span slot="description">with sub label text</span>
+  </auro-counter>
+</auro-counter-group>
+  `,
+};
+
+// ─── Error state on counter ──────────────────────────────────────────────────
+export const CounterError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<auro-counter error="There is an error with the counter">
+  Adults
+</auro-counter>
+  `,
+};
+
+// ─── Inverse appearance ──────────────────────────────────────────────────────
+export const CounterInverse: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter appearance="inverse">
+    Adults
+  </auro-counter>
+</div>
+  `,
+};
+
+// ─── Inverse disabled ────────────────────────────────────────────────────────
+export const CounterInverseDisabled: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter-group>
+    <auro-counter appearance="inverse" disabled>Short label</auro-counter>
+    <auro-counter appearance="inverse" disabled>
+      Long label example
+      <span slot="description">with sub label text</span>
+    </auro-counter>
+  </auro-counter-group>
+</div>
+  `,
+};
+
+// ─── Inverse error ───────────────────────────────────────────────────────────
+export const CounterInverseError: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter appearance="inverse" error="There is an error with the counter">
+    Adults
+  </auro-counter>
+</div>
+  `,
+};
+
+// ─── Inverse group ───────────────────────────────────────────────────────────
+export const CounterInverseGroup: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  render: () => html`
+<div style="background: var(--ds-color-background-darkest, #07244a); padding: 2rem;">
+  <auro-counter-group appearance="inverse">
+    <div slot="label">Passengers</div>
+    <div slot="helpText">Total must be 4 or fewer</div>
+    <auro-counter>Adults</auro-counter>
+    <auro-counter>Children</auro-counter>
+  </auro-counter-group>
+</div>
+  `,
 };

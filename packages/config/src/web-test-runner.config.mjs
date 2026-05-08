@@ -1,9 +1,13 @@
+import { defaultReporter } from '@web/test-runner';
+import { jsonSummaryReporter } from './wtr-json-summary-reporter.mjs';
+
 export default {
   rootDir: '../../',
   files: [
     'test/**/*.test.js',
     '!**/node_modules/**'
   ],
+  reporters: [defaultReporter(), jsonSummaryReporter()],
   nodeResolve: {
     moduleDirectories: [
       'node_modules',

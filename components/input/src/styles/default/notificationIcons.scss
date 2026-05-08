@@ -20,7 +20,8 @@
   selector-max-compound-selectors,
   selector-not-notation,
   no-duplicate-selectors,
-  no-descending-specificity */
+  no-descending-specificity,
+  selector-max-pseudo-class */
 .layoutDefault,
 :host(:not([layout])) { 
   .typeIcon {

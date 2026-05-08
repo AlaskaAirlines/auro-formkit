@@ -72,8 +72,8 @@ The `auro-checkbox` element is for the purpose of allowing users to select one o
 | `auroCheckbox-focusin`  | `CustomEvent<any>` |                                                  |
 | `auroCheckbox-focusout` | `CustomEvent<any>` |                                                  |
 | `auroCheckbox-input`    | `CustomEvent<any>` |                                                  |
-| `change`                | `CustomEvent<any>` | (Deprecated) Notifies when checked value is changed. |
-| `input`                 | `InputEvent`       | Notifies when when checked value is changed by user's interface. |
+| `change`                |                    | (Deprecated) Notifies when checked value is changed. |
+| `input`                 |                    | Notifies when when checked value is changed by user's interface. |
 
 ## Slots
 

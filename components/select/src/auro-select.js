@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -18,8 +18,7 @@ import tokensCss from "./styles/tokens-css.js";
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
-import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose } from '@aurodesignsystem/utils';
-import { applyKeyboardStrategy } from '../../dropdown/src/keyboardUtils.js';
+import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
@@ -546,7 +545,7 @@ export class AuroSelect extends AuroElement {
 
     // Prevent dropdown from closing on focus loss since menu content is slotted
     // from select's light DOM and won't be detected by dropdown's contains() check.
-    // Select handles Tab key closing explicitly, ESC via dialog cancel, and
+    // Select handles Tab key closing explicitly, `Escape` key via dialog cancel, and
     // click outside works correctly via composedPath().
     this.dropdown.noHideOnThisFocusLoss = true;
 
@@ -559,12 +558,30 @@ export class AuroSelect extends AuroElement {
         this.dropdown.setActiveDescendant(null);
         this.optionActive = null;
 
-        restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
+        if (this.dropdown.isBibFullscreen) {
+          restoreTriggerAfterClose(this.dropdown, this.dropdown.trigger);
+        }
       }
 
       if (this.dropdown.isPopoverVisible) {
         this.updateMenuShapeSize();
 
+        // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
+        // No selection → first enabled option gets highlighted
+        if (!this.menu.optionActive) {
+          if (this.optionSelected && !Array.isArray(this.optionSelected)) {
+            this.menu.updateActiveOption(this.optionSelected);
+          } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
+            this.menu.updateActiveOption(this.optionSelected[0]);
+          } else {
+            // If no activeOption has yet to be set, then make the first enabled option active by default
+            const firstActive = this.menu.menuService.menuOptions.find((option) => !option.disabled);
+            this.menu.updateActiveOption(firstActive);
+          }
+        }
+
+        // Scroll the selected option into view when dropdown opens
+        this.scrollSelectedOptionIntoView();
         if (this.dropdown.isBibFullscreen) {
           // Hide the trigger from assistive technology so VoiceOver cannot reach it
           // behind the fullscreen dialog
@@ -576,17 +593,6 @@ export class AuroSelect extends AuroElement {
           // multiple Lit update cycles before moving focus into the bib
           doubleRaf(() => {
             this.bibtemplate.focusCloseButton();
-
-            // If there's a selected option, highlight it (per W3C APG combobox-select-only pattern)
-            // No selection → no highlight
-            if (this.optionSelected && !Array.isArray(this.optionSelected)) {
-              this.menu.updateActiveOption(this.optionSelected);
-            } else if (this.multiSelect && Array.isArray(this.optionSelected) && this.optionSelected.length > 0) {
-              this.menu.updateActiveOption(this.optionSelected[0]);
-            }
-
-            // Scroll the selected option into view when dropdown opens
-            this.scrollSelectedOptionIntoView();
           });
         } else {
           // wait til the bib gets fully rendered
@@ -748,14 +754,26 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Returns the shadow root containing the live region for screen reader announcements.
+   * When the bib is open in fullscreen modal mode, everything outside the <dialog>
+   * is inert, so we target the bib's own shadow root instead of the host's.
+   * @private
+   * @returns {ShadowRoot}
+   */
+  _getAnnouncementRoot() {
+    if (this.dropdown.isBibFullscreen && this.dropdown.isPopoverVisible && this.dropdown.bibElement && this.dropdown.bibElement.value) {
+      return this.dropdown.bibElement.value.shadowRoot;
+    }
+    return this.shadowRoot;
+  }
+
+  /**
    * Binds all behavior needed to the menu after rendering.
    * @private
    * @returns {void}
    */
   configureMenu() {
     this.menu = this.querySelector('auro-menu, [auro-menu]');
-    this.defaultMenuSize = this.menu.getAttribute('size');
-    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     // racing condition on custom-select with custom-menu
     if (!this.menu) {
@@ -764,6 +782,9 @@ export class AuroSelect extends AuroElement {
       }, 0);
       return;
     }
+
+    this.defaultMenuSize = this.menu.getAttribute('size');
+    this.defaultMenuShape = this.menu.getAttribute('shape');
 
     this.updateMenuShapeSize();
     this.setMenuValue(this.value);
@@ -782,6 +803,10 @@ export class AuroSelect extends AuroElement {
     this.updateOptionPositions();
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
+    this.menu.addEventListener("auroMenu-deselectPrevented", () => {
+      this.hideBib();
+    });
+
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
       this.optionActive = evt.detail;
 
@@ -793,24 +818,28 @@ export class AuroSelect extends AuroElement {
       if (this.optionActive) {
         const optionText = this.optionActive.textContent.trim();
         const selectedState = this.optionActive.hasAttribute('selected') ? ', selected' : ', not selected';
-        announceToScreenReader(this.shadowRoot, `${optionText}${selectedState}`);
+        announceToScreenReader(this._getAnnouncementRoot(), `${optionText}${selectedState}`);
       }
 
       if (this.dropdown.isPopoverVisible) {
         this.scrollActiveOptionIntoView();
       }
     });
+
     this.menu.addEventListener('auroMenu-selectedOption', (event) => {
 
       // Update the displayed value
       this.updateDisplayedValue();
 
-      // Update the internal value to match
-      this.value = event.detail.stringValue;
-      this.optionSelected = this.multiSelect ? event.detail.options : event.detail.options[0];
+      const options = event.detail.options || [];
 
-      if (this.dropdown.isPopoverVisible) {
+      this.value = event.detail.stringValue;
+
+      this.optionSelected = this.multiSelect ? options : options[0];
+
+      if (this.dropdown.isPopoverVisible && !this.multiSelect) {
         this.dropdown.hide();
+        this.dropdown.trigger.focus();
       }
 
       // Announce the selection after the dropdown closes so it isn't
@@ -818,7 +847,7 @@ export class AuroSelect extends AuroElement {
       const selectedValue = event.detail.stringValue;
       const announcementDelay = 300;
       setTimeout(() => {
-        announceToScreenReader(this.shadowRoot, `${selectedValue}, selected`);
+        announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
       }, announcementDelay);
     });
   }
@@ -1057,7 +1086,10 @@ export class AuroSelect extends AuroElement {
   }
 
   updated(changedProperties) {
-    if (changedProperties.has('multiSelect') && !changedProperties.has('value')) {
+    if (
+      changedProperties.has('multiSelect') &&
+      !changedProperties.has('value')
+    ) {
       this.clearSelection();
     }
 
@@ -1066,9 +1098,8 @@ export class AuroSelect extends AuroElement {
 
       this._updateNativeSelect();
       this.validate();
-      this.hideBib();
-      if (this.dropdown && this.dropdown.trigger) {
-        this.dropdown.trigger.focus();
+      if (!this.multiSelect) {
+        this.hideBib();
       }
 
       // LEGACY EVENT
@@ -1267,6 +1298,7 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          disableKeyboardHandling
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"
@@ -1312,6 +1344,7 @@ export class AuroSelect extends AuroElement {
             ${this.renderHtmlHelpText()}
           </div>
         </${this.dropdownTag}>
+        <span id="srAnnouncement" class="util_displayHiddenVisually" aria-live="polite" role="status"></span>
       </div>
     `;
   }
@@ -1346,6 +1379,7 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          disableKeyboardHandling
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"
@@ -1431,6 +1465,7 @@ export class AuroSelect extends AuroElement {
           <slot name="bib.fullscreen.headline" @slotchange="${this.handleSlotChange}"></slot>
         </div>
         <${this.dropdownTag}
+          disableKeyboardHandling
           appearance="${this.onDark ? 'inverse' : this.appearance}"
           .a11yRole=${"combobox"}
           ?autoPlacement="${this.autoPlacement}"

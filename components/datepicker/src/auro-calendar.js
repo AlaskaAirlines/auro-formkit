@@ -244,6 +244,7 @@ export class AuroCalendar extends RangeDatepicker {
 
     if (this.visible) {
       this.utilCalRender.setFirstRenderableMonthDate(this);
+
       this.utilCal.assessNavigationButtonVisibility(this);
 
       this.isFullscreen = this.dropdown.bibContent.hasAttribute('isFullscreen');
@@ -253,7 +254,6 @@ export class AuroCalendar extends RangeDatepicker {
       let dateMatches = undefined;
 
       if (!this.isFullscreen) {
-
         const formattedDateStr = this.util.getDateAsString(new Date(this.centralDate), this.datepicker.format);
 
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
@@ -310,7 +310,7 @@ export class AuroCalendar extends RangeDatepicker {
           newYear = oldYear;
         }
 
-        const newMonthDateStr = `${newMonth}/1/${newYear}`;
+        const newMonthDateStr = `${newMonth}/01/${newYear}`;
         newMonthDate = new Date(newMonthDateStr);
 
         renderedHtml = html`${renderedHtml}${this.utilCalRender.renderCalendar(this, newMonth, newYear)}`;
@@ -414,12 +414,12 @@ export class AuroCalendar extends RangeDatepicker {
         </div>
         <div class="calendarNavButtons">
           ${this.showPrevMonthBtn ? html`
-          <button class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
+          <button tabIndex="-1" class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
             ${this.util.generateIconHtml(chevronLeft)}
           </button>
           ` : undefined}
           ${this.showNextMonthBtn ? html`
-          <button class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
+          <button tabIndex="-1" class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
             ${this.util.generateIconHtml(chevronRight)}
           </button>
           ` : undefined}

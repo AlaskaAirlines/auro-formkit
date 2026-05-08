@@ -3,7 +3,7 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "^build:version", "^@aurodesignsystem/build-tools#build:formkit-version"],
+      "dependsOn": ["^build", "^build:version", "@aurodesignsystem/build-tools#build:formkit-version"],
       "outputs": [
         "dist/**",
         "demo/*.md",
@@ -110,6 +110,20 @@
       "dependsOn": [
         "@aurodesignsystem/auro-dropdown#build"
       ]
+    },
+    "test:framework": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "outputs": ["test-results/**", "playwright-report/**", "coverage/**", "coverage-code/**"]
+    },
+    "dev:app": {
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "cache": false
+    },
+    "build:app": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", ".svelte-kit/**"]
     }
   }
 }

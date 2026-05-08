@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -110,7 +110,7 @@ export class AuroDropdown extends AuroElement {
     this.appearance = 'default';
     this.chevron = false;
     this.disabled = false;
-    this.disableFocusTrap = false;
+    this.disableKeyboardHandling = false;
     this.error = false;
     this.tabIndex = 0;
     this.noToggle = false;
@@ -208,9 +208,8 @@ export class AuroDropdown extends AuroElement {
     // showModal() fires asynchronously via Lit's update cycle, which
     // falls outside the user activation window and causes iOS to
     // dismiss the keyboard.
-    if (this.isBibFullscreen && this.bibElement && this.bibElement.value) {
-      const useModal = !this.disableFocusTrap;
-      this.bibElement.value.open(useModal);
+    if (this.bibElement && this.bibElement.value) {
+      this.bibElement.value.open(this.isBibFullscreen);
     }
   }
 
@@ -247,6 +246,15 @@ export class AuroDropdown extends AuroElement {
     } else {
       this.trigger.ariaActiveDescendantElement = null;
       this.trigger.removeAttribute('aria-activedescendant');
+    }
+
+    // In fullscreen, focus stays on the close button while arrow keys
+    // highlight options via active-descendant. Without this flag the
+    // keyboard bridge clicks the close button on Enter (closing the
+    // bib without selecting). When true, the bridge skips the button
+    // click and forwards Enter to the parent to make the selection.
+    if (this.bibContent) {
+      this.bibContent.hasActiveDescendant = this.isBibFullscreen && Boolean(element);
     }
   }
 
@@ -315,9 +323,9 @@ export class AuroDropdown extends AuroElement {
       },
 
       /**
-       * If declared, the focus trap inside of bib will be turned off.
+       * If declared, the dropdown will not handle keyboard events and will require the consumer to manage this behavior.
        */
-      disableFocusTrap: {
+      disableKeyboardHandling: {
         type: Boolean,
         reflect: true
       },
@@ -595,7 +603,7 @@ export class AuroDropdown extends AuroElement {
       if (this.isPopoverVisible) {
         // Fullscreen: use showModal() for native accessibility (inert outside, focus trap)
         // Desktop: use show() for Floating UI positioning + FocusTrap for focus management
-        const useModal = this.isBibFullscreen && !this.disableFocusTrap;
+        const useModal = this.isBibFullscreen;
         this.bibElement.value.open(useModal);
       } else {
         this.bibElement.value.close();
@@ -605,7 +613,7 @@ export class AuroDropdown extends AuroElement {
     // When fullscreen strategy changes while open, re-open dialog with correct mode
     // (e.g. resizing from desktop → mobile while dropdown is open)
     if (changedProperties.has('isBibFullscreen') && this.isPopoverVisible && this.bibElement.value) {
-      const useModal = this.isBibFullscreen && !this.disableFocusTrap;
+      const useModal = this.isBibFullscreen;
       this.bibElement.value.close();
       this.bibElement.value.open(useModal);
     }
@@ -627,7 +635,7 @@ export class AuroDropdown extends AuroElement {
 
   firstUpdated() {
     // Configure the floater to, this will generate the ID for the bib
-    this.floater.configure(this, 'auroDropdown');
+    this.floater.configure(this, 'auroDropdown', !this.disableKeyboardHandling);
 
     // Prevent `contain: layout` on the dropdown host. Layout containment
     // creates a containing block for position:fixed descendants (the bib),
@@ -719,7 +727,7 @@ export class AuroDropdown extends AuroElement {
    * @private
    */
   updateFocusTrap() {
-    if (this.isPopoverVisible && !this.disableFocusTrap) {
+    if (this.isPopoverVisible) {
       if (!this.isBibFullscreen) {
         // Desktop: show() doesn't trap focus, so use FocusTrap
         this.focusTrap = new FocusTrap(this.bibContent);
@@ -937,6 +945,7 @@ export class AuroDropdown extends AuroElement {
           aria-expanded="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.isPopoverVisible)}"
           aria-controls="${ifDefined(this.a11yRole === 'button' || this.triggerContentFocusable ? undefined : this.dropdownId)}"
           aria-labelledby="${ifDefined(this.triggerContentFocusable ? undefined : 'triggerLabel')}"
+          aria-disabled="${ifDefined(this.disabled ? 'true' : undefined)}"
           @focusin="${this.handleFocusin}"
           @blur="${this.handleFocusOut}">
           <div class="triggerContentWrapper" id="triggerLabel">

@@ -1,0 +1,38 @@
+{
+  "name": "@aurodesignsystem/react-framework",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev:app": "vite",
+    "dev:app:open": "npm run dev:app -- --open",
+    "build:app": "tsc -b && vite build",
+    "preview": "vite preview",
+    "clean:cache": "rm -rf node_modules/.vite",
+    "pretest:framework": "npm run clean:cache && npx playwright install chromium",
+    "test:framework": "playwright test",
+    "pretest:framework:report": "npm run clean:cache && npx playwright install chromium",
+    "test:framework:report": "playwright test --config=playwright.report.config.ts"
+  },
+  "dependencies": {
+    "@aurodesignsystem/auro-formkit": "file:../../",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^24.12.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "monocart-reporter": "^2.10.1",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.58.0",
+    "vite": "^8.0.5"
+  }
+}

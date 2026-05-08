@@ -29,6 +29,7 @@ import { ContextProvider } from "@lit/context";
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Notifies when the loading attribute is changed.
  * @event {CustomEvent<any>} auroMenu-selectValueFailure - Notifies that an attempt to select a menuoption by matching a value has failed.
+ * @event {CustomEvent<{ values: HTMLElement[] }>} auroMenu-deselectPrevented - Notifies that deselection was prevented and includes the affected options in `detail.values`.
  * @event {CustomEvent<any>} auroMenu-selectValueReset - Notifies that the component value has been reset.
  * @event {CustomEvent<any>} auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @slot loadingText - Text to show while loading attribute is set
@@ -55,8 +56,6 @@ export class AuroMenu extends AuroElement {
      */
     this.size = "sm";
 
-    // Value of the selected options
-    this.value = undefined;
     // Currently selected option
     this.optionSelected = undefined;
     // String used for highlighting/filtering
@@ -75,12 +74,6 @@ export class AuroMenu extends AuroElement {
     this.selectAllMatchingOptions = false;
 
     // Event Bindings
-
-    /**
-     * @private
-     */
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-
 
     /**
      * @private
@@ -199,7 +192,7 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Available menu options
+       * Available menu options.
        * @readonly
        */
       options: {
@@ -266,7 +259,7 @@ export class AuroMenu extends AuroElement {
   /**
    * @readonly
    * @returns {Array<HTMLElement>} - Returns the array of available menu options.
-   * @deprecated use `options` property instead.
+   * @deprecated Use `options` property instead.
    */
   get items() {
     return this.options;
@@ -328,6 +321,13 @@ export class AuroMenu extends AuroElement {
    * @protected
    */
   provideContext() {
+    if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
+      this.rootMenu = false;
+      this.menuService = this.parentElement.menuService;
+      this._contextProvider = this.parentElement._contextProvider;
+      return;
+    }
+
     this.menuService = new MenuService({host: this});
     this.menuService.setProperties(this.propertyValues);
     this.menuService.subscribe(this.handleMenuChange.bind(this));
@@ -374,7 +374,7 @@ export class AuroMenu extends AuroElement {
       const newValue = event.stringValue;
 
       // Check if the option or value has actually changed
-      if (newValue === undefined || (this.optionSelected !== newOption || this.stringValue !== newValue)) {
+      if (this.optionSelected !== newOption || this.stringValue !== newValue) {
         this.optionSelected = newOption;
         this.setInternalValue(newValue);
       }
@@ -421,7 +421,7 @@ export class AuroMenu extends AuroElement {
 
     this.provideContext();
 
-    this.addEventListener('keydown', this.handleKeyDown);
+    // this.addEventListener('keydown', this.handleKeyDown);
     this.addEventListener('auroMenuOption-click', this.handleMouseSelect);
     this.addEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.addEventListener('slotchange', this.handleSlotChange);
@@ -429,7 +429,7 @@ export class AuroMenu extends AuroElement {
   }
 
   disconnectedCallback() {
-    this.removeEventListener('keydown', this.handleKeyDown);
+    // this.removeEventListener('keydown', this.handleKeyDown);
     this.removeEventListener('auroMenuOption-click', this.handleMouseSelect);
     this.removeEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.removeEventListener('slotchange', this.handleSlotChange);
@@ -448,14 +448,27 @@ export class AuroMenu extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    // Update menu service properties on host update
-    if (changedProperties.has('value')) {
+    // Apply value selection synchronously so that static-HTML fixtures
+    // resolve within a single update cycle.  The refactored selectByValue
+    // no longer calls reset() first, so the destructive intermediate-event
+    // cascade that originally required deferral is eliminated.  If option
+    // keys are not yet resolved (framework mount-order race), selectByValue
+    // queues a bounded retry automatically via queuePendingValue.
+    if (changedProperties.has('value') && !this.internalUpdateInProgress) {
       this.menuService.selectByValue(this.value);
     }
 
     // Handle loading state changes
     if (changedProperties.has('loading')) {
       this.setLoadingState(this.loading);
+    }
+
+    if (changedProperties.has('multiSelect') && this.rootMenu) {
+      if (this.multiSelect) {
+        this.setAttribute('aria-multiselectable', 'true');
+      } else {
+        this.removeAttribute('aria-multiselectable');
+      }
     }
   }
 
@@ -497,9 +510,9 @@ export class AuroMenu extends AuroElement {
       if (this.multiSelect) {
         this.setAttribute('aria-multiselectable', 'true');
       }
-
-      this.handleNestedMenus(this);
     }
+
+    this.handleNestedMenus(this);
   }
 
   /**
@@ -555,31 +568,6 @@ export class AuroMenu extends AuroElement {
     });
   }
 
-  // Event Handlers
-
-  /**
-   * Handles keyboard navigation.
-   * @private
-   * @param {KeyboardEvent} event - Event object from the browser.
-   */
-  handleKeyDown(event) {
-    event.preventDefault();
-    switch (event.key) {
-      case "ArrowDown":
-        this.menuService.highlightNext();
-        break;
-      case "ArrowUp":
-        this.menuService.highlightPrevious();
-        break;
-      case "Tab":
-      case "Enter":
-        this.menuService.selectHighlightedOption();
-        break;
-      default:
-        break;
-    }
-  }
-
   /**
    * Navigates the menu options in the specified direction.
    * @param {'up'|'down'} direction - The direction to navigate.
@@ -598,10 +586,6 @@ export class AuroMenu extends AuroElement {
    * @private
    */
   handleSlotChange() {
-    if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
-      this.rootMenu = false;
-    }
-
     if (this.rootMenu) {
       this.initializeMenu();
     }
@@ -623,12 +607,13 @@ export class AuroMenu extends AuroElement {
    * @param {any} source - The source that triggers this event.
    * @private
    */
-  notifySelectionChange({value, stringValue, keys, options} = {}) {
+  notifySelectionChange({value, stringValue, keys, options, reason} = {}) {
     dispatchMenuEvent(this, 'auroMenu-selectedOption', {
       value,
       stringValue,
       keys,
-      options
+      options,
+      reason
     });
   }
 
@@ -701,4 +686,3 @@ export class AuroMenu extends AuroElement {
     `;
   }
 }
-

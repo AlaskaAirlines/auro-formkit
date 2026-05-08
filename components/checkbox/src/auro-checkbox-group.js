@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -344,12 +344,6 @@ export class AuroCheckboxGroup extends LitElement {
    * @returns {void}
    */
   updated(changedProperties) {
-    if (changedProperties.has('layout')) {
-      this.checkboxes.forEach((el) => {
-        el.layout = this.layout;
-      });
-    }
-
     if (changedProperties.has('disabled')) {
       this.checkboxes.forEach((el) => {
         if (this.disabled) {

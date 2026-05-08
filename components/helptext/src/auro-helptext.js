@@ -41,7 +41,7 @@ export class AuroHelpText extends LitElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @property {'default', 'inverse'} - The appearance of the help text, either default (for light backgrounds) or inverse (for dark backgrounds).
        * @default 'default'
        */
       appearance: {

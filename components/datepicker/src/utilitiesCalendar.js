@@ -53,7 +53,7 @@ export class CalendarUtilities {
     // 1. Compare the first rendered month to the earliest renderable month to determine if the previous month button should be hidden or shown
     if (!elem.hasAttribute('calendarStartDate') && !elem.hasAttribute('minDate')) {
       elem.showPrevMonthBtn = true;
-    } else if (this.util.convertDateToFirstOfMonth(new Date(elem.centralDate)) <= elem.firstMonthRenderable) {
+    } else if (new Date(elem.centralDate) <= elem.firstMonthRenderable) {
       elem.showPrevMonthBtn = false;
     } else {
       elem.showPrevMonthBtn = true;
@@ -138,15 +138,12 @@ export class CalendarUtilities {
 
     if (this.util.validDateStr(formattedDateStr, datepicker.format)) {
       // Use current date as base and adjust month by increment
-      newCentralDate = new Date(formattedDateStr).setMonth(new Date(formattedDateStr).getMonth() + increment);
+      newCentralDate = new Date(formattedDateStr).setMonth(new Date(formattedDateStr).getMonth() + increment, 1);
     } else {
       // Fallback to first rendered month if central date invalid
-      newCentralDate = new Date(firstRenderedMonth).setMonth(new Date(firstRenderedMonth).getMonth() + increment);
+      newCentralDate = new Date(firstRenderedMonth).setMonth(new Date(firstRenderedMonth).getMonth() + increment, 1);
     }
 
-    // Update calendar central date
-    if (newCentralDate) {
-      elem.centralDate = this.util.convertDateToFirstOfMonth(newCentralDate);
-    }
+    elem.centralDate = newCentralDate;
   }
 }

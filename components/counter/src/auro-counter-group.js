@@ -19,13 +19,14 @@ import { AuroDependencyVersioning } from "@aurodesignsystem/auro-library/scripts
 import { AuroDropdown } from "@aurodesignsystem/auro-dropdown";
 import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 
-import { doubleRaf } from '@aurodesignsystem/utils';
+import { doubleRaf, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
 import './auro-counter-wrapper.js';
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
 import { classMap } from "lit/directives/class-map.js";
+import { counterGroupKeyboardStrategy } from './counterGroupKeyboardStrategy.js';
 
 import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
 import iconVersion from "./iconVersion.js";
@@ -349,6 +350,8 @@ export class AuroCounterGroup extends AuroElement {
       counter.addEventListener("input", this.updateValue);
       counter.addEventListener("auroFormElement-validated", this.updateValidity);
     });
+    this.updateValue();
+    this.updateValidity();
   }
 
   /**
@@ -479,6 +482,9 @@ export class AuroCounterGroup extends AuroElement {
       counter.addEventListener("auroFormElement-validated", this.updateValidity);
     });
 
+    this.updateValue();
+    this.updateValidity();
+
     if (this.isDropdown) {
       this.configureBibtemplate();
     }
@@ -502,15 +508,6 @@ export class AuroCounterGroup extends AuroElement {
         doubleRaf(() => {
           this.bibtemplate.focusCloseButton();
         });
-      }
-    });
-
-    // Tab closes the fullscreen dialog
-    // The dialog event bridge intercepts Tab and re-dispatches it as a
-    // composed keydown; this listener catches the re-dispatched event.
-    this.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Tab' && this.dropdown.isPopoverVisible && this.dropdown.isBibFullscreen) {
-        this.dropdown.hide();
       }
     });
   }
@@ -632,6 +629,10 @@ export class AuroCounterGroup extends AuroElement {
     super.firstUpdated();
     this.updateValue();
     this.updateValueText();
+
+    if (this.isDropdown) {
+      applyKeyboardStrategy(this, counterGroupKeyboardStrategy);
+    }
   }
 
   /**
@@ -702,8 +703,7 @@ export class AuroCounterGroup extends AuroElement {
    */
   renderCounterDropdown() {
     return html`
-      <${this.dropdownTag} 
-        noHideOnThisFocusLoss
+      <${this.dropdownTag}
         chevron
         part="dropdown"
         appearance="${this.onDark ? 'inverse' : this.appearance}"

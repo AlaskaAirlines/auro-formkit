@@ -25,6 +25,9 @@ for arg in "$@"; do
   fi
 done
 
+# Cache-busting token derived from the current git commit (falls back to timestamp)
+cache_buster=$(git rev-parse --short HEAD 2>/dev/null || date +%s)
+
 # Simple array of component names
 components="checkbox combobox counter datepicker dropdown form input menu radio select"
 
@@ -42,7 +45,7 @@ cat > "$target_dir/package.json" << EOF
   "name": "auro-formkit-demo",
   "version": "1.0.0",
   "scripts": {
-    "start": "http-server ./ -o"
+    "start": "http-server ./ -o -a localhost"
   },
   "author": "Auro",
   "license": "ISC",
@@ -69,13 +72,21 @@ for component in $components; do
         # Copy demo directory to the target with component name
         cp -r "$src_dir" "$dst_dir"
         
-        # Fix relative paths in HTML files to work with file based serving
+        # Fix all relative ./paths in HTML files to work with file-based serving.
+        # CDN URLs (https://...) are unaffected; only ./ references are rewritten.
         find "$dst_dir" -name "*.html" -type f -exec sed -i '' \
-            -e "s|<script src=\"\./\([^\"]*\.min\.js\)\"|<script src=\"../$component/\1\"|g" \
-            -e "s|fetch('\./\([^']*\.md\)')|fetch('../$component/\1')|g" \
-            -e "s|fetch(\"\./\([^\"]*\.md\)\")|fetch(\"../$component/\1\")|g" \
+            -e "s|'\./|'../$component/|g" \
+            -e "s|\"\./|\"../$component/|g" \
             {} \;
-        
+
+        # Append cache-busting query string to local versioned assets (.min.js, .min.css, .md).
+        # CDN URLs already contain version info and are left untouched.
+        find "$dst_dir" -name "*.html" -type f -exec sed -i '' \
+            -e "s|\(\.min\.js\)\(['\"]\)|\1?v=$cache_buster\2|g" \
+            -e "s|\(\.min\.css\)\(['\"]\)|\1?v=$cache_buster\2|g" \
+            -e "s|\(\.md\)\(['\"]\)|\1?v=$cache_buster\2|g" \
+            {} \;
+
         echo "✓ Copied to $dst_dir"
     else
         echo "✗ Source directory not found: $src_dir"
@@ -116,27 +127,11 @@ EOF
 for component in $components; do
     dst_dir="$target_dir/$component"
     if [ -d "$dst_dir" ]; then
-        # Find the main demo file in the component folder
-        demo_files=$(find "$dst_dir" -name "*.html")
-        if [ -n "$demo_files" ]; then
-            # Use the first HTML file found (using head -1 to get first line)
-            demo_file=$(echo "$demo_files" | head -1)
-            # Get the relative path from target_dir
-            rel_path="${demo_file#$target_dir/}"
-            # Add a link to the component in the index.html
-            cat >> "$target_dir/index.html" << EOF
-        <a href="$component/$(basename "$demo_file")" class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all p-6 text-center">
+        cat >> "$target_dir/index.html" << EOF
+        <a href="$component/index" class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all p-6 text-center">
             <span class="text-auro-blue font-medium text-lg capitalize hover:underline">$component</span>
         </a>
 EOF
-        else
-            # If no HTML file is found, just link to the directory
-            cat >> "$target_dir/index.html" << EOF
-        <a href="$component/" class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all p-6 text-center">
-            <span class="text-auro-blue font-medium text-lg capitalize hover:underline">$component</span>
-        </a>
-EOF
-        fi
     fi
 done
 

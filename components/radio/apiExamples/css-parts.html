@@ -1,0 +1,18 @@
+<style>
+  #cssPartsRadioGroup::part(radio-group) {
+    border: 2px dashed purple;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  #cssPartsRadioGroup auro-radio::part(radio-label) {
+    font-weight: bold;
+    color: purple;
+  }
+</style>
+<auro-radio-group id="cssPartsRadioGroup">
+  <span slot="legend">CSS Parts example</span>
+  <auro-radio id="cssPartsRadio1" label="Option 1" name="cssPartsDemo" value="option1"></auro-radio>
+  <auro-radio id="cssPartsRadio2" label="Option 2" name="cssPartsDemo" value="option2"></auro-radio>
+  <auro-radio id="cssPartsRadio3" label="Option 3" name="cssPartsDemo" value="option3"></auro-radio>
+</auro-radio-group>

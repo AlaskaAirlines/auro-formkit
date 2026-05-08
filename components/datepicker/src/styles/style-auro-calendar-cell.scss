@@ -55,6 +55,7 @@
 
   &.disabled {
     cursor: default !important;
+    pointer-events: none;
   }
 
   &.reference {

@@ -1,0 +1,16 @@
+@import '@aurodesignsystem/webcorestylesheets/dist/elementDemoStyles';
+@import '@aurodesignsystem/webcorestylesheets/dist/demoWrapper';
+
+#page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  background: var(--ds-color-background-lightest, #fff);
+  border-bottom: 1px solid var(--ds-color-border-subtle, #ddd);
+  font-family: var(--ds-text-body-default-font, sans-serif);
+  font-size: 0.8rem;
+
+}

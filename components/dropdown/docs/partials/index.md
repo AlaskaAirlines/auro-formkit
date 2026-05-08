@@ -29,13 +29,13 @@ Not including one of the above options will result in your UI being non-complian
 The dropdown can be opened with the following actions:
 
 1. Clicking/tapping on the trigger.
-1. Tabbing to the trigger and using the `enter` or `spacebar` keys.
+1. Tabbing to the trigger and using the `Enter` or `Space` keys.
 1. Programmatically via another control in the UI calling the `show()` method (see api).
 
 The dropdown can be closed with the following actions:
 
 1. Clicking anywhere in the view outside of the dropdown.
-1. Using the `esc` key.
+1. Using the `Escape` key.
 1. Programmatically via another control in the UI calling the `hide()` method (see api).
  
 ## Example(s)

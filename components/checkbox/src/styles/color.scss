@@ -3,7 +3,11 @@
 
 // ---------------------------------------------------------------------
 
-/* stylelint-disable selector-class-pattern, order/properties-order, no-descending-specificity */
+/* stylelint-disable selector-class-pattern,
+  order/properties-order,
+  no-descending-specificity,
+  selector-max-attribute,
+  selector-max-pseudo-class */
 
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 

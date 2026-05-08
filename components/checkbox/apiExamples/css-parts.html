@@ -1,0 +1,16 @@
+<style>
+  #cssPartsExample::part(checkbox) {
+    border: 2px solid mediumpurple;
+    border-radius: 6px;
+  }
+
+  #cssPartsExample::part(checkbox-label) {
+    font-style: italic;
+    color: purple;
+  }
+</style>
+<auro-checkbox-group>
+  <span slot="legend">CSS Shadow Parts example</span>
+  <auro-checkbox id="cssPartsExample" value="styled" name="parts" checked>Styled checkbox</auro-checkbox>
+  <auro-checkbox value="default" name="parts" id="checkbox-parts2">Default checkbox</auro-checkbox>
+</auro-checkbox-group>

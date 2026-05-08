@@ -1,0 +1,18 @@
+<style>
+  auro-input.css-parts-demo::part(wrapper) {
+    border-color: orange;
+  }
+  auro-input.css-parts-demo::part(label) {
+    color: purple;
+  }
+  auro-input.css-parts-demo::part(helpText) {
+    color: green;
+  }
+  auro-input.css-parts-demo::part(input) {
+    font-style: italic;
+  }
+</style>
+<auro-input class="css-parts-demo" required>
+  <span slot="label">CSS Parts Example</span>
+  <span slot="helpText">This input has custom styles applied via CSS Shadow Parts.</span>
+</auro-input>

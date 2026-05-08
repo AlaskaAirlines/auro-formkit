@@ -38,6 +38,8 @@ import buttonVersion from './buttonVersion.js';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import formkitVersion from '@aurodesignsystem/version';
 
+import { createRef, ref } from "lit/directives/ref.js";
+
 /**
  * The `auro-input` element provides users a way to enter data into a text field.
  * @customElement auro-input
@@ -89,6 +91,11 @@ export class AuroInput extends BaseInput {
      * @private
      */
     this.iconTag = versioning.generateTag('auro-formkit-input-icon', iconVersion, AuroIcon);
+
+    /**
+     * @private
+     */
+    this.clearButtonRef = createRef();
   }
 
   static get styles() {
@@ -104,6 +111,20 @@ export class AuroInput extends BaseInput {
       css`${emphasizedColorCss}`,
       css`${snowflakeStyleCss}`
     ];
+  }
+
+  /**
+   * Returns classmap configuration for the clear button visibility.
+   * The button is hidden when the input has no value, is read-only, or is disabled.
+   * @private
+   * @returns {Record<string, boolean>} - Classmap object controlling clear button display state.
+   */
+  get clearBtnClassMap() {
+    return {
+      'notificationBtn': true,
+      'clearBtn': true,
+      'util_displayHidden': !this.hasValue || this.readonly || this.disabled
+    };
   }
 
   /**
@@ -328,6 +349,24 @@ export class AuroInput extends BaseInput {
     this.hasDisplayValueContent = hasContent;
   }
 
+  firstUpdated() {
+    super.firstUpdated();
+
+
+    this.clearBtn = this.clearButtonRef.value;
+
+    // This must get moved into inputKeyboardStrategy when implemented
+    if (this.clearBtn) {
+      this.clearBtn.addEventListener('keydown', (evt) => {
+        evt.stopPropagation();
+      });
+
+      this.clearBtn.addEventListener('click', (evt) => {
+        evt.stopPropagation();
+      });
+    }
+  }
+
   /**
    * Returns HTML for the validation error icon.
    * @private
@@ -425,10 +464,11 @@ export class AuroInput extends BaseInput {
         <${this.buttonTag}
           @click="${this.handleClickClear}"
           appearance="${this.onDark ? 'inverse' : this.appearance}"
-          class="notificationBtn clearBtn"
+          class="${classMap(this.clearBtnClassMap)}"
           shape="circle"
           size="sm"
-          variant="ghost">
+          variant="ghost"
+          ${ref(this.clearButtonRef)}>
           <span><slot name="ariaLabel.clear">Clear Input</slot></span>
           <${this.iconTag}
             aria-hidden="true"
@@ -573,11 +613,7 @@ export class AuroInput extends BaseInput {
         <div part="accent-right" class="accents right">
           ${this.renderValidationErrorIconHtml()}
           ${this.hasValue && this.type === 'password' ? this.renderHtmlNotificationPassword() : undefined}
-          ${this.hasValue ? html`
-            ${!this.disabled && !this.readonly ? html`
-              ${this.renderHtmlActionClear()}
-            ` : undefined}
-          ` : undefined}
+          ${this.renderHtmlActionClear()}
         </div>
       </div>
       <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">
@@ -609,11 +645,7 @@ export class AuroInput extends BaseInput {
           ${this.layout.includes('right') || this.layout === "emphasized" ? html`
             ${this.renderValidationErrorIconHtml()}
           ` : undefined}
-          ${this.hasValue ? html`
-            ${!this.disabled && !this.readonly ? html`
-              ${this.renderHtmlActionClear()}
-            ` : undefined}
-          ` : undefined}
+          ${this.renderHtmlActionClear()}
         </div>
       </div>
       <div class="${classMap(this.helpTextClasses)}" part="inputHelpText">
@@ -641,11 +673,7 @@ export class AuroInput extends BaseInput {
         </div>
         <div class="accents right">
           ${this.renderValidationErrorIconHtml()}
-          ${this.hasValue ? html`
-            ${!this.disabled && !this.readonly ? html`
-              ${this.renderHtmlActionClear()}
-            ` : undefined}
-          ` : undefined}
+          ${this.renderHtmlActionClear()}
         </div>
       </div>
       <div class="helpTextWrapper leftIndent rightIndent" part="inputHelpText">

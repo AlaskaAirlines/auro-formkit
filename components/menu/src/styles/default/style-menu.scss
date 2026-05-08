@@ -15,8 +15,8 @@
 // container styles - defines the look of the outer custom component
 :host {
   display: block;
-  vertical-align: middle;
   line-height: 0; // prevents page from jumping when menu options are selected at the end of the list.
+  overflow-y: auto;
 
   .menuWrapper {
     box-sizing: border-box;

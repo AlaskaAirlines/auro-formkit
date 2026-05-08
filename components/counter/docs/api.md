@@ -67,7 +67,7 @@ The `auro-counter` element provides a flexible counter interface with increment 
 | `min`        | `min`        | `number`                 |             | The minimum value for the counter.               |
 | `onDark`     | `onDark`     | `boolean`                |             | DEPRECATED - use `appearance="inverse"` instead. |
 | `validity`   | `validity`   | `string`                 |             | The validity state of the counter.               |
-| `value`      | `value`      | `number`                 |             | The current value of the counter.                |
+| `value`      | `value`      | `number \| undefined`    |             | Gets the current value of the counter.           |
 
 ## Methods
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -17,6 +17,7 @@ import checkLg from '@alaskaairux/icons/dist/icons/interface/check-lg.mjs';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
+/* eslint-disable jsdoc/no-undefined-types -- @fires event names are not types */
 /**
  * The `auro-checkbox` element is for the purpose of allowing users to select one or more options of a limited number of choices.
  * @customElement auro-checkbox
@@ -27,9 +28,10 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  *
  * @slot default - The default slot for the checkbox label.
  *
- * @fires {CustomEvent<any>} change - (Deprecated) Notifies when checked value is changed.
- * @fires {InputEvent} input - Notifies when when checked value is changed by user's interface.
+ * @fires change - (Deprecated) Notifies when checked value is changed.
+ * @fires input - Notifies when when checked value is changed by user's interface.
  */
+/* eslint-enable jsdoc/no-undefined-types */
 
 // build the component class
 export class AuroCheckbox extends LitElement {
@@ -40,7 +42,7 @@ export class AuroCheckbox extends LitElement {
   }
 
   _initializeDefaults() {
-    this.apperance = 'default';
+    this.appearance = 'default';
     this.checked = false;
     this.disabled = false;
     this.error = false;
@@ -107,7 +109,8 @@ export class AuroCheckbox extends LitElement {
        * The id global attribute defines an identifier (ID) which must be unique in the whole document.
        */
       id: {
-        type: String
+        type: String,
+        reflect: true
       },
 
       /**

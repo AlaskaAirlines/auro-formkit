@@ -57,11 +57,31 @@ export const withCssTheme = ({ themes, defaultTheme }) => {
   };
 };
 
+// ─── Tailwind Play CDN decorator ─────────────────────────────────────────────
+// Injected once per session only for stories that opt in via
+// `parameters.requiresTailwindCdn: true`. Tailwind's built-in MutationObserver
+// picks up class names added by every subsequent story render automatically.
+const TAILWIND_CDN_ID = 'tailwind-play-cdn';
+const TAILWIND_CDN_SRC = 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4';
+
+export const withTailwindCdn = (StoryFn: any, context: StoryContext) => {
+  if (context.parameters.requiresTailwindCdn) {
+    if (!document.getElementById(TAILWIND_CDN_ID)) {
+      const script = document.createElement('script');
+      script.id = TAILWIND_CDN_ID;
+      script.src = TAILWIND_CDN_SRC;
+      document.head.appendChild(script);
+    }
+  }
+  return StoryFn();
+};
+
 const preview: Preview = {
   beforeEach({ canvasElement, canvas }) {
     Object.assign(canvas, { ...withinShadow(canvasElement) });
   },
   decorators: [
+    withTailwindCdn,
     (Story, context) => {
       const background = context.globals.backgrounds?.value;
 

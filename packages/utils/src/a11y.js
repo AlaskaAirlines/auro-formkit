@@ -12,18 +12,30 @@
 
 const ANNOUNCEMENT_DURATION_MS = 1000;
 
+// Tracks the clear-after-announce timeout per shadowRoot so simultaneous
+// announcements from different components don't cancel each other.
+// A WeakMap (rather than a single module-level variable) is needed because
+// ES modules are singletons — a shared variable would let a rapid call from
+// one component cancel another component's pending clear, leaving stale text
+// in the first component's live region.
+const pendingClearTimeouts = new WeakMap();
+
 export function announceToScreenReader(shadowRoot, text) {
   const liveRegion = shadowRoot.querySelector('#srAnnouncement');
   if (liveRegion) {
+    // Cancel any pending clear so a previous announcement's timeout
+    // doesn't blank this one before the screen reader can read it.
+    clearTimeout(pendingClearTimeouts.get(shadowRoot));
+
     // Clear and re-set to ensure the announcement fires even with same text
     liveRegion.textContent = '';
     requestAnimationFrame(() => {
       liveRegion.textContent = text;
 
       // Clear after the announcement so VoiceOver cannot swipe to stale text
-      setTimeout(() => {
+      pendingClearTimeouts.set(shadowRoot, setTimeout(() => {
         liveRegion.textContent = '';
-      }, ANNOUNCEMENT_DURATION_MS);
+      }, ANNOUNCEMENT_DURATION_MS));
     });
   }
 }
@@ -73,7 +85,13 @@ export function guardTouchPassthrough(element) {
 }
 
 /**
- * Restores the dropdown trigger after a fullscreen dialog closes.
+ * Restores the dropdown trigger after a fullscreen dialog closes
+ * when focus doesn't leave the component (e.g. using Esc or Enter keys).
+ * When leaving the component (e.g., tabbing out of the combobox after closing
+ * the fullscreen dialog), focus restoration is handled by the browser's native
+ * dialog focus restoration behavior, so this function only restores focus
+ * when focus remains inside the component after the dialog closes.
+
  *
  * Removes the `inert` attribute from the trigger so it is accessible again,
  * and restores focus to the given target after one animation frame. The rAF
@@ -89,11 +107,12 @@ export function guardTouchPassthrough(element) {
 export function restoreTriggerAfterClose(dropdown, focusTarget) {
   dropdown.trigger.inert = false;
 
-  if (dropdown.isBibFullscreen) {
-    requestAnimationFrame(() => {
-      if (!dropdown.isPopoverVisible) {
-        focusTarget.focus();
-      }
-    });
-  }
+  // Wait a frame so that dialog.close() has completed and the browser's
+  // native focus restoration has run before we attempt to focus the
+  // trigger / input programmatically.
+  requestAnimationFrame(() => {
+    if (!dropdown.isPopoverVisible && dropdown.trigger.contains(document.activeElement)) {
+      focusTarget.focus();
+    }
+  });
 }
