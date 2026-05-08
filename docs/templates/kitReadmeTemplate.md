@@ -17,7 +17,7 @@ The following sections are editable by making changes to the following files:
 | Getting Started        | Getting started links for each component          | `./docs/partials/gettingStarted.md` |
 -->
 
-# {{ capitalize name }} TESTING
+# {{ capitalize name }}
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
