@@ -6,7 +6,7 @@
 /* eslint-disable max-lines, no-continue, new-cap, curly, no-underscore-dangle, no-inline-comments, line-comment-position */
 /* eslint no-magic-numbers: ["error", { "ignore": [0] }] */
 
-import i18n from './i18n.js';
+import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import IMask from 'imask';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
@@ -634,6 +634,12 @@ export default class BaseInput extends AuroElement {
     super.connectedCallback();
 
     this.locale = this.domHandler.getLocale(this);
+    notifyOnLangChange(this);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    stopNotifyingOnLangChange(this);
   }
 
   firstUpdated() {
