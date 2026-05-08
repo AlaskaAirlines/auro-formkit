@@ -94,7 +94,6 @@
       "sass": "$sass"
     },
     "serialize-javascript": "^7.0.5",
-    "@actions/http-client": "^3.0.2",
     "undici@<=6.23.0": "^6.24.0",
     "@rollup/plugin-terser": "^1.0.0"
   },
