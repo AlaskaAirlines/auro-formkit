@@ -44,7 +44,6 @@
     "sass:render": "sass-render -i ../../node_modules --suffix=-css.js 'src/**/*.css' -t ../../node_modules/@aurodesignsystem/auro-library/scripts/build/staticStyles-template.js",
     "test": "wtr --config \"./web-test-runner.config.mjs\" --coverage --port 7704",
     "test:watch": "wtr --config \"./web-test-runner.config.mjs\" --watch --port 7704",
-    "test:watch": "wtr --config \"./web-test-runner.config.mjs\" --watch --port 7704",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all scssLint esLint",
     "scssLint": "stylelint \"./src/**/*.scss\"",
