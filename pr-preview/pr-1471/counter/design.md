@@ -6,16 +6,16 @@
 <auro-header level="2" id="anatomy">Anatomy</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/layout/layout.md) -->
 <!-- The below content is automatically added from ./../docs/partials/layout/layout.md -->
-        The counter component consists of the following key elements:
-
-        - **Counter Label** — The main label text (default slot) identifying what is being counted
-        - **Description** — Optional supplementary text below the label (description slot)
-        - **Increment Button** — Increases the counter value by 1
-        - **Decrement Button** — Decreases the counter value by 1
-        - **Value Display** — Shows the current numeric value
-        - **Help Text** — Optional guidance text below the counter (helpText slot)
-
-        In a **counter group**, multiple counters are rendered together. When used with the `isDropdown` attribute, the group appears as a collapsible dropdown with a trigger element showing a label and summary of values.
+<p>The counter component consists of the following key elements:</p>
+<ul>
+<li><strong>Counter Label</strong> — The main label text (default slot) identifying what is being counted</li>
+<li><strong>Description</strong> — Optional supplementary text below the label (description slot)</li>
+<li><strong>Increment Button</strong> — Increases the counter value by 1</li>
+<li><strong>Decrement Button</strong> — Decreases the counter value by 1</li>
+<li><strong>Value Display</strong> — Shows the current numeric value</li>
+<li><strong>Help Text</strong> — Optional guidance text below the counter (helpText slot)</li>
+</ul>
+<p>In a <strong>counter group</strong>, multiple counters are rendered together. When used with the <code>isDropdown</code> attribute, the group appears as a collapsible dropdown with a trigger element showing a label and summary of values.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>

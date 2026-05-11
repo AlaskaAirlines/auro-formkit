@@ -45,13 +45,6 @@
 </auro-accordion>
 <section>
 <auro-header level="2" id="userStories">User Stories</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
-<!-- The below content is automatically added from ./../docs/partials/useCases.md -->
-        The <code>&lt;auro-checkbox&gt;</code> element should be used in situations where users may:
-
-        * Be filling out a form
-        * Need to select one or more options
-<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
 <!-- The below content is automatically added from ./../docs/partials/index/userStories.md -->
 <auro-header level="3" id="selectOptions">Select one or more options</auro-header>

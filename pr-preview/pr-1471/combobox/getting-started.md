@@ -331,12 +331,12 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-        Every <code>&lt;auro-combobox&gt;</code> implementation requires three things:
-
-        1. **A unique `id` attribute** — Required when the combobox is used within a form so it can be properly identified during submission and validation.
-        2. **A label in the `label` slot** — Provides an accessible label for the combobox element.
-        3. **One or more `<auro-menuoption>` elements** — Placed inside an `<auro-menu>` in the default slot to define the available choices.
-
+<p>Every <code>&lt;auro-combobox&gt;</code> implementation requires three things:</p>
+<ul>
+<li><strong>A unique `id` attribute</strong> — Required when the combobox is used within a form so it can be properly identified during submission and validation.</li>
+<li><strong>A label in the `label` slot</strong> — Provides an accessible label for the combobox element.</li>
+<li><strong>One or more `<auro-menuoption>` elements</strong> — Placed inside an `<auro-menu>` in the default slot to define the available choices.</li>
+</ul>
 <pre class="language-html"><code class="language-html">&lt;auro-combobox id="airportSearch"&gt;
   &lt;span slot="label"&gt;Search airports&lt;/span&gt;
   &lt;auro-menu&gt;
