@@ -17,7 +17,7 @@ The following sections are editable by making changes to the following files:
 | Getting Started        | Getting started links for each component          | `./docs/partials/gettingStarted.md` |
 -->
 
-# Formkit TESTING
+# Formkit
 
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->

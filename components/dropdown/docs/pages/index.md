@@ -20,8 +20,6 @@
       </section>
       <section>
         <auro-header level="2" id="useCases">User Stories</auro-header>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
         <auro-header level="3" id="basicTrigger">Text Trigger</auro-header>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->

@@ -62,6 +62,19 @@
         "@aurodesignsystem/auro-helptext#build"
       ]
     },
+    "@aurodesignsystem/auro-form#build": {
+      "dependsOn": [
+        "^build",
+        "@aurodesignsystem/auro-input#build",
+        "@aurodesignsystem/auro-datepicker#build",
+        "@aurodesignsystem/auro-counter#build",
+        "@aurodesignsystem/auro-radio#build",
+        "@aurodesignsystem/auro-checkbox#build",
+        "@aurodesignsystem/auro-combobox#build",
+        "@aurodesignsystem/auro-menu#build",
+        "@aurodesignsystem/auro-select#build"
+      ]
+    },
     "@aurodesignsystem/auro-form#test": {
       "dependsOn": [
         "^build",
