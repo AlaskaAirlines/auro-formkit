@@ -158,20 +158,18 @@ The `<auro-datepicker>` custom element is compatible with Svelte. See the auro-f
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-        Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following:
-
-        1. **A label in the `fromLabel` slot** — Provides an accessible label for the date input.
-        2. **A `bib.fullscreen.headline` slot** — Provides a headline for the fullscreen (mobile) calendar view.
-        3. **A `bib.fullscreen.fromLabel` slot** — Provides a label for the date input in the fullscreen view.
-
+<p>Every <code>&lt;auro-datepicker&gt;</code> implementation requires the following:</p>
+<ul>
+<li><strong>A label in the `fromLabel` slot</strong> — Provides an accessible label for the date input.</li>
+<li><strong>A `bib.fullscreen.headline` slot</strong> — Provides a headline for the fullscreen (mobile) calendar view.</li>
+<li><strong>A `bib.fullscreen.fromLabel` slot</strong> — Provides a label for the date input in the fullscreen view.</li>
+</ul>
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Select Date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
-
-        When using the `range` attribute, also provide `toLabel` and `bib.fullscreen.toLabel`:
-
+<p>When using the `range` attribute, also provide `toLabel` and `bib.fullscreen.toLabel`:/<p>
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker range&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
@@ -179,6 +177,7 @@ The `<auro-datepicker>` custom element is compatible with Svelte. See the auro-f
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="bib.fullscreen.toLabel"&gt;Return&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
+</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
