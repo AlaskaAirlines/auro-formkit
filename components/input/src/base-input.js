@@ -828,7 +828,6 @@ export default class BaseInput extends AuroElement {
 
         if (!this.shadowRoot.contains(this.getActiveElement())) {
           this.validation.validate(this);
-          this.normalizeDateValidityState();
         }
       }
 
@@ -841,33 +840,6 @@ export default class BaseInput extends AuroElement {
 
     if (changedProperties.has('validity')) {
       this.notifyValidityChange();
-    }
-  }
-
-  /**
-   * Normalizes date validity state for full date formats.
-   * Converts `patternMismatch` to `invalidDate` when the date string is the expected length but fails date parsing.
-   * @private
-   * @returns {void}
-   */
-  normalizeDateValidityState() {
-    if (!this.util.isFullDateFormat(this.type, this.format) || this.validity !== 'patternMismatch') {
-      return;
-    }
-
-    if (!this.value || this.value.length !== this.lengthForType) {
-      return;
-    }
-
-    const normalizedFormat = this.format ? this.format.toLowerCase() : '';
-
-    try {
-      const parsedDate = this.util.parseDateByMask(this.value, normalizedFormat);
-      if (!(parsedDate instanceof Date) || Number.isNaN(parsedDate.getTime())) {
-        this.validity = 'invalidDate';
-      }
-    } catch (error) { // eslint-disable-line no-unused-vars
-      this.validity = 'invalidDate';
     }
   }
 
@@ -932,6 +904,7 @@ export default class BaseInput extends AuroElement {
       return;
     }
 
+    // when value is newly set to the same ISO string that corresponds to the existing Date object, do not clear the Date object (avoid unnecessary updates)
     if (
       changedProperties &&
       valueProperty === 'value' &&
@@ -981,7 +954,7 @@ export default class BaseInput extends AuroElement {
         !Number.isNaN(this.valueObject.getTime()) &&
         typeof maskOptions.format === 'function'
       ) {
-        existingValue = maskOptions.format(this.valueObject) || this.inputElement.value;
+        existingValue = maskOptions.format(this.valueObject);
       }
 
       this.skipNextProgrammaticInputEvent = true;

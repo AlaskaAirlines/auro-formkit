@@ -43,14 +43,6 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Retrieves the current locale.
-   * @returns {string}
-   */
-  getLocale() {
-    return this.locale;
-  }
-
-  /**
    * Updates the date format override.
    * @param {string} newFormat - New date format string.
    * @returns {void}
@@ -209,13 +201,7 @@ export class AuroInputUtilities {
             if (!date || !dateFns.isValid(date)) {
               return '';
             }
-
-            if (dateFormat) {
-              return dateFns.format(date, dateFnsMask);
-            }
-
-            // eslint-disable-next-line new-cap
-            return Intl.DateTimeFormat(this.locale).format(new Date(date));
+            return dateFns.format(date, dateFnsMask);
           },
           parse: (str) => dateFns.parse(str, dateFnsMask, new Date()),
           lazy: true,
@@ -233,45 +219,6 @@ export class AuroInputUtilities {
     }
 
     return {};
-  }
-
-  /**
-   * @private
-   * TODO: This needs to be removed after datepicker, form updated with locale support
-   * @param {string} dateStr - Date string to format.
-   * @param {string?} [format] - DEPRECATED: Date format to use.
-   * @returns {{ formattedDate: string, dateForComparison: string }}
-   */
-  toNorthAmericanFormat(dateStr, format) {
-    const maskForLocale = this.getDateMaskFromLocale(this.locale);
-    const parsedDate = this.parseDateByMask(dateStr, format || maskForLocale);
-
-    if (!dateFns.isValid(parsedDate)) {
-      return undefined;
-    }
-
-    // Legacy, this object was returned this way before. Unsure why but keeping for now.
-    return {
-      formattedDate: dateFns.format(parsedDate, 'MM/dd/yyyy'),
-      dateForComparison: dateFns.format(parsedDate, 'MM/dd/yyyy')
-    };
-  }
-
-  /**
-   * The opposite of the toNorthAmericanFormat function.
-   * @param {string} dateStr - A North American formatted date string.
-   * @param {string} [format] - Optional: Date format string to use.
-   * @returns {string}
-   */
-  toLocaleFormat(dateStr, format) {
-    const maskForLocale = this.getDateMaskFromLocale(this.locale);
-    const parsedDate = this.parseDateByMask(dateStr, format || maskForLocale);
-
-    if (!dateFns.isValid(parsedDate)) {
-      return '';
-    }
-
-    return dateFns.format(parsedDate, this.toDateFnsMask(maskForLocale));
   }
 
   /**
@@ -302,7 +249,7 @@ export class AuroInputUtilities {
       return inputValue;
     }
 
-    const normalizedFormat = format ? format.toLowerCase() : '';
+    const normalizedFormat = format.toLowerCase();
     const parsedDate = this.parseDateByMask(inputValue, normalizedFormat);
 
     if (!(parsedDate instanceof Date) || Number.isNaN(parsedDate.getTime())) {
@@ -331,7 +278,7 @@ export class AuroInputUtilities {
       return (/^\d{4}-\d{2}-\d{2}$/u).test(value) ? '' : value;
     }
 
-    const normalizedFormat = format ? format.toLowerCase() : '';
+    const normalizedFormat = format.toLowerCase();
     const maskOptions = this.getMaskOptions('date', normalizedFormat);
 
     if (!(valueObject instanceof Date) || Number.isNaN(valueObject.getTime()) || !maskOptions || typeof maskOptions.format !== 'function') {

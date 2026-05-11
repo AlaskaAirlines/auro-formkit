@@ -1285,6 +1285,48 @@ function runFullTest(mobileView) {
           await elementUpdated(el);
           expect(el.getAttribute('validity')).to.equal('invalidDate');
         });
+
+        it('clearing value propagates to clear valueObject', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+
+          el.value = '2024-01-15';
+          await elementUpdated(el);
+          expect(el.valueObject).to.be.instanceof(Date);
+
+          el.value = undefined;
+          await elementUpdated(el);
+          await elementUpdated(el);
+
+          expect(el.valueObject).to.be.undefined;
+        });
+
+        it('clearing min after it was set clears minObject', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+
+          el.min = '2024-01-01';
+          await elementUpdated(el);
+          expect(el.minObject).to.be.instanceof(Date);
+
+          el.min = undefined;
+          await elementUpdated(el);
+          await elementUpdated(el);
+
+          expect(el.minObject).to.be.undefined;
+        });
+
+        it('setting value to ISO string matching an existing valueObject does not replace the Date object', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+          await elementUpdated(el);
+
+          // Simulate auro-datepicker setting valueObject directly before value is synced
+          const targetDate = new Date(2024, 0, 15);
+          el.setDateObjectProperty('valueObject', targetDate);
+          await elementUpdated(el); // objectProperty → sets value to '2024-01-15'
+          await elementUpdated(el); // value change from undefined → guard fires → no re-parse
+
+          expect(el.value).to.equal('2024-01-15');
+          expect(el.valueObject).to.equal(targetDate);
+        });
       });
 
       it('should validate type="email" input correctly', async () => {
@@ -2481,15 +2523,6 @@ function runFullTest(mobileView) {
         const result = maskOpts.parse.call({ mask: 'mm/dd/yyyy' }, 'xx/xx/xxxx');
 
         expect(result).to.satisfy(d => d instanceof Date && isNaN(d.getTime()));
-      });
-
-      it('toNorthAmericanFormat returns undefined when dateStr does not match format', async () => {
-        const el = await fixture(html`<auro-input></auro-input>`);
-        await elementUpdated(el);
-
-        const result = el.util.toNorthAmericanFormat('not-a-date', 'mm/dd/yyyy');
-
-        expect(result).to.be.undefined;
       });
     });
   });

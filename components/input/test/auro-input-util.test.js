@@ -2,6 +2,7 @@
 
 import { expect } from '@open-wc/testing';
 import { AuroInputUtil } from '../src/auro-input-util.js';
+import { AuroInputUtilities } from '../src/utilities.js';
 
 const { formatISODate, toISOFormatString } = AuroInputUtil;
 
@@ -123,5 +124,39 @@ describe('toISOFormatString', () => {
     it('throws for undefined', () => {
       expect(() => toISOFormatString(undefined)).to.throw();
     });
+  });
+});
+
+describe('AuroInputUtilities', () => {
+  it('falls back to en-US when an invalid locale is provided', () => {
+    const util = new AuroInputUtilities({ locale: 'invalid-locale!!!' });
+    expect(util.locale).to.equal('en-US');
+  });
+
+  it('toModelValue returns the original string when the date cannot be parsed', () => {
+    const util = new AuroInputUtilities({ locale: 'en-US' });
+    const result = util.toModelValue('xx/xx/xxxx', 'mm/dd/yyyy');
+    expect(result).to.equal('xx/xx/xxxx');
+  });
+
+  it('toDisplayValue returns the value when valueObject is not a Date', () => {
+    const util = new AuroInputUtilities({ locale: 'en-US' });
+    const result = util.toDisplayValue('2024-01-15', undefined, 'mm/dd/yyyy');
+    expect(result).to.equal('2024-01-15');
+  });
+
+  it('getDateMaskFromLocale uses locale parameter when this.locale is falsy', () => {
+    const util = new AuroInputUtilities({ locale: 'en-US' });
+    util.locale = '';
+    const mask = util.getDateMaskFromLocale('en-US');
+    expect(mask).to.be.a('string').and.not.empty;
+  });
+
+  it('getMaskOptions date falls back to mm/dd/yyyy when format, overrideFormat, and pattern are all falsy', () => {
+    const util = new AuroInputUtilities({ locale: 'en-US' });
+    util.overrideFormat = undefined;
+    util.getDateMaskFromLocale = () => '';
+    const opts = util.getMaskOptions('date', undefined);
+    expect(opts.pattern).to.equal('mm/dd/yyyy');
   });
 });
