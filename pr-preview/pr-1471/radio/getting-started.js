@@ -1,6 +1,8 @@
 import { AuroRadio } from '../src/auro-radio.js';
 import { AuroRadioGroup } from '../src/auro-radio-group.js';
 
+import { resetStateExample } from '../apiExamples/reset-state.js';
+
 AuroRadio.register();
 AuroRadioGroup.register();
 
@@ -11,7 +13,7 @@ export function initExamples(initCount) {
   initCount = initCount || 0;
 
   try {
-    // Add any example initialization code here.
+    await resetStateExample();
   } catch (err) {
     if (initCount <= 20) {
       setTimeout(() => {
