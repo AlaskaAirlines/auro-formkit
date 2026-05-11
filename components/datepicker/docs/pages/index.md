@@ -20,8 +20,6 @@
       <!-- AURO-GENERATED-CONTENT:END -->
       <section>
         <auro-header level="2" id="userStories">User Stories</auro-header>
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
       </section>

@@ -9,11 +9,6 @@ This file is generated based on a template fetched from `./docs/partials/index.m
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./description.md) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 
-## auro-form use cases
-
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./useCases.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
-
 ## Additional Information
 
 > Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam fermentum libero ipsum, ac tempor sapien blandit in. Nam tincidunt non felis molestie varius.
