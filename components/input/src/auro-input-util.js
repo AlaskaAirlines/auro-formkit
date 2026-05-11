@@ -20,10 +20,6 @@ function formatISODate(isoStr, format) {
   try {
     const date = dateFormatter.stringToDateInstance(isoStr);
 
-    if (!date || Number.isNaN(date.getTime())) {
-      return undefined;
-    }
-
     const year = String(date.getFullYear()).padStart(4, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
