@@ -54,7 +54,42 @@
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3">Implementation</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/customRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/customRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/customRegistrationDescription.md) -->
+<!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
+<p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
+<p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
+<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
+<p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
+<!-- AURO-GENERATED-CONTENT:END -->
+
+<pre class="language-js"><code class="language-js">// Import the classes
+import { AuroSelect } from '@aurodesignsystem/auro-formkit/auro-select/class';
+import { AuroMenu } from '@aurodesignsystem/auro-formkit/auro-menu/class';
+import { AuroMenuOption } from '@aurodesignsystem/auro-formkit/auro-menuoption/class';
+​
+// Register each component with a custom name
+AuroSelect.register('[custom]-select');
+AuroMenu.register('[custom]-menu');
+AuroMenuOption.register('[custom]-menuoption');</code></pre>
+
+The `<auro-menu>` and `<auro-menuoption>` components must also be custom registered when using a custom `<auro-select>` registration. All three components work together and need to be registered under the same custom naming convention.
+
+This will create new custom elements that behave exactly like their standard counterparts, allowing both to coexist on the same page without interfering with each other.
+
+<pre class="language-html"><code class="language-html">&lt;custom-select placeholder="Placeholder Text" id="custom-select"&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Headline&lt;/span&gt;
+  &lt;span slot="label"&gt;Label&lt;/span&gt;
+  &lt;custom-menu&gt;
+    &lt;custom-menuoption value="stops"&gt;Stops&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="price"&gt;Price&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="duration"&gt;Duration&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="departure"&gt;Departure&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="arrival"&gt;Arrival&lt;/custom-menuoption&gt;
+    &lt;custom-menuoption value="prefer alaska"&gt;Prefer Alaska&lt;/custom-menuoption&gt;
+  &lt;/custom-menu&gt;
+&lt;/custom-select&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 </auro-accordion>
@@ -87,10 +122,9 @@
 </div>
 </auro-accordion>
 <auro-accordion class="section" id="cdnAccordion">
-<span slot="trigger">CDN Installation and Implementation</span>
+<span slot="trigger">CDN Installation</span>
 <div class="accordion-content">
-<p class="warning"><strong>Warning:</strong> CDN install & registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
-<auro-header level="3">Install & Implementation</auro-header>
+<p class="warning"><strong>Warning:</strong> CDN registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/cdnRegistration.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/cdnRegistration.md -->
 <p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
@@ -301,12 +335,12 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-        Every <code>&lt;auro-select&gt;</code> implementation requires three things:
-
-        1. **A unique `id` attribute** — Required when the select is used within a form so it can be properly identified during submission and validation.
-        2. **A label in the `label` slot** — Provides an accessible label for the select element.
-        3. **One or more `<auro-menuoption>` elements** — Placed inside an `<auro-menu>` in the default slot to define the available choices.
-
+<p>Every <code>&lt;auro-select&gt;</code> implementation requires three things:</p>
+<ul>
+<li><strong>A unique `id` attribute</strong> — Required when the select is used within a form so it can be properly identified during submission and validation.</li>
+<li><strong>A label in the `label` slot</strong> — Provides an accessible label for the select element.</li>
+<li><strong>One or more <code>&lt;auro-menuoption&gt;</code> elements</strong> — Placed inside an <code>&lt;auro-menu&gt;</code> in the default slot to define the available choices.</li>
+</ul>
 <pre class="language-html"><code class="language-html">&lt;auro-select id="flightFilter"&gt;
   &lt;span slot="label"&gt;Filter by&lt;/span&gt;
   &lt;auro-menu&gt;

@@ -22,13 +22,6 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 <section>
 <auro-header level="2" id="userStories">User Stories</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
-<!-- The below content is automatically added from ./../docs/partials/useCases.md -->
-        The <code>&lt;auro-datepicker&gt;</code> element should be used in situations where users may:
-
-        * select a single date
-        * select a pair of dates which identify a calendar range
-<!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/index/userStories.md) -->
 <!-- The below content is automatically added from ./../docs/partials/index/userStories.md -->
 <auro-header level="3" id="selectDate">Select a date</auro-header>

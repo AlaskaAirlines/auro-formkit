@@ -17,21 +17,13 @@
 <auro-header level="2" id="description">Description</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/description.md) -->
 <!-- The below content is automatically added from ./../docs/partials/description.md -->
-        The `auro-dropdown` component is a trigger and dropdown element combination intended to be used with dropdown content that is interactive. `auro-dropdown` is content agnostic and any valid HTML can be placed in either the trigger or the dropdown.
+        The <code>auro-dropdown</code> component is a trigger and dropdown element combination intended to be used with dropdown content that is interactive. <code>auro-dropdown</code> is content agnostic and any valid HTML can be placed in either the trigger or the dropdown.
 
-        _Note: if the dropdown content in your implementation is not interactive (e.g. a tooltip) [auro-popover](http://auro.alaskaair.com/components/auro/popover) may better serve your needs._
+<p class="note"><strong>Note:</strong> if the dropdown content in your implementation is not interactive (e.g. a tooltip) [auro-popover](http://auro.alaskaair.com/components/auro/popover) may better serve your needs.</p>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>
 <section>
 <auro-header level="2" id="useCases">User Stories</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/useCases.md) -->
-<!-- The below content is automatically added from ./../docs/partials/useCases.md -->
-        The `auro-dropdown` element should be used in situations where users may:
-
-        * interact with an element to get clarification on content offering
-        * provide definition to iconic imagery
-        * when interactive help is required
-<!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="3" id="basicTrigger">Text Trigger</auro-header>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/basic.html) -->

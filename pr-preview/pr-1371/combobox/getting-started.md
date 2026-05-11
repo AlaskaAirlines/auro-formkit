@@ -41,54 +41,103 @@
 <section>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/install.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/install.md -->
-<auro-header level="1" id="install">Install</auro-header>
-<auro-header level="2" id="npmInstall">NPM Installation</auro-header>
+<auro-header level="2" id="setup">Setup</auro-header>
+<auro-accordion-group Emphasis>
+<auro-accordion expanded class="section" id="recommendedAccordion">
+<span slot="trigger">Recommended Installation and Implementation</span>
+<div class="accordion-content">
+<auro-header level="3">Install</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
 <!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
 
 <pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="2" id="gettingStarted">Getting Started</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/gettingStarted.md) -->
-<!-- The below content is automatically added from ./../../../docs/templates/gettingStarted.md -->
-
-### TypeScript Module Resolution
-
-When using TypeScript set `moduleResolution` to `bundler`, add the following to your `tsconfig.json`:
-
-<pre class="language-json"><code class="language-json">{
-    "compilerOptions": {
-        "moduleResolution": "bundler"
-    }
-}</code></pre>
-
-This configuration enables proper module resolution for the component's TypeScript files.
+<auro-header level="3">Implementation</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/customRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/customRegistration.md -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/partials/customRegistrationDescription.md) -->
+<!-- The below content is automatically added from ./../../../docs/partials/customRegistrationDescription.md -->
+<p>Every Auro component consists of a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">class</a> and a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define">custom element registration</a>. The class defines the component's behavior, and the registration maps it to an HTML tag name so it can be used in markup.</p>
+<p>The default import (shown above) handles both steps automatically, registering the component under its standard tag name.</p>
+<p>If you need multiple versions of the same component on a single page — for example, when two projects depend on different versions — you can register the class under a custom tag name to avoid conflicts.</p>
+<p>To do this, import the component class directly and call its <code>register(name)</code> method with a unique name:</p>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="2" id="defaultSetup">Default Component Setup</auro-header>
-        Once installed, the component can be used in your project by importing the component's registered module:
+
+<pre class="language-js"><code class="language-js">// Import the class only
+import { AuroCombobox } from '@aurodesignsystem/auro-formkit/auro-combobox/class';
+​
+// Register with a custom name if desired
+AuroCombobox.register('custom-combobox');</code></pre>
+
+This will create a new custom element `<custom-combobox>` that behaves exactly like `<auro-combobox>`, allowing both to coexist on the same page without interfering with each other.
+
+<pre class="language-html"><code class="language-html">&lt;custom-combobox&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Bib Header&lt;/span&gt;
+  &lt;span slot="label"&gt;Name&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="Apples" id="option-0"&gt;Apples&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Oranges" id="option-1"&gt;Oranges&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Peaches" id="option-2"&gt;Peaches&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Grapes" id="option-3"&gt;Grapes&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="Cherries" id="option-4"&gt;Cherries&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption static nomatch&gt;No matching option&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/custom-combobox&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+<auro-accordion class="section" id="autoAccordion">
+<span slot="trigger">Auto Installation and Implementation</span>
+<div class="accordion-content">
+<p class="warning"><strong>Warning:</strong> Default registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
+<auro-header level="3">Install</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/componentInstall.md) -->
+<!-- The below content is automatically added from ./../../../docs/templates/componentInstall.md -->
+
+<pre class="language-shell"><code class="language-shell">$ npm i @aurodesignsystem/auro-formkit</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<auro-header level="3">Implementation</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/defaultRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/defaultRegistration.md -->
+<p>Once installed, the component can be used in your project by importing the component's registered module:</p>
 
 <pre class="language-js"><code class="language-js">import '@aurodesignsystem/auro-formkit/auro-combobox';</code></pre>
-
-        This import registers the `<auro-combobox>` custom element globally. You can then use it in your HTML:
+<p>This import registers the <code>&lt;auro-combobox&gt;</code> custom element globally. You can then use it in your HTML:</p>
 
 <pre class="language-html"><code class="language-html">&lt;auro-combobox&gt;
   &lt;span slot="label"&gt;Choose an option&lt;/span&gt;
   &lt;auro-menu&gt;
     &lt;auro-menuoption value="option1"&gt;Option 1&lt;/auro-menuoption&gt;
     &lt;auro-menuoption value="option2"&gt;Option 2&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption static nomatch&gt;No matching option&lt;/auro-menuoption&gt;
   &lt;/auro-menu&gt;
 &lt;/auro-combobox&gt;</code></pre>
-
-<auro-header level="2" id="cdn">Install from CDN</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../../docs/templates/bundleInstallDescription.md) -->
-<!-- The below content is automatically added from ./../../../docs/templates/bundleInstallDescription.md -->
-In cases where the project is not able to process JS assets, there are pre-processed assets available for use. Legacy browsers such as IE11 are no longer supported.
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+<auro-accordion class="section" id="cdnAccordion">
+<span slot="trigger">CDN Installation</span>
+<div class="accordion-content">
+<p class="warning"><strong>Warning:</strong> CDN registration can cause conflicts if another package registers the same tag name using a different version of the component, leading to unexpected behavior. Use custom registration to avoid this risk.</p>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/cdnRegistration.md) -->
+<!-- The below content is automatically added from ./../docs/partials/getting-started/cdnRegistration.md -->
+<p>Add the following script tag to your HTML to load the component directly from a CDN:</p>
 
 <pre class="language-html"><code class="language-html">&lt;script type="module" src="https://cdn.jsdelivr.net/npm/@aurodesignsystem/auro-formkit@latest/auro-combobox/+esm"&gt;&lt;/script&gt;</code></pre>
+<p>This script registers the <code>&lt;auro-combobox&gt;</code> custom element globally. You can then use it in your HTML:</p>
+
+<pre class="language-html"><code class="language-html">&lt;auro-combobox&gt;
+  &lt;span slot="label"&gt;Choose an option&lt;/span&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="option1"&gt;Option 1&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="option2"&gt;Option 2&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption static nomatch&gt;No matching option&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
+&lt;/auro-combobox&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-<auro-header level="2" id="customRegistration">Custom Component Registration</auro-header>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customRegistration.md) -->
-<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+</auro-accordion>
+</auro-accordion-group>
 <!-- AURO-GENERATED-CONTENT:END -->
 </section>   
 <section>
@@ -282,12 +331,12 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/getting-started/minimal-config.md) -->
 <!-- The below content is automatically added from ./../docs/partials/getting-started/minimal-config.md -->
 <auro-header level="3" id="minimalConfig">Minimal Configuration</auro-header>
-        Every <code>&lt;auro-combobox&gt;</code> implementation requires three things:
-
-        1. **A unique `id` attribute** — Required when the combobox is used within a form so it can be properly identified during submission and validation.
-        2. **A label in the `label` slot** — Provides an accessible label for the combobox element.
-        3. **One or more `<auro-menuoption>` elements** — Placed inside an `<auro-menu>` in the default slot to define the available choices.
-
+<p>Every <code>&lt;auro-combobox&gt;</code> implementation requires three things:</p>
+<ul>
+<li><strong>A unique `id` attribute</strong> — Required when the combobox is used within a form so it can be properly identified during submission and validation.</li>
+<li><strong>A label in the `label` slot</strong> — Provides an accessible label for the combobox element.</li>
+<li><strong>One or more `<auro-menuoption>` elements</strong> — Placed inside an `<auro-menu>` in the default slot to define the available choices.</li>
+</ul>
 <pre class="language-html"><code class="language-html">&lt;auro-combobox id="airportSearch"&gt;
   &lt;span slot="label"&gt;Search airports&lt;/span&gt;
   &lt;auro-menu&gt;

@@ -21,8 +21,6 @@ The following sections are editable by making changes to the following files:
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./docs/partials/description.md) -->
 <!-- The below content is automatically added from ./docs/partials/description.md -->
 <code>&lt;auro-radio&gt;</code> is a <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements" target="_blank">HTML custom element</auro-hyperlink> that is rendered as a small circle, which is filled or highlighted when selected. Only one <code>&lt;auro-radio&gt;</code> component in a given <code>&lt;auro-radio-group&gt;</code> can be selected at the same time.
-
-test
 <!-- AURO-GENERATED-CONTENT:END -->
 
 ## Radio Use Cases
