@@ -3,16 +3,14 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+    align-items: start;
   }
 
-  .columned-form div {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
+  .columned-form .span-2 {
+    grid-column: span 2;
   }
 
-  .controls {
+  .columned-form-controls {
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
@@ -21,30 +19,27 @@
 
 <auro-form>
   <div class="columned-form">
-    <div>
-      <auro-input id="search-box" name="searchBox" required>
-        <span slot="label">Search flights</span>
-      </auro-input>
+    <auro-input id="cl-first-name" name="firstName" required>
+      <span slot="label">First Name</span>
+    </auro-input>
 
-      <auro-input id="last-name" name="lastName" required>
-        <span slot="label">Last Name</span>
-      </auro-input>
-    </div>
+    <auro-input id="cl-last-name" name="lastName" required>
+      <span slot="label">Last Name</span>
+    </auro-input>
 
-    <div>
-      <div class="datepickerBlock">
-        <h4>Pick a date range</h4>
-        <auro-datepicker id="date-range" name="dateRange" required range>
-          <span slot="fromLabel">Start</span>
-          <span slot="toLabel">End</span>
-          <span slot="bib.fullscreen.fromLabel">Start</span>
-          <span slot="bib.fullscreen.toLabel">End</span>
-        </auro-datepicker>
-      </div>
+    <auro-input id="cl-email" name="email" type="email" class="span-2" required>
+      <span slot="label">Email</span>
+    </auro-input>
 
-      <div class="controls">
-        <auro-button type="submit">Submit</auro-button>
-      </div>
-    </div>
+    <auro-datepicker id="cl-date-range" name="dateRange" class="span-2" required range>
+      <span slot="fromLabel">Departure</span>
+      <span slot="toLabel">Return</span>
+      <span slot="bib.fullscreen.fromLabel">Departure</span>
+      <span slot="bib.fullscreen.toLabel">Return</span>
+    </auro-datepicker>
+  </div>
+
+  <div class="columned-form-controls">
+    <auro-button type="submit">Submit</auro-button>
   </div>
 </auro-form>
