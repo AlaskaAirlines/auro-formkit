@@ -1,0 +1,18 @@
+<auro-input id="formatIsoExample" type="date" locale="en-US" value="2024-01-15">
+  <span slot="label">Date</span>
+  <span slot="helpText">The <code>.value</code> property always stores the date as ISO (YYYY-MM-DD)</span>
+</auro-input>
+
+<br />
+
+<table>
+  <thead>
+    <tr><th>Property / Method</th><th>Result</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.value</code> (ISO)</td><td><code id="isoVal">2024-01-15</code></td></tr>
+    <tr><td><code>formatISODate(value, 'mm/dd/yyyy')</code></td><td><code id="fmtUs">01/15/2024</code></td></tr>
+    <tr><td><code>formatISODate(value, 'dd/mm/yyyy')</code></td><td><code id="fmtGb">15/01/2024</code></td></tr>
+    <tr><td><code>formatISODate(value, 'yyyy/mm/dd')</code></td><td><code id="fmtIso">2024/01/15</code></td></tr>
+  </tbody>
+</table>

@@ -3,8 +3,10 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { generateStoriesFromGlobData } from '@aurodesignsystem/utils';
+import { html } from 'lit-html';
 import '../src/registered';
 import { AuroInput } from '../src/index';
+import { AuroInputUtil } from '../src/auro-input-util.js';
 
 AuroInput.register('custom-input');
 
@@ -82,5 +84,7 @@ export const Tel = stories.Tel;
 export const ValidateOnInput = stories.ValidateOnInput;
 export const Value = stories.Value;
 export const YearMonthDay = stories.YearMonthDay;
+export const Locale = stories.Locale;
+export const LocaleSingle = stories.LocaleSingle;
 export const Nested = stories.Nested;
 export const Simple = stories.Simple;
