@@ -720,6 +720,7 @@ export default class BaseInput extends AuroElement {
 
   /**
    * @private
+   * @deprecated https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296
    * @returns {void} Sets the default help text for the input.
    */
   setCustomHelpTextMessage() {
@@ -1225,6 +1226,7 @@ export default class BaseInput extends AuroElement {
   /**
    * Function to support credit-card feature type.
    * @private
+   * @deprecated https://dev.azure.com/itsals/E_Retain_Content/_workitems/edit/1557296
    * @returns {object} JSON with data for credit card formatting.
    */
   matchInputValueToCreditCard() {
