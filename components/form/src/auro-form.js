@@ -650,9 +650,14 @@ export class AuroForm extends LitElement {
     const renameOccurred = relevant.some((mutation) => mutation.attributeName === 'name');
     if (renameOccurred) {
       // initializeState() rebuilds formState from scratch (re-keying any
-      // renamed element) and also dispatches `change` + refreshes button state,
-      // so we can return early without doing the disabled path's work.
+      // renamed element) and also dispatches `change` + refreshes button state.
+      // We also re-run _attachEventListeners() because elements that previously
+      // had no `name` were skipped by queryAuroElements() (which selects
+      // `[name]`) and therefore never received input/validation/keydown
+      // listeners. Re-attaching is safe — the listener-removal step inside
+      // _attachEventListeners() prevents duplicates on already-wired elements.
       this.initializeState();
+      this._attachEventListeners();
       return;
     }
 
