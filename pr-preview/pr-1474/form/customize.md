@@ -241,6 +241,7 @@
 <li>It does not contribute to <code>validity</code> — a disabled <code>required</code> field will not block submission.</li>
 <li>It does not taint <code>isInitialState</code> — a disabled field carrying a preset value still leaves the form in its initial state.</li>
 </ul>
+<p><strong>Behavior change:</strong> a form whose only invalid field was a <code>disabled</code> AND <code>required</code> field is now submittable, where previously it would have been blocked. If your application relied on a <code>disabled</code>/<code>required</code> field gating submission, surface that constraint a different way (for example, only render the field once the prerequisite is met).</p>
 <p>In the example below the Mileage Plan number is preset and disabled. Fill in the remaining required fields and submit the form — the output region below the form will show the contents of the <code>submit</code> event's <code>detail.value</code>. Notice that only <code>firstName</code> and <code>lastName</code> appear; <code>loyaltyNumber</code> is omitted even though the field has a value.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
@@ -261,7 +262,20 @@
 <br />
 <auro-button type="submit">Submit</auro-button>
 </auro-form>
-<output id="disabledExampleOutput" for="disabledExampleForm" aria-live="polite">Submit the form to see what gets sent.</output>
+<output id="disabledExampleOutput" form="disabledExampleForm" aria-live="polite">Submit the form to see what data gets stored.</output>
+<style>
+          #disabledExampleOutput {
+            display: block;
+            margin-top: 2rem;
+            padding: 1rem 1.25rem;
+            border-left: 4px solid #2a2a2a;
+            border-radius: 0.25rem;
+            background: #f5f5f5;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+          }
+</style>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
@@ -284,7 +298,20 @@
   &lt;br /&gt;
   &lt;auro-button type="submit"&gt;Submit&lt;/auro-button&gt;
 &lt;/auro-form&gt;
-&lt;output id="disabledExampleOutput" for="disabledExampleForm" aria-live="polite"&gt;Submit the form to see what gets sent.&lt;/output&gt;</code></pre>
+&lt;output id="disabledExampleOutput" form="disabledExampleForm" aria-live="polite"&gt;Submit the form to see what data gets stored.&lt;/output&gt;
+&lt;style&gt;
+  #disabledExampleOutput {
+    display: block;
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid #2a2a2a;
+    border-radius: 0.25rem;
+    background: #f5f5f5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+  }
+&lt;/style&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 </section>
