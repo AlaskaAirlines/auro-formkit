@@ -17,7 +17,6 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @property {string | number | boolean | string[] | null} value - The value of the form element.
  * @property {ValidityState} validity - The validity state of the form element, stored when fired from the form element.
  * @property {boolean} required - Whether the form element is required or not.
- * @property {HTMLElement} element - Whether the form element is required or not.
  */
 
 /**
@@ -101,6 +100,20 @@ export class AuroForm extends LitElement {
      */
     this.mutationObservers = [];
 
+    // Single subtree observer that watches `disabled` and `name` attribute
+    // changes across all tracked form elements. The `name` watch is required:
+    // without it, renaming a tracked field at runtime leaves a stale key in
+    // `formState` that `_isNameDisabled` cannot resolve, so a renamed-but-
+    // disabled field would re-appear in `.value`.
+    /**
+     * @private
+     * @type {MutationObserver | null}
+     */
+    this._attributeObserver = null;
+
+    /** @private */
+    this._handleAttributeMutations = this._handleAttributeMutations.bind(this);
+
     // Bind listeners
     /** @private */
     this.reset = this.reset.bind(this);
@@ -170,6 +183,42 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Whether a given element is currently disabled. Disabled controls are excluded
+   * from submission, validity, and initial-state checks (per the HTML spec).
+   *
+   * Implementation note: we deliberately read only the attribute. Every Auro
+   * form element in `formElementTags` declares `disabled` with `reflect: true`,
+   * so the attribute and property stay in sync. Reading the attribute also
+   * lets the MutationObserver in `connectedCallback` (which is filtered to
+   * `['disabled', 'name']`) be the single source of truth for re-renders.
+   * If a future form-element type ships without attribute reflection, expand
+   * this helper to also read `element.disabled`.
+   * @param {HTMLElement | undefined | null} element - The element to check.
+   * @returns {boolean}
+   * @private
+   */
+  _isDisabled(element) {
+    return Boolean(element?.hasAttribute('disabled'));
+  }
+
+  /**
+   * Whether the tracked form element registered under `name` is currently disabled.
+   *
+   * Performance note: this is called once per `formState` key per read of
+   * `value` / `validity` / `isInitialState`, producing O(n²) work where n is
+   * the number of tracked fields. Acceptable for typical forms (< ~50 fields).
+   * For larger forms, a future refactor should store disabled state on each
+   * `formState` entry and update it from the attribute observer instead.
+   * @param {string} name - The `name` attribute used to register the element.
+   * @returns {boolean}
+   * @private
+   */
+  _isNameDisabled(name) {
+    const element = this._elements.find((el) => el.getAttribute('name') === name);
+    return this._isDisabled(element);
+  }
+
+  /**
    * Validates if an event is from a valid form element with a name.
    * @param {Event} event - The event to validate.
    * @returns {boolean} - True if event is valid for processing.
@@ -208,6 +257,10 @@ export class AuroForm extends LitElement {
    */
   get value() {
     return Object.keys(this.formState).reduce((acc, key) => {
+      if (this._isNameDisabled(key)) {
+        return acc;
+      }
+
       acc[key] = this.formState[key].value;
       return acc;
     }, {});
@@ -242,6 +295,10 @@ export class AuroForm extends LitElement {
       // go through validity states and return the first invalid state (if any)
       const invalidKey = Object.keys(this.formState).
         find((key) => {
+          if (this._isNameDisabled(key)) {
+            return false;
+          }
+
           const formKey = this.formState[key];
           // these are NOT extra parens
           // eslint-disable-next-line no-extra-parens
@@ -268,7 +325,13 @@ export class AuroForm extends LitElement {
    * @private
    */
   _setInitialState() {
-    const anyTainted = Object.keys(this.formState).some((key) => this.formState[key].validity !== null || this.formState[key].value !== null);
+    const anyTainted = Object.keys(this.formState).some((key) => {
+      if (this._isNameDisabled(key)) {
+        return false;
+      }
+
+      return this.formState[key].validity !== null || this.formState[key].value !== null;
+    });
 
     this._isInitialState = !anyTainted;
 
@@ -352,7 +415,6 @@ export class AuroForm extends LitElement {
       value: element.value || element.getAttribute('value'),
       validity: element.validity || null,
       required: element.hasAttribute('required'),
-      // element
     };
 
     this._elements.push(element);
@@ -435,10 +497,13 @@ export class AuroForm extends LitElement {
    * @returns {Promise<void>}
    */
   async submit() {
-    // Force validation on ALL elements
-    this._elements.forEach((element) => {
-      element.validate(true);
-    });
+    // Force validation on all enabled elements. Disabled fields are skipped
+    // because disabled controls are not validated nor submitted per the HTML spec.
+    this._elements.
+      filter((element) => !this._isDisabled(element)).
+      forEach((element) => {
+        element.validate(true);
+      });
 
     // Wait for validation to complete and formState to update
     await this.updateComplete;
@@ -526,6 +591,11 @@ export class AuroForm extends LitElement {
    */
   handleKeyDown(event) {
     if (event.key === 'Enter' && this.isFormElement(event.target)) {
+      // Disabled controls do not submit a form natively.
+      if (this._isDisabled(event.target)) {
+        return;
+      }
+
       // Don't submit if it's a textarea (allow new lines)
       if (event.target.tagName.toLowerCase() === 'textarea' ||
           event.target.hasAttribute('textarea')) {
@@ -555,6 +625,76 @@ export class AuroForm extends LitElement {
       element.addEventListener('auroFormElement-validated', this.sharedValidationListener);
       element.addEventListener('keydown', this.handleKeyDown);
     });
+  }
+
+  /**
+   * Handle batched MutationObserver records for `disabled` and `name`
+   * attribute changes on tracked form elements. A `name` change invalidates
+   * the formState keying — we resolve it by re-initializing state. A `disabled`
+   * change simply needs a re-render (so `value` / `validity` getters re-evaluate)
+   * and a refresh of the submit/reset button enablement.
+   * @param {MutationRecord[]} mutations - The batched mutation records.
+   * @returns {void}
+   * @private
+   */
+  _handleAttributeMutations(mutations) {
+    // Only mutations on tracked FORM elements matter here. The same observer
+    // also sees attribute changes on the submit/reset buttons (which this
+    // component itself toggles via `setDisabledStateOnButtons`); reacting to
+    // those would create an infinite observer/update loop.
+    const relevant = mutations.filter((mutation) => this.isFormElement(mutation.target));
+    if (relevant.length === 0) {
+      return;
+    }
+
+    const renameOccurred = relevant.some((mutation) => mutation.attributeName === 'name');
+    if (renameOccurred) {
+      // initializeState() rebuilds formState from scratch (re-keying any
+      // renamed element) and also dispatches `change` + refreshes button state,
+      // so we can return early without doing the disabled path's work.
+      this.initializeState();
+      return;
+    }
+
+    this.requestUpdate('formState');
+    this.setDisabledStateOnButtons();
+  }
+
+  /**
+   * @returns {void}
+   */
+  connectedCallback() {
+    super.connectedCallback();
+
+    // One observer rooted at the host catches `disabled` / `name` changes on
+    // any tracked form element (light-DOM children, including those nested in
+    // wrapper elements). Cheaper than allocating an observer per element and
+    // resilient to runtime DOM mutations.
+    if (!this._attributeObserver) {
+      this._attributeObserver = new MutationObserver(this._handleAttributeMutations);
+    }
+
+    this._attributeObserver.observe(this, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: [
+        'disabled',
+        'name'
+      ]
+    });
+  }
+
+  /**
+   * @returns {void}
+   */
+  disconnectedCallback() {
+    // Disconnect everything we own to avoid leaking observers (and the strong
+    // refs they hold to DOM nodes) past the form's lifetime.
+    this._attributeObserver?.disconnect();
+    this.mutationObservers.forEach((observer) => observer.disconnect());
+    this.mutationObservers = [];
+
+    super.disconnectedCallback();
   }
 
   /**
