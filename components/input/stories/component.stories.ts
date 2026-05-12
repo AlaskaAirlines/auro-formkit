@@ -283,6 +283,41 @@ export const InputInverseError: Story = {
   `,
 };
 
+// ─── Multi-locale side-by-side — same ISO value, four distinct display formats ─
+export const InputDateMultiLocale: Story = {
+  tags: ['!autodocs', 'chromatic-enabled'],
+  parameters: {
+    chromatic: { delay: 200 },
+  },
+  render: () => html`
+<div style="display: flex; flex-direction: column; gap: 1rem;">
+  <auro-input id="ml-enus" type="date" locale="en-US" value="2024-01-15">
+    <span slot="label">en-US</span>
+  </auro-input>
+  <auro-input id="ml-engb" type="date" locale="en-GB" value="2024-01-15">
+    <span slot="label">en-GB</span>
+  </auro-input>
+  <auro-input id="ml-zhcn" type="date" locale="zh-CN" value="2024-01-15">
+    <span slot="label">zh-CN</span>
+  </auro-input>
+  <auro-input id="ml-fmt" type="date" locale="en-US" format="yyyy.mm.dd" value="2024-01-15">
+    <span slot="label">en-US + yyyy.mm.dd format</span>
+  </auro-input>
+</div>
+  `,
+  async play({ canvasElement }: { canvasElement: HTMLElement }) {
+    const inputs = Array.from(canvasElement.querySelectorAll('auro-input')) as any[];
+    await Promise.all(inputs.map((el) => el.updateComplete));
+    await Promise.all(inputs.map((el) => el.updateComplete));
+
+    const [enUS, enGB, zhCN, fmt] = inputs.map((el) => el.shadowRoot.querySelector('input'));
+    await expect(enUS.value).toBe('01/15/2024');
+    await expect(enGB.value).toBe('15/01/2024');
+    await expect(zhCN.value).toBe('2024/01/15');
+    await expect(fmt.value).toBe('2024.01.15');
+  },
+};
+
 // ─── Icon renders in DOM for credit-card type ────────────────────────────────
 export const InputCreditCardIcon: Story = {
   tags: ['!autodocs', 'chromatic-enabled'],
