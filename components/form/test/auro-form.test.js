@@ -649,6 +649,189 @@ function runFullTest(mobileView) {
     });
   });
 
+  describe('Disabled elements', () => {
+    it('omits disabled fields from form.value', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="enabledField" value="hello"></auro-input>
+          <auro-input name="disabledField" value="ignored" disabled></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      expect(el.value).to.have.property('enabledField', 'hello');
+      expect(el.value).to.not.have.property('disabledField');
+    });
+
+    it('omits disabled fields from the submit event payload', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="enabledField"></auro-input>
+          <auro-input name="disabledField" value="ignored" disabled></auro-input>
+        </auro-form>
+      `);
+
+      const enabledEl = el.querySelector('auro-input[name="enabledField"]');
+      enabledEl.focus();
+      enabledEl.value = 'hello';
+      enabledEl.blur();
+      await elementUpdated(el);
+
+      let submitDetail = null;
+      el.addEventListener('submit', (event) => {
+        submitDetail = event.detail;
+      });
+
+      await el.submit();
+
+      await expect(submitDetail).to.not.be.null;
+      await expect(submitDetail.value).to.have.property('enabledField', 'hello');
+      await expect(submitDetail.value).to.not.have.property('disabledField');
+    });
+
+    it('does not mark the form invalid because of a disabled required field', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="enabledField"></auro-input>
+          <auro-input name="disabledRequired" required disabled></auro-input>
+        </auro-form>
+      `);
+
+      const enabledEl = el.querySelector('auro-input[name="enabledField"]');
+      enabledEl.focus();
+      enabledEl.value = 'hello';
+      enabledEl.blur();
+      await elementUpdated(el);
+
+      await expect(el.validity).to.not.equal('invalid');
+    });
+
+    it('does not taint isInitialState when a disabled field carries a value', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="disabledField" value="hello" disabled></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      await expect(el.isInitialState).to.be.true;
+    });
+
+    it('re-includes a field in form.value when its disabled attribute is removed', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="toggleField" value="hello" disabled></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      expect(el.value).to.not.have.property('toggleField');
+
+      const inputEl = el.querySelector('auro-input[name="toggleField"]');
+      inputEl.removeAttribute('disabled');
+      await elementUpdated(el);
+
+      expect(el.value).to.have.property('toggleField', 'hello');
+    });
+
+    // Spy on validate to prove the disabled field is never force-validated
+    // during submit(), matching native HTML behavior.
+    it('does not call validate(true) on disabled elements during submit', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="enabledField"></auro-input>
+          <auro-input name="disabledField" value="hello" disabled></auro-input>
+        </auro-form>
+      `);
+
+      const enabledEl = el.querySelector('auro-input[name="enabledField"]');
+      enabledEl.focus();
+      enabledEl.value = 'hello';
+      enabledEl.blur();
+      await elementUpdated(el);
+
+      const disabledInput = el.querySelector('auro-input[name="disabledField"]');
+      const originalValidate = disabledInput.validate.bind(disabledInput);
+      let disabledValidateCalls = 0;
+      disabledInput.validate = (...args) => {
+        disabledValidateCalls += 1;
+        return originalValidate(...args);
+      };
+
+      await el.submit();
+
+      await expect(disabledValidateCalls).to.equal(0);
+    });
+
+    // A disabled+required field must not block submission — that combination
+    // is excluded from validity per the HTML spec.
+    it('enables the submit button when a disabled+required field is the only blocker', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="enabledField" value="hello"></auro-input>
+          <auro-input name="disabledRequired" required disabled></auro-input>
+          <auro-button type="submit">Submit</auro-button>
+        </auro-form>
+      `);
+
+      const enabledEl = el.querySelector('auro-input[name="enabledField"]');
+      enabledEl.focus();
+      enabledEl.value = 'hello';
+      enabledEl.blur();
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      const [submitButton] = el.submitElements;
+      await expect(submitButton.hasAttribute('disabled')).to.be.false;
+    });
+
+    // A non-initial form should snap back to initial state if the only thing
+    // making it dirty is a now-disabled field. Verifies the attribute observer
+    // and `_setInitialState` predicate work together.
+    it('returns to initial state when the only dirty field becomes disabled', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="dirtyField"></auro-input>
+        </auro-form>
+      `);
+
+      const inputEl = el.querySelector('auro-input[name="dirtyField"]');
+      inputEl.focus();
+      inputEl.value = 'typed';
+      inputEl.blur();
+      await elementUpdated(el);
+      await expect(el.isInitialState).to.be.false;
+
+      inputEl.setAttribute('disabled', '');
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      await expect(el.isInitialState).to.be.true;
+    });
+
+    // Renaming a tracked element at runtime previously left a stale key in
+    // formState that `_isNameDisabled` could not resolve. The attribute
+    // observer's `name` watch should re-key formState.
+    it('re-keys formState when a tracked element is renamed at runtime', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="originalName" value="abc"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      expect(el.formState).to.have.property('originalName');
+
+      const inputEl = el.querySelector('auro-input[name="originalName"]');
+      inputEl.setAttribute('name', 'renamedField');
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      expect(el.formState).to.not.have.property('originalName');
+      expect(el.formState).to.have.property('renamedField');
+    });
+  });
+
   describe('Slots', () => {
     describe('default', () => {
       it('should render content in the default slot', async () => {
