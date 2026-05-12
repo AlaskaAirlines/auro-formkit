@@ -115,6 +115,7 @@ export class AuroInputUtilities {
 
   /**
    * Parses a date string using the provided mask.
+   * @private
    * @param {string} dateString - The date string to parse.
    * @param {string} mask - The date mask to use for parsing.
    * @returns {string}
@@ -223,6 +224,7 @@ export class AuroInputUtilities {
 
   /**
    * Determines if the given type and format combination represents a full year/month/day date.
+   * @private
    * @param {string} type - The input type.
    * @param {string} format - The date format string.
    * @returns {boolean}
@@ -236,6 +238,7 @@ export class AuroInputUtilities {
   /**
    * Converts a display string to its model value.
    * For full date formats, converts the display string to an ISO date string.
+   * @private
    * @param {string} inputValue - String from the rendered input.
    * @param {string} format - The date format string.
    * @returns {string}
@@ -262,6 +265,7 @@ export class AuroInputUtilities {
   /**
    * Converts a model value to a display value for the input element.
    * For full date formats, converts an ISO model value to the configured display format.
+   * @private
    * @param {string} value - The model value (ISO string for date types).
    * @param {Date|undefined} valueObject - Date object representation of value.
    * @param {string} format - The date format string.
