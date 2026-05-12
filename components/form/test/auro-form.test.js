@@ -830,6 +830,35 @@ function runFullTest(mobileView) {
       expect(el.formState).to.not.have.property('originalName');
       expect(el.formState).to.have.property('renamedField');
     });
+
+    // An element that initially renders without a `name` is invisible to
+    // queryAuroElements() (which selects `[name]`). When the consumer adds a
+    // name later, the rename path must both register the element in formState
+    // AND attach the input/validation/keydown listeners; otherwise subsequent
+    // typing would never propagate into formState.
+    it('attaches listeners to elements that gain a name attribute after initial render', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input id="lateName"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      expect(Object.keys(el.formState).length).to.equal(0);
+
+      const inputEl = el.querySelector('auro-input#lateName');
+      inputEl.setAttribute('name', 'addedLater');
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      expect(el.formState).to.have.property('addedLater');
+
+      inputEl.value = 'hello';
+      inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+
+      expect(el.formState.addedLater.value).to.equal('hello');
+    });
   });
 
   describe('Slots', () => {
