@@ -30,6 +30,9 @@
 <auro-anchorlink fluid href="#focus" class="level2 body-xs">focus()</auro-anchorlink>
 <auro-anchorlink fluid href="#reset" class="level2 body-xs">reset()</auro-anchorlink>
 <auro-anchorlink fluid href="#validate" class="level2 body-xs">validate()</auro-anchorlink>
+<auro-anchorlink fluid href="#auroInputUtil">AuroInputUtil</auro-anchorlink>
+<auro-anchorlink fluid href="#auroInputUtilFormatIso" class="level2 body-xs">formatISODate()</auro-anchorlink>
+<auro-anchorlink fluid href="#auroInputUtilToIso" class="level2 body-xs">toISOFormatString()</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -316,6 +319,14 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <p>Resets the component to its initial state, clearing the value and validation state.</p>
 <auro-header level="3" id="validate">validate()</auro-header>
 <p>Triggers validation on the component. Pass <code>true</code> to force validation even when <code>noValidate</code> is set.</p>
+</section>
+<section>
+<auro-header level="2" id="auroInputUtil">AuroInputUtil</auro-header>
+<p><code>AuroInputUtil</code> is a standalone utility exported from the package for working with date values. When <code>type="date"</code> is used, <code>.value</code> always stores the date as ISO (<code>YYYY-MM-DD</code>). Use these helpers to convert between ISO and any display format in your application.</p>
+<auro-header level="3" id="auroInputUtilFormatIso">formatISODate(isoStr, format)</auro-header>
+<p>Converts an ISO string from <code>.value</code> into a display format string (e.g. <code>'01/15/2024'</code>). Returns <code>undefined</code> for empty or invalid input. See <a href="customize">Customize</a> for full examples.</p>
+<auro-header level="3" id="auroInputUtilToIso">toISOFormatString(date)</auro-header>
+<p>Converts a <code>Date</code> instance to an ISO string suitable for setting <code>input.value</code> programmatically. Throws for invalid input. See <a href="customize">Customize</a> for full examples.</p>
 </section>
 </div>
 </div>
