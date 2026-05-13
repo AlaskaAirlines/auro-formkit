@@ -276,7 +276,7 @@ export class AuroInputUtilities {
       return value;
     }
 
-    if (!dateFormatter.isValidISODate(value)) {
+    if (!dateFormatter.isValidDate(value)) {
       // For ISO-pattern strings that fail range validation (e.g. '2024-99-99'),
       // return '' so inputElement stays empty and format-based validation is not triggered.
       return (/^\d{4}-\d{2}-\d{2}$/u).test(value) ? '' : value;
