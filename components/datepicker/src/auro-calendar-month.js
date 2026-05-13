@@ -116,7 +116,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
    */
   renderDayOfWeek(dayOfWeek, index) {
     const fullName = this.dayFullNames ? this.dayFullNames[index] : dayOfWeek;
-    return html`<div class="th body-default"><abbr title="${fullName}">${dayOfWeek}</abbr></div>`;
+    return html`<div class="th body-default" role="columnheader"><abbr title="${fullName}">${dayOfWeek}</abbr></div>`;
   }
 
   /**
@@ -209,6 +209,12 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     }
   }
 
+  renderWeek(week) {
+    return html`
+      <div class="tr" role="row">${week.map((day) => this.renderDay(day))}</div>
+    `;
+  }
+
   renderDay(day) {
     return html`
       <div class="td ${this.tdIsEnabled(day)}">
@@ -256,13 +262,13 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
           ${this.renderNextButton()}
         </div>
 
-        <div class="table">
-          <div class="thead">
-            <div class="tr">
+        <div class="table" role="grid" aria-labelledby="${this.getHeadingId()}">
+          <div class="thead" role="rowgroup">
+            <div class="tr" role="row">
               ${(_a = this.dayNamesOfTheWeek) === null || _a === void 0 ? void 0 : _a.map((dayNameOfWeek, index) => this.renderDayOfWeek(dayNameOfWeek, index))}
             </div>
           </div>
-          <div class="tbody">
+          <div class="tbody" role="rowgroup">
             ${(_b = this.daysOfMonth) === null || _b === void 0 ? void 0 : _b.map(week => this.renderWeek(week))}
           </div>
         </div>
