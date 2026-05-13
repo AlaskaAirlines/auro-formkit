@@ -7,8 +7,9 @@
 // Current behavior (transitional — full bib keyboard navigation is planned for a future iteration):
 //   - The bib opens and closes via pointer/touch interaction only.
 //   - Escape closes the bib and prevents the event from reaching parent containers.
+//   - Space opens the bib when it is closed.
 //   - Tab uses the browser's default tabindex sequence across trigger controls.
-//   - Enter and Space do not open or close the bib.
+//   - Enter does not open or close the bib.
 //
 // This file is an intentional placeholder for most keys. When datepicker bib keyboard navigation is
 // added, handlers should go here following the same strategy pattern used by
@@ -25,5 +26,16 @@ export const datepickerKeyboardStrategy = {
     evt.stopPropagation();
 
     component.dropdown.hide();
+  },
+
+  ' '(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      return;
+    }
+
+    // Prevent the space character from being typed into the input.
+    evt.preventDefault();
+
+    component.dropdown.show();
   },
 };

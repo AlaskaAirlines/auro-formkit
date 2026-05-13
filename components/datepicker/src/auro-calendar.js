@@ -59,6 +59,13 @@ export class AuroCalendar extends RangeDatepicker {
     this.isFullscreen = false;
 
     /**
+     * The date of the currently active cell (Unix timestamp).
+     * Only one cell across the entire calendar has tabindex="0" at a time.
+     * @private
+     */
+    this.activeCellDate = null;
+
+    /**
      * @private
      */
     this.firstMonthRenderable = undefined;
@@ -339,6 +346,278 @@ export class AuroCalendar extends RangeDatepicker {
     this.utilCal.scrollMonthIntoView(this, date, this.format);
   }
 
+  /**
+   * Gets all rendered month components.
+   * @private
+   * @returns {Array} Array of auro-formkit-calendar-month elements.
+   */
+  getMonthComponents() {
+    return Array.from(this.shadowRoot.querySelectorAll('auro-formkit-calendar-month'));
+  }
+
+  /**
+   * Gets all focusable cells across all rendered months.
+   * @private
+   * @returns {Array} Array of auro-formkit-calendar-cell elements.
+   */
+  getAllFocusableCells() {
+    const months = this.getMonthComponents();
+    let cells = [];
+    months.forEach(month => {
+      cells = cells.concat(month.getFocusableCells());
+    });
+    return cells;
+  }
+
+  /**
+   * Sets the active cell across all months. Only one cell has tabindex="0" at a time.
+   * @param {Number} date - Unix timestamp of the cell to activate.
+   * @returns {void}
+   */
+  setActiveCell(date) {
+    const allCells = this.getAllFocusableCells();
+
+    allCells.forEach(cell => {
+      cell.active = cell.day && cell.day.date === date;
+    });
+
+    this.activeCellDate = date;
+  }
+
+  /**
+   * Focuses the currently active cell. If activeCellDate is set but no cell
+   * has the active attribute yet, sets it first. Waits for the cell's render
+   * to complete so the focused button is the final DOM element.
+   * @returns {void}
+   */
+  focusActiveCell() {
+    if (this.activeCellDate !== undefined) {
+      this.setActiveCell(this.activeCellDate);
+    }
+
+    const allCells = this.getAllFocusableCells();
+    const activeCell = allCells.find(cell => cell.active);
+    if (activeCell) {
+      activeCell.updateComplete.then(() => {
+        activeCell.focusButton();
+      });
+    }
+  }
+
+  /**
+   * Computes the initial active date from data properties alone — no DOM required.
+   * Priority:
+   *   1. Selected date (dateFrom) if within range
+   *   2. Today's date if not disabled (in-range and not blackout)
+   *   3. First future non-disabled date (scans day-by-day from today up to 1 year)
+   *   4. First previous non-disabled date (scans day-by-day from today up to 1 year)
+   *   5. undefined — no valid target
+   *
+   * @private
+   * @returns {Number|undefined} Unix timestamp (seconds) of the date to activate, or undefined.
+   */
+  computeActiveDate() {
+    const ONE_DAY = 86400; // seconds
+    const MAX_SCAN_DAYS = 366; // scan at most ~1 year in each direction
+
+    const rawMin = Number(this.min);
+    const rawMax = Number(this.max);
+
+    // When min/max are NaN (no minDate/maxDate configured), treat as unbounded.
+    const minTs = Number.isFinite(rawMin) ? rawMin : -Infinity;
+    const maxTs = Number.isFinite(rawMax) ? rawMax : Infinity;
+
+    // Build a Set of blackout timestamps for O(1) lookup.
+    const blackoutSet = new Set(
+      (this.disabledDays || []).map(d => parseInt(d, 10))
+    );
+
+    /**
+     * A date (unix timestamp in seconds, midnight-aligned) is "enabled" when
+     * it is within [min, max] AND not a blackout day.
+     */
+    const isEnabled = (ts) => ts >= minTs && ts <= maxTs && !blackoutSet.has(ts);
+
+    /**
+     * A date is "in range" (focusable in the grid) when it is within [min, max].
+     * Blackout dates are focusable but not selectable.
+     */
+    const isInRange = (ts) => ts >= minTs && ts <= maxTs;
+
+    // 1. Selected date — always valid target if within range (user chose it).
+    if (this.dateFrom) {
+      const parsedFrom = parseInt(this.dateFrom, 10);
+      if (Number.isFinite(parsedFrom) && isInRange(parsedFrom)) return parsedFrom;
+    }
+
+    // 2. Today's date (midnight-aligned) if enabled.
+    const now = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
+
+    if (isEnabled(now)) return now;
+
+    // 3. First future enabled date (scan forward from tomorrow, capped by max and MAX_SCAN_DAYS).
+    const scanMax = Number.isFinite(maxTs)
+      ? Math.min(maxTs, now + (MAX_SCAN_DAYS * ONE_DAY))
+      : now + (MAX_SCAN_DAYS * ONE_DAY);
+
+    for (let ts = now + ONE_DAY; ts <= scanMax; ts += ONE_DAY) {
+      if (isEnabled(ts)) return ts;
+    }
+
+    // 4. First previous enabled date (scan backward from yesterday, capped by min and MAX_SCAN_DAYS).
+    const scanMin = Number.isFinite(minTs)
+      ? Math.max(minTs, now - (MAX_SCAN_DAYS * ONE_DAY))
+      : now - (MAX_SCAN_DAYS * ONE_DAY);
+
+    for (let ts = now - ONE_DAY; ts >= scanMin; ts -= ONE_DAY) {
+      if (isEnabled(ts)) return ts;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Handles cross-month boundary navigation events from month components.
+   * @private
+   * @param {CustomEvent} event - The boundary event with direction and source date info.
+   * @returns {void}
+   */
+  handleMonthBoundary(event) {
+    const { direction, fromDate, key } = event.detail;
+
+    if (key === 'ArrowRight' || key === 'ArrowLeft') {
+      // Linear navigation: find adjacent focusable cell across months
+      const allCells = this.getAllFocusableCells();
+      const currentIndex = allCells.findIndex(cell => cell.day && cell.day.date === fromDate);
+
+      if (currentIndex === -1) return;
+
+      let targetIndex;
+      if (direction === 'next') {
+        targetIndex = currentIndex + 1;
+      } else {
+        targetIndex = currentIndex - 1;
+      }
+
+      if (targetIndex >= 0 && targetIndex < allCells.length) {
+        const targetCell = allCells[targetIndex];
+        this.setActiveCell(targetCell.day.date);
+        this.scrollToActiveCell();
+        this.focusActiveCell();
+      } else if (direction === 'next' && this.showNextMonthBtn) {
+        // Navigate to next month and try again
+        this.handleNextMonth();
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const cells = this.getAllFocusableCells();
+            if (cells.length > 0) {
+              this.setActiveCell(cells[0].day.date);
+              this.focusActiveCell();
+            }
+          });
+        });
+      } else if (direction === 'prev' && this.showPrevMonthBtn) {
+        // Navigate to previous month and try again
+        this.handlePrevMonth();
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const cells = this.getAllFocusableCells();
+            if (cells.length > 0) {
+              this.setActiveCell(cells[cells.length - 1].day.date);
+              this.focusActiveCell();
+            }
+          });
+        });
+      }
+    } else if (key === 'ArrowDown' || key === 'ArrowUp') {
+      // Vertical navigation: find same day-of-week +/- 7 days
+      const increment = key === 'ArrowDown' ? 7 : -7;
+      const targetDate = fromDate + (increment * 86400);
+
+      const allCells = this.getAllFocusableCells();
+      let targetCell = allCells.find(cell => cell.day && cell.day.date === targetDate);
+
+      if (targetCell) {
+        this.setActiveCell(targetCell.day.date);
+        this.scrollToActiveCell();
+        this.focusActiveCell();
+      } else {
+        // Target might be in an unrendered month, navigate there
+        const navDirection = key === 'ArrowDown' ? 'next' : 'prev';
+        if ((navDirection === 'next' && this.showNextMonthBtn) || (navDirection === 'prev' && this.showPrevMonthBtn)) {
+          if (navDirection === 'next') {
+            this.handleNextMonth();
+          } else {
+            this.handlePrevMonth();
+          }
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const cells = this.getAllFocusableCells();
+              const target = cells.find(cell => cell.day && cell.day.date === targetDate);
+              if (target) {
+                this.setActiveCell(target.day.date);
+                this.focusActiveCell();
+              } else if (cells.length > 0) {
+                // Clamp to nearest focusable cell
+                const nearest = navDirection === 'next' ? cells[0] : cells[cells.length - 1];
+                this.setActiveCell(nearest.day.date);
+                this.focusActiveCell();
+              }
+            });
+          });
+        }
+      }
+    }
+  }
+
+  /**
+   * Handles cell activation events from month components.
+   * @private
+   * @param {CustomEvent} event - The activation event with target date.
+   * @returns {void}
+   */
+  handleCellActivate(event) {
+    const { date } = event.detail;
+    this.setActiveCell(date);
+    this.focusActiveCell();
+  }
+
+  /**
+   * Scrolls the calendar to ensure the month containing the active cell is visible.
+   * @private
+   * @returns {void}
+   */
+  scrollToActiveCell() {
+    if (this.activeCellDate == null) return;
+
+    const date = new Date(this.activeCellDate * 1000);
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const selector = `#month-${month}-${year}`;
+    const monthElem = this.shadowRoot.querySelector(selector);
+
+    if (monthElem) {
+      monthElem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }
+
+  /**
+   * Announces a date selection via the live region.
+   * @private
+   * @param {String} dateStr - The localized date string to announce.
+   * @returns {void}
+   */
+  announceSelection(dateStr) {
+    const liveRegion = this.shadowRoot.querySelector('#calendar-live-region');
+    if (liveRegion) {
+      liveRegion.textContent = '';
+      // Use microtask to ensure SR picks up the change
+      Promise.resolve().then(() => {
+        liveRegion.textContent = dateStr;
+      });
+    }
+  }
+
   firstUpdated() {
     this.addEventListener('date-from-changed', () => {
       this.dispatchEvent(new CustomEvent('auroCalendar-dateSelected', {
@@ -346,6 +625,15 @@ export class AuroCalendar extends RangeDatepicker {
         cancelable: false,
         composed: true,
       }));
+
+      // Announce selection via live region
+      if (this.dateFrom) {
+        const date = new Date(parseInt(this.dateFrom, 10) * 1000);
+        const formatter = new Intl.DateTimeFormat(undefined, {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        this.announceSelection(formatter.format(date));
+      }
     });
 
     this.addEventListener('date-to-changed', () => {
@@ -357,6 +645,25 @@ export class AuroCalendar extends RangeDatepicker {
         cancelable: false,
         composed: true,
       }));
+
+      // Announce end date selection via live region
+      if (this.dateTo) {
+        const date = new Date(parseInt(this.dateTo, 10) * 1000);
+        const formatter = new Intl.DateTimeFormat(undefined, {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        this.announceSelection(formatter.format(date));
+      }
+    });
+
+    // Listen for cross-month boundary navigation events
+    this.addEventListener('calendar-month-boundary', (event) => {
+      this.handleMonthBoundary(event);
+    });
+
+    // Listen for cell activation events
+    this.addEventListener('calendar-cell-activate', (event) => {
+      this.handleCellActivate(event);
     });
   }
 
@@ -382,7 +689,16 @@ export class AuroCalendar extends RangeDatepicker {
     }
 
     if (changedProperties.has('visible')) {
-      setTimeout(() => this.requestUpdate());
+      if (this.visible) {
+        // Compute the active date eagerly from data — no DOM needed.
+        if (this.activeCellDate == null) {
+          this.activeCellDate = this.computeActiveDate();
+        }
+
+        this.requestUpdate();
+      } else {
+        this.requestUpdate();
+      }
     }
   }
 
@@ -391,6 +707,7 @@ export class AuroCalendar extends RangeDatepicker {
     <${this.bibtemplateTag}
       ?large="${this.largeFullscreenHeadline}"
       ?isFullscreen="${this.isFullscreen}"
+      ?showFooter="${!this.isFullscreen && this.dropdown?.desktopModal}"
       @close-click="${this.utilCal.requestDismiss}">
       <span slot="ariaLabel.close">${this.slots["ariaLabel.bib.close"]}</span>
 
@@ -408,23 +725,25 @@ export class AuroCalendar extends RangeDatepicker {
         </div>
       </div>
 
-      <div class="calendarWrapper">
-        <div class="calendars">
-          ${this.renderAllCalendars()}
-        </div>
+      <div class="calendarWrapper ${!this.isFullscreen && this.dropdown?.desktopModal ? 'hasFooter' : ''}">
         <div class="calendarNavButtons">
           ${this.showPrevMonthBtn ? html`
-          <button tabIndex="-1" class="calendarNavBtn prevMonth" @click="${this.handlePrevMonth}">
+          <button tabIndex="0" class="calendarNavBtn prevMonth" aria-label="Previous month" @click="${this.handlePrevMonth}">
             ${this.util.generateIconHtml(chevronLeft)}
           </button>
           ` : undefined}
           ${this.showNextMonthBtn ? html`
-          <button tabIndex="-1" class="calendarNavBtn nextMonth" @click="${this.handleNextMonth}">
+          <button tabIndex="0" class="calendarNavBtn nextMonth" aria-label="Next month" @click="${this.handleNextMonth}">
             ${this.util.generateIconHtml(chevronRight)}
           </button>
           ` : undefined}
         </div>
+        <div class="calendars">
+          ${this.renderAllCalendars()}
+        </div>
       </div>
+
+      <div id="calendar-live-region" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
 
       <${this.buttonTag} slot="footer" fluid @click="${this.utilCal.requestDismiss}">Done</${this.buttonTag}>
     </${this.bibtemplateTag}>

@@ -61,6 +61,12 @@
       --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
       --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
     }
+
+    &.blackout {
+      --ds-auro-calendar-cell-container-color: transparent;
+      --ds-auro-calendar-cell-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+      --ds-auro-calendar-cell-price-text-color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+    }
   
     &.inRange,
     &.rangeDepartDate,

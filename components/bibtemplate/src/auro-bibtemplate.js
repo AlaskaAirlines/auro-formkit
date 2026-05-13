@@ -80,6 +80,14 @@ export class AuroBibtemplate extends LitElement {
       large: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * If declared, the footer slot will be rendered even when not in fullscreen mode.
+       */
+      showFooter: {
+        type: Boolean,
+        reflect: true
       }
     };
   }
@@ -182,7 +190,7 @@ export class AuroBibtemplate extends LitElement {
           <slot></slot>
         </div>
 
-      ${this.isFullscreen ? html`
+      ${this.isFullscreen || this.showFooter ? html`
         <div id="footerContainer">
           <slot name="footer"></slot>
         </div>` : null}

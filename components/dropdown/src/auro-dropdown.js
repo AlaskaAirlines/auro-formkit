@@ -3,7 +3,7 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, line-comment-position, no-inline-comments, no-warning-comments, no-underscore-dangle */
+/* eslint-disable max-lines, lit/no-invalid-html, lit/binding-positions, template-curly-spacing, line-comment-position, no-inline-comments, no-warning-comments, no-underscore-dangle, consistent-this, prefer-destructuring */
 
 import { html } from "lit/static-html.js";
 import { classMap } from 'lit/directives/class-map.js';
@@ -109,6 +109,7 @@ export class AuroDropdown extends AuroElement {
   _intializeDefaults() {
     this.appearance = 'default';
     this.chevron = false;
+    this.desktopModal = false;
     this.disabled = false;
     this.disableKeyboardHandling = false;
     this.error = false;
@@ -285,6 +286,14 @@ export class AuroDropdown extends AuroElement {
        * If declared, bib's position will be automatically calculated where to appear.
        */
       autoPlacement: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * If declared, the dropdown will behave as a modal dialog when in a desktop viewport size.
+       */
+      desktopModal: {
         type: Boolean,
         reflect: true
       },
@@ -576,6 +585,15 @@ export class AuroDropdown extends AuroElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this._clearPageInert();
+    if (this._bibTabHandler) {
+      this.removeEventListener('keydown', this._bibTabHandler);
+      this._bibTabHandler = undefined;
+    }
+    if (this.focusTrap) {
+      this.focusTrap.disconnect();
+      this.focusTrap = undefined;
+    }
     if (this.floater) {
       this.floater.hideBib('disconnect');
       this.floater.disconnect();
@@ -603,19 +621,31 @@ export class AuroDropdown extends AuroElement {
       if (this.isPopoverVisible) {
         // Fullscreen: use showModal() for native accessibility (inert outside, focus trap)
         // Desktop: use show() for Floating UI positioning + FocusTrap for focus management
-        const useModal = this.isBibFullscreen;
-        this.bibElement.value.open(useModal);
+        this.bibElement.value.open(this.isBibFullscreen);
+        this.updateFocusTrap();
+
+        // Desktop modal: make siblings inert so content outside is not interactive
+        if (this.desktopModal && !this.isBibFullscreen) {
+          this._setPageInert();
+        }
       } else {
         this.bibElement.value.close();
+        this._clearPageInert();
       }
     }
 
     // When fullscreen strategy changes while open, re-open dialog with correct mode
     // (e.g. resizing from desktop → mobile while dropdown is open)
     if (changedProperties.has('isBibFullscreen') && this.isPopoverVisible && this.bibElement.value) {
-      const useModal = this.isBibFullscreen;
       this.bibElement.value.close();
-      this.bibElement.value.open(useModal);
+      this.bibElement.value.open(this.isBibFullscreen);
+
+      // Toggle inert: desktop modal needs it, fullscreen showModal() handles it natively
+      if (this.desktopModal && !this.isBibFullscreen) {
+        this._setPageInert();
+      } else {
+        this._clearPageInert();
+      }
     }
   }
 
@@ -625,8 +655,14 @@ export class AuroDropdown extends AuroElement {
    * @param {CustomEvent} event - The custom event that contains the dropdown toggle information.
    */
   handleDropdownToggle(event) {
-    this.updateFocusTrap();
     this.isPopoverVisible = event.detail.expanded;
+
+    // Tear down FocusTrap when closing. Creation happens in updated()
+    // after the dialog is open so getFocusableElements can find content.
+    if (!this.isPopoverVisible) {
+      this.updateFocusTrap();
+    }
+
     const eventType = event.detail.eventType || "unknown";
     if (!this.isPopoverVisible && this.hasFocus && eventType === "keydown") {
       this.trigger.focus();
@@ -729,17 +765,162 @@ export class AuroDropdown extends AuroElement {
   updateFocusTrap() {
     if (this.isPopoverVisible) {
       if (!this.isBibFullscreen) {
-        // Desktop: show() doesn't trap focus, so use FocusTrap
-        this.focusTrap = new FocusTrap(this.bibContent);
-        this.focusTrap.focusFirstElement();
+        if (this.desktopModal) {
+          // Desktop modal: trap focus only within the bib content.
+          // Can't use FocusTrap on the bib element because keydown events
+          // from slotted content bubble through the dropdown host (light DOM),
+          // not through the bib (shadow projection target). Using FocusTrap
+          // on the dropdown would include the trigger in the tab cycle.
+          // Instead, listen for Tab on the dropdown and manually wrap focus
+          // within the bib's focusable elements.
+          this._bibTabHandler = (event) => {
+            if (event.key !== 'Tab') {
+              return;
+            }
+
+            // Collect focusable elements from the bib content.
+            const focusables = getFocusableElements(this.bibContent);
+
+            // Fallback: try from slotted content directly
+            if (!focusables.length) {
+              const slot = this.shadowRoot.querySelector('.slotContent slot');
+              const assignedNodes = slot ? slot.assignedNodes({ flatten: true }) : [];
+
+              for (const node of assignedNodes) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                  focusables.push(...getFocusableElements(node));
+                }
+              }
+            }
+
+            if (!focusables.length) {
+              return;
+            }
+
+            event.preventDefault();
+
+            const direction = event.shiftKey ? -1 : 1; // eslint-disable-line no-magic-numbers
+
+            // Walk the active element chain through shadow roots
+            const actives = this._getActiveElements();
+
+            let idx = focusables.findIndex((el) => actives.includes(el));
+
+            if (idx === -1) { // eslint-disable-line no-magic-numbers
+              // Focus is not on a known element — move to first/last
+              idx = direction === 1 ? -1 : focusables.length; // eslint-disable-line no-magic-numbers
+            }
+
+            // Try each element in order, skipping any that can't receive focus
+            // (e.g. hidden elements, elements in collapsed sections)
+            for (let index = 0; index < focusables.length; index++) { // eslint-disable-line no-plusplus
+              let nextIdx = idx + direction;
+
+              // Wrap around
+              if (nextIdx < 0) {
+                nextIdx = focusables.length - 1;
+              } else if (nextIdx >= focusables.length) {
+                nextIdx = 0;
+              }
+
+              focusables[nextIdx].focus();
+
+              // Verify focus actually moved to the target
+              const newActives = this._getActiveElements();
+
+              if (newActives.includes(focusables[nextIdx])) {
+                return;
+              }
+
+              // Focus didn't stick — skip this element and try the next
+              idx = nextIdx;
+            }
+          };
+          this.addEventListener('keydown', this._bibTabHandler);
+        } else {
+          // Normal desktop: use FocusTrap on the bib element
+          this.focusTrap = new FocusTrap(this.bibContent);
+          this.focusTrap.focusFirstElement();
+        }
       }
       // Fullscreen: showModal() provides native focus trapping
       return;
     }
 
+    // Cleanup on close
+    if (this._bibTabHandler) {
+      this.removeEventListener('keydown', this._bibTabHandler);
+      this._bibTabHandler = undefined;
+    }
+
     if (this.focusTrap) {
       this.focusTrap.disconnect();
       this.focusTrap = undefined;
+    }
+  }
+
+  /**
+   * Returns the chain of active (focused) elements through shadow roots.
+   * @private
+   * @returns {Array<HTMLElement>}
+   */
+  _getActiveElements() {
+    let { activeElement } = document;
+    const actives = [activeElement];
+
+    while (activeElement?.shadowRoot?.activeElement) {
+      activeElement = activeElement.shadowRoot.activeElement;
+      actives.push(activeElement);
+    }
+
+    return actives;
+  }
+
+  /**
+   * Sets `inert` on sibling elements of the dropdown's top-level host
+   * so that content outside the dropdown is not interactive while the modal is open.
+   * Walks up through shadow DOM boundaries to find the outermost host element
+   * in the light DOM, then sets `inert` on that element's siblings.
+   * @private
+   */
+  _setPageInert() {
+    if (this._inertSiblings) {
+      return;
+    }
+
+    this._inertSiblings = [];
+
+    // Walk up through shadow DOM boundaries to find the topmost host
+    // element in the light DOM. For example, if this dropdown is inside
+    // auro-datepicker's shadow DOM, we walk up to the datepicker element
+    // so we set inert on its siblings — not on the datepicker itself.
+    let host = this;
+    while (host.getRootNode() instanceof ShadowRoot) {
+      host = host.getRootNode().host;
+    }
+
+    const parent = host.parentElement;
+
+    if (parent) {
+      for (const sibling of parent.children) {
+        if (sibling !== host && !sibling.inert) {
+          sibling.inert = true;
+          this._inertSiblings.push(sibling);
+        }
+      }
+    }
+  }
+
+  /**
+   * Restores `inert` state on siblings that were made inert by `_setPageInert`.
+   * @private
+   */
+  _clearPageInert() {
+    if (this._inertSiblings) {
+      for (const sibling of this._inertSiblings) {
+        sibling.inert = false;
+      }
+      this._inertSiblings = undefined;
     }
   }
 
@@ -978,6 +1159,7 @@ export class AuroDropdown extends AuroElement {
           shape="${this.shape}"
           ?data-show="${this.isPopoverVisible}"
           ?isfullscreen="${this.isBibFullscreen}"
+          ?desktopmodal="${this.desktopModal}"
           .dialogLabel="${this.bibDialogLabel}"
           ${ref(this.bibElement)}
           >

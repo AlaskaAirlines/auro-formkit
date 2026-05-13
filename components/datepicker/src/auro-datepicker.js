@@ -841,12 +841,60 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Attempts to focus the active calendar cell using a rAF retry loop.
+   * Shared by both fullscreen and desktop open paths.
+   * @private
+   * @returns {void}
+   */
+  focusActiveCellWhenReady() {
+    const MAX_ATTEMPTS = 20;
+    let attempts = 0;
+
+    const tryFocus = () => {
+      attempts += 1;
+      const allCells = this.calendar.getAllFocusableCells();
+
+      if (!allCells.length && attempts < MAX_ATTEMPTS) {
+        requestAnimationFrame(tryFocus);
+        return;
+      }
+
+      // Compute and mark the active cell
+      if (this.calendar.activeCellDate == null) {
+        this.calendar.activeCellDate = this.calendar.computeActiveDate();
+      }
+      if (this.calendar.activeCellDate !== undefined) {
+        this.calendar.setActiveCell(this.calendar.activeCellDate);
+      }
+
+      // Find the active cell, pre-set hovered so @focus is a no-op
+      const activeCell = allCells.find(cell => cell.active);
+      if (activeCell) {
+        activeCell.hovered = true;
+        const btn = activeCell.shadowRoot.querySelector('button:not([aria-hidden])');
+        if (btn) {
+          btn.setAttribute('tabindex', '0');
+          btn.focus({ focusVisible: true });
+        }
+      }
+    };
+
+    requestAnimationFrame(tryFocus);
+  }
+
+  /**
    * Binds all behavior needed to the dropdown after rendering.
    * @private
    * @returns {void}
    */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+
+    // The datepicker manages its own open/close lifecycle (Space/Escape/date-select/done).
+    // Prevent the floater's document-level focusin handler from closing the bib
+    // when focus moves from the trigger into the calendar cells (which live inside
+    // a top-layer popover where :focus-within on the dropdown host returns false).
+    this.dropdown.noHideOnThisFocusLoss = true;
 
     // Pass label text to the dropdown bib for accessible dialog naming.
     // Without this, the fullscreen <dialog> has no accessible name and
@@ -897,12 +945,17 @@ export class AuroDatePicker extends AuroElement {
               bibEl.open(true);
 
               doubleRaf(() => {
-                this.calendar.focusCloseButton();
+                this.focusActiveCellWhenReady();
               });
             }
           });
 
           guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
+        } else {
+          // Desktop (non-fullscreen): focus the active calendar cell.
+          this.dropdown.updateComplete.then(() => {
+            this.focusActiveCellWhenReady();
+          });
         }
       } else {
         // Always clear the inert flag. Only restore focus to the input when the datepicker
@@ -1143,14 +1196,8 @@ export class AuroDatePicker extends AuroElement {
 
       if (onEndValue) {
         this.valueEnd = newDate;
-        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
-          this.focus('startDate');
-        }
       } else {
         this.value = newDate;
-        if (this.dropdown.isPopoverVisible && !this.dropdown.isBibFullscreen) {
-          this.focus('endDate');
-        }
       }
     }
   }
@@ -1505,6 +1552,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   firstUpdated() {
+
     // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-datepicker');
 
@@ -1951,6 +1999,7 @@ export class AuroDatePicker extends AuroElement {
           .shape="${this.shape}"
           .size="${this.size}"
           class="${classMap(dropdownElementClassMap)}"
+          desktopModal
           disableEventShow
           for="dropdownMenu"
           part="dropdown"
