@@ -37,6 +37,7 @@ export class AuroCalendarCell extends LitElement {
     this.dateStr = null;
     this.renderForDateSlot = false; // When false, the numerical date will render vertically centered. When true, the date will render off-center to the top and leave room below for the slot content.
     this.active = false;
+    this.hasPopoverContent = false;
 
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
@@ -74,7 +75,8 @@ export class AuroCalendarCell extends LitElement {
       active:        {
         type: Boolean,
         reflect: true
-      }
+      },
+      hasPopoverContent: { type: Boolean }
     };
   }
 
@@ -466,9 +468,9 @@ export class AuroCalendarCell extends LitElement {
 
       if (popoverSlotContent) {
         this.appendChild(popoverSlotContent.cloneNode(true));
-        this.auroPopover.removeAttribute('disabled');
+        this.hasPopoverContent = true;
       } else {
-        this.auroPopover.setAttribute('disabled', true);
+        this.hasPopoverContent = false;
       }
     } catch (err) { // eslint-disable-line no-unused-vars
       // Error handling goes here
@@ -490,7 +492,9 @@ export class AuroCalendarCell extends LitElement {
 
     this.auroPopover = this.shadowRoot.querySelector(this.popoverTag._$litStatic$);
 
-    this.auroPopover.boundary = calendarMonth;
+    if (this.auroPopover) {
+      this.auroPopover.boundary = calendarMonth;
+    }
   }
 
   updated(properties) {
@@ -513,9 +517,45 @@ export class AuroCalendarCell extends LitElement {
     }
   }
 
+  renderCellButton(buttonClasses) {
+    const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
+    const role = outOfRange ? 'presentation' : 'gridcell';
+    const blackout = this.isBlackout();
+
+    let _b;
+    return html`
+      <button
+        slot="trigger"
+        id="${this.getCellId()}"
+        role="${role}"
+        @click="${this.handleTap}"
+        @mouseover="${this.handleHover}"
+        @focus="${this.handleHover}"
+        class="${classMap(buttonClasses)}"
+        ?disabled="${outOfRange}"
+        ?aria-disabled="${blackout}"
+        ?aria-hidden="${outOfRange}"
+        aria-selected="${this.selected ? 'true' : 'false'}"
+        aria-label="${this.getAriaLabel()}"
+        aria-current="${this.isCurrentDate ? 'date' : nothing}"
+        tabindex="${this.active ? '0' : '-1'}">
+        <div class="buttonWrapper">
+          <div class="currentDayMarker" aria-hidden="true">${(_b = this.day) === null || _b === void 0 ? void 0 : _b.title}</div>
+          <div class="dateSlot body-2xs" part="dateSlot">
+            <slot name="date_${this.dateStr}"></slot>
+          </div>
+        </div>
+      </button>
+    `;
+  }
+
   render() {
     const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
     const blackout = this.isBlackout();
+    const hasPopoverContent = this.hasPopoverContent;
+    if (this.hasPopoverContent) {
+      console.warn(this.dateStr, 'hasPopoverContent', this.hasPopoverContent);
+    }
 
     const buttonClasses = {
       'day': true,
@@ -532,57 +572,18 @@ export class AuroCalendarCell extends LitElement {
       'sameDateTrip': this.dateFrom === this.dateTo
     };
 
-    let _a, _b;
 
-    // Out-of-range cells are hidden from the accessibility tree entirely
-    if (outOfRange) {
+    if (hasPopoverContent) {
       return html`
         <${this.popoverTag}>
           <slot name="popover_${this.dateStr}"></slot>
-          <button
-            slot="trigger"
-            @click="${this.handleTap}"
-            @mouseover="${this.handleHover}"
-            @focus="${this.handleHover}"
-            class="${classMap(buttonClasses)}"
-            disabled
-            aria-hidden="true"
-            tabindex="-1">
-            <div class="buttonWrapper">
-              <div class="currentDayMarker">${(_b = this.day) === null || _b === void 0 ? void 0 : _b.title}</div>
-              <div class="dateSlot body-2xs" part="dateSlot">
-                <slot name="date_${this.dateStr}"></slot>
-              </div>
-            </div>
-          </button>
+          ${this.renderCellButton(buttonClasses)}
         </${this.popoverTag}>
       `;
     }
 
     return html`
-      <${this.popoverTag}>
-        <slot name="popover_${this.dateStr}"></slot>
-        <button
-          slot="trigger"
-          id="${this.getCellId()}"
-          @click="${this.handleTap}"
-          @keydown="${this.handleKeyDown}"
-          @mouseover="${this.handleHover}"
-          @focus="${this.handleHover}"
-          class="${classMap(buttonClasses)}"
-          aria-label="${this.getAriaLabel()}"
-          aria-selected="${this.selected ? 'true' : 'false'}"
-          aria-disabled="${blackout ? 'true' : 'false'}"
-          aria-current="${this.isCurrentDate ? 'date' : nothing}"
-          tabindex="${this.active ? '0' : '-1'}">
-          <div class="buttonWrapper">
-            <div class="currentDayMarker">${(_a = this.day) === null || _a === void 0 ? void 0 : _a.title}</div>
-            <div class="dateSlot body-2xs" part="dateSlot">
-              <slot name="date_${this.dateStr}"></slot>
-            </div>
-          </div>
-        </button>
-      </${this.popoverTag}>
+      ${this.renderCellButton(buttonClasses)}
     `;
   }
 }
