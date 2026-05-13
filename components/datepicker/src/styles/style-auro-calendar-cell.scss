@@ -112,6 +112,23 @@
   flex-direction: column;
 }
 
+.srOnly {
+  position: absolute;
+
+  overflow: hidden;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+
+  border: 0;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+}
+
 ::slotted([slot^="date_"]) {
   position: absolute;
   top: 80%;

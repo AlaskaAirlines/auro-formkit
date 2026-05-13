@@ -15,17 +15,15 @@
 // added, handlers should go here following the same strategy pattern used by
 // auro-select (selectKeyboardStrategy.js) and auro-combobox (comboboxKeyboardStrategy.js).
 export const datepickerKeyboardStrategy = {
-  Escape(component, evt) {
-    if (!component.dropdown || !component.dropdown.isPopoverVisible) {
+  Enter(component, evt, ctx) {
+    if (ctx.isExpanded) {
       return;
     }
 
-    // Prevent the Escape key from bubbling up and closing any parent dialogs / drawers / popups.
-    // Because stopPropagation prevents the document-level floatingUI keydown handler from
-    // seeing this event, we must also close the dropdown explicitly.
-    evt.stopPropagation();
+    // Prevent the space character from being typed into the input.
+    evt.preventDefault();
 
-    component.dropdown.hide();
+    component.dropdown.show();
   },
 
   ' '(component, evt, ctx) {

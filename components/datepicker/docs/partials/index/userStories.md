@@ -12,8 +12,14 @@
     Click the input or press <kbd>Enter</kbd> / <kbd>Space</kbd> to open the calendar
     <div class="note">
       <p>
-        The calendar bib opens and displays the current month. Focus moves into the calendar on the current date or, if a <code>calendarFocusDate</code> is set, on that date.
+        The calendar bib opens and displays the current month. The focused cell is determined in the following priority order:
       </p>
+      <ol>
+        <li>The currently selected date (if one exists and is within the valid min/max range).</li>
+        <li>Today's date (if it is enabled — within the min/max range).</li>
+        <li>The first future enabled date.</li>
+        <li>The first past enabled date.</li>
+      </ol>
     </div>
   </li>
   <li>

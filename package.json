@@ -108,7 +108,7 @@
     "@aurodesignsystem/auro-icon": "^9.1.1",
     "@aurodesignsystem/auro-library": "^5.12.2",
     "@aurodesignsystem/auro-loader": "^6.2.0",
-    "@aurodesignsystem/auro-popover": "^6.0.0",
+    "@aurodesignsystem/auro-popover": "npm:@aurodesignsystem-dev/auro-popover@0.0.0-pr127.0",
     "@aurodesignsystem/build-tools": "*",
     "@aurodesignsystem/config": "*",
     "@aurodesignsystem/design-tokens": "^8.16.0",

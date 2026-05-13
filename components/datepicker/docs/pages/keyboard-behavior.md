@@ -11,9 +11,15 @@
       <p>Each focusable element <em>(when shown)</em> participates in the browser window's default <code>tabindex</code> sequence.</p>
       <p>When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
       <div class="note">
-        <p><strong>Note:</strong> The current implementation <strong>DOES</strong> support full interaction of the bib content and calendar with touch, click and VoiceOver interactions.</p>
+        <p><strong>Note:</strong> The current implementation <strong>DOES</strong> support full interaction of the bib content and calendar with touch, click and VoiceOver interactions.  </p>
         <p>The current implementation of the component <strong>DOES</strong> support using the keyboard to navigate the trigger and type dates via the keyboard. It <strong>DOES NOT</strong> support navigating the bib content and calendar via the keyboard. This functionality is scheduled to be added in the next major redesign of the component.</p>
       </div>
+      <auro-header level="3" id="keyEventsCounterGroup">Key Events</auro-header>
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
+      <!-- AURO-GENERATED-CONTENT:END -->
+      <auro-header level="4" id="keyEventsDropdown">Key Events inherited from Auro-Dropdown</auro-header>
+      <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../../dropdown/docs/partials/keyEvents.md) -->
+      <!-- AURO-GENERATED-CONTENT:END -->
     </div>
   </div>
 </div>

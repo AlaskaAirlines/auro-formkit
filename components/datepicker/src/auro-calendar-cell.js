@@ -522,7 +522,6 @@ export class AuroCalendarCell extends LitElement {
     const role = outOfRange ? 'presentation' : 'gridcell';
     const blackout = this.isBlackout();
 
-    let _b;
     return html`
       <button
         slot="trigger"
@@ -536,12 +535,12 @@ export class AuroCalendarCell extends LitElement {
         ?aria-disabled="${blackout}"
         ?aria-hidden="${outOfRange}"
         aria-selected="${this.selected ? 'true' : 'false'}"
-        aria-label="${this.getAriaLabel()}"
         aria-current="${this.isCurrentDate ? 'date' : nothing}"
         tabindex="${this.active ? '0' : '-1'}">
-        <div class="buttonWrapper">
-          <div class="currentDayMarker" aria-hidden="true">${(_b = this.day) === null || _b === void 0 ? void 0 : _b.title}</div>
-          <div class="dateSlot body-2xs" part="dateSlot">
+        <span class="srOnly">${this.getAriaLabel()}</span>
+        <div class="buttonWrapper" aria-hidden="true">
+          <div class="currentDayMarker">${this.day?.title || nothing}</div>
+          <div class="dateSlot body-2xs" part="dateSlot" ?hidden="${!this.renderForDateSlot}">
             <slot name="date_${this.dateStr}"></slot>
           </div>
         </div>

@@ -1,3 +1,4 @@
+<auro-header level="3" id="keyEvents-trigger">Trigger input</auro-header>
 <table>
   <thead>
     <tr>
@@ -10,18 +11,126 @@
   </thead>
   <tbody>
     <tr>
-      <td>Escape</td>
+      <td>Space</td>
       <td>-</td>
-      <td>Bib (popover) is visible</td>
-      <td>
-        Component <code>:host</code> or any <strong>focusable</strong> element within the component.
-      </td>
-      <td>
-        Closes the bib. Calls <code>stopPropagation()</code> to prevent parent containers (e.g., dialogs) from also closing.
-      </td>
+      <td>Expanded</td>
+      <td>Trigger input, <strong>NOT</strong> the input clear button</td>
+      <td>Opens the calendar bib. Focus moves to the active date cell inside the calendar grid. The Enter key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
+    </tr>
+    <tr>
+      <td>Space</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Trigger input, <strong>NOT</strong> the input clear button</td>
+      <td>Opens the calendar bib. Focus moves to the active date cell inside the calendar grid. The Space key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
     </tr>
   </tbody>
 </table>
-<div class="note">
-  <p><strong>Note:</strong> Full keyboard navigation of the calendar grid (e.g., arrow keys to move between dates) is not currently supported. This functionality is planned for a future major redesign. All date entry is handled via the trigger input(s) using the keyboard.</p>
-</div>
+<auro-header level="3" id="keyEvents-calendar">Calendar</auro-header>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Modifier</th>
+      <th>Current State</th>
+      <th>Focus Element</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3">Enter</td>
+      <td rowspan="3">-</td>
+      <td rowspan="3">Expanded</td>
+      <td>Previous Month Button</td>
+      <td>Re-renders the calendar to show the previous month</td>
+    </tr>
+    <tr>
+      <td>Next Month Button</td>
+      <td>Re-renders the calendar to show the next month</td>
+    </tr>
+    <tr>
+      <td>Done button</td>
+      <td>Collapses the bib.</td>
+    </tr>
+      <tr>
+      <td rowspan="3">Space</td>
+      <td rowspan="3">-</td>
+      <td rowspan="3">Expanded</td>
+      <td>Previous Month Button</td>
+      <td>Re-renders the calendar to show the previous month</td>
+    </tr>
+    <tr>
+      <td>Next Month Button</td>
+      <td>Re-renders the calendar to show the next month</td>
+    </tr>
+    <tr>
+      <td>Done button</td>
+      <td>Collapses the bib.</td>
+    </tr>
+  </tbody>
+</table>
+<auro-header level="3" id="keyEvents-calendar">Calendar grid</auro-header>
+<p>When the calendar bib is open, one date cell is the <em>active</em> cell (roving <code>tabindex="0"</code>). All other cells have <code>tabindex="-1"</code>. Arrow keys move the active cell without wrapping — when a boundary is reached the calendar navigates to the adjacent month.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Modifier</th>
+      <th>Current State</th>
+      <th>Focus Element</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ArrowRight</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Any date cell</td>
+      <td>Moves focus to the next day. If at the end of the month, navigates to the first focusable day of the next month.</td>
+    </tr>
+    <tr>
+      <td>ArrowLeft</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Any date cell</td>
+      <td>Moves focus to the previous day. If at the start of the month, navigates to the last focusable day of the previous month.</td>
+    </tr>
+    <tr>
+      <td>ArrowDown</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Any date cell</td>
+      <td>Moves focus to the same day of the week in the next week (+7 days). Navigates to the next month if needed.</td>
+    </tr>
+    <tr>
+      <td>ArrowUp</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Any date cell</td>
+      <td>Moves focus to the same day of the week in the previous week (−7 days). Navigates to the previous month if needed.</td>
+    </tr>
+    <tr>
+      <td>Enter / Space</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Any date cell</td>
+      <td>Selects the focused date. Blackout dates receive focus but cannot be selected.</td>
+    </tr>
+    <tr>
+      <td>Escape</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Any date cell</td>
+      <td>Closes the calendar bib and returns focus to the trigger input.</td>
+    </tr>
+    <tr>
+      <td>Tab</td>
+      <td>-</td>
+      <td>Expanded</td>
+      <td>Any date cell</td>
+      <td>Moves focus to the next focusable element outside the calendar grid (e.g., month navigation buttons or the close button in fullscreen mode).</td>
+    </tr>
+  </tbody>
+</table>
