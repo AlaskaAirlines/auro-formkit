@@ -1440,19 +1440,53 @@
 <section>
 <auro-header level="2" id="auroInputUtil">AuroInputUtil</auro-header>
 <p>When <code>type="date"</code> is used, the <code>.value</code> property always stores and returns the date in ISO format (<code>YYYY-MM-DD</code>) regardless of the displayed locale or <code>format</code> attribute. Use the <code>AuroInputUtil</code> helper to convert between ISO and any display format in your application code.</p>
-<p>Import the utility from the package:</p>
-<auro-accordion alignRight>
-<span slot="trigger">See import</span>
-
-<pre class="language-js"><code class="language-js">import { AuroInputUtil } from '@aurodesignsystem/auro-formkit/input';</code></pre>
-
-</auro-accordion>
 <auro-header level="3" id="auroInputUtilFormatIso">formatISODate — ISO to display format</auro-header>
 <p>Use <code>AuroInputUtil.formatISODate(isoStr, format)</code> to convert the ISO value read from the input into any display string. The format argument uses the same tokens as the <code>format</code> attribute (<code>mm</code>, <code>dd</code>, <code>yyyy</code>, <code>yy</code>).</p>
 <p>Returns <code>undefined</code> when either argument is empty or the ISO string is not a valid date.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/format-iso-value.html) -->
+<!-- The below content is automatically added from ../apiExamples/format-iso-value.html -->
+<auro-input id="formatIsoExample" type="date" locale="en-US" value="2024-01-15">
+<span slot="label">Date</span>
+<span slot="helpText">The <code>.value</code> property always stores the date as ISO (YYYY-MM-DD)</span>
+</auro-input>
+<br />
+<table>
+<thead>
+<tr><th>Property / Method</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td><code>.value</code> (ISO)</td><td><code id="isoVal">2024-01-15</code></td></tr>
+<tr><td><code>formatISODate(value, 'mm/dd/yyyy')</code></td><td><code id="fmtUs">01/15/2024</code></td></tr>
+<tr><td><code>formatISODate(value, 'dd/mm/yyyy')</code></td><td><code id="fmtGb">15/01/2024</code></td></tr>
+<tr><td><code>formatISODate(value, 'yyyy/mm/dd')</code></td><td><code id="fmtIso">2024/01/15</code></td></tr>
+</tbody>
+</table>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
-
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format-iso-value.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/format-iso-value.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input id="formatIsoExample" type="date" locale="en-US" value="2024-01-15"&gt;
+  &lt;span slot="label"&gt;Date&lt;/span&gt;
+  &lt;span slot="helpText"&gt;The &lt;code&gt;.value&lt;/code&gt; property always stores the date as ISO (YYYY-MM-DD)&lt;/span&gt;
+&lt;/auro-input&gt;
+&lt;br /&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Property / Method&lt;/th&gt;&lt;th&gt;Result&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;&lt;code&gt;.value&lt;/code&gt; (ISO)&lt;/td&gt;&lt;td&gt;&lt;code id="isoVal"&gt;2024-01-15&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;&lt;code&gt;formatISODate(value, 'mm/dd/yyyy')&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code id="fmtUs"&gt;01/15/2024&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;&lt;code&gt;formatISODate(value, 'dd/mm/yyyy')&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code id="fmtGb"&gt;15/01/2024&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;&lt;code&gt;formatISODate(value, 'yyyy/mm/dd')&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code id="fmtIso"&gt;2024/01/15&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/auro-input-util-format-iso.js) -->
+<!-- The below code snippet is automatically added from ../apiExamples/auro-input-util-format-iso.js -->
 <pre class="language-js"><code class="language-js">import { AuroInputUtil } from '@aurodesignsystem/auro-formkit/input';
 ​
 const input = document.querySelector('auro-input');
@@ -1468,23 +1502,26 @@ AuroInputUtil.formatISODate(iso, 'dd.mm.yyyy'); // → '15.01.2024'
 // Returns undefined for empty or invalid input
 AuroInputUtil.formatISODate(undefined, 'mm/dd/yyyy'); // → undefined
 AuroInputUtil.formatISODate('not-a-date', 'mm/dd/yyyy'); // → undefined</code></pre>
-
+<!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+</section>
+<section>
 <auro-header level="3" id="auroInputUtilToIso">toISOFormatString — Date instance to ISO</auro-header>
 <p>Use <code>AuroInputUtil.toISOFormatString(date)</code> to convert a JavaScript <code>Date</code> instance into an ISO string suitable for setting <code>input.value</code>.</p>
 <p>Throws when the argument is not a valid <code>Date</code> instance.</p>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/auro-input-util-to-iso.js) -->
+<!-- The below code snippet is automatically added from ../apiExamples/auro-input-util-to-iso.js -->
 <pre class="language-js"><code class="language-js">import { AuroInputUtil } from '@aurodesignsystem/auro-formkit/input';
 ​
 const input = document.querySelector('auro-input');
 ​
 // Convert a Date to ISO, then set it on the input
 const today = new Date();
-input.value = AuroInputUtil.toISOFormatString(today); // e.g. '2024-01-15'</code></pre>
-
-</auro-accordion>
+input.value = AuroInputUtil.toISOFormatString(today); // e.g. '2024-01-15'
+​
+// Convert a specific date
+AuroInputUtil.toISOFormatString(new Date(2024, 0, 15)); // → '2024-01-15'</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
 </section>
 </div>
 </div>
