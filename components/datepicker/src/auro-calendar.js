@@ -473,6 +473,14 @@ export class AuroCalendar extends RangeDatepicker {
       if (isEnabled(ts)) return ts;
     }
 
+    // 5. If scans missed (e.g. min/max range is far from today), fall back to
+    //    the first enabled date in the [min, max] range.
+    if (Number.isFinite(minTs) && Number.isFinite(maxTs)) {
+      for (let ts = minTs; ts <= maxTs; ts += ONE_DAY) {
+        if (isEnabled(ts)) return ts;
+      }
+    }
+
     return undefined;
   }
 
