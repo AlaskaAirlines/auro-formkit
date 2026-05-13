@@ -81,6 +81,17 @@
 <auro-header level="3" id="skipSelection">Skip selection</auro-header>
 <p>The datepicker does not force the user to select a date. If no selection is made and the field is not <code>required</code>, the user can move past the datepicker without entering a value.</p>
 <p>If the field is <code>required</code>, moving focus away without selecting a date triggers validation and renders the <code>valueMissing</code> error state.</p>
+<auro-header level="3" id="popoverSlot">Popover slot</auro-header>
+<p>Use the <code>popover_MM_DD_YYYY</code> slot to display additional information when the user hovers over a calendar cell. This is useful for showing pricing, availability, or other contextual details for specific dates.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/popover-slot.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/popover-slot.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="viewportSize">Viewport size</auro-header>
 <p>The datepicker automatically adapts its presentation based on viewport size. On larger screens, the calendar opens in a floating popover anchored to the trigger. On smaller screens, the calendar opens in a fullscreen dialog.</p>
 <p>The breakpoint at which the fullscreen behavior activates is controlled by the <code>fullscreenBreakpoint</code> attribute. The default value is <code>sm</code>. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>.</p>
