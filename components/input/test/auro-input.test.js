@@ -1266,24 +1266,24 @@ function runFullTest(mobileView) {
           expect(el.getAttribute('validity')).to.equal('valid');
         });
 
-        it('calendar-invalid date is marked as invalidDate', async () => {
+        it('calendar-invalid date is marked as patternMismatch', async () => {
           const el = await fixture(html`
             <auro-input type="date" format="mm/dd/yyyy"></auro-input>
           `);
 
           el.value = '02/29/2023';
           await elementUpdated(el);
-          expect(el.getAttribute('validity')).to.equal('invalidDate');
+          expect(el.getAttribute('validity')).to.equal('patternMismatch');
         });
 
-        it('out-of-range month/day segments are marked as invalidDate', async () => {
+        it('out-of-range month/day segments are marked as patternMismatch', async () => {
           const el = await fixture(html`
             <auro-input type="date" format="mm/dd/yyyy"></auro-input>
           `);
 
           el.value = '13/32/2024';
           await elementUpdated(el);
-          expect(el.getAttribute('validity')).to.equal('invalidDate');
+          expect(el.getAttribute('validity')).to.equal('patternMismatch');
         });
 
         it('clearing value propagates to clear valueObject', async () => {

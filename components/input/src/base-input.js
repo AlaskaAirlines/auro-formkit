@@ -916,7 +916,7 @@ export default class BaseInput extends AuroElement {
       return;
     }
 
-    if (this[valueProperty] && dateFormatter.isValidISODate(this[valueProperty])) {
+    if (this[valueProperty] && dateFormatter.isValidDate(this[valueProperty])) {
       this.setDateObjectProperty(objectProperty, dateFormatter.stringToDateInstance(this[valueProperty]));
     } else if (changedProperties) { // only when valueProperty is changed to null|undefined, not on initial setup
       this.setDateObjectProperty(objectProperty, undefined);
@@ -950,7 +950,7 @@ export default class BaseInput extends AuroElement {
       if (
         this.util.isFullDateFormat(this.type, this.format) &&
         this.value &&
-        dateFormatter.isValidISODate(this.value) &&
+        dateFormatter.isValidDate(this.value) &&
         this.valueObject instanceof Date &&
         !Number.isNaN(this.valueObject.getTime()) &&
         typeof maskOptions.format === 'function'
