@@ -10,6 +10,7 @@
 <auro-anchorlink fluid href="#selectRange" class="level2 body-xs">Select a Range</auro-anchorlink>
 <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
 <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
+<auro-anchorlink fluid href="#popoverSlot" class="level2 body-xs">Date Popover</auro-anchorlink>
 <auro-anchorlink fluid href="#viewportSize" class="level2 body-xs">Viewport Size</auro-anchorlink>
 </auro-nav>
 </nav>
@@ -167,6 +168,43 @@
 <auro-header level="3" id="skipSelection">Skip selection</auro-header>
 <p>The datepicker does not force the user to select a date. If no selection is made and the field is not <code>required</code>, the user can move past the datepicker without entering a value.</p>
 <p>If the field is <code>required</code>, moving focus away without selecting a date triggers validation and renders the <code>valueMissing</code> error state.</p>
+<auro-header level="3" id="popoverSlot">Popover slot</auro-header>
+<p>Use the <code>popover_MM_DD_YYYY</code> slot to display additional information when the user hovers over a calendar cell. This is useful for showing pricing, availability, or other contextual details for specific dates.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/popover-slot.html) -->
+<!-- The below content is automatically added from ./../apiExamples/popover-slot.html -->
+<auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023">
+<span slot="bib.fullscreen.headline">Popover Slot Example</span>
+<span slot="fromLabel">Choose a date</span>
+<span slot="bib.fullscreen.fromLabel">Choose a date</span>
+<span slot="popover_12_03_2023">Tickets for this day are sold out</span>
+<span slot="popover_12_04_2023">Tickets for this day are $89</span>
+<span slot="popover_12_05_2023">Tickets for this day are $100</span>
+<span slot="popover_12_06_2023">Tickets for this day are $2345</span>
+<span slot="popover_12_07_2023">Tickets for this day are $149</span>
+<span slot="popover_12_08_2023">Tickets for this day are $382</span>
+<span slot="popover_12_09_2023">Tickets for this day are $560</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/popover-slot.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/popover-slot.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023"&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Popover Slot Example&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="popover_12_03_2023"&gt;Tickets for this day are sold out&lt;/span&gt;
+  &lt;span slot="popover_12_04_2023"&gt;Tickets for this day are $89&lt;/span&gt;
+  &lt;span slot="popover_12_05_2023"&gt;Tickets for this day are $100&lt;/span&gt;
+  &lt;span slot="popover_12_06_2023"&gt;Tickets for this day are $2345&lt;/span&gt;
+  &lt;span slot="popover_12_07_2023"&gt;Tickets for this day are $149&lt;/span&gt;
+  &lt;span slot="popover_12_08_2023"&gt;Tickets for this day are $382&lt;/span&gt;
+  &lt;span slot="popover_12_09_2023"&gt;Tickets for this day are $560&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="viewportSize">Viewport size</auro-header>
 <p>The datepicker automatically adapts its presentation based on viewport size. On larger screens, the calendar opens in a floating popover anchored to the trigger. On smaller screens, the calendar opens in a fullscreen dialog.</p>
 <p>The breakpoint at which the fullscreen behavior activates is controlled by the <code>fullscreenBreakpoint</code> attribute. The default value is <code>sm</code>. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>.</p>
