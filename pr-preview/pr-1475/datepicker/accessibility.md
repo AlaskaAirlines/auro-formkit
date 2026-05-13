@@ -26,6 +26,17 @@ The clear button (shown when the input has a value) exposes:
 - Help text is associated with the component so screen readers can announce contextual guidance.
 - When validation fails, the error message is rendered with `role="alert"` and `aria-live="assertive"` to ensure it is announced immediately.
 
+<auro-header level="3" id="calendarGrid">Calendar Grid</auro-header>
+The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
+
+| Attribute | Applied to | Description |
+|---|---|---|
+| `role="grid"` | Calendar table | Identifies the calendar as a grid. `aria-labelledby` points to the month heading. |
+| `role="row"` | Week row | Groups each week of date cells. |
+| `role="gridcell"` | Date button | Each date cell. Includes `aria-selected`, `aria-disabled` (for blackout dates), and `aria-current="date"` (for today). |
+| `aria-hidden="true"` | Out-of-range cells | Removes cells outside the valid range from the accessibility tree and the tab order. |
+| `aria-label` | Date button | Localized label that includes the full date, range position (e.g., "range start"), and availability status. |
+
 <auro-header level="2" id="focusManagement">Focus Management</auro-header>
 The component uses `delegatesFocus: true` on its shadow root, meaning focus is automatically delegated to the first focusable element inside the component (the date input).
 
