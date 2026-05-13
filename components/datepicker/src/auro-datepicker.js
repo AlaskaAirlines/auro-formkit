@@ -1328,6 +1328,9 @@ export class AuroDatePicker extends AuroElement {
 
       if (this.cellClickActive) {
         this.cellClickActive = false;
+        this.wasCellClick = true;
+      } else {
+        this.wasCellClick = false;
       }
 
       if (this.value && this.util.validDateStr(this.value, this.format)) {
@@ -1358,7 +1361,11 @@ export class AuroDatePicker extends AuroElement {
       }
 
       if (this.value && this.value.length === this.inputList[0].lengthForType) {
-        this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
+        // Skip centralDate update when user clicked a cell in range mode
+        // to prevent the displayed months from shifting
+        if (!(this.wasCellClick && this.range)) {
+          this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
+        }
       }
 
       this.setHasValue();
@@ -1395,7 +1402,11 @@ export class AuroDatePicker extends AuroElement {
       }
 
       if (this.valueEnd && this.valueEnd.length === this.inputList[1].lengthForType) {
-        this.calendarRenderUtil.updateCentralDate(this, this.formattedValueEnd);
+        // Skip centralDate update when user clicked a cell in range mode
+        // to prevent the displayed months from shifting
+        if (!this.wasCellClick) {
+          this.calendarRenderUtil.updateCentralDate(this, this.formattedValueEnd);
+        }
       }
 
       this.validate();
