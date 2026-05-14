@@ -13,6 +13,7 @@
       <auro-anchorlink fluid href="#matchWidth" class="level2 body-xs">Match Width</auro-anchorlink>
       <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
       <auro-anchorlink fluid href="#chevron" class="level2 body-xs">Chevron</auro-anchorlink>
+      <auro-anchorlink fluid href="#desktopModal" class="level2 body-xs">Desktop Modal</auro-anchorlink>
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
       <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
       <auro-anchorlink fluid href="#noToggle" class="level2 body-xs">No Toggle</auro-anchorlink>
@@ -114,6 +115,8 @@
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/chevron.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
+        <auro-header level="3" id="desktopModal">Desktop Modal</auro-header>
+        <p>Use the <code>desktopModal</code> attribute to make the dropdown behave as a modal dialog on desktop viewports. When set, all sibling elements on the page are marked <code>inert</code> and focus is trapped within the bib content. In fullscreen mode, the native <code>&lt;dialog&gt;</code> <code>showModal()</code> API provides equivalent behavior automatically.</p>
         <auro-header level="3" id="disabled">Disabled</auro-header>
         <p>Use the <code>disabled</code> attribute to disable interaction with the dropdown.</p>
         <div class="exampleWrapper">
