@@ -748,11 +748,6 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization.html -->
-<auro-datepicker format="yyyy/mm/dd" id="localizationExample">
-<span slot="bib.fullscreen.headline">Localization Headline</span>
-<span slot="fromLabel">Choose a date</span>
-<span slot="bib.fullscreen.fromLabel">Choose a date</span>
-</auro-datepicker>
 <auro-datepicker range
   rangeLabelStart="fecha de salida"
   rangeLabelEnd="fecha de regreso"
@@ -761,7 +756,7 @@
   rangeLabelAfterRange="después del regreso"
   navLabelPrevMonth="Ir al mes anterior"
   navLabelNextMonth="Ir al mes siguiente"
-  id="rangeLabelsExample">
+  id="localizationExample">
 <span slot="fromLabel">Salida</span>
 <span slot="toLabel">Regreso</span>
 </auro-datepicker>
@@ -772,12 +767,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/localization.html -->
 
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker format="yyyy/mm/dd" id="localizationExample"&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Localization Headline&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
-&lt;/auro-datepicker&gt;
-&lt;auro-datepicker range
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker range
   rangeLabelStart="fecha de salida"
   rangeLabelEnd="fecha de regreso"
   rangeLabelBeforeRange="antes de la salida"
@@ -785,7 +775,7 @@
   rangeLabelAfterRange="después del regreso"
   navLabelPrevMonth="Ir al mes anterior"
   navLabelNextMonth="Ir al mes siguiente"
-  id="rangeLabelsExample"&gt;
+  id="localizationExample"&gt;
   &lt;span slot="fromLabel"&gt;Salida&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Regreso&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
