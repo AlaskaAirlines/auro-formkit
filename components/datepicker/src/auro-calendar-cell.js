@@ -294,16 +294,16 @@ export class AuroCalendarCell extends LitElement {
     const hasDateTo = Number.isFinite(parsedDateTo);
     const returnTimestamp = hasDateTo ? startOfDay(parsedDateTo * 1000) / 1000 : null;
 
-    if (dayDate === departTimestamp) return 'range start';
+    if (dayDate === departTimestamp) return this.datepicker.rangeLabelStart || 'range start';
 
-    if (hasDateTo && dayDate === returnTimestamp) return 'range end';
+    if (hasDateTo && dayDate === returnTimestamp) return this.datepicker.rangeLabelEnd || 'range end';
 
-    if (dayDate < departTimestamp) return 'before range';
+    if (dayDate < departTimestamp) return this.datepicker.rangeLabelBeforeRange || 'before range';
 
-    if (hasDateTo && dayDate > departTimestamp && dayDate < returnTimestamp) return 'in range';
+    if (hasDateTo && dayDate > departTimestamp && dayDate < returnTimestamp) return this.datepicker.rangeLabelInRange || 'in range';
 
     // After start date, no end date yet, or after end date
-    return 'after range';
+    return this.datepicker.rangeLabelAfterRange || 'after range';
   }
 
   /**

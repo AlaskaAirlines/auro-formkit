@@ -115,6 +115,11 @@ export class AuroDatePicker extends AuroElement {
     this.required = false;
     this.onDark = false;
     this.range = false;
+    this.rangeLabelStart = 'range start';
+    this.rangeLabelEnd = 'range end';
+    this.rangeLabelBeforeRange = 'before range';
+    this.rangeLabelInRange = 'in range';
+    this.rangeLabelAfterRange = 'after range';
     this.stacked = false;
     this.noValidate = false;
     this.validity = undefined;
@@ -490,6 +495,46 @@ export class AuroDatePicker extends AuroElement {
        */
       range: {
         type: Boolean,
+        reflect: true
+      },
+
+      /**
+       * Label announced for the range start date cell.
+       */
+      rangeLabelStart: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for the range end date cell.
+       */
+      rangeLabelEnd: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for cells before the range start.
+       */
+      rangeLabelBeforeRange: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for cells within the selected range.
+       */
+      rangeLabelInRange: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Label announced for cells after the range (or after start when no end is selected).
+       */
+      rangeLabelAfterRange: {
+        type: String,
         reflect: true
       },
 
