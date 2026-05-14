@@ -11,16 +11,16 @@
   </thead>
   <tbody>
     <tr>
-      <td>Space</td>
+      <td>Enter</td>
       <td>-</td>
-      <td>Expanded</td>
+      <td>Collapsed</td>
       <td>Trigger input, <strong>NOT</strong> the input clear button</td>
       <td>Opens the calendar bib. Focus moves to the active date cell inside the calendar grid. The Enter key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
     </tr>
     <tr>
       <td>Space</td>
       <td>-</td>
-      <td>Expanded</td>
+      <td>Collapsed</td>
       <td>Trigger input, <strong>NOT</strong> the input clear button</td>
       <td>Opens the calendar bib. Focus moves to the active date cell inside the calendar grid. The Space key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
     </tr>

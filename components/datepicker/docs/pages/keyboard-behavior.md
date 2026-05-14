@@ -11,8 +11,7 @@
       <p>Each focusable element <em>(when shown)</em> participates in the browser window's default <code>tabindex</code> sequence.</p>
       <p>When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
       <div class="note">
-        <p><strong>Note:</strong> The current implementation <strong>DOES</strong> support full interaction of the bib content and calendar with touch, click and VoiceOver interactions.  </p>
-        <p>The current implementation of the component <strong>DOES</strong> support using the keyboard to navigate the trigger and type dates via the keyboard. It <strong>DOES NOT</strong> support navigating the bib content and calendar via the keyboard. This functionality is scheduled to be added in the next major redesign of the component.</p>
+        <p><strong>Note:</strong> The datepicker supports full interaction via touch, click, VoiceOver, and keyboard. The trigger input accepts typed dates, and the calendar bib supports arrow-key navigation between date cells, Enter/Space to select, and Escape to close.</p>
       </div>
       <auro-header level="3" id="keyEventsCounterGroup">Key Events</auro-header>
       <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
