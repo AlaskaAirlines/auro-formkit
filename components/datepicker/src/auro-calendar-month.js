@@ -250,7 +250,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
       <div aria-labelledby="${this.getHeadingId()}" @keydown="${this.handleGridKeyDown}">
         <div class="header">
           ${this.renderPrevButton()}
-          <div class="headerTitle heading-xs" id="${this.getHeadingId()}">
+          <div class="headerTitle heading-xs" id="${this.getHeadingId()}" aria-live="polite" aria-atomic="true">
             ${this.monthFirst ? html`
               <div>${this.computeCurrentMonthName(this.month)}</div>
               <div>${this.renderYear()}</div>

@@ -230,6 +230,7 @@ export class AuroCalendar extends RangeDatepicker {
    */
   handlePrevMonth() {
     this.utilCal.handleMonthChange(this, 'prev');
+    this.announceMonthChange();
   }
 
   /**
@@ -239,6 +240,18 @@ export class AuroCalendar extends RangeDatepicker {
    */
   handleNextMonth() {
     this.utilCal.handleMonthChange(this, 'next');
+    this.announceMonthChange();
+  }
+
+  /**
+   * Announces the current month and year via the live region after navigation.
+   * @private
+   * @returns {void}
+   */
+  announceMonthChange() {
+    const date = new Date(this.centralDate);
+    const formatter = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' });
+    this.announceSelection(formatter.format(date));
   }
 
   /**
@@ -647,11 +660,6 @@ export class AuroCalendar extends RangeDatepicker {
         cancelable: false,
         composed: true,
       }));
-
-      // Announce selection via live region
-      if (this.dateFrom) {
-        this.announceSelection(this.formatAnnouncementDate(this.dateFrom));
-      }
     });
 
     this.addEventListener('date-to-changed', () => {
@@ -663,11 +671,6 @@ export class AuroCalendar extends RangeDatepicker {
         cancelable: false,
         composed: true,
       }));
-
-      // Announce end date selection via live region
-      if (this.dateTo) {
-        this.announceSelection(this.formatAnnouncementDate(this.dateTo));
-      }
     });
 
     // Listen for cross-month boundary navigation events
@@ -713,6 +716,27 @@ export class AuroCalendar extends RangeDatepicker {
       } else {
         this.requestUpdate();
       }
+    }
+
+    // Announce date selection to screen readers when user clicks/selects a cell
+    const isCellClick = this.datepicker?.wasCellClick || this.datepicker?.cellClickActive;
+
+    if (changedProperties.has('dateFrom') && this.dateFrom && isCellClick) {
+      const dateStr = this.formatAnnouncementDate(this.dateFrom);
+      const isRange = !this.noRange;
+
+      if (isRange) {
+        const rangeLabel = this.datepicker.rangeLabelStart || 'range start';
+        this.announceSelection(`${dateStr}, selected as ${rangeLabel}`);
+      } else {
+        this.announceSelection(`${dateStr}, selected`);
+      }
+    }
+
+    if (changedProperties.has('dateTo') && this.dateTo && isCellClick) {
+      const dateStr = this.formatAnnouncementDate(this.dateTo);
+      const rangeLabel = this.datepicker.rangeLabelEnd || 'range end';
+      this.announceSelection(`${dateStr}, selected as ${rangeLabel}`);
     }
   }
 
