@@ -184,12 +184,19 @@
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 <span slot="popover_12_03_2023">Tickets for this day are sold out</span>
-<span slot="popover_12_04_2023">Tickets for this day are $89</span>
-<span slot="popover_12_05_2023">Tickets for this day are $100</span>
-<span slot="popover_12_06_2023">Tickets for this day are $2345</span>
-<span slot="popover_12_07_2023">Tickets for this day are $149</span>
-<span slot="popover_12_08_2023">Tickets for this day are $382</span>
-<span slot="popover_12_09_2023">Tickets for this day are $560</span>
+<span slot="date_12_03_2023">$560</span>
+<span slot="popover_12_04_2023">34 seats available</span>
+<span slot="date_12_04_2023">$245</span>
+<span slot="popover_12_05_2023">18 seats available</span>
+<span slot="date_12_05_2023">$312</span>
+<span slot="popover_12_06_2023">Tickets for this day are sold out</span>
+<span slot="date_12_06_2023">$489</span>
+<span slot="popover_12_07_2023">52 seats available</span>
+<span slot="date_12_07_2023">$198</span>
+<span slot="popover_12_08_2023">7 seats available</span>
+<span slot="date_12_08_2023">$375</span>
+<span slot="popover_12_09_2023">41 seats available</span>
+<span slot="date_12_09_2023">$220</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -202,12 +209,19 @@
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="popover_12_03_2023"&gt;Tickets for this day are sold out&lt;/span&gt;
-  &lt;span slot="popover_12_04_2023"&gt;Tickets for this day are $89&lt;/span&gt;
-  &lt;span slot="popover_12_05_2023"&gt;Tickets for this day are $100&lt;/span&gt;
-  &lt;span slot="popover_12_06_2023"&gt;Tickets for this day are $2345&lt;/span&gt;
-  &lt;span slot="popover_12_07_2023"&gt;Tickets for this day are $149&lt;/span&gt;
-  &lt;span slot="popover_12_08_2023"&gt;Tickets for this day are $382&lt;/span&gt;
-  &lt;span slot="popover_12_09_2023"&gt;Tickets for this day are $560&lt;/span&gt;
+  &lt;span slot="date_12_03_2023"&gt;$560&lt;/span&gt;
+  &lt;span slot="popover_12_04_2023"&gt;34 seats available&lt;/span&gt;
+  &lt;span slot="date_12_04_2023"&gt;$245&lt;/span&gt;
+  &lt;span slot="popover_12_05_2023"&gt;18 seats available&lt;/span&gt;
+  &lt;span slot="date_12_05_2023"&gt;$312&lt;/span&gt;
+  &lt;span slot="popover_12_06_2023"&gt;Tickets for this day are sold out&lt;/span&gt;
+  &lt;span slot="date_12_06_2023"&gt;$489&lt;/span&gt;
+  &lt;span slot="popover_12_07_2023"&gt;52 seats available&lt;/span&gt;
+  &lt;span slot="date_12_07_2023"&gt;$198&lt;/span&gt;
+  &lt;span slot="popover_12_08_2023"&gt;7 seats available&lt;/span&gt;
+  &lt;span slot="date_12_08_2023"&gt;$375&lt;/span&gt;
+  &lt;span slot="popover_12_09_2023"&gt;41 seats available&lt;/span&gt;
+  &lt;span slot="date_12_09_2023"&gt;$220&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
