@@ -742,12 +742,12 @@ export class AuroCalendar extends RangeDatepicker {
       <div class="calendarWrapper ${!this.isFullscreen && this.dropdown?.desktopModal ? 'hasFooter' : ''}">
         <div class="calendarNavButtons">
           ${this.showPrevMonthBtn ? html`
-          <button tabIndex="0" class="calendarNavBtn prevMonth" aria-label="Previous month" @click="${this.handlePrevMonth}">
+          <button tabIndex="0" class="calendarNavBtn prevMonth" aria-label="${this.datepicker?.navLabelPrevMonth || 'Previous month'}" @click="${this.handlePrevMonth}">
             ${this.util.generateIconHtml(chevronLeft)}
           </button>
           ` : undefined}
           ${this.showNextMonthBtn ? html`
-          <button tabIndex="0" class="calendarNavBtn nextMonth" aria-label="Next month" @click="${this.handleNextMonth}">
+          <button tabIndex="0" class="calendarNavBtn nextMonth" aria-label="${this.datepicker?.navLabelNextMonth || 'Next month'}" @click="${this.handleNextMonth}">
             ${this.util.generateIconHtml(chevronRight)}
           </button>
           ` : undefined}

@@ -120,6 +120,8 @@ export class AuroDatePicker extends AuroElement {
     this.rangeLabelBeforeRange = 'before range';
     this.rangeLabelInRange = 'in range';
     this.rangeLabelAfterRange = 'after range';
+    this.navLabelPrevMonth = 'Previous month';
+    this.navLabelNextMonth = 'Next month';
     this.stacked = false;
     this.noValidate = false;
     this.validity = undefined;
@@ -534,6 +536,22 @@ export class AuroDatePicker extends AuroElement {
        * Label announced for cells after the range (or after start when no end is selected).
        */
       rangeLabelAfterRange: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Accessible label for the previous month navigation button.
+       */
+      navLabelPrevMonth: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Accessible label for the next month navigation button.
+       */
+      navLabelNextMonth: {
         type: String,
         reflect: true
       },
