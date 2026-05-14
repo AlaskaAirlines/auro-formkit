@@ -527,9 +527,9 @@ export class AuroCalendarCell extends LitElement {
         slot="trigger"
         id="${this.getCellId()}"
         role="${role}"
-        @click="${this.handleTap}"
-        @mouseover="${this.handleHover}"
-        @focus="${this.handleHover}"
+        @click="${outOfRange ? nothing : this.handleTap}"
+        @mouseover="${outOfRange ? nothing : this.handleHover}"
+        @focus="${outOfRange ? nothing : this.handleHover}"
         class="${classMap(buttonClasses)}"
         ?disabled="${outOfRange}"
         ?aria-disabled="${blackout}"
@@ -552,9 +552,7 @@ export class AuroCalendarCell extends LitElement {
     const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
     const blackout = this.isBlackout();
     const hasPopoverContent = this.hasPopoverContent;
-    if (this.hasPopoverContent) {
-      console.warn(this.dateStr, 'hasPopoverContent', this.hasPopoverContent);
-    }
+
 
     const buttonClasses = {
       'day': true,

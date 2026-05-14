@@ -391,7 +391,7 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {void}
    */
   focusActiveCell() {
-    if (this.activeCellDate !== undefined) {
+    if (this.activeCellDate != null) {
       this.setActiveCell(this.activeCellDate);
     }
 
@@ -626,6 +626,20 @@ export class AuroCalendar extends RangeDatepicker {
     }
   }
 
+  /**
+   * Formats a Unix timestamp (seconds) as a localized date string for SR announcements.
+   * @private
+   * @param {String|Number} timestamp - Unix timestamp in seconds.
+   * @returns {String} Localized date string.
+   */
+  formatAnnouncementDate(timestamp) {
+    const date = new Date(parseInt(timestamp, 10) * 1000);
+    const formatter = new Intl.DateTimeFormat(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    return formatter.format(date);
+  }
+
   firstUpdated() {
     this.addEventListener('date-from-changed', () => {
       this.dispatchEvent(new CustomEvent('auroCalendar-dateSelected', {
@@ -636,11 +650,7 @@ export class AuroCalendar extends RangeDatepicker {
 
       // Announce selection via live region
       if (this.dateFrom) {
-        const date = new Date(parseInt(this.dateFrom, 10) * 1000);
-        const formatter = new Intl.DateTimeFormat(undefined, {
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-        this.announceSelection(formatter.format(date));
+        this.announceSelection(this.formatAnnouncementDate(this.dateFrom));
       }
     });
 
@@ -656,11 +666,7 @@ export class AuroCalendar extends RangeDatepicker {
 
       // Announce end date selection via live region
       if (this.dateTo) {
-        const date = new Date(parseInt(this.dateTo, 10) * 1000);
-        const formatter = new Intl.DateTimeFormat(undefined, {
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-        this.announceSelection(formatter.format(date));
+        this.announceSelection(this.formatAnnouncementDate(this.dateTo));
       }
     });
 

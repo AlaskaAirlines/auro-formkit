@@ -640,6 +640,9 @@ export class AuroDropdown extends AuroElement {
       this.bibElement.value.close();
       this.bibElement.value.open(this.isBibFullscreen);
 
+      // Re-initialize focus management for the new strategy
+      this.updateFocusTrap();
+
       // Toggle inert: desktop modal needs it, fullscreen showModal() handles it natively
       if (this.desktopModal && !this.isBibFullscreen) {
         this._setPageInert();
@@ -763,6 +766,18 @@ export class AuroDropdown extends AuroElement {
    * @private
    */
   updateFocusTrap() {
+    // Always clean up existing handlers/traps before setting up new ones
+    // to prevent duplicate listeners on repeated calls.
+    if (this._bibTabHandler) {
+      this.removeEventListener('keydown', this._bibTabHandler);
+      this._bibTabHandler = undefined;
+    }
+
+    if (this.focusTrap) {
+      this.focusTrap.disconnect();
+      this.focusTrap = undefined;
+    }
+
     if (this.isPopoverVisible) {
       if (!this.isBibFullscreen) {
         if (this.desktopModal) {
@@ -844,18 +859,6 @@ export class AuroDropdown extends AuroElement {
         }
       }
       // Fullscreen: showModal() provides native focus trapping
-      return;
-    }
-
-    // Cleanup on close
-    if (this._bibTabHandler) {
-      this.removeEventListener('keydown', this._bibTabHandler);
-      this._bibTabHandler = undefined;
-    }
-
-    if (this.focusTrap) {
-      this.focusTrap.disconnect();
-      this.focusTrap = undefined;
     }
   }
 
