@@ -15,6 +15,19 @@
 // added, handlers should go here following the same strategy pattern used by
 // auro-select (selectKeyboardStrategy.js) and auro-combobox (comboboxKeyboardStrategy.js).
 export const datepickerKeyboardStrategy = {
+  Escape(component, evt, ctx) {
+    if (!ctx.isExpanded) {
+      return;
+    }
+
+    // Stop propagation so parent containers (auro-dialog, auro-drawer)
+    // don't also react to Escape.
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    component.hideBib();
+  },
+
   Enter(component, evt, ctx) {
     if (ctx.isExpanded) {
       return;

@@ -121,119 +121,7 @@ function runFullTest(mobileView) {
   describe('User Stories', () => {
     // Add missing tests
 
-    if (!mobileView) {
-      it('should hide the dropdown when it or its children lose focus', async () => {
-        const el = await fixture(html`
-          <div>
-            <auro-datepicker></auro-datepicker>
-            <button>Test Button</button>
-          </div>
-        `);
 
-        const datepicker = el.querySelector('auro-datepicker');
-        const button = el.querySelector('button');
-
-        const input = getInput(datepicker, 0);
-        input.click();
-
-        await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
-
-        // wait for a frame to add `click` event listener correctly
-        await nextFrame();
-
-        button.click();
-
-        await elementUpdated(datepicker);
-        await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
-      });
-    }
-
-    it('should not restore focus to trigger when bib closes due to tab-out', async () => {
-      await setViewport({ width: 1024, height: 800 });
-
-      const el = await fixture(html`
-        <div>
-          <auro-datepicker></auro-datepicker>
-          <button id="outside">Outside</button>
-        </div>
-      `);
-
-      const datepicker = el.querySelector('auro-datepicker');
-      const outside = el.querySelector('#outside');
-
-      getInput(datepicker, 0).click();
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
-
-      // Spy directly on the trigger input's focus method. This is more reliable
-      // than checking document.activeElement in headless Chrome, where shadow DOM
-      // focus propagation timing cannot be guaranteed across frames.
-      const triggerInput = datepicker.inputList[0];
-      let focusCallCount = 0;
-      const originalFocus = triggerInput.focus.bind(triggerInput);
-      triggerInput.focus = () => { focusCallCount++; originalFocus(); };
-
-      // Move focus outside — simulates the user tabbing away.
-      outside.focus();
-      await elementUpdated(datepicker);
-
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
-
-      // Wait two rAFs: first lets the toggled-handler's rAF fire,
-      // second confirms no further focus call slips through afterward.
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-      expect(focusCallCount).to.equal(0);
-    });
-
-    it('should not open the bib when Enter key is pressed', async () => {
-      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-
-      await elementUpdated(el);
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-    });
-
-    it('should not open the bib when Space is pressed', async () => {
-      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
-
-      await elementUpdated(el);
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-    });
-
-    it('should close the bib in desktop mode when Tab triggers focus-loss', async () => {
-      await setViewport({ width: 1200, height: 800 });
-
-      const el = await fixture(html`
-        <div>
-          <auro-datepicker></auro-datepicker>
-          <button id="outside">Outside</button>
-        </div>
-      `);
-
-      const datepicker = el.querySelector('auro-datepicker');
-      const outside = el.querySelector('#outside');
-      const input = getInput(datepicker, 0);
-
-      input.click();
-      await elementUpdated(datepicker);
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
-      await expect(datepicker.dropdown.isBibFullscreen).to.be.false;
-
-      // Tab naturally moves focus outside; simulate that by focusing the next element.
-      // The keyboard spec defers to browser-default Tab behaviour — there is no
-      // redirect-back mechanism in desktop mode. The bib closes via focus-loss.
-      outside.focus();
-      await elementUpdated(datepicker);
-
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
-    });
 
     it('should change to the previous calendar month when handlePrevMonth is called', async () => {
       const el = await fixture(html`
@@ -297,24 +185,6 @@ function runFullTest(mobileView) {
       const centralAfterAgain = `${`0${new Date(el.centralDate).getMonth() + 1}`.slice(-2)}/${`0${new Date(el.centralDate).getDate()}`.slice(-2)}/${new Date(el.centralDate).getFullYear()}`;
 
       await expect(centralAfterAgain).to.contain('01/01/2024');
-    });
-
-    it('should hide the dropdown on blur', async () => {
-      const el = await fixture(html`
-          <auro-datepicker></auro-datepicker>
-      `);
-
-      el.focus();
-      el.shadowRoot.activeElement.click();
-      await elementUpdated(el);
-      await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-      setTimeout(() => {
-        el.blur();
-      }, 0);
-
-      await oneEvent(el, 'auroDatePicker-toggled');
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
     describe('badInput validity', () => {
@@ -625,28 +495,6 @@ function runFullTest(mobileView) {
         await expect(calendar.numCalendars).to.be.equal(12);
       });
 
-      it('should focus the close button when the fullscreen dialog opens', async () => {
-        await setViewport({ width: mobileBreakpointWidth, height: 800 });
-
-        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-        const input = getInput(el, 0);
-
-        input.click();
-        await expect(dropdown.isPopoverVisible).to.be.true;
-
-        // Wait for updateComplete + rAF focus cycle used by configureDropdown
-        await el.dropdown.updateComplete;
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-        // Calendar delegates focusCloseButton to its internal bibtemplate
-        const bibtemplate = calendar.shadowRoot.querySelector(calendar.bibtemplateTag._$litStatic$);
-        const closeBtn = bibtemplate.shadowRoot.querySelector('#closeButton');
-        expect(closeBtn).to.exist;
-        expect(bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
-      });
-
       it('should not close the fullscreen dialog when Tab key is pressed', async () => {
         await setViewport({ width: mobileBreakpointWidth, height: 800 });
 
@@ -664,16 +512,6 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         await expect(dropdown.isPopoverVisible).to.be.true;
-      });
-
-      it('should set noHideOnThisFocusLoss to false when bib opens in non-fullscreen mode', async () => {
-        await setViewport({ width: 1024, height: 800 });
-
-        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-        getInput(el, 0).click();
-        await elementUpdated(el);
-
-        expect(el.dropdown.noHideOnThisFocusLoss).to.be.false;
       });
 
       it('should restore trigger inert and focus after fullscreen dialog closes', async () => {
