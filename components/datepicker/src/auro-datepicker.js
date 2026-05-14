@@ -913,6 +913,22 @@ export class AuroDatePicker extends AuroElement {
     this.dropdown.addEventListener('auroDropdown-toggled', () => {
       this.notifyDatepickerToggled();
 
+      if (this.dropdown.isPopoverVisible) {
+        // Reset calendar focus state so it recomputes from the current selection.
+        // Without this, reopening after navigating to a month without a selected
+        // date leaves activeCellDate pointing at a cell in a different month than
+        // what centralDate renders, causing all cells to have tabindex="-1".
+        this.calendar.activeCellDate = null;
+
+        // Show the month containing the selected date (or today) instead of
+        // whichever month the user last navigated to.
+        if (this.value && this.util.validDateStr(this.value, this.format)) {
+          this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
+        } else if (!this.minDate) {
+          this.calendarRenderUtil.updateCentralDate(this, new Date());
+        }
+      }
+
       // This forces the calendar to render when the dropdown is opened.
       // It is not rendered by default
       this.calendar.visible = this.dropdown.isPopoverVisible;
