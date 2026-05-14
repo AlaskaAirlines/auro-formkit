@@ -11,8 +11,7 @@
 <p>Each focusable element <em>(when shown)</em> participates in the browser window's default <code>tabindex</code> sequence.</p>
 <p>When the component is <code>disabled</code> it is removed from the <code>tabindex</code> sequence. VoiceOver's virtual cursor <em>(swipe navigation)</em> can still encounter the component, but standard keyboard <code>Tab</code> navigation skips it.</p>
 <div class="note">
-<p><strong>Note:</strong> The current implementation <strong>DOES</strong> support full interaction of the bib content and calendar with touch, click and VoiceOver interactions.  </p>
-<p>The current implementation of the component <strong>DOES</strong> support using the keyboard to navigate the trigger and type dates via the keyboard. It <strong>DOES NOT</strong> support navigating the bib content and calendar via the keyboard. This functionality is scheduled to be added in the next major redesign of the component.</p>
+<p><strong>Note:</strong> The datepicker supports full interaction via touch, click, VoiceOver, and keyboard. The trigger input accepts typed dates, and the calendar bib supports arrow-key navigation between date cells, Enter/Space to select, and Escape to close.</p>
 </div>
 <auro-header level="3" id="keyEventsCounterGroup">Key Events</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
@@ -30,16 +29,16 @@
 </thead>
 <tbody>
 <tr>
-<td>Space</td>
+<td>Enter</td>
 <td>-</td>
-<td>Expanded</td>
+<td>Collapsed</td>
 <td>Trigger input, <strong>NOT</strong> the input clear button</td>
 <td>Opens the calendar bib. Focus moves to the active date cell inside the calendar grid. The Enter key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
 </tr>
 <tr>
 <td>Space</td>
 <td>-</td>
-<td>Expanded</td>
+<td>Collapsed</td>
 <td>Trigger input, <strong>NOT</strong> the input clear button</td>
 <td>Opens the calendar bib. Focus moves to the active date cell inside the calendar grid. The Space key behavior overrides the inherited <code>auro-dropdown</code> key behavior outlined below.</td>
 </tr>
