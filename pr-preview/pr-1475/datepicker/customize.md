@@ -20,7 +20,6 @@
 <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#minMaxDate" class="level2 body-xs">Min/Max Date</auro-anchorlink>
 <auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
-<auro-anchorlink fluid href="#rangeLabels" class="level3 body-xs">Screen Reader Labels</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
