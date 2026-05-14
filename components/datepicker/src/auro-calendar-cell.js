@@ -540,9 +540,9 @@ export class AuroCalendarCell extends LitElement {
         <span class="srOnly">${this.getAriaLabel()}</span>
         <div class="buttonWrapper" aria-hidden="true">
           <div class="currentDayMarker">${this.day?.title || nothing}</div>
-          <div class="dateSlot body-2xs" part="dateSlot" ?hidden="${!this.renderForDateSlot}">
-            <slot name="date_${this.dateStr}"></slot>
-          </div>
+        </div>
+        <div class="dateSlot body-2xs" part="dateSlot" ?hidden="${!this.renderForDateSlot}">
+          <slot name="date_${this.dateStr}"></slot>
         </div>
       </button>
     `;
