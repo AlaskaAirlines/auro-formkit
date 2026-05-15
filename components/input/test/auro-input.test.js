@@ -3,7 +3,7 @@
 , no-await-in-loop, no-implicit-coercion, jsdoc/require-jsdoc */
 
 import { fixture, fixtureSync, html, expect, elementUpdated, oneEvent } from '@open-wc/testing';
-import { setViewport } from '@web/test-runner-commands';
+import { setViewport, sendKeys } from '@web/test-runner-commands';
 import { unsafeStatic } from 'lit/static-html.js';
 import { useAccessibleIt } from "@aurodesignsystem/auro-library/scripts/test-plugin/iterateWithA11Check.mjs";
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
@@ -1286,6 +1286,24 @@ function runFullTest(mobileView) {
           expect(el.getAttribute('validity')).to.equal('patternMismatch');
         });
 
+        it('backspace on a fully-entered date does not wipe the input', async () => {
+          const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
+          await elementUpdated(el);
+
+          // Set a complete ISO value — simulates user finishing a full date entry
+          el.value = '2024-01-15';
+          await elementUpdated(el);
+          await elementUpdated(el);
+          expect(el.valueObject).to.be.instanceof(Date);
+
+          await sendKeys({ press: 'Backspace' });
+          await elementUpdated(el);
+
+          // Input must not be wiped — partial display value should remain
+          expect(el.value).to.not.equal('');
+          expect(el.value).to.not.be.undefined;
+        });
+
         it('clearing value propagates to clear valueObject', async () => {
           const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy"></auro-input>`);
 
@@ -2528,6 +2546,33 @@ function runFullTest(mobileView) {
   });
 
   describe('Keyboard Behavior', () => {
+    it('date input cursor does not move back after user moves it left', async () => {
+      const el = await fixture(html`<auro-input type="date" format="mm/dd/yyyy" label="selection start test"></auro-input>`);
+      await elementUpdated(el);
+
+      el.focus();
+
+      await sendKeys({ press: '0' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '9' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: '1' });
+      await sendKeys({ press: 'ArrowLeft' });
+      await sendKeys({ press: 'ArrowLeft' });
+
+      const input = el.shadowRoot.querySelector('input');
+      const selectionStartAfterLeft = input.selectionStart;
+
+      await sendKeys({ press: 'Backspace' });
+
+      await expect(input.value).to.equal('01/11/1');
+
+      await expect(input.selectionStart).to.equal(selectionStartAfterLeft - 1);
+    });
+
     it('should accept typed input', async () => {
       const el = await fixture(html`<auro-input></auro-input>`);
       await elementUpdated(el);
