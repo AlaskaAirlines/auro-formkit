@@ -36,7 +36,6 @@ export class AuroInputUtilities {
     // Bindings - many of these are passed into IMask callbacks,
     // so we need to bind 'this' context for them to work properly.
     // ------------------------------------------------------------------------------
-    this.getDateFormatterFromLocale = this.getDateFormatterFromLocale.bind(this);
     this.getDateMaskFromLocale = this.getDateMaskFromLocale.bind(this);
     this.parseDateByMask = this.parseDateByMask.bind(this);
     this.getMaskOptions = this.getMaskOptions.bind(this);
@@ -65,16 +64,6 @@ export class AuroInputUtilities {
   }
 
   /**
-   * Generates an Intl.DateTimeFormat based on the provided locale.
-   * @param {string} locale - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
-   * @param {Intl.DateTimeFormatOptions?} options - Intl.DateTimeFormat options.
-   * @returns {Intl.DateTimeFormat}
-   */
-  getDateFormatterFromLocale(locale, options) {
-    return new Intl.DateTimeFormat(locale, options);
-  }
-
-  /**
    * Generates a date mask based on the provided locale.
    * @param {string} [locale] - BCP 47 language tag (e.g. "en-US", "fr-FR", "ja-JP").
    * @returns {string}
@@ -86,7 +75,7 @@ export class AuroInputUtilities {
       return this.overrideFormat.toUpperCase();
     }
 
-    const formatter = this.getDateFormatterFromLocale(this.locale || locale, {
+    const formatter = new Intl.DateTimeFormat(this.locale || locale, {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -271,7 +260,7 @@ export class AuroInputUtilities {
    * @param {string} format - The date format string.
    * @returns {string}
    */
-  toDisplayValue(value, valueObject, format) {
+  toFormattedValue(value, valueObject, format) {
     if (!this.isFullDateFormat('date', format) || !value) {
       return value;
     }
@@ -291,4 +280,16 @@ export class AuroInputUtilities {
 
     return maskOptions.format(valueObject);
   }
+}
+
+/**
+ * Derives a locale-aware date format string suitable for use in input masks. This helper exposes the internal AuroInputUtilities locale logic in a simple function form.
+ *
+ * @param {string} locale - BCP 47 language tag used to determine the date format (e.g. "en-US", "fr-FR").
+ * @returns {string} A lowercase date format mask string corresponding to the provided locale.
+ */
+export function getDateFormatFromLocale (locale) {
+  return new AuroInputUtilities({ locale }).
+    getDateMaskFromLocale().
+    toLowerCase();
 }

@@ -143,9 +143,9 @@ describe('formatISODate', () => {
         expect(result).to.equal('xx/xx/xxxx');
       });
 
-      it('toDisplayValue returns the value when valueObject is not a Date', () => {
+      it('toFormattedValue returns the value when valueObject is not a Date', () => {
         const util = new AuroInputUtilities({ locale: 'en-US' });
-        const result = util.toDisplayValue('2024-01-15', undefined, 'mm/dd/yyyy');
+        const result = util.toFormattedValue('2024-01-15', undefined, 'mm/dd/yyyy');
         expect(result).to.equal('2024-01-15');
       });
 
