@@ -10,7 +10,7 @@ import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import IMask from 'imask';
 import AuroFormValidation from '@aurodesignsystem/form-validation';
 import { AuroElement } from '../../layoutElement/src/auroElement.js';
-import { AuroInputUtilities } from "./utilities.js";
+import { AuroInputUtilities, getDateFormatFromLocale } from "./utilities.js";
 import { UniqueId } from '@aurodesignsystem/auro-library/scripts/runtime/uniqueHash';
 import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler';
 import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
@@ -754,32 +754,23 @@ export default class BaseInput extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    // When the locale changes, if the format was not explicitly set or was previously the default for the old locale,
-    // update to the new locale's default format.
+    // When locale changes without an explicit format override, derive format from the new locale.
+    // Only runs if the current format is still the previous locale's default (not user-overridden).
     if (changedProperties.has('locale') && !changedProperties.has('format') && this.type === 'date') {
-      const previousLocale = changedProperties.get('locale');
-      const previousLocaleUtil = new AuroInputUtilities({ locale: previousLocale });
-      const previousLocaleDefaultFormat = previousLocaleUtil.getDateMaskFromLocale().toLowerCase();
-
-      if (!this.format || this.format.toLowerCase() === previousLocaleDefaultFormat) {
-        const nextLocaleUtil = new AuroInputUtilities({ locale: this.locale });
-        const nextLocaleDefaultFormat = nextLocaleUtil.getDateMaskFromLocale().toLowerCase();
-
-        if (this.format !== nextLocaleDefaultFormat) {
-          this.format = nextLocaleDefaultFormat;
-        }
+      const previousLocaleFormat = getDateFormatFromLocale(changedProperties.get('locale'));
+      if (!this.format || this.format.toLowerCase() === previousLocaleFormat) {
+        this.format = getDateFormatFromLocale(this.locale);
       }
     }
 
-    if (changedProperties.has('locale') || changedProperties.has('format')) {
+    if (changedProperties.has('format') || changedProperties.has('locale')) {
       this.util = new AuroInputUtilities({
         locale: this.locale,
         format: this.format
       });
-    }
-
-    if (changedProperties.has('format')) {
-      this.configureAutoFormatting();
+      if (changedProperties.has('format')) {
+        this.configureAutoFormatting();
+      }
     }
 
     if (this.type === 'password') {
@@ -817,12 +808,12 @@ export default class BaseInput extends AuroElement {
         this.hasValue = false;
       }
 
-      const inputDisplayValue = this.type === 'date' ? this.util.toDisplayValue(this.value, this.valueObject, this.format) : this.value;
+      const formattedValue = this.type === 'date' ? this.util.toFormattedValue(this.value, this.valueObject, this.format) : this.value;
 
-      if (inputDisplayValue !== this.inputElement.value) {
+      if (formattedValue !== this.inputElement.value) {
         this.skipNextProgrammaticInputEvent = true;
-        if (inputDisplayValue) {
-          this.inputElement.value = inputDisplayValue;
+        if (formattedValue) {
+          this.inputElement.value = formattedValue;
         } else {
           this.inputElement.value = '';
         }
@@ -891,12 +882,8 @@ export default class BaseInput extends AuroElement {
     const objectPropertyChanged = !changedProperties || changedProperties.has(objectProperty);
 
     // objectProperty wins over valueProperty when both changed
-    if (objectPropertyChanged) {
-      if (this[objectProperty]) {
-        this[valueProperty] = dateFormatter.toISOFormatString(this[objectProperty]);
-      } else if (changedProperties) { // only when objectProperty is changed to null|undefined, not on initial setup
-        this[valueProperty] = undefined;
-      }
+    if (objectPropertyChanged && this[objectProperty]) {
+      this[valueProperty] = dateFormatter.toISOFormatString(this[objectProperty]);
       return;
     }
 
@@ -916,9 +903,9 @@ export default class BaseInput extends AuroElement {
       return;
     }
 
-    if (this[valueProperty] && dateFormatter.isValidDate(this[valueProperty])) {
+    if (dateFormatter.isValidDate(this[valueProperty])) {
       this.setDateObjectProperty(objectProperty, dateFormatter.stringToDateInstance(this[valueProperty]));
-    } else if (changedProperties) { // only when valueProperty is changed to null|undefined, not on initial setup
+    } else {
       this.setDateObjectProperty(objectProperty, undefined);
     }
   }
