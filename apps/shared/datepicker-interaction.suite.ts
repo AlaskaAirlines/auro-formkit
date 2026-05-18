@@ -188,22 +188,16 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
         await waitForBibClosed(page, 'default');
       });
 
-      test('does not open the bib when Enter is pressed on the input', async ({ page }) => {
+      test('opens the bib when Enter is pressed on the input', async ({ page }) => {
         await dp(page, 'default').evaluate((el: any) => el.focus());
         await page.keyboard.press('Enter');
-        await page.waitForTimeout(100);
-
-        const visible = await isBibVisible(page, 'default');
-        expect(visible).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'default'), { timeout: 5_000 }).toBe(true);
       });
 
-      test('does not open the bib when Space is pressed on the input', async ({ page }) => {
+      test('opens the bib when Space is pressed on the input', async ({ page }) => {
         await dp(page, 'default').evaluate((el: any) => el.focus());
         await page.keyboard.press('Space');
-        await page.waitForTimeout(100);
-
-        const visible = await isBibVisible(page, 'default');
-        expect(visible).toBe(false);
+        await expect.poll(() => isBibVisible(page, 'default'), { timeout: 5_000 }).toBe(true);
       });
 
       test('typing in the input does not open the bib', async ({ page }) => {
@@ -473,22 +467,22 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
       expect(value).not.toBe('');
     });
 
-    test('focus moves to the close button when fullscreen dialog opens', async ({ page }) => {
+    test('focus moves to the active calendar cell when fullscreen dialog opens', async ({ page }) => {
       await openBib(page, 'default');
       await waitForBibOpen(page, 'default');
 
       await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(true);
 
-      // Wait for focus cycle (rAF)
+      // Wait for focus to land on the active calendar cell (rAF retry loop)
       await expect.poll(async () => {
         return dp(page, 'default').evaluate((el: any) => {
           const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-          const bibtemplateTag = calendar.bibtemplateTag?._$litStatic$;
-          if (!bibtemplateTag) return false;
-          const bibtemplate = calendar.shadowRoot.querySelector(bibtemplateTag);
-          if (!bibtemplate) return false;
-          const closeBtn = bibtemplate.shadowRoot.querySelector('#closeButton');
-          return bibtemplate.shadowRoot.activeElement === closeBtn;
+          if (!calendar) return false;
+          const allCells = calendar.getAllFocusableCells();
+          const activeCell = allCells.find((cell: any) => cell.active);
+          if (!activeCell) return false;
+          const button = activeCell.shadowRoot.querySelector('button[tabindex="0"]');
+          return activeCell.shadowRoot.activeElement === button;
         });
       }, { timeout: 5_000 }).toBe(true);
     });
