@@ -43,7 +43,7 @@ export const comboboxKeyboardStrategy = {
 
       // navigate if bib is open otherwise open it
       if (component.dropdown.isPopoverVisible) {
-        if (evt.altKey || evt.metaKey) {
+        if (evt.altKey || evt.ctrlKey || evt.metaKey) {
           component.activateLastEnabledAvailableOption();
         } else {
           navigateArrow(component, 'down');
@@ -66,7 +66,7 @@ export const comboboxKeyboardStrategy = {
 
       // navigate if bib is open otherwise open it
       if (component.dropdown.isPopoverVisible) {
-        if (evt.altKey || evt.metaKey) {
+        if (evt.altKey || evt.ctrlKey || evt.metaKey) {
           component.activateFirstEnabledAvailableOption();
         } else {
           navigateArrow(component, 'up');

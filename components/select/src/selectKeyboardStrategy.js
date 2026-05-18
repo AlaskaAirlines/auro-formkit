@@ -4,28 +4,30 @@ import { navigateArrow } from '@aurodesignsystem/utils';
 export const selectKeyboardStrategy = {
   ArrowDown(component, evt, ctx) {
     evt.preventDefault();
-    if (evt.altKey || evt.metaKey) {
-      // navigate to last enabled option
-      selectKeyboardStrategy.End(component, evt, ctx);
-      return;
+    if (ctx.isExpanded) {
+      if (evt.altKey || evt.ctrlKey || evt.metaKey) {
+        // navigate to last enabled option
+        selectKeyboardStrategy.End(component, evt, ctx);
+      } else {
+        navigateArrow(component, 'down', { ctx });
+      }
+    } else {
+      component.dropdown.show();
     }
-    navigateArrow(component, 'down', {
-      ctx,
-      showFn: () => component.dropdown.show(),
-    });
   },
 
   ArrowUp(component, evt, ctx) {
     evt.preventDefault();
-    if (evt.altKey || evt.metaKey) {
-      // navigate to first enabled option
-      selectKeyboardStrategy.Home(component, evt, ctx);
-      return;
+    if (ctx.isExpanded) {
+      if (evt.altKey || evt.ctrlKey || evt.metaKey) {
+        // navigate to first enabled option
+        selectKeyboardStrategy.Home(component, evt, ctx);
+      } else {
+        navigateArrow(component, 'up', { ctx });
+      }
+    } else {
+      component.dropdown.show();
     }
-    navigateArrow(component, 'up', {
-      ctx,
-      showFn: () => component.dropdown.show(),
-    });
   },
 
   Escape(component, evt, ctx) {

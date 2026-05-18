@@ -3479,6 +3479,100 @@ function runFullTest(mobileView) {
         await expect(el.optionActive).to.equal(lastOption);
       });
 
+      it('should activate the last enabled option with Ctrl+ArrowDown', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          ctrlKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
+        const lastOption = menuOptions[menuOptions.length - 1];
+        await expect(el.optionActive).to.equal(lastOption);
+      });
+
+      it('should open the bib when collapsed with Alt+ArrowDown', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+
+        el.hideBib();
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          altKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should open the bib when collapsed with Meta+ArrowDown', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+
+        el.hideBib();
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          metaKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should open the bib when collapsed with Ctrl+ArrowDown', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+
+        el.hideBib();
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          ctrlKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
       it('should not navigate when clear button has focus', async () => {
         const el = await defaultFixture(mobileView);
 
@@ -3644,6 +3738,36 @@ function runFullTest(mobileView) {
         await expect(el.optionActive).to.equal(menuOptions[0]);
       });
 
+      it('should activate the first enabled option with Ctrl+ArrowUp', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        // Navigate away from first option
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          ctrlKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
+        await expect(el.optionActive).to.equal(menuOptions[0]);
+      });
+
       it('should open the bib when ArrowUp is pressed and bib is closed', async () => {
         const el = await defaultFixture(mobileView);
 
@@ -3660,6 +3784,75 @@ function runFullTest(mobileView) {
         // ArrowUp should open it
         el.dispatchEvent(new KeyboardEvent('keydown', {
           key: 'ArrowUp',
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should open the bib when collapsed with Alt+ArrowUp', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+
+        el.hideBib();
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          altKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should open the bib when collapsed with Meta+ArrowUp', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+
+        el.hideBib();
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          metaKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should open the bib when collapsed with Ctrl+ArrowUp', async () => {
+        const el = await shiftTabFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+
+        el.hideBib();
+        await elementUpdated(el);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          ctrlKey: true,
           bubbles: true,
           cancelable: true
         }));

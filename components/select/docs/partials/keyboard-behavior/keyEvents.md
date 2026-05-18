@@ -10,7 +10,7 @@
   </thead>
   <tbody>
     <tr>
-      <td rowspan="6">ArrowDown</td>
+      <td rowspan="8">ArrowDown</td>
       <td rowspan="2">-</td>
       <td>Collapsed</td>
       <td>Trigger element</td>
@@ -50,7 +50,25 @@
       </td>
     </tr>
     <tr>
-      <td rowspan="6">ArrowUp</td>
+      <td rowspan="2">Control</td>
+      <td>Collapsed</td>
+      <td>Trigger element</td>
+      <td>
+        Opens the bib.
+        <div class="note">
+          <strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Command</code> or <code>Option</code> instead.
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>Expanded</td>
+      <td>Trigger element</td>
+      <td>
+        Advances the <code>focused</code> option to the last enabled option in the list.
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="8">ArrowUp</td>
       <td rowspan="2">-</td>
       <td>Collapsed</td>
       <td>Trigger element</td>
@@ -81,6 +99,24 @@
       <td>Collapsed</td>
       <td>Trigger element</td>
       <td>Opens the bib.</td>
+    </tr>
+    <tr>
+      <td>Expanded</td>
+      <td>Trigger element</td>
+      <td>
+        Advances the <code>focused</code> option to the first enabled option in the list.
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2">Control</td>
+      <td>Collapsed</td>
+      <td>Trigger element</td>
+      <td>
+        Opens the bib.
+        <div class="note">
+          <strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Command</code> or <code>Option</code> instead.
+        </div>
+      </td>
     </tr>
     <tr>
       <td>Expanded</td>
