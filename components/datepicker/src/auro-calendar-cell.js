@@ -208,7 +208,11 @@ export class AuroCalendarCell extends LitElement {
     const blackoutDates = this.datepicker?.blackoutDates;
 
     if (Array.isArray(blackoutDates) && blackoutDates.length > 0) {
-      const cellDate = new Date(this.day.date * 1000).toISOString().split('T')[0];
+      const date = new Date(this.day.date * 1000);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      const cellDate = `${yyyy}-${mm}-${dd}`;
       if (blackoutDates.includes(cellDate)) {
         return true;
       }
@@ -544,7 +548,7 @@ export class AuroCalendarCell extends LitElement {
     const buttonClasses = {
       'day': true,
       'body-lg': true,
-      'currentDate': this.currentDate,
+      'currentDate': this.isCurrentDate,
       'selected': this.selected,
       'inRange': this.datepicker?.hasAttribute('range') && this.hovered && this.isInRange(this.day, this.dateFrom, this.dateTo),
       'lastHoveredDate': this.isLastHoveredDate(this.day, this.dateFrom, this.dateTo, this.hoveredDate) && this.datepicker && this.datepicker.hasAttribute('range'),
@@ -566,8 +570,8 @@ export class AuroCalendarCell extends LitElement {
         @focus="${outOfRange ? nothing : this.handleHover}"
         class="${classMap(buttonClasses)}"
         ?disabled="${outOfRange}"
-        ?aria-disabled="${blackout}"
-        ?aria-hidden="${outOfRange}"
+        aria-disabled="${blackout ? 'true' : nothing}"
+        aria-hidden="${outOfRange ? 'true' : nothing}"
         aria-selected="${this.selected ? 'true' : 'false'}"
         aria-current="${this.isCurrentDate ? 'date' : nothing}"
         tabindex="${this.active ? '0' : '-1'}">

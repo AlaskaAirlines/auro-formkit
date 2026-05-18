@@ -445,6 +445,15 @@ export class AuroCalendar extends RangeDatepicker {
       (this.disabledDays || []).map(d => parseInt(d, 10))
     );
 
+    // Also include ISO-format blackoutDates from the datepicker if available
+    const isoBlackouts = this.datepicker?.blackoutDates;
+    if (Array.isArray(isoBlackouts)) {
+      for (const isoStr of isoBlackouts) {
+        const ts = Math.floor(new Date(isoStr).setHours(0, 0, 0, 0) / 1000);
+        if (Number.isFinite(ts)) blackoutSet.add(ts);
+      }
+    }
+
     /**
      * A date (unix timestamp in seconds, midnight-aligned) is "enabled" when
      * it is within [min, max] AND not a blackout day.
@@ -618,7 +627,8 @@ export class AuroCalendar extends RangeDatepicker {
     const monthElem = this.shadowRoot.querySelector(selector);
 
     if (monthElem) {
-      monthElem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      monthElem.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion ? 'instant' : 'smooth' });
     }
   }
 

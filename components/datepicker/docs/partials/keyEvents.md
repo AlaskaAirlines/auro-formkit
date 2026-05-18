@@ -70,7 +70,7 @@
     </tr>
   </tbody>
 </table>
-<auro-header level="3" id="keyEvents-calendar">Calendar grid</auro-header>
+<auro-header level="3" id="keyEvents-calendarGrid">Calendar grid</auro-header>
 <p>When the calendar bib is open, one date cell is the <em>active</em> cell (roving <code>tabindex="0"</code>). All other cells have <code>tabindex="-1"</code>. Arrow keys move the active cell without wrapping — when a boundary is reached the calendar navigates to the adjacent month.</p>
 <table>
   <thead>

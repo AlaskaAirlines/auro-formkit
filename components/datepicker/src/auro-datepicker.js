@@ -1003,9 +1003,10 @@ export class AuroDatePicker extends AuroElement {
 
         // Show the month containing the selected date (or today) instead of
         // whichever month the user last navigated to.
+        // Respect consumer-provided centralDate/calendarStartDate if no value is set.
         if (this.value && this.util.validDateStr(this.value, this.format)) {
           this.calendarRenderUtil.updateCentralDate(this, this.formattedValue);
-        } else if (!this.minDate) {
+        } else if (!this.centralDate && !this.calendarStartDate && !this.minDate) {
           this.calendarRenderUtil.updateCentralDate(this, new Date());
         }
       }
@@ -1296,6 +1297,11 @@ export class AuroDatePicker extends AuroElement {
       } else {
         this.value = newDate;
       }
+
+      // For single-date picker, close the bib and return focus to trigger after selection
+      if (!this.range) {
+        this.hideBib();
+      }
     }
   }
 
@@ -1468,9 +1474,23 @@ export class AuroDatePicker extends AuroElement {
       this.setHasValue();
     }
 
+    if (changedProperties.has('blackoutDates')) {
+      // Force calendar cells to re-render with updated blackout state
+      if (this.calendar) {
+        this.calendar.requestUpdate();
+      }
+    }
+
     if (changedProperties.has('valueEnd') && this.inputList[1]) {
 
       this.formattedValueEnd = this.util.toNorthAmericanFormat(this.valueEnd, this.format);
+
+      if (this.cellClickActive) {
+        this.cellClickActive = false;
+        this.wasCellClick = true;
+      } else {
+        this.wasCellClick = false;
+      }
 
       // update the calendar
       if (this.valueEnd && this.util.validDateStr(this.valueEnd, this.format)) {

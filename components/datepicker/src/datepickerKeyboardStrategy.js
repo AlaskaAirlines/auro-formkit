@@ -5,11 +5,10 @@
 //   components/datepicker/docs/partials/keyboardBehavior.md
 //
 // Current behavior (transitional — full bib keyboard navigation is planned for a future iteration):
-//   - The bib opens and closes via pointer/touch interaction only.
 //   - Escape closes the bib and prevents the event from reaching parent containers.
-//   - Space opens the bib when it is closed.
+//   - Enter opens the bib when it is closed (trigger input only, not clear button).
+//   - Space opens the bib when it is closed (trigger input only, not clear button).
 //   - Tab uses the browser's default tabindex sequence across trigger controls.
-//   - Enter does not open or close the bib.
 //
 // This file is an intentional placeholder for most keys. When datepicker bib keyboard navigation is
 // added, handlers should go here following the same strategy pattern used by
@@ -33,7 +32,11 @@ export const datepickerKeyboardStrategy = {
       return;
     }
 
-    // Prevent the space character from being typed into the input.
+    // Only open from the trigger input, not the clear button or other elements
+    if (evt.target?.hasAttribute?.('slot') && evt.target.getAttribute('slot').includes('clear')) {
+      return;
+    }
+
     evt.preventDefault();
 
     component.dropdown.show();
@@ -44,7 +47,11 @@ export const datepickerKeyboardStrategy = {
       return;
     }
 
-    // Prevent the space character from being typed into the input.
+    // Only open from the trigger input, not the clear button or other elements
+    if (evt.target?.hasAttribute?.('slot') && evt.target.getAttribute('slot').includes('clear')) {
+      return;
+    }
+
     evt.preventDefault();
 
     component.dropdown.show();

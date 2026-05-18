@@ -31,8 +31,9 @@ export function blackoutLabelExample() {
       const yyyy = current.getFullYear();
       const slotDateStr = `${mm}_${dd}_${yyyy}`;
 
-      // Randomly mark ~30% of dates as blackout
-      const isSoldOut = Math.random() < 0.3;
+      // Mark every 3rd date as blackout (deterministic pattern)
+      const dayOfMonth = current.getDate();
+      const isSoldOut = dayOfMonth % 3 === 0;
 
       if (isSoldOut) {
         blackoutDates.push(current.toISOString().split('T')[0]);
@@ -42,7 +43,8 @@ export function blackoutLabelExample() {
         popover.textContent = 'There are no tickets available for this date.';
         blackoutDP.appendChild(popover);
       } else {
-        const price = Math.floor(Math.random() * 400) + 100;
+        // Use a fixed price based on day of month for deterministic output
+        const price = 150 + (dayOfMonth * 17) % 400;
 
         const dateSlot = document.createElement('span');
         dateSlot.setAttribute('slot', `date_${slotDateStr}`);
