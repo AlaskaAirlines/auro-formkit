@@ -11,6 +11,7 @@
 <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
 <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
 <auro-anchorlink fluid href="#popoverSlot" class="level2 body-xs">Date Popover</auro-anchorlink>
+<auro-anchorlink fluid href="#blackoutDates" class="level2 body-xs">Blackout Dates</auro-anchorlink>
 <auro-anchorlink fluid href="#viewportSize" class="level2 body-xs">Viewport Size</auro-anchorlink>
 </auro-nav>
 </nav>
@@ -222,6 +223,27 @@
   &lt;span slot="date_12_08_2023"&gt;$375&lt;/span&gt;
   &lt;span slot="popover_12_09_2023"&gt;41 seats available&lt;/span&gt;
   &lt;span slot="date_12_09_2023"&gt;$220&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="blackoutDates">Blackout dates with custom label</auro-header>
+<p>Use the <code>blackoutLabel</code> attribute to customize the screen reader announcement for blackout (disabled but in-range) dates. The default label is <code>"unavailable"</code>. This is useful when you want to provide more context about why a date cannot be selected, such as <code>"sold out"</code>.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/blackout-label.html) -->
+<!-- The below content is automatically added from ./../apiExamples/blackout-label.html -->
+<auro-datepicker id="blackoutLabelExample" blackoutLabel="sold out">
+<span slot="fromLabel">Choose a date</span>
+<span slot="bib.fullscreen.fromLabel">Choose a date</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/blackout-label.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/blackout-label.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker id="blackoutLabelExample" blackoutLabel="sold out"&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
