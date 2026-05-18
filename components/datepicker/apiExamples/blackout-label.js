@@ -36,7 +36,7 @@ export function blackoutLabelExample() {
       const isSoldOut = dayOfMonth % 3 === 0;
 
       if (isSoldOut) {
-        blackoutDates.push(current.toISOString().split('T')[0]);
+        blackoutDates.push(`${yyyy}-${mm}-${dd}`);
 
         const popover = document.createElement('span');
         popover.setAttribute('slot', `popover_${slotDateStr}`);

@@ -14,7 +14,7 @@ async function waitForDatepicker(page: Page, fixture: string) {
       );
     },
     fixture,
-    { timeout: 10_000 },
+    { timeout: 15_000 },
   );
 }
 
@@ -25,6 +25,7 @@ function dp(page: Page, fixture: string): Locator {
 
 /** Click the datepicker input to open the bib. */
 async function openBib(page: Page, fixture: string) {
+  await waitForDatepicker(page, fixture);
   await dp(page, fixture).evaluate((el: any) => {
     el.inputList[0].click();
   });

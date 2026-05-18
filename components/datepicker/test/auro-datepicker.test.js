@@ -3522,14 +3522,17 @@ function runFullTest(mobileView) {
         const initialActive = calendar.activeCellDate;
 
         // Dispatch ArrowRight on the month grid
-        const grid = month.shadowRoot.querySelector('[role="grid"]').parentElement;
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
         grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, composed: true }));
 
         await elementUpdated(el);
         await nextFrame();
 
         // Active cell should have moved to the next day
-        expect(calendar.activeCellDate).to.equal(initialActive + 86400);
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() + 1);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
       });
 
       it('should move active cell left on ArrowLeft', async () => {
@@ -3547,13 +3550,16 @@ function runFullTest(mobileView) {
         const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
         const initialActive = calendar.activeCellDate;
 
-        const grid = month.shadowRoot.querySelector('[role="grid"]').parentElement;
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
         grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, composed: true }));
 
         await elementUpdated(el);
         await nextFrame();
 
-        expect(calendar.activeCellDate).to.equal(initialActive - 86400);
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() - 1);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
       });
 
       it('should move active cell down by 7 days on ArrowDown', async () => {
@@ -3571,13 +3577,16 @@ function runFullTest(mobileView) {
         const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
         const initialActive = calendar.activeCellDate;
 
-        const grid = month.shadowRoot.querySelector('[role="grid"]').parentElement;
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
         grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
 
         await elementUpdated(el);
         await nextFrame();
 
-        expect(calendar.activeCellDate).to.equal(initialActive + (7 * 86400));
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() + 7);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
       });
 
       it('should move active cell up by 7 days on ArrowUp', async () => {
@@ -3595,13 +3604,16 @@ function runFullTest(mobileView) {
         const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
         const initialActive = calendar.activeCellDate;
 
-        const grid = month.shadowRoot.querySelector('[role="grid"]').parentElement;
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
         grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, composed: true }));
 
         await elementUpdated(el);
         await nextFrame();
 
-        expect(calendar.activeCellDate).to.equal(initialActive - (7 * 86400));
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() - 7);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
       });
     });
 
@@ -4109,15 +4121,19 @@ function runFullTest(mobileView) {
         const focusableCells = calendarMonth.getFocusableCells();
         if (focusableCells.length < 2) return;
 
-        // Set the first cell as active
+        // Clear all active states, then set the first cell as active
+        focusableCells.forEach(c => { c.active = false; });
         focusableCells[0].active = true;
         await elementUpdated(calendarMonth);
 
         const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+
+        const expectedDate = focusableCells[1].day.date;
+        const listener = oneEvent(calendarMonth, 'calendar-cell-activate');
         grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
 
-        // Should dispatch calendar-cell-activate with the next cell's date
-        await expect(focusableCells[1].day.date).to.exist;
+        const event = await listener;
+        await expect(event.detail.date).to.equal(expectedDate);
       });
 
       it('should move active cell to the previous day on ArrowLeft', async () => {
@@ -4134,15 +4150,19 @@ function runFullTest(mobileView) {
         const focusableCells = calendarMonth.getFocusableCells();
         if (focusableCells.length < 2) return;
 
-        // Set the second cell as active
+        // Clear all active states, then set the second cell as active
+        focusableCells.forEach(c => { c.active = false; });
         focusableCells[1].active = true;
         await elementUpdated(calendarMonth);
 
         const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+
+        const expectedDate = focusableCells[0].day.date;
+        const listener = oneEvent(calendarMonth, 'calendar-cell-activate');
         grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
 
-        // Should dispatch calendar-cell-activate with the previous cell's date
-        await expect(focusableCells[0].day.date).to.exist;
+        const event = await listener;
+        await expect(event.detail.date).to.equal(expectedDate);
       });
 
       it('should dispatch calendar-month-boundary when ArrowRight at end of month', async () => {
@@ -4159,7 +4179,8 @@ function runFullTest(mobileView) {
         const focusableCells = calendarMonth.getFocusableCells();
         if (focusableCells.length === 0) return;
 
-        // Set the last cell as active
+        // Clear all active states, then set the last cell as active
+        focusableCells.forEach(c => { c.active = false; });
         const lastCell = focusableCells[focusableCells.length - 1];
         lastCell.active = true;
         await elementUpdated(calendarMonth);
@@ -4186,7 +4207,8 @@ function runFullTest(mobileView) {
         const focusableCells = calendarMonth.getFocusableCells();
         if (focusableCells.length === 0) return;
 
-        // Set the first cell as active
+        // Clear all active states, then set the first cell as active
+        focusableCells.forEach(c => { c.active = false; });
         focusableCells[0].active = true;
         await elementUpdated(calendarMonth);
 

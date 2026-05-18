@@ -55,7 +55,16 @@ function getNativeType(page: Page, fixture: string) {
   );
 }
 
-/** Clear the native input via keyboard (select-all + delete). */
+/** Blur by moving focus to an element outside the input under test. */
+async function clickOutside(page: Page) {
+  // Use evaluate to focus + click the outside element directly.
+  // This avoids Playwright actionability timeouts that can occur
+  // when the page is slow to settle after typing.
+  await page.locator('#outside-element').evaluate((el: HTMLElement) => {
+    el.focus();
+    el.click();
+  });
+}
 async function clearViaKeyboard(page: Page, fixture: string) {
   await focusNative(page, fixture);
   await page.keyboard.press('ControlOrMeta+A');
@@ -114,56 +123,56 @@ export function inputInteractionSuite(framework: string) {
       test('required field shows valueMissing on blur when empty', async ({ page }) => {
         await focusNative(page, 'required');
         await expect(auroInput(page, 'required').locator('input')).toBeFocused();
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'required')).toBe('valueMissing');
       });
 
       test('required field shows valid after filling', async ({ page }) => {
         await typeIn(page, 'required', 'something');
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'required')).toBe('valid');
       });
 
       test('email type rejects invalid email', async ({ page }) => {
         await typeIn(page, 'email', 'notanemail');
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'email')).toBe('patternMismatch');
       });
 
       test('email type accepts valid email', async ({ page }) => {
         await typeIn(page, 'email', 'user@example.com');
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'email')).toBe('valid');
       });
 
       test('minLength violation triggers tooShort', async ({ page }) => {
         await typeIn(page, 'length-constraints', 'ab');
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'length-constraints')).toBe('tooShort');
       });
 
       test('valid length passes validation', async ({ page }) => {
         await typeIn(page, 'length-constraints', 'abcde');
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'length-constraints')).toBe('valid');
       });
 
       test('pattern mismatch triggers patternMismatch', async ({ page }) => {
         await typeIn(page, 'pattern', 'abc');
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'pattern')).toBe('patternMismatch');
       });
 
       test('valid pattern passes validation', async ({ page }) => {
         await typeIn(page, 'pattern', '98101');
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() => getValidity(page, 'pattern')).toBe('valid');
       });
@@ -171,7 +180,7 @@ export function inputInteractionSuite(framework: string) {
       test('noValidate prevents validation on blur', async ({ page }) => {
         await focusNative(page, 'no-validate');
         await expect(auroInput(page, 'no-validate').locator('input')).toBeFocused();
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         // validity should remain undefined/null (untouched)
         const v = await getValidity(page, 'no-validate');
@@ -192,7 +201,7 @@ export function inputInteractionSuite(framework: string) {
 
         await focusNative(page, 'required');
         await expect(auroInput(page, 'required').locator('input')).toBeFocused();
-        await page.click('#outside-element');
+        await clickOutside(page);
 
         await expect.poll(() =>
           auroInput(page, 'required').evaluate((el: any) => (el as any).__validatedFired),
@@ -334,7 +343,7 @@ export function inputInteractionSuite(framework: string) {
     test.describe('Reset', () => {
       test('reset() clears value and validity', async ({ page }) => {
         await typeIn(page, 'required', 'temp');
-        await page.click('#outside-element');
+        await clickOutside(page);
         await expect.poll(() => getValidity(page, 'required')).toBe('valid');
 
         await auroInput(page, 'required').evaluate((el: any) => el.reset());

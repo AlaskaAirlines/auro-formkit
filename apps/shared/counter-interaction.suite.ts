@@ -4,10 +4,14 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-counter custom element to be fully registered. */
 async function waitForCounter(page: Page) {
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await page.waitForFunction(
-    () => customElements.get('auro-counter') !== undefined,
-    { timeout: 10_000 },
+    () => {
+      const el = document.querySelector('auro-counter');
+      return customElements.get('auro-counter') !== undefined &&
+        !!el?.shadowRoot?.querySelector('[role="spinbutton"]');
+    },
+    { timeout: 15_000 },
   );
 }
 

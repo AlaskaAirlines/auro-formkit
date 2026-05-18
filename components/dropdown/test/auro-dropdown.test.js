@@ -1537,8 +1537,14 @@ function runFullTest(mobileView) {
         }
       };
 
+      // Suppress the expected console.warn from the catch block
+      const originalWarn = console.warn;
+      console.warn = () => {};
+
       // Should not throw — catch block absorbs the error
       el.handleTriggerContentSlotChange(mockEvent);
+
+      console.warn = originalWarn;
       await elementUpdated(el);
     });
 

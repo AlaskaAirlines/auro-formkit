@@ -250,7 +250,8 @@ export class AuroCalendar extends RangeDatepicker {
    */
   announceMonthChange() {
     const date = new Date(this.centralDate);
-    const formatter = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' });
+    const localeCode = this.locale?.code || undefined;
+    const formatter = new Intl.DateTimeFormat(localeCode, { month: 'long', year: 'numeric' });
     this.announceSelection(formatter.format(date));
   }
 
@@ -430,8 +431,18 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {Number|undefined} Unix timestamp (seconds) of the date to activate, or undefined.
    */
   computeActiveDate() {
-    const ONE_DAY = 86400; // seconds
     const MAX_SCAN_DAYS = 366; // scan at most ~1 year in each direction
+
+    /**
+     * Adds days to a timestamp using Date arithmetic to handle DST correctly.
+     * Returns a local-midnight-aligned timestamp in seconds.
+     */
+    const addDays = (ts, days) => {
+      const d = new Date(ts * 1000);
+      d.setDate(d.getDate() + days);
+      d.setHours(0, 0, 0, 0);
+      return Math.floor(d.getTime() / 1000);
+    };
 
     const rawMin = Number(this.min);
     const rawMax = Number(this.max);
@@ -445,11 +456,13 @@ export class AuroCalendar extends RangeDatepicker {
       (this.disabledDays || []).map(d => parseInt(d, 10))
     );
 
-    // Also include ISO-format blackoutDates from the datepicker if available
+    // Also include ISO-format blackoutDates from the datepicker if available.
+    // Parse YYYY-MM-DD as local date to avoid UTC shift issues.
     const isoBlackouts = this.datepicker?.blackoutDates;
     if (Array.isArray(isoBlackouts)) {
       for (const isoStr of isoBlackouts) {
-        const ts = Math.floor(new Date(isoStr).setHours(0, 0, 0, 0) / 1000);
+        const parts = isoStr.split('-');
+        const ts = Math.floor(new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10)).getTime() / 1000);
         if (Number.isFinite(ts)) blackoutSet.add(ts);
       }
     }
@@ -478,30 +491,33 @@ export class AuroCalendar extends RangeDatepicker {
     if (isEnabled(now)) return now;
 
     // 3. First future enabled date (scan forward from tomorrow, capped by max and MAX_SCAN_DAYS).
-    const scanMax = Number.isFinite(maxTs)
-      ? Math.min(maxTs, now + (MAX_SCAN_DAYS * ONE_DAY))
-      : now + (MAX_SCAN_DAYS * ONE_DAY);
-
-    for (let ts = now + ONE_DAY; ts <= scanMax; ts += ONE_DAY) {
+    for (let idx = 1; idx <= MAX_SCAN_DAYS; idx++) {
+      const ts = addDays(now, idx);
+      if (Number.isFinite(maxTs) && ts > maxTs) break;
       if (isEnabled(ts)) return ts;
     }
 
     // 4. First previous enabled date (scan backward from yesterday, capped by min and MAX_SCAN_DAYS).
-    const scanMin = Number.isFinite(minTs)
-      ? Math.max(minTs, now - (MAX_SCAN_DAYS * ONE_DAY))
-      : now - (MAX_SCAN_DAYS * ONE_DAY);
-
-    for (let ts = now - ONE_DAY; ts >= scanMin; ts -= ONE_DAY) {
+    for (let idx = 1; idx <= MAX_SCAN_DAYS; idx++) {
+      const ts = addDays(now, -idx);
+      if (Number.isFinite(minTs) && ts < minTs) break;
       if (isEnabled(ts)) return ts;
     }
 
     // 5. If scans missed (e.g. min/max range is far from today), fall back to
     //    the first enabled date in the [min, max] range.
     if (Number.isFinite(minTs) && Number.isFinite(maxTs)) {
-      for (let ts = minTs; ts <= maxTs; ts += ONE_DAY) {
+      let ts = minTs;
+      for (let idx = 0; ts <= maxTs; idx++) {
         if (isEnabled(ts)) return ts;
+        ts = addDays(minTs, idx + 1);
       }
     }
+
+    // 6. All dates are blackout — fall back to the first in-range date so focus
+    //    still lands on a focusable (but not selectable) cell.
+    if (Number.isFinite(minTs) && isInRange(minTs)) return minTs;
+    if (isInRange(now)) return now;
 
     return undefined;
   }
@@ -561,8 +577,12 @@ export class AuroCalendar extends RangeDatepicker {
       }
     } else if (key === 'ArrowDown' || key === 'ArrowUp') {
       // Vertical navigation: find same day-of-week +/- 7 days
+      // Use Date arithmetic instead of fixed seconds to handle DST correctly
       const increment = key === 'ArrowDown' ? 7 : -7;
-      const targetDate = fromDate + (increment * 86400);
+      const currentDate = new Date(fromDate * 1000);
+      currentDate.setDate(currentDate.getDate() + increment);
+      currentDate.setHours(0, 0, 0, 0);
+      const targetDate = Math.floor(currentDate.getTime() / 1000);
 
       const allCells = this.getAllFocusableCells();
       let targetCell = allCells.find(cell => cell.day && cell.day.date === targetDate);
@@ -657,7 +677,8 @@ export class AuroCalendar extends RangeDatepicker {
    */
   formatAnnouncementDate(timestamp) {
     const date = new Date(parseInt(timestamp, 10) * 1000);
-    const formatter = new Intl.DateTimeFormat(undefined, {
+    const localeCode = this.locale?.code || undefined;
+    const formatter = new Intl.DateTimeFormat(localeCode, {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
     return formatter.format(date);

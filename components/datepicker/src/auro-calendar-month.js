@@ -182,8 +182,12 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
       }
     } else if (key === 'ArrowDown' || key === 'ArrowUp') {
       // Find the target day (same day-of-week, +/- 7 days)
+      // Use Date arithmetic instead of fixed seconds to handle DST correctly
       const increment = key === 'ArrowDown' ? 7 : -7;
-      const targetDate = activeCell.day.date + (increment * 86400); // 86400 seconds per day
+      const currentDate = new Date(activeCell.day.date * 1000);
+      currentDate.setDate(currentDate.getDate() + increment);
+      currentDate.setHours(0, 0, 0, 0);
+      const targetDate = Math.floor(currentDate.getTime() / 1000);
 
       // Look for the target date in this month's focusable cells
       targetCell = focusableCells.find(cell => cell.day.date === targetDate);
@@ -247,7 +251,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     var _a, _b;
 
     return html `
-      <div aria-labelledby="${this.getHeadingId()}" @keydown="${this.handleGridKeyDown}">
+      <div aria-labelledby="${this.getHeadingId()}">
         <div class="header">
           ${this.renderPrevButton()}
           <div class="headerTitle heading-xs" id="${this.getHeadingId()}" aria-live="polite" aria-atomic="true">
@@ -262,7 +266,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
           ${this.renderNextButton()}
         </div>
 
-        <div class="table" role="grid" aria-labelledby="${this.getHeadingId()}">
+        <div class="table" role="grid" aria-labelledby="${this.getHeadingId()}" @keydown="${this.handleGridKeyDown}">
           <div class="thead" role="rowgroup">
             <div class="tr" role="row">
               ${(_a = this.dayNamesOfTheWeek) === null || _a === void 0 ? void 0 : _a.map((dayNameOfWeek, index) => this.renderDayOfWeek(dayNameOfWeek, index))}

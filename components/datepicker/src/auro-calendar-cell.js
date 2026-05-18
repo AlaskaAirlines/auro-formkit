@@ -204,6 +204,13 @@ export class AuroCalendarCell extends LitElement {
       return false;
     }
 
+    // Check against disabledDays timestamps (legacy path)
+    if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0) {
+      if (this.disabledDays.findIndex(d => parseInt(d, 10) === this.day.date) !== -1) {
+        return true;
+      }
+    }
+
     // Check against blackoutDates (ISO format YYYY-MM-DD) on the datepicker
     const blackoutDates = this.datepicker?.blackoutDates;
 
@@ -268,8 +275,9 @@ export class AuroCalendarCell extends LitElement {
 
     const date = new Date(this.day.date * 1000);
 
-    // Generate localized full date string
-    const dateFormatter = new Intl.DateTimeFormat(undefined, {
+    // Generate localized full date string using the configured locale
+    const localeCode = this.locale?.code || undefined;
+    const dateFormatter = new Intl.DateTimeFormat(localeCode, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -278,7 +286,7 @@ export class AuroCalendarCell extends LitElement {
 
     let label = dateFormatter.format(date);
 
-    // appending popover content here so that it get's read in a logical order with the other date content.
+    // appending popover content here so that it gets read in a logical order with the other date content.
     if (this.hasPopoverContent) {
       label += `, ${this.querySelector(`[slot="popover_${this.dateStr}"]`).innerText.trim()}`;
     }
@@ -511,10 +519,22 @@ export class AuroCalendarCell extends LitElement {
       this.handleSlotContent();
     });
 
+    this.calendarMonth = calendarMonth;
+    this.configurePopover();
+  }
+
+  /**
+   * Configures the popover instance with the calendar month boundary.
+   * Called from firstUpdated and updated because the popover element is only
+   * rendered after hasPopoverContent becomes true (set by handleSlotContent).
+   * @private
+   * @returns {void}
+   */
+  configurePopover() {
     this.auroPopover = this.shadowRoot.querySelector(this.popoverTag._$litStatic$);
 
-    if (this.auroPopover) {
-      this.auroPopover.boundary = calendarMonth;
+    if (this.auroPopover && this.calendarMonth) {
+      this.auroPopover.boundary = this.calendarMonth;
     }
   }
 
@@ -526,6 +546,11 @@ export class AuroCalendarCell extends LitElement {
     if (this.day) {
       this.setDateSlotName();
       this.handleSlotContent();
+    }
+
+    // Configure popover when it first becomes rendered
+    if (properties.has('hasPopoverContent') && this.hasPopoverContent) {
+      this.updateComplete.then(() => this.configurePopover());
     }
   }
 

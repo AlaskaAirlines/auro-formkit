@@ -852,6 +852,14 @@ export class AuroDropdown extends AuroElement {
             }
           };
           this.addEventListener('keydown', this._bibTabHandler);
+
+          // Move initial focus into the bib content, matching FocusTrap behavior
+          requestAnimationFrame(() => {
+            const focusables = getFocusableElements(this.bibContent);
+            if (focusables.length) {
+              focusables[0].focus();
+            }
+          });
         } else {
           // Normal desktop: use FocusTrap on the bib element
           this.focusTrap = new FocusTrap(this.bibContent);

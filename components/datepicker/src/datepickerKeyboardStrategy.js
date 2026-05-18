@@ -32,8 +32,10 @@ export const datepickerKeyboardStrategy = {
       return;
     }
 
-    // Only open from the trigger input, not the clear button or other elements
-    if (evt.target?.hasAttribute?.('slot') && evt.target.getAttribute('slot').includes('clear')) {
+    // Only open from the trigger input, not the clear button or other slotted elements.
+    // evt.target is retargeted to the host in shadow DOM, so use composedPath() to find the real origin.
+    const path = evt.composedPath();
+    if (path.some(el => el.getAttribute?.('slot')?.includes('clear'))) {
       return;
     }
 
@@ -47,8 +49,10 @@ export const datepickerKeyboardStrategy = {
       return;
     }
 
-    // Only open from the trigger input, not the clear button or other elements
-    if (evt.target?.hasAttribute?.('slot') && evt.target.getAttribute('slot').includes('clear')) {
+    // Only open from the trigger input, not the clear button or other slotted elements.
+    // evt.target is retargeted to the host in shadow DOM, so use composedPath() to find the real origin.
+    const path = evt.composedPath();
+    if (path.some(el => el.getAttribute?.('slot')?.includes('clear'))) {
       return;
     }
 

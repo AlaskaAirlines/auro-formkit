@@ -1475,9 +1475,13 @@ export class AuroDatePicker extends AuroElement {
     }
 
     if (changedProperties.has('blackoutDates')) {
-      // Force calendar cells to re-render with updated blackout state
+      // Force calendar cells to re-render with updated blackout state.
+      // requestUpdate on the calendar alone is insufficient because cells
+      // don't receive blackoutDates as a bound property. Dispatching the
+      // slot content event triggers handleSlotContent → requestUpdate on each cell.
       if (this.calendar) {
         this.calendar.requestUpdate();
+        this.dispatchEvent(new CustomEvent('auroDatePicker-newSlotContent'));
       }
     }
 
