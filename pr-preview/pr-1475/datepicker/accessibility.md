@@ -39,7 +39,7 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 | `role="presentation"` | Out-of-range date cell | Cells outside the valid min/max range. Also receive `aria-hidden="true"` and `tabindex="-1"` to remove them from both the accessibility tree and the tab order. |
 | `aria-disabled="true"` | Blackout date cell | Cells matching the `blackout` dates list. Unlike out-of-range cells, blackout cells **remain focusable** via arrow-key navigation so screen reader users can discover them. The cell's label includes ", unavailable" to communicate that the date cannot be selected. |
 | `aria-selected` | Date cell button | `"true"` for the selected date(s), `"false"` for all other in-range cells. |
-| `aria-label` | Date cell button | Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus the range position label (e.g., "range start") and availability status (", unavailable" for blackout dates). |
+| Accessible name | Date cell button | Provided via visually-hidden text content (not an `aria-label` attribute). Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus the range position label (e.g., "range start") and availability status (", unavailable" for blackout dates). |
 
 <auro-header level="2" id="focusManagement">Focus Management</auro-header>
 The component uses `delegatesFocus: true` on its shadow root, meaning focus is automatically delegated to the first focusable element inside the component (the date input).
