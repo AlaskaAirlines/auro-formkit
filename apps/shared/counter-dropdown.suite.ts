@@ -28,16 +28,11 @@ export function counterDropdownSuite(framework: string) {
       const plusButtons = page.getByRole('button', { name: '+' });
       await expect(plusButtons).toHaveCount(3, { timeout: 3_000 });
 
-      // Tab from the trigger into the bib. Each auro-counter host element has a
-      // counterControl part with tabindex=0; the inner +/- buttons have
-      // tabindex="-1" and are not in the Tab sequence. First Tab lands on counter 1.
-      await page.keyboard.press('Tab');
-      await expect(page.locator('auro-counter').nth(0)).toBeFocused();
+      // FocusTrap's focusFirstElement() lands focus on counter 0 when the bib opens.
+      await expect(page.locator('auro-counter').nth(0)).toBeFocused({ timeout: 3_000 });
 
-      // Second Tab moves focus to counter 2, keeping the dropdown open.
+      // Tab moves focus to counter 1, keeping the dropdown open.
       await page.keyboard.press('Tab');
-
-      // After two Tabs, document.activeElement is the second auro-counter host element.
       await expect(page.locator('auro-counter').nth(1)).toBeFocused();
 
       // Dropdown must still be open — all 3 plus buttons still reachable
@@ -50,14 +45,12 @@ export function counterDropdownSuite(framework: string) {
       const plusButtons = page.getByRole('button', { name: '+' });
       await expect(plusButtons).toHaveCount(3, { timeout: 3_000 });
 
-      // Tab into the bib twice so focus lands on counter 2 natively.
-      await page.keyboard.press('Tab');
-      await expect(page.locator('auro-counter').nth(0)).toBeFocused();
-
+      // FocusTrap lands focus on counter 0. Tab to counter 1.
+      await expect(page.locator('auro-counter').nth(0)).toBeFocused({ timeout: 3_000 });
       await page.keyboard.press('Tab');
       await expect(page.locator('auro-counter').nth(1)).toBeFocused();
 
-      // Shift+Tab moves focus back to counter 1, keeping the dropdown open.
+      // Shift+Tab moves focus back to counter 0, keeping the dropdown open.
       await page.keyboard.press('Shift+Tab');
       await expect(page.locator('auro-counter').nth(0)).toBeFocused();
 
