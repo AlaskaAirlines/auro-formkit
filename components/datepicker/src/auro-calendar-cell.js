@@ -200,9 +200,20 @@ export class AuroCalendarCell extends LitElement {
    * @returns {Boolean} - True if the date is a blackout date.
    */
   isBlackout() {
-    if (this.disabledDays && this.day && this.day.date != null && !this.isOutOfRange(this.day, this.min, this.max)) {
-      return this.disabledDays.findIndex(disabledDay => parseInt(disabledDay, 10) === this.day.date) !== -1;
+    if (!this.day || this.day.date == null || this.isOutOfRange(this.day, this.min, this.max)) {
+      return false;
     }
+
+    // Check against blackoutDates (ISO format YYYY-MM-DD) on the datepicker
+    const blackoutDates = this.datepicker?.blackoutDates;
+
+    if (Array.isArray(blackoutDates) && blackoutDates.length > 0) {
+      const cellDate = new Date(this.day.date * 1000).toISOString().split('T')[0];
+      if (blackoutDates.includes(cellDate)) {
+        return true;
+      }
+    }
+
     return false;
   }
 
@@ -260,7 +271,13 @@ export class AuroCalendarCell extends LitElement {
       month: 'long',
       day: 'numeric'
     });
+
     let label = dateFormatter.format(date);
+
+    // appending popover content here so that it get's read in a logical order with the other date content.
+    if (this.hasPopoverContent) {
+      label += `, ${this.querySelector(`[slot="popover_${this.dateStr}"]`).innerText.trim()}`;
+    }
 
     // Append range position if in range mode
     const rangePosition = this.getRangePosition();
@@ -268,9 +285,9 @@ export class AuroCalendarCell extends LitElement {
       label += `, ${rangePosition}`;
     }
 
-    // Append "unavailable" for blackout cells
+    // Append blackout label for blackout cells
     if (this.isBlackout()) {
-      label += ', unavailable';
+      label += `, ${this.datepicker?.blackoutLabel || 'unavailable'}`;
     }
 
     return label;
@@ -517,10 +534,25 @@ export class AuroCalendarCell extends LitElement {
     }
   }
 
-  renderCellButton(buttonClasses) {
+  renderCellButton() {
     const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
     const role = outOfRange ? 'presentation' : 'gridcell';
     const blackout = this.isBlackout();
+
+    const buttonClasses = {
+      'day': true,
+      'body-lg': true,
+      'currentDate': this.currentDate,
+      'selected': this.selected,
+      'inRange': this.datepicker?.hasAttribute('range') && this.hovered && this.isInRange(this.day, this.dateFrom, this.dateTo),
+      'lastHoveredDate': this.isLastHoveredDate(this.day, this.dateFrom, this.dateTo, this.hoveredDate) && this.datepicker && this.datepicker.hasAttribute('range'),
+      'disabled': outOfRange,
+      'blackout': blackout,
+      'rangeDepartDate': this.datepicker?.hasAttribute('range') && this.isDepartDate(this.day, this.dateFrom) && (this.hoveredDate > this.dateFrom || this.dateTo),
+      'rangeReturnDate': this.datepicker?.hasAttribute('range') && this.isReturnDate(this.day, this.dateFrom, this.dateTo),
+      'reference': this.isReferenceDate(this.dateStr),
+      'sameDateTrip': this.datepicker?.hasAttribute('range') && this.dateFrom === this.dateTo
+    };
 
     return html`
       <button
@@ -549,38 +581,19 @@ export class AuroCalendarCell extends LitElement {
   }
 
   render() {
-    const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
-    const blackout = this.isBlackout();
     const hasPopoverContent = this.hasPopoverContent;
-
-
-    const buttonClasses = {
-      'day': true,
-      'body-lg': true,
-      'currentDate': this.currentDate,
-      'selected': this.selected,
-      'inRange': this.hovered && this.isInRange(this.day, this.dateFrom, this.dateTo),
-      'lastHoveredDate': this.isLastHoveredDate(this.day, this.dateFrom, this.dateTo, this.hoveredDate) && this.datepicker && this.datepicker.hasAttribute('range'),
-      'disabled': outOfRange,
-      'blackout': blackout,
-      'rangeDepartDate': this.isDepartDate(this.day, this.dateFrom) && (this.hoveredDate > this.dateFrom || this.dateTo),
-      'rangeReturnDate': this.isReturnDate(this.day, this.dateFrom, this.dateTo),
-      'reference': this.isReferenceDate(this.dateStr),
-      'sameDateTrip': this.dateFrom === this.dateTo
-    };
-
 
     if (hasPopoverContent) {
       return html`
         <${this.popoverTag}>
-          <slot name="popover_${this.dateStr}"></slot>
-          ${this.renderCellButton(buttonClasses)}
+          <span aria-hidden="true"><slot name="popover_${this.dateStr}"></slot></span>
+          ${this.renderCellButton()}
         </${this.popoverTag}>
       `;
     }
 
     return html`
-      ${this.renderCellButton(buttonClasses)}
+      ${this.renderCellButton()}
     `;
   }
 }

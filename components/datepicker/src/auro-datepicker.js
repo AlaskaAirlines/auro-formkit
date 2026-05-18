@@ -120,6 +120,8 @@ export class AuroDatePicker extends AuroElement {
     this.rangeLabelBeforeRange = 'before range';
     this.rangeLabelInRange = 'in range';
     this.rangeLabelAfterRange = 'after range';
+    this.blackoutDates = [];
+    this.blackoutLabel = 'unavailable';
     this.navLabelPrevMonth = 'Previous month';
     this.navLabelNextMonth = 'Next month';
     this.stacked = false;
@@ -536,6 +538,22 @@ export class AuroDatePicker extends AuroElement {
        * Label announced for cells after the range (or after start when no end is selected).
        */
       rangeLabelAfterRange: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Array of dates that cannot be selected. Dates should be in ISO format (YYYY-MM-DD).
+       */
+      blackoutDates: {
+        type: Array,
+        reflect: true
+      },
+
+      /**
+       * Label announced for blackout (disabled but in-range) date cells.
+       */
+      blackoutLabel: {
         type: String,
         reflect: true
       },

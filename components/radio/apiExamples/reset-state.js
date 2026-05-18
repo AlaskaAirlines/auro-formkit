@@ -1,4 +1,4 @@
-export function resetStateExample() {
+export async function resetStateExample() {
   const elem = document.querySelector('#resetStateExample');
 
   document.querySelector('#resetStateBtn').addEventListener('click', () => {
