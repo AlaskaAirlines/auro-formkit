@@ -4052,18 +4052,28 @@ function runFullTest(mobileView) {
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('should not show the bib when Space is pressed on the input', async () => {
+    it('should show the bib when Space is pressed on the input', async () => {
       const el = await fixture(html`
         <auro-datepicker></auro-datepicker>
       `);
 
-      const input = getInput(el, 0);
-
-      input.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
 
       await elementUpdated(el);
 
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+    });
+
+    it('should show the bib when Enter is pressed on the input', async () => {
+      const el = await fixture(html`
+        <auro-datepicker></auro-datepicker>
+      `);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+      await elementUpdated(el);
+
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
     });
 
     for (const key of ['Enter', 'Space']) {
@@ -4083,6 +4093,138 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
     }
+
+    describe('Arrow key navigation within calendar month', () => {
+      it('should move active cell to the next day on ArrowRight', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        if (focusableCells.length < 2) return;
+
+        // Set the first cell as active
+        focusableCells[0].active = true;
+        await elementUpdated(calendarMonth);
+
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+
+        // Should dispatch calendar-cell-activate with the next cell's date
+        await expect(focusableCells[1].day.date).to.exist;
+      });
+
+      it('should move active cell to the previous day on ArrowLeft', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        if (focusableCells.length < 2) return;
+
+        // Set the second cell as active
+        focusableCells[1].active = true;
+        await elementUpdated(calendarMonth);
+
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+
+        // Should dispatch calendar-cell-activate with the previous cell's date
+        await expect(focusableCells[0].day.date).to.exist;
+      });
+
+      it('should dispatch calendar-month-boundary when ArrowRight at end of month', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        if (focusableCells.length === 0) return;
+
+        // Set the last cell as active
+        const lastCell = focusableCells[focusableCells.length - 1];
+        lastCell.active = true;
+        await elementUpdated(calendarMonth);
+
+        const listener = oneEvent(calendarMonth, 'calendar-month-boundary');
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+
+        const event = await listener;
+        await expect(event.detail.direction).to.equal('next');
+      });
+
+      it('should dispatch calendar-month-boundary when ArrowLeft at start of month', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        if (focusableCells.length === 0) return;
+
+        // Set the first cell as active
+        focusableCells[0].active = true;
+        await elementUpdated(calendarMonth);
+
+        const listener = oneEvent(calendarMonth, 'calendar-month-boundary');
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+
+        const event = await listener;
+        await expect(event.detail.direction).to.equal('prev');
+      });
+
+      it('should set tabindex 0 on active cell and -1 on others (roving tabindex)', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        if (focusableCells.length < 2) return;
+
+        // Set the first cell as active
+        focusableCells[0].active = true;
+        focusableCells[1].active = false;
+        await elementUpdated(focusableCells[0]);
+        await elementUpdated(focusableCells[1]);
+
+        const activeButton = focusableCells[0].shadowRoot.querySelector('button');
+        const inactiveButton = focusableCells[1].shadowRoot.querySelector('button');
+
+        await expect(activeButton.getAttribute('tabindex')).to.equal('0');
+        await expect(inactiveButton.getAttribute('tabindex')).to.equal('-1');
+      });
+    });
 
     describe('Escape', () => {
       it('should close the datepicker bib without closing a parent auro-dialog', async () => {

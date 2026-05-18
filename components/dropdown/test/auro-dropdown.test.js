@@ -768,6 +768,96 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('desktopModal', () => {
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.desktopModal).to.be.false;
+      });
+
+      it('should reflect the desktopModal attribute', async () => {
+        const el = await fixture(html`<auro-dropdown desktopmodal><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.desktopModal).to.be.true;
+        await expect(el.hasAttribute('desktopmodal')).to.be.true;
+      });
+
+      it('should set siblings inert when opened in desktopModal mode', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        await expect(sibling.inert).to.not.be.true;
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        await expect(sibling.inert).to.be.true;
+      });
+
+      it('should clear sibling inert when closed', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        el.hide();
+        await elementUpdated(el);
+        await expectPopoverHidden(el);
+
+        await expect(sibling.inert).to.not.be.true;
+      });
+
+      it('should clear sibling inert on disconnectedCallback', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        wrapper.removeChild(el);
+        await elementUpdated(wrapper);
+
+        await expect(sibling.inert).to.not.be.true;
+      });
+    });
+
     describe('offset', () => {
       it('should default to 0', async () => {
         const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
