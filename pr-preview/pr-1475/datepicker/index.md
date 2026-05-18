@@ -180,7 +180,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/popover-slot.html) -->
 <!-- The below content is automatically added from ./../apiExamples/popover-slot.html -->
-<auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023">
+<auro-datepicker centralDate="12/03/2023" calendarStartDate="12/01/2023" calendarEndDate="12/31/2023" minDate="12/04/2023" maxDate="12/09/2023">
 <span slot="bib.fullscreen.headline">Popover Slot Example</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
@@ -205,7 +205,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/popover-slot.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/popover-slot.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker centralDate="12/03/2023" minDate="12/04/2023" maxDate="12/09/2023"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker centralDate="12/03/2023" calendarStartDate="12/01/2023" calendarEndDate="12/31/2023" minDate="12/04/2023" maxDate="12/09/2023"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Popover Slot Example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
