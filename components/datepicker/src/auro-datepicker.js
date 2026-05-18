@@ -2090,7 +2090,7 @@ export class AuroDatePicker extends AuroElement {
     // Base HTML render() handles dropdown and calendar bib
     return html`
       <!-- Hidden slot for clear button aria-label -->
-      <slot name="ariaLabel.input.clear" hidden @slotchange=${this.requestUpdate}></slot>
+      <slot name="ariaLabel.input.clear" hidden @slotchange=${() => this.requestUpdate()}></slot>
 
       <${this.dropdownTag}
           appearance="${this.onDark ? 'inverse' : this.appearance}"

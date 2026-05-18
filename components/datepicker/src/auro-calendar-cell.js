@@ -519,8 +519,10 @@ export class AuroCalendarCell extends LitElement {
       this.dateChanged(this.dateFrom, this.dateTo, this.hoveredDate, this.day);
     }
 
-    this.setDateSlotName();
-    this.handleSlotContent();
+    if (this.day) {
+      this.setDateSlotName();
+      this.handleSlotContent();
+    }
   }
 
   /**
