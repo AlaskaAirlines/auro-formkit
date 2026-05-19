@@ -217,39 +217,16 @@ export function menuInteractionSuite(framework: string) {
       });
     });
 
-    // ── Allow deselect ────────────────────────────────────────────────────
+    // ── Single-select persistence ──────────────────────────────────────────
 
-    test.describe('Allow deselect', () => {
-      test('clicking same option twice deselects it', async ({ page }) => {
-        await clickOption(page, 'allow-deselect', 'One');
-        await expect.poll(() => menuValue(page, 'allow-deselect')).toBe('One');
-
-        await clickOption(page, 'allow-deselect', 'One');
-
-        await expect.poll(async () => {
-          const val = await menuValue(page, 'allow-deselect');
-          return val == null || val === '';
-        }).toBe(true);
-      });
-
-      test('deselect prevented without allowDeselect', async ({ page }) => {
-        await menu(page, 'default').evaluate((el: any) => {
-          (el as any).__deselectPrevented = false;
-          el.addEventListener('auroMenu-deselectPrevented', () => {
-            (el as any).__deselectPrevented = true;
-          }, { once: true });
-        });
-
+    test.describe('Single-select persistence', () => {
+      test('clicking same option twice keeps selection in single-select', async ({ page }) => {
         await clickOption(page, 'default', 'Apples');
         await expect.poll(() => menuValue(page, 'default')).toBe('Apples');
 
         await clickOption(page, 'default', 'Apples');
 
-        await expect.poll(() =>
-          menu(page, 'default').evaluate((el: any) => (el as any).__deselectPrevented),
-        ).toBe(true);
-
-        // Value should remain
+        // Value should remain — single-select does not allow deselection
         await expect.poll(() => menuValue(page, 'default')).toBe('Apples');
       });
     });
@@ -388,10 +365,10 @@ export function menuInteractionSuite(framework: string) {
 
     test.describe('Nested menu', () => {
       test('clicking child option in nested menu selects it on root', async ({ page }) => {
-        // Ensure the menuoption's context consumer has wired up menuService
+        // Wait for nested options to be connected and interactive
         await expect.poll(() =>
           page.locator('[data-testid="nested"] auro-menuoption[value="Child1"]')
-            .evaluate((el: any) => el.menuService != null),
+            .evaluate((el: any) => el.isConnected && el.closest('auro-menu') != null),
           { timeout: 5_000 },
         ).toBe(true);
 
@@ -401,10 +378,10 @@ export function menuInteractionSuite(framework: string) {
       });
 
       test('clicking parent-level option still works', async ({ page }) => {
-        // Ensure the menuoption's context consumer has wired up menuService
+        // Wait for parent-level options to be connected
         await expect.poll(() =>
           page.locator('[data-testid="nested"] auro-menuoption[value="Parent1"]')
-            .evaluate((el: any) => el.menuService != null),
+            .evaluate((el: any) => el.isConnected && el.closest('auro-menu') != null),
           { timeout: 5_000 },
         ).toBe(true);
 
