@@ -4119,7 +4119,7 @@ function runFullTest(mobileView) {
         await elementUpdated(calendarMonth);
 
         const focusableCells = calendarMonth.getFocusableCells();
-        if (focusableCells.length < 2) return;
+        expect(focusableCells.length).to.be.at.least(2, 'Expected at least 2 focusable cells for ArrowRight test');
 
         // Clear all active states, then set the first cell as active
         focusableCells.forEach(c => { c.active = false; });
@@ -4148,7 +4148,7 @@ function runFullTest(mobileView) {
         await elementUpdated(calendarMonth);
 
         const focusableCells = calendarMonth.getFocusableCells();
-        if (focusableCells.length < 2) return;
+        expect(focusableCells.length).to.be.at.least(2, 'Expected at least 2 focusable cells for ArrowLeft test');
 
         // Clear all active states, then set the second cell as active
         focusableCells.forEach(c => { c.active = false; });
@@ -4177,7 +4177,7 @@ function runFullTest(mobileView) {
         await elementUpdated(calendarMonth);
 
         const focusableCells = calendarMonth.getFocusableCells();
-        if (focusableCells.length === 0) return;
+        expect(focusableCells.length).to.be.at.least(1, 'Expected at least 1 focusable cell for ArrowRight boundary test');
 
         // Clear all active states, then set the last cell as active
         focusableCells.forEach(c => { c.active = false; });
@@ -4205,7 +4205,7 @@ function runFullTest(mobileView) {
         await elementUpdated(calendarMonth);
 
         const focusableCells = calendarMonth.getFocusableCells();
-        if (focusableCells.length === 0) return;
+        expect(focusableCells.length).to.be.at.least(1, 'Expected at least 1 focusable cell for ArrowLeft boundary test');
 
         // Clear all active states, then set the first cell as active
         focusableCells.forEach(c => { c.active = false; });
@@ -4232,7 +4232,7 @@ function runFullTest(mobileView) {
         await elementUpdated(calendarMonth);
 
         const focusableCells = calendarMonth.getFocusableCells();
-        if (focusableCells.length < 2) return;
+        expect(focusableCells.length).to.be.at.least(2, 'Expected at least 2 focusable cells for roving tabindex test');
 
         // Set the first cell as active
         focusableCells[0].active = true;

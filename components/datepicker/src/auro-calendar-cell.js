@@ -151,11 +151,11 @@ export class AuroCalendarCell extends LitElement {
 
   /**
    * Handles user hover events and dispatches a custom event.
+   * Always dispatches for range pickers so the preview updates correctly.
    * @private
    * @returns {void}
    */
   handleHover() {
-    if (this.hovered) return;
     this.hovered = true;
 
     let _a;
@@ -506,6 +506,8 @@ export class AuroCalendarCell extends LitElement {
     this.datepicker = calendar.datepicker;
     this.datepicker.addEventListener('auroDatePicker-newSlotContent', () => {
       this.handleSlotContent();
+      // Force re-render so isBlackout()/aria-disabled reflect updated blackoutDates.
+      this.requestUpdate();
     });
 
     this.calendarMonth = calendarMonth;

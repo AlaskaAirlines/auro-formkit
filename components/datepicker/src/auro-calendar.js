@@ -425,7 +425,11 @@ export class AuroCalendar extends RangeDatepicker {
    *   2. Today's date if not disabled (in-range and not blackout)
    *   3. First future non-disabled date (scans day-by-day from today up to 1 year)
    *   4. First previous non-disabled date (scans day-by-day from today up to 1 year)
-   *   5. undefined — no valid target
+   *   5. First enabled date in finite [min, max] range
+   *   5b. First enabled date scanning forward from finite min (unbounded max)
+   *   5c. First enabled date scanning backward from finite max (unbounded min)
+   *   6. First in-range date (even if blackout) so focus can land somewhere
+   *   7. undefined — no valid target
    *
    * @private
    * @returns {Number|undefined} Unix timestamp (seconds) of the date to activate, or undefined.
@@ -488,6 +492,46 @@ export class AuroCalendar extends RangeDatepicker {
     // 2. Today's date (midnight-aligned) if enabled.
     const now = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
 
+    // When centralDate is configured, prefer a date within the month(s) that
+    // will actually be rendered. If today falls outside the visible range, an
+    // active cell set to today would have no matching DOM element and keyboard
+    // focus could not enter the calendar.
+    const centralDateValue = this.centralDate ? new Date(this.centralDate) : null;
+
+    if (centralDateValue && !isNaN(centralDateValue.getTime())) {
+      const centralMonth = centralDateValue.getMonth();
+      const centralYear = centralDateValue.getFullYear();
+      const todayDate = new Date(now * 1000);
+      const todayMonth = todayDate.getMonth();
+      const todayYear = todayDate.getFullYear();
+
+      // Today is outside the centralDate's month — scan for an enabled date
+      // within the visible month instead.
+      if (todayMonth !== centralMonth || todayYear !== centralYear) {
+        const visibleStart = new Date(centralYear, centralMonth, 1);
+        visibleStart.setHours(0, 0, 0, 0);
+        const visibleEnd = new Date(centralYear, centralMonth + 1, 0); // last day of month
+        visibleEnd.setHours(0, 0, 0, 0);
+        const startTs = Math.floor(visibleStart.getTime() / 1000);
+        const endTs = Math.floor(visibleEnd.getTime() / 1000);
+        const daysInMonth = visibleEnd.getDate();
+
+        for (let idx = 0; idx < daysInMonth; idx++) {
+          const ts = addDays(startTs, idx);
+          if (ts > endTs) break;
+          if (isEnabled(ts)) return ts;
+        }
+
+        // No enabled date in the visible month — fall back to first in-range
+        // date in the month so focus still lands on a focusable cell.
+        for (let idx = 0; idx < daysInMonth; idx++) {
+          const ts = addDays(startTs, idx);
+          if (ts > endTs) break;
+          if (isInRange(ts)) return ts;
+        }
+      }
+    }
+
     if (isEnabled(now)) return now;
 
     // 3. First future enabled date (scan forward from tomorrow, capped by max and MAX_SCAN_DAYS).
@@ -514,7 +558,16 @@ export class AuroCalendar extends RangeDatepicker {
       }
     }
 
-    // 5b. Unbounded min with a finite max far in the past (e.g. birth-date picker):
+    // 5b. Finite min with unbounded max (e.g. minDate far in the future):
+    //     scan forward from min for up to MAX_SCAN_DAYS.
+    if (Number.isFinite(minTs) && !Number.isFinite(maxTs)) {
+      for (let idx = 0; idx <= MAX_SCAN_DAYS; idx++) {
+        const ts = addDays(minTs, idx);
+        if (isEnabled(ts)) return ts;
+      }
+    }
+
+    // 5c. Unbounded min with a finite max far in the past (e.g. birth-date picker):
     //     scan backward from max for up to MAX_SCAN_DAYS.
     if (!Number.isFinite(minTs) && Number.isFinite(maxTs)) {
       for (let idx = 0; idx <= MAX_SCAN_DAYS; idx++) {
