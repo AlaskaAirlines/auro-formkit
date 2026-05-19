@@ -43,7 +43,7 @@
 <auro-header level="3" id="voiceOverCalendarNavigation">Calendar Navigation</auro-header>
 <p>When the calendar bib is open, users can navigate calendar cells using VoiceOver gestures (swipe left/right) or arrow keys. Each cell announces:</p>
 <ul>
-  <li>The full localized date (e.g. <em>"Wednesday, May 14, 2026"</em>)</li>
+  <li>The full localized date (e.g. <em>"Thursday, May 14, 2026"</em>)</li>
   <li>Range position when in range mode (e.g. <em>", range start"</em>, <em>", in range"</em>, <em>", before range"</em>)</li>
   <li><em>", unavailable"</em> for blackout dates (dates within the min/max range that are explicitly disabled)</li>
   <li><em>"current date"</em> for today's date (via <code>aria-current="date"</code>)</li>
@@ -52,7 +52,7 @@
 <p>Out-of-range cells (outside min/max bounds) are completely hidden from VoiceOver with <code>aria-hidden="true"</code>.</p>
 
 <auro-header level="3" id="voiceOverDateSelection">Date Selection</auro-header>
-<p>When a date is selected, an <code>aria-live="assertive"</code> region announces the selected date (e.g. <em>"Wednesday, May 14, 2026"</em>). For range datepickers, both the start and end selections are announced.</p>
+<p>When a date is selected, an <code>aria-live="assertive"</code> region announces the selected date (e.g. <em>"Thursday, May 14, 2026"</em>). For range datepickers, both the start and end selections are announced.</p>
 
 <auro-header level="3" id="voiceOverDialogName">Dialog Name</auro-header>
 <p>The calendar dialog receives its accessible name from the <code>fromLabel</code> slot content. VoiceOver announces the dialog as e.g. <em>"Departure date, dialog"</em> when it opens.</p>

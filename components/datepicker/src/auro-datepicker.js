@@ -1372,8 +1372,18 @@ export class AuroDatePicker extends AuroElement {
     // After standard validation, check blackout dates for typed input
     if (this.validity !== 'customError') {
       if (this.isBlackoutDate(this.value) || (this.range && this.isBlackoutDate(this.valueEnd))) {
+        const msg = this.setCustomValidityCustomError || 'Selected date is unavailable';
         this.validity = 'customError';
-        this.setCustomValidity = this.setCustomValidityCustomError || 'Selected date is unavailable';
+        this.errorMessage = msg;
+
+        this.dispatchEvent(new CustomEvent('auroFormElement-validated', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            validity: this.validity,
+            message: this.errorMessage
+          }
+        }));
       }
     }
   }

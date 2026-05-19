@@ -230,6 +230,7 @@ export class AuroCalendar extends RangeDatepicker {
    */
   handlePrevMonth() {
     this.utilCal.handleMonthChange(this, 'prev');
+    this.updateActiveCellForVisibleMonth();
     this.announceMonthChange();
   }
 
@@ -240,6 +241,7 @@ export class AuroCalendar extends RangeDatepicker {
    */
   handleNextMonth() {
     this.utilCal.handleMonthChange(this, 'next');
+    this.updateActiveCellForVisibleMonth();
     this.announceMonthChange();
   }
 
@@ -253,6 +255,22 @@ export class AuroCalendar extends RangeDatepicker {
     const localeCode = this.locale?.code || undefined;
     const formatter = new Intl.DateTimeFormat(localeCode, { month: 'long', year: 'numeric' });
     this.announceSelection(formatter.format(date));
+  }
+
+  /**
+   * Recomputes and sets the active cell for the newly visible month after
+   * month navigation. Without this, activeCellDate can point at a date in
+   * the old month, leaving no tabindex="0" cell in the grid.
+   * @private
+   * @returns {void}
+   */
+  updateActiveCellForVisibleMonth() {
+    this.activeCellDate = this.computeActiveDate();
+    this.updateComplete.then(() => {
+      if (this.activeCellDate != null) {
+        this.setActiveCell(this.activeCellDate);
+      }
+    });
   }
 
   /**
