@@ -83,7 +83,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
 | `auroDatePicker-newSlotContent` | `CustomEvent<any>`                               | Notifies that new slot content has been added to the datepicker. |
 | `auroDatePicker-toggled`        | `CustomEvent<{ expanded: any; }>`                | Notifies that the calendar dropdown has been opened/closed. |
 | `auroDatePicker-valueSet`       |                                                  | Notifies that the component has a new value set. |
-| `auroFormElement-validated`     |                                                  | Notifies that the component value(s) have been validated. |
+| `auroFormElement-validated`     | `CustomEvent<{ validity: any; message: any; }>`  | Notifies that the component value(s) have been validated. |
 | `input`                         |                                                  |                                                  |
 
 ## Slots
