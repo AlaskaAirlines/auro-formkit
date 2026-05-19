@@ -504,14 +504,22 @@ export class AuroCalendarCell extends LitElement {
       return;
     }
     this.datepicker = calendar.datepicker;
-    this.datepicker.addEventListener('auroDatePicker-newSlotContent', () => {
+    this._slotContentHandler = () => {
       this.handleSlotContent();
       // Force re-render so isBlackout()/aria-disabled reflect updated blackoutDates.
       this.requestUpdate();
-    });
+    };
+    this.datepicker.addEventListener('auroDatePicker-newSlotContent', this._slotContentHandler);
 
     this.calendarMonth = calendarMonth;
     this.configurePopover();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.datepicker && this._slotContentHandler) {
+      this.datepicker.removeEventListener('auroDatePicker-newSlotContent', this._slotContentHandler);
+    }
   }
 
   /**
@@ -581,9 +589,9 @@ export class AuroCalendarCell extends LitElement {
         slot="trigger"
         id="${this.getCellId()}"
         role="${role}"
-        @click="${outOfRange ? nothing : this.handleTap}"
-        @mouseover="${outOfRange ? nothing : this.handleHover}"
-        @focus="${outOfRange ? nothing : this.handleHover}"
+        @click="${outOfRange ? undefined : this.handleTap}"
+        @mouseover="${outOfRange ? undefined : this.handleHover}"
+        @focus="${outOfRange ? undefined : this.handleHover}"
         class="${classMap(buttonClasses)}"
         ?disabled="${outOfRange}"
         aria-disabled="${blackout ? 'true' : nothing}"

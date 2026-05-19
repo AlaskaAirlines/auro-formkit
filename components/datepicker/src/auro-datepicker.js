@@ -600,6 +600,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Custom help text message to display when validity = `customError`.
+       * Also used as the validation message when a blackout date is typed into the input.
        */
       setCustomValidityCustomError: {
         type: String
@@ -1336,6 +1337,27 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
+   * Checks whether a formatted date string matches a blackout date.
+   * @private
+   * @param {string} dateStr - A date string in the component's configured format.
+   * @returns {boolean} True if the date is in the blackoutDates list.
+   */
+  isBlackoutDate(dateStr) {
+    if (!Array.isArray(this.blackoutDates) || this.blackoutDates.length === 0 || !dateStr) {
+      return false;
+    }
+
+    const formatted = this.util.toNorthAmericanFormat(dateStr, this.format);
+    if (!this.util.validDateStr(dateStr, this.format)) return false;
+
+    const d = new Date(formatted);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return this.blackoutDates.includes(`${yyyy}-${mm}-${dd}`);
+  }
+
+  /**
    * Validates value.
    * @param {boolean} [force=false] - Whether to force validation.
    */
@@ -1346,6 +1368,14 @@ export class AuroDatePicker extends AuroElement {
     }
 
     this.validation.validate(this, force);
+
+    // After standard validation, check blackout dates for typed input
+    if (this.validity !== 'customError') {
+      if (this.isBlackoutDate(this.value) || (this.range && this.isBlackoutDate(this.valueEnd))) {
+        this.validity = 'customError';
+        this.setCustomValidity = this.setCustomValidityCustomError || 'Selected date is unavailable';
+      }
+    }
   }
 
   /**
