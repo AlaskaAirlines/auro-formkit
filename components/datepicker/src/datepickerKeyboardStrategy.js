@@ -32,10 +32,11 @@ export const datepickerKeyboardStrategy = {
       return;
     }
 
-    // Only open from the trigger input, not the clear button or other slotted elements.
-    // evt.target is retargeted to the host in shadow DOM, so use composedPath() to find the real origin.
+    // Only open from the trigger input, not the clear button or other internal elements.
+    // evt.target is retargeted to the host in shadow DOM, so use composedPath()
+    // to find the real origin. The clear button is rendered with class "clearBtn".
     const path = evt.composedPath();
-    if (path.some(el => el.getAttribute?.('slot')?.includes('clear'))) {
+    if (path.some(el => el.classList?.contains('clearBtn'))) {
       return;
     }
 
@@ -49,10 +50,11 @@ export const datepickerKeyboardStrategy = {
       return;
     }
 
-    // Only open from the trigger input, not the clear button or other slotted elements.
-    // evt.target is retargeted to the host in shadow DOM, so use composedPath() to find the real origin.
+    // Only open from the trigger input, not the clear button or other internal elements.
+    // evt.target is retargeted to the host in shadow DOM, so use composedPath()
+    // to find the real origin. The clear button is rendered with class "clearBtn".
     const path = evt.composedPath();
-    if (path.some(el => el.getAttribute?.('slot')?.includes('clear'))) {
+    if (path.some(el => el.classList?.contains('clearBtn'))) {
       return;
     }
 

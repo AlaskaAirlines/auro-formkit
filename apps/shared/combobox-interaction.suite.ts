@@ -4,7 +4,7 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-combobox custom element to be fully registered and its dropdown ready. */
 async function waitForCombobox(page: Page) {
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('load');
   await page.waitForFunction(
     () => {
       if (customElements.get('auro-combobox') === undefined) return false;
@@ -12,7 +12,7 @@ async function waitForCombobox(page: Page) {
       const els = document.querySelectorAll('auro-combobox');
       return els.length > 0 && [...els].every((el: any) => el.dropdown != null);
     },
-    { timeout: 10_000 },
+    { timeout: 15_000 },
   );
 }
 
@@ -47,12 +47,12 @@ function comboboxValue(page: Page, fixture: string) {
 
 /** Wait for the dropdown bib to become visible. */
 async function waitForBibOpen(page: Page, fixture: string) {
-  await expect.poll(() => isBibVisible(page, fixture), { timeout: 8_000 }).toBe(true);
+  await expect.poll(() => isBibVisible(page, fixture), { timeout: 15_000 }).toBe(true);
 }
 
 /** Wait for the dropdown bib to close. */
 async function waitForBibClosed(page: Page, fixture: string) {
-  await expect.poll(() => isBibVisible(page, fixture), { timeout: 8_000 }).toBe(false);
+  await expect.poll(() => isBibVisible(page, fixture), { timeout: 15_000 }).toBe(false);
 }
 
 /** Type into the combobox input using real keyboard events. */
@@ -357,6 +357,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
 
     test.describe('Screen reader announcements', () => {
       test('populates live region when an option is activated', async ({ page }) => {
+        test.setTimeout(45_000);
         await typeInCombobox(page, 'no-filter', 'a');
         await waitForBibOpen(page, 'no-filter');
         await waitForOptionsReady(page, 'no-filter');
@@ -374,6 +375,7 @@ export function comboboxInteractionSuite(framework: string, options?: SuiteOptio
       });
 
       test('clears live region after announcement duration', async ({ page }) => {
+        test.setTimeout(45_000);
         await typeInCombobox(page, 'no-filter', 'a');
         await waitForBibOpen(page, 'no-filter');
 

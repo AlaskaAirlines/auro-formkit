@@ -1099,7 +1099,7 @@ export class AuroDatePicker extends AuroElement {
             bibEl.close();
             bibEl.open(true);
             doubleRaf(() => {
-              this.calendar.focusCloseButton();
+              this.focusActiveCellWhenReady();
             });
           }
         });

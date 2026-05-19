@@ -1541,10 +1541,12 @@ function runFullTest(mobileView) {
       const originalWarn = console.warn;
       console.warn = () => {};
 
-      // Should not throw — catch block absorbs the error
-      el.handleTriggerContentSlotChange(mockEvent);
-
-      console.warn = originalWarn;
+      try {
+        // Should not throw — catch block absorbs the error
+        el.handleTriggerContentSlotChange(mockEvent);
+      } finally {
+        console.warn = originalWarn;
+      }
       await elementUpdated(el);
     });
 

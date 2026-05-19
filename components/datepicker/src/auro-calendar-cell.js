@@ -150,19 +150,6 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Handles Enter/Space key on the cell button.
-   * @private
-   * @param {KeyboardEvent} event - The keyboard event.
-   * @returns {void}
-   */
-  handleKeyDown(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this.handleTap();
-    }
-  }
-
-  /**
    * Handles user hover events and dispatches a custom event.
    * @private
    * @returns {void}
@@ -229,8 +216,10 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is a valid date depending on the min and max values.
-   * Sets the disabled attribute for both out-of-range and blackout dates.
+   * Checks if the current date is disabled based on min/max range or the
+   * legacy disabledDays timestamp list.  Sets the `disabled` attribute on the
+   * host when the date falls outside the allowed range or appears in
+   * disabledDays. Note: blackout dates are handled separately by `isBlackout()`.
    * @private
    * @param {Object} day - An object containing the dateFrom and day of month values.
    * @param {Number} min - The minimum date value.

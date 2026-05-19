@@ -650,6 +650,17 @@ export class AuroDropdown extends AuroElement {
         this._clearPageInert();
       }
     }
+
+    // Handle desktopModal toggled while the dropdown is already open.
+    // Re-initialize focus trapping and page inert state to match the new mode.
+    if (changedProperties.has('desktopModal') && this.isPopoverVisible && !this.isBibFullscreen) {
+      this.updateFocusTrap();
+      if (this.desktopModal) {
+        this._setPageInert();
+      } else {
+        this._clearPageInert();
+      }
+    }
   }
 
   /**

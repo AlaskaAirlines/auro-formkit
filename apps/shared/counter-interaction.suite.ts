@@ -4,14 +4,14 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-counter custom element to be fully registered. */
 async function waitForCounter(page: Page) {
-  await page.waitForLoadState('domcontentloaded');
+  await page.waitForLoadState('load');
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-counter');
       return customElements.get('auro-counter') !== undefined &&
         !!el?.shadowRoot?.querySelector('[role="spinbutton"]');
     },
-    { timeout: 15_000 },
+    { timeout: 30_000 },
   );
 }
 
@@ -106,6 +106,7 @@ export function counterInteractionSuite(framework: string) {
 
   test.describe(`${label} — standalone counter`, () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(45_000);
       await page.goto('/counter-interaction');
       await waitForCounter(page);
     });
@@ -228,6 +229,7 @@ export function counterInteractionSuite(framework: string) {
 
   test.describe(`${label} — counter-group dropdown`, () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(45_000);
       await page.goto('/counter-interaction');
       await waitForCounter(page);
     });

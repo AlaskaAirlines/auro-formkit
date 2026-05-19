@@ -514,6 +514,15 @@ export class AuroCalendar extends RangeDatepicker {
       }
     }
 
+    // 5b. Unbounded min with a finite max far in the past (e.g. birth-date picker):
+    //     scan backward from max for up to MAX_SCAN_DAYS.
+    if (!Number.isFinite(minTs) && Number.isFinite(maxTs)) {
+      for (let idx = 0; idx <= MAX_SCAN_DAYS; idx++) {
+        const ts = addDays(maxTs, -idx);
+        if (isEnabled(ts)) return ts;
+      }
+    }
+
     // 6. All dates are blackout — fall back to the first in-range date so focus
     //    still lands on a focusable (but not selectable) cell.
     if (Number.isFinite(minTs) && isInRange(minTs)) return minTs;
