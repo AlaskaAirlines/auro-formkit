@@ -18,38 +18,6 @@ export async function defaultFixture() {
   `);
 }
 
-export async function multiSelectDuplicateValuesFixture() {
-
-  return await fixture(html`
-    <auro-menu multiselect>
-      <auro-menuoption value="option 1">option 1</auro-menuoption>
-      <auro-menuoption value="option 2">option 2</auro-menuoption>
-      <auro-menuoption value="option 4">option 4</auro-menuoption>
-      <auro-menuoption value="option 3">option 3</auro-menuoption>
-      <auro-menuoption value="option 2">option 2</auro-menuoption>
-      <auro-menuoption value="option 5">option 5</auro-menuoption>
-      <auro-menuoption value="option 4">option 4</auro-menuoption>
-      <auro-menuoption value="option 6">option 6</auro-menuoption>
-    </auro-menu>
-  `);
-};
-
-export async function multiSelectDuplicateValuesSelectAllFixture() {
-
-  return await fixture(html`
-    <auro-menu multiselect selectAllMatchingOptions>
-      <auro-menuoption value="option 1">option 1</auro-menuoption>
-      <auro-menuoption value="option 2">option 2</auro-menuoption>
-      <auro-menuoption value="option 4">option 4</auro-menuoption>
-      <auro-menuoption value="option 3">option 3</auro-menuoption>
-      <auro-menuoption value="option 2">option 2</auro-menuoption>
-      <auro-menuoption value="option 5">option 5</auro-menuoption>
-      <auro-menuoption value="option 4">option 4</auro-menuoption>
-      <auro-menuoption value="option 6">option 6</auro-menuoption>
-    </auro-menu>
-  `);
-};
-
 export async function noninteractiveOptionsFixture() {
   return await fixture(html`
     <div>
