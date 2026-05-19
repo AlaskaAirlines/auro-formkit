@@ -1356,6 +1356,57 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('reactive property propagation to menu', () => {
+      it('should update menu size via updateMenuShapeSize after layout change', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+
+        // classic layout always sets menu size to 'md'
+        expect(menu.getAttribute('size')).to.equal('md');
+
+        el.layout = 'emphasized';
+        await elementUpdated(el);
+        el.updateMenuShapeSize();
+        await elementUpdated(el);
+
+        // emphasized layout uses 'lg'
+        expect(menu.getAttribute('size')).to.equal('lg');
+      });
+
+      it('should update menu shape via updateMenuShapeSize after layout change', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+
+        // classic layout forces shape to 'box'
+        expect(menu.getAttribute('shape')).to.equal('box');
+
+        el.layout = 'default';
+        el.shape = 'round';
+        await elementUpdated(el);
+        el.updateMenuShapeSize();
+        await elementUpdated(el);
+
+        // default layout passes shape through
+        expect(menu.getAttribute('shape')).to.equal('round');
+      });
+
+      it('should propagate noCheckmark to menu as attribute', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.noCheckmark = true;
+        await elementUpdated(el);
+
+        const menu = el.querySelector('auro-menu');
+        expect(menu.hasAttribute('nocheckmark')).to.be.true;
+      });
+
+    });
+
     describe('triggerIcon', () => {
       it('should not have triggerIcon attribute by default', async () => {
         const el = await defaultFixture(mobileView);

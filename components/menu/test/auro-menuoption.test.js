@@ -71,24 +71,6 @@ function runFullTest(mobileView) {
       });
     });
 
-    describe('key', () => {
-      it('should default to the value when not explicitly set', async () => {
-        const el = await fixture(html`<auro-menu><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
-        await elementUpdated(el);
-        const option = el.querySelector('auro-menuoption');
-
-        expect(option.key).to.equal('one');
-      });
-
-      it('should use explicit key when provided', async () => {
-        const el = await fixture(html`<auro-menu><auro-menuoption value="one" key="custom-key">One</auro-menuoption></auro-menu>`);
-        await elementUpdated(el);
-        const option = el.querySelector('auro-menuoption');
-
-        expect(option.key).to.equal('custom-key');
-      });
-    });
-
     describe('selected', () => {
       it('should default to false', async () => {
         const el = await fixture(html`<auro-menu><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
@@ -257,9 +239,9 @@ function runFullTest(mobileView) {
 
   describe('Mouse Behavior', () => {
     describe('Click', () => {
-      it('should toggle selection on click', async () => {
+      it('should toggle selection on click in multiSelect mode', async () => {
         const el = await fixture(html`
-          <auro-menu allowDeselect>
+          <auro-menu multiSelect>
             <auro-menuoption value="one">One</auro-menuoption>
           </auro-menu>
         `);

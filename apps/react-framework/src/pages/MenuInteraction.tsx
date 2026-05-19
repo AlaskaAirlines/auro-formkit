@@ -4,7 +4,7 @@ declare global {
       'auro-menu': React.HTMLAttributes<HTMLElement> & {
         multiSelect?: boolean | '';
         noCheckmark?: boolean | '';
-        allowDeselect?: boolean | '';
+
         disabled?: boolean | '';
         loading?: boolean | '';
         matchWord?: string;
@@ -58,15 +58,6 @@ export default function MenuInteraction() {
           <auro-menuoption value="Apples">Apples</auro-menuoption>
           <auro-menuoption value="Oranges">Oranges</auro-menuoption>
           <auro-menuoption value="Bananas">Bananas</auro-menuoption>
-        </auro-menu>
-      </section>
-
-      {/* Allow deselect menu */}
-      <section data-testid="allow-deselect">
-        <auro-menu allowDeselect>
-          <auro-menuoption value="One">One</auro-menuoption>
-          <auro-menuoption value="Two">Two</auro-menuoption>
-          <auro-menuoption value="Three">Three</auro-menuoption>
         </auro-menu>
       </section>
 
