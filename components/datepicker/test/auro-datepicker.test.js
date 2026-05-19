@@ -240,10 +240,22 @@ function runFullTest(mobileView) {
     });
 
     describe('Blackout dates', () => {
+      /**
+       * Formats a Date as a local YYYY-MM-DD string without UTC conversion.
+       * Using toISOString() would convert to UTC, which can shift the date
+       * in negative time zones and cause flaky tests.
+       */
+      function toLocalISODate(date) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
       it('should mark blackout dates as aria-disabled', async () => {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = tomorrow.toISOString().split('T')[0];
+        const isoDate = toLocalISODate(tomorrow);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
@@ -258,7 +270,7 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const blackoutCell = allCells.find(cell => {
           if (!cell.day) return false;
-          const cellDate = new Date(cell.day.date * 1000).toISOString().split('T')[0];
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
 
@@ -273,7 +285,7 @@ function runFullTest(mobileView) {
       it('should not select a blackout date when clicked', async () => {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = tomorrow.toISOString().split('T')[0];
+        const isoDate = toLocalISODate(tomorrow);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
@@ -288,7 +300,7 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const blackoutCell = allCells.find(cell => {
           if (!cell.day) return false;
-          const cellDate = new Date(cell.day.date * 1000).toISOString().split('T')[0];
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
 
@@ -301,7 +313,7 @@ function runFullTest(mobileView) {
       it('should include blackoutLabel in aria-label for blackout cells', async () => {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = tomorrow.toISOString().split('T')[0];
+        const isoDate = toLocalISODate(tomorrow);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]} blackoutLabel="sold out"></auro-datepicker>
@@ -316,7 +328,7 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const blackoutCell = allCells.find(cell => {
           if (!cell.day) return false;
-          const cellDate = new Date(cell.day.date * 1000).toISOString().split('T')[0];
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
 
@@ -327,7 +339,7 @@ function runFullTest(mobileView) {
       it('should use default blackoutLabel "unavailable" when not specified', async () => {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        const isoDate = tomorrow.toISOString().split('T')[0];
+        const isoDate = toLocalISODate(tomorrow);
 
         const el = await fixture(html`
           <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
@@ -342,7 +354,7 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
         const blackoutCell = allCells.find(cell => {
           if (!cell.day) return false;
-          const cellDate = new Date(cell.day.date * 1000).toISOString().split('T')[0];
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
 

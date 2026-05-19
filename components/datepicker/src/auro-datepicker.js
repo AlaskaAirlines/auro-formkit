@@ -1051,6 +1051,12 @@ export class AuroDatePicker extends AuroElement {
 
           guardTouchPassthrough(this.shadowRoot.querySelector('.calendarWrapper'));
         } else {
+          // Desktop (non-fullscreen) modal: make the trigger inert so users
+          // cannot interact with the input while the modal bib is open.
+          if (this.dropdown.desktopModal) {
+            this.dropdown.trigger.inert = true;
+          }
+
           // Desktop (non-fullscreen): focus the active calendar cell.
           this.dropdown.updateComplete.then(() => {
             this.focusActiveCellWhenReady();
@@ -1517,6 +1523,12 @@ export class AuroDatePicker extends AuroElement {
       if (this.calendar) {
         this.calendar.requestUpdate();
         this.dispatchEvent(new CustomEvent('auroDatePicker-newSlotContent'));
+      }
+
+      // Re-run validation so that a previously valid value that now falls on
+      // a blackout date is flagged, and vice versa.
+      if (this.value || this.valueEnd) {
+        this.validate();
       }
     }
 

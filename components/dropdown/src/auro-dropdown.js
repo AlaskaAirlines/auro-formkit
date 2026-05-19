@@ -928,9 +928,9 @@ export class AuroDropdown extends AuroElement {
     while (current.parentElement) {
       const parent = current.parentElement;
       for (const sibling of parent.children) {
-        if (sibling !== current && !sibling.inert) {
+        if (sibling !== current) {
+          this._inertSiblings.push({ element: sibling, wasInert: sibling.inert });
           sibling.inert = true;
-          this._inertSiblings.push(sibling);
         }
       }
       current = parent;
@@ -938,13 +938,15 @@ export class AuroDropdown extends AuroElement {
   }
 
   /**
-   * Restores `inert` state on siblings that were made inert by `_setPageInert`.
+   * Restores `inert` state on siblings that were tracked by `_setPageInert`.
+   * Preserves the previous inert state so externally-inerted elements are
+   * not inadvertently re-enabled.
    * @private
    */
   _clearPageInert() {
     if (this._inertSiblings) {
-      for (const sibling of this._inertSiblings) {
-        sibling.inert = false;
+      for (const entry of this._inertSiblings) {
+        entry.element.inert = entry.wasInert;
       }
       this._inertSiblings = undefined;
     }
