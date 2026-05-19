@@ -560,6 +560,37 @@ export class AuroCalendar extends RangeDatepicker {
 
     if (isEnabled(now)) return now;
 
+    // When a centralDate is configured (or inferred), constrain the scan to the
+    // rendered month(s) first so a single-month calendar does not pick a date
+    // that has no DOM cell. Determine the visible range based on centralDate and
+    // the number of rendered months.
+    const renderedMonths = this.numCalendars || 1;
+    const visibleAnchor = centralDateValue && !isNaN(centralDateValue.getTime())
+      ? centralDateValue
+      : new Date(now * 1000);
+    const visMonthStart = new Date(visibleAnchor.getFullYear(), visibleAnchor.getMonth(), 1);
+    visMonthStart.setHours(0, 0, 0, 0);
+    const visMonthEnd = new Date(visibleAnchor.getFullYear(), visibleAnchor.getMonth() + renderedMonths, 0);
+    visMonthEnd.setHours(0, 0, 0, 0);
+    const visStartTs = Math.floor(visMonthStart.getTime() / 1000);
+    const visEndTs = Math.floor(visMonthEnd.getTime() / 1000);
+    const visDays = Math.round((visEndTs - visStartTs) / 86400) + 1;
+
+    // Scan visible months for an enabled date.
+    for (let idx = 0; idx < visDays; idx++) {
+      const ts = addDays(visStartTs, idx);
+      if (ts > visEndTs) break;
+      if (isEnabled(ts)) return ts;
+    }
+
+    // No enabled date in visible months — try an in-range (focusable) date so
+    // keyboard focus still has a tabindex="0" target.
+    for (let idx = 0; idx < visDays; idx++) {
+      const ts = addDays(visStartTs, idx);
+      if (ts > visEndTs) break;
+      if (isInRange(ts)) return ts;
+    }
+
     // 3. First future enabled date (scan forward from tomorrow, capped by max and MAX_SCAN_DAYS).
     for (let idx = 1; idx <= MAX_SCAN_DAYS; idx++) {
       const ts = addDays(now, idx);

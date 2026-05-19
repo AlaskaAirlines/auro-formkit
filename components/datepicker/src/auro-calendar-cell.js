@@ -511,6 +511,10 @@ export class AuroCalendarCell extends LitElement {
     };
     this.datepicker.addEventListener('auroDatePicker-newSlotContent', this._slotContentHandler);
 
+    // Trigger an initial update now that `this.datepicker` is assigned so
+    // cells reflect blackout/slot state that was configured before first render.
+    this.requestUpdate();
+
     this.calendarMonth = calendarMonth;
     this.configurePopover();
   }
