@@ -51,12 +51,17 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Command</td>
+<td rowspan="2">Meta (Command / Windows key)</td>
 <td>Collapsed, list options have been populated</td>
 <td>
               Trigger input element, <strong>NOT</strong> the trigger input clear button
 </td>
-<td>Opens the bib.</td>
+<td>
+              Opens the bib.
+<div class="note">
+<strong>Note:</strong> On Windows, <code>Meta</code> + arrow key combinations are reserved by the operating system for window management. Windows users should use <code>Control</code> or <code>Alt</code> instead.
+</div>
+</td>
 </tr>
 <tr>
 <td>Expanded</td>
@@ -71,7 +76,7 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Option</td>
+<td rowspan="2">Alt (Option)</td>
 <td>Collapsed, list options have been populated</td>
 <td>
               Trigger input element, <strong>NOT</strong> the trigger input clear button
@@ -99,7 +104,7 @@
 <td>
               Opens the bib.
 <div class="note">
-<strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Command</code> or <code>Option</code> instead.
+<strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Meta</code> or <code>Alt</code> instead.
 </div>
 </td>
 </tr>
@@ -137,12 +142,17 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Command</td>
+<td rowspan="2">Meta (Command / Windows key)</td>
 <td>Collapsed, list options have been populated</td>
 <td>
               Trigger input element, <strong>NOT</strong> the trigger input clear button
 </td>
-<td>Opens the bib.</td>
+<td>
+              Opens the bib.
+<div class="note">
+<strong>Note:</strong> On Windows, <code>Meta</code> + arrow key combinations are reserved by the operating system for window management. Windows users should use <code>Control</code> or <code>Alt</code> instead.
+</div>
+</td>
 </tr>
 <tr>
 <td>Expanded</td>
@@ -157,7 +167,7 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Option</td>
+<td rowspan="2">Alt (Option)</td>
 <td>Collapsed, list options have been populated</td>
 <td>
               Input element, <strong>NOT</strong> the input clear button
@@ -185,7 +195,7 @@
 <td>
               Opens the bib.
 <div class="note">
-<strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Command</code> or <code>Option</code> instead.
+<strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Meta</code> or <code>Alt</code> instead.
 </div>
 </td>
 </tr>
