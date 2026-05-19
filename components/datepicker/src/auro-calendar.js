@@ -265,7 +265,9 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {void}
    */
   updateActiveCellForVisibleMonth() {
-    this.activeCellDate = this.computeActiveDate();
+    // Skip the dateFrom shortcut so the active cell lands in the newly
+    // visible month rather than jumping back to the selected date's month.
+    this.activeCellDate = this.computeActiveDate({ skipDateFrom: true });
     this.updateComplete.then(() => {
       if (this.activeCellDate != null) {
         this.setActiveCell(this.activeCellDate);
@@ -450,9 +452,13 @@ export class AuroCalendar extends RangeDatepicker {
    *   7. undefined — no valid target
    *
    * @private
+   * @param {Object} [options] - Optional settings.
+   * @param {boolean} [options.skipDateFrom=false] - When true, skip the selected-date
+   *   shortcut (step 1). Used after month navigation so the active cell lands in the
+   *   newly visible month instead of jumping back to the selected date's month.
    * @returns {Number|undefined} Unix timestamp (seconds) of the date to activate, or undefined.
    */
-  computeActiveDate() {
+  computeActiveDate(options = {}) {
     const MAX_SCAN_DAYS = 366; // scan at most ~1 year in each direction
 
     /**
@@ -502,7 +508,9 @@ export class AuroCalendar extends RangeDatepicker {
     const isInRange = (ts) => ts >= minTs && ts <= maxTs;
 
     // 1. Selected date — always valid target if within range (user chose it).
-    if (this.dateFrom) {
+    //    Skipped when called from month navigation so the active cell lands in
+    //    the newly visible month rather than the (possibly off-screen) selection.
+    if (!options.skipDateFrom && this.dateFrom) {
       const parsedFrom = parseInt(this.dateFrom, 10);
       if (Number.isFinite(parsedFrom) && isInRange(parsedFrom)) return parsedFrom;
     }
