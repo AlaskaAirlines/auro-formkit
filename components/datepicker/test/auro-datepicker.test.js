@@ -361,6 +361,59 @@ function runFullTest(mobileView) {
         const label = blackoutCell.getAriaLabel();
         expect(label).to.include('unavailable');
       });
+
+      it('should set customError validity when a blackout date is typed', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        // Format as MM/DD/YYYY for input
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const dd = String(tomorrow.getDate()).padStart(2, '0');
+        const yyyy = tomorrow.getFullYear();
+        const formatted = `${mm}/${dd}/${yyyy}`;
+
+        el.inputList[0].value = formatted;
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+        expect(el.errorMessage).to.equal('Selected date is unavailable');
+      });
+
+      it('should use setCustomValidityCustomError message for blackout validation', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]} setCustomValidityCustomError="Date is sold out"></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const dd = String(tomorrow.getDate()).padStart(2, '0');
+        const yyyy = tomorrow.getFullYear();
+        const formatted = `${mm}/${dd}/${yyyy}`;
+
+        el.inputList[0].value = formatted;
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+        expect(el.errorMessage).to.equal('Date is sold out');
+      });
     });
 
     describe('calendarEndDate', () => {
