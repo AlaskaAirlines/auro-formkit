@@ -54,7 +54,7 @@
             Select a date by clicking a calendar cell or by typing a date directly into the input
 <div class="note">
 <p>
-                When a valid date is selected, the <code>value</code> property is updated. The calendar remains open so additional dates can be reviewed. Close the calendar by pressing Escape, clicking outside, or activating the Done button. If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
+                When a valid date is selected, the <code>value</code> property is updated. The calendar remains open so additional dates can be reviewed. Close the calendar by pressing Escape or activating the Done button. If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
 </p>
 </div>
 </li>
@@ -228,6 +228,7 @@
 </auro-accordion>
 <auro-header level="3" id="blackoutDates">Blackout dates with custom label</auro-header>
 <p>Use the <code>blackoutLabel</code> attribute to customize the screen reader announcement for blackout (disabled but in-range) dates. The default label is <code>"unavailable"</code>. This is useful when you want to provide more context about why a date cannot be selected, such as <code>"sold out"</code>.</p>
+<p>When a user types a blackout date into the input, the datepicker validates the entry and displays a <code>customError</code> message. The default message is <code>"Selected date is unavailable"</code>. Use the <code>setCustomValidityCustomError</code> attribute to provide a custom error message, for example <code>setCustomValidityCustomError="That date is sold out"</code>.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/blackout-label.html) -->
 <!-- The below content is automatically added from ./../apiExamples/blackout-label.html -->

@@ -69,7 +69,7 @@
 <li><strong>Focus</strong> — Tab to the datepicker input.</li>
 <li><strong>Type a date</strong> — Enter a date value directly, or press Enter/Space to open the calendar.</li>
 <li><strong>Calendar opens</strong> — Focus moves to the active date cell inside the calendar grid. Navigate dates with VoiceOver gestures (swipe) or arrow keys.</li>
-<li><strong>Select a date</strong> — Activate a calendar cell (double-tap with VoiceOver, or Enter/Space with keyboard) to select the date. The selected date is announced via a live region and populates the input. The calendar remains open; close it by pressing Escape, clicking outside, or activating the Done button.</li>
+<li><strong>Select a date</strong> — Activate a calendar cell (double-tap with VoiceOver, or Enter/Space with keyboard) to select the date. The selected date is announced via a live region and populates the input. The calendar remains open; close it by pressing Escape or activating the Done button.</li>
 </ol>
 <auro-header level="2" id="voiceOverSmallVPAnnouncements">Small Viewport Workflow</auro-header>
 <p>Examples: mobile phone, very small desktop browser window</p>
