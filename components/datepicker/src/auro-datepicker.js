@@ -1297,11 +1297,6 @@ export class AuroDatePicker extends AuroElement {
       } else {
         this.value = newDate;
       }
-
-      // For single-date picker, close the bib and return focus to trigger after selection
-      if (!this.range) {
-        this.hideBib();
-      }
     }
   }
 

@@ -26,7 +26,7 @@
     Select a date by clicking a calendar cell or by typing a date directly into the input
     <div class="note">
       <p>
-        When a valid date is selected, the <code>value</code> property is updated and the calendar closes (on desktop). If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
+        When a valid date is selected, the <code>value</code> property is updated. The calendar remains open so additional dates can be reviewed. Close the calendar by pressing Escape, clicking outside, or activating the Done button. If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
       </p>
     </div>
   </li>

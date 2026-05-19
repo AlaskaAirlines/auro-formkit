@@ -78,7 +78,7 @@
   <li><strong>Focus</strong> — Tab to the datepicker input.</li>
   <li><strong>Type a date</strong> — Enter a date value directly, or press Enter/Space to open the calendar.</li>
   <li><strong>Calendar opens</strong> — Focus moves to the active date cell inside the calendar grid. Navigate dates with VoiceOver gestures (swipe) or arrow keys.</li>
-  <li><strong>Select a date</strong> — Activate a calendar cell (double-tap with VoiceOver, or Enter/Space with keyboard) to select the date. The selected date is announced via a live region. For single datepickers, the calendar closes and the selected date populates the input.</li>
+  <li><strong>Select a date</strong> — Activate a calendar cell (double-tap with VoiceOver, or Enter/Space with keyboard) to select the date. The selected date is announced via a live region and populates the input. The calendar remains open; close it by pressing Escape, clicking outside, or activating the Done button.</li>
 </ol>
 
 <auro-header level="2" id="voiceOverSmallVPAnnouncements">Small Viewport Workflow</auro-header>
@@ -90,9 +90,9 @@
   </li>
   <li><strong>Navigate dates</strong> — Swipe through calendar cells or use arrow keys.</li>
   <li>
-    <strong>Select a date:</strong> The selected date is announced via a live region. For single datepickers, the fullscreen modal closes and the selected date populates the input.
+    <strong>Select a date:</strong> The selected date is announced via a live region and populates the input. The fullscreen modal remains open so additional dates can be reviewed.
     <p>~OR~</p>
-    <strong>Close without selecting:</strong> Activate the close button, press Escape, or use the VoiceOver scrub gesture to close the fullscreen modal dialog.
+    <strong>Close:</strong> Activate the close button, press Escape, or use the VoiceOver scrub gesture to close the fullscreen modal dialog.
   </li>
 </ol>
 
