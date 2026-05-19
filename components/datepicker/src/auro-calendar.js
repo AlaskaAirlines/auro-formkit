@@ -639,25 +639,48 @@ export class AuroCalendar extends RangeDatepicker {
         this.scrollToActiveCell();
         this.focusActiveCell();
       } else if (direction === 'next' && this.showNextMonthBtn) {
-        // Navigate to next month and try again
+        // Navigate to next month and focus the computed next date.
+        // Using the target date (fromDate + 1 day) instead of cells[0]
+        // avoids jumping backward in range datepickers where cells[0]
+        // belongs to the previous (still-rendered) month.
+        const nextDate = new Date(fromDate * 1000);
+        nextDate.setDate(nextDate.getDate() + 1);
+        nextDate.setHours(0, 0, 0, 0);
+        const nextTs = Math.floor(nextDate.getTime() / 1000);
+
         this.handleNextMonth();
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const cells = this.getAllFocusableCells();
-            if (cells.length > 0) {
-              this.setActiveCell(cells[0].day.date);
+            const target = cells.find(cell => cell.day && cell.day.date === nextTs);
+            if (target) {
+              this.setActiveCell(target.day.date);
+              this.focusActiveCell();
+            } else if (cells.length > 0) {
+              // Fallback: first cell of the last rendered month
+              this.setActiveCell(cells[cells.length - 1].day.date);
               this.focusActiveCell();
             }
           });
         });
       } else if (direction === 'prev' && this.showPrevMonthBtn) {
-        // Navigate to previous month and try again
+        // Navigate to previous month and focus the computed previous date.
+        const prevDate = new Date(fromDate * 1000);
+        prevDate.setDate(prevDate.getDate() - 1);
+        prevDate.setHours(0, 0, 0, 0);
+        const prevTs = Math.floor(prevDate.getTime() / 1000);
+
         this.handlePrevMonth();
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const cells = this.getAllFocusableCells();
-            if (cells.length > 0) {
-              this.setActiveCell(cells[cells.length - 1].day.date);
+            const target = cells.find(cell => cell.day && cell.day.date === prevTs);
+            if (target) {
+              this.setActiveCell(target.day.date);
+              this.focusActiveCell();
+            } else if (cells.length > 0) {
+              // Fallback: last cell of the first rendered month
+              this.setActiveCell(cells[0].day.date);
               this.focusActiveCell();
             }
           });
