@@ -88,14 +88,12 @@ const stories = generateStoriesFromGlobData(apiExamples, apiExamplesJs, specialC
 // Export all generated stories
 // eslint-disable-next-line @typescript-eslint/prefer-destructuring-assignment
 // sourcery skip: use-object-destructuring
-export const AllowDeselect = stories.AllowDeselect;
 export const Basic = stories.Basic;
 export const Custom = stories.Custom;
 export const DisabledMenu = stories.DisabledMenu;
 export const Disabled = stories.Disabled;
 export const Hidden = stories.Hidden;
 export const Hr = stories.Hr;
-export const Keys = stories.Keys;
 export const Loading = stories.Loading;
 export const MatchWord = stories.MatchWord;
 export const MultiSelect = stories.MultiSelect;
@@ -107,7 +105,6 @@ export const RestrictedWidth = stories.RestrictedWidth;
 export const PresetValue = stories.PresetValue;
 export const PresetValueMultiselect = stories.PresetValueMultiselect;
 export const Scroll = stories.Scroll;
-export const SelectAllMatchingOptions = stories.SelectAllMatchingOptions;
 export const Shape = stories.Shape;
 export const Size = stories.Size;
 export const CustomTokens = stories.CustomTokens;
