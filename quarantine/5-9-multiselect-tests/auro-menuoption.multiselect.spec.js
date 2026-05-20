@@ -4,7 +4,7 @@
 // 'components/menu/src/registered.js'
 
 import { fixture, html, expect, elementUpdated } from '@open-wc/testing';
-import '../../../components/menu/src/registered.js';
+import '../../components/menu/src/registered.js';
 
 describe.skip('Quarantined 5.9 — auro-menuoption key property', () => {
   it('should default to the value when not explicitly set', async () => {
