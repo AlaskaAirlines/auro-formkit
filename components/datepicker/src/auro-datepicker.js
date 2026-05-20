@@ -15,6 +15,7 @@ import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
+import { AuroBibtemplate } from '@aurodesignsystem/auro-bibtemplate';
 import { AuroInput } from '@aurodesignsystem/auro-input';
 import { AuroHelpText } from '@aurodesignsystem/auro-helptext';
 import { AuroIcon } from '@aurodesignsystem/auro-icon/class';
@@ -155,6 +156,9 @@ export class AuroDatePicker extends AuroElement {
 
     /** @private */
     this.dropdownTag = versioning.generateTag('auro-formkit-datepicker-dropdown', formkitVersion, AuroDropdown);
+
+    /** @private */
+    this.bibtemplateTag = versioning.generateTag('auro-formkit-datepicker-bibtemplate', formkitVersion, AuroBibtemplate);
 
     /** @private */
     this.buttonTag = versioning.generateTag('auro-formkit-datepicker-button', buttonVersion, AuroButton);
@@ -608,6 +612,7 @@ export class AuroDatePicker extends AuroElement {
   /** @private */
   configureDropdown() {
     this.dropdown = this.shadowRoot.querySelector(this.dropdownTag._$litStatic$);
+    this.bibtemplate = this.shadowRoot.querySelector(this.bibtemplateTag._$litStatic$);
 
     const labelElement = this.querySelector('[slot="fromLabel"]');
     if (labelElement) {
@@ -631,9 +636,8 @@ export class AuroDatePicker extends AuroElement {
             bibEl.close();
             bibEl.open(true);
             doubleRaf(() => {
-              const closeBtn = this.shadowRoot.querySelector('.calendarCloseBtn');
-              if (closeBtn) {
-                closeBtn.focus();
+              if (this.bibtemplate && typeof this.bibtemplate.focusCloseButton === 'function') {
+                this.bibtemplate.focusCloseButton();
               }
             });
           }
@@ -1266,7 +1270,11 @@ export class AuroDatePicker extends AuroElement {
         <div slot="trigger" class="dpTriggerContent" part="trigger">
           ${this.renderLayoutFromAttributes()}
         </div>
-        ${this.renderCalendar()}
+        <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
+          <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
+          <slot name="bib.fullscreen.headline" slot="header"></slot>
+          ${this.renderCalendar()}
+        </${this.bibtemplateTag}>
         <div slot="helpText" part="helpTextSpan">
           ${this.renderHtmlHelpText()}
         </div>
