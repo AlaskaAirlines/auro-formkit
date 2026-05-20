@@ -3,11 +3,6 @@
 
 // ---------------------------------------------------------------------
 
-@use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-
-:host([appearance="inverse"]) calendar-range,
-:host([appearance="inverse"]) calendar-date {
-  --color-accent: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
-  --color-text-on-accent: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
-  color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
-}
+// Calendar popover content always renders on a light bib background, so
+// `appearance="inverse"` (which inverts the trigger) must NOT cascade into the
+// calendar grid. Intentionally no overrides here.
