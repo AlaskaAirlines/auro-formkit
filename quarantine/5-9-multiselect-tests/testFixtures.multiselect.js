@@ -3,7 +3,7 @@
 // Imports needed: { fixture, html } from '@open-wc/testing'; 'components/menu/src/registered.js'
 
 import { fixture, html } from '@open-wc/testing';
-import '../../../components/menu/src/registered.js';
+import '../../components/menu/src/registered.js';
 
 export async function multiSelectDuplicateValuesFixture() {
   return await fixture(html`
