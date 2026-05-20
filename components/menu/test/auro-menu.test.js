@@ -1415,10 +1415,10 @@ function runFullTest(mobileView) {
 
         const event = await listener;
         expect(event).to.exist;
-        expect(event.detail).to.have.property('value');
+        expect(event.detail).to.deep.equal({ source: undefined });
       });
 
-      it('should include selection details in the event', async () => {
+      it('should include only source in the event detail', async () => {
         const el = await defaultFixture();
         const menuEl = el.querySelector('auro-menu');
 
@@ -1428,8 +1428,7 @@ function runFullTest(mobileView) {
         menuEl.makeSelection();
 
         const event = await listener;
-        expect(event.detail).to.have.property('options');
-        expect(event.detail).to.have.property('keys');
+        expect(event.detail).to.deep.equal({ source: undefined });
       });
     });
 
@@ -1892,7 +1891,7 @@ function runFullTest(mobileView) {
       expect(event).to.exist;
     });
 
-    it('auroMenu-selectValueFailure should fire with detail containing message and values', async () => {
+    it('auroMenu-selectValueFailure should fire without a detail payload', async () => {
       const el = await defaultFixture();
       const menu = el.querySelector('auro-menu');
       await elementUpdated(menu);
@@ -1903,8 +1902,7 @@ function runFullTest(mobileView) {
 
       const event = await listener;
       expect(event).to.exist;
-      expect(event.detail).to.have.property('message');
-      expect(event.detail).to.have.property('values');
+      expect(event.detail).to.be.null;
     });
 
     it('auroMenu-activatedOption should fire with the option element as detail', async () => {
@@ -1920,7 +1918,7 @@ function runFullTest(mobileView) {
       expect(event.detail).to.be.an.instanceOf(HTMLElement);
     });
 
-    it('auroMenu-selectedOption should include stringValue in detail', async () => {
+    it('auroMenu-selectedOption should include only source in detail', async () => {
       const el = await defaultFixture();
       const menu = el.querySelector('auro-menu');
       await elementUpdated(menu);
@@ -1931,9 +1929,7 @@ function runFullTest(mobileView) {
       menu.makeSelection();
 
       const event = await listener;
-      expect(event.detail).to.have.property('value');
-      expect(event.detail).to.have.property('options');
-      expect(event.detail).to.have.property('keys');
+      expect(event.detail).to.deep.equal({ source: undefined });
     });
 
     it('auroMenu-loadingChange should include hasLoadingPlaceholder', async () => {
