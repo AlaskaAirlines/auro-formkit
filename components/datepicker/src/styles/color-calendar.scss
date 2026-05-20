@@ -1,56 +1,13 @@
-// // Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
-// // See LICENSE in the project root for license information.
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
 
-// // ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
-@use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@use '@aurodesignsystem/webcorestylesheets/src/breakpoints' as vb;
-
-.calendarNavBtn {
-  border-color: var(--ds-auro-calendar-nav-btn-border-color);
-  background-color: var(--ds-auro-calendar-nav-btn-container-color);
-  color: var(--ds-auro-calendar-nav-btn-chevron-color);
-
-  &:hover {
-    --ds-auro-calendar-nav-btn-container-color: var(--ds-advanced-color-state-background-hover, #{v.$ds-advanced-color-state-background-hover});
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
-  }
-
-  &:focus {
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
-  }
-
-  &:active {
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
-    
-    box-shadow: inset 0 0 0 1px var(--ds-auro-calendar-nav-btn-border-color);
-  }
-}
-
-.mobileHeader {
-  background-color: var(--ds-auro-calendar-mobile-header-container-color);
-}
-
-.mobileDateLabel {
-  color: var(--ds-auro-calendar-mobile-header-text-color);
-}
-
-:host(:not([noRange])) {
-  .headerDateTo {
-    &:after {
-      background-color: var(--ds-auro-calendar-mobile-header-divider-color);
-    }
-  }
-}
-
-::slotted([slot="bib.fullscreen.fromStr"]), ::slotted([slot="mobileDateToStr"]) {
-  color: var(--ds-auro-datepicker-placeholder-color);
-}
-
-@include vb.auro_breakpoint($max: vac.$ds-grid-breakpoint-sm) {
-  .calendarNavBtn {
-    --ds-auro-calendar-nav-btn-border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
-  }
+:host([appearance="inverse"]) calendar-range,
+:host([appearance="inverse"]) calendar-date {
+  --color-accent: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  --color-text-on-accent: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+  color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
 }

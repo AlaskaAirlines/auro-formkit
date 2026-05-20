@@ -6,14 +6,14 @@
 
 	<!-- Default: single-date picker with fixed month -->
 	<section data-testid="default">
-		<auro-datepicker centralDate="01/15/2025">
+		<auro-datepicker centralDate="2025-01-15">
 			<span slot="fromLabel">Departure</span>
 		</auro-datepicker>
 	</section>
 
 	<!-- Range: two-date picker for round-trip -->
 	<section data-testid="range">
-		<auro-datepicker range centralDate="01/15/2025">
+		<auro-datepicker range centralDate="2025-01-15">
 			<span slot="fromLabel">Depart</span>
 			<span slot="toLabel">Return</span>
 		</auro-datepicker>
@@ -21,7 +21,7 @@
 
 	<!-- Preset: has a value already set, for clear-button tests -->
 	<section data-testid="preset">
-		<auro-datepicker value="01/10/2025" centralDate="01/15/2025">
+		<auro-datepicker value="2025-01-10" centralDate="2025-01-15">
 			<span slot="fromLabel">Preset</span>
 		</auro-datepicker>
 	</section>

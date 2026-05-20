@@ -99,7 +99,7 @@ function runFullTest(mobileView) {
       setTimeout(() => { input.value = '04/03/2023'; }, 0);
       await oneEvent(form, 'change');
 
-      await expect(form.value.dateExample).to.equal('04/03/2023');
+      await expect(form.value.dateExample).to.equal('2023-04-03');
     });
 
     it('should surface values from datepicker with `range` attribute as a string array', async () => {
@@ -122,7 +122,7 @@ function runFullTest(mobileView) {
       setTimeout(() => { input2.value = '04/04/2023'; }, 0);
       await oneEvent(form, 'change');
 
-      await expect(form.value.dateExample).to.deep.equal(['04/03/2023', '04/04/2023']);
+      await expect(form.value.dateExample).to.deep.equal(['2023-04-03', '2023-04-04']);
     });
   });
 

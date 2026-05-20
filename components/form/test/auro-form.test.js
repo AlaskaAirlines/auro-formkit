@@ -981,8 +981,8 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
 
       const datepicker = el.querySelector('auro-datepicker');
-      datepicker.value = '01/15/2024';
-      datepicker.valueEnd = '01/20/2024';
+      datepicker.value = '2024-01-15';
+      datepicker.valueEnd = '2024-01-20';
 
       // Fire input event to trigger sharedInputListener
       datepicker.dispatchEvent(new Event('input', {

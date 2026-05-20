@@ -1,124 +1,42 @@
-// // Copyright (c) 2022 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
-// // See LICENSE in the project root for license information.
+// Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
+// See LICENSE in the project root for license information.
 
-// // ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
 @use "@aurodesignsystem/design-tokens/dist/themes/alaska/SCSSVariables--alaska" as v;
 @use "@aurodesignsystem/design-tokens/dist/legacy/auro-classic/SCSSVariables" as vac;
 
-@use '@aurodesignsystem/webcorestylesheets/dist/bundled/type/classes.alaska.css';
-
-/* stylelint-disable color-function-notation, at-rule-empty-line-before, order/properties-order, declaration-empty-line-before, declaration-block-no-duplicate-properties */
+/* stylelint-disable color-function-notation, at-rule-empty-line-before, order/properties-order, declaration-empty-line-before, declaration-block-no-duplicate-properties, selector-pseudo-element-no-unknown */
 
 :host {
   --calendar-width: 336px;
   --mobile-footer-height: 150px;
   --mobile-header-height: 68px;
+  --cally-day-size: var(--ds-size-500, #{vac.$ds-size-500});
+}
 
-  height: 100vh;
-  height: 100dvh; /* dvh = dynamic viewport height */
+.calendarWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: var(--ds-size-200, vac.$ds-size-200);
 }
 
 .calendars {
   display: flex;
-
   flex-direction: row;
-}
-
-.calendarNavButtons {
-  position: absolute;
-  top: var(--ds-size-200, vac.$ds-size-200);
-  right: var(--ds-size-50, vac.$ds-size-50);
-  left: var(--ds-size-50, vac.$ds-size-50);
+  gap: var(--ds-size-300, vac.$ds-size-300);
 }
 
 .calendarNavBtn {
-  display: flex;
+  display: inline-flex;
   width: var(--ds-size-500, vac.$ds-size-500);
   height: var(--ds-size-500, vac.$ds-size-500);
-
   align-items: center;
   justify-content: center;
-
-  border-width: 1px;
-  border-style: solid;
+  border: 1px solid transparent;
+  background: transparent;
   border-radius: 50%;
-
   cursor: pointer;
-}
-
-.prevMonth,
-.nextMonth {
-  position: absolute;
-  top: 0;
-}
-
-.prevMonth {
-  left: 0;
-}
-
-.nextMonth {
-  right: 0;
-}
-
-.headerActions {
-  padding: 0 var(--ds-size-200, vac.$ds-size-200);
-}
-
-.mobileHeader {
-  width: 100%;
-  height: var(--mobile-header-height);
-  z-index: +1;
-
-  align-items: center;
-  flex-direction: row;
-}
-
-.headerDateFrom,
-.headerDateTo {
-  display: flex;
-  height: var(--mobile-header-height);
-
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-
-  padding: 0 var(--ds-size-150, vac.$ds-size-150) 0 var(--ds-size-200, vac.$ds-size-200);
-}
-
-.mobileDateLabel {
-  // padding to make up for body-xs line height
-  padding: var(--ds-size-25, vac.$ds-size-25) 0;
-}
-
-.mobileFooter {
-  display: none;
-  width: 100%;
-
-  align-items: flex-end;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.mobileFooterActions {
-  position: relative;
-  bottom: 0;
-  left: 50%;
-
-  display: none;
-  width: calc(100% - calc(var(--ds-size-200, vac.$ds-size-200) * 2));
-
-  align-items: flex-end;
-  flex-direction: column;
-  justify-content: flex-end;
-
-  padding: var(--ds-size-150) calc(var(--ds-size-200, vac.$ds-size-200));
-
-  transform: translateX(-50%);
-
-  auro-button {
-    width: 100%;
-  }
 }
 
 :host([isfullscreen]) {
@@ -126,39 +44,75 @@
   max-height: 100dvh;
   overflow: hidden;
 
-  .prevMonth,
-  .nextMonth {
-    display: none;
-  }
-
-  .mobileHeader,
-  .mobileFooter,
-  .mobileFooterActions {
-    display: flex;
-  }
-
-  .calendarWrapper {
-    display: flex;
-
-    flex-direction: column;
-  }
-
   .calendars {
-    display: flex;
     flex-direction: column;
-    flex: 1;
-
     align-items: center;
     width: 100%;
-
     overscroll-behavior: contain;
-
-    &:after {
-      display: block;
-      width: 100%;
-      height: var(--mobile-footer-height);
-
-      content: '';
-    }
   }
+}
+
+calendar-range,
+calendar-date {
+  --color-accent: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+  --color-text-on-accent: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  display: block;
+  width: var(--calendar-width);
+}
+
+calendar-month::part(day) {
+  box-sizing: border-box;
+  width: var(--cally-day-size);
+  height: var(--cally-day-size);
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+calendar-month::part(day):hover {
+  border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+}
+
+calendar-month::part(today) {
+  font-weight: 700;
+}
+
+calendar-month::part(selected),
+calendar-month::part(range-start),
+calendar-month::part(range-end) {
+  background: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+  color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+}
+
+calendar-month::part(range-inner) {
+  background: var(--ds-advanced-color-state-background-hover, #{v.$ds-advanced-color-state-background-hover});
+  border-radius: 0;
+}
+
+calendar-month::part(disallowed) {
+  color: var(--ds-basic-color-texticon-disabled, #{v.$ds-basic-color-texticon-disabled});
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+calendar-month::part(outside) {
+  opacity: 0.5;
+}
+
+calendar-month::part(reference) {
+  box-shadow: inset 0 0 0 2px var(--ds-advanced-color-shared-background, #{v.$ds-advanced-color-shared-background});
+  border-color: var(--ds-basic-color-border-default, #{v.$ds-basic-color-border-default});
+}
+
+calendar-month::part(hover-range-inner) {
+  background: var(--ds-advanced-color-state-background-hover, #{v.$ds-advanced-color-state-background-hover});
+  border-radius: 0;
+}
+
+calendar-month::part(hover-range-end) {
+  background: var(--ds-advanced-color-state-background-hover, #{v.$ds-advanced-color-state-background-hover});
 }

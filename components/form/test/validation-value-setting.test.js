@@ -255,16 +255,16 @@ function runFullTest(mobileView) {
 
   describe('datepicker', () => {
     it('should set value via attribute and reflect in inner input', async () => {
-      const el = await getFixtureWithValueAttr(DATEPICKER_TEMPLATE, '04/03/2023');
-      await expect(el.value).to.equal('04/03/2023');
+      const el = await getFixtureWithValueAttr(DATEPICKER_TEMPLATE, '2023-04-03');
+      await expect(el.value).to.equal('2023-04-03');
       const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
       const innerInput = dropdown.querySelector('[auro-input]');
       await expect(innerInput.value).to.equal('04/03/2023');
     });
 
     it('should set value via property and reflect in inner input', async () => {
-      const el = await getFixtureWithValueProp(DATEPICKER_TEMPLATE, '04/03/2023');
-      await expect(el.value).to.equal('04/03/2023');
+      const el = await getFixtureWithValueProp(DATEPICKER_TEMPLATE, '2023-04-03');
+      await expect(el.value).to.equal('2023-04-03');
 
       const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
       const innerInput = dropdown.querySelector('[auro-input]');

@@ -1,11 +1,10 @@
-function formatDateString(date) {
-  /* eslint-disable prefer-template, no-magic-numbers */
-  const dd = String("0" + date.getDate()).slice(-2);
-  const mm = String("0" + (date.getMonth() + 1)).slice(-2);
-  /* eslint-enable prefer-template, no-magic-numbers */
+function toIso(date) {
+  /* eslint-disable no-magic-numbers */
   const yyyy = date.getFullYear();
-
-  return `${mm}/${dd}/${yyyy}`;
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  /* eslint-enable no-magic-numbers */
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 export function updateMinDateExample() {
@@ -13,13 +12,12 @@ export function updateMinDateExample() {
   const changeMinDateButton = document.getElementById('minDateChange');
   const resetButton = document.getElementById('resetMinDate');
 
-  const today = formatDateString(new Date());
+  const today = toIso(new Date());
 
   let nextWeek = new Date();
-  let addOneWeek = nextWeek.getDate() + 7;
-
-  nextWeek.setDate(addOneWeek);
-  nextWeek = formatDateString(nextWeek);
+  // eslint-disable-next-line no-magic-numbers
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  nextWeek = toIso(nextWeek);
 
   minDateExample.setAttribute('value', today);
   minDateExample.setAttribute('minDate', today);
@@ -32,6 +30,4 @@ export function updateMinDateExample() {
     minDateExample.setAttribute('value', today);
     minDateExample.setAttribute('minDate', today);
   });
-
 }
-
