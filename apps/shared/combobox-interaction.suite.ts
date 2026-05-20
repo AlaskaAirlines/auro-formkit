@@ -4,7 +4,7 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-combobox custom element to be fully registered and its dropdown ready. */
 async function waitForCombobox(page: Page) {
-  await page.waitForLoadState('load');
+  await page.waitForLoadState('networkidle');
   await page.waitForFunction(
     () => {
       if (customElements.get('auro-combobox') === undefined) return false;
