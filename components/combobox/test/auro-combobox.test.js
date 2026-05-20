@@ -3573,6 +3573,108 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.true;
       });
 
+      it('should skip disabled last option with Alt+ArrowDown', async () => {
+        const el = await fixture(html`
+          <auro-combobox>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption value="Grapes" disabled>Grapes</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          altKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
+        const lastEnabledOption = enabledOptions[enabledOptions.length - 1];
+        await expect(el.optionActive).to.equal(lastEnabledOption);
+      });
+
+      it('should skip disabled last option with Meta+ArrowDown', async () => {
+        const el = await fixture(html`
+          <auro-combobox>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption value="Grapes" disabled>Grapes</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          metaKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
+        const lastEnabledOption = enabledOptions[enabledOptions.length - 1];
+        await expect(el.optionActive).to.equal(lastEnabledOption);
+      });
+
+      it('should skip disabled last option with Ctrl+ArrowDown', async () => {
+        const el = await fixture(html`
+          <auro-combobox>
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption value="Grapes" disabled>Grapes</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          ctrlKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
+        const lastEnabledOption = enabledOptions[enabledOptions.length - 1];
+        await expect(el.optionActive).to.equal(lastEnabledOption);
+      });
+
       it('should not navigate when clear button has focus', async () => {
         const el = await defaultFixture(mobileView);
 
@@ -3859,6 +3961,93 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         await expect(el.dropdown.isPopoverVisible).to.be.true;
+      });
+
+      it('should skip disabled first option with Alt+ArrowUp', async () => {
+        const el = await shiftTabDisabledFirstFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        // Navigate away from the first enabled option
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          altKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
+        await expect(el.optionActive).to.equal(enabledOptions[0]);
+        await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
+      });
+
+      it('should skip disabled first option with Meta+ArrowUp', async () => {
+        const el = await shiftTabDisabledFirstFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        // Navigate away from the first enabled option
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          metaKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
+        await expect(el.optionActive).to.equal(enabledOptions[0]);
+        await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
+      });
+
+      it('should skip disabled first option with Ctrl+ArrowUp', async () => {
+        const el = await shiftTabDisabledFirstFixture(mobileView);
+
+        setInputValue(el, 'a');
+        await elementUpdated(el);
+        await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+        if (mobileView) {
+          el.inputInBib.focus();
+          await waitUntil(() => el.shadowRoot.activeElement === el.inputInBib);
+        }
+
+        // Navigate away from the first enabled option
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await elementUpdated(el);
+
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          ctrlKey: true,
+          bubbles: true,
+          cancelable: true
+        }));
+        await elementUpdated(el);
+
+        const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
+        await expect(el.optionActive).to.equal(enabledOptions[0]);
+        await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
     });
 

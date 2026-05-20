@@ -2564,6 +2564,36 @@ function runTest(mobileView) {
 
             await expect(el.optionActive === firstOption).to.equal(true);
           });
+
+          it('should skip disabled options', async () => {
+            const el = await fixture(html`
+              <auro-select>
+                <span slot="bib.fullscreen.headline">Bib Headline</span>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+                  <auro-menuoption value="Price">Price</auro-menuoption>
+                  <auro-menuoption value="Duration">Duration</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            `);
+
+            await elementUpdated(el);
+            el.showBib();
+            await elementUpdated(el);
+
+            // Move away from the first enabled option
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            const menu = el.querySelector('auro-menu');
+            const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', metaKey: true }));
+            await elementUpdated(el);
+
+            await expect(el.optionActive === firstEnabledOption).to.equal(true);
+          });
         });
 
         describe('Alt', () => {
@@ -2600,6 +2630,36 @@ function runTest(mobileView) {
 
             await expect(el.optionActive === firstOption).to.equal(true);
           });
+
+          it('should skip disabled options', async () => {
+            const el = await fixture(html`
+              <auro-select>
+                <span slot="bib.fullscreen.headline">Bib Headline</span>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+                  <auro-menuoption value="Price">Price</auro-menuoption>
+                  <auro-menuoption value="Duration">Duration</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            `);
+
+            await elementUpdated(el);
+            el.showBib();
+            await elementUpdated(el);
+
+            // Move away from the first enabled option
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            const menu = el.querySelector('auro-menu');
+            const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
+            await elementUpdated(el);
+
+            await expect(el.optionActive === firstEnabledOption).to.equal(true);
+          });
         });
 
         describe('Ctrl', () => {
@@ -2635,6 +2695,36 @@ function runTest(mobileView) {
             await elementUpdated(el);
 
             await expect(el.optionActive === firstOption).to.equal(true);
+          });
+
+          it('should skip disabled options', async () => {
+            const el = await fixture(html`
+              <auro-select>
+                <span slot="bib.fullscreen.headline">Bib Headline</span>
+                <span slot="label">Name</span>
+                <auro-menu>
+                  <auro-menuoption value="Stops" disabled>Stops</auro-menuoption>
+                  <auro-menuoption value="Price">Price</auro-menuoption>
+                  <auro-menuoption value="Duration">Duration</auro-menuoption>
+                </auro-menu>
+              </auro-select>
+            `);
+
+            await elementUpdated(el);
+            el.showBib();
+            await elementUpdated(el);
+
+            // Move away from the first enabled option
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await elementUpdated(el);
+
+            const menu = el.querySelector('auro-menu');
+            const firstEnabledOption = menu.querySelector('auro-menuoption[value="Price"]');
+
+            el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+            await elementUpdated(el);
+
+            await expect(el.optionActive === firstEnabledOption).to.equal(true);
           });
         });
       });
