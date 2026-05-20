@@ -4,101 +4,105 @@ The `auro-datepicker` component provides users with a way to select a date or da
 
 ## Properties
 
-| Property                          | Attribute                         | Modifiers | Type                                             | Default                                          | Description                                      |
-|-----------------------------------|-----------------------------------|-----------|--------------------------------------------------|--------------------------------------------------|--------------------------------------------------|
-| `appearance`                      | `appearance`                      |           | `string`                                         | "'default'"                                      | Defines whether the component will be on lighter or darker backgrounds. |
-| `autoPlacement`                   | `autoPlacement`                   |           | `boolean`                                        | "false"                                          | If declared, bib's position will be automatically calculated where to appear. |
-| `calendarEndDate`                 | `calendarEndDate`                 |           | `string`                                         | "undefined"                                      | The last date that may be displayed in the calendar. |
-| `calendarFocusDate`               | `calendarFocusDate`               |           | `string`                                         | "value"                                          | The date that will first be visually rendered to the user in the calendar. |
-| `calendarStartDate`               | `calendarStartDate`               |           | `string`                                         | "undefined"                                      | The first date that may be displayed in the calendar. |
-| `centralDate`                     | `centralDate`                     |           | `string`                                         |                                                  | The date that determines the currently visible month. |
-| `disabled`                        | `disabled`                        |           | `boolean`                                        | false                                            | If set, disables the datepicker.                 |
-| `dvInputOnly`                     | `dvInputOnly`                     |           | `boolean`                                        | false                                            | If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked. |
-| `error`                           | `error`                           |           | `string`                                         |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
-| `format`                          | `format`                          |           | `string`                                         | "mm/dd/yyyy"                                     | Specifies the date format. The default is `mm/dd/yyyy`. |
-| `fullscreenBreakpoint`            | `fullscreenBreakpoint`            |           | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'disabled'` | "'sm'"                                           | Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.<br /><br />When expanded, the dropdown will automatically display in fullscreen mode<br />if the screen size is equal to or smaller than the selected breakpoint. |
-| `hasError`                        |                                   | readonly  | `boolean`                                        |                                                  |                                                  |
-| `inputmode`                       | `inputmode`                       |           | `string`                                         |                                                  | Exposes inputmode attribute for input.           |
-| `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`                                        | false                                            | If declared, make bib.fullscreen.headline in HeadingDisplay.<br />Otherwise, Heading 600. |
-| `layout`                          | `layout`                          |           | `'classic' \| 'snowflake'`                       | "'classic'"                                      | Sets the layout of the datepicker.               |
-| `maxDate`                         | `maxDate`                         |           | `string`                                         |                                                  | Maximum date. All dates after will be disabled.  |
-| `minDate`                         | `minDate`                         |           | `string`                                         |                                                  | Minimum date. All dates before will be disabled. |
-| `monthNames`                      | `monthNames`                      |           | `array`                                          | ["January","February","March","April","May","June","July","August","September","October","November","December"] | Names of all 12 months to render in the calendar, used for localization of date string in mobile layout. |
-| `noFlip`                          | `noFlip`                          |           | `boolean`                                        | false                                            | If declared, the bib will NOT flip to an alternate position<br />when there isn't enough space in the specified `placement`. |
-| `noValidate`                      | `noValidate`                      |           | `boolean`                                        | false                                            | If set, disables auto-validation on blur.        |
-| `offset`                          | `offset`                          |           | `number`                                         | "0"                                              | Gap between the trigger element and bib.         |
-| `onDark`                          | `onDark`                          |           | `boolean`                                        | false                                            | DEPRECATED - use `appearance="inverse"` instead. |
-| `placeholder`                     | `placeholder`                     |           | `string`                                         |                                                  | Placeholder text to display in the input(s) when no value is set. |
-| `placeholderEndDate`              | `placeholderEndDate`              |           | `string`                                         |                                                  | Optional placeholder text to display in the second input when using date range.<br />By default, datepicker will use `placeholder` for both inputs if placeholder is<br />specified, but placeholderEndDate is not. |
-| `placement`                       | `placement`                       |           | `'top' \| 'right' \| 'bottom' \| 'left' \| 'bottom-start' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-end' \| 'left-start' \| 'left-end'` | "'bottom-start'"                                 | Position where the bib should appear relative to the trigger. |
-| `range`                           | `range`                           |           | `boolean`                                        | false                                            | If set, turns on date range functionality in auro-calendar. |
-| `referenceDates`                  | `referenceDates`                  |           | `array`                                          |                                                  | Dates that the user should have for reference as part of their decision making when selecting a date.<br />This should be a JSON string array of dates in the format of `MM/DD/YYYY`. |
-| `required`                        | `required`                        |           | `boolean`                                        | false                                            | Populates the `required` attribute on the input. Used for client-side validation. |
-| `setCustomValidity`               | `setCustomValidity`               |           | `string`                                         |                                                  | Sets a custom help text message to display for all validityStates. |
-| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    |           | `string`                                         |                                                  | Custom help text message to display when validity = `customError`. |
-| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  |           | `string`                                         |                                                  | Custom help text message to display when validity = `rangeOverflow`. |
-| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` |           | `string`                                         |                                                  | Custom help text message to display when validity = `rangeUnderflow`. |
-| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   |           | `string`                                         |                                                  | Custom help text message to display when validity = `valueMissing`. |
-| `shape`                           |                                   |           | `string`                                         | "classic"                                        |                                                  |
-| `shift`                           | `shift`                           |           | `boolean`                                        | false                                            | If declared, the dropdown will shift its position to avoid being cut off by the viewport. |
-| `size`                            |                                   |           | `string`                                         | "lg"                                             |                                                  |
-| `stacked`                         | `stacked`                         |           | `boolean`                                        | false                                            | Set true to make datepicker stacked style.       |
-| `validity`                        | `validity`                        |           | `string`                                         | "undefined"                                      | Specifies the `validityState` this element is in. |
-| `value`                           | `value`                           |           | `string`                                         | "undefined"                                      | Value selected for the datepicker.               |
-| `valueEnd`                        | `valueEnd`                        |           | `string`                                         | "undefined"                                      | Value selected for the second datepicker when using date range. |
-| `values`                          |                                   | readonly  | `string[]`                                       |                                                  | A convenience wrapper for `value` and `valueEnd`, uses the new Auro "array value pattern". |
+| Property                          | Attribute                         | Modifiers | Type       | Default                                          | Description                                      |
+|-----------------------------------|-----------------------------------|-----------|------------|--------------------------------------------------|--------------------------------------------------|
+| `appearance`                      | `appearance`                      |           | `string`   | "default"                                        |                                                  |
+| `autoPlacement`                   | `autoPlacement`                   |           | `boolean`  | false                                            |                                                  |
+| `calendarFocusDate`               | `calendarFocusDate`               |           | `string`   | "undefined"                                      | Date to first show in the calendar (ISO `YYYY-MM-DD`). |
+| `centralDate`                     | `centralDate`                     |           | `string`   |                                                  | Currently visible month marker (ISO `YYYY-MM-DD`, non-reflected). |
+| `dayDecorations`                  |                                   |           |            |                                                  | Optional callback `(date: Date) => { parts?: string[], label?: string, ariaLabel?: string } \| null`<br />for per-cell decoration. Replaces the legacy `date_MM_DD_YYYY` / `popover_MM_DD_YYYY` slots. |
+| `disabled`                        | `disabled`                        |           | `boolean`  | false                                            |                                                  |
+| `dvInputOnly`                     | `dvInputOnly`                     |           | `boolean`  | false                                            |                                                  |
+| `error`                           | `error`                           |           | `string`   |                                                  |                                                  |
+| `format`                          | `format`                          |           | `string`   | "mm/dd/yyyy"                                     |                                                  |
+| `fullscreenBreakpoint`            | `fullscreenBreakpoint`            |           | `string`   | "sm"                                             |                                                  |
+| `handleCalendarChange`            |                                   |           |            |                                                  |                                                  |
+| `handleCalendarFocusDay`          |                                   |           |            |                                                  |                                                  |
+| `handleCalendarPointerOut`        |                                   |           |            |                                                  |                                                  |
+| `handleCalendarPointerOver`       |                                   |           |            |                                                  |                                                  |
+| `handleClearClick`                |                                   |           |            |                                                  |                                                  |
+| `handleClick`                     |                                   |           |            |                                                  |                                                  |
+| `hasError`                        |                                   | readonly  | `boolean`  |                                                  |                                                  |
+| `inputmode`                       | `inputmode`                       |           | `string`   |                                                  |                                                  |
+| `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`  | false                                            |                                                  |
+| `layout`                          | `layout`                          |           | `string`   | "classic"                                        |                                                  |
+| `maxDate`                         | `maxDate`                         |           | `string`   |                                                  | Maximum allowed date as ISO `YYYY-MM-DD`.        |
+| `minDate`                         | `minDate`                         |           | `string`   |                                                  | Minimum allowed date as ISO `YYYY-MM-DD`.        |
+| `monthNames`                      | `monthNames`                      |           | `array`    | ["January","February","March","April","May","June","July","August","September","October","November","December"] |                                                  |
+| `noFlip`                          | `noFlip`                          |           | `boolean`  | false                                            |                                                  |
+| `noValidate`                      | `noValidate`                      |           | `boolean`  | false                                            |                                                  |
+| `offset`                          | `offset`                          |           | `number`   | 0                                                |                                                  |
+| `onDark`                          | `onDark`                          |           | `boolean`  | false                                            |                                                  |
+| `placeholder`                     | `placeholder`                     |           | `string`   |                                                  |                                                  |
+| `placeholderEndDate`              | `placeholderEndDate`              |           | `string`   |                                                  |                                                  |
+| `placement`                       | `placement`                       |           | `string`   | "bottom-start"                                   |                                                  |
+| `range`                           | `range`                           |           | `boolean`  | false                                            |                                                  |
+| `referenceDates`                  | `referenceDates`                  |           | `array`    |                                                  | Decorated reference dates (ISO `YYYY-MM-DD` or legacy `MM/DD/YYYY`). |
+| `required`                        | `required`                        |           | `boolean`  | false                                            |                                                  |
+| `setCustomValidity`               | `setCustomValidity`               |           | `string`   |                                                  |                                                  |
+| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    |           | `string`   |                                                  |                                                  |
+| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  |           | `string`   |                                                  |                                                  |
+| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` |           | `string`   |                                                  |                                                  |
+| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   |           | `string`   |                                                  |                                                  |
+| `shape`                           |                                   |           | `string`   | "classic"                                        |                                                  |
+| `shift`                           | `shift`                           |           | `boolean`  | false                                            |                                                  |
+| `size`                            |                                   |           | `string`   | "lg"                                             |                                                  |
+| `stacked`                         | `stacked`                         |           | `boolean`  | false                                            |                                                  |
+| `validity`                        | `validity`                        |           | `string`   | "undefined"                                      |                                                  |
+| `value`                           | `value`                           |           | `string`   | "undefined"                                      | Selected start date as ISO `YYYY-MM-DD`.         |
+| `valueEnd`                        | `valueEnd`                        |           | `string`   | "undefined"                                      | Selected end date as ISO `YYYY-MM-DD` (range mode). |
+| `values`                          |                                   | readonly  | `string[]` |                                                  | Convenience accessor returning `[value]` or `[value, valueEnd]` for range. |
 
 ## Methods
 
-| Method                        | Type                                   | Description                                      |
-|-------------------------------|----------------------------------------|--------------------------------------------------|
-| `clear`                       | `(): void`                             | Clears the current value(s) of the datepicker.   |
-| `focus`                       | `(focusInput?: string): void`          | Focuses the datepicker trigger input.<br /><br />**focusInput**: Pass in `endDate` to focus on the return input. No parameter is needed to focus on the depart input. |
-| `hideBib`                     | `(): void`                             | Hides the dropdown bib if its open.              |
-| `reset`                       | `(): void`                             | Resets component to initial state.               |
-| `resetInputs`                 | `(): void`                             | Resets values without resetting validation.      |
-| `resetLayoutClasses`          | `(): void`                             |                                                  |
-| `resetShapeClasses`           | `(): void`                             |                                                  |
-| `showBib`                     | `(): void`                             | Shows the dropdown bib if there are options to show. |
-| `updateComponentArchitecture` | `(): void`                             |                                                  |
-| `validate`                    | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| Method                        | Type                          | Description                                      |
+|-------------------------------|-------------------------------|--------------------------------------------------|
+| `blur`                        | `(): void`                    |                                                  |
+| `clear`                       | `(): void`                    |                                                  |
+| `focus`                       | `(focusInput?: string): void` | Focus the datepicker trigger input.<br /><br />**focusInput**: Pass `endDate` to focus the end input (range mode). |
+| `focusCalendar`               | `(): void`                    | Move focus into the calendar grid. Used by keyboard strategy after ArrowDown. |
+| `hideBib`                     | `(): void`                    |                                                  |
+| `reset`                       | `(): void`                    |                                                  |
+| `resetInputs`                 | `(): void`                    |                                                  |
+| `resetLayoutClasses`          | `(): void`                    |                                                  |
+| `resetShapeClasses`           | `(): void`                    |                                                  |
+| `showBib`                     | `(): void`                    |                                                  |
+| `updateComponentArchitecture` | `(): void`                    |                                                  |
+| `validate`                    | `(force?: boolean): void`     |                                                  |
 
 ## Events
 
-| Event                           | Type                                             | Description                                      |
-|---------------------------------|--------------------------------------------------|--------------------------------------------------|
-| `auroDatePicker-monthChanged`   | `CustomEvent<{ month: any; year: any; numCalendars: any; }>` | Notifies that the visible calendar month(s) have changed. |
-| `auroDatePicker-newSlotContent` | `CustomEvent<any>`                               | Notifies that new slot content has been added to the datepicker. |
-| `auroDatePicker-toggled`        | `CustomEvent<{ expanded: any; }>`                | Notifies that the calendar dropdown has been opened/closed. |
-| `auroDatePicker-valueSet`       |                                                  | Notifies that the component has a new value set. |
-| `auroFormElement-validated`     |                                                  | Notifies that the component value(s) have been validated. |
-| `input`                         |                                                  |                                                  |
+| Event                         | Type                                             |
+|-------------------------------|--------------------------------------------------|
+| `auroDatePicker-monthChanged` | `CustomEvent<{ month: any; year: any; numCalendars: number; }>` |
+| `auroDatePicker-toggled`      | `CustomEvent<{ expanded: any; }>`                |
+| `auroDatePicker-valueSet`     |                                                  |
+| `auroFormElement-validated`   |                                                  |
+| `input`                       |                                                  |
 
 ## Slots
 
-| Name                       | Description                                      |
-|----------------------------|--------------------------------------------------|
-| `ariaLabel.bib.close`      | Sets aria-label on close button in fullscreen bib |
-| `ariaLabel.input.clear`    | Sets aria-label on clear button                  |
-| `bib.fullscreen.dateLabel` | **DEPRECATED** - Use `bib.fullscreen.fromLabel` instead. |
-| `bib.fullscreen.fromLabel` | Defines the content to display above the first input in the mobile layout. |
-| `bib.fullscreen.headline`  | Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout. |
-| `bib.fullscreen.toLabel`   | Defines the content to display above the second input in the mobile layout when `range` is true. |
-| `date_MM_DD_YYYY`          | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |
-| `fromLabel`                | Defines the label content for the first input.   |
-| `helpText`                 | Defines the content of the helpText.             |
-| `label`                    | Defines the label content for the entire datepicker when `layout="snowflake"`. |
-| `popover_MM_DD_YYYY`       | Defines the content to display in the auro-calendar-cell popover for the specified date. |
-| `toLabel`                  | Defines the label content for the second input when the `range` attribute is used. |
+| Name                       |
+|----------------------------|
+| `ariaLabel.bib.close`      |
+| `ariaLabel.input.clear`    |
+| `bib.fullscreen.fromLabel` |
+| `bib.fullscreen.headline`  |
+| `bib.fullscreen.toLabel`   |
+| `displayValue`             |
+| `fromLabel`                |
+| `helpText`                 |
+| `label`                    |
+| `toLabel`                  |
 
 ## CSS Shadow Parts
 
-| Part              | Description                                      |
-|-------------------|--------------------------------------------------|
-| `calendar`        | Use for customizing the style of the calendar.   |
-| `calendarWrapper` | Use for customizing the style of the calendar container. |
-| `dropdown`        | Use for customizing the style of the dropdown.   |
-| `helpText`        | Use for customizing the style of the datepicker help text. |
-| `helpTextSpan`    | Use for customizing the style of the datepicker help text span. |
-| `input`           | Use for customizing the style of the datepicker inputs. |
-| `trigger`         | Use for customizing the style of the datepicker trigger. |
+| Part              |
+|-------------------|
+| `calendar`        |
+| `calendarWrapper` |
+| `dropdown`        |
+| `helpText`        |
+| `helpTextSpan`    |
+| `input`           |
+| `trigger`         |

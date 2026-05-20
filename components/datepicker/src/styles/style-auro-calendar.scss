@@ -76,6 +76,18 @@ calendar-month::part(day):hover {
   border-color: var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
 }
 
+calendar-month::part(day):focus-visible {
+  outline: 2px solid var(--ds-basic-color-brand-primary, #{v.$ds-basic-color-brand-primary});
+  outline-offset: 2px;
+}
+
+calendar-month::part(selected):focus-visible,
+calendar-month::part(range-start):focus-visible,
+calendar-month::part(range-end):focus-visible {
+  outline-color: var(--ds-basic-color-texticon-inverse, #{v.$ds-basic-color-texticon-inverse});
+  outline-offset: -3px;
+}
+
 calendar-month::part(today) {
   font-weight: 700;
 }
