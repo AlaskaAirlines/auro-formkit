@@ -4,7 +4,7 @@
 // 'components/menu/src/registered.js'
 
 import { fixture, html, expect, oneEvent, elementUpdated } from '@open-wc/testing';
-import '../../../components/menu/src/registered.js';
+import '../../components/menu/src/registered.js';
 import {
   multiSelectDuplicateValuesFixture,
   multiSelectDuplicateValuesSelectAllFixture,
