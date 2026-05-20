@@ -18,7 +18,6 @@
       <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
       <auro-anchorlink fluid href="#presetValueMultiselect" class="level2 body-xs">Preset Value (Multi)</auro-anchorlink>
       <auro-anchorlink fluid href="#preselect" class="level2 body-xs">Pre-Selected</auro-anchorlink>
-      <auro-anchorlink fluid href="#allowDeselect" class="level2 body-xs">Allow Deselect</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -160,17 +159,6 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/preselect.html) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-        </auro-accordion>
-        <auro-header level="3" id="allowDeselect">Allow Deselect</auro-header>
-        <p>Use the <code>allowDeselect</code> attribute to allow users to click a selected option again to deselect it in single-select mode. In multi-select mode, deselection is always available regardless of this attribute.</p>
-        <div class="exampleWrapper">
-        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/allow-deselect.html) -->
-        <!-- AURO-GENERATED-CONTENT:END -->
-        </div>
-        <auro-accordion alignRight>
-        <span slot="trigger">See code</span>
-        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/allow-deselect.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
       </section>

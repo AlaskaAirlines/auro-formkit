@@ -6,7 +6,6 @@ The `auro-menu` element provides users a way to select from a list of options.
 
 | Property                   | Attribute                  | Modifiers | Type                  | Default     | Description                                      |
 |----------------------------|----------------------------|-----------|-----------------------|-------------|--------------------------------------------------|
-| `allowDeselect`            | `allowDeselect`            |           | `boolean`             | false       | Allows deselecting an already selected option when clicked again in single-select mode. |
 | `currentLabel`             |                            | readonly  | `string`              |             |                                                  |
 | `disabled`                 | `disabled`                 |           | `boolean`             |             | When true, the entire menu and all options are disabled. |
 | `hasLoadingPlaceholder`    | `hasLoadingPlaceholder`    |           | `boolean`             |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
@@ -19,7 +18,6 @@ The `auro-menu` element provides users a way to select from a list of options.
 | `optionActive`             | `optionactive`             |           | `object`              | "undefined" | Specifies the current active menuOption.         |
 | `optionSelected`           | `optionSelected`           |           | `object`              | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
 | `options`                  |                            | readonly  | `array`               |             | Available menu options.                          |
-| `selectAllMatchingOptions` | `selectAllMatchingOptions` |           | `boolean`             | false       | When true, selects all options that match the provided value/key when setting value and multiselect is enabled. |
 | `selectedOption`           |                            | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
 | `selectedOptions`          |                            | readonly  | `HTMLElement[]`       |             | Gets the currently selected options.             |
 | `value`                    | `value`                    |           | `string`              |             | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values. |
@@ -64,7 +62,6 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | `disabled`    | `disabled` |           | `boolean` | false   | When true, disables the menu option.             |
 | `iconTag`     |            |           |           |         |                                                  |
 | `isActive`    |            | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable.<br />An option is considered active if it is not hidden, not disabled, and not static. |
-| `key`         | `key`      |           | `string`  |         | Allows users to set a unique key for the menu option for specified option selection. If no key is provided, the value property will be used. |
 | `noMatch`     | `nomatch`  |           | `boolean` | false   | When true, marks this option as the "no matching results" placeholder shown by combobox when the user's input does not match any available options. Enables distinct styling and prevents the option from being treated as a selectable match. |
 | `selected`    | `selected` |           | `boolean` | false   | Specifies that an option is selected.            |
 | `tabIndex`    | `tabIndex` |           | `number`  |         | Specifies the tab index of the menu option.      |
