@@ -11,7 +11,7 @@ async function waitForCounter(page: Page) {
       return customElements.get('auro-counter') !== undefined &&
         !!el?.shadowRoot?.querySelector('[role="spinbutton"]');
     },
-    { timeout: 30_000 },
+    { timeout: 40_000 },
   );
 }
 

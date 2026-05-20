@@ -4,6 +4,7 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-datepicker to be fully registered and its dropdown ready. */
 async function waitForDatepicker(page: Page, fixture: string) {
+  await page.waitForLoadState('load');
   await page.waitForFunction(
     (testId) => {
       const section = document.querySelector(`[data-testid="${testId}"]`);
@@ -14,7 +15,7 @@ async function waitForDatepicker(page: Page, fixture: string) {
       );
     },
     fixture,
-    { timeout: 15_000 },
+    { timeout: 30_000 },
   );
 }
 

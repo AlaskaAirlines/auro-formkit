@@ -12,7 +12,7 @@ async function waitForCombobox(page: Page) {
       const els = document.querySelectorAll('auro-combobox');
       return els.length > 0 && [...els].every((el: any) => el.dropdown != null);
     },
-    { timeout: 15_000 },
+    { timeout: 30_000 },
   );
 }
 

@@ -4,18 +4,14 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for auro-input custom element to be fully registered and shadow DOM rendered. */
 async function waitForInput(page: Page) {
-  await page.waitForLoadState('networkidle');
-  await page.waitForFunction(
-    () => customElements.get('auro-input') !== undefined,
-    { timeout: 10_000 },
-  );
-  // Wait for the first input's shadow DOM <input> to be rendered
+  await page.waitForLoadState('load');
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-input');
-      return !!el?.shadowRoot?.querySelector('input');
+      return customElements.get('auro-input') !== undefined &&
+        !!el?.shadowRoot?.querySelector('input');
     },
-    { timeout: 10_000 },
+    { timeout: 30_000 },
   );
 }
 

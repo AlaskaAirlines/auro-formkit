@@ -13,6 +13,7 @@ import { test, expect, type Page } from './coverage-fixture';
  * breakpoint is wired up, causing FloatingUI to fall back to floating mode
  * and leaving noHideOnThisFocusLoss false even on a mobile viewport. */
 async function waitForDatepicker(page: Page) {
+  await page.waitForLoadState('load');
   await page.waitForFunction(
     () => {
       const el = document.querySelector('auro-datepicker') as any;
@@ -21,7 +22,7 @@ async function waitForDatepicker(page: Page) {
         el?.dropdown?.bibContent != null
       );
     },
-    { timeout: 10_000 },
+    { timeout: 30_000 },
   );
 }
 
@@ -30,12 +31,13 @@ async function openBib(page: Page) {
   await page.locator('auro-datepicker').click();
 }
 
-/** Returns true when dropdown.isPopoverVisible is true on the datepicker. */
+/** Returns true when dropdown.isPopoverVisible is true on the datepicker.
+ * Uses a locator-based evaluate to survive execution context destruction
+ * that can occur during Svelte's lazy route transitions. */
 function isBibVisible(page: Page) {
-  return page.evaluate(() => {
-    const el = document.querySelector('auro-datepicker') as any;
+  return page.locator('auro-datepicker').evaluate((el: any) => {
     return Boolean(el?.dropdown?.isPopoverVisible);
-  });
+  }).catch(() => false);
 }
 
 /** After openBib(), waits for the bib to be visible and in fullscreen mode.

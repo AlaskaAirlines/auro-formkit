@@ -949,15 +949,33 @@ export class AuroDatePicker extends AuroElement {
         this.calendar.setActiveCell(this.calendar.activeCellDate);
       }
 
-      // Find the active cell, pre-set hovered so @focus is a no-op
-      const activeCell = allCells.find(cell => cell.active);
-      if (activeCell) {
-        activeCell.hovered = true;
-        const btn = activeCell.shadowRoot.querySelector('button:not([aria-hidden])');
-        if (btn) {
-          btn.setAttribute('tabindex', '0');
-          btn.focus({ focusVisible: true });
+      // If no cell matched (e.g. centralDate month differs from the rendered
+      // range on mobile), fall back to the first rendered enabled cell.
+      let activeCell = allCells.find(cell => cell.active);
+      if (!activeCell && allCells.length) {
+        const fallback = allCells[0];
+        if (fallback.day) {
+          this.calendar.activeCellDate = fallback.day.date;
+          this.calendar.setActiveCell(this.calendar.activeCellDate);
+          activeCell = allCells.find(cell => cell.active);
         }
+      }
+
+      // Wait for the cell's Lit render to complete so the button's tabindex
+      // reflects the active state before we attempt to focus.
+      if (activeCell) {
+        activeCell.updateComplete.then(() => {
+          activeCell.hovered = true;
+          const btn = activeCell.shadowRoot.querySelector('button:not([aria-hidden])');
+          if (btn) {
+            btn.setAttribute('tabindex', '0');
+            btn.focus({ focusVisible: true });
+          } else if (attempts < MAX_ATTEMPTS) {
+            requestAnimationFrame(tryFocus);
+          }
+        });
+      } else if (attempts < MAX_ATTEMPTS) {
+        requestAnimationFrame(tryFocus);
       }
     };
 
