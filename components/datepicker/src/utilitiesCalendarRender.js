@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { AuroDatepickerUtilities } from './utilities.js';
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
 export class UtilitiesCalendarRender {
   constructor() {
@@ -13,7 +14,7 @@ export class UtilitiesCalendarRender {
    * @private
    */
   updateCentralDate(elem, date) {
-    const dateObj = new Date(date);
+    const dateObj = date instanceof String ? dateFormatter.stringToDateInstance(date) :  new Date(date);
     dateObj.setDate(1);
     dateObj.setHours(0, 0, 0, 0);
 
@@ -31,7 +32,7 @@ export class UtilitiesCalendarRender {
   determineDefinedCalendarRange(elem) {
     if (elem.getAttribute('calendarStartDate') && elem.getAttribute('calendarEndDate')) {
       // if we have a defined range of months, use that
-      elem.calendarRangeMonths = elem.util.monthDiff(new Date(elem.getAttribute('calendarStartDate')), new Date(elem.getAttribute('calendarEndDate')));
+      elem.calendarRangeMonths = elem.util.monthDiff(dateFormatter.stringToDateInstance(elem.getAttribute('calendarStartDate')), dateFormatter.stringToDateInstance(elem.getAttribute('calendarEndDate')));
     } else {
       // if we don't have a defined range of months, use undefined
       elem.calendarRangeMonths = undefined;
@@ -91,7 +92,7 @@ export class UtilitiesCalendarRender {
 
     // 3. If we didn't get a count early, restrict based on min/max date.
     if (!calendarCount && elem.minDate && elem.maxDate) {
-      const monthsInRange = this.util.monthDiff(new Date(elem.minDate), new Date(elem.maxDate));
+      const monthsInRange = this.util.monthDiff(dateFormatter.stringToDateInstance(elem.minDate), dateFormatter.stringToDateInstance(elem.maxDate));
 
       if (monthsInRange < maxRenderableMonths) {
         calendarCount = monthsInRange;
@@ -117,9 +118,9 @@ export class UtilitiesCalendarRender {
     let firstMonthDate = new Date();
 
     if (start) {
-      firstMonthDate = new Date(start);
+      firstMonthDate = dateFormatter.stringToDateInstance(start);
     } else if (min) {
-      firstMonthDate = new Date(min);
+      firstMonthDate = dateFormatter.stringToDateInstance(min);
     }
 
     // sets to the first day of the month

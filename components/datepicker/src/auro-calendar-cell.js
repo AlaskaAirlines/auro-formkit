@@ -249,11 +249,11 @@ export class AuroCalendarCell extends LitElement {
       // Guard clause: no dates in the array
       if (!Array.isArray(referenceDates) || referenceDates.length === 0) return false;
 
-      // Compare the dateStr (MM_DD_YYYY) to the referenceDates (MM/DD/YYYY)
-      const compareDateStr = dateStr.replace(/_/gu, '/');
+      // Convert cell dateStr (MM_DD_YYYY) to ISO (YYYY-MM-DD) for comparison
+      const [month, day, year] = dateStr.split('_');
+      const cellISO = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-      // Check if the compareDateStr is in the referenceDates array
-      return referenceDates.includes(compareDateStr);
+      return referenceDates.includes(cellISO);
     };
 
     return false;

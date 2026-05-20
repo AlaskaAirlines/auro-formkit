@@ -9,7 +9,7 @@ import '../src/registered.js';
  */
 export function dateSlotFixture() {
   return fixture(html`
-    <auro-datepicker centralDate="10/01/2023">
+    <auro-datepicker centralDate="2023-10-01">
       <span slot="date_10_01_2023">$1322</span>
       <span slot="date_10_02_2023">$234</span>
       <span slot="date_10_11_2023">$784</span>
@@ -25,7 +25,7 @@ export function dateSlotFixture() {
  */
 export function popoverSlotFixture() {
   return fixture(html`
-    <auro-datepicker centralDate="10/01/2023">
+    <auro-datepicker centralDate="2023-10-01">
       <span slot="popover_10_01_2023">$1322</span>
       <span slot="popover_10_02_2023">$234</span>
       <span slot="popover_10_11_2023">$784</span>

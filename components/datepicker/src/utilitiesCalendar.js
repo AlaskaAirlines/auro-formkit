@@ -1,4 +1,5 @@
 import { AuroDatepickerUtilities } from './utilities.js';
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 
 export class CalendarUtilities {
   constructor() {
@@ -16,9 +17,10 @@ export class CalendarUtilities {
   scrollMonthIntoView(elem, date, format) {
     const mobileLayout = window.innerWidth < elem.mobileBreakpoint;
 
-    if (this.util.validDateStr(date, format) && mobileLayout) {
-      const month = new Date(date).getMonth() + 1;
-      const year = new Date(date).getFullYear();
+    if (dateFormatter.isValidDate(date, format) && mobileLayout) {
+      const dateObj = dateFormatter.stringToDateInstance(date, format);
+      const month = dateObj.getMonth() + 1;
+      const year = dateObj.getFullYear();
       const selector = `#month-${month}-${year}`;
       const monthElem = elem.shadowRoot.querySelector(selector);
 
@@ -67,9 +69,9 @@ export class CalendarUtilities {
     let lastRenderableMonth = undefined; // eslint-disable-line no-undef-init
 
     if (elem.hasAttribute('calendarEndDate')) {
-      lastRenderableMonth = new Date(elem.getAttribute('calendarEndDate'));
+      lastRenderableMonth = dateFormatter.stringToDateInstance(elem.getAttribute('calendarEndDate'));
     } else if (elem.hasAttribute('maxDate')) {
-      lastRenderableMonth = new Date(elem.getAttribute('maxDate'));
+      lastRenderableMonth = dateFormatter.stringToDateInstance(elem.getAttribute('maxDate'));
     }
 
     if (lastRenderableMonth) {
