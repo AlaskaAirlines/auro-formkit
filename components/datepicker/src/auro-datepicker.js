@@ -30,7 +30,7 @@ import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHa
 import 'cally';
 
 import { AuroDatepickerUtilities } from './utilities.js';
-import { CalendarBridge, normalizeReferenceDates, toIsoLocal, firstDayOfWeekForLocale } from './calendarBridge.js';
+import { CalendarBridge, normalizeReferenceDates, toIsoLocal, firstDayOfWeekForLocale, parseIsoLocal } from './calendarBridge.js';
 import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
 import { translate } from './i18nStrings.js';
 import { buildLocaleDateMask } from '../../input/src/localeMask.js';
@@ -439,16 +439,11 @@ export class AuroDatePicker extends AuroElement {
    * @returns {Date|undefined}
    * @private
    */
+  // F4: ISO→Date parsing was inlined per-component. Promoted to `parseIsoLocal`
+  // in `calendarBridge.js` so any future Auro component using the ISO contract
+  // shares one implementation (and the negative-UTC-offset guard).
   _isoToLocalDate(iso) {
-    if (!iso) {
-      return undefined;
-    }
-    const match = iso.match(/^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/u);
-    if (!match || !match.groups) {
-      return undefined;
-    }
-    const { year, month, day } = match.groups;
-    return new Date(Number(year), Number(month) - 1, Number(day));
+    return parseIsoLocal(iso);
   }
 
   /**
@@ -494,6 +489,12 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Long-form month names. Auto-derived from the resolved locale unless the
    * consumer assigns a 12-element array override.
+   *
+   * F1: Stays a getter (not a reactive property + eager populate) because
+   * Cally renders its own month header from its `locale` attribute — the
+   * datepicker shell does not read `monthNames` during render. The array is
+   * only computed when consumer code reads it, then cached per locale.
+   *
    * @returns {string[]}
    */
   get monthNames() {

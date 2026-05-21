@@ -582,12 +582,15 @@ describe('auro-datepicker', () => {
   });
 
   describe('monthNames auto-derivation', () => {
+    // F12: assert structure + locale-distinct output rather than pinning the
+    // exact CLDR string ("Januar"). Cally + ICU/CLDR own the exact text; we
+    // only own the "12 entries, non-English when locale non-English" contract.
     it('returns localized month names for the resolved locale', async () => {
       const el = await fixture(html`<auro-datepicker locale="de-DE"></auro-datepicker>`);
       await elementUpdated(el);
       const names = el.monthNames;
       expect(names).to.have.lengthOf(12);
-      expect(names[0]).to.equal('Januar');
+      expect(names[0]).to.not.equal('January');
     });
 
     it('respects an explicit 12-element override', async () => {

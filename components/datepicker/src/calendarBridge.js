@@ -83,11 +83,18 @@ export function toIsoLocal(date) {
 }
 
 /**
- * Parse `YYYY-MM-DD` to a local-time ms timestamp at midnight.
+ * Parse `YYYY-MM-DD` to a local-time `Date` at midnight.
+ *
+ * F4: Single canonical local-time ISO→Date helper. `new Date(iso)` interprets
+ * an ISO date-only string as UTC midnight, which lands on the previous calendar
+ * day in any negative UTC offset (e.g. `Pacific/Honolulu` flips `2025-01-01`
+ * back to Dec 31). Constructing from year/month/day components sidesteps that.
+ * The five `*Object` getters in `auro-datepicker` all route through this.
+ *
  * @param {string} iso - ISO date string.
- * @returns {number|undefined} Millisecond timestamp.
+ * @returns {Date|undefined} Local-time Date, or `undefined` if the string is empty/malformed.
  */
-function isoMs(iso) {
+export function parseIsoLocal(iso) {
   if (!iso) {
     return undefined;
   }
@@ -95,7 +102,17 @@ function isoMs(iso) {
   if (!m) {
     return undefined;
   }
-  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).getTime();
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+}
+
+/**
+ * Parse `YYYY-MM-DD` to a local-time ms timestamp at midnight.
+ * @param {string} iso - ISO date string.
+ * @returns {number|undefined} Millisecond timestamp.
+ */
+function isoMs(iso) {
+  const d = parseIsoLocal(iso);
+  return d ? d.getTime() : undefined;
 }
 
 export class CalendarBridge {
