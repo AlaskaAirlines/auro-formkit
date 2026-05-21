@@ -58,6 +58,7 @@ const stringsES = {
   'dateYY': 'Ingrese una fecha completa en el formato AA',
   'dateMM': 'Ingrese una fecha completa en el formato MM',
   'dateDD': 'Ingrese una fecha completa en el formato DD',
+  'invalidFormat': 'Introduzca una fecha completa en el formato {pattern}',
   'clearInput': 'Borrar campo de entrada',
   'showPassword': 'Mostrar contraseña',
   'hidePassword': 'Ocultar contraseña'
@@ -84,24 +85,98 @@ const stringsEN = {
   'dateYY': 'Please enter a complete date in the format YY',
   'dateMM': 'Please enter a complete date in the format MM',
   'dateDD': 'Please enter a complete date in the format DD',
+  'invalidFormat': 'Please enter a complete date in the format {pattern}',
   'clearInput': 'Clear input field',
   'showPassword': 'Show password',
   'hidePassword': 'Hide password'
 };
 
+const stringsFR = {
+  'optional': 'facultatif',
+  'invalidFormat': 'Veuillez saisir une date complète au format {pattern}',
+  'clearInput': 'Effacer le champ',
+  'showPassword': 'Afficher le mot de passe',
+  'hidePassword': 'Masquer le mot de passe'
+};
+
+const stringsDE = {
+  'optional': 'optional',
+  'invalidFormat': 'Bitte geben Sie ein vollständiges Datum im Format {pattern} ein',
+  'clearInput': 'Eingabe löschen',
+  'showPassword': 'Passwort anzeigen',
+  'hidePassword': 'Passwort verbergen'
+};
+
+const stringsJA = {
+  'optional': '任意',
+  'invalidFormat': '{pattern} 形式で日付を入力してください',
+  'clearInput': '入力をクリア',
+  'showPassword': 'パスワードを表示',
+  'hidePassword': 'パスワードを非表示'
+};
+
+const stringsAR = {
+  'optional': 'اختياري',
+  'invalidFormat': 'يرجى إدخال تاريخ كامل بالتنسيق {pattern}',
+  'clearInput': 'مسح الإدخال',
+  'showPassword': 'إظهار كلمة المرور',
+  'hidePassword': 'إخفاء كلمة المرور'
+};
+
+const TABLES = {
+  en: stringsEN,
+  es: stringsES,
+  fr: stringsFR,
+  de: stringsDE,
+  ja: stringsJA,
+  ar: stringsAR
+};
+
+/**
+ * @private
+ * @param {string} tag - BCP47 locale tag.
+ * @returns {string} Lowercase base-language code.
+ */
+function baseLanguage(tag) {
+  if (!tag || typeof tag !== 'string') {
+    return 'en';
+  }
+  return tag.split('-')[0].toLowerCase();
+}
+
+/**
+ * @private
+ * @param {string} template - String with `{name}` placeholders.
+ * @param {object} [vars] - Substitution map.
+ * @returns {string} Interpolated string.
+ */
+function interpolate(template, vars) {
+  if (!template || !vars) {
+    return template;
+  }
+  return template.replace(/\{(?<key>[a-zA-Z0-9_]+)\}/gu, (_match, key) => {
+    if (Object.prototype.hasOwnProperty.call(vars, key)) {
+      return String(vars[key]);
+    }
+    return `{${key}}`;
+  });
+}
+
 /**
  * Function to support the selected of a string in the set lang.
+ * Falls back through base-language (e.g. `fr-CA → fr`) and finally to `en`.
+ * Supports `{name}` placeholder substitution via the optional `vars` argument.
  * @param {string} lang - Requested lang for content return.
  * @param {string} requestedString - String requested in context.
+ * @param {object} [vars] - Optional substitution values for `{name}` placeholders.
  * @private
  * @returns {string} Value of string request.
  */
-export default function i18n(lang, requestedString) {
-  if (lang === 'es') {
-    return stringsES[requestedString];
-  }
-
-  return stringsEN[requestedString];
+export default function i18n(lang, requestedString, vars) {
+  const base = baseLanguage(lang);
+  const table = TABLES[base] || stringsEN;
+  const value = table[requestedString] || stringsEN[requestedString];
+  return interpolate(value, vars);
 }
 
 /**

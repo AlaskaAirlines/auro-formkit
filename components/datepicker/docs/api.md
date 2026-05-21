@@ -4,54 +4,60 @@ The `auro-datepicker` component provides users with a way to select a date or da
 
 ## Properties
 
-| Property                          | Attribute                         | Modifiers | Type       | Default                                          | Description                                      |
-|-----------------------------------|-----------------------------------|-----------|------------|--------------------------------------------------|--------------------------------------------------|
-| `appearance`                      | `appearance`                      |           | `string`   | "default"                                        |                                                  |
-| `autoPlacement`                   | `autoPlacement`                   |           | `boolean`  | false                                            |                                                  |
-| `calendarFocusDate`               | `calendarFocusDate`               |           | `string`   | "undefined"                                      | Date to first show in the calendar (ISO `YYYY-MM-DD`). |
-| `centralDate`                     | `centralDate`                     |           | `string`   |                                                  | Currently visible month marker (ISO `YYYY-MM-DD`, non-reflected). |
-| `dayDecorations`                  |                                   |           |            |                                                  | Optional callback `(date: Date) => { parts?: string[], label?: string, ariaLabel?: string } \| null`<br />for per-cell decoration. Replaces the legacy `date_MM_DD_YYYY` / `popover_MM_DD_YYYY` slots. |
-| `disabled`                        | `disabled`                        |           | `boolean`  | false                                            |                                                  |
-| `dvInputOnly`                     | `dvInputOnly`                     |           | `boolean`  | false                                            |                                                  |
-| `error`                           | `error`                           |           | `string`   |                                                  |                                                  |
-| `format`                          | `format`                          |           | `string`   | "mm/dd/yyyy"                                     |                                                  |
-| `fullscreenBreakpoint`            | `fullscreenBreakpoint`            |           | `string`   | "sm"                                             |                                                  |
-| `handleCalendarChange`            |                                   |           |            |                                                  |                                                  |
-| `handleCalendarFocusDay`          |                                   |           |            |                                                  |                                                  |
-| `handleCalendarPointerOut`        |                                   |           |            |                                                  |                                                  |
-| `handleCalendarPointerOver`       |                                   |           |            |                                                  |                                                  |
-| `handleClearClick`                |                                   |           |            |                                                  |                                                  |
-| `handleClick`                     |                                   |           |            |                                                  |                                                  |
-| `hasError`                        |                                   | readonly  | `boolean`  |                                                  |                                                  |
-| `inputmode`                       | `inputmode`                       |           | `string`   |                                                  |                                                  |
-| `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`  | false                                            |                                                  |
-| `layout`                          | `layout`                          |           | `string`   | "classic"                                        |                                                  |
-| `maxDate`                         | `maxDate`                         |           | `string`   |                                                  | Maximum allowed date as ISO `YYYY-MM-DD`.        |
-| `minDate`                         | `minDate`                         |           | `string`   |                                                  | Minimum allowed date as ISO `YYYY-MM-DD`.        |
-| `monthNames`                      | `monthNames`                      |           | `array`    | ["January","February","March","April","May","June","July","August","September","October","November","December"] |                                                  |
-| `noFlip`                          | `noFlip`                          |           | `boolean`  | false                                            |                                                  |
-| `noValidate`                      | `noValidate`                      |           | `boolean`  | false                                            |                                                  |
-| `offset`                          | `offset`                          |           | `number`   | 0                                                |                                                  |
-| `onDark`                          | `onDark`                          |           | `boolean`  | false                                            |                                                  |
-| `placeholder`                     | `placeholder`                     |           | `string`   |                                                  |                                                  |
-| `placeholderEndDate`              | `placeholderEndDate`              |           | `string`   |                                                  |                                                  |
-| `placement`                       | `placement`                       |           | `string`   | "bottom-start"                                   |                                                  |
-| `range`                           | `range`                           |           | `boolean`  | false                                            |                                                  |
-| `referenceDates`                  | `referenceDates`                  |           | `array`    |                                                  | Decorated reference dates (ISO `YYYY-MM-DD` or legacy `MM/DD/YYYY`). |
-| `required`                        | `required`                        |           | `boolean`  | false                                            |                                                  |
-| `setCustomValidity`               | `setCustomValidity`               |           | `string`   |                                                  |                                                  |
-| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    |           | `string`   |                                                  |                                                  |
-| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  |           | `string`   |                                                  |                                                  |
-| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` |           | `string`   |                                                  |                                                  |
-| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   |           | `string`   |                                                  |                                                  |
-| `shape`                           |                                   |           | `string`   | "classic"                                        |                                                  |
-| `shift`                           | `shift`                           |           | `boolean`  | false                                            |                                                  |
-| `size`                            |                                   |           | `string`   | "lg"                                             |                                                  |
-| `stacked`                         | `stacked`                         |           | `boolean`  | false                                            |                                                  |
-| `validity`                        | `validity`                        |           | `string`   | "undefined"                                      |                                                  |
-| `value`                           | `value`                           |           | `string`   | "undefined"                                      | Selected start date as ISO `YYYY-MM-DD`.         |
-| `valueEnd`                        | `valueEnd`                        |           | `string`   | "undefined"                                      | Selected end date as ISO `YYYY-MM-DD` (range mode). |
-| `values`                          |                                   | readonly  | `string[]` |                                                  | Convenience accessor returning `[value]` or `[value, valueEnd]` for range. |
+| Property                          | Attribute                         | Modifiers | Type                | Default        | Description                                      |
+|-----------------------------------|-----------------------------------|-----------|---------------------|----------------|--------------------------------------------------|
+| `appearance`                      | `appearance`                      |           | `string`            | "default"      |                                                  |
+| `autoPlacement`                   | `autoPlacement`                   |           | `boolean`           | false          |                                                  |
+| `calendarFocusDate`               | `calendarFocusDate`               |           | `string`            |                | Date to first show in the calendar (ISO `YYYY-MM-DD`). |
+| `calendarFocusDateObject`         |                                   | readonly  | `Date \| undefined` |                | Read-only local-time `Date` for `calendarFocusDate`. |
+| `centralDate`                     | `centralDate`                     |           | `string`            |                | Currently visible month marker (ISO `YYYY-MM-DD`, non-reflected). |
+| `dayDecorations`                  |                                   |           |                     |                | Optional callback `(date: Date) => { parts?: string[], label?: string, ariaLabel?: string } \| null`<br />for per-cell decoration. Replaces the legacy `date_MM_DD_YYYY` / `popover_MM_DD_YYYY` slots. |
+| `disabled`                        | `disabled`                        |           | `boolean`           | false          |                                                  |
+| `dvInputOnly`                     | `dvInputOnly`                     |           | `boolean`           | false          |                                                  |
+| `error`                           | `error`                           |           | `string`            |                |                                                  |
+| `format`                          | `format`                          |           | `string`            | "undefined"    |                                                  |
+| `fullscreenBreakpoint`            | `fullscreenBreakpoint`            |           | `string`            | "sm"           |                                                  |
+| `handleCalendarChange`            |                                   |           |                     |                |                                                  |
+| `handleCalendarFocusDay`          |                                   |           |                     |                |                                                  |
+| `handleCalendarPointerOut`        |                                   |           |                     |                |                                                  |
+| `handleCalendarPointerOver`       |                                   |           |                     |                |                                                  |
+| `handleClearClick`                |                                   |           |                     |                |                                                  |
+| `handleClick`                     |                                   |           |                     |                |                                                  |
+| `hasError`                        |                                   | readonly  | `boolean`           |                |                                                  |
+| `inputmode`                       | `inputmode`                       |           | `string`            |                |                                                  |
+| `largeFullscreenHeadline`         | `largeFullscreenHeadline`         |           | `boolean`           | false          |                                                  |
+| `layout`                          | `layout`                          |           | `string`            | "classic"      |                                                  |
+| `locale`                          | `locale`                          |           | `string`            |                | BCP47 locale tag (e.g. `de-DE`). Defaults to `DomHandler.getLocale(this)`. |
+| `maxDate`                         | `maxDate`                         |           | `string`            |                | Maximum allowed date as ISO `YYYY-MM-DD`.        |
+| `maxDateObject`                   |                                   | readonly  | `Date \| undefined` |                | Read-only local-time `Date` for `maxDate`.       |
+| `minDate`                         | `minDate`                         |           | `string`            |                | Minimum allowed date as ISO `YYYY-MM-DD`.        |
+| `minDateObject`                   |                                   | readonly  | `Date \| undefined` |                | Read-only local-time `Date` for `minDate`.       |
+| `monthNames`                      | `monthNames`                      |           | `array`             |                | Long-form month names. Auto-derived from the resolved locale unless the<br />consumer assigns a 12-element array override. |
+| `noFlip`                          | `noFlip`                          |           | `boolean`           | false          |                                                  |
+| `noValidate`                      | `noValidate`                      |           | `boolean`           | false          |                                                  |
+| `offset`                          | `offset`                          |           | `number`            | 0              |                                                  |
+| `onDark`                          | `onDark`                          |           | `boolean`           | false          |                                                  |
+| `placeholder`                     | `placeholder`                     |           | `string`            |                |                                                  |
+| `placeholderEndDate`              | `placeholderEndDate`              |           | `string`            |                |                                                  |
+| `placement`                       | `placement`                       |           | `string`            | "bottom-start" |                                                  |
+| `range`                           | `range`                           |           | `boolean`           | false          |                                                  |
+| `referenceDates`                  | `referenceDates`                  |           | `array`             |                | Decorated reference dates (ISO `YYYY-MM-DD` or legacy `MM/DD/YYYY`). |
+| `required`                        | `required`                        |           | `boolean`           | false          |                                                  |
+| `setCustomValidity`               | `setCustomValidity`               |           | `string`            |                |                                                  |
+| `setCustomValidityCustomError`    | `setCustomValidityCustomError`    |           | `string`            |                |                                                  |
+| `setCustomValidityRangeOverflow`  | `setCustomValidityRangeOverflow`  |           | `string`            |                |                                                  |
+| `setCustomValidityRangeUnderflow` | `setCustomValidityRangeUnderflow` |           | `string`            |                |                                                  |
+| `setCustomValidityValueMissing`   | `setCustomValidityValueMissing`   |           | `string`            |                |                                                  |
+| `shape`                           |                                   |           | `string`            | "classic"      |                                                  |
+| `shift`                           | `shift`                           |           | `boolean`           | false          |                                                  |
+| `size`                            |                                   |           | `string`            | "lg"           |                                                  |
+| `stacked`                         | `stacked`                         |           | `boolean`           | false          |                                                  |
+| `validity`                        | `validity`                        |           | `string`            | "undefined"    |                                                  |
+| `value`                           | `value`                           |           | `string`            |                | Selected start date as ISO `YYYY-MM-DD`.         |
+| `valueEnd`                        | `valueEnd`                        |           | `string`            |                | Selected end date as ISO `YYYY-MM-DD` (range mode). |
+| `valueEndObject`                  |                                   | readonly  | `Date \| undefined` |                | Read-only local-time `Date` for `valueEnd`.      |
+| `valueObject`                     |                                   | readonly  | `Date \| undefined` |                | Read-only local-time `Date` for `value`.         |
+| `values`                          |                                   | readonly  | `string[]`          |                | Convenience accessor returning `[value]` or `[value, valueEnd]` for range. |
 
 ## Methods
 
@@ -74,11 +80,11 @@ The `auro-datepicker` component provides users with a way to select a date or da
 
 | Event                         | Type                                             |
 |-------------------------------|--------------------------------------------------|
-| `auroDatePicker-monthChanged` | `CustomEvent<{ month: any; year: any; numCalendars: number; }>` |
+| `auroDatePicker-monthChanged` | `CustomEvent<{ month: number; year: number; numCalendars: number; }>` |
 | `auroDatePicker-toggled`      | `CustomEvent<{ expanded: any; }>`                |
 | `auroDatePicker-valueSet`     |                                                  |
 | `auroFormElement-validated`   |                                                  |
-| `input`                       |                                                  |
+| `input`                       | `CustomEvent<{ value: any; valueEnd: any; }>`    |
 
 ## Slots
 

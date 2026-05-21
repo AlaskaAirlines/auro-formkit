@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------
 
 /* eslint-disable max-lines, no-magic-numbers, complexity, newline-per-chained-call, no-underscore-dangle,
-   lit/binding-positions, lit/no-invalid-html */
+   lit/binding-positions, lit/no-invalid-html, id-length, camelcase */
 
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -24,13 +24,16 @@ import { AuroElement } from '@aurodesignsystem/auro-layout-element';
 import formkitVersion from '@aurodesignsystem/version';
 import i18n from '@aurodesignsystem/auro-input/src/i18n.js';
 import { applyKeyboardStrategy, doubleRaf, guardTouchPassthrough } from '@aurodesignsystem/utils';
+import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler/index.mjs';
 
 // Cally — pulls in <calendar-date>, <calendar-range>, <calendar-month> definitions
 import 'cally';
 
 import { AuroDatepickerUtilities } from './utilities.js';
-import { CalendarBridge, normalizeReferenceDates, toIsoLocal } from './calendarBridge.js';
+import { CalendarBridge, normalizeReferenceDates, toIsoLocal, firstDayOfWeekForLocale } from './calendarBridge.js';
 import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
+import { translate } from './i18nStrings.js';
+import { buildLocaleDateMask } from '../../input/src/localeMask.js';
 
 import iconVersion from './iconVersion.js';
 import buttonVersion from './buttonVersion.js';
@@ -107,25 +110,28 @@ export class AuroDatePicker extends AuroElement {
     this.stacked = false;
     this.noValidate = false;
     this.validity = undefined;
-    this.value = undefined;
-    this.valueEnd = undefined;
-    this.calendarFocusDate = undefined;
-    this.format = 'mm/dd/yyyy';
+    this._value = undefined;
+    this._valueEnd = undefined;
+    this._minDate = undefined;
+    this._maxDate = undefined;
+    this._calendarFocusDate = undefined;
+    this.format = undefined;
     this.fullscreenBreakpoint = 'sm';
-    this.monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
+
+    /** @private */
+    this._monthNamesOverride = undefined;
+
+    /** @private */
+    this._resolvedLocale = 'en-US';
+
+    /** @private */
+    this._prevLocaleDefaultFormat = undefined;
+
+    /** @private */
+    this._dateFormatterCache = new Map();
+
+    /** @private */
+    this._monthNamesCache = new Map();
 
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -194,10 +200,15 @@ export class AuroDatePicker extends AuroElement {
 
       /** Date to first show in the calendar (ISO `YYYY-MM-DD`). */
       calendarFocusDate: { type: String,
-        reflect: true },
+        reflect: true,
+        noAccessor: true },
 
       /** Currently visible month marker (ISO `YYYY-MM-DD`, non-reflected). */
       centralDate: { type: String },
+
+      /** BCP47 locale tag (e.g. `de-DE`). Defaults to `DomHandler.getLocale(this)`. */
+      locale: { type: String,
+        reflect: true },
 
       disabled: { type: Boolean,
         reflect: true },
@@ -231,13 +242,20 @@ export class AuroDatePicker extends AuroElement {
 
       /** Maximum allowed date as ISO `YYYY-MM-DD`. */
       maxDate: { type: String,
-        reflect: true },
+        reflect: true,
+        noAccessor: true },
 
       /** Minimum allowed date as ISO `YYYY-MM-DD`. */
       minDate: { type: String,
-        reflect: true },
+        reflect: true,
+        noAccessor: true },
 
-      monthNames: { type: Array },
+      /**
+       * @deprecated Auto-derived from `locale` via `Intl.DateTimeFormat`.
+       * Assign a 12-element array to override.
+       */
+      monthNames: { type: Array,
+        noAccessor: true },
 
       /** @private */
       monthFirst: { type: Boolean },
@@ -284,10 +302,12 @@ export class AuroDatePicker extends AuroElement {
         reflect: true },
 
       /** Selected start date as ISO `YYYY-MM-DD`. */
-      value: { type: String },
+      value: { type: String,
+        noAccessor: true },
 
       /** Selected end date as ISO `YYYY-MM-DD` (range mode). */
-      valueEnd: { type: String },
+      valueEnd: { type: String,
+        noAccessor: true },
 
       /** @private */
       touched: { type: Boolean,
@@ -313,6 +333,187 @@ export class AuroDatePicker extends AuroElement {
 
   static register(name = 'auro-datepicker') {
     AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroDatePicker);
+  }
+
+  /**
+   * Flips to `true` after the first `auroDatePicker-valueSet` dispatch so the
+   * deprecation warning is logged once per page session.
+   * @private
+   */
+  static _deprecationWarned = false;
+
+  // ---------------------------------------------------------------------
+  // ISO 8601 date property accessors
+  //
+  // value/valueEnd/minDate/maxDate/calendarFocusDate accept and emit ISO
+  // `YYYY-MM-DD` only. Non-ISO assignment logs `console.warn` and is ignored.
+  // Empty string or undefined clears the property.
+
+  /**
+   * Selected start date as ISO `YYYY-MM-DD`.
+   * @returns {string|undefined} ISO date string or undefined.
+   */
+  get value() {
+    return this._value;
+  }
+
+  set value(next) {
+    this._setIsoProp('_value', 'value', next);
+  }
+
+  /**
+   * Selected end date as ISO `YYYY-MM-DD` (range mode).
+   * @returns {string|undefined} ISO date string or undefined.
+   */
+  get valueEnd() {
+    return this._valueEnd;
+  }
+
+  set valueEnd(next) {
+    this._setIsoProp('_valueEnd', 'valueEnd', next);
+  }
+
+  /**
+   * Minimum allowed date as ISO `YYYY-MM-DD`.
+   * @returns {string|undefined} ISO date string or undefined.
+   */
+  get minDate() {
+    return this._minDate;
+  }
+
+  set minDate(next) {
+    this._setIsoProp('_minDate', 'minDate', next);
+  }
+
+  /**
+   * Maximum allowed date as ISO `YYYY-MM-DD`.
+   * @returns {string|undefined} ISO date string or undefined.
+   */
+  get maxDate() {
+    return this._maxDate;
+  }
+
+  set maxDate(next) {
+    this._setIsoProp('_maxDate', 'maxDate', next);
+  }
+
+  /**
+   * Initial calendar focus date as ISO `YYYY-MM-DD`.
+   * @returns {string|undefined} ISO date string or undefined.
+   */
+  get calendarFocusDate() {
+    return this._calendarFocusDate;
+  }
+
+  set calendarFocusDate(next) {
+    this._setIsoProp('_calendarFocusDate', 'calendarFocusDate', next);
+  }
+
+  /**
+   * @param {string} storage - Private storage field name.
+   * @param {string} propName - Public property name (for requestUpdate + warn).
+   * @param {string|undefined} incoming - Incoming value.
+   * @private
+   * @returns {void}
+   */
+  _setIsoProp(storage, propName, incoming) {
+    const isClear = incoming === undefined || incoming === null || incoming === '';
+    const isIso = typeof incoming === 'string' && (/^\d{4}-\d{2}-\d{2}$/u).test(incoming);
+    if (!isClear && !isIso) {
+      // eslint-disable-next-line no-console
+      console.warn(`auro-datepicker: "${incoming}" is not ISO 8601 (YYYY-MM-DD); ignoring`);
+      return;
+    }
+    const old = this[storage];
+    const next = isClear ? undefined : incoming;
+    if (next !== old) {
+      this[storage] = next;
+      this.requestUpdate(propName, old);
+    }
+  }
+
+  /**
+   * Local-time `Date` parsed from an ISO `YYYY-MM-DD` string. Uses
+   * `new Date(y, m-1, d)` to avoid the UTC off-by-one drift of `new Date(iso)`.
+   * @param {string|undefined} iso
+   * @returns {Date|undefined}
+   * @private
+   */
+  _isoToLocalDate(iso) {
+    if (!iso) {
+      return undefined;
+    }
+    const match = iso.match(/^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/u);
+    if (!match || !match.groups) {
+      return undefined;
+    }
+    const { year, month, day } = match.groups;
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
+  /**
+   * Read-only local-time `Date` for `value`.
+   * @returns {Date|undefined} Local-time Date or undefined.
+   */
+  get valueObject() {
+    return this._isoToLocalDate(this._value);
+  }
+
+  /**
+   * Read-only local-time `Date` for `valueEnd`.
+   * @returns {Date|undefined} Local-time Date or undefined.
+   */
+  get valueEndObject() {
+    return this._isoToLocalDate(this._valueEnd);
+  }
+
+  /**
+   * Read-only local-time `Date` for `minDate`.
+   * @returns {Date|undefined} Local-time Date or undefined.
+   */
+  get minDateObject() {
+    return this._isoToLocalDate(this._minDate);
+  }
+
+  /**
+   * Read-only local-time `Date` for `maxDate`.
+   * @returns {Date|undefined} Local-time Date or undefined.
+   */
+  get maxDateObject() {
+    return this._isoToLocalDate(this._maxDate);
+  }
+
+  /**
+   * Read-only local-time `Date` for `calendarFocusDate`.
+   * @returns {Date|undefined} Local-time Date or undefined.
+   */
+  get calendarFocusDateObject() {
+    return this._isoToLocalDate(this._calendarFocusDate);
+  }
+
+  /**
+   * Long-form month names. Auto-derived from the resolved locale unless the
+   * consumer assigns a 12-element array override.
+   * @returns {string[]}
+   */
+  get monthNames() {
+    if (Array.isArray(this._monthNamesOverride) && this._monthNamesOverride.length === 12) {
+      return this._monthNamesOverride;
+    }
+    const locale = this._resolvedLocale || 'en-US';
+    let cached = this._monthNamesCache.get(locale);
+    if (!cached) {
+      const fmt = new Intl.DateTimeFormat(locale, { month: 'long' });
+      cached = Array.from({ length: 12 }, (_unused, idx) => fmt.format(new Date(2000, idx, 1)));
+      this._monthNamesCache.set(locale, cached);
+    }
+    return cached;
+  }
+
+  set monthNames(next) {
+    const old = this._monthNamesOverride;
+    this._monthNamesOverride = Array.isArray(next) && next.length === 12 ? next : undefined;
+    this.requestUpdate('monthNames', old);
   }
 
   /**
@@ -453,8 +654,19 @@ export class AuroDatePicker extends AuroElement {
   notifyValueChanged() {
     this.dispatchEvent(new Event('auroDatePicker-valueSet', { bubbles: true,
       composed: true }));
-    this.dispatchEvent(new Event('input', { bubbles: true,
-      composed: true }));
+    if (!AuroDatePicker._deprecationWarned) {
+      AuroDatePicker._deprecationWarned = true;
+      // eslint-disable-next-line no-console
+      console.warn('auro-datepicker: `auroDatePicker-valueSet` is deprecated. Listen for the standard `input` event with `event.detail.value` / `event.detail.valueEnd` (ISO 8601).');
+    }
+    this.dispatchEvent(new CustomEvent('input', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        value: this._value,
+        valueEnd: this._valueEnd
+      }
+    }));
   }
 
   /** @private */
@@ -466,7 +678,12 @@ export class AuroDatePicker extends AuroElement {
     }));
   }
 
-  /** @private */
+  /**
+   * @private
+   * @param {number} month - 1-based month.
+   * @param {number} year - Full year.
+   * @param {number} numCalendars - Number of visible calendars.
+   */
   notifyMonthChanged(month, year, numCalendars = 1) {
     this.dispatchEvent(new CustomEvent('auroDatePicker-monthChanged', {
       bubbles: true,
@@ -548,7 +765,10 @@ export class AuroDatePicker extends AuroElement {
     }
   }
 
-  /** @private */
+  /**
+   * @private
+   * @param {PointerEvent} event - Pointer event from the calendar.
+   */
   handleCalendarPointerOver(event) {
     if (!this.range || !this.value || this.valueEnd) {
       return;
@@ -561,7 +781,10 @@ export class AuroDatePicker extends AuroElement {
     }
   }
 
-  /** @private */
+  /**
+   * @private
+   * @param {PointerEvent} event - Pointer event from the calendar.
+   */
   handleCalendarPointerOut(event) {
     if (!this.range || !this.value || this.valueEnd) {
       return;
@@ -762,7 +985,75 @@ export class AuroDatePicker extends AuroElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    this._domHandler = this._domHandler || new DomHandler();
+    this._resolveLocale();
+    this._observeAncestorLocale();
+    this._applyLocaleFormatPrecedence();
+    this.bridge.setLocale(this._resolvedLocale);
+    if (this.format) {
+      this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._localeMutationObserver) {
+      this._localeMutationObserver.disconnect();
+      this._localeMutationObserver = null;
+    }
+  }
+
+  /**
+   * Resolve the effective locale via `DomHandler.getLocale`: own `locale` attr →
+   * nearest ancestor `data-locale` → `en-US`.
+   * @private
+   */
+  _resolveLocale() {
+    try {
+      this._resolvedLocale = this._domHandler.getLocale(this);
+    } catch {
+      this._resolvedLocale = 'en-US';
+    }
+  }
+
+  /**
+   * Re-resolve locale when an ancestor toggles `data-locale`.
+   * @private
+   */
+  _observeAncestorLocale() {
+    if (typeof MutationObserver === 'undefined' || this._localeMutationObserver) {
+      return;
+    }
+    this._localeMutationObserver = new MutationObserver(() => {
+      const next = this._domHandler.getLocale(this);
+      if (next !== this._resolvedLocale) {
+        this._resolvedLocale = next;
+        this._applyLocaleFormatPrecedence();
+        this.bridge.setLocale(this._resolvedLocale);
+        this.requestUpdate();
+      }
+    });
+    this._localeMutationObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-locale'],
+      subtree: true
+    });
+  }
+
+  /**
+   * Implements `format`/`locale` precedence:
+   *  - If `format` is unset OR equals the previous locale's default pattern,
+   *    overwrite `format` with the new locale's default pattern.
+   *  - Otherwise leave `format` untouched (consumer override).
+   * @private
+   */
+  _applyLocaleFormatPrecedence() {
+    const nextDefault = buildLocaleDateMask(this._resolvedLocale).pattern;
+    if (!this.format || this.format === this._prevLocaleDefaultFormat) {
+      this.format = nextDefault;
+      this.monthFirst = nextDefault.indexOf('mm') < nextDefault.indexOf('yyyy');
+    }
+    this._prevLocaleDefaultFormat = nextDefault;
   }
 
   // ---------------------------------------------------------------------
@@ -774,12 +1065,19 @@ export class AuroDatePicker extends AuroElement {
       this.hasAllValues = this.hasValue;
       return;
     }
-    this.hasValue = Boolean(this.value && this.value.length > 0 || this.valueEnd && this.valueEnd.length > 0);
+    // eslint-disable-next-line no-extra-parens
+    this.hasValue = Boolean((this.value && this.value.length > 0) || (this.valueEnd && this.valueEnd.length > 0));
     this.hasAllValues = Boolean(this.value && this.valueEnd);
   }
 
   updated(changedProperties) {
-    if (changedProperties.has('format')) {
+    if (changedProperties.has('locale')) {
+      this._resolveLocale();
+      this._applyLocaleFormatPrecedence();
+      this.bridge.setLocale(this._resolvedLocale);
+    }
+
+    if (changedProperties.has('format') && this.format) {
       this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
     }
 
@@ -846,7 +1144,11 @@ export class AuroDatePicker extends AuroElement {
     }
   }
 
-  /** @private */
+  /**
+   * @private
+   * @param {number} index - Input list index (0 start, 1 end).
+   * @param {string|undefined} iso - ISO date string to display.
+   */
   _syncInputFromIso(index, iso) {
     if (!this.inputList || !this.inputList[index]) {
       return;
@@ -884,7 +1186,10 @@ export class AuroDatePicker extends AuroElement {
   // ---------------------------------------------------------------------
   // Rendering
 
-  /** @private */
+  /**
+   * @private
+   * @param {Event} event - Click event.
+   */
   handleClick(event) {
     const [initTarget] = event.composedPath();
     const layoutRequiresHandling = ['snowflake'].includes(this.layout);
@@ -895,7 +1200,10 @@ export class AuroDatePicker extends AuroElement {
     }
   }
 
-  /** @private */
+  /**
+   * @private
+   * @param {Event} event - Click event from the clear control.
+   */
   handleClearClick(event) {
     event.stopPropagation();
     this.resetInputs();
@@ -905,12 +1213,32 @@ export class AuroDatePicker extends AuroElement {
     this.focus();
   }
 
-  /** @private */
+  /**
+   * @private
+   * @param {number} length - Desired output length.
+   * @returns {string} Random alphanumeric string.
+   */
   generateRandomString(length) {
     return Math.random().toString(36).substring(2, length + 2);
   }
 
   /** @private */
+  _shortDateFormatter() {
+    const locale = this._resolvedLocale || 'en-US';
+    let fmt = this._dateFormatterCache.get(locale);
+    if (!fmt) {
+      fmt = new Intl.DateTimeFormat(locale, { month: 'short',
+        day: '2-digit' });
+      this._dateFormatterCache.set(locale, fmt);
+    }
+    return fmt;
+  }
+
+  /**
+   * @private
+   * @param {string|undefined} iso - ISO date string to format.
+   * @returns {string} Localized short date, or empty string.
+   */
   formatShortDate(iso) {
     if (!iso) {
       return '';
@@ -919,11 +1247,39 @@ export class AuroDatePicker extends AuroElement {
     if (!d) {
       return '';
     }
-    return d.toLocaleDateString('en-US', { month: 'short',
-      day: '2-digit' }).replace(',', '');
+    return this._shortDateFormatter().format(d).replace(',', '');
   }
 
-  /** @private */
+  /**
+   * Format an ISO range as a localized string using `Intl.formatRange` when
+   * available. Falls back to `"start – end"`.
+   * @param {string|undefined} startIso
+   * @param {string|undefined} endIso
+   * @returns {string}
+   * @private
+   */
+  _formatRange(startIso, endIso) {
+    const start = this.util.isoToDate(startIso);
+    const end = this.util.isoToDate(endIso);
+    if (!start || !end) {
+      return '';
+    }
+    const fmt = this._shortDateFormatter();
+    if (typeof fmt.formatRange === 'function') {
+      try {
+        return fmt.formatRange(start, end);
+      } catch {
+        // fall through
+      }
+    }
+    return `${fmt.format(start)} – ${fmt.format(end)}`;
+  }
+
+  /**
+   * @private
+   * @param {string|undefined} iso - ISO date string.
+   * @returns {import('lit').TemplateResult} Display template.
+   */
   renderDisplayTextDate(iso) {
     return html`
       <div>
@@ -935,7 +1291,7 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /** @private */
-  renderHtmlInputs() {
+  renderDateInputs() {
     const inputClasses = {
       'util_displayHiddenVisually': !this.hasValue && !this.hasFocus && this.layout !== 'classic',
       'parentBorder': this.layout === 'classic'
@@ -949,6 +1305,7 @@ export class AuroDatePicker extends AuroElement {
           ?required="${this.required}"
           ?hideLabelVisually="${this.layout !== 'classic'}"
           .format="${this.format}"
+          .locale="${this._resolvedLocale}"
           .max="${ifDefined(this.maxDate ? this.util.isoToDisplay(this.maxDate, this.format) : undefined)}"
           .min="${ifDefined(this.minDate ? this.util.isoToDisplay(this.minDate, this.format) : undefined)}"
           .placeholder="${this.placeholder}"
@@ -985,6 +1342,7 @@ export class AuroDatePicker extends AuroElement {
             ?required="${this.required}"
             ?hideLabelVisually="${this.layout !== 'classic'}"
             .format="${this.format}"
+            .locale="${this._resolvedLocale}"
             .max="${ifDefined(this.maxDate ? this.util.isoToDisplay(this.maxDate, this.format) : undefined)}"
             .min="${ifDefined(this.minDate ? this.util.isoToDisplay(this.minDate, this.format) : undefined)}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
@@ -1038,12 +1396,14 @@ export class AuroDatePicker extends AuroElement {
             <slot name="label"></slot>
           </label>
           <div class="${classMap(inputSectionClassMap)}" part="inputSection">
-            ${this.renderHtmlInputs()}
+            ${this.renderDateInputs()}
           </div>
           <div class="${classMap(this.commonDisplayValueWrapperClasses)}">
             <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}>
               <span>
-                ${this.formatShortDate(this.value)}${this.range ? html`–${this.formatShortDate(this.valueEnd)}` : undefined}
+                ${this.range && this.value && this.valueEnd
+                  ? this._formatRange(this.value, this.valueEnd)
+                  : this.formatShortDate(this.value)}
               </span>
             </slot>
           </div>
@@ -1069,7 +1429,7 @@ export class AuroDatePicker extends AuroElement {
         <div class="accents left">${this.renderHtmlIconCalendar()}</div>
         <div class="mainContent">
           <div class="${classMap(inputSectionClassMap)}" part="inputSection">
-            ${this.renderHtmlInputs()}
+            ${this.renderDateInputs()}
           </div>
         </div>
         <div class="accents right ${classMap(accentsClassMap)}">
@@ -1165,9 +1525,11 @@ export class AuroDatePicker extends AuroElement {
     `;
   }
 
-  /** @private */
+  /**
+   * @private
+   * @returns {import('lit').TemplateResult} Calendar template.
+   */
   renderCalendar() {
-    const tag = this.range ? 'calendar-range' : 'calendar-date';
     const months = 2;
     return html`
       <div class="calendarWrapper" part="calendarWrapper">
@@ -1177,32 +1539,33 @@ export class AuroDatePicker extends AuroElement {
               <calendar-range
                 part="calendar"
                 months="${months}"
+                locale="${this._resolvedLocale}"
+                first-day-of-week="${firstDayOfWeekForLocale(this._resolvedLocale)}"
                 .value="${this._calendarValue()}"
                 min="${ifDefined(this.minDate)}"
                 max="${ifDefined(this.maxDate)}"
                 focused-date="${ifDefined(this.calendarFocusDate)}">
                 ${this._renderCalendarNavSlots()}
-                <calendar-month></calendar-month>
-                <calendar-month offset="1"></calendar-month>
+                <calendar-month locale="${this._resolvedLocale}"></calendar-month>
+                <calendar-month locale="${this._resolvedLocale}" offset="1"></calendar-month>
               </calendar-range>
             `
             : html`
               <calendar-date
                 part="calendar"
+                locale="${this._resolvedLocale}"
+                first-day-of-week="${firstDayOfWeekForLocale(this._resolvedLocale)}"
                 .value="${this.value || ''}"
                 min="${ifDefined(this.minDate)}"
                 max="${ifDefined(this.maxDate)}"
                 focused-date="${ifDefined(this.calendarFocusDate)}">
                 ${this._renderCalendarNavSlots()}
-                <calendar-month></calendar-month>
+                <calendar-month locale="${this._resolvedLocale}"></calendar-month>
               </calendar-date>
             `}
         </div>
       </div>
     `;
-    // `tag` retained for future use (varying calendar element); avoid unused warning.
-    // eslint-disable-next-line no-unused-expressions
-    tag;
   }
 
   /**
@@ -1228,7 +1591,7 @@ export class AuroDatePicker extends AuroElement {
         shape="circle"
         size="sm"
         variant="ghost"
-        aria-label="Previous month">
+        aria-label="${translate(this._resolvedLocale, 'datepicker.calendar.prevMonth')}">
         <${this.iconTag} category="interface" name="chevron-left"></${this.iconTag}>
       </${this.buttonTag}>
       <${this.buttonTag}
@@ -1237,7 +1600,7 @@ export class AuroDatePicker extends AuroElement {
         shape="circle"
         size="sm"
         variant="ghost"
-        aria-label="Next month">
+        aria-label="${translate(this._resolvedLocale, 'datepicker.calendar.nextMonth')}">
         <${this.iconTag} category="interface" name="chevron-right"></${this.iconTag}>
       </${this.buttonTag}>
     `;
@@ -1271,7 +1634,7 @@ export class AuroDatePicker extends AuroElement {
           ${this.renderLayoutFromAttributes()}
         </div>
         <${this.bibtemplateTag} ?large="${this.largeFullscreenHeadline}" @close-click="${this.hideBib}">
-          <slot name="ariaLabel.bib.close" slot="ariaLabel.close">Close</slot>
+          <slot name="ariaLabel.bib.close" slot="ariaLabel.close">${translate(this._resolvedLocale, 'datepicker.bib.close')}</slot>
           <slot name="bib.fullscreen.headline" slot="header"></slot>
           ${this.renderCalendar()}
         </${this.bibtemplateTag}>

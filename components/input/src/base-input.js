@@ -9,6 +9,8 @@
 
 import i18n, { notifyOnLangChange, stopNotifyingOnLangChange } from './i18n.js';
 import { AuroInputUtilities } from "./utilities.js";
+import { buildLocaleDateMask } from './localeMask.js';
+import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler/index.mjs';
 
 import IMask from 'imask';
 
@@ -252,6 +254,16 @@ export default class BaseInput extends AuroElement {
        * Specifies the input mask format.
        */
       format: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * BCP47 locale tag such as `en-US`, `de-DE`, or `ja-JP`.
+       * When set, drives the date input mask pattern for `type="date"`.
+       * May also be inherited from a `data-locale` attribute on an ancestor element via `DomHandler.getLocale`.
+       */
+      locale: {
         type: String,
         reflect: true
       },
@@ -554,11 +566,79 @@ export default class BaseInput extends AuroElement {
     super.connectedCallback();
 
     notifyOnLangChange(this);
+
+    this._domHandler = this._domHandler || new DomHandler();
+    this._resolveLocale();
+    this._observeAncestorLocale();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     stopNotifyingOnLangChange(this);
+    if (this._localeMutationObserver) {
+      this._localeMutationObserver.disconnect();
+      this._localeMutationObserver = null;
+    }
+  }
+
+  /**
+   * Resolve the effective locale using `DomHandler.getLocale`:
+   *  own `locale` attr → nearest ancestor `data-locale` → `en-US`.
+   * Updates `_resolvedLocale` on the instance.
+   * @private
+   * @returns {void}
+   */
+  _resolveLocale() {
+    try {
+      this._resolvedLocale = this._domHandler.getLocale(this);
+    } catch {
+      this._resolvedLocale = 'en-US';
+    }
+  }
+
+  /**
+   * Watch `data-locale` mutations on documentElement so the input re-resolves
+   * its locale when an ancestor toggles it.
+   * @private
+   * @returns {void}
+   */
+  _observeAncestorLocale() {
+    if (typeof MutationObserver === 'undefined' || this._localeMutationObserver) {
+      return;
+    }
+    this._localeMutationObserver = new MutationObserver(() => {
+      const next = this._domHandler.getLocale(this);
+      if (next !== this._resolvedLocale) {
+        this._resolvedLocale = next;
+        this._applyLocaleFormatPrecedence();
+        this.configureAutoFormatting();
+        this.requestUpdate();
+      }
+    });
+    this._localeMutationObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-locale'],
+      subtree: true
+    });
+  }
+
+  /**
+   * Implements the `format`/`locale` precedence:
+   *  - If `format` is unset OR equals the previous locale's default pattern,
+   *    overwrite `format` with the new locale's default pattern.
+   *  - Otherwise leave `format` untouched (consumer override).
+   * @private
+   * @returns {void}
+   */
+  _applyLocaleFormatPrecedence() {
+    if (this.type !== 'date') {
+      return;
+    }
+    const nextDefault = buildLocaleDateMask(this._resolvedLocale).pattern;
+    if (!this.format || this.format === this._prevLocaleDefaultFormat) {
+      this.format = nextDefault;
+    }
+    this._prevLocaleDefaultFormat = nextDefault;
   }
 
   firstUpdated() {
@@ -658,11 +738,26 @@ export default class BaseInput extends AuroElement {
 
     if (typeToI18n.includes(this.type)) {
       this.setCustomValidityForType = i18n(this.lang, this.type);
-    } else if (!this.format && this.type === 'date') {
-      this.setCustomValidityForType = i18n(this.lang, 'dateMMDDYYYY');
-    } else if (this.dateFormatMap[this.format]) {
-      this.setCustomValidityForType = i18n(this.lang, this.dateFormatMap[this.format]);
+    } else if (this.type === 'date') {
+      const pattern = this._datePatternForI18n();
+      this.setCustomValidityForType = i18n(this.lang, 'invalidFormat', { pattern: pattern.toUpperCase() });
     }
+  }
+
+  /**
+   * Resolve the date pattern for i18n placeholder substitution.
+   * Prefers explicit `format`, then locale-derived default, then `mm/dd/yyyy`.
+   * @private
+   * @returns {string} Lowercase date pattern.
+   */
+  _datePatternForI18n() {
+    if (this.format) {
+      return this.format;
+    }
+    if (this._resolvedLocale) {
+      return buildLocaleDateMask(this._resolvedLocale).pattern;
+    }
+    return 'mm/dd/yyyy';
   }
 
   /**
@@ -672,6 +767,12 @@ export default class BaseInput extends AuroElement {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
+    if (changedProperties.has('locale')) {
+      this._resolveLocale();
+      this._applyLocaleFormatPrecedence();
+      this.configureAutoFormatting();
+    }
 
     if (changedProperties.has('format')) {
       this.configureAutoFormatting();
@@ -757,7 +858,7 @@ export default class BaseInput extends AuroElement {
       this.maskInstance.destroy();
     }
 
-    const maskOptions = this.util.getMaskOptions(this.type, this.format);
+    const maskOptions = this.util.getMaskOptions(this.type, this.format, this._resolvedLocale);
 
     if (this.inputElement && maskOptions.mask) {
       this.maskInstance = IMask(this.inputElement, maskOptions);
@@ -997,7 +1098,8 @@ export default class BaseInput extends AuroElement {
     }
 
     if (this.type === "date" && !this.format) {
-      this.format = 'mm/dd/yyyy';
+      this.format = this._resolvedLocale ? buildLocaleDateMask(this._resolvedLocale).pattern : 'mm/dd/yyyy';
+      this._prevLocaleDefaultFormat = this.format;
     }
   }
 
@@ -1033,7 +1135,8 @@ export default class BaseInput extends AuroElement {
     }
 
     if (this.type === 'date') {
-      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
+      const pattern = this._datePatternForI18n();
+      return i18n(this.lang, 'invalidFormat', { pattern: pattern.toUpperCase() });
     }
 
     return '';

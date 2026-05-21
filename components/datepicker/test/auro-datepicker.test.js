@@ -446,4 +446,169 @@ describe('auro-datepicker', () => {
       expect(alert.getAttribute('aria-live')).to.equal('assertive');
     });
   });
+
+  describe('locale resolution and plumbing', () => {
+    it('defaults the resolved locale to en-US when no locale or ancestor data-locale is set', async () => {
+      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+      // eslint-disable-next-line no-underscore-dangle
+      expect(el._resolvedLocale).to.equal('en-US');
+    });
+
+    it('honors a locale attribute on the component', async () => {
+      const el = await fixture(html`<auro-datepicker locale="de-DE"></auro-datepicker>`);
+      await elementUpdated(el);
+      // eslint-disable-next-line no-underscore-dangle
+      expect(el._resolvedLocale).to.equal('de-DE');
+    });
+
+    it('inherits data-locale from an ancestor', async () => {
+      const wrapper = document.createElement('div');
+      wrapper.setAttribute('data-locale', 'ja-JP');
+      const el = document.createElement('auro-datepicker');
+      wrapper.appendChild(el);
+      document.body.appendChild(wrapper);
+      try {
+        // eslint-disable-next-line no-underscore-dangle
+        expect(el._resolvedLocale).to.equal('ja-JP');
+      } finally {
+        document.body.removeChild(wrapper);
+      }
+    });
+
+    it('forwards the resolved locale to Cally calendar tags', async () => {
+      const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+      await elementUpdated(el);
+      const cal = getCalendar(el);
+      expect(cal.getAttribute('locale')).to.equal('fr-FR');
+    });
+
+    it('forwards the resolved locale to the inner auro-input', async () => {
+      const el = await fixture(html`<auro-datepicker locale="ja-JP"></auro-datepicker>`);
+      await elementUpdated(el);
+      expect(el.inputList[0].locale).to.equal('ja-JP');
+    });
+
+    it('forwards locale to both inputs in range mode', async () => {
+      const el = await fixture(html`<auro-datepicker range locale="de-DE"></auro-datepicker>`);
+      await elementUpdated(el);
+      expect(el.inputList[0].locale).to.equal('de-DE');
+      expect(el.inputList[1].locale).to.equal('de-DE');
+    });
+  });
+
+  describe('format/locale precedence', () => {
+    it('derives a default format from the resolved locale when format is unset', async () => {
+      const el = await fixture(html`<auro-datepicker locale="ja-JP"></auro-datepicker>`);
+      await elementUpdated(el);
+      expect(el.format).to.equal('yyyy/mm/dd');
+    });
+
+    it('preserves an explicitly set format across locale changes', async () => {
+      const el = await fixture(html`<auro-datepicker locale="en-US" format="yyyy/mm/dd"></auro-datepicker>`);
+      await elementUpdated(el);
+      el.locale = 'de-DE';
+      await elementUpdated(el);
+      expect(el.format).to.equal('yyyy/mm/dd');
+    });
+  });
+
+  describe('ISO setter guards', () => {
+    it('warns and ignores non-ISO assignment to value', async () => {
+      const el = await fixture(html`<auro-datepicker value="2025-06-15"></auro-datepicker>`);
+      const original = console.warn;
+      let warned = false;
+      // eslint-disable-next-line no-console
+      console.warn = () => { warned = true; };
+      try {
+        el.value = '06/15/2025';
+      } finally {
+        // eslint-disable-next-line no-console
+        console.warn = original;
+      }
+      expect(warned).to.equal(true);
+      expect(el.value).to.equal('2025-06-15');
+    });
+
+    it('clears value when set to empty string or undefined', async () => {
+      const el = await fixture(html`<auro-datepicker value="2025-06-15"></auro-datepicker>`);
+      el.value = '';
+      await elementUpdated(el);
+      expect(el.value).to.be.oneOf([undefined, null, '']);
+    });
+  });
+
+  describe('local-time Date getters', () => {
+    it('valueObject returns a local-time Date', async () => {
+      const el = await fixture(html`<auro-datepicker value="2025-06-15"></auro-datepicker>`);
+      const date = el.valueObject;
+      expect(date).to.be.instanceOf(Date);
+      expect(date.getFullYear()).to.equal(2025);
+      expect(date.getMonth()).to.equal(5);
+      expect(date.getDate()).to.equal(15);
+    });
+
+    it('valueEndObject and minDateObject and maxDateObject parse local-time', async () => {
+      const el = await fixture(html`
+        <auro-datepicker
+          range
+          value="2025-06-15"
+          valueEnd="2025-06-22"
+          minDate="2025-01-01"
+          maxDate="2025-12-31"
+        ></auro-datepicker>
+      `);
+      expect(el.valueEndObject.getDate()).to.equal(22);
+      expect(el.minDateObject.getDate()).to.equal(1);
+      expect(el.maxDateObject.getDate()).to.equal(31);
+    });
+
+    it('returns undefined for unset properties', async () => {
+      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+      expect(el.valueObject).to.equal(undefined);
+      expect(el.valueEndObject).to.equal(undefined);
+    });
+  });
+
+  describe('standard input event', () => {
+    it('fires a CustomEvent input with ISO detail when value changes', async () => {
+      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+      const listener = oneEvent(el, 'input');
+      el.value = '2025-06-15';
+      // eslint-disable-next-line no-underscore-dangle
+      el.notifyValueChanged();
+      const event = await listener;
+      expect(event.detail.value).to.equal('2025-06-15');
+    });
+  });
+
+  describe('monthNames auto-derivation', () => {
+    it('returns localized month names for the resolved locale', async () => {
+      const el = await fixture(html`<auro-datepicker locale="de-DE"></auro-datepicker>`);
+      await elementUpdated(el);
+      const names = el.monthNames;
+      expect(names).to.have.lengthOf(12);
+      expect(names[0]).to.equal('Januar');
+    });
+
+    it('respects an explicit 12-element override', async () => {
+      const el = await fixture(html`<auro-datepicker locale="de-DE"></auro-datepicker>`);
+      const override = [
+        'A', 'B', 'C', 'D', 'E', 'F',
+        'G', 'H', 'I', 'J', 'K', 'L'
+      ];
+      el.monthNames = override;
+      expect(el.monthNames).to.deep.equal(override);
+    });
+  });
+
+  describe('first-day-of-week derivation', () => {
+    it('passes a numeric first-day-of-week to Cally', async () => {
+      const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+      await elementUpdated(el);
+      const cal = getCalendar(el);
+      const fdow = cal.getAttribute('first-day-of-week');
+      expect(fdow).to.be.a('string');
+      expect(Number.isFinite(Number(fdow))).to.equal(true);
+    });
+  });
 });

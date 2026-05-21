@@ -3,11 +3,27 @@
 
 // ---------------------------------------------------------------------
 
-/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, init-declarations, radix, no-nested-ternary */
+/* eslint-disable no-magic-numbers, dot-location, no-extra-parens, object-property-newline, init-declarations, radix, no-nested-ternary, complexity */
 
 import IMask from 'imask';
+import { buildLocaleDateMask, buildPatternMask } from './localeMask.js';
 
 export class AuroInputUtilities {
+
+  /**
+   * True if `pattern` is a 3-token full date (yyyy + mm + dd in any order).
+   * Such patterns may contain non-`/` literal separators that the legacy
+   * mask code can't parse, so they get routed through the locale-aware mask.
+   * @private
+   * @param {string} pattern - Lowercase pattern string.
+   * @returns {boolean} True when the pattern has all three tokens.
+   */
+  isFullDatePattern(pattern) {
+    if (!pattern) {
+      return false;
+    }
+    return pattern.includes('yyyy') && pattern.includes('mm') && pattern.includes('dd');
+  }
 
   /**
    * Configures the mask to be used on the input element based on format and/or type.
@@ -15,9 +31,10 @@ export class AuroInputUtilities {
    * @private
    * @param {string} type - The input type.
    * @param {string} format - The format of the mask to apply.
-   * @returns {void}
+   * @param {string} [locale] - BCP47 locale; when set and `format` is unset, derives the date mask from the locale.
+   * @returns {object} IMask options object.
    */
-  getMaskOptions(type, format) {
+  getMaskOptions(type, format, locale) {
     if (type) {
       if (type === 'credit-card') {
         return {
@@ -54,6 +71,19 @@ export class AuroInputUtilities {
             parse(str) {
               return parseInt(str) || null;
             }
+          };
+        }
+
+        if (this.isFullDatePattern(dateFormat) || (locale && !format)) {
+          const maskCfg = format ? buildPatternMask(dateFormat) : buildLocaleDateMask(locale);
+          return {
+            mask: Date,
+            pattern: maskCfg.pattern,
+            blocks: maskCfg.blocks,
+            format: maskCfg.format,
+            parse: maskCfg.parse,
+            lazy: true,
+            placeholderChar: ''
           };
         }
 

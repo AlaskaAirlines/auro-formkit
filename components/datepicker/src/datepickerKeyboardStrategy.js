@@ -25,7 +25,7 @@ export const datepickerKeyboardStrategy = {
     if (!component.dropdown) {
       return;
     }
-    const target = evt.composedPath()[0];
+    const [target] = evt.composedPath();
     if (component.inputList && component.inputList.some((input) => input === target || input.contains(target))) {
       if (!component.dropdown.isPopoverVisible) {
         component.dropdown.show();
@@ -39,7 +39,7 @@ export const datepickerKeyboardStrategy = {
     if (!component.dropdown) {
       return;
     }
-    const target = evt.composedPath()[0];
+    const [target] = evt.composedPath();
     if (component.inputList && component.inputList.some((input) => input === target || input.contains(target))) {
       if (!component.dropdown.isPopoverVisible) {
         component.dropdown.show();

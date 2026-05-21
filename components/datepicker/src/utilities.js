@@ -1,34 +1,41 @@
 // Copyright (c) 2026 Alaska Airlines. All rights reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
-const DATE_STR_LENGTH = 10;
+/* eslint-disable no-magic-numbers, id-length, prefer-named-capture-group */
+
+import { buildPatternMask } from '../../input/src/localeMask.js';
+
+const ISO_LENGTH = 10;
 
 export class AuroDatepickerUtilities {
 
   /**
    * True if `date` is a valid date string in the given `format`.
-   * @param {string} date
-   * @param {string} format
-   * @returns {boolean}
+   * @param {string} date - Display-formatted date string.
+   * @param {string} format - Lowercase token pattern (e.g. `dd.mm.yyyy`).
+   * @returns {boolean} True when the input parses to a valid Date.
    */
   validDateStr(date, format) {
-    if (!date || !format || date.length !== DATE_STR_LENGTH) {
+    if (!date || !format) {
       return false;
     }
-
-    const iso = this.displayToIso(date, format);
-    if (!iso) {
+    const parsed = this.parseDate(date, format);
+    if (!parsed) {
       return false;
     }
-    return !Number.isNaN(Date.parse(iso));
+    const { year, month, day } = parsed;
+    if (!year || !month || !day) {
+      return false;
+    }
+    return !Number.isNaN(new Date(Number(year), Number(month) - 1, Number(day)).getTime());
   }
 
   /**
-   * Convert a display-formatted date string (e.g. `mm/dd/yyyy`) to ISO `YYYY-MM-DD`.
+   * Convert a display-formatted date string to ISO `YYYY-MM-DD`.
    * Returns undefined for invalid input.
-   * @param {string} dateStr
-   * @param {string} format
-   * @returns {string|undefined}
+   * @param {string} dateStr - Display-formatted date string.
+   * @param {string} format - Lowercase token pattern.
+   * @returns {string|undefined} ISO date string.
    */
   displayToIso(dateStr, format) {
     const parsed = this.parseDate(dateStr, format);
@@ -45,12 +52,12 @@ export class AuroDatepickerUtilities {
   /**
    * Convert an ISO `YYYY-MM-DD` date string to the given display `format`.
    * Returns undefined for invalid input.
-   * @param {string} iso
-   * @param {string} format
-   * @returns {string|undefined}
+   * @param {string} iso - ISO 8601 date string.
+   * @param {string} format - Lowercase token pattern.
+   * @returns {string|undefined} Display-formatted date.
    */
   isoToDisplay(iso, format) {
-    if (!iso || iso.length !== DATE_STR_LENGTH) {
+    if (!iso || iso.length !== ISO_LENGTH) {
       return undefined;
     }
     const match = iso.match(/^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/u);
@@ -58,8 +65,8 @@ export class AuroDatepickerUtilities {
       return undefined;
     }
     const { year, month, day } = match.groups;
-    const f = format || 'mm/dd/yyyy';
-    return f.
+    const pattern = format || 'mm/dd/yyyy';
+    return pattern.
       replace('yyyy', year).
       replace('mm', month).
       replace('dd', day);
@@ -67,37 +74,31 @@ export class AuroDatepickerUtilities {
 
   /**
    * Parse a date string into `{year, month, day}` components according to `format`.
-   * @param {string} dateStr
-   * @param {string} format
-   * @returns {{year:string, month:string, day:string}|undefined}
+   * Uses `buildPatternMask` so arbitrary literal separators (`.`, `年`, `月`, `日`) parse.
+   * @param {string} dateStr - Display-formatted date string.
+   * @param {string} format - Lowercase token pattern.
+   * @returns {{year:string, month:string, day:string}|undefined} Parsed components.
    */
   parseDate(dateStr, format) {
     if (!dateStr) {
       return undefined;
     }
-    const dateFormat = format || 'mm/dd/yyyy';
-    const formatPatterns = {
-      'yyyy': '(?<year>\\d{4})',
-      'mm': '(?<month>\\d{2})',
-      'dd': '(?<day>\\d{2})'
-    };
-    let regexPattern = dateFormat.replace(/(?:yyyy|mm|dd)/gu, (m) => formatPatterns[m]);
-    regexPattern = `^${regexPattern}$`;
-    const match = dateStr.match(new RegExp(regexPattern, 'u'));
-    if (match && match.groups) {
-      return {
-        year: match.groups.year,
-        month: match.groups.month,
-        day: match.groups.day
-      };
+    const pattern = format || 'mm/dd/yyyy';
+    const date = buildPatternMask(pattern).parse(dateStr);
+    if (!date) {
+      return undefined;
     }
-    return undefined;
+    return {
+      year: String(date.getFullYear()).padStart(4, '0'),
+      month: String(date.getMonth() + 1).padStart(2, '0'),
+      day: String(date.getDate()).padStart(2, '0')
+    };
   }
 
   /**
    * Convert any value the platform accepts (Date or ISO string) to ISO `YYYY-MM-DD`.
-   * @param {Date|string|number|undefined} input
-   * @returns {string|undefined}
+   * @param {Date|string|number|undefined} input - Source value to convert.
+   * @returns {string|undefined} ISO date string, or undefined if invalid.
    */
   toIso(input) {
     if (input === undefined || input === null || input === '') {
@@ -119,8 +120,8 @@ export class AuroDatepickerUtilities {
   /**
    * Parse an ISO `YYYY-MM-DD` string into a local-time Date at midnight.
    * Avoids timezone interpretation that `new Date("YYYY-MM-DD")` (UTC) would apply.
-   * @param {string} iso
-   * @returns {Date|undefined}
+   * @param {string} iso - ISO date string in `YYYY-MM-DD` form.
+   * @returns {Date|undefined} Local-time Date, or undefined if input is malformed.
    */
   isoToDate(iso) {
     if (!iso || typeof iso !== 'string') {
@@ -140,9 +141,9 @@ export class AuroDatepickerUtilities {
 
   /**
    * True if two ISO date strings refer to the same day.
-   * @param {string|undefined} a
-   * @param {string|undefined} b
-   * @returns {boolean}
+   * @param {string|undefined} a - First ISO date string.
+   * @param {string|undefined} b - Second ISO date string.
+   * @returns {boolean} True when both are present and equal.
    */
   isoMatch(a, b) {
     return Boolean(a) && Boolean(b) && a === b;

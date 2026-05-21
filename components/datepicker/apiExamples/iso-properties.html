@@ -1,0 +1,18 @@
+<auro-datepicker id="isoExample" value="2025-06-15">
+  <span slot="ariaLabel.bib.close">Close Calendar</span>
+  <span slot="bib.fullscreen.headline">ISO value contract</span>
+  <span slot="fromLabel">value="2025-06-15"</span>
+  <span slot="bib.fullscreen.fromLabel">Pick a date</span>
+  <span slot="helpText">
+    Set <code>.value</code> and read it back as ISO. Read
+    <code>.valueObject</code> to get a local-time <code>Date</code>.
+  </span>
+</auro-datepicker>
+
+<script type="module">
+  const picker = document.querySelector('#isoExample');
+  picker.addEventListener('input', (event) => {
+    console.log('value (ISO):', event.detail.value);
+    console.log('valueObject (Date):', picker.valueObject);
+  });
+</script>
