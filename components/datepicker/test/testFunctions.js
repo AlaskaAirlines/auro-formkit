@@ -39,15 +39,29 @@ export function getCalendarMonths(el) {
 }
 
 /**
- * Resolve a calendar day button by ISO date.
+ * Resolve a calendar day button by ISO date. Cally renders day buttons inside
+ * each `calendar-month`'s shadow root as `<button class="num" part="...day...">`
+ * with a localized `aria-label`. We match by formatted aria-label.
  * @param {HTMLElement} el - The datepicker element.
- * @param {string} iso - ISO date string.
+ * @param {string} iso - ISO date string (YYYY-MM-DD).
+ * @param {Intl.DateTimeFormat} [formatter] - Override formatter for aria-label match.
  * @returns {HTMLButtonElement|null}
  */
-export function getDayButton(el, iso) {
-  const cal = getCalendar(el);
-  if (!cal) return null;
-  return cal.shadowRoot
-    ? cal.shadowRoot.querySelector(`button[data-value="${iso}"]`)
-    : cal.querySelector(`button[data-value="${iso}"]`);
+export function getDayButton(el, iso, formatter) {
+  const months = getCalendarMonths(el);
+  if (months.length === 0) return null;
+  const [yr, mo, dy] = iso.split('-').map(Number);
+  const date = new Date(yr, mo - 1, dy);
+  const fmt = formatter || new Intl.DateTimeFormat(undefined, {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  const target = fmt.format(date);
+  for (const m of months) {
+    if (!m.shadowRoot) continue;
+    const buttons = m.shadowRoot.querySelectorAll('button.num');
+    for (const btn of buttons) {
+      if (btn.getAttribute('aria-label') === target) return btn;
+    }
+  }
+  return null;
 }

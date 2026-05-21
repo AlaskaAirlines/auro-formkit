@@ -3,6 +3,24 @@ import '@aurodesignsystem/auro-dialog';
 import '@aurodesignsystem/auro-drawer';
 import '../src/registered.js';
 
+export function rangeFixture(value, valueEnd) {
+  return fixture(html`
+    <auro-datepicker range value="${value || ''}" valueEnd="${valueEnd || ''}"></auro-datepicker>
+  `);
+}
+
+export function fullscreenFixture() {
+  return fixture(html`
+    <auro-datepicker fullscreenBreakpoint="xxl"></auro-datepicker>
+  `);
+}
+
+export function decorationsFixture(dayDecorations) {
+  return fixture(html`
+    <auro-datepicker .dayDecorations="${dayDecorations}"></auro-datepicker>
+  `);
+}
+
 export function inDialogFixture() {
   return fixture(html`
     <auro-dialog open>

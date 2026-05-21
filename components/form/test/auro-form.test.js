@@ -995,6 +995,37 @@ function runFullTest(mobileView) {
       await expect(el.formState['dates']).to.exist;
     });
 
+    // ─── datepicker exposes ISO YYYY-MM-DD via formState ─────────────
+    it('exposes ISO YYYY-MM-DD on datepicker values in formState', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-datepicker name="dateSingle"></auro-datepicker>
+          <auro-datepicker name="dateRange" range></auro-datepicker>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      const [single, ranged] = el.querySelectorAll('auro-datepicker');
+      single.value = '2025-06-15';
+      ranged.value = '2025-06-15';
+      ranged.valueEnd = '2025-06-22';
+      single.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      ranged.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+
+      const ISO = /^\d{4}-\d{2}-\d{2}$/u;
+      const single_value = el.formState['dateSingle'].value;
+      const range_value = el.formState['dateRange'].value;
+
+      // Single: stored as a scalar ISO string.
+      expect(single_value).to.match(ISO);
+
+      // Range: stored via .values getter as [ISO, ISO].
+      expect(Array.isArray(range_value)).to.equal(true);
+      expect(range_value[0]).to.match(ISO);
+      expect(range_value[1]).to.match(ISO);
+    });
+
     // ─── sharedInputListener adds unknown element to state ─────────────
     it('sharedInputListener adds element to state when not already tracked', async () => {
       const el = await fixture(html`
