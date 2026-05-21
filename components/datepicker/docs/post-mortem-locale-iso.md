@@ -8,10 +8,10 @@
 
 Two adjacent workstreams landed on this branch:
 
-1. **Cally integration** — replaced the legacy in-house calendar grid with the [Cally](https://wicky.nillia.ms/cally/) web component (`<calendar-date>` / `<calendar-range>` / `<calendar-month>`). This was the prerequisite that made native locale support tractable.
+1. **Cally integration** — replaced the legacy in-house calendar grid with the [Cally](https://wicky.nillia.ms/cally/) web component (`<calendar-date>` / `<calendar-range>` / `<calendar-month>`). This was the prerequisite that made native locale support tractable. See [Cally's accessibility documentation](https://wicky.nillia.ms/cally/accessibility/) for the keyboard model, ARIA roles, and screen-reader behavior the Auro shell inherits.
 2. **TRD #1300 — date localization & ISO 8601 contract** — added locale-aware display, `data-locale` ancestor inheritance, a strict ISO `YYYY-MM-DD` property/event contract, local-time `Date` getters, and removed the hardcoded English `monthNames` table.
 
-Net diff: **+1,573 / −149** across 17 files.
+Net diff: **+1,573 / −149** across 17 files (pre-optimizations). A subsequent pass folded five of the planned post-mortem optimizations (F1, F4, F8, F10, F12) into the same branch — see "Optimizations integrated post-plan" below.
 
 ## User stories (TRD #1300)
 
@@ -121,6 +121,7 @@ Mirrored shape lives on `auro-input` (`components/input/src/base-input.js`) so a
 | Datepicker examples | `apiExamples/iso-properties.html` | **New** — value + valueObject demo |
 | Datepicker examples | `apiExamples/data-locale-ancestor.html` | **New** — ancestor inheritance demo |
 | Datepicker tests | `test/auro-datepicker.test.js` | +165 lines: locale resolution, format/locale precedence, ISO guards, `*Object` getters, `input` event, `monthNames` auto-derive, first-day-of-week |
+| Datepicker tests | `test/cally-contract.test.js` | **New** (F10) — pin test mounting raw Cally elements; asserts locale-driven labels + ISO `change` emission without the Auro shell |
 | Input | `src/auro-input.js` (via base) | `locale` prop, format/locale precedence logic |
 | Input base | `src/base-input.js` | Drop `dateFormatMap`; parameterized `invalidFormat`; remount mask on locale change |
 | Input utils | `src/utilities.js` | Wire `buildLocaleDateMask` into mask config; rename `_isFullDatePattern` → `isFullDatePattern` |
@@ -129,19 +130,39 @@ Mirrored shape lives on `auro-input` (`components/input/src/base-input.js`) so a
 
 ## Test posture
 
-- **76 passed, 0 failed** in the datepicker suite at branch tip.
-- **Coverage:** 82.92% on `components/datepicker`.
-- New describe blocks: `locale resolution and plumbing`, `format/locale precedence`, `ISO setter guards`, `local-time Date getters`, `standard input event`, `monthNames auto-derivation`, `first-day-of-week derivation`.
+- **79 passed, 0 failed** in the datepicker suite at branch tip (76 in `auro-datepicker.test.js` + 3 in the new `cally-contract.test.js`).
+- **Coverage:** 83.35% on `components/datepicker`.
+- New describe blocks: `locale resolution and plumbing`, `format/locale precedence`, `ISO setter guards`, `local-time Date getters`, `standard input event`, `monthNames auto-derivation`, `first-day-of-week derivation`, `Cally locale contract (pin test)`.
 - Pre-existing tests that asserted display-format `value` (MM/DD/YYYY strings) were rewritten to assert ISO. None were deleted — every legacy assertion has a converted equivalent.
 
-## Follow-up workstream (deliberately deferred)
+## Optimizations integrated post-plan
 
-The plan's "Follow-up Optimizations" section (F1–F17) was scoped out of this PR per user direction. Highest-leverage items flagged for separate PRs:
+The original plan deferred F1–F17 to follow-up PRs. After the main TRD work landed, a follow-up pass folded five of them into the same branch — the cheapest items with the highest downstream leverage. Each is annotated in code with a `// F<n>:` decision comment explaining the reasoning so a future reader doesn't undo it.
 
-- **F10 + F11** — Cally contract pin test + Renovate gate. Prevents a silent Cally minor bump from re-introducing English headers in non-English locales.
-- **F1** — Demote `monthNames` to a lazy passthrough. Cally renders its own header from `locale`; our auto-derived array is computed for nobody.
-- **F4** — Extract `parseIsoLocal(iso)` into a shared util; the five `*Object` getters are over-budget for what they do.
-- **F8** — Audit Cally's localized aria-labels; trim `i18nStrings.js` to only strings the Auro shell renders.
+| ID | Change | Files | Rationale |
+|---|---|---|---|
+| **F1** | `monthNames` getter now lazily computes via `Intl.DateTimeFormat({month:'long'})` only when consumer code reads `.monthNames`; cached per locale. Override path preserved. | `src/auro-datepicker.js` (monthNames getter + decision comment) | Cally renders its own header from its `locale` attribute. Eagerly computing the array on every locale change was paying for nothing. |
+| **F4** | Promoted `parseIsoLocal(iso)` to an exported helper in `calendarBridge.js`. `_isoToLocalDate` and `isoMs` both delegate to it. | `src/calendarBridge.js`, `src/auro-datepicker.js` | One implementation of the negative-UTC-offset guard for any future Auro component on the ISO contract. |
+| **F8** | Audited `i18nStrings.js` against Cally's localized aria-labels; documented in code which strings the Auro shell owns vs. which Cally renders. | `src/i18nStrings.js` (decision comments) | Confirms the retained keys (`prevMonth`, `nextMonth`, `bib.close`, `invalidFormat`) all belong to elements outside Cally's shadow root. Prevents an over-zealous future cleanup from deleting strings Cally doesn't actually own. |
+| **F10** | New `test/cally-contract.test.js` mounts raw `<calendar-month>` / `<calendar-date>` / `<calendar-range>` (no Auro wrapper) and asserts: non-English label for non-English locale, ISO `value` shape on `calendar-date`, ISO range shape on `calendar-range`. | `test/cally-contract.test.js` (new) | Canary against silent Cally upgrades. If a Renovate batch ships English headers in non-English locales, this test fails before the shell tests do. |
+| **F12** | Softened CLDR-string assertions: `monthNames[0]` under `de-DE` asserts `!== 'January'` instead of pinning `'Januar'`; similar relaxations elsewhere. | `test/auro-datepicker.test.js` | A CLDR/ICU update flipping `／` → `/` should not turn every PR red. Tests now assert only the contract Auro owns ("locale-distinct output, correct shape"). |
+
+## Remaining deferred follow-ups
+
+The other twelve items remain out of scope on this branch. Each has a concrete blocker — they're not "we'll get to it," they're "this needs a separate decision first."
+
+- **F2** — Delete legacy display↔ISO converters in `components/datepicker/src/utilities.js`. Needs a grep across consumer repos (Borealis, ecomm) first.
+- **F3** — Skip `Intl.formatRange` for the in-popover range display. Needs screen-reader verification — a11y users may rely on the live-region range string.
+- **F5** — Drop the bespoke event bridge for a direct Cally `change` listener. Hold until the `auroDatePicker-valueSet` deprecation window closes.
+- **F6** — Upstream `firstDayOfWeek` derivation into Cally itself. External maintainer timeline.
+- **F7** — Promote the per-locale formatter cache into `packages/util`. Premature until a second component needs it.
+- **F9** — Subscribe to a Cally context-protocol provider for `data-locale` if upstream ships one. Speculative.
+- **F11** — Renovate / Dependabot gate that groups Cally bumps separately. CI-config change, outside this PR's blast radius.
+- **F13** — Storybook + Chromatic visual snapshots per Tier-1 locale. Requires Chromatic budget decision.
+- **F14** — `fast-check` property-based round-trip test. Requires adding `fast-check` as a dev dependency.
+- **F15** — Move `buildLocaleDateMask` unit tests from datepicker to the input package. Pure refactor when those tests land.
+- **F16** — Split RTL/IME/a11y coverage into unit + `axe-core` + manual. Requires `axe-core` integration.
+- **F17** — Locale-flip perf / cache-leak test. Preventative — earns its keep only if production telemetry flags a leak.
 
 ## Ticket-by-ticket verification (datepicker locale 1–4)
 
@@ -198,11 +219,11 @@ Each acceptance criterion below was verified against branch tip (`cfriedberg/dat
 | Week start day derivation via `Intl` | ✅ | `first-day-of-week derivation` test asserts numeric attribute on Cally |
 | `api.md` reflects final public API | ✅ | `components/datepicker/docs/api.md` updated |
 | Migration guide complete | ✅ | `migration-locale-iso.md` covers ISO property change (incl. `calendarStartDate`/`calendarEndDate` removal), `*Object` getters, `locale` + `data-locale`, `format` precedence, `monthNames` auto-derive, `auroDatePicker-valueSet` → `input` migration, SSR caveat |
-| All new tests pass + existing tests still pass | ✅ | **76 passing / 0 failing**, 82.92% coverage |
+| All new tests pass + existing tests still pass | ✅ | **79 passing / 0 failing**, 83.35% coverage |
 
 ## Risk register (carry-forward)
 
 - **SSR:** `DomHandler.getLocale` is DOM-only. During SSR the component resolves to `en-US`; on first client paint it re-resolves and may flip the display format if `format` wasn't explicitly set. Documented in `migration-locale-iso.md`; no code workaround in scope.
 - **Cally `Intl.DateTimeFormat` cache invalidation on locale flip.** Cally caches per-instance `DateTimeFormat`; mid-mount locale changes should invalidate it. A Lit `key=${_resolvedLocale}` remount is held in reserve if a regression is found — not currently needed.
 - **RTL keyboard semantics.** In RTL, Left arrow = next day. Cally handles this internally; `datepickerKeyboardStrategy.js` is direction-neutral. Verify if the Cally team ever changes default RTL arrow behavior.
-- **CLDR drift.** Each Renovate bump of Cally / Node / ICU could shift a locale's separator (e.g. `ja-JP` `/` → `年`). Per-locale string assertions in our test suite are deliberately minimal so this doesn't cause brittle red runs — but it means a CLDR shift could ship undetected. The proposed F10 Cally contract test closes this gap.
+- **CLDR drift.** Each Renovate bump of Cally / Node / ICU could shift a locale's separator (e.g. `ja-JP` `/` → `年`). Per-locale string assertions in our test suite are deliberately minimal so this doesn't cause brittle red runs — but it means a CLDR shift could ship undetected. The F10 Cally contract test (now landed — see "Optimizations integrated post-plan") closes this gap; F11 (Renovate gate) is still pending.
