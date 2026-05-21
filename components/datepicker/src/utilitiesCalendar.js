@@ -14,11 +14,11 @@ export class CalendarUtilities {
    * @param {String} format - The format of the date.
    * @returns {void}
    */
-  scrollMonthIntoView(elem, date, format) {
+  scrollMonthIntoView(elem, date) {
     const mobileLayout = window.innerWidth < elem.mobileBreakpoint;
 
-    if (dateFormatter.isValidDate(date, format) && mobileLayout) {
-      const dateObj = dateFormatter.stringToDateInstance(date, format);
+    if (dateFormatter.isValidDate(date) && mobileLayout) {
+      const dateObj = dateFormatter.stringToDateInstance(date);
       const month = dateObj.getMonth() + 1;
       const year = dateObj.getFullYear();
       const selector = `#month-${month}-${year}`;
@@ -55,7 +55,7 @@ export class CalendarUtilities {
     // 1. Compare the first rendered month to the earliest renderable month to determine if the previous month button should be hidden or shown
     if (!elem.hasAttribute('calendarStartDate') && !elem.hasAttribute('minDate')) {
       elem.showPrevMonthBtn = true;
-    } else if (new Date(elem.centralDate) <= elem.firstMonthRenderable) {
+    } else if (elem.centralDateObject <= elem.firstMonthRenderable) {
       elem.showPrevMonthBtn = false;
     } else {
       elem.showPrevMonthBtn = true;
@@ -79,7 +79,7 @@ export class CalendarUtilities {
     }
 
     // 2. Determine the last month currently rendered into the DOM.
-    let lastRenderedMonth = new Date(elem.centralDate);
+    let lastRenderedMonth = elem.centralDateObject;
 
     if (!elem.noRange) {
       lastRenderedMonth = new Date(lastRenderedMonth.setMonth(lastRenderedMonth.getMonth() + 1));
@@ -134,18 +134,17 @@ export class CalendarUtilities {
     }
 
     // Get new central date for calendar view
-    const {firstRenderedMonth, centralDate, datepicker} = elem;
-    const formattedDateStr = this.util.getDateAsString(centralDate, datepicker.format);
+    const {firstRenderedMonth, centralDateObject} = elem;
     let newCentralDate = null;
 
-    if (this.util.validDateStr(formattedDateStr, datepicker.format)) {
-      // Use current date as base and adjust month by increment
-      newCentralDate = new Date(formattedDateStr).setMonth(new Date(formattedDateStr).getMonth() + increment, 1);
+    if (centralDateObject) {
+      // Use current central date as base and adjust month by increment
+      newCentralDate = new Date(centralDateObject).setMonth(centralDateObject.getMonth() + increment, 1);
     } else {
       // Fallback to first rendered month if central date invalid
       newCentralDate = new Date(firstRenderedMonth).setMonth(new Date(firstRenderedMonth).getMonth() + increment, 1);
     }
 
-    elem.centralDate = newCentralDate;
+    elem.centralDate = dateFormatter.toISOFormatString(new Date(newCentralDate));
   }
 }

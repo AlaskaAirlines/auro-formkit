@@ -14,13 +14,22 @@ export class UtilitiesCalendarRender {
    * @private
    */
   updateCentralDate(elem, date) {
-    const dateObj = date instanceof String ? dateFormatter.stringToDateInstance(date) :  new Date(date);
+    // if date is already iso formatted string, we can skip the conversion and validation step
+    if (typeof date === 'string' && !dateFormatter.isValidDate(date)) {
+      elem.centralDate = date;
+      return;
+    }
+
+    // Accept Date objects, Unix timestamps (numbers), and ISO strings
+    const dateObj = date instanceof Date || typeof date === 'number' ? new Date(date) : dateFormatter.stringToDateInstance(date);
+
+    if (!dateObj || isNaN(dateObj)) {
+      return;
+    }
+
     dateObj.setDate(1);
     dateObj.setHours(0, 0, 0, 0);
-
-    if (!isNaN(dateObj)) {
-      elem.centralDate = dateObj;
-    }
+    elem.centralDate = dateFormatter.toISOFormatString(dateObj);
   }
 
   /**

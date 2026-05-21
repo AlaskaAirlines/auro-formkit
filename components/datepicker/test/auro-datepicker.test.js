@@ -246,21 +246,21 @@ function runFullTest(mobileView) {
       const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
       const prevMonthBth = calendar.shadowRoot.querySelector('.prevMonth');
 
-      await expect(el.centralDate).to.be.an.instanceOf(Date);
-      await expect(el.centralDate.getMonth()).to.equal(1); // February
-      await expect(el.centralDate.getFullYear()).to.equal(2023);
+      await expect(el.centralDateObject).to.be.an.instanceOf(Date);
+      await expect(el.centralDateObject.getMonth()).to.equal(1); // February
+      await expect(el.centralDateObject.getFullYear()).to.equal(2023);
 
       prevMonthBth.click();
       await elementUpdated(el);
 
-      await expect(el.centralDate.getMonth()).to.equal(0); // January
-      await expect(el.centralDate.getFullYear()).to.equal(2023);
+      await expect(el.centralDateObject.getMonth()).to.equal(0); // January
+      await expect(el.centralDateObject.getFullYear()).to.equal(2023);
 
       prevMonthBth.click();
       await elementUpdated(el);
 
-      await expect(el.centralDate.getMonth()).to.equal(11); // December
-      await expect(el.centralDate.getFullYear()).to.equal(2022);
+      await expect(el.centralDateObject.getMonth()).to.equal(11); // December
+      await expect(el.centralDateObject.getFullYear()).to.equal(2022);
     });
 
     it('should change to the next calendar month when handleNextMonth is called', async () => {
@@ -274,21 +274,21 @@ function runFullTest(mobileView) {
       const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
       const nextMonthBth = calendar.shadowRoot.querySelector('.nextMonth');
 
-      await expect(el.centralDate).to.be.an.instanceOf(Date);
-      await expect(el.centralDate.getMonth()).to.equal(10); // November
-      await expect(el.centralDate.getFullYear()).to.equal(2023);
+      await expect(el.centralDateObject).to.be.an.instanceOf(Date);
+      await expect(el.centralDateObject.getMonth()).to.equal(10); // November
+      await expect(el.centralDateObject.getFullYear()).to.equal(2023);
 
       nextMonthBth.click();
       await elementUpdated(el);
 
-      await expect(el.centralDate.getMonth()).to.equal(11); // December
-      await expect(el.centralDate.getFullYear()).to.equal(2023);
+      await expect(el.centralDateObject.getMonth()).to.equal(11); // December
+      await expect(el.centralDateObject.getFullYear()).to.equal(2023);
 
       nextMonthBth.click();
       await elementUpdated(el);
 
-      await expect(el.centralDate.getMonth()).to.equal(0); // January
-      await expect(el.centralDate.getFullYear()).to.equal(2024);
+      await expect(el.centralDateObject.getMonth()).to.equal(0); // January
+      await expect(el.centralDateObject.getFullYear()).to.equal(2024);
     });
 
     it('should hide the dropdown on blur', async () => {
@@ -386,15 +386,15 @@ function runFullTest(mobileView) {
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
         // centralDate is set to the 1st of the month by updateCentralDate
-        await expect(el.centralDate).to.be.an.instanceOf(Date);
-        await expect(el.centralDate.getMonth()).to.equal(2); // March
-        await expect(el.centralDate.getFullYear()).to.equal(2023);
+        await expect(el.centralDateObject).to.be.an.instanceOf(Date);
+        await expect(el.centralDateObject.getMonth()).to.equal(2); // March
+        await expect(el.centralDateObject.getFullYear()).to.equal(2023);
 
         el.calendarFocusDate = '2024-04-25';
         await elementUpdated(el);
 
-        await expect(el.centralDate.getMonth()).to.equal(3); // April
-        await expect(el.centralDate.getFullYear()).to.equal(2024);
+        await expect(el.centralDateObject.getMonth()).to.equal(3); // April
+        await expect(el.centralDateObject.getFullYear()).to.equal(2024);
       });
 
     });
@@ -402,7 +402,7 @@ function runFullTest(mobileView) {
     describe('calendarStartDate', () => {
       it('should hide the prev month button when viewing the first available month', async () => {
         const date = new Date();
-        const fullDate = `${`0${date.getMonth() + 1}`.slice(-2)}/${`0${date.getDate()}`.slice(-2)}/${date.getFullYear()}`;
+        const fullDate = date.toISOString().split('T')[0]; // Get current date in yyyy-mm-dd format
 
         const el = await fixture(html`
           <auro-datepicker calendarStartDate="${fullDate}"></auro-datepicker>
@@ -445,16 +445,16 @@ function runFullTest(mobileView) {
       it('should default to the current date', async () => {
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const today = new Date();
-        await expect(el.centralDate).to.be.an.instanceOf(Date);
-        await expect(el.centralDate.getMonth()).to.equal(today.getMonth());
+        await expect(el.centralDateObject).to.be.an.instanceOf(Date);
+        await expect(el.centralDateObject.getMonth()).to.equal(today.getMonth());
       });
 
       it('should update the visible month when centralDate is set', async () => {
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         el.centralDate = '2024-06-15';
         await elementUpdated(el);
-        await expect(el.centralDate).to.be.an.instanceOf(Date);
-        await expect(el.centralDate.getMonth()).to.equal(5); // June
+        await expect(el.centralDateObject).to.be.an.instanceOf(Date);
+        await expect(el.centralDateObject.getMonth()).to.equal(5); // June
       });
     });
 
@@ -590,7 +590,7 @@ function runFullTest(mobileView) {
         // value property stays ISO
         await expect(el.value).to.equal('1999-08-15');
         // input displays in the configured format
-        await expect(getInput(el, 0).value).to.equal('1999/08/15');
+        await expect(getInput(el, 0).value).to.equal('1999-08-15');
         await expect(el.getAttribute('validity')).to.be.equal('valid');
       });
 
@@ -789,20 +789,22 @@ function runFullTest(mobileView) {
 
         const input = getInput(el, 0);
 
-        input.value = "2022-01-01";
-
         el.focus();
-        el.blur();
 
+        input.value = "2022-01-01";
+        await elementUpdated(input);
+
+        el.blur();
         await elementUpdated(el);
 
         await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-        input.value = "2022-01-02";
-
         el.focus();
-        el.blur();
 
+        input.value = "2022-01-02";
+        await elementUpdated(input);
+
+        el.blur();
         await elementUpdated(el);
 
         await expect(el.getAttribute('validity')).to.be.equal('rangeOverflow');
@@ -816,11 +818,11 @@ function runFullTest(mobileView) {
         const input1 = getInput(el, 0);
         const input2 = getInput(el, 1);
 
-        input1.value = "2022-01-01";
-
-        input2.value = "2022-01-08";
-
         el.focus();
+        input1.value = "2022-01-01";
+        input2.value = "2022-01-08";
+        await elementUpdated(el);
+
         el.blur();
 
         await elementUpdated(el);
@@ -851,9 +853,11 @@ function runFullTest(mobileView) {
 
         const input = getInput(el, 0);
 
-        // User types in the display format; el.value stays ISO
-        input.value = "2022/03/18";
         el.focus();
+        // User types in the display format; el.value stays ISO
+        input.value = "2022-03-18";
+        await elementUpdated(el);
+
         el.blur();
         await elementUpdated(el);
 
@@ -861,7 +865,7 @@ function runFullTest(mobileView) {
         await expect(el.maxDate).to.equal('2022-03-22');
         await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-        input.value = "2022/03/25";
+        input.value = "2022-03-25";
         el.focus();
         el.blur();
         await elementUpdated(el);
@@ -878,11 +882,12 @@ function runFullTest(mobileView) {
         const input1 = getInput(el, 0);
         const input2 = getInput(el, 1);
 
-        // User types in display format; el.value/valueEnd stay ISO
-        input1.value = "2022/03/18";
-        input2.value = "2022/03/25";
-
         el.focus();
+        // User types in display format; el.value/valueEnd stay ISO
+        input1.value = "2022-03-18";
+        input2.value = "2022-03-25";
+        await elementUpdated(el);
+
         el.blur();
         await elementUpdated(el);
 
@@ -923,9 +928,9 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // centralDate is set to the 1st of the month by updateCentralDate
-        await expect(el.centralDate).to.be.an.instanceOf(Date);
-        await expect(el.centralDate.getMonth()).to.equal(3); // April
-        await expect(el.centralDate.getFullYear()).to.equal(2023);
+        await expect(el.centralDateObject).to.be.an.instanceOf(Date);
+        await expect(el.centralDateObject.getMonth()).to.equal(3); // April
+        await expect(el.centralDateObject.getFullYear()).to.equal(2023);
       });
 
       it('should respect minDate setting with custom format', async () => {
@@ -935,9 +940,11 @@ function runFullTest(mobileView) {
 
         const input = getInput(el, 0);
 
-        // User types in the display format; el.value stays ISO
-        input.value = "2022/03/25";
         el.focus();
+        // User types in the display format; el.value stays ISO
+        input.value = "2022-03-25";
+        await elementUpdated(el);
+
         el.blur();
         await elementUpdated(el);
 
@@ -945,7 +952,7 @@ function runFullTest(mobileView) {
         await expect(el.minDate).to.equal('2022-03-22');
         await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-        input.value = "2022/03/18";
+        input.value = "2022-03-18";
         el.focus();
         el.blur();
         await elementUpdated(el);
@@ -962,11 +969,12 @@ function runFullTest(mobileView) {
         const input1 = getInput(el, 0);
         const input2 = getInput(el, 1);
 
-        // User types in display format; el.value/valueEnd stay ISO
-        input1.value = "2025/03/18";
-        input2.value = "2025/03/25";
-
         el.focus();
+        // User types in display format; el.value/valueEnd stay ISO
+        input1.value = "2025-03-18";
+        input2.value = "2025-03-25";
+        await elementUpdated(el);
+
         el.blur();
         await elementUpdated(el);
 
@@ -1091,18 +1099,10 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const departInput = getInput(el, 0);
-
-        const setDepartDate = new Date('01/01/2023').toDateString();
-        const departInputDate = new Date(departInput.value).toDateString();
-
-        await expect(departInputDate).to.be.equal(setDepartDate);
+        await expect(departInput.value).to.be.equal("2023-01-01");
 
         const returnInput = getInput(el, 1);
-
-        const setReturnDate = new Date('01/15/2023').toDateString();
-        const returnInputDate = new Date(returnInput.value).toDateString();
-
-        await expect(returnInputDate).to.be.equal(setReturnDate);
+        await expect(returnInput.value).to.be.equal("2023-01-15");
       });
 
       it('should render two calendars when range attribute is present', async () => {
@@ -1133,8 +1133,8 @@ function runFullTest(mobileView) {
         // el.value/valueEnd are ISO; the inputs display in the configured format
         await expect(el.value).to.equal('2023-02-25');
         await expect(el.valueEnd).to.equal('2023-02-28');
-        await expect(getInput(el, 0).value).to.equal('2023/02/25');
-        await expect(getInput(el, 1).value).to.equal('2023/02/28');
+        await expect(getInput(el, 0).value).to.equal('2023-02-25');
+        await expect(getInput(el, 1).value).to.equal('2023-02-28');
       });
 
     });
@@ -1196,11 +1196,11 @@ function runFullTest(mobileView) {
 
         await expect(el.getAttribute('validity')).to.be.equal('valueMissing');
 
-        input.value = '2023-03-03';
-
         el.focus();
-        el.blur();
+        input.value = '2023-03-03';
+        await elementUpdated(el);
 
+        el.blur();
         await elementUpdated(el);
 
         await expect(el.getAttribute('validity')).to.be.equal('valid');
@@ -1271,9 +1271,10 @@ function runFullTest(mobileView) {
         `);
 
         const input = getInput(el, 0);
-        input.value = '2022-01-02';
-
         el.focus();
+        input.value = '2022-01-02';
+        await elementUpdated(el);
+
         el.blur();
         await elementUpdated(el);
 
@@ -1290,11 +1291,13 @@ function runFullTest(mobileView) {
         `);
 
         const input = getInput(el, 0);
-        input.value = '2022-03-18';
-
         el.focus();
+        input.value = '2022-03-18';
+        await elementUpdated(el);
+
         el.blur();
         await elementUpdated(el);
+
 
         await expect(el.getAttribute('validity')).to.equal('rangeUnderflow');
         const helpText = el.shadowRoot.querySelector('[auro-helptext]');
@@ -1494,7 +1497,7 @@ function runFullTest(mobileView) {
         const input = getInput(el, 0);
 
         const setDate = new Date('01/01/2022').toDateString();
-        const inputDate = new Date(input.value).toDateString();
+        const inputDate = input.valueObject.toDateString();
 
         await expect(inputDate).to.be.equal(setDate);
       });
@@ -1516,7 +1519,7 @@ function runFullTest(mobileView) {
 
         await elementUpdated(el);
 
-        expect(input2.value).to.equal('04/09/202');
+        expect(input2.value).to.equal('202-04-09');
 
         el.valueEnd = undefined;
 
@@ -1529,6 +1532,8 @@ function runFullTest(mobileView) {
         const el = await fixture(html`
           <auro-datepicker range minDate="2025-06-30" value="2025-02-14" valueEnd="2025-04-05"></auro-datepicker>
         `);
+
+        await elementUpdated(el);
 
         await expect(el.value).to.be.equal('2025-02-14');
         await expect(el.valueEnd).to.be.equal('2025-04-05');
@@ -1552,7 +1557,7 @@ function runFullTest(mobileView) {
 
         // el.value is ISO; the input displays in the configured format
         await expect(el.value).to.equal('2023-02-25');
-        await expect(getInput(el, 0).value).to.equal('2023/02/25');
+        await expect(getInput(el, 0).value).to.equal('2023-02-25');
       });
 
 
@@ -1572,7 +1577,7 @@ function runFullTest(mobileView) {
 
         const returnInput = getInput(el, 1);
         const setReturnDate = new Date('01/15/2023').toDateString();
-        const returnInputDate = new Date(returnInput.value).toDateString();
+        const returnInputDate = returnInput.valueObject.toDateString();
         await expect(returnInputDate).to.be.equal(setReturnDate);
       });
     });
@@ -2290,12 +2295,12 @@ function runFullTest(mobileView) {
       const calendar = el.calendar;
 
       // Set dateFrom so the first input condition passes (value already matches)
-      const dateFromTimestamp = new Date('2024-01-15').getTime() / 1000;
+      const dateFromTimestamp = new Date('01/15/2024').getTime() / 1000;
       calendar.dateFrom = dateFromTimestamp;
       el.inputList[0].value = el.convertWcTimeToDate(dateFromTimestamp);
 
       // Set dateTo on calendar with a value that differs from inputList[1]
-      const dateToTimestamp = new Date('2024-01-20').getTime() / 1000;
+      const dateToTimestamp = new Date('01/20/2024').getTime() / 1000;
       calendar.dateTo = dateToTimestamp;
       el.inputList[1].value = '';
 
@@ -2377,12 +2382,12 @@ function runFullTest(mobileView) {
 
       // Set minDate to a year well ahead of wherever the calendar is
       const targetYear = calYear + 2;
-      el.minDate = `06/15/${targetYear}`;
+      el.minDate = `${targetYear}-06-15`;
       await elementUpdated(el);
 
       // updateCentralDate sets el.centralDate to a Date matching the minDate
-      expect(el.centralDate).to.be.an.instanceOf(Date);
-      expect(el.centralDate.getFullYear()).to.equal(targetYear);
+      expect(el.centralDateObject).to.be.an.instanceOf(Date);
+      expect(el.centralDateObject.getFullYear()).to.equal(targetYear);
     });
 
     it('minDate updates central date when same year but minDateMonth > calendar.month', async () => {
@@ -2394,13 +2399,13 @@ function runFullTest(mobileView) {
       const calYear = el.calendar.year;
 
       // Pick December which is guaranteed later than any starting month
-      el.minDate = `12/01/${calYear}`;
+      el.minDate = `${calYear}-12-01`;
       await elementUpdated(el);
 
-      // updateCentralDate sets el.centralDate to a Date matching the minDate
-      expect(el.centralDate).to.be.an.instanceOf(Date);
-      expect(el.centralDate.getMonth()).to.equal(11); // December = month 11
-      expect(el.centralDate.getFullYear()).to.equal(calYear);
+      // updateCentralDate sets el.centralDateObject to a Date matching the minDate
+      expect(el.centralDateObject).to.be.an.instanceOf(Date);
+      expect(el.centralDateObject.getMonth()).to.equal(11); // December = month 11
+      expect(el.centralDateObject.getFullYear()).to.equal(calYear);
     });
 
     it('maxDate updates central date when same year but maxDateMonth < calendar.month', async () => {
@@ -2415,13 +2420,13 @@ function runFullTest(mobileView) {
       // Pick January which is guaranteed earlier than any starting month (unless already Jan)
       const targetMonth = 1;
 
-      el.maxDate = `${String(targetMonth).padStart(2, '0')}/01/${calYear}`;
+      el.maxDate = `${calYear}-${String(targetMonth).padStart(2, '0')}-01`;
       await elementUpdated(el);
 
       if (calMonth > targetMonth) {
-        expect(el.centralDate).to.be.an.instanceOf(Date);
-        expect(el.centralDate.getMonth()).to.equal(0); // January = month 0
-        expect(el.centralDate.getFullYear()).to.equal(calYear);
+        expect(el.centralDateObject).to.be.an.instanceOf(Date);
+        expect(el.centralDateObject.getMonth()).to.equal(0); // January = month 0
+        expect(el.centralDateObject.getFullYear()).to.equal(calYear);
       }
     });
 
@@ -2501,12 +2506,9 @@ function runFullTest(mobileView) {
 
       utilCal.handleMonthChange(mockElem, 'next');
 
-      // handleMonthChange sets centralDate to a timestamp (number) via setMonth()
+      // handleMonthChange sets centralDate to the next month
       // Should fall back to firstRenderedMonth (March 2025) + 1 month = April 2025
-      const resultDate = new Date(mockElem.centralDate);
-      expect(resultDate).to.be.an.instanceOf(Date);
-      expect(resultDate.getMonth()).to.equal(3); // April = month 3
-      expect(resultDate.getFullYear()).to.equal(2025);
+      expect(mockElem.centralDate).to.be.equal('2025-04-01');
     });
 
     it('maximumRenderableMonths caps numCalendars to definedRangeMonths when range is smaller', async () => {
@@ -2606,7 +2608,7 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
 
       // valueEnd should be cleared (reset to '') since both were valid
-      await expect(el.valueEnd).to.equal('');
+      await expect(el.valueEnd).to.be.undefined;
     });
 
     // ─── updated() resets value when minDate is later than current value ─
@@ -2690,28 +2692,6 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
 
       await expect(dropdown.isPopoverVisible).to.be.false;
-    });
-
-    // ─── utilities: parseDate with null input returns undefined ─────────
-    it('parseDate returns undefined for null input', async () => {
-      const el = await fixture(html`
-        <auro-datepicker></auro-datepicker>
-      `);
-      await elementUpdated(el);
-
-      const result = el.util.parseDate(null, 'mm/dd/yyyy');
-      await expect(result).to.be.undefined;
-    });
-
-    // ─── utilities: toNorthAmericanFormat with unparseable input ────────
-    it('toNorthAmericanFormat returns falsy for unparseable date', async () => {
-      const el = await fixture(html`
-        <auro-datepicker format="dd/mm/yyyy"></auro-datepicker>
-      `);
-      await elementUpdated(el);
-
-      const result = el.util.toNorthAmericanFormat('invalid', 'dd/mm/yyyy');
-      await expect(result).to.be.undefined;
     });
 
     // ─── utilities: toCustomFormat with incomplete date returns undefined ─

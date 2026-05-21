@@ -11,6 +11,7 @@ import chevronRight from '@alaskaairux/icons/dist/icons/interface/chevron-right.
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 import { AuroDatepickerUtilities } from './utilities.js';
 import { CalendarUtilities } from './utilitiesCalendar.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
@@ -216,6 +217,13 @@ export class AuroCalendar extends RangeDatepicker {
     };
   }
 
+  // ─── Read-only *Object properties ─────────────────────────────────────────
+
+  /** @returns {Date|undefined} */
+  get centralDateObject() {
+    return this.centralDate && dateFormatter.isValidDate(this.centralDate) ? dateFormatter.stringToDateInstance(this.centralDate) : undefined;
+  }
+
   /**
    * Updates the month and year when the user navigates to the previous calendar month.
    * @private
@@ -254,20 +262,18 @@ export class AuroCalendar extends RangeDatepicker {
       let dateMatches = undefined;
 
       if (!this.isFullscreen) {
-        const formattedDateStr = this.util.getDateAsString(new Date(this.centralDate), this.datepicker.format);
-
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
-        if (this.util.validDateStr(formattedDateStr, this.datepicker.format)) {
-          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDate));
+        if (this.centralDate) {
+          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDateObject));
 
           if (!dateMatches) {
-            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.centralDate);
+            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.centralDateObject);
           }
         } else if (this.minDate) {
-          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.minDate));
+          dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.minDateObject));
 
           if (!dateMatches) {
-            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.minDate);
+            this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.minDateObject);
           }
         } else {
           const now = new Date();
@@ -310,8 +316,8 @@ export class AuroCalendar extends RangeDatepicker {
           newYear = oldYear;
         }
 
-        const newMonthDateStr = `${newMonth}/01/${newYear}`;
-        newMonthDate = new Date(newMonthDateStr);
+        const newMonthDateStr = `${String(newMonth).padStart(2, '0')}/01/${newYear}`;
+        newMonthDate = dateFormatter.stringToDateInstance(newMonthDateStr, 'mm/dd/yyyy');
 
         renderedHtml = html`${renderedHtml}${this.utilCalRender.renderCalendar(this, newMonth, newYear)}`;
       }
