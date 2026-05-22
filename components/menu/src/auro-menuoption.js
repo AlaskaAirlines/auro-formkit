@@ -75,7 +75,8 @@ export class AuroMenuOption extends AuroElement {
       ...super.properties,
       noCheckmark: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        attribute: 'nocheckmark'
       },
       selected: {
         type: Boolean,
