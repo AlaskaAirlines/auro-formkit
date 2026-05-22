@@ -302,7 +302,8 @@ export class AuroMenu extends AuroElement {
       return;
     }
 
-    this.value = value;
+    // `value` is a String property; stringify arrays so attribute reflection and `formattedValue` parsing stay correct.
+    this.value = Array.isArray(value) ? JSON.stringify(value) : value;
   }
 
   // Lifecycle Methods
