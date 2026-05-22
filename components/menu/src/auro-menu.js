@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-underscore-dangle, no-magic-numbers, max-lines, no-extra-parens */
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -11,14 +11,13 @@ import colorCss from "./styles/default/color-menu-css.js";
 import tokensCss from "./styles/default/tokens-css.js";
 
 import { AuroElement } from "../../layoutElement/src/auroElement.js";
-import { MenuContext, MenuService } from "./auro-menu.context.js";
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 import {
+  isOptionInteractive,
   dispatchMenuEvent
 } from './auro-menu-utils.js';
 import { classMap } from "lit/directives/class-map.js";
-import { ContextProvider } from "@lit/context";
 
 
 /**
@@ -29,16 +28,12 @@ import { ContextProvider } from "@lit/context";
  * @event {CustomEvent<any>} auroMenu-customEventFired - Notifies that a custom event has been fired.
  * @event {CustomEvent<{ loading: boolean; hasLoadingPlaceholder: boolean; }>} auroMenu-loadingChange - Notifies when the loading attribute is changed.
  * @event {CustomEvent<any>} auroMenu-selectValueFailure - Notifies that an attempt to select a menuoption by matching a value has failed.
- * @event {CustomEvent<{ values: HTMLElement[] }>} auroMenu-deselectPrevented - Notifies that deselection was prevented and includes the affected options in `detail.values`.
  * @event {CustomEvent<any>} auroMenu-selectValueReset - Notifies that the component value has been reset.
  * @event {CustomEvent<any>} auroMenu-selectedOption - Notifies that a new menuoption selection has been made.
  * @slot loadingText - Text to show while loading attribute is set
  * @slot loadingIcon - Icon to show while loading attribute is set
  * @slot - Slot for insertion of menu options.
  */
-
-/* eslint-disable max-lines */
-
 export class AuroMenu extends AuroElement {
 
   constructor() {
@@ -56,6 +51,8 @@ export class AuroMenu extends AuroElement {
      */
     this.size = "sm";
 
+    // Value of the selected options
+    this.value = undefined;
     // Currently selected option
     this.optionSelected = undefined;
     // String used for highlighting/filtering
@@ -68,12 +65,23 @@ export class AuroMenu extends AuroElement {
     this.loading = false;
     // Multi-select mode
     this.multiSelect = false;
-    // Allow deselecting of menu options
-    this.allowDeselect = false;
-    // Select all matching options when setting value in multi-select mode
-    this.selectAllMatchingOptions = false;
 
     // Event Bindings
+
+    /**
+     * @private
+     */
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+
+    /**
+     * @private
+     */
+    this.handleMouseSelect = this.handleMouseSelect.bind(this);
+
+    /**
+     * @private
+     */
+    this.handleOptionHover = this.handleOptionHover.bind(this);
 
     /**
      * @private
@@ -102,33 +110,11 @@ export class AuroMenu extends AuroElement {
       ...super.properties,
 
       /**
-       * Allows deselecting an already selected option when clicked again in single-select mode.
-       */
-      allowDeselect: {
-        type: Boolean,
-        reflect: true,
-      },
-
-      /**
        * When true, the entire menu and all options are disabled.
        */
       disabled: {
         type: Boolean,
         reflect: true
-      },
-
-      /**
-       * Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state.
-       */
-      hasLoadingPlaceholder: {
-        type: Boolean
-      },
-
-      /**
-       * @private
-       */
-      layout: {
-        type: String
       },
 
       /**
@@ -192,44 +178,6 @@ export class AuroMenu extends AuroElement {
       },
 
       /**
-       * Available menu options.
-       * @readonly
-       */
-      options: {
-        type: Array,
-        reflect: false,
-        attribute: false
-      },
-
-      /**
-       * Sets the size of the menu.
-       * @type {'sm' | 'md'}
-       * @default 'sm'
-       */
-      size: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * When true, selects all options that match the provided value/key when setting value and multiselect is enabled.
-       */
-      selectAllMatchingOptions: {
-        type: Boolean,
-        reflect: true,
-      },
-
-      /**
-       * Sets the shape of the menu.
-       * @type {'box' | 'round'}
-       * @default 'box'
-       */
-      shape: {
-        type: String,
-        reflect: true
-      },
-
-      /**
        * The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values.
        */
       value: {
@@ -249,20 +197,23 @@ export class AuroMenu extends AuroElement {
   }
 
   /**
-   * @readonly
-   * @returns {string} - Returns the label of the currently selected option(s).
+   * This will register this element with the browser.
+   * @param {string} [name="auro-menu"] - The name of element that you want to register to.
+   *
+   * @example
+   * AuroMenu.register("custom-menu") // this will register this element to <custom-menu/>
+   *
    */
-  get currentLabel() {
-    return this.menuService.currentLabel;
-  };
+  static register(name = "auro-menu") {
+    AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroMenu);
+  }
 
   /**
    * @readonly
    * @returns {Array<HTMLElement>} - Returns the array of available menu options.
-   * @deprecated Use `options` property instead.
    */
-  get items() {
-    return this.options;
+  get options() {
+    return this.items;
   }
 
   /**
@@ -276,19 +227,44 @@ export class AuroMenu extends AuroElement {
    * @param {number} value - Sets the index of the currently active option.
    */
   set index(value) {
-    this.menuService.setHighlightedIndex(value);
+    this.updateActiveOption(value);
   }
 
   /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-menu"] - The name of the element that you want to register.
-   *
-   * @example
-   * AuroMenu.register("custom-menu") // this will register this element to <custom-menu/>
-   *
+   * Gets the currently selected options as an array.
+   * @returns {Array<HTMLElement>}
    */
-  static register(name = "auro-menu") {
-    AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroMenu);
+  get selectedOptions() {
+    if (!this.optionSelected) {
+      return [];
+    }
+    if (Array.isArray(this.optionSelected)) {
+      return this.optionSelected;
+    }
+    return [this.optionSelected];
+  }
+
+  /**
+   * Gets the first selected option, or null if none.
+   * @returns {HTMLElement|null}
+   */
+  get selectedOption() {
+    const opts = this.selectedOptions;
+    return opts.length > 0 ? opts[0] : null;
+  }
+
+  /**
+   * @readonly
+   * @returns {string} - Returns the label of the currently selected option(s).
+   */
+  get currentLabel() {
+    if (!this.optionSelected) {
+      return '';
+    }
+    if (Array.isArray(this.optionSelected)) {
+      return this.optionSelected.map((opt) => opt.textContent).join(', ');
+    }
+    return this.optionSelected.textContent || '';
   }
 
   /**
@@ -298,120 +274,35 @@ export class AuroMenu extends AuroElement {
    * @returns {String|Array<String>}
    */
   get formattedValue() {
-    return this.menuService.currentValue;
+    if (this.multiSelect) {
+      if (!this.value) {
+        return undefined;
+      }
+      if (this.value.startsWith("[")) {
+        return JSON.parse(this.value);
+      }
+      return [this.value];
+    }
+    return this.value;
   }
 
   /**
-   * Gets the current property values for the menu service.
-   * @private
-   * @returns {Object}
+   * Selects options by value.
+   * @param {string|string[]|undefined|null} value - The value(s) to select.
+   * @public
    */
-  get propertyValues() {
-    return {
-      size: this.size,
-      shape: this.shape,
-      noCheckmark: this.nocheckmark,
-      disabled: this.disabled
-    };
-  }
+  selectByValue(value) {
+    const isEmpty = value === undefined ||
+      value === null ||
+      (Array.isArray(value) && value.length === 0) ||
+      (typeof value === 'string' && value.trim() === '');
 
-  /**
-   * Provides the menu context to child components.
-   * Initializes the MenuService and subscribes to menu changes.
-   * @protected
-   */
-  provideContext() {
-    if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
-      this.rootMenu = false;
-      this.menuService = this.parentElement.menuService;
-      this._contextProvider = this.parentElement._contextProvider;
+    if (isEmpty) {
+      this.clearSelection();
       return;
     }
 
-    this.menuService = new MenuService({host: this});
-    this.menuService.setProperties(this.propertyValues);
-    this.menuService.subscribe(this.handleMenuChange.bind(this));
-    this._contextProvider = new ContextProvider(this, {
-      context: MenuContext,
-      initialValue: this.menuService
-    });
-  }
-
-  /**
-   * Updates the currently active option in the menu.
-   * @param {HTMLElement} option - The option to set as active.
-   */
-  updateActiveOption(option) {
-    this.menuService.setHighlightedOption(option);
-  }
-
-  /**
-   * Sets the internal value and manages update state.
-   * @param {String|Array<String>} value - The value to set.
-   * @protected
-   */
-  setInternalValue(value) {
-    if (this.value !== value) {
-      this.internalUpdateInProgress = true;
-      this.value = value;
-
-      setTimeout(() => {
-        this.internalUpdateInProgress = false;
-      });
-    }
-  }
-
-  /**
-   * Handles changes from the menu service and updates component state.
-   * @param {Object} event - The event object from the menu service.
-   * @protected
-   */
-  handleMenuChange(event) {
-    if (event.type === 'valueChange') {
-
-      // New option is array value or first option with fallback to undefined for empty array in all cases
-      const newOption = this.multiSelect && event.options.length ? event.options : event.options[0] || undefined;
-      const newValue = event.stringValue;
-
-      // Check if the option or value has actually changed
-      if (this.optionSelected !== newOption || this.stringValue !== newValue) {
-        this.optionSelected = newOption;
-        this.setInternalValue(newValue);
-      }
-
-      // Notify components of selection change
-      this.notifySelectionChange(event);
-    }
-
-    if (event.type === 'highlightChange') {
-      this.optionActive = event.option;
-      this._index = event.index;
-    }
-
-    if (event.type === 'optionsChange') {
-      this.options = event.options;
-      this.dispatchEvent(new CustomEvent('auroMenu-optionsChange', {
-        detail: {
-          options: event.options
-        }
-      }));
-    }
-  }
-
-  /**
-   * Gets the currently selected options.
-   * @returns {Array<HTMLElement>}
-   */
-  get selectedOptions() {
-    return this.menuService ? this.menuService.selectedOptions : [];
-  }
-
-  /**
-   * Gets the first selected option, or null if none.
-   * @returns {HTMLElement|null}
-   */
-  get selectedOption() {
-    return this.menuService ? this.menuService.selectedOptions[0] : null;
+    this.value = value;
   }
 
   // Lifecycle Methods
@@ -419,9 +310,7 @@ export class AuroMenu extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.provideContext();
-
-    // this.addEventListener('keydown', this.handleKeyDown);
+    this.addEventListener('keydown', this.handleKeyDown);
     this.addEventListener('auroMenuOption-click', this.handleMouseSelect);
     this.addEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.addEventListener('slotchange', this.handleSlotChange);
@@ -429,7 +318,7 @@ export class AuroMenu extends AuroElement {
   }
 
   disconnectedCallback() {
-    // this.removeEventListener('keydown', this.handleKeyDown);
+    this.removeEventListener('keydown', this.handleKeyDown);
     this.removeEventListener('auroMenuOption-click', this.handleMouseSelect);
     this.removeEventListener('auroMenuOption-mouseover', this.handleOptionHover);
     this.removeEventListener('slotchange', this.handleSlotChange);
@@ -444,34 +333,6 @@ export class AuroMenu extends AuroElement {
     this.initializeMenu();
   }
 
-
-  updated(changedProperties) {
-    super.updated(changedProperties);
-
-    // Apply value selection synchronously so that static-HTML fixtures
-    // resolve within a single update cycle.  The refactored selectByValue
-    // no longer calls reset() first, so the destructive intermediate-event
-    // cascade that originally required deferral is eliminated.  If option
-    // keys are not yet resolved (framework mount-order race), selectByValue
-    // queues a bounded retry automatically via queuePendingValue.
-    if (changedProperties.has('value') && !this.internalUpdateInProgress) {
-      this.menuService.selectByValue(this.value);
-    }
-
-    // Handle loading state changes
-    if (changedProperties.has('loading')) {
-      this.setLoadingState(this.loading);
-    }
-
-    if (changedProperties.has('multiSelect') && this.rootMenu) {
-      if (this.multiSelect) {
-        this.setAttribute('aria-multiselectable', 'true');
-      } else {
-        this.removeAttribute('aria-multiselectable');
-      }
-    }
-  }
-
   /**
    * Sets an attribute that matches the default tag name if the tag name is not the default.
    * @param {string} tagName - The tag name to set as an attribute.
@@ -483,17 +344,186 @@ export class AuroMenu extends AuroElement {
     }
   }
 
+  // eslint-disable-next-line complexity
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('optionSelected')) {
+      const old = changedProperties.get('optionSelected');
+      if ((old && this.optionSelected && old.value !== this.optionSelected.value) ||
+        (!old && this.optionSelected) ||
+        (old && !this.optionSelected)) {
+        this.notifySelectionChange();
+      }
+    }
+
+    // Reset selection if multiSelect mode changes
+    if (changedProperties.has('multiSelect') && !changedProperties.has("value")) {
+      this.clearSelection();
+    }
+
+    if (changedProperties.has("value")) {
+      // Handle null/undefined case
+      if (this.value === undefined || this.value === null) {
+        this.clearSelection();
+      } else {
+        let newSelected = null;
+
+        if (this.multiSelect) {
+          // In multiselect mode, this.value should be an array of strings
+          const valueArray = this.formattedValue;
+          const matchingOptions = this.items ? this.items.filter((item) => valueArray.includes(item.value)) : [];
+          newSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
+        } else {
+          // In single-select mode, this.value should be a string
+          const matchingOption = this.items ? this.items.find((item) => item.value === this.value) : undefined;
+
+          if (matchingOption) {
+            newSelected = matchingOption;
+            this._index = this.items.indexOf(matchingOption);
+          } else {
+            // If no matching option found, reset selection
+            newSelected = undefined;
+            this._index = -1;
+          }
+        }
+
+        // If no matching options were found in either mode
+        if (!newSelected || (Array.isArray(newSelected) && newSelected.length === 0)) {
+          dispatchMenuEvent(this, 'auroMenu-selectValueFailure');
+          if (this.optionSelected !== undefined) {
+            this.optionSelected = undefined;
+          }
+          this._index = -1;
+        } else if (!this.selectionEquals(this.optionSelected, newSelected)) {
+          this.optionSelected = newSelected;
+        }
+      }
+
+      // Update UI state
+      this.updateItemsState(new Map([
+        [
+          'optionSelected',
+          true
+        ]
+      ]));
+
+      // Notify of changes
+      if (this.optionSelected !== undefined) {
+        const selected = Array.isArray(this.optionSelected) ? this.optionSelected : [this.optionSelected];
+        selected.forEach((opt) => {
+          if (opt.hasAttribute('event')) {
+            this.handleCustomEvent(opt);
+          }
+        });
+      }
+    }
+
+    // Process all other UI updates
+    if (changedProperties.has('multiSelect') && this.rootMenu) {
+      if (this.multiSelect) {
+        this.setAttribute('aria-multiselectable', 'true');
+      } else {
+        this.removeAttribute('aria-multiselectable');
+      }
+    }
+
+    this.updateItemsState(changedProperties);
+  }
+
   /**
-   * Sets the loading state and dispatches a loading change event.
-   * @param {boolean} isLoading - Whether the menu is loading.
-   * @protected
+   * Updates the UI state and appearance of menu items based on changed properties.
+   * @private
+   * @param {Map<string, boolean>} changedProperties - LitElement's changed properties map.
    */
-  setLoadingState(isLoading) {
-    this.setAttribute("aria-busy", isLoading);
-    dispatchMenuEvent(this, "auroMenu-loadingChange", {
-      loading: isLoading,
-      hasLoadingPlaceholder: this.hasLoadingPlaceholder
+  updateItemsState(changedProperties) {
+    // Handle loading state changes
+    if (changedProperties.has('loading')) {
+      this.setAttribute("aria-busy", this.loading);
+      dispatchMenuEvent(this, "auroMenu-loadingChange", {
+        loading: this.loading,
+        hasLoadingPlaceholder: this.hasLoadingPlaceholder
+      });
+    }
+
+    if (!this.items) {
+      return;
+    }
+
+    // Handle noCheckmark propagation to all menus and options
+    if (changedProperties.has('noCheckmark') && this.noCheckmark) {
+      // Update both menus and options
+      this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]').forEach((element) => {
+        element.noCheckmark = true;
+      });
+    }
+
+    // Handle layout propagation to all menus and options
+    const propagationTargets = this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]');
+    [
+      'size',
+      'shape'
+    ].forEach((prop) => {
+      if (changedProperties.has(prop)) {
+        propagationTargets.forEach((el) => {
+          el.setAttribute(prop, this[prop]);
+        });
+      }
     });
+
+    // Regex for matchWord if needed
+    let regexWord = null;
+
+    if (changedProperties.has('matchWord') && this.matchWord && this.matchWord.length) {
+      const escapedWord = this.matchWord.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+      regexWord = new RegExp(escapedWord, 'giu');
+    }
+
+    // Handle direct item updates
+    this.items.forEach((option) => {
+      // Update selection if option or value changed
+      if (changedProperties.has('optionSelected') || changedProperties.has('value')) {
+        const isSelected = this.isOptionSelected(option);
+        option.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+
+        // Add/remove selected attribute based on state
+        if (isSelected) {
+          option.setAttribute('selected', '');
+        } else {
+          option.removeAttribute('selected');
+        }
+      }
+
+      // Update text highlighting if matchWord changed
+      if (changedProperties.has('matchWord') && regexWord &&
+          isOptionInteractive(option) && !option.hasAttribute('persistent')) {
+        // Create nested spacers
+        const nested = option.querySelectorAll('.nestingSpacer');
+
+        const displayValueEl = option.querySelector('[slot="displayValue"]');
+        if (displayValueEl) {
+          option.removeChild(displayValueEl);
+        }
+
+        // Update with spacers and matchWord
+        const nestingSpacerBundle = [...nested].map(() => this.nestingSpacer).join('');
+
+        option.innerHTML = nestingSpacerBundle +
+          option.textContent.replace(
+            regexWord,
+            (match) => `<strong>${match}</strong>`
+          );
+        if (displayValueEl) {
+          option.append(displayValueEl);
+        }
+      }
+
+      // Update disabled state
+      if (changedProperties.has('disabled')) {
+        option.disabled = this.disabled;
+      }
+    });
+
   }
 
   // Init Methods
@@ -503,6 +533,7 @@ export class AuroMenu extends AuroElement {
    * @private
    */
   initializeMenu() {
+    this.initItems();
     if (this.rootMenu) {
       this.setAttribute('role', 'listbox');
       this.setAttribute('root', '');
@@ -510,17 +541,107 @@ export class AuroMenu extends AuroElement {
       if (this.multiSelect) {
         this.setAttribute('aria-multiselectable', 'true');
       }
-    }
 
-    this.handleNestedMenus(this);
+      this.handleNestedMenus(this);
+    }
   }
 
   /**
-   * Selects the currently highlighted option.
-   * @protected
+   * Initializes menu items and their attributes.
+   * @private
    */
-  makeSelection() {
-    this.menuService.selectHighlightedOption();
+  initItems() {
+    const found = Array.from(this.querySelectorAll('auro-menuoption, [auro-menuoption]'));
+    this.items = found.length > 0 ? found : undefined;
+
+    if (this.noCheckmark) {
+      this.updateItemsState(new Map([
+        [
+          'noCheckmark',
+          true
+        ]
+      ]));
+    }
+
+    this.dispatchEvent(new CustomEvent('auroMenu-optionsChange', {
+      detail: {
+        options: this.items
+      }
+    }));
+  }
+
+  // Logic Methods
+
+  /**
+   * Updates menu state when an option is selected.
+   * @private
+   * @param {HTMLElement} option - The option element to select.
+   */
+  handleSelectState(option) {
+    if (this.multiSelect) {
+      const currentValue = this.formattedValue || [];
+      const currentSelected = this.optionSelected || [];
+
+      if (!currentValue.includes(option.value)) {
+        this.value = JSON.stringify([
+          ...currentValue,
+          option.value
+        ]);
+      }
+      if (!currentSelected.includes(option)) {
+        this.optionSelected = [
+          ...currentSelected,
+          option
+        ];
+      }
+    } else {
+      this.value = option.value;
+      this.optionSelected = option;
+    }
+
+    this._index = this.items.indexOf(option);
+  }
+
+  /**
+   * Deselects a menu option and updates related state.
+   * @private
+   * @param {HTMLElement} option - The menuoption to be deselected.
+   */
+  handleDeselectState(option) {
+    if (this.multiSelect) {
+      // Remove this option from array
+      const newFormattedValue = (this.formattedValue || []).filter((val) => val !== option.value);
+
+      // If array is empty after removal, set back to undefined
+      if (newFormattedValue && newFormattedValue.length === 0) {
+        this.value = undefined;
+      } else {
+        this.value = JSON.stringify(newFormattedValue);
+      }
+
+      this.optionSelected = this.optionSelected.filter((val) => val !== option);
+      if (this.optionSelected.length === 0) {
+        this.optionSelected = undefined;
+      }
+    } else {
+      // For single-select: Back to undefined when deselected
+      this.value = undefined;
+      this.optionSelected = undefined;
+    }
+
+    // Update the index tracking
+    this._index = this.items.indexOf(option);
+
+    // Update UI to reflect changes
+    this.updateItemsState(new Map([
+      [
+        'optionSelected',
+        true
+      ]
+    ]));
+
+    // Notify of selection change
+    this.notifySelectionChange();
   }
 
   /**
@@ -539,7 +660,18 @@ export class AuroMenu extends AuroElement {
    * @public
    */
   reset() {
-    this.menuService.reset();
+    // Reset to undefined - initial state
+    this.value = undefined;
+    this.optionSelected = undefined;
+    this._index = -1;
+
+    // Reset UI state
+    this.updateItemsState(new Map([
+      [
+        'optionSelected',
+        true
+      ]
+    ]));
 
     // Dispatch reset event
     dispatchMenuEvent(this, 'auroMenu-selectValueReset');
@@ -568,16 +700,117 @@ export class AuroMenu extends AuroElement {
     });
   }
 
+  // Event Handlers
+
   /**
-   * Navigates the menu options in the specified direction.
-   * @param {'up'|'down'} direction - The direction to navigate.
-   * @protected
+   * Makes a selection based on the current index.
+   * @private
    */
-  navigateOptions(direction) {
-    if (direction === 'up') {
-      this.menuService.highlightPrevious();
-    } else if (direction === 'down') {
-      this.menuService.highlightNext();
+  makeSelection() {
+    if (!this.items) {
+      this.initItems();
+    }
+
+    // Get currently selected menu option based on index
+    const option = this.items ? this.items[this._index] : undefined;
+
+    // Return early if option is not interactive
+    if (!option || !isOptionInteractive(option)) {
+      return;
+    }
+
+    // Handle custom events first
+    if (option.hasAttribute('event')) {
+      this.handleCustomEvent(option);
+      return;
+    }
+
+    if (this.multiSelect) {
+      // In multiselect, toggle individual selections
+      this.toggleOption(option);
+      // In single select, only handle selection of new options
+    } else if (!this.isOptionSelected(option)) {
+      this.clearSelection();
+      this.handleSelectState(option);
+    }
+
+    this.notifySelectionChange();
+  }
+
+  /**
+   * Toggle the selection state of the menuoption.
+   * @private
+   * @param {HTMLElement} option - The menuoption to toggle.
+   */
+  toggleOption(option) {
+    const isCurrentlySelected = this.isOptionSelected(option);
+
+    if (isCurrentlySelected) {
+      this.handleDeselectState(option);
+    } else if (option.value === undefined || option.value === '') {
+      dispatchMenuEvent(this, 'auroMenu-selectValueFailure');
+    } else {
+      this.handleSelectState(option);
+    }
+  }
+
+  /**
+   * Handles keyboard navigation and selection.
+   * @private
+   * @param {KeyboardEvent} event - The keydown event.
+   */
+  handleKeyDown(event) {
+    event.preventDefault();
+    switch (event.key) {
+      case "ArrowDown":
+        this.navigateOptions('down');
+        break;
+      case "ArrowUp":
+        this.navigateOptions('up');
+        break;
+      case "Tab":
+        this.makeSelection();
+        break;
+      case "Enter":
+        this.makeSelection();
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Handles option selection via click events from menuoptions.
+   * @private
+   * @param {CustomEvent} event - The auroMenuOption-click event.
+   */
+  handleMouseSelect(event) {
+    if (!this.rootMenu || this.disabled) {
+      return;
+    }
+
+    const option = event.detail;
+    if (option && this.items) {
+      const idx = this.items.indexOf(option);
+      if (idx >= 0) {
+        this._index = idx;
+        this.makeSelection();
+      }
+    }
+  }
+
+  /**
+   * Handles option hover events.
+   * @private
+   * @param {CustomEvent} event - Event object from the browser.
+   */
+  handleOptionHover(event) {
+    const option = event.detail;
+    if (this.items) {
+      const idx = this.items.indexOf(option);
+      if (idx >= 0) {
+        this.updateActiveOption(idx);
+      }
     }
   }
 
@@ -586,9 +819,88 @@ export class AuroMenu extends AuroElement {
    * @private
    */
   handleSlotChange() {
+    if (this.parentElement && this.parentElement.closest('auro-menu, [auro-menu]')) {
+      this.rootMenu = false;
+    }
+
     if (this.rootMenu) {
       this.initializeMenu();
+    } else if (this.noCheckmark) {
+      this.updateItemsState(new Map([
+        [
+          'noCheckmark',
+          true
+        ]
+      ]));
     }
+  }
+
+  /**
+   * Navigates through options using keyboard.
+   * @param {string} direction - 'up' or 'down'.
+   */
+  navigateOptions(direction) {
+    // Return early if no items exist
+    if (!this.items || !this.items.length) {
+      return;
+    }
+
+    let newIndex = this._index;
+    if (newIndex === -1 && direction === 'up') {
+      newIndex = this.items.length;
+    }
+    const increment = direction === 'down' ? 1 : -1;
+    const maxIterations = this.items.length;
+    let iterations = 0;
+    let foundInteractiveOption = false;
+
+    do {
+      newIndex = (newIndex + increment + this.items.length) % this.items.length;
+      iterations += 1;
+
+      // Check if current option is interactive
+      const currentOption = this.items[newIndex];
+      if (isOptionInteractive(currentOption)) {
+        foundInteractiveOption = true;
+        break;
+      }
+
+      // Break if all options were checked
+      if (iterations >= maxIterations) {
+        break;
+      }
+    } while (iterations < maxIterations);
+
+    // Update only if an interactive option was found
+    if (foundInteractiveOption) {
+      this.updateActiveOption(newIndex);
+    }
+  }
+
+  /**
+   * Updates the active option state and dispatches events.
+   * Accepts either a numeric index or an HTMLElement option.
+   * @param {number|HTMLElement} indexOrOption - Index of the option or the option element to make active.
+   */
+  updateActiveOption(indexOrOption) {
+    let idx = -1;
+
+    if (typeof indexOrOption === 'number') {
+      idx = indexOrOption;
+    } else {
+      idx = this.items ? this.items.indexOf(indexOrOption) : -1;
+    }
+
+    if (!this.items || !this.items[idx]) {
+      return;
+    }
+
+    this.items.forEach((item) => item.classList.remove('active'));
+    this.items[idx].classList.add('active');
+    this.optionActive = this.items[idx];
+    this._index = idx;
+
+    dispatchMenuEvent(this, 'auroMenu-activatedOption', this.items[idx]);
   }
 
   /**
@@ -598,8 +910,8 @@ export class AuroMenu extends AuroElement {
    */
   handleCustomEvent(option) {
     const eventName = option.getAttribute('event');
-    dispatchMenuEvent(this, eventName);
-    dispatchMenuEvent(this, 'auroMenu-customEventFired');
+    dispatchMenuEvent(this, eventName, { option });
+    dispatchMenuEvent(this, 'auroMenu-customEventFired', { option });
   }
 
   /**
@@ -607,14 +919,30 @@ export class AuroMenu extends AuroElement {
    * @param {any} source - The source that triggers this event.
    * @private
    */
-  notifySelectionChange({value, stringValue, keys, options, reason} = {}) {
-    dispatchMenuEvent(this, 'auroMenu-selectedOption', {
-      value,
-      stringValue,
-      keys,
-      options,
-      reason
-    });
+  notifySelectionChange(source = undefined) {
+    dispatchMenuEvent(this, 'auroMenu-selectedOption', { source });
+  }
+
+  /**
+   * @private
+   * @param {any} current - Current selection.
+   * @param {any} next - New selection to compare.
+   * @returns {boolean} Whether the selections are equal.
+   */
+  selectionEquals(current, next) {
+    if (current === next) {
+      return true;
+    }
+    if (!current || !next) {
+      return false;
+    }
+    if (Array.isArray(current) && Array.isArray(next)) {
+      if (current.length !== next.length) {
+        return false;
+      }
+      return current.every((item, idx) => item === next[idx]);
+    }
+    return false;
   }
 
   /**
@@ -629,7 +957,6 @@ export class AuroMenu extends AuroElement {
     }
 
     if (this.multiSelect) {
-      // In multi-select mode, check if the option is in the selected array
       return Array.isArray(this.optionSelected) && this.optionSelected.some((selectedOption) => selectedOption === option);
     }
 
