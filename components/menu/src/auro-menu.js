@@ -983,7 +983,10 @@ export class AuroMenu extends AuroElement {
       if (current.length !== next.length) {
         return false;
       }
-      return current.every((item, idx) => item === next[idx]);
+      // Compare as sets — selection order may differ from DOM order after value-driven
+      // reconciliation, but the selected set is what matters for change detection.
+      const nextSet = new Set(next);
+      return current.every((item) => nextSet.has(item));
     }
     return false;
   }
