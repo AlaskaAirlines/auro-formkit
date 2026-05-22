@@ -1980,13 +1980,13 @@ function runFullTest(mobileView) {
       });
     });
 
-    describe('auroDatePicker-valueSet', () => {
-      it('should fire auroDatePicker-valueSet when a value is set', async () => {
+    describe('input', () => {
+      it('should fire input event with ISO value in detail when a value is set', async () => {
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         await elementUpdated(el);
 
         const eventPromise = new Promise((resolve) => {
-          el.addEventListener('auroDatePicker-valueSet', (event) => resolve(event));
+          el.addEventListener('input', (event) => resolve(event));
         });
 
         el.value = '2023-01-15';
@@ -1994,6 +1994,7 @@ function runFullTest(mobileView) {
 
         const event = await eventPromise;
         await expect(event).to.exist;
+        await expect(event.detail).to.equal('2023-01-15');
       });
     });
 

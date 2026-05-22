@@ -75,7 +75,6 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @csspart calendar - Use for customizing the style of the calendar.
  * @csspart helpTextSpan - Use for customizing the style of the datepicker help text span.
  * @csspart helpText - Use for customizing the style of the datepicker help text.
- * @event auroDatePicker-valueSet - Notifies that the component has a new value set.
  * @event auroDatePicker-toggled - Notifies that the calendar dropdown has been opened/closed.
  * @event auroDatePicker-monthChanged - Notifies that the visible calendar month(s) have changed.
  * @event auroFormElement-validated - Notifies that the component value(s) have been validated.
@@ -828,15 +827,10 @@ export class AuroDatePicker extends AuroElement {
    * @returns {void}
    */
   notifyValueChanged() {
-    this.dispatchEvent(new Event('auroDatePicker-valueSet', {
+    this.dispatchEvent(new CustomEvent('input', {
       bubbles: true,
       composed: true,
-    }));
-
-    // Standard input event so auro-form can track datepicker value changes.
-    this.dispatchEvent(new Event('input', {
-      bubbles: true,
-      composed: true,
+      detail: this.value,
     }));
   }
 
