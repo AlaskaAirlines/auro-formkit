@@ -805,18 +805,21 @@ export class AuroMenu extends AuroElement {
    * @param {KeyboardEvent} event - The keydown event.
    */
   handleKeyDown(event) {
-    event.preventDefault();
     switch (event.key) {
       case "ArrowDown":
+        event.preventDefault();
         this.navigateOptions('down');
         break;
       case "ArrowUp":
+        event.preventDefault();
         this.navigateOptions('up');
         break;
       case "Tab":
+        // Do not preventDefault on Tab so focus can move out of the menu (a11y: avoid trapping keyboard users).
         this.makeSelection();
         break;
       case "Enter":
+        event.preventDefault();
         this.makeSelection();
         break;
       default:
