@@ -1074,6 +1074,40 @@ function runFullTest(mobileView) {
 
       expect(el.formState.addedLater.value).to.equal('hello');
     });
+
+    // Regression: a user-edited field that is then renamed must keep the
+    // form non-initial. Without migrating `_initialValues` from the old name
+    // to the new name, re-running initializeState() captures the typed value
+    // as the new initial, current === initial under the new key, and the
+    // form silently flips back to its initial state.
+    it('keeps the form non-initial after a user-edited field is renamed', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="originalName"></auro-input>
+          <auro-button type="reset">Reset</auro-button>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      const inputEl = el.querySelector('auro-input[name="originalName"]');
+      inputEl.value = 'hello';
+      inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      expect(el.isInitialState).to.be.false;
+
+      inputEl.setAttribute('name', 'renamedField');
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      expect(el.formState).to.have.property('renamedField');
+      expect(el.formState).to.not.have.property('originalName');
+      expect(el.isInitialState).to.be.false;
+
+      const [resetButton] = el.resetElements;
+      expect(resetButton.hasAttribute('disabled')).to.be.false;
+    });
   });
 
   describe('Slots', () => {
