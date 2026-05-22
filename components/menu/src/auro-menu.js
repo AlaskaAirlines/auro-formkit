@@ -395,8 +395,10 @@ export class AuroMenu extends AuroElement {
         let newSelected = null;
 
         if (this.multiSelect) {
-          // In multiselect mode, this.value should be an array of strings
-          const valueArray = this.formattedValue;
+          // In multiselect mode, this.value should be an array of strings.
+          // Defensive default: `formattedValue` can be undefined for unexpected value types,
+          // and calling `.includes` on undefined would throw during reconciliation.
+          const valueArray = this.formattedValue || [];
           const matchingOptions = this.items ? this.items.filter((item) => valueArray.includes(item.value)) : [];
           newSelected = matchingOptions.length > 0 ? matchingOptions : undefined;
         } else {
