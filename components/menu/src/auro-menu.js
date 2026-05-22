@@ -379,6 +379,14 @@ export class AuroMenu extends AuroElement {
     }
 
     if (changedProperties.has("value")) {
+      // Ensure items are populated before matching. `firstUpdated` normally initializes them,
+      // but a `value` change can arrive before slotted options are appended (e.g. parent sets
+      // value before children render). Without this guard, matching against an empty `items`
+      // would falsely dispatch `auroMenu-selectValueFailure` for valid initial values.
+      if (!this.items) {
+        this.initItems();
+      }
+
       // Handle null/undefined case
       if (this.value === undefined || this.value === null) {
         this.clearSelection();
