@@ -585,9 +585,10 @@ export class AuroMenu extends AuroElement {
       if (this.multiSelect) {
         this.setAttribute('aria-multiselectable', 'true');
       }
-
-      this.handleNestedMenus(this);
     }
+
+    // Must run for nested menus too — sets level, role="group", and aria-label="submenu" based on parent.
+    this.handleNestedMenus(this);
   }
 
   /**
