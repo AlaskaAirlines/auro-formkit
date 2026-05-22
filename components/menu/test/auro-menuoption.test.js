@@ -187,6 +187,25 @@ function runFullTest(mobileView) {
     });
 
     describe('auroMenuOption-click', () => {
+      it('should not self-toggle selected when handleClick fires (menu owns state)', async () => {
+        // Render outside an auro-menu so the parent doesn't update selected via setSelected().
+        const option = await fixture(html`<auro-menuoption value="solo">Solo</auro-menuoption>`);
+        await elementUpdated(option);
+
+        expect(option.selected).to.be.false;
+
+        let fired = false;
+        option.addEventListener('auroMenuOption-click', () => {
+          fired = true;
+        });
+
+        option.handleClick();
+        await elementUpdated(option);
+
+        expect(fired).to.be.true;
+        expect(option.selected).to.be.false;
+      });
+
       it('should fire when option is clicked', async () => {
         const el = await fixture(html`<auro-menu><auro-menuoption value="one">One</auro-menuoption></auro-menu>`);
         await elementUpdated(el);

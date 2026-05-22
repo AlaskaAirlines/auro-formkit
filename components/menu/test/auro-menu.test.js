@@ -1998,6 +1998,200 @@ function runFullTest(mobileView) {
 
       expect(el.noCheckmark).to.be.true;
     });
+
+    it('should propagate noCheckmark=false to nested options after toggling back', async () => {
+      const el = await fixture(html`
+        <auro-menu aria-label="test">
+          <auro-menuoption value="opt1">Opt 1</auro-menuoption>
+          <auro-menuoption value="opt2">Opt 2</auro-menuoption>
+        </auro-menu>
+      `);
+      await elementUpdated(el);
+
+      el.noCheckmark = true;
+      await elementUpdated(el);
+      const options = el.querySelectorAll('auro-menuoption');
+      expect(options[0].noCheckmark).to.be.true;
+
+      el.noCheckmark = false;
+      await elementUpdated(el);
+
+      expect(options[0].noCheckmark).to.be.false;
+      expect(options[1].noCheckmark).to.be.false;
+    });
+  });
+
+  describe('Regression: bug fixes', () => {
+    describe('matchWord XSS safety', () => {
+      it('should render literal HTML in option text without injecting elements', async () => {
+        const el = await fixture(html`
+          <auro-menu matchword="foo" aria-label="test">
+            <auro-menuoption value="bad">&lt;img src=x onerror=alert(1)&gt;foo</auro-menuoption>
+          </auro-menu>
+        `);
+        await elementUpdated(el);
+
+        const option = el.querySelector('auro-menuoption');
+        // No injected <img> from option text content.
+        expect(option.querySelector('img')).to.be.null;
+        // The literal text should still be present in textContent.
+        expect(option.textContent).to.contain('<img');
+        expect(option.textContent).to.contain('onerror=alert(1)');
+        // The match itself should still be highlighted via DOM (not innerHTML).
+        const strong = option.querySelector('strong');
+        expect(strong).to.not.be.null;
+        expect(strong.textContent).to.equal('foo');
+      });
+    });
+
+    describe('selectByValue with raw Array', () => {
+      it('should JSON-stringify an Array assigned via selectByValue and reflect attribute', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        menuEl.selectByValue(['option1', 'option3']);
+        await elementUpdated(menuEl);
+
+        expect(menuEl.value).to.equal('["option1","option3"]');
+        expect(menuEl.getAttribute('value')).to.equal('["option1","option3"]');
+        expect(menuEl.formattedValue).to.eql(['option1', 'option3']);
+      });
+    });
+
+    describe('formattedValue defensive parsing (multiSelect)', () => {
+      it('should coerce a non-string value to a single-item array without throwing', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        // Assign a number directly to the String-typed property; should not throw.
+        menuEl.value = 42;
+        await elementUpdated(menuEl);
+
+        expect(() => menuEl.formattedValue).to.not.throw();
+        expect(menuEl.formattedValue).to.eql(['42']);
+      });
+
+      it('should fall back to a single-item array when value looks like JSON but is malformed', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        menuEl.value = '[abc';
+        await elementUpdated(menuEl);
+
+        expect(() => menuEl.formattedValue).to.not.throw();
+        expect(menuEl.formattedValue).to.eql(['[abc']);
+      });
+
+      it('should return the Array directly when value is an Array (not a JSON string)', async () => {
+        const el = await multiSelectFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        menuEl.value = ['option1', 'option3'];
+        await elementUpdated(menuEl);
+
+        expect(() => menuEl.formattedValue).to.not.throw();
+        expect(menuEl.formattedValue).to.eql(['option1', 'option3']);
+      });
+    });
+
+    describe('items initialization before value matching', () => {
+      it('should not fire auroMenu-selectValueFailure when items get appended after value is set', async () => {
+        const menu = document.createElement('auro-menu');
+        menu.setAttribute('aria-label', 'test');
+        document.body.appendChild(menu);
+        await elementUpdated(menu);
+
+        // After init with no children, items is undefined.
+        expect(menu.items).to.be.undefined;
+
+        const opt = document.createElement('auro-menuoption');
+        opt.value = 'late';
+        opt.textContent = 'Late';
+        menu.appendChild(opt);
+
+        let failureFired = false;
+        const handler = () => {
+          failureFired = true;
+        };
+        menu.addEventListener('auroMenu-selectValueFailure', handler);
+
+        menu.value = 'late';
+        await elementUpdated(menu);
+
+        menu.removeEventListener('auroMenu-selectValueFailure', handler);
+        document.body.removeChild(menu);
+
+        expect(failureFired).to.be.false;
+      });
+    });
+
+    describe('single auroMenu-selectedOption per selection', () => {
+      it('should fire exactly one auroMenu-selectedOption event for a single click', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        let count = 0;
+        menuEl.addEventListener('auroMenu-selectedOption', () => {
+          count += 1;
+        });
+
+        const option = menuEl.querySelector('auro-menuoption[value="option 1"]');
+        option.click();
+        await elementUpdated(menuEl);
+
+        expect(count).to.equal(1);
+      });
+
+      it('should fire exactly one auroMenu-selectedOption event when re-clicking the already-selected option in single-select', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        const option = menuEl.querySelector('auro-menuoption[value="option 1"]');
+        option.click();
+        await elementUpdated(menuEl);
+
+        let count = 0;
+        menuEl.addEventListener('auroMenu-selectedOption', () => {
+          count += 1;
+        });
+
+        option.click();
+        await elementUpdated(menuEl);
+
+        expect(count).to.equal(1);
+      });
+    });
+
+    describe('Tab keydown does not preventDefault', () => {
+      it('should allow Tab to move focus out of the menu', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+        menuEl.dispatchEvent(tabEvent);
+
+        expect(tabEvent.defaultPrevented).to.be.false;
+      });
+
+      it('should preventDefault on ArrowDown, ArrowUp, and Enter', async () => {
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+        await elementUpdated(menuEl);
+
+        for (const key of ['ArrowDown', 'ArrowUp', 'Enter']) {
+          const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+          menuEl.dispatchEvent(event);
+          expect(event.defaultPrevented, `${key} should preventDefault`).to.be.true;
+        }
+      });
+    });
   });
 
   describe('auro-menuoption coverage', () => {
