@@ -64,7 +64,7 @@ The `auro-menuoption` element provides users a way to define a menu option.
 | `iconTag`     |               |           |           |         |                                                  |
 | `isActive`    |               | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable. |
 | `layout`      |               |           | `string`  |         |                                                  |
-| `noCheckmark` | `nocheckmark` |           | `boolean` | false   |                                                  |
+| `noCheckmark` | `noCheckmark` |           | `boolean` | false   |                                                  |
 | `noMatch`     | `nomatch`     |           | `boolean` | false   | When true, marks this option as the "no matching results" placeholder shown by combobox<br />when the user's input does not match any available options. |
 | `selected`    | `selected`    |           | `boolean` | false   |                                                  |
 | `value`       | `value`       |           | `string`  |         |                                                  |
