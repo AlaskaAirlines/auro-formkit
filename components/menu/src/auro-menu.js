@@ -364,13 +364,13 @@ export class AuroMenu extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    // Single source of truth for 'auroMenu-selectedOption'. Selection handlers
+    // mutate optionSelected and let Lit's update cycle dispatch here; the prior
+    // .value comparison missed multi-select array changes and combined with the
+    // explicit calls in handleDeselectState/makeSelection produced 2-3 duplicate
+    // events per selection.
     if (changedProperties.has('optionSelected')) {
-      const old = changedProperties.get('optionSelected');
-      if ((old && this.optionSelected && old.value !== this.optionSelected.value) ||
-        (!old && this.optionSelected) ||
-        (old && !this.optionSelected)) {
-        this.notifySelectionChange();
-      }
+      this.notifySelectionChange();
     }
 
     // Reset selection if multiSelect mode changes
@@ -683,8 +683,7 @@ export class AuroMenu extends AuroElement {
       ]
     ]));
 
-    // Notify of selection change
-    this.notifySelectionChange();
+    // Notification happens via updated() when optionSelected changes above.
   }
 
   /**
@@ -775,9 +774,12 @@ export class AuroMenu extends AuroElement {
     } else if (!this.isOptionSelected(option)) {
       this.clearSelection();
       this.handleSelectState(option);
+    } else {
+      // Re-selecting the already-selected option in single-select doesn't change
+      // state, so updated() won't fire. Notify explicitly so consumers (e.g.
+      // auro-select closing its dropdown on Enter) still get the event.
+      this.notifySelectionChange();
     }
-
-    this.notifySelectionChange();
   }
 
   /**
