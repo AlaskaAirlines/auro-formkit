@@ -122,7 +122,7 @@
       </section>
       <section>
         <auro-header level="3" id="cssTokens">Tokens</auro-header>
-        <p>The component may be restyled by changing the values of the following token(s) for the dropown, input and menu</p>
+        <p>The component may be restyled by changing the values of the following token(s) for the dropdown, input and menu</p>
         <auro-header level="4" id="cssTokensDropdown">Dropdown</auro-header>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../../dropdown/src/styles/tokens.scss) -->
         <!-- AURO-GENERATED-CONTENT:END -->
@@ -193,7 +193,7 @@
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="noFilter">Turn off Filtering</auro-header>
-        <p>If set, combobox will not do suggestion filtering of the menuoptions. This option is useful when the <code>&lt;auro-menuoption&gt;</code> elements are being pre-filtered externally (e.g. using the citysearch API).</p>
+        <p>If set, combobox will not do suggestion filtering of the menu options. This option is useful when the <code>&lt;auro-menuoption&gt;</code> elements are being pre-filtered externally (e.g. using the citysearch API).</p>
         <div class="exampleWrapper">
           <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/no-filter.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
