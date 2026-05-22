@@ -70,8 +70,8 @@ export class CalendarUtilities {
 
     if (elem.hasAttribute('calendarEndDate')) {
       lastRenderableMonth = dateFormatter.stringToDateInstance(elem.getAttribute('calendarEndDate'));
-    } else if (elem.hasAttribute('maxDate')) {
-      lastRenderableMonth = dateFormatter.stringToDateInstance(elem.getAttribute('maxDate'));
+    } else if (elem.maxDateObject) {
+      lastRenderableMonth = elem.maxDateObject;
     }
 
     if (lastRenderableMonth) {

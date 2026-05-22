@@ -1257,11 +1257,11 @@ function runFullTest(mobileView) {
         it('incomplete entry is tooShort', async () => {
           const el = await fixture(html`<auro-input type="date"></auro-input>`);
 
-          el.value = '10/10/202';
+          el.value = '202-10-10';
           await elementUpdated(el);
           expect(el.getAttribute('validity')).to.equal('tooShort');
 
-          el.value = '10/10/2022';
+          el.value = '2022-10-10';
           await elementUpdated(el);
           expect(el.getAttribute('validity')).to.equal('valid');
         });
@@ -1271,7 +1271,7 @@ function runFullTest(mobileView) {
             <auro-input type="date" format="mm/dd/yyyy"></auro-input>
           `);
 
-          el.value = '02/29/2023';
+          el.value = '2023-02-29';
           await elementUpdated(el);
           expect(el.getAttribute('validity')).to.equal('patternMismatch');
         });
@@ -1281,7 +1281,7 @@ function runFullTest(mobileView) {
             <auro-input type="date" format="mm/dd/yyyy"></auro-input>
           `);
 
-          el.value = '13/32/2024';
+          el.value = '2024-13-32';
           await elementUpdated(el);
           expect(el.getAttribute('validity')).to.equal('patternMismatch');
         });
@@ -1464,7 +1464,7 @@ function runFullTest(mobileView) {
     describe('valueObject / minObject / maxObject', () => {
       it('does not create date objects when type is not "date"', async () => {
         const el = await fixture(html`
-          <auro-input type="text" value="01/01/2024" min="2023-01-01" max="2024-12-31"></auro-input>
+          <auro-input type="text" value="2024-01-01" min="2023-01-01" max="2024-12-31"></auro-input>
         `);
 
         const initialValue = el.value;

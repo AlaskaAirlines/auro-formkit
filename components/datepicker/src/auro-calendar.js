@@ -224,6 +224,16 @@ export class AuroCalendar extends RangeDatepicker {
     return this.centralDate && dateFormatter.isValidDate(this.centralDate) ? dateFormatter.stringToDateInstance(this.centralDate) : undefined;
   }
 
+  /** @returns {Date|undefined} */
+  get minDateObject() {
+    return this.minDate && dateFormatter.isValidDate(this.minDate) ? dateFormatter.stringToDateInstance(this.minDate) : undefined;
+  }
+
+  /** @returns {Date|undefined} */
+  get maxDateObject() {
+    return this.maxDate && dateFormatter.isValidDate(this.maxDate) ? dateFormatter.stringToDateInstance(this.maxDate) : undefined;
+  }
+
   /**
    * Updates the month and year when the user navigates to the previous calendar month.
    * @private

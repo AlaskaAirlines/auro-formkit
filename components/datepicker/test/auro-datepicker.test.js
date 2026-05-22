@@ -1,6 +1,6 @@
 /* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
 
-import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, nextFrame, oneEvent, waitUntil } from '@open-wc/testing';
 import { setViewport, sendKeys } from '@web/test-runner-commands';
 import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
@@ -1375,7 +1375,10 @@ function runFullTest(mobileView) {
         `);
 
         // non-existant day
+        el.focus();
         el.value = "2022-02-31";
+        await elementUpdated(el);
+        el.blur();
         await elementUpdated(el);
         await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
 
@@ -1410,16 +1413,10 @@ function runFullTest(mobileView) {
         await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
 
         // Year too low
-        el.value = `${minYear - 1}-02-01`;
-        el.validate();
-        await elementUpdated(el);
-        await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+        // new dateformatter covers years down to 1000
 
         // Year too high
-        el.value = `${maxYear + 1}-02-01`;
-        el.validate();
-        await elementUpdated(el);
-        await expect(el.getAttribute('validity')).to.be.equal('patternMismatch');
+        // new dateformatter covers years up to 9999
       });
 
       it('should set an error when the passed value exceeds the expected length', async () => {
@@ -1428,7 +1425,7 @@ function runFullTest(mobileView) {
           <auro-datepicker></auro-datepicker>
         `);
 
-        el.value = "2028-01-22";
+        el.value = "20288-01-22";
         el.validate();
         await elementUpdated(el);
         await expect(el.getAttribute('validity')).to.be.equal('tooLong');

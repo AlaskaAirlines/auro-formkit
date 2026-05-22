@@ -280,6 +280,10 @@ export class AuroCalendarCell extends LitElement {
    * @returns {void}
    */
   setDateSlotName() {
+    if (!this.day || !this.day.date) {
+      this.dateStr = null;
+      return;
+    }
     const date = new Date(this.day.date * 1000);
 
     let month = date.getMonth() + 1;

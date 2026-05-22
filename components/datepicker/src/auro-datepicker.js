@@ -1383,7 +1383,7 @@ export class AuroDatePicker extends AuroElement {
 
     // This resets the datepicker when the minDate is set to a new value that is
     // a later date than the current value date
-    if (changedProperties.has('minDate')) {
+    if (changedProperties.has('minDate') && this.minDate) {
       if (this.minDate && dateFormatter.isValidDate(this.minDate)) {
         const minDateMonth = this.minDateObject.getMonth() + 1;
         const minDateYear = this.minDateObject.getFullYear();
@@ -1396,7 +1396,7 @@ export class AuroDatePicker extends AuroElement {
           this.calendarRenderUtil.updateCentralDate(this, this.minDateObject);
         }
 
-        if (this.valueObject) {
+        if (!changedProperties.has('value') && this.valueObject) {
           if (this.minDateObject > this.valueObject) {
             this.value = undefined;
 
@@ -1436,7 +1436,7 @@ export class AuroDatePicker extends AuroElement {
         }
       }
 
-      if (this.maxDate && this.valueObject) {
+      if (this.maxDate && !changedProperties.has('value') && this.valueObject) {
         if (this.maxDateObject < this.valueObject) {
           this.value = undefined;
 

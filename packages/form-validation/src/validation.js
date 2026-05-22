@@ -5,6 +5,7 @@
 
 /* eslint-disable complexity, max-depth, no-extra-parens, no-magic-numbers, line-comment-position, no-inline-comments, prefer-destructuring */
 import { validDateStr, dateAndFormatMatch } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
+import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
 
 export default class AuroFormValidation {
@@ -223,17 +224,10 @@ export default class AuroFormValidation {
           return;
         }
 
-        // Validate that the date passed was the correct format
-        if (!dateAndFormatMatch(elem.inputElement.value, elem.format)) {
+        // Validate that the date passed was the correct format and is a valid date
+        if (elem.value && !dateFormatter.isValidDate(elem.inputElement.value, elem.format)) {
           elem.validity = 'patternMismatch';
           elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
-          return;
-        }
-
-        // Validate that the date passed was a valid date
-        if (!validDateStr(elem.inputElement.value, elem.format)) {
-          elem.validity = 'patternMismatch';
-          elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Entered';
           return;
         }
 
