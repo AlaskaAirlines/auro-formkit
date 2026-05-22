@@ -505,14 +505,31 @@ export class AuroMenu extends AuroElement {
           option.removeChild(displayValueEl);
         }
 
-        // Update with spacers and matchWord
-        const nestingSpacerBundle = [...nested].map(() => this.nestingSpacer).join('');
+        // Update with spacers and matchWord using safe DOM manipulation
+        const originalText = option.textContent;
+        option.textContent = '';
 
-        option.innerHTML = nestingSpacerBundle +
-          option.textContent.replace(
-            regexWord,
-            (match) => `<strong>${match}</strong>`
-          );
+        for (let i = 0; i < nested.length; i++) {
+          const spacer = document.createElement('span');
+          spacer.className = 'nestingSpacer';
+          option.appendChild(spacer);
+        }
+
+        const matches = [...originalText.matchAll(regexWord)];
+        let lastIndex = 0;
+        for (const m of matches) {
+          if (m.index > lastIndex) {
+            option.appendChild(document.createTextNode(originalText.slice(lastIndex, m.index)));
+          }
+          const strong = document.createElement('strong');
+          strong.textContent = m[0];
+          option.appendChild(strong);
+          lastIndex = m.index + m[0].length;
+        }
+        if (lastIndex < originalText.length) {
+          option.appendChild(document.createTextNode(originalText.slice(lastIndex)));
+        }
+
         if (displayValueEl) {
           option.append(displayValueEl);
         }
