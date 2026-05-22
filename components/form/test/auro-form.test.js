@@ -948,6 +948,61 @@ function runFullTest(mobileView) {
       await expect(resetButton.hasAttribute('disabled')).to.be.false;
     });
 
+    // Regression: matches the "Disabling a field after user edits" example.
+    // The toggle handler does BOTH `field.setAttribute('disabled', '')` AND
+    // `toggle.textContent = 'Enable field'`. The textContent assignment is a
+    // childList mutation on a non-form-element direct child of the form,
+    // which fires the form's nested-child MutationObserver and re-runs
+    // initializeState(). That re-init must not flip the form back to the
+    // initial state — `_initialValues` capture preserves the original empty
+    // value, so the now-typed value stays tainted.
+    it('keeps the reset button enabled when a sibling button disables the edited field and changes its own text', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="comment"></auro-input>
+          <br />
+          <auro-button id="toggle" type="button">Disable field</auro-button>
+          <auro-button type="reset">Reset</auro-button>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      const inputEl = el.querySelector('auro-input[name="comment"]');
+      const toggle = el.querySelector('#toggle');
+      await inputEl.updateComplete;
+      await toggle.updateComplete;
+
+      // Simulate a real keystroke through the inner native input.
+      const nativeInput = inputEl.shadowRoot.querySelector('input');
+      nativeInput.focus();
+      nativeInput.value = 'hello';
+      nativeInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+      await el.updateComplete;
+      nativeInput.blur();
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      const [resetButton] = el.resetElements;
+      await expect(el.isInitialState).to.be.false;
+      await expect(resetButton.hasAttribute('disabled')).to.be.false;
+
+      // Mirror the example's toggle handler exactly — both the attribute
+      // change on the field AND the textContent change on the toggle itself.
+      toggle.addEventListener('click', () => {
+        inputEl.setAttribute('disabled', '');
+        toggle.textContent = 'Enable field';
+      });
+      toggle.click();
+      await elementUpdated(el);
+      await el.updateComplete;
+      await el.updateComplete;
+
+      await expect(el.isInitialState).to.be.false;
+      await expect(resetButton.hasAttribute('disabled')).to.be.false;
+    });
+
     // Programmatic submit on a pre-filled valid form should fire the
     // submit event — gating on raw validity (not the public gated getter)
     // so the form isn't locked out by `isInitialState=true`.
