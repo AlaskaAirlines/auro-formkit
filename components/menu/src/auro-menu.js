@@ -873,16 +873,9 @@ export class AuroMenu extends AuroElement {
       this.rootMenu = false;
     }
 
-    if (this.rootMenu) {
-      this.initializeMenu();
-    } else if (this.noCheckmark) {
-      this.updateItemsState(new Map([
-        [
-          'noCheckmark',
-          true
-        ]
-      ]));
-    }
+    // Nested menus must also reinitialize so items, level, role="group", and aria-label refresh on content changes.
+    // Root-specific attributes (listbox/root/aria-multiselectable) remain gated by `rootMenu` inside initializeMenu.
+    this.initializeMenu();
   }
 
   /**
