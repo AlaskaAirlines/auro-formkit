@@ -1,8 +1,8 @@
 /* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
 
-import { fixture, html, expect, elementUpdated, nextFrame, oneEvent, waitUntil } from '@open-wc/testing';
+import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport, sendKeys } from '@web/test-runner-commands';
-import { minDay, minMonth, minYear, maxDay, maxMonth, maxYear } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
+import { minDay, minMonth, maxDay, maxMonth } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities';
 import designTokens from '@aurodesignsystem/design-tokens/dist/legacy/auro-classic/JSONVariablesFlat.json' with { type: 'json' };
 import '../src/registered.js';
 import { dateSlotFixture, popoverSlotFixture, inDialogFixture, inDrawerFixture } from './testFixtures.js';

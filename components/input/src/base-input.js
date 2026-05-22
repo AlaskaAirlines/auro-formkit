@@ -821,11 +821,10 @@ export default class BaseInput extends AuroElement {
         if (!this.shadowRoot.contains(this.getActiveElement())) {
           this.validate();
         }
-      }
+      } else if (this.value && !this.valueObject) {
+        // invalid format or date value
+        // run validate to update validity and error message
 
-      // invalid format or date value
-      // run validate to update validity and error message
-      if (this.value && !this.valueObject) {
         this.validate();
       }
 

@@ -273,13 +273,13 @@ export class AuroCalendar extends RangeDatepicker {
 
       if (!this.isFullscreen) {
         // On Desktop start the calendar at the central date if it exists, then minDate and finally the current date.
-        if (this.centralDate) {
+        if (this.centralDateObject) {
           dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.centralDateObject));
 
           if (!dateMatches) {
             this.firstRenderedMonth = this.util.convertDateToFirstOfMonth(this.centralDateObject);
           }
-        } else if (this.minDate) {
+        } else if (this.minDateObject) {
           dateMatches = this.util.datesMatch(this.firstRenderedMonth, this.util.convertDateToFirstOfMonth(this.minDateObject));
 
           if (!dateMatches) {
