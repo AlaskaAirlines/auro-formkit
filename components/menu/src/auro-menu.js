@@ -278,8 +278,23 @@ export class AuroMenu extends AuroElement {
       if (!this.value) {
         return undefined;
       }
+      // Defensive: `value` is declared as String, but consumers may assign arrays or other
+      // types programmatically. Normalize without throwing so render/update never hard-crashes.
+      if (Array.isArray(this.value)) {
+        return this.value;
+      }
+      if (typeof this.value !== 'string') {
+        return [String(this.value)];
+      }
       if (this.value.startsWith("[")) {
-        return JSON.parse(this.value);
+        // Malformed JSON (e.g. a literal string that happens to start with "[") falls back
+        // to a single-item array rather than throwing during render.
+        try {
+          const parsed = JSON.parse(this.value);
+          return Array.isArray(parsed) ? parsed : [this.value];
+        } catch {
+          return [this.value];
+        }
       }
       return [this.value];
     }
