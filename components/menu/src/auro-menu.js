@@ -387,8 +387,9 @@ export class AuroMenu extends AuroElement {
         this.initItems();
       }
 
-      // Handle null/undefined case
-      if (this.value === undefined || this.value === null) {
+      // Handle null/undefined/empty case — empty/whitespace strings clear selection
+      // consistently with selectByValue(''), and avoid downstream `.includes('')` matches.
+      if (this.value === undefined || this.value === null || (typeof this.value === 'string' && this.value.trim() === '')) {
         this.clearSelection();
       } else {
         let newSelected = null;
