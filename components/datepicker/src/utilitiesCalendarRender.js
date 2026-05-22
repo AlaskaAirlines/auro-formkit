@@ -15,7 +15,7 @@ export class UtilitiesCalendarRender {
    */
   updateCentralDate(elem, date) {
     // if date is already iso formatted string, we can skip the conversion and validation step
-    if (typeof date === 'string' && !dateFormatter.isValidDate(date)) {
+    if (typeof date === 'string' && dateFormatter.isValidDate(date)) {
       elem.centralDate = date;
       return;
     }

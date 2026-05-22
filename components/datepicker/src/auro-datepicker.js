@@ -33,7 +33,7 @@ import snowflakeColors from "./styles/snowflake/color-css.js";
 import './auro-calendar.js';
 
 import { AuroDropdown } from '@aurodesignsystem/auro-dropdown';
-import { AuroInput } from '@aurodesignsystem/auro-input';
+import { AuroInput, AuroInputUtil } from '@aurodesignsystem/auro-input';
 import { AuroHelpText } from "@aurodesignsystem/auro-helptext";
 import formkitVersion from '@aurodesignsystem/version';
 
@@ -1092,16 +1092,16 @@ export class AuroDatePicker extends AuroElement {
         return;
       }
 
-      if (!this.contains(document.activeElement)) {
+      if (!this.matches(':focus-within')) {
         this.validate();
       }
     });
 
-    if (this.hasAttribute('value') && this.getAttribute('value').length > 0) {
+    if (this.valueObject) {
       this.calendar.dateFrom = this.valueObject.getTime();
     }
 
-    if (this.hasAttribute('valueEnd') && this.getAttribute('valueEnd').length > 0) {
+    if (this.valueEndObject) {
       this.calendar.dateTo = this.valueEndObject.getTime();
     }
   }
@@ -1156,7 +1156,7 @@ export class AuroDatePicker extends AuroElement {
    * @param {Number} time - Unix timestamp to be converted to a date.
    * @returns {void}
    */
-  handleCellClick(time) {
+  async handleCellClick(time) {
     this.cellClickActive = true;
 
     // convertWcTimeToDate now returns an ISO string directly
@@ -1164,18 +1164,16 @@ export class AuroDatePicker extends AuroElement {
 
     let onEndValue = false;
     if (dateFormatter.isValidDate(newDate)) {
-      if (this.range) {
-        const isValueValid = this.value && dateFormatter.isValidDate(this.value);
-        const isValueEndValid = this.valueEnd && dateFormatter.isValidDate(this.valueEnd);
 
-        if (isValueValid && !isValueEndValid) {
+      if (this.range) {
+        if (this.valueObject && !this.valueEndObject) {
           // verify the date is after this.value to insure we are setting a proper range
           if (dateFormatter.stringToDateInstance(newDate) >= this.valueObject) {
             onEndValue = true;
           }
-        } else if (isValueValid && isValueEndValid) {
+        } else if (this.valueObject && this.valueEndObject) {
           // both dateTo and dateFrom are valid, then reset dateEnd
-          this.valueEnd = '';
+          this.inputList[1].value = undefined;
         }
       }
 
@@ -1325,13 +1323,16 @@ export class AuroDatePicker extends AuroElement {
         this.inputList[0].value = this.value || '';
       }
 
+      // wait input to update before
+      await this.inputList[0].updateComplete;
+
       this.setHasValue();
     }
 
     if (changedProperties.has('valueEnd') && this.inputList[1]) {
 
       // update the calendar
-      if (this.valueEnd && dateFormatter.isValidDate(this.valueEnd)) {
+      if (this.valueEndObject) {
         this.calendar.dateTo = this.convertToWcValidTime(this.valueEndObject);
         this.calendarRenderUtil.updateCentralDate(this, this.valueEndObject);
       } else {
@@ -1350,6 +1351,7 @@ export class AuroDatePicker extends AuroElement {
       }
 
       await this.inputList[1].updateComplete;
+
       this.validate();
       this.setHasValue();
     }
@@ -1378,7 +1380,7 @@ export class AuroDatePicker extends AuroElement {
     // This resets the datepicker when the minDate is set to a new value that is
     // a later date than the current value date
     if (changedProperties.has('minDate') && this.minDate) {
-      if (this.minDate && dateFormatter.isValidDate(this.minDate)) {
+      if (this.minDateObject) {
         const minDateMonth = this.minDateObject.getMonth() + 1;
         const minDateYear = this.minDateObject.getFullYear();
 
@@ -1911,8 +1913,8 @@ export class AuroDatePicker extends AuroElement {
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.toLabel" name="bib.fullscreen.toLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.fromLabel" name="bib.fullscreen.fromLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-        <span slot="bib.fullscreen.fromStr">${this.value || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
-        ${this.range ? html`<span slot="bib.fullscreen.toStr">${this.valueEnd || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
+        <span slot="bib.fullscreen.fromStr">${AuroInputUtil.toFormattedValue(this.value, this.valueObject, this.format) || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
+        ${this.range ? html`<span slot="bib.fullscreen.toStr">${AuroInputUtil.toFormattedValue(this.valueEnd, this.valueEndObject, this.format) || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
       </auro-formkit-calendar>
     `;
   }

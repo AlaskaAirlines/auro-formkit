@@ -952,8 +952,8 @@ function runFullTest(mobileView) {
         await expect(el.minDate).to.equal('2022-03-22');
         await expect(el.getAttribute('validity')).to.be.equal('valid');
 
-        input.value = "2022-03-18";
         el.focus();
+        input.value = "2022-03-18";
         el.blur();
         await elementUpdated(el);
 
@@ -1953,6 +1953,7 @@ function runFullTest(mobileView) {
         const innerInput = el.inputList[0];
 
         // Simulate typing a date into the inner input
+        innerInput.focus();
         innerInput.value = '2025-03-15';
         innerInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         await elementUpdated(el);
@@ -1965,6 +1966,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // Type the start date
+        el.inputList[0].focus();
         el.inputList[0].value = '2025-03-15';
         el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         await elementUpdated(el);
@@ -1972,6 +1974,7 @@ function runFullTest(mobileView) {
         expect(el.value).to.equal('2025-03-15');
 
         // Type the end date
+        el.inputList[1].focus();
         el.inputList[1].value = '2025-03-20';
         el.inputList[1].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         await elementUpdated(el);

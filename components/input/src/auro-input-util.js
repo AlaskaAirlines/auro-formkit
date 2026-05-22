@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers, no-unused-vars */
 
 import { dateFormatter } from "@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs";
+import { AuroInputUtilities } from "./utilities.js";
 
 /**
  * Converts an ISO date string (yyyy-mm-dd) to a display string in the given format.
@@ -38,4 +39,5 @@ function formatISODate(isoStr, format) {
 export const AuroInputUtil = {
   toISOFormatString: dateFormatter.toISOFormatString,
   formatISODate,
+  toFormattedValue: AuroInputUtilities.prototype.toFormattedValue.bind(new AuroInputUtilities()),
 };
