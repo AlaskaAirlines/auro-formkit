@@ -195,7 +195,9 @@ export class AuroForm extends LitElement {
 
   /**
    * Whether a given element is currently disabled. Disabled controls are excluded
-   * from submission, validity, and initial-state checks (per the HTML spec).
+   * from submission, validity, and initial-state checks per the HTML spec
+   * (section 4.10.19.2 "Enabling and disabling form controls":
+   * https://www.w3.org/TR/2011/WD-html5-20110113/association-of-controls-and-forms.html).
    *
    * Implementation note: we deliberately read only the attribute. Every Auro
    * form element in `formElementTags` declares `disabled` with `reflect: true`,
@@ -214,6 +216,8 @@ export class AuroForm extends LitElement {
 
   /**
    * Whether the tracked form element registered under `name` is currently disabled.
+   * See `_isDisabled` for the HTML-spec rationale behind excluding disabled
+   * controls from form state.
    *
    * Performance note: this is called once per `formState` key per read of
    * `value` / `validity` / `isInitialState`, producing O(n²) work where n is

@@ -517,6 +517,30 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await expect(defaultPrevented).to.be.true;
       });
+
+      it('does not submit when Enter is pressed on a disabled form element', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="field" value="hello" disabled></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        let submitFired = false;
+        el.addEventListener('submit', () => {
+          submitFired = true;
+        });
+
+        const inputEl = el.querySelector('auro-input[name="field"]');
+        inputEl.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Enter',
+          bubbles: true,
+          composed: true,
+        }));
+        await elementUpdated(el);
+
+        expect(submitFired).to.be.false;
+      });
     });
   });
 
