@@ -497,10 +497,14 @@ export class AuroForm extends LitElement {
       required: element.hasAttribute('required'),
     };
 
-    // Capture the initial (default) value once per name. The `??=` guard
-    // preserves the original capture across rename/slot/reset cycles so
-    // `_setInitialState` can detect user edits as `current !== initial`.
-    this._initialValues[targetName] ??= this.formState[targetName].value;
+    // Capture the initial (default) value once per name. Use `in` rather
+    // than `??=` so a captured `null` (an empty field at first sight) is
+    // preserved across rename/slot/reset cycles — `??=` would treat the
+    // stored `null` as nullish and overwrite it with whatever value the
+    // field has now, defeating the `current !== initial` taint check.
+    if (!(targetName in this._initialValues)) {
+      this._initialValues[targetName] = this.formState[targetName].value;
+    }
 
     this._elements.push(element);
   }
