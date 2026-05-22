@@ -257,11 +257,13 @@ function runFullTest(mobileView) {
       expect(el.resetElements).to.have.length(1);
     });
 
-    it('should disable buttons when form is in initial state', async () => {
+    it('should disable buttons when an empty required form has nothing to submit or reset', async () => {
+      // Empty required field: nothing for the user to submit (constraint
+      // violated) and nothing for reset to restore — both buttons disabled.
       const el = await fixture(html`
         <auro-form>
-          <auro-input name="tester"></auro-input>
-          <auro-button type="submit">Reset</auro-button>
+          <auro-input name="tester" required></auro-input>
+          <auro-button type="submit">Submit</auro-button>
           <auro-button type="reset">Reset</auro-button>
         </auro-form>
       `);
@@ -280,14 +282,22 @@ function runFullTest(mobileView) {
     it('should enable reset buttons when form is not in initial state', async () => {
       const el = await fixture(html`
         <auro-form>
-          <auro-input name="tester" value="some value"></auro-input>
+          <auro-input name="tester"></auro-input>
           <auro-button type="reset">Reset</auro-button>
         </auro-form>
       `);
 
       const [button] = el.resetElements;
-
       await elementUpdated(el);
+
+      // Form must transition out of initial state via a user edit; a
+      // pre-filled value on its own no longer counts (matches HTML's
+      // `dirtyValueFlag` semantics).
+      const inputEl = el.querySelector('auro-input[name="tester"]');
+      inputEl.value = 'user-typed';
+      inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+
       await expect(el.isInitialState).to.be.false;
       await expect(button.hasAttribute("disabled")).to.be.false;
     });
@@ -295,14 +305,19 @@ function runFullTest(mobileView) {
     it('should enable submit buttons when form is valid', async () => {
       const el = await fixture(html`
         <auro-form>
-          <auro-input name="tester" value="some value"></auro-input>
+          <auro-input name="tester"></auro-input>
           <auro-button type="submit">Submit</auro-button>
         </auro-form>
       `);
 
       const [button] = el.submitElements;
-
       await elementUpdated(el);
+
+      const inputEl = el.querySelector('auro-input[name="tester"]');
+      inputEl.value = 'user-typed';
+      inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+
       await expect(el.isInitialState).to.be.false;
       await expect(el.validity).to.equal('valid');
       await expect(button.hasAttribute("disabled")).to.be.false;
@@ -349,7 +364,7 @@ function runFullTest(mobileView) {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="tester" value="some value"></auro-input>
-          <auro-button type="reset">Submit</auro-button>
+          <auro-button type="reset">Reset</auro-button>
         </auro-form>
       `);
 
@@ -564,7 +579,10 @@ function runFullTest(mobileView) {
         await el.updateComplete;
         await expect(el.formState).to.deep.equal(expectedFormState);
         await expect(el.value).to.deep.equal(expectedFormValue);
-        await expect(el.validity).to.equal("valid");
+        // Form-level validity is `null` at first render even though the
+        // preset value is valid — the form is in its initial state and
+        // stays quiet until the user interacts.
+        await expect(el.validity).to.equal(null);
       });
 
       it('should update values when input events are emitted by form elements', async () => {
@@ -764,7 +782,8 @@ function runFullTest(mobileView) {
     });
 
     // A disabled+required field must not block submission — that combination
-    // is excluded from validity per the HTML spec.
+    // is excluded from validity per the HTML spec, so the form is treated as
+    // valid for submit-button enablement.
     it('enables the submit button when a disabled+required field is the only blocker', async () => {
       const el = await fixture(html`
         <auro-form>
@@ -773,11 +792,6 @@ function runFullTest(mobileView) {
           <auro-button type="submit">Submit</auro-button>
         </auro-form>
       `);
-
-      const enabledEl = el.querySelector('auro-input[name="enabledField"]');
-      enabledEl.focus();
-      enabledEl.value = 'hello';
-      enabledEl.blur();
       await elementUpdated(el);
       await el.updateComplete;
 
@@ -785,10 +799,11 @@ function runFullTest(mobileView) {
       await expect(submitButton.hasAttribute('disabled')).to.be.false;
     });
 
-    // A non-initial form should snap back to initial state if the only thing
-    // making it dirty is a now-disabled field. Verifies the attribute observer
-    // and `_setInitialState` predicate work together.
-    it('returns to initial state when the only dirty field becomes disabled', async () => {
+    // Disabling a field that the user has already edited must NOT clear the
+    // form's dirty state — matching HTML's `dirtyValueFlag` semantics.
+    // `_setInitialState` compares each field's current value against its
+    // captured initial value rather than short-circuiting on disabled.
+    it('remains non-initial when a dirty field becomes disabled', async () => {
       const el = await fixture(html`
         <auro-form>
           <auro-input name="dirtyField"></auro-input>
@@ -806,7 +821,128 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
       await el.updateComplete;
 
+      await expect(el.isInitialState).to.be.false;
+    });
+
+    // A field whose current value equals its declared default (no user
+    // interaction has occurred) does not taint `isInitialState`. Confirms the
+    // `_initialValues` capture vs `formState.value` comparison.
+    it('considers a default-value field as initial state at first render', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="preset" value="default-value"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
       await expect(el.isInitialState).to.be.true;
+    });
+
+    // After reset, the form should report as initial regardless of any prior
+    // user edits. element.reset() restores defaults, and `_initialValues`
+    // persists across `initializeState` so current === initial again.
+    it('returns to initial state after reset of a user-edited field', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="field"></auro-input>
+        </auro-form>
+      `);
+      const inputEl = el.querySelector('auro-input[name="field"]');
+      inputEl.value = 'typed';
+      inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+      expect(el.isInitialState).to.be.false;
+
+      el.reset();
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      await expect(el.isInitialState).to.be.true;
+    });
+
+    // Submit-button enablement bypasses the validity gate so a pre-filled
+    // valid form is submittable at first render — covers the "logged-in
+    // user with pre-populated data, just clicks Submit to continue" flow.
+    it('enables the submit button at first render when pre-filled with valid values', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="firstName" value="Bob" required></auro-input>
+          <auro-input name="lastName" value="Jones" required></auro-input>
+          <auro-button type="submit">Submit</auro-button>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      // Form is in its initial state (no user edits), but ready to submit.
+      await expect(el.isInitialState).to.be.true;
+      const [submitButton] = el.submitElements;
+      await expect(submitButton.hasAttribute('disabled')).to.be.false;
+    });
+
+    // Reset-button enablement is driven by whether any non-disabled field
+    // has a value or a captured default — a pre-filled form has both, so
+    // Reset is meaningful from the start.
+    it('enables the reset button at first render when pre-filled with default values', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="firstName" value="Bob"></auro-input>
+          <auro-button type="reset">Reset</auro-button>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      const [resetButton] = el.resetElements;
+      await expect(resetButton.hasAttribute('disabled')).to.be.false;
+    });
+
+    // Edge case: user edits a single field, then JS disables it. The form
+    // still remembers being dirty (Decision 2), so the Reset button must
+    // stay enabled even though the only field with a value is now disabled
+    // — otherwise the user would have no UI path back to initial state.
+    it('keeps the reset button enabled after the only edited field is disabled', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="x"></auro-input>
+          <auro-button type="reset">Reset</auro-button>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      const inputEl = el.querySelector('auro-input[name="x"]');
+      inputEl.value = 'hello';
+      inputEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      await elementUpdated(el);
+
+      const [resetButton] = el.resetElements;
+      await expect(resetButton.hasAttribute('disabled')).to.be.false;
+
+      inputEl.setAttribute('disabled', '');
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      await expect(el.isInitialState).to.be.false;
+      await expect(resetButton.hasAttribute('disabled')).to.be.false;
+    });
+
+    // Programmatic submit on a pre-filled valid form should fire the
+    // submit event — gating on raw validity (not the public gated getter)
+    // so the form isn't locked out by `isInitialState=true`.
+    it('fires submit event on a pre-filled valid form without prior user edit', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="firstName" value="Bob" required></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      const submitPromise = new Promise((res) => {
+        el.addEventListener('submit', (event) => res(event.detail.value));
+      });
+
+      el.submit();
+
+      const submittedValue = await submitPromise;
+      await expect(submittedValue).to.deep.equal({ firstName: 'Bob' });
     });
 
     // Renaming a tracked element at runtime previously left a stale key in

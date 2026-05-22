@@ -100,6 +100,17 @@ export class AuroForm extends LitElement {
      */
     this.mutationObservers = [];
 
+    /**
+     * Captured initial (default) value per field `name`. Populated on first
+     * sight of each name in `_addElementToState` and preserved across
+     * subsequent `initializeState` cycles (slot change, rename, reset) so
+     * `_setInitialState` can detect user edits as `current !== initial`,
+     * matching HTML's `dirtyValueFlag` semantics.
+     * @private
+     * @type {Record<string, string | number | boolean | string[] | null | undefined>}
+     */
+    this._initialValues = {};
+
     // Single subtree observer that watches `disabled` and `name` attribute
     // changes across all tracked form elements. The `name` watch is required:
     // without it, renaming a tracked field at runtime leaves a stale key in
@@ -285,26 +296,70 @@ export class AuroForm extends LitElement {
   }
 
   /**
+   * Raw constraint-validation check. Returns `true` when no enabled field
+   * has a validity error. Unlike the public `validity` getter, this does
+   * NOT gate on `isInitialState` — callers that need to make a decision
+   * based on the actual constraint state (submit-button enablement, the
+   * internal `submit()` gate) read this so a pre-filled valid form is
+   * correctly recognized as submittable at first render.
+   * @returns {boolean}
+   * @private
+   */
+  _isFormValid() {
+    return !Object.keys(this.formState).some((key) => {
+      if (this._isNameDisabled(key)) {
+        return false;
+      }
+
+      const formKey = this.formState[key];
+      // these are NOT extra parens
+      // eslint-disable-next-line no-extra-parens
+      return (formKey.validity !== 'valid' && formKey.required) || (formKey.validity !== 'valid' && formKey.value !== null);
+    });
+  }
+
+  /**
+   * Whether the reset button should be enabled. True when the form has
+   * diverged from its initial state (so the user can always return to
+   * defaults — even if the dirty value lives behind a now-disabled field),
+   * OR when any non-disabled field has a current value or captured initial
+   * value (covers pre-filled forms and user-cleared-back-to-empty cases).
+   * @returns {boolean}
+   * @private
+   */
+  _hasResetableState() {
+    // Form is dirty — always allow Reset, even if the dirt is on a field
+    // that has since been disabled. Without this branch, the user would
+    // have no UI path to return the form to its initial state.
+    if (!this._isInitialState) {
+      return true;
+    }
+
+    return Object.keys(this.formState).some((key) => {
+      if (this._isNameDisabled(key)) {
+        return false;
+      }
+      const current = this.formState[key].value;
+      const initial = this._initialValues[key] ?? null;
+      return current !== null || initial !== null;
+    });
+  }
+
+  /**
    * Infer validity status based on current formState.
+   *
+   * Validity stays `null` while the form is in its initial state — this is
+   * the "stay quiet until the user interacts" UX contract that consumers
+   * depend on to delay error indicators. Code that needs the raw
+   * constraint-validation result regardless of interaction (e.g.,
+   * submit-button enablement) should call `_isFormValid()` directly.
    * @private
    */
   _calculateValidity() {
     if (this.isInitialState) {
       this._validity = null;
     } else {
-      // go through validity states and return the first invalid state (if any)
-      const invalidKey = Object.keys(this.formState).
-        find((key) => {
-          if (this._isNameDisabled(key)) {
-            return false;
-          }
-
-          const formKey = this.formState[key];
-          // these are NOT extra parens
-          // eslint-disable-next-line no-extra-parens
-          return (formKey.validity !== 'valid' && formKey.required) || (formKey.validity !== 'valid' && formKey.value !== null);
-        });
-      this._validity = invalidKey ? 'invalid' : 'valid';
+      this._validity = this._isFormValid() ? 'valid' : 'invalid';
     }
   }
 
@@ -321,16 +376,29 @@ export class AuroForm extends LitElement {
 
   /**
    * Determines whether the form is in its initial (untouched) state and updates `_isInitialState` accordingly.
+   *
+   * A field is tainted when its current value differs from the initial value
+   * captured at first sight (see `_initialValues`). Disabled state is
+   * intentionally NOT short-circuited here — disabling a field that the user
+   * has already edited does not clear its dirty state, matching HTML's
+   * `dirtyValueFlag` semantics. A pre-filled disabled field whose value still
+   * equals its default attribute will not taint, because current === initial.
+   *
+   * Note: we deliberately do NOT treat `formState[key].validity !== null` as
+   * a taint signal. Auro form elements auto-validate on first render (so a
+   * default-valued field arrives with validity `'valid'`, not null), which
+   * would otherwise mark every form with a default value as non-initial.
+   * Value comparison is the canonical HTML-spec dirty signal.
    * @returns {void}
    * @private
    */
   _setInitialState() {
     const anyTainted = Object.keys(this.formState).some((key) => {
-      if (this._isNameDisabled(key)) {
-        return false;
-      }
-
-      return this.formState[key].validity !== null || this.formState[key].value !== null;
+      const initialValue = this._initialValues[key] ?? null;
+      const currentValue = this.formState[key].value;
+      const fieldValidity = this.formState[key].validity;
+      // eslint-disable-next-line no-extra-parens
+      return currentValue !== initialValue || (fieldValidity !== null && fieldValidity !== 'valid');
     });
 
     this._isInitialState = !anyTainted;
@@ -357,18 +425,26 @@ export class AuroForm extends LitElement {
    */
   setDisabledStateOnButtons() {
     this._resetElements.forEach((element) => {
-      if (this.isInitialState) {
-        element.setAttribute("disabled", "");
-      } else {
+      // Reset is meaningful whenever any non-disabled field has a current
+      // value OR a captured default value — i.e., whenever the click would
+      // either clear something or restore a default.
+      if (this._hasResetableState()) {
         element.removeAttribute("disabled");
+      } else {
+        element.setAttribute("disabled", "");
       }
     });
 
     this._submitElements.forEach((element) => {
-      if (this.isInitialState || this.validity !== "valid") {
-        element.setAttribute("disabled", "");
-      } else {
+      // Submit enablement reads raw validity (not the gated public getter)
+      // so a pre-filled valid form is submittable at first render — the
+      // public `validity` stays `null` during initial state to keep error
+      // indicators quiet until the user interacts, but the button decision
+      // bypasses that gate.
+      if (this._isFormValid()) {
         element.removeAttribute("disabled");
+      } else {
+        element.setAttribute("disabled", "");
       }
     });
   }
@@ -416,6 +492,11 @@ export class AuroForm extends LitElement {
       validity: element.validity || null,
       required: element.hasAttribute('required'),
     };
+
+    // Capture the initial (default) value once per name. The `??=` guard
+    // preserves the original capture across rename/slot/reset cycles so
+    // `_setInitialState` can detect user edits as `current !== initial`.
+    this._initialValues[targetName] ??= this.formState[targetName].value;
 
     this._elements.push(element);
   }
@@ -508,8 +589,10 @@ export class AuroForm extends LitElement {
     // Wait for validation to complete and formState to update
     await this.updateComplete;
 
-    // Only dispatch submit event if form is valid
-    if (this.validity === 'valid') {
+    // Gate on raw constraint-validation rather than the public `validity`
+    // getter (which is `null` while in initial state). A pre-filled valid
+    // form should be submittable without a prior user edit.
+    if (this._isFormValid()) {
       this.dispatchEvent(new CustomEvent('submit', {
         bubbles: true,
         composed: true,
@@ -698,6 +781,7 @@ export class AuroForm extends LitElement {
     this._attributeObserver?.disconnect();
     this.mutationObservers.forEach((observer) => observer.disconnect());
     this.mutationObservers = [];
+    this._initialValues = {};
 
     super.disconnectedCallback();
   }
