@@ -474,11 +474,12 @@ export class AuroMenu extends AuroElement {
       return;
     }
 
-    // Handle noCheckmark propagation to all menus and options
-    if (changedProperties.has('noCheckmark') && this.noCheckmark) {
-      // Update both menus and options
+    // Handle noCheckmark propagation to all menus and options.
+    // Propagate in both directions so toggling back to false also clears nested elements
+    // (otherwise nested menus/options would stay stuck in no-checkmark mode).
+    if (changedProperties.has('noCheckmark')) {
       this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]').forEach((element) => {
-        element.noCheckmark = true;
+        element.noCheckmark = this.noCheckmark;
       });
     }
 
