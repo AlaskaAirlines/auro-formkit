@@ -221,16 +221,16 @@ export class AuroMenuOption extends AuroElement {
    */
   handleClick() {
     if (!this.disabled) {
-      const newSelected = !this.selected;
-
+      // Pure event emitter: the parent menu owns selection state and will
+      // update `selected` via setSelected(). Toggling here desyncs the option
+      // UI from auro-menu.optionSelected (e.g. single-select re-click on the
+      // already-selected option would flip the option off while the menu keeps it on).
       this.dispatchEvent(new CustomEvent('auroMenuOption-click', {
         bubbles: true,
         cancelable: false,
         composed: true,
         detail: this
       }));
-
-      this.selected = newSelected;
     }
   }
 
