@@ -738,8 +738,22 @@ export class AuroForm extends LitElement {
       return;
     }
 
-    const renameOccurred = relevant.some((mutation) => mutation.attributeName === 'name');
-    if (renameOccurred) {
+    const renameMutations = relevant.filter((mutation) => mutation.attributeName === 'name');
+    if (renameMutations.length > 0) {
+      // Migrate each renamed field's captured initial value from the old key
+      // to the new key before `initializeState()` re-runs `_addElementToState`.
+      // Without this, the new-name lookup in `_initialValues` would miss, the
+      // field's current (possibly user-edited) value would be captured as the
+      // new initial, and the form would incorrectly flip back to its initial
+      // state. The old key would also leak in `_initialValues` indefinitely.
+      renameMutations.forEach((mutation) => {
+        const oldName = mutation.oldValue;
+        const newName = mutation.target.getAttribute('name');
+        if (oldName && newName && oldName !== newName && oldName in this._initialValues) {
+          this._initialValues[newName] = this._initialValues[oldName];
+          delete this._initialValues[oldName];
+        }
+      });
       // initializeState() rebuilds formState from scratch (re-keying any
       // renamed element) and also dispatches `change` + refreshes button state.
       // We also re-run _attachEventListeners() because elements that previously
@@ -773,6 +787,7 @@ export class AuroForm extends LitElement {
     this._attributeObserver.observe(this, {
       attributes: true,
       subtree: true,
+      attributeOldValue: true,
       attributeFilter: [
         'disabled',
         'name'
