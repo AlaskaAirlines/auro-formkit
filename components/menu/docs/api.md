@@ -4,23 +4,23 @@ The `auro-menu` element provides users a way to select from a list of options.
 
 ## Properties
 
-| Property                | Attribute        | Modifiers | Type                              | Default     | Description                                      |
-|-------------------------|------------------|-----------|-----------------------------------|-------------|--------------------------------------------------|
-| `currentLabel`          |                  | readonly  | `string`                          |             |                                                  |
-| `disabled`              | `disabled`       |           | `boolean`                         |             | When true, the entire menu and all options are disabled; |
-| `hasLoadingPlaceholder` |                  |           | `boolean`                         |             | Indicates whether the menu has a loadingIcon or loadingText to render when in a loading state. |
-| `index`                 |                  |           | `number`                          |             |                                                  |
-| `layout`                |                  |           | `string`                          |             |                                                  |
-| `loading`               | `loading`        |           | `boolean`                         | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
-| `matchWord`             | `matchword`      |           | `string`                          | "undefined" | Specifies a string used to highlight matched string parts in options. |
-| `multiSelect`           | `multiselect`    |           | `boolean`                         | false       | When true, the selected option can be multiple options. |
-| `noCheckmark`           | `nocheckmark`    |           | `boolean`                         | false       | When true, selected option will not show the checkmark. |
-| `optionActive`          | `optionactive`   |           | `object`                          | "undefined" | Specifies the current active menuOption.         |
-| `optionSelected`        | `optionSelected` |           | `HTMLElement\|Array<HTMLElement>` | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
-| `options`               |                  | readonly  | `HTMLElement[]`                   |             |                                                  |
-| `selectedOption`        |                  | readonly  | `HTMLElement \| null`             |             | Gets the first selected option, or null if none. |
-| `selectedOptions`       |                  | readonly  | `HTMLElement[]`                   |             | Gets the currently selected options as an array. |
-| `value`                 | `value`          |           | `string`                          | "undefined" | Value selected for the component.                |
+| Property                | Attribute        | Modifiers | Type                  | Default     | Description                                      |
+|-------------------------|------------------|-----------|-----------------------|-------------|--------------------------------------------------|
+| `currentLabel`          |                  | readonly  | `string`              |             |                                                  |
+| `disabled`              | `disabled`       |           | `boolean`             |             | When true, the entire menu and all options are disabled. |
+| `hasLoadingPlaceholder` |                  | readonly  | `boolean`             |             | Getter for loading placeholder state.            |
+| `index`                 |                  |           | `number`              |             |                                                  |
+| `layout`                |                  |           | `string`              |             |                                                  |
+| `loading`               | `loading`        |           | `boolean`             | false       | When true, displays a loading state using the loadingIcon and loadingText slots if provided. |
+| `matchWord`             | `matchword`      |           | `string`              | "undefined" | Specifies a string used to highlight matched string parts in options. |
+| `multiSelect`           | `multiselect`    |           | `boolean`             | false       | When true, the selected option can be multiple options. |
+| `noCheckmark`           | `nocheckmark`    |           | `boolean`             | false       | When true, selected option will not show the checkmark. |
+| `optionActive`          | `optionactive`   |           | `object`              | "undefined" | Specifies the current active menuOption.         |
+| `optionSelected`        | `optionSelected` |           | `object`              | "undefined" | An array of currently selected menu options, type `HTMLElement` by default. In multi-select mode, `optionSelected` is an array of HTML elements. |
+| `options`               |                  | readonly  | `HTMLElement[]`       |             |                                                  |
+| `selectedOption`        |                  | readonly  | `HTMLElement \| null` |             | Gets the first selected option, or null if none. |
+| `selectedOptions`       |                  | readonly  | `HTMLElement[]`       |             | Gets the currently selected options as an array. |
+| `value`                 | `value`          |           | `string`              | "undefined" | The value of the selected option. In multi-select mode, this is a JSON stringified array of selected option values. |
 
 ## Methods
 
@@ -60,14 +60,14 @@ The `auro-menuoption` element provides users a way to define a menu option.
 
 | Property      | Attribute     | Modifiers | Type      | Default | Description                                      |
 |---------------|---------------|-----------|-----------|---------|--------------------------------------------------|
-| `disabled`    | `disabled`    |           | `Boolean` | false   | When true specifies that the menuoption is disabled. |
+| `disabled`    | `disabled`    |           | `boolean` | false   |                                                  |
 | `iconTag`     |               |           |           |         |                                                  |
 | `isActive`    |               | readonly  | `boolean` |         | Returns whether the menu option is currently active and selectable. |
 | `layout`      |               |           | `string`  |         |                                                  |
-| `noCheckmark` | `noCheckmark` |           | `Boolean` | false   | When true, selected option will not show the checkmark. |
+| `noCheckmark` | `noCheckmark` |           | `boolean` | false   |                                                  |
 | `noMatch`     | `nomatch`     |           | `boolean` | false   | When true, marks this option as the "no matching results" placeholder shown by combobox<br />when the user's input does not match any available options. |
-| `selected`    | `selected`    |           | `Boolean` | false   | Specifies that an option is selected.            |
-| `value`       | `value`       |           | `String`  |         | Specifies the value to be sent to a server.      |
+| `selected`    | `selected`    |           | `boolean` | false   |                                                  |
+| `value`       | `value`       |           | `string`  |         |                                                  |
 
 ## Methods
 
@@ -87,6 +87,6 @@ The `auro-menuoption` element provides users a way to define a menu option.
 
 ## Slots
 
-| Name | Description                                      |
-|------|--------------------------------------------------|
-|      | Specifies text for an option, but is not the value. |
+| Name      | Description                                |
+|-----------|--------------------------------------------|
+| `default` | The default slot for the menu option text. |
