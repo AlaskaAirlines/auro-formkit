@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
-/* eslint-disable no-extra-parens, lit/binding-positions, lit/no-invalid-html, no-underscore-dangle, curly, max-lines */
+/* eslint-disable lit/binding-positions, lit/no-invalid-html */
 
 // ---------------------------------------------------------------------
 import { html } from 'lit/static-html.js';
@@ -20,9 +20,6 @@ import iconVersion from './iconVersion.js';
 
 import checkmarkIcon from '@alaskaairux/icons/dist/icons/interface/checkmark-sm.mjs';
 import { classMap } from 'lit/directives/class-map.js';
-import { MenuContext } from './auro-menu.context.js';
-import { ContextConsumer } from '@lit/context';
-import { dispatchMenuEvent } from './auro-menu-utils.js';
 
 let menuOptionIdCounter = 0;
 
@@ -33,36 +30,11 @@ let menuOptionIdCounter = 0;
  * @slot default - The default slot for the menu option text.
  *
  * @event auroMenuOption-mouseover - Notifies that this option has been hovered over.
+ * @event auroMenuOption-click - Notifies that this option has been clicked.
  */
 export class AuroMenuOption extends AuroElement {
-
-  /**
-   * This will register this element with the browser.
-   * @param {string} [name="auro-menuoption"] - The name of the element that you want to register.
-   *
-   * @example
-   * AuroMenuOption.register("custom-menuoption") // this will register this element to <custom-menuoption/>
-   *
-   */
-  static register(name = "auro-menuoption") {
-    AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroMenuOption);
-  }
-
-  /**
-   * Returns whether the menu option is currently active and selectable.
-   * An option is considered active if it is not hidden, not disabled, and not static.
-   * @returns {boolean} True if the option is active, false otherwise.
-   */
-  get isActive() {
-    return !this.hasAttribute('hidden') &&
-      !this.disabled &&
-      !this.hasAttribute('static');
-  }
-
   constructor() {
     super();
-
-    this.bindEvents();
 
     /**
      * @private
@@ -88,27 +60,37 @@ export class AuroMenuOption extends AuroElement {
     /**
      * @private
      */
-    this.runtimeUtils = new AuroLibraryRuntimeUtils();
-
-    // Initialize context-related properties
-    this.menuService = null;
-    this.unsubscribe = null;
+    this.tabIndex = -1;
 
     /**
      * @private
      */
-    this.handleMenuChange = this.handleMenuChange.bind(this);
+    this.runtimeUtils = new AuroLibraryRuntimeUtils();
+
+    this.addEventListener('click', this.handleClick.bind(this));
   }
 
   static get properties() {
     return {
       ...super.properties,
-
-      /**
-       * When true, disables the menu option.
-       */
+      noCheckmark: {
+        type: Boolean,
+        reflect: true
+      },
+      selected: {
+        type: Boolean,
+        reflect: true
+      },
       disabled: {
         type: Boolean,
+        reflect: true
+      },
+      value: {
+        type: String,
+        reflect: true
+      },
+      tabIndex: {
+        type: Number,
         reflect: true
       },
 
@@ -121,75 +103,13 @@ export class AuroMenuOption extends AuroElement {
       },
 
       /**
-       * @private
-       */
-      layout: {
-        type: String
-      },
-
-      /**
-       * Allows users to set a unique key for the menu option for specified option selection. If no key is provided, the value property will be used.
-       */
-      key: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * @private
-       */
-      menuService: {
-        type: Object,
-        state: true
-      },
-
-      /**
-       * @private
-       */
-      matchWord: {
-        type: String,
-        state: true
-      },
-
-      /**
-       * @private
-       */
-      noCheckmark: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * When true, marks this option as the "no matching results" placeholder shown by combobox when the user's input does not match any available options. Enables distinct styling and prevents the option from being treated as a selectable match.
+       * When true, marks this option as the "no matching results" placeholder shown by combobox
+       * when the user's input does not match any available options.
        */
       noMatch: {
         type: Boolean,
         reflect: true,
         attribute: 'nomatch'
-      },
-
-      /**
-       * Specifies that an option is selected.
-       */
-      selected: {
-        type: Boolean,
-        reflect: true
-      },
-
-      /**
-       * Specifies the tab index of the menu option.
-       */
-      tabIndex: {
-        type: Number,
-        reflect: true
-      },
-
-      /**
-       * Specifies the value to be sent to a server.
-       */
-      value: {
-        type: String,
-        reflect: true
       },
     };
   }
@@ -202,41 +122,44 @@ export class AuroMenuOption extends AuroElement {
     ];
   }
 
+  /**
+   * This will register this element with the browser.
+   * @param {string} [name="auro-menuoption"] - The name of element that you want to register to.
+   *
+   * @example
+   * AuroMenuOption.register("custom-menuoption") // this will register this element to <custom-menuoption/>
+   *
+   */
+  static register(name = "auro-menuoption") {
+    AuroLibraryRuntimeUtils.prototype.registerComponent(name, AuroMenuOption);
+  }
+
+  /**
+   * Returns whether the menu option is currently active and selectable.
+   * @returns {boolean}
+   */
+  get isActive() {
+    return !this.hasAttribute('hidden') &&
+      !this.disabled &&
+      !this.hasAttribute('static');
+  }
+
   connectedCallback() {
     super.connectedCallback();
 
-    // Add the tag name as an attribute if it is different than the component name
-    // Add this step soon as this node gets attached to the DOM to avoid racing condition with menu's value setting logic.
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
-
-    // Set up context consumption in connectedCallback
-    this._contextConsumer = new ContextConsumer(this, {
-      context: MenuContext,
-      callback: this.attachTo.bind(this),
-      subscribe: true
-    });
-
-    // Establish the key property as early as possible.
-    // When a framework (e.g. Svelte) inserts the element into the DOM before
-    // setting its `value` property, both `getAttribute('value')` and
-    // `getAttribute('key')` return null here. Setting `this.key = null`
-    // would block the fallback in `updated()` that assigns key from the
-    // value property (the guard checked `=== undefined`). Only assign key
-    // if at least one source attribute is actually present so that the
-    // `updated()` fallback can run when the value property arrives later.
-    const valueAttr = this.getAttribute('value');
-    const keyAttr = this.getAttribute('key');
-    const resolvedKey = keyAttr !== null ? keyAttr : valueAttr;
-    if (resolvedKey !== null) {
-      this.key = resolvedKey;
-    }
   }
 
   firstUpdated() {
-    // Add the tag name as an attribute if it is different than the component name
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
 
-    // Generate unique ID if not already set (required for aria-activedescendant)
+    if (!this.hasAttribute('size')) {
+      this.size = this.parentElement.getAttribute('size') || 'sm';
+    }
+    if (!this.hasAttribute('shape')) {
+      this.shape = this.parentElement.getAttribute('shape') || 'box';
+    }
+
     if (!this.id) {
       menuOptionIdCounter += 1;
       this.id = `menuoption-${menuOptionIdCounter}`;
@@ -258,16 +181,8 @@ export class AuroMenuOption extends AuroElement {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    // Update aria-selected attribute if selected changed
     if (changedProperties.has('selected')) {
-
-      // Update aria-selected attribute
       this.setAttribute('aria-selected', this.selected.toString());
-
-      // Update menu service selection state if this isn't an internal update
-      if (this.internalUpdateInProgress !== true && this.menuService) {
-        this.menuService[this.selected ? 'selectOption' : 'deselectOption'](this);
-      }
     }
 
     if (changedProperties.has('disabled')) {
@@ -277,229 +192,46 @@ export class AuroMenuOption extends AuroElement {
         this.removeAttribute('aria-disabled');
       }
     }
+  }
 
-    if (changedProperties.has('active')) {
-      this.updateActiveClasses();
-    }
+  handleMenuChange() {
+    // no-op: menu owns state in the distributed architecture
+  }
 
-    // Update text highlight if matchWord changed
-    if (changedProperties.has('matchWord')) {
-      this.updateTextHighlight();
-    }
+  setSelected(value) {
+    this.selected = value;
+  }
 
-    // Set the key to be the passed value if no key is provided.
-    // Loose equality (== null) is intentional: it catches both null AND
-    // undefined. When a framework (e.g. Svelte, React) inserts the element
-    // before setting its value property, connectedCallback skips key
-    // assignment because both attributes are null at that point. The Lit
-    // property default for `key` is undefined (not null), so strict
-    // === null would miss the case and the fallback would never run.
-    if (changedProperties.has('value') && this.key == null) { // eslint-disable-line eqeqeq, no-eq-null
-      this.key = this.value;
+  updateActive(active) {
+    this.active = active;
+    if (active) {
+      this.classList.add('active');
+    } else {
+      this.classList.remove('active');
     }
   }
 
-  disconnectedCallback() {
-    if (this.menuService) {
-      this.menuService.unsubscribe(this.handleMenuChange);
-      this.menuService.removeMenuOption(this);
-    }
+  attachTo() {
+    // no-op: menu owns state in the distributed architecture
   }
 
   /**
-   * Sets up event listeners for user interaction with the menu option.
-   * This function enables click and mouse enter events to trigger selection and highlighting logic.
-   */
-  bindEvents() {
-    this.addEventListener('click', this.handleClick.bind(this));
-    this.addEventListener('mouseenter', this.handleMouseEnter.bind(this));
-  }
-
-  /**
-   * Attaches this menu option to a menu service and subscribes to its events.
-   * This method enables the option to participate in menu selection and highlighting logic.
-   * @param {Object} service - The menu service instance to attach to.
-   */
-  attachTo(service) {
-    if (!service) {
-      return;
-    }
-    this.menuService = service;
-    this.menuService.addMenuOption(this);
-    this.menuService.subscribe(this.handleMenuChange);
-  }
-
-  /**
-   * Handles changes from the menu service and updates the option's state.
-   * This function synchronizes the option's properties and selection/highlight state with menu events.
-   * @param {Object} event - The event object from the menu service.
-   */
-  handleMenuChange(event) {
-
-    // Ignore events without a type or property
-    if (!event || (!event.type && !event.property)) {
-      return;
-    }
-
-    // Update reactive properties based on event type
-    if (event.property && Object.keys(AuroMenuOption.properties).includes(event.property)) {
-      this[event.property] = event.value;
-    }
-
-    // Handle highlight changes
-    if (event.type === 'highlightChange') {
-      const isActive = event.option === this;
-      this.active = isActive;
-      this.updateActiveClasses();
-    }
-
-    if (event.type === 'stateChange') {
-      const isSelected = event.selectedOptions.includes(this);
-      this.setInternalSelected(isSelected);
-    }
-  }
-
-  /**
-   * Updates the internal selected state of the menu option bypassing 'updated' and triggers custom events if selected.
-   * This function ensures the option's selection state is synchronized with menu logic and notifies listeners.
-   * @param {boolean} isSelected - Whether the option should be marked as selected.
-   */
-  setInternalSelected(isSelected) {
-    this.internalUpdateInProgress = true;
-    this.selected = isSelected;
-
-    // Fire custom event if selected
-    if (isSelected) {
-      this.handleCustomEvent();
-    }
-
-    setTimeout(() => {
-      this.internalUpdateInProgress = false;
-    }, 0);
-  }
-
-  /**
-   * Sets the selected state of the menu option.
-   * This function updates whether the option is currently selected.
-   * @param {boolean} isSelected - Whether the option should be marked as selected.
-   * @deprecated Simply modify the `selected` property directly instead.
-   */
-  setSelected(isSelected) {
-    this.selected = isSelected;
-  }
-
-  /**
-   * Updates the active state and visual highlighting of the menu option.
-   * This function toggles the option's active status and applies or removes the active CSS class.
-   * @param {boolean} isActive - Whether the option should be marked as active.
-   * @deprecated Simply modify the `active` property directly instead.
-   */
-  updateActive(isActive) {
-
-    // Set active state
-    this.active = isActive;
-    this.updateActiveClasses();
-  }
-
-  /**
-   * Updates the CSS class for the menu option based on its active state.
-   * This function adds or removes the 'active' class to visually indicate the option's active status.
-   * @private
-   */
-  updateActiveClasses() {
-    // Update class based on active state
-    if (this.active) this.classList.add('active');
-    else this.classList.remove('active');
-  }
-
-
-  /**
-   * Updates the visual highlighting of text within the menu option based on the current match word.
-   * This function highlights matching text segments and manages nested spacers for display formatting.
-   * @private
-   */
-  updateTextHighlight() {
-
-    // Regex for matchWord if needed
-    let regexWord = null;
-
-    if (this.matchWord && this.matchWord.length) {
-      const escapedWord = this.matchWord.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
-      regexWord = new RegExp(escapedWord, 'giu');
-    }
-
-    // Update text highlighting if matchWord changed
-    if (regexWord &&
-      this.isActive && !this.hasAttribute('persistent')) {
-      const nested = this.querySelectorAll('.nestingSpacer');
-
-      const displayValueEl = this.querySelector('[slot="displayValue"]');
-      if (displayValueEl) {
-        this.removeChild(displayValueEl);
-      }
-
-      // Create nested spacers
-      const nestingSpacerBundle = [...nested].map(() => this.nestingSpacer).join('');
-
-      // Update with spacers and matchWord
-      this.innerHTML = nestingSpacerBundle +
-        this.textContent.replace(
-          regexWord,
-          (match) => `<strong>${match}</strong>`
-        );
-      if (displayValueEl) {
-        this.append(displayValueEl);
-      }
-    }
-  }
-
-  /**
-   * Handles click events on the menu option, toggling its selected state.
-   * This function dispatches a click event and updates selection if the option is not disabled.
+   * Handles click events on the menu option.
    * @private
    */
   handleClick() {
-    if (!this.disabled && !this.menuService?.disabled) {
-      this.dispatchClickEvent();
-      this.selected = !this.selected;
-    }
-  }
-
-  /**
-   * Handles mouse enter events to highlight the menu option.
-   * This function updates the menu service to set this option as the currently highlighted item if not disabled.
-   * @private
-   */
-  handleMouseEnter() {
     if (!this.disabled) {
-      this.menuService.setHighlightedOption(this);
-    }
-  }
+      const newSelected = !this.selected;
 
-  /**
-   * Dispatches custom events defined for this menu option.
-   * This function notifies listeners when a custom event is triggered by the option.
-   * @private
-   */
-  handleCustomEvent() {
-    if (this.event) {
-      dispatchMenuEvent(this, this.event, { option: this });
-      dispatchMenuEvent(this, 'auroMenu-customEventFired', { option: this });
-    }
-  }
+      this.dispatchEvent(new CustomEvent('auroMenuOption-click', {
+        bubbles: true,
+        cancelable: false,
+        composed: true,
+        detail: this
+      }));
 
-  /**
-   * Dispatches a click event for this menu option.
-   * This function notifies listeners that the option has been clicked.
-   * @private
-   */
-  dispatchClickEvent() {
-    this.dispatchEvent(new CustomEvent('auroMenuOption-click', {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-      detail: this
-    }));
+      this.selected = newSelected;
+    }
   }
 
   /**
@@ -541,8 +273,8 @@ export class AuroMenuOption extends AuroElement {
     return html`
       <div class="${classes}">
         ${this.selected && !this.noCheckmark
-        ? this.generateIconHtml(checkmarkIcon.svg)
-        : undefined}
+          ? this.generateIconHtml(checkmarkIcon.svg)
+          : undefined}
         <slot></slot>
       </div>
     `;
