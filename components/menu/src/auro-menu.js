@@ -505,27 +505,29 @@ export class AuroMenu extends AuroElement {
           option.removeChild(displayValueEl);
         }
 
-        // Update with spacers and matchWord using safe DOM manipulation
+        // Build highlighted content via DOM APIs rather than innerHTML so any
+        // `<`, `>`, or `&` in the option text renders literally (prevents XSS).
         const originalText = option.textContent;
         option.textContent = '';
 
-        for (let i = 0; i < nested.length; i++) {
+        nested.forEach(() => {
           const spacer = document.createElement('span');
           spacer.className = 'nestingSpacer';
           option.appendChild(spacer);
-        }
+        });
 
         const matches = [...originalText.matchAll(regexWord)];
         let lastIndex = 0;
-        for (const m of matches) {
-          if (m.index > lastIndex) {
-            option.appendChild(document.createTextNode(originalText.slice(lastIndex, m.index)));
+        matches.forEach((match) => {
+          const [matchText] = match;
+          if (match.index > lastIndex) {
+            option.appendChild(document.createTextNode(originalText.slice(lastIndex, match.index)));
           }
           const strong = document.createElement('strong');
-          strong.textContent = m[0];
+          strong.textContent = matchText;
           option.appendChild(strong);
-          lastIndex = m.index + m[0].length;
-        }
+          lastIndex = match.index + matchText.length;
+        });
         if (lastIndex < originalText.length) {
           option.appendChild(document.createTextNode(originalText.slice(lastIndex)));
         }
