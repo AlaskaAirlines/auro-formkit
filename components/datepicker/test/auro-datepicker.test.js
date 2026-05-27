@@ -402,7 +402,7 @@ function runFullTest(mobileView) {
     describe('calendarStartDate', () => {
       it('should hide the prev month button when viewing the first available month', async () => {
         const date = new Date();
-        const fullDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`; // Get current date in yyyy-mm-dd format
+        const fullDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; // Get current date in yyyy-mm-dd format
 
         const el = await fixture(html`
           <auro-datepicker calendarStartDate="${fullDate}"></auro-datepicker>
@@ -3258,6 +3258,29 @@ function runFullTest(mobileView) {
       await listener;
 
       expect(calendar.dateTo).to.equal(undefined);
+    });
+    // convertWcTimeToDate expects calendar.dateFrom and dateTo to be in Unix seconds, so
+    it('should initialise calendar.dateFrom in Unix seconds (not ms) when value is preset', async () => {
+      const el = await fixture(html`
+        <auro-datepicker value="2025-06-15"></auro-datepicker>
+      `);
+      await elementUpdated(el);
+
+      // convertWcTimeToDate multiplies by 1000, so if calendar.dateFrom was wrongly
+      // set in milliseconds the round-trip would yield a date ~56000 years in the future.
+      const roundTripped = el.convertWcTimeToDate(el.calendar.dateFrom);
+      await expect(roundTripped).to.equal('2025-06-15');
+    });
+
+    // convertWcTimeToDate expects calendar.dateFrom and dateTo to be in Unix seconds, so
+    it('should initialise calendar.dateFrom and dateTo in Unix seconds when range values are preset', async () => {
+      const el = await fixture(html`
+        <auro-datepicker range value="2025-06-10" valueEnd="2025-06-20"></auro-datepicker>
+      `);
+      await elementUpdated(el);
+
+      await expect(el.convertWcTimeToDate(el.calendar.dateFrom)).to.equal('2025-06-10');
+      await expect(el.convertWcTimeToDate(el.calendar.dateTo)).to.equal('2025-06-20');
     });
   });
 

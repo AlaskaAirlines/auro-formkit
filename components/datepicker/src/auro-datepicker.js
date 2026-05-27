@@ -1098,11 +1098,11 @@ export class AuroDatePicker extends AuroElement {
     });
 
     if (this.valueObject) {
-      this.calendar.dateFrom = this.valueObject.getTime();
+      this.calendar.dateFrom = this.convertToWcValidTime(this.valueObject);
     }
 
     if (this.valueEndObject) {
-      this.calendar.dateTo = this.valueEndObject.getTime();
+      this.calendar.dateTo = this.convertToWcValidTime(this.valueEndObject);
     }
   }
 
