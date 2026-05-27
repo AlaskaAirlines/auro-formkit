@@ -1173,6 +1173,7 @@ export class AuroDatePicker extends AuroElement {
           }
         } else if (this.valueObject && this.valueEndObject) {
           // both dateTo and dateFrom are valid, then reset dateEnd
+          // set input's value as the callback restores this.valueEnd to the old value
           this.inputList[1].value = undefined;
         }
       }

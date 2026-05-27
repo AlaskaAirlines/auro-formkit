@@ -224,7 +224,7 @@ export default class AuroFormValidation {
         }
 
         // Validate that the date passed was the correct format and is a valid date
-        if (elem.value && !dateFormatter.isValidDate(elem.inputElement.value, elem.format)) {
+        if (elem.value && !elem.valueObject) {
           elem.validity = 'patternMismatch';
           elem.errorMessage = elem.setCustomValidityPatternMismatch || elem.setCustomValidity || 'Invalid Date Format Entered';
           return;

@@ -402,7 +402,7 @@ function runFullTest(mobileView) {
     describe('calendarStartDate', () => {
       it('should hide the prev month button when viewing the first available month', async () => {
         const date = new Date();
-        const fullDate = date.toISOString().split('T')[0]; // Get current date in yyyy-mm-dd format
+        const fullDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`; // Get current date in yyyy-mm-dd format
 
         const el = await fixture(html`
           <auro-datepicker calendarStartDate="${fullDate}"></auro-datepicker>
@@ -590,7 +590,7 @@ function runFullTest(mobileView) {
         // value property stays ISO
         await expect(el.value).to.equal('1999-08-15');
         // input displays in the configured format
-        await expect(getInput(el, 0).value).to.equal('1999-08-15');
+        await expect(getInput(el, 0).inputElement.value).to.equal('1999/08/15');
         await expect(el.getAttribute('validity')).to.be.equal('valid');
       });
 
@@ -2296,12 +2296,12 @@ function runFullTest(mobileView) {
       const calendar = el.calendar;
 
       // Set dateFrom so the first input condition passes (value already matches)
-      const dateFromTimestamp = new Date('01/15/2024').getTime() / 1000;
+      const dateFromTimestamp = new Date('2024/01/15').getTime() / 1000;
       calendar.dateFrom = dateFromTimestamp;
       el.inputList[0].value = el.convertWcTimeToDate(dateFromTimestamp);
 
       // Set dateTo on calendar with a value that differs from inputList[1]
-      const dateToTimestamp = new Date('01/20/2024').getTime() / 1000;
+      const dateToTimestamp = new Date('2024/01/20').getTime() / 1000;
       calendar.dateTo = dateToTimestamp;
       el.inputList[1].value = '';
 
