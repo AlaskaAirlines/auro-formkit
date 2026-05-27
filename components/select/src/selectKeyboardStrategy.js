@@ -1,5 +1,6 @@
 /* eslint-disable new-cap */
 import { navigateArrow } from '@aurodesignsystem/utils';
+import { getEnabledOptions } from './selectUtils.js';
 
 export const selectKeyboardStrategy = {
   ArrowDown(component, evt, ctx) {
@@ -47,7 +48,8 @@ export const selectKeyboardStrategy = {
     }
     evt.preventDefault();
     evt.stopPropagation();
-    const lastOption = [...component.menu.options].reverse().find((option) => !option.disabled);
+    // `pop()` is safe here: getEnabledOptions returns a fresh filtered array.
+    const lastOption = getEnabledOptions(component.menu).pop();
     if (lastOption) {
       component.menu.updateActiveOption(lastOption);
     }
@@ -69,7 +71,7 @@ export const selectKeyboardStrategy = {
     }
     evt.preventDefault();
     evt.stopPropagation();
-    const firstOption = component.menu.options.find((option) => !option.disabled);
+    const [firstOption] = getEnabledOptions(component.menu);
     if (firstOption) {
       component.menu.updateActiveOption(firstOption);
     }

@@ -20,6 +20,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
+import { getEnabledOptions } from './selectUtils.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -575,7 +576,7 @@ export class AuroSelect extends AuroElement {
             this.menu.updateActiveOption(this.optionSelected[0]);
           } else {
             // If no activeOption has yet to be set, then make the first enabled option active by default
-            const firstActive = this.menu.options.find((option) => !option.disabled);
+            const [firstActive] = getEnabledOptions(this.menu);
             this.menu.updateActiveOption(firstActive);
           }
         }
