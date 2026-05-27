@@ -47,7 +47,7 @@ export const selectKeyboardStrategy = {
     }
     evt.preventDefault();
     evt.stopPropagation();
-    const lastOption = [...component.menu.menuService.menuOptions].reverse().find((option) => !option.disabled);
+    const lastOption = [...component.menu.options].reverse().find((option) => !option.disabled);
     if (lastOption) {
       component.menu.updateActiveOption(lastOption);
     }
@@ -69,7 +69,7 @@ export const selectKeyboardStrategy = {
     }
     evt.preventDefault();
     evt.stopPropagation();
-    const firstOption = component.menu.menuService.menuOptions.find((option) => !option.disabled);
+    const firstOption = component.menu.options.find((option) => !option.disabled);
     if (firstOption) {
       component.menu.updateActiveOption(firstOption);
     }
