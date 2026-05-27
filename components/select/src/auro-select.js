@@ -809,13 +809,13 @@ export class AuroSelect extends AuroElement {
     this.updateOptionPositions();
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
-    this.menu.addEventListener("auroMenu-deselectPrevented", () => {
-      this.hideBib();
-    });
-
     this.menu.addEventListener("auroMenu-selectValueFailure", () => {
       this.value = undefined;
       this.optionSelected = this.multiSelect ? [] : undefined;
+      // The trigger label is rendered imperatively into #value, so a property
+      // change alone won't clear it. Refresh so stale text doesn't linger when
+      // a runtime value change fails to match any option.
+      this.updateDisplayedValue();
     });
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
