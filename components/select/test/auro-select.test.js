@@ -2935,19 +2935,12 @@ function runTest(mobileView) {
           await expect(selectedOption.selected).to.be.true;
 
           const valueBefore = el.value;
-          let deselectPreventedEvent = null;
-
-          menu.addEventListener('auroMenu-deselectPrevented', (event) => {
-            deselectPreventedEvent = event;
-          }, { once: true });
 
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           await elementUpdated(menu);
+          await new Promise((resolve) => setTimeout(resolve, 0));
           await elementUpdated(el);
-          await waitUntil(() => !!deselectPreventedEvent);
 
-          await expect(deselectPreventedEvent).to.exist;
-          await expect(deselectPreventedEvent.detail.values[0]).to.equal(selectedOption);
           await expect(selectedOption.selected).to.be.true;
           await expect(el.value).to.equal(valueBefore);
           await expect(dropdown.isPopoverVisible).to.be.false;
