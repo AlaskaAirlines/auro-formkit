@@ -510,6 +510,30 @@ function runTest(mobileView) {
           await expect(el.optionSelected.length).to.equal(0);
         });
 
+        it('should not leak external mutation of select.optionSelected back into menu state', async () => {
+          // Regression: select.optionSelected must be a cloned array in multiselect
+          // mode so consumers mutating it cannot reach back into menu.optionSelected
+          // through a shared reference.
+          const el = await multiSelectFixture();
+          const menu = el.querySelector('auro-menu');
+
+          el.value = '["Apples", "Bananas"]';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          expect(Array.isArray(el.optionSelected)).to.be.true;
+          expect(el.optionSelected.length).to.equal(2);
+          expect(menu.optionSelected.length).to.equal(2);
+          expect(el.optionSelected).to.not.equal(menu.optionSelected);
+
+          // Mutate the consumer-visible array.
+          el.optionSelected.push('intruder');
+          el.optionSelected.pop();
+          el.optionSelected.splice(0, 1);
+
+          expect(menu.optionSelected.length, 'menu state must be insulated from external mutation').to.equal(2);
+        });
+
       });
 
       describe('name', () => {
