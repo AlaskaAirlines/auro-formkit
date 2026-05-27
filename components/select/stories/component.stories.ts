@@ -392,7 +392,7 @@ export const SelectFullscreenEnterOnCloseSelectsActiveOption: Story = {
     // synthetic events can't drive the full navigation chain. Set
     // the state directly to exercise the keyboard bridge logic.
     const firstOption = el.querySelector('auro-menuoption[value="stops"]');
-    el.menu.menuService.setHighlightedOption(firstOption);
+    el.menu.updateActiveOption(firstOption);
     bib.hasActiveDescendant = true;
 
     // Get the dialog element where the keyboard bridge listens
