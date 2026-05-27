@@ -15,6 +15,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
 | `calendarStartDate`               | `calendarStartDate`               |           | `string`                                         | "undefined"                                      | The first date that may be displayed in the calendar. |
 | `calendarStartDateObject`         |                                   | readonly  | `Date \| undefined`                              |                                                  |                                                  |
 | `centralDate`                     | `centralDate`                     |           | `string`                                         |                                                  | The date that determines the currently visible month. |
+| `centralDateObject`               |                                   | readonly  | `Date \| undefined`                              |                                                  |                                                  |
 | `disabled`                        | `disabled`                        |           | `boolean`                                        | false                                            | If set, disables the datepicker.                 |
 | `dvInputOnly`                     | `dvInputOnly`                     |           | `boolean`                                        | false                                            | If defined, the display value slot content will only mask the HTML5 input element. The input's label will not be masked. |
 | `error`                           | `error`                           |           | `string`                                         |                                                  | When defined, sets persistent validity to `customError` and sets the validation message to the attribute value. |
@@ -77,9 +78,8 @@ The `auro-datepicker` component provides users with a way to select a date or da
 | `auroDatePicker-monthChanged`   | `CustomEvent<{ month: any; year: any; numCalendars: any; }>` | Notifies that the visible calendar month(s) have changed. |
 | `auroDatePicker-newSlotContent` | `CustomEvent<any>`                               | Notifies that new slot content has been added to the datepicker. |
 | `auroDatePicker-toggled`        | `CustomEvent<{ expanded: any; }>`                | Notifies that the calendar dropdown has been opened/closed. |
-| `auroDatePicker-valueSet`       |                                                  | Notifies that the component has a new value set. |
 | `auroFormElement-validated`     |                                                  | Notifies that the component value(s) have been validated. |
-| `input`                         |                                                  |                                                  |
+| `input`                         | `CustomEvent<any>`                               |                                                  |
 
 ## Slots
 

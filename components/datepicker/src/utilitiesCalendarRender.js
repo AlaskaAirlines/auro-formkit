@@ -16,14 +16,14 @@ export class UtilitiesCalendarRender {
   updateCentralDate(elem, date) {
     // if date is already iso formatted string, we can skip the conversion and validation step
     if (typeof date === 'string' && dateFormatter.isValidDate(date)) {
-      elem.centralDate = date;
+      elem.centralDate = date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1-$2-01'); // Set to first of the month
       return;
     }
 
     // Accept Date objects, Unix timestamps (numbers), and ISO strings
-    const dateObj = date instanceof Date || typeof date === 'number' ? new Date(date) : dateFormatter.stringToDateInstance(date);
+    const dateObj = new Date(date);
 
-    if (!dateObj || isNaN(dateObj)) {
+    if (isNaN(dateObj)) {
       return;
     }
 

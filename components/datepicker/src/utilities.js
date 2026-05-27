@@ -53,21 +53,6 @@ export class AuroDatepickerUtilities {
   }
 
   /**
-   * Convert a date object or timestamp to an ISO string (yyyy-mm-dd).
-   * @param {Date|number} date - Date object or timestamp.
-   * @returns {string|undefined}
-   */
-  getDateAsString(date) {
-    if (!date) return undefined;
-    try {
-      const d = date instanceof Date ? date : new Date(date);
-      return dateFormatter.toISOFormatString(d);
-    } catch {
-      return undefined;
-    }
-  }
-
-  /**
    * Function to format a number to two digits.
    * @private
    * @param {Number} num - Number to format.

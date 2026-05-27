@@ -1156,7 +1156,7 @@ export class AuroDatePicker extends AuroElement {
    * @param {Number} time - Unix timestamp to be converted to a date.
    * @returns {void}
    */
-  async handleCellClick(time) {
+  handleCellClick(time) {
     this.cellClickActive = true;
 
     // convertWcTimeToDate now returns an ISO string directly
@@ -1173,8 +1173,9 @@ export class AuroDatePicker extends AuroElement {
           }
         } else if (this.valueObject && this.valueEndObject) {
           // both dateTo and dateFrom are valid, then reset dateEnd
-          // set input's value as the callback restores this.valueEnd to the old value
+          // set input's value directly as the callback restores this.valueEnd to the old value
           this.inputList[1].value = undefined;
+          // callback will set valueEnd to undefined
         }
       }
 
@@ -1260,12 +1261,11 @@ export class AuroDatePicker extends AuroElement {
     return this.validity !== undefined && this.validity !== 'valid';
   }
 
-  async updated(changedProperties) {
+  updated(changedProperties) {
     if (changedProperties.has('format')) {
       this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
     }
 
-    // referenceDates are ISO strings — no conversion needed
 
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
@@ -1324,9 +1324,6 @@ export class AuroDatePicker extends AuroElement {
         this.inputList[0].value = this.value || '';
       }
 
-      // wait input to update before
-      await this.inputList[0].updateComplete;
-
       this.setHasValue();
     }
 
@@ -1350,8 +1347,6 @@ export class AuroDatePicker extends AuroElement {
       if (this.inputList[1].value !== this.valueEnd) {
         this.inputList[1].value = this.valueEnd || '';
       }
-
-      await this.inputList[1].updateComplete;
 
       this.validate();
       this.setHasValue();
@@ -1901,8 +1896,6 @@ export class AuroDatePicker extends AuroElement {
         ?noRange="${!this.range}"
         .format="${this.format}"
         .monthFirst="${this.monthFirst}"
-        .min="${this.minDateObject ? this.convertToWcValidTime(this.minDateObject) : undefined}"
-        .max="${this.maxDateObject ? this.convertToWcValidTime(this.maxDateObject) : undefined}"
         .maxDate="${this.maxDate}"
         .minDate="${this.minDate}"
         .monthNames="${this.monthNames}"

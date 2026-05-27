@@ -11,7 +11,6 @@ export class CalendarUtilities {
    * Scroll the calendar month list to a given valid date if in mobile view.
    * @param {Object} elem - The calendar element.
    * @param {String} date - The date to scroll into view.
-   * @param {String} format - The format of the date.
    * @returns {void}
    */
   scrollMonthIntoView(elem, date) {
@@ -52,6 +51,12 @@ export class CalendarUtilities {
      * Hide/show the previous month button.
      */
 
+    // centralDateObject is required for both button visibility calculations — bail
+    // early if it isn't available yet (calendar not yet fully initialised).
+    if (!elem.centralDateObject) {
+      return;
+    }
+
     // 1. Compare the first rendered month to the earliest renderable month to determine if the previous month button should be hidden or shown
     if (!elem.hasAttribute('calendarStartDate') && !elem.hasAttribute('minDate')) {
       elem.showPrevMonthBtn = true;
@@ -79,7 +84,7 @@ export class CalendarUtilities {
     }
 
     // 2. Determine the last month currently rendered into the DOM.
-    let lastRenderedMonth = elem.centralDateObject;
+    let lastRenderedMonth = new Date(elem.centralDateObject);
 
     if (!elem.noRange) {
       lastRenderedMonth = new Date(lastRenderedMonth.setMonth(lastRenderedMonth.getMonth() + 1));
