@@ -844,9 +844,11 @@ export class AuroSelect extends AuroElement {
 
       this.value = this.menu.value;
 
+      // Clone the multiselect array so external mutation of select.optionSelected
+      // can't reach back into menu's internal state through a shared reference.
       let nextSelected = this.menu.optionSelected;
-      if (this.multiSelect && !Array.isArray(nextSelected)) {
-        nextSelected = [];
+      if (this.multiSelect) {
+        nextSelected = Array.isArray(nextSelected) ? [...nextSelected] : [];
       }
       this.optionSelected = nextSelected;
 
