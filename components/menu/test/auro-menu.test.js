@@ -1382,6 +1382,30 @@ function runFullTest(mobileView) {
         const event = await listener;
         expect(event).to.exist;
       });
+
+      it('should have already cleared optionSelected when the event fires', async () => {
+        // Synchronous listeners (e.g. auro-select's updateDisplayedValue) read
+        // menu.optionSelected to decide what to render. If the dispatch happens
+        // before the clear, listeners see the stale prior selection and re-render
+        // the old label.
+        const el = await defaultFixture();
+        const menuEl = el.querySelector('auro-menu');
+
+        // Establish a prior selection so the stale value is observable.
+        menuEl.value = 'option 1';
+        await elementUpdated(menuEl);
+        expect(menuEl.optionSelected, 'precondition: prior selection set').to.exist;
+
+        let optionSelectedAtDispatch = 'unread';
+        menuEl.addEventListener('auroMenu-selectValueFailure', () => {
+          optionSelectedAtDispatch = menuEl.optionSelected;
+        }, { once: true });
+
+        menuEl.value = 'non-existent-value';
+        await elementUpdated(menuEl);
+
+        expect(optionSelectedAtDispatch).to.be.undefined;
+      });
     });
 
     describe('auroMenu-selectValueReset', () => {

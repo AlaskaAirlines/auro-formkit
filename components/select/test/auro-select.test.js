@@ -968,6 +968,26 @@ function runTest(mobileView) {
           await expect(el.optionSelected).to.equal(selectedOption);
         });
 
+        it('should clear the trigger label when value changes to a non-matching string', async () => {
+          // Regression: a runtime value change with no matching option must not
+          // leave the previous selection's label rendered in the trigger.
+          const el = await defaultFixture();
+          const menu = el.querySelector('auro-menu');
+
+          el.value = 'Apples';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          const triggerValueEl = el.shadowRoot.querySelector('#value');
+          expect(triggerValueEl.textContent.trim(), 'precondition: trigger shows prior selection').to.equal('Apples');
+
+          el.value = 'non-existent-value';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          expect(triggerValueEl.textContent.trim()).to.equal('');
+        });
+
         it('should apply value from host attribute on initial render', async () => {
           const el = await fixture(html`
             <auro-select value="bar">
