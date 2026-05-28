@@ -42,7 +42,7 @@
 </thead>
 <tbody>
 <tr>
-<td rowspan="6">ArrowDown</td>
+<td rowspan="8">ArrowDown</td>
 <td rowspan="2">-</td>
 <td>Collapsed</td>
 <td>Trigger element</td>
@@ -56,7 +56,25 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Command</td>
+<td rowspan="2">Meta (Command / Windows key)</td>
+<td>Collapsed</td>
+<td>Trigger element</td>
+<td>
+            Opens the bib.
+<div class="note">
+<strong>Note:</strong> On Windows, <code>Meta</code> + arrow key combinations are reserved by the operating system for window management. Windows users should use <code>Control</code> or <code>Alt</code> instead.
+</div>
+</td>
+</tr>
+<tr>
+<td>Expanded</td>
+<td>Trigger element</td>
+<td>
+            Advances the <code>focused</code> option to the last enabled option in the list.
+</td>
+</tr>
+<tr>
+<td rowspan="2">Alt (Option)</td>
 <td>Collapsed</td>
 <td>Trigger element</td>
 <td>Opens the bib.</td>
@@ -69,10 +87,15 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Option</td>
+<td rowspan="2">Control</td>
 <td>Collapsed</td>
 <td>Trigger element</td>
-<td>Opens the bib.</td>
+<td>
+            Opens the bib.
+<div class="note">
+<strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Meta</code> or <code>Alt</code> instead.
+</div>
+</td>
 </tr>
 <tr>
 <td>Expanded</td>
@@ -82,7 +105,7 @@
 </td>
 </tr>
 <tr>
-<td rowspan="6">ArrowUp</td>
+<td rowspan="8">ArrowUp</td>
 <td rowspan="2">-</td>
 <td>Collapsed</td>
 <td>Trigger element</td>
@@ -96,7 +119,25 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Command</td>
+<td rowspan="2">Meta (Command / Windows key)</td>
+<td>Collapsed</td>
+<td>Trigger element</td>
+<td>
+            Opens the bib.
+<div class="note">
+<strong>Note:</strong> On Windows, <code>Meta</code> + arrow key combinations are reserved by the operating system for window management. Windows users should use <code>Control</code> or <code>Alt</code> instead.
+</div>
+</td>
+</tr>
+<tr>
+<td>Expanded</td>
+<td>Trigger element</td>
+<td>
+            Advances the <code>focused</code> option to the first enabled option in the list.
+</td>
+</tr>
+<tr>
+<td rowspan="2">Alt (Option)</td>
 <td>Collapsed</td>
 <td>Trigger element</td>
 <td>Opens the bib.</td>
@@ -109,10 +150,15 @@
 </td>
 </tr>
 <tr>
-<td rowspan="2">Option</td>
+<td rowspan="2">Control</td>
 <td>Collapsed</td>
 <td>Trigger element</td>
-<td>Opens the bib.</td>
+<td>
+            Opens the bib.
+<div class="note">
+<strong>Note:</strong> On macOS, <code>Control</code> + arrow key combinations are reserved by the operating system for Mission Control and Application Windows. macOS users should use <code>Meta</code> or <code>Alt</code> instead.
+</div>
+</td>
 </tr>
 <tr>
 <td>Expanded</td>
