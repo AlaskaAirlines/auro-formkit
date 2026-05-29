@@ -10,8 +10,8 @@
         "demo/*.min.js",
         "docTemplates/**",
         "docs/api.md",
-        "src/styles/*.css",
-        "src/styles/*-css.js"
+        "src/styles/**/*.css",
+        "src/styles/**/*-css.js"
       ]
     },
     "build:version": {
@@ -121,7 +121,9 @@
     },
     "@aurodesignsystem/auro-select#build": {
       "dependsOn": [
-        "@aurodesignsystem/auro-dropdown#build"
+        "@aurodesignsystem/auro-bibtemplate#build",
+        "@aurodesignsystem/auro-dropdown#build",
+        "@aurodesignsystem/auro-menu#build"
       ]
     },
     "test:framework": {
