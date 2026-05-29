@@ -34,8 +34,8 @@ export default {
   },
   testRunnerHtml: (testFramework) => `<html>
       <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/legacy/auro-classic/CSSCustomProperties.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aurodesignsystem/design-tokens@latest/dist/web/alaska.css">
+        <link rel="stylesheet" href="/node_modules/@aurodesignsystem/design-tokens/dist/legacy/auro-classic/CSSCustomProperties.css">
+        <link rel="stylesheet" href="/node_modules/@aurodesignsystem/design-tokens/dist/web/alaska.css">
       </head>
       <body>
         <script type="module" src="${testFramework}"></script>
