@@ -379,20 +379,17 @@ export class AuroForm extends LitElement {
   }
 
   /**
-   * Determines whether the form is in its initial (untouched) state and updates `_isInitialState` accordingly.
+   * Determines whether the form is in its initial (untouched) state.
    *
-   * A field is tainted when its current value differs from the initial value
-   * captured at first sight (see `_initialValues`). Disabled state is
-   * intentionally NOT short-circuited here — disabling a field that the user
-   * has already edited does not clear its dirty state, matching HTML's
-   * `dirtyValueFlag` semantics. A pre-filled disabled field whose value still
-   * equals its default attribute will not taint, because current === initial.
+   * A field is tainted if either:
+   *   - its value differs from the value captured on first render, OR
+   *   - its validity is failing (anything other than `null` or `'valid'`).
    *
-   * Note: we deliberately do NOT treat `formState[key].validity !== null` as
-   * a taint signal. Auro form elements auto-validate on first render (so a
-   * default-valued field arrives with validity `'valid'`, not null), which
-   * would otherwise mark every form with a default value as non-initial.
-   * Value comparison is the canonical HTML-spec dirty signal.
+   * Validity acts as a backup signal: it catches users who interact with a
+   * field without changing its value (e.g., focusing and blurring a required
+   * field). We skip `null` (not yet validated) and `'valid'` (the default
+   * after Auro's auto-validation on mount) because neither proves the user
+   * touched anything.
    * @returns {void}
    * @private
    */
