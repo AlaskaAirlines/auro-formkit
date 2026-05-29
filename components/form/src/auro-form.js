@@ -408,9 +408,7 @@ export class AuroForm extends LitElement {
     this._isInitialState = !anyTainted;
 
     this._resetElements.forEach((resetElement) => {
-      if (resetElement.hasAttribute("disabled")) {
-        resetElement.removeAttribute("disabled");
-      }
+      resetElement.disabled = false;
     });
   }
 
@@ -432,11 +430,7 @@ export class AuroForm extends LitElement {
       // Reset is meaningful whenever any non-disabled field has a current
       // value OR a captured default value — i.e., whenever the click would
       // either clear something or restore a default.
-      if (this._hasResetableState()) {
-        element.removeAttribute("disabled");
-      } else {
-        element.setAttribute("disabled", "");
-      }
+      element.disabled = !this._hasResetableState();
     });
 
     this._submitElements.forEach((element) => {
@@ -445,11 +439,7 @@ export class AuroForm extends LitElement {
       // public `validity` stays `null` during initial state to keep error
       // indicators quiet until the user interacts, but the button decision
       // bypasses that gate.
-      if (this._isFormValid()) {
-        element.removeAttribute("disabled");
-      } else {
-        element.setAttribute("disabled", "");
-      }
+      element.disabled = !this._isFormValid();
     });
   }
 
