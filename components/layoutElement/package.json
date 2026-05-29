@@ -29,7 +29,8 @@
     "build:watch": "nodemon",
     "bundler": "rollup -c node:@aurodesignsystem/config/internal.rollup",
     "clean": "rm -rf dist build",
-    "test": "wtr --config \"web-test-runner.config.mjs\" --coverage --port 7710",
+    "test": "wtr --config \"web-test-runner.config.mjs\" --coverage --port 7713",
+    "test:watch": "wtr --config \"web-test-runner.config.mjs\" --watch --port 7713",
     "types": "tsc --project tsconfig.json",
     "lint": "npm-run-all esLint",
     "esLint": "eslint \"./src/**/*.js\""
