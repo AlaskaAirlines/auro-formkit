@@ -21,5 +21,23 @@ jobs:
         ./custom-elements.json
         ./apps/**/node_modules
         ./apps/svelte-framework/.svelte-kit
+      test-matrix: |
+        [
+          {"name":"svelte-framework","command":"npm run test:framework:svelte"},
+          {"name":"react-framework","command":"npm run test:framework:react"},
+          {"name":"bibtemplate","command":"npx turbo run test --filter=@aurodesignsystem/auro-bibtemplate"},
+          {"name":"checkbox","command":"npx turbo run test --filter=@aurodesignsystem/auro-checkbox"},
+          {"name":"combobox","command":"npx turbo run test --filter=@aurodesignsystem/auro-combobox"},
+          {"name":"counter","command":"npx turbo run test --filter=@aurodesignsystem/auro-counter"},
+          {"name":"datepicker","command":"npx turbo run test --filter=@aurodesignsystem/auro-datepicker"},
+          {"name":"dropdown","command":"npx turbo run test --filter=@aurodesignsystem/auro-dropdown"},
+          {"name":"form","command":"npx turbo run test --filter=@aurodesignsystem/auro-form"},
+          {"name":"helptext","command":"npx turbo run test --filter=@aurodesignsystem/auro-helptext"},
+          {"name":"input","command":"npx turbo run test --filter=@aurodesignsystem/auro-input"},
+          {"name":"layout-element","command":"npx turbo run test --filter=@aurodesignsystem/auro-layout-element"},
+          {"name":"menu","command":"npx turbo run test --filter=@aurodesignsystem/auro-menu"},
+          {"name":"radio","command":"npx turbo run test --filter=@aurodesignsystem/auro-radio"},
+          {"name":"select","command":"npx turbo run test --filter=@aurodesignsystem/auro-select"}
+        ]
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
