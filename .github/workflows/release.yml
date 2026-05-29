@@ -13,6 +13,7 @@ jobs:
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     with:
+      additional-build-command: 'npx playwright install chromium'
       cache-dirs: |
         ./components/**/dist
         ./components/**/demo
@@ -25,6 +26,7 @@ jobs:
         ./custom-elements.json
         ./apps/**/node_modules
         ./apps/svelte-framework/.svelte-kit
+        ~/.cache/ms-playwright
       test-matrix: |
         [
           {"name":"svelte-framework","command":"npm run test:framework:svelte"},
