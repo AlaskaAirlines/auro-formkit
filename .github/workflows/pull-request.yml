@@ -16,8 +16,12 @@ jobs:
       cache-dirs: |
         ./components/**/dist
         ./components/**/demo
+        ./components/**/src/styles/**/*-css.js
+        ./components/**/src/styles/**/*.css
+        ./components/**/src/*Version.js
         ./components/**/node_modules
         ./node_modules
+        ./node_modules/.cache/turbo
         ./custom-elements.json
         ./apps/**/node_modules
         ./apps/svelte-framework/.svelte-kit
