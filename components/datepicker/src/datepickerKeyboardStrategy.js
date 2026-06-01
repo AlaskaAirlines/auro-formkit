@@ -5,25 +5,61 @@
 //   components/datepicker/docs/partials/keyboardBehavior.md
 //
 // Current behavior (transitional — full bib keyboard navigation is planned for a future iteration):
-//   - The bib opens and closes via pointer/touch interaction only.
 //   - Escape closes the bib and prevents the event from reaching parent containers.
+//   - Enter opens the bib when it is closed (trigger input only, not clear button).
+//   - Space opens the bib when it is closed (trigger input only, not clear button).
 //   - Tab uses the browser's default tabindex sequence across trigger controls.
-//   - Enter and Space do not open or close the bib.
 //
 // This file is an intentional placeholder for most keys. When datepicker bib keyboard navigation is
 // added, handlers should go here following the same strategy pattern used by
 // auro-select (selectKeyboardStrategy.js) and auro-combobox (comboboxKeyboardStrategy.js).
 export const datepickerKeyboardStrategy = {
-  Escape(component, evt) {
-    if (!component.dropdown || !component.dropdown.isPopoverVisible) {
+  Escape(component, evt, ctx) {
+    if (!ctx.isExpanded) {
       return;
     }
 
-    // Prevent the Escape key from bubbling up and closing any parent dialogs / drawers / popups.
-    // Because stopPropagation prevents the document-level floatingUI keydown handler from
-    // seeing this event, we must also close the dropdown explicitly.
+    // Stop propagation so parent containers (auro-dialog, auro-drawer)
+    // don't also react to Escape.
     evt.stopPropagation();
+    evt.preventDefault();
 
-    component.dropdown.hide();
+    component.hideBib();
+  },
+
+  Enter(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      return;
+    }
+
+    // Only open from the trigger input, not the clear button or other internal elements.
+    // evt.target is retargeted to the host in shadow DOM, so use composedPath()
+    // to find the real origin. The clear button is rendered with class "clearBtn".
+    const path = evt.composedPath();
+    if (path.some(el => el.classList?.contains('clearBtn'))) {
+      return;
+    }
+
+    evt.preventDefault();
+
+    component.dropdown.show();
+  },
+
+  ' '(component, evt, ctx) {
+    if (ctx.isExpanded) {
+      return;
+    }
+
+    // Only open from the trigger input, not the clear button or other internal elements.
+    // evt.target is retargeted to the host in shadow DOM, so use composedPath()
+    // to find the real origin. The clear button is rendered with class "clearBtn".
+    const path = evt.composedPath();
+    if (path.some(el => el.classList?.contains('clearBtn'))) {
+      return;
+    }
+
+    evt.preventDefault();
+
+    component.dropdown.show();
   },
 };

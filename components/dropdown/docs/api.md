@@ -10,6 +10,7 @@ The `auro-dropdown` element provides a way to place content in a bib that can be
 | `appearance`              | `appearance`              | `'default' \| 'inverse'`                         | "'default'"      | Defines whether the component will be on lighter or darker backgrounds. |
 | `autoPlacement`           | `autoPlacement`           | `boolean`                                        |                  | If declared, bib's position will be automatically calculated where to appear. |
 | `chevron`                 | `chevron`                 | `boolean`                                        |                  | If declared, the dropdown displays a chevron on the right. |
+| `desktopModal`            | `desktopModal`            | `boolean`                                        |                  | If declared, the dropdown will behave as a modal dialog when in a desktop viewport size. |
 | `disableEventShow`        | `disableEventShow`        | `boolean`                                        |                  | If declared, the dropdown will only show by calling the API .show() public method. |
 | `disableKeyboardHandling` | `disableKeyboardHandling` | `boolean`                                        |                  | If declared, the dropdown will not handle keyboard events and will require the consumer to manage this behavior. |
 | `disabled`                | `disabled`                | `boolean`                                        |                  | If declared, the dropdown is not interactive.    |
