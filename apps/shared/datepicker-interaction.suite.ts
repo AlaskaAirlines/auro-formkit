@@ -132,13 +132,16 @@ async function hoverCalendarCell(page: Page, fixture: string, cellIndex: number)
   }, cellIndex);
 }
 
-/** Check whether a calendar cell at the given index has hovered state. */
+/** Check whether a calendar cell at the given index has hovered state (inRange class). */
 function isCellHovered(page: Page, fixture: string, cellIndex: number) {
   return dp(page, fixture).evaluate((el: any, idx: number) => {
     const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
     const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
     const cells = calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell');
-    return Boolean(cells[idx]?.hovered);
+    const cell = cells[idx];
+    if (!cell) return false;
+    const btn = cell.shadowRoot.querySelector('button');
+    return btn ? btn.classList.contains('inRange') : false;
   }, cellIndex);
 }
 
@@ -475,16 +478,21 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
 
       await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(true);
 
-      // Wait for focus to land on the active calendar cell (rAF retry loop)
+      // With aria-activedescendant, DOM focus stays on the grid wrapper
+      // (#calendarGrid) and ariaActiveDescendantElement points to the
+      // active cell. Verify that the grid wrapper has focus and an active
+      // cell exists.
       await expect.poll(async () => {
         return dp(page, 'default').evaluate((el: any) => {
           const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
           if (!calendar) return false;
+
+          const gridWrapper = calendar.shadowRoot.querySelector('#calendarGrid');
+          if (!gridWrapper || calendar.shadowRoot.activeElement !== gridWrapper) return false;
+
           const allCells = calendar.getAllFocusableCells();
           const activeCell = allCells.find((cell: any) => cell.active);
-          if (!activeCell) return false;
-          const button = activeCell.shadowRoot.querySelector('button[tabindex="0"]');
-          return activeCell.shadowRoot.activeElement === button;
+          return !!activeCell;
         });
       }, { timeout: 5_000 }).toBe(true);
     });

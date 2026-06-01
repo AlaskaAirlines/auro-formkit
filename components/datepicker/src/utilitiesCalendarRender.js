@@ -143,7 +143,6 @@ export class UtilitiesCalendarRender {
         .max="${elem.max}"
         ?noRange="${elem.noRange}"
         .monthFirst="${elem.monthFirst}"
-        .hoveredDate="${elem.hoveredDate}"
         .dateTo="${elem.dateTo}"
         .dateFrom="${elem.dateFrom}"
         .locale="${elem.locale}"

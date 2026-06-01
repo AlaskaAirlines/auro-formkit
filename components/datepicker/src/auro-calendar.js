@@ -1,4 +1,5 @@
 import { html } from "lit/static-html.js";
+import { startOfDay } from 'date-fns';
 
 import styleCss from './styles/style-auro-calendar-css.js';
 import colorCss from './styles/color-calendar-css.js';
@@ -21,7 +22,7 @@ import formkitVersion from '@aurodesignsystem/version';
 import { AuroButton } from "@aurodesignsystem/auro-button/class";
 import buttonVersion from './buttonVersion.js';
 
-/* eslint-disable no-magic-numbers, no-undef-init, max-lines, lit/binding-positions, lit/no-invalid-html */
+/* eslint-disable no-magic-numbers, complexity, line-comment-position, no-undef-init, max-lines, line-comment-position, no-underscore-dangle, lit/binding-positions, lit/no-invalid-html, no-inline-comments */
 
 
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
@@ -66,6 +67,13 @@ export class AuroCalendar extends RangeDatepicker {
     this.activeCellDate = null;
 
     /**
+     * Whether the #calendarGrid wrapper currently has focus.
+     * Used to determine whether the visualFocus ring should be shown.
+     * @private
+     */
+    this._gridHasFocus = false;
+
+    /**
      * @private
      */
     this.firstMonthRenderable = undefined;
@@ -98,6 +106,12 @@ export class AuroCalendar extends RangeDatepicker {
     this.buttonTag = versioning.generateTag('auro-formkit-datepicker-button', buttonVersion, AuroButton);
 
     this.dropdown = undefined;
+
+    /**
+     * Unique instance ID for the live region element.
+     * @private
+     */
+    this._calendarInstanceId = Date.now().toString(36);
   }
 
   static get styles() {
@@ -110,6 +124,7 @@ export class AuroCalendar extends RangeDatepicker {
 
   static get properties() {
     return {
+
       /**
        * The last month that may be displayed in the calendar.
        */
@@ -226,22 +241,36 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * Updates the month and year when the user navigates to the previous calendar month.
    * @private
+   * @param {Object} [options] - Optional settings.
+   * @param {boolean} [options.skipActiveUpdate=false] - When true, skip the active cell
+   *   recomputation. Used by arrow key handlers that manage the active cell themselves.
    * @returns {void}
    */
-  handlePrevMonth() {
+  handlePrevMonth(options) {
+    const opts = options instanceof Event ? {} : options || {};
+    this.clearRangePreview();
     this.utilCal.handleMonthChange(this, 'prev');
-    this.updateActiveCellForVisibleMonth();
+    if (!opts.skipActiveUpdate) {
+      this.updateActiveCellForVisibleMonth();
+    }
     this.announceMonthChange();
   }
 
   /**
    * Updates the month and year when the user navigates to the next calendar month.
    * @private
+   * @param {Object} [options] - Optional settings.
+   * @param {boolean} [options.skipActiveUpdate=false] - When true, skip the active cell
+   *   recomputation. Used by arrow key handlers that manage the active cell themselves.
    * @returns {void}
    */
-  handleNextMonth() {
+  handleNextMonth(options) {
+    const opts = options instanceof Event ? {} : options || {};
+    this.clearRangePreview();
     this.utilCal.handleMonthChange(this, 'next');
-    this.updateActiveCellForVisibleMonth();
+    if (!opts.skipActiveUpdate) {
+      this.updateActiveCellForVisibleMonth();
+    }
     this.announceMonthChange();
   }
 
@@ -251,27 +280,39 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {void}
    */
   announceMonthChange() {
+    // Cancel any pending debounced cell announcement so it does not
+    // overwrite this month navigation announcement.
+    if (this._focusAnnounceTimer) {
+      clearTimeout(this._focusAnnounceTimer);
+      this._focusAnnounceTimer = null;
+    }
+
     const date = new Date(this.centralDate);
     const localeCode = this.locale?.code || undefined;
-    const formatter = new Intl.DateTimeFormat(localeCode, { month: 'long', year: 'numeric' });
+    const formatter = new Intl.DateTimeFormat(localeCode, { month: 'long',
+      year: 'numeric' });
     this.announceSelection(formatter.format(date));
   }
 
   /**
-   * Recomputes and sets the active cell for the newly visible month after
-   * month navigation. Without this, activeCellDate can point at a date in
-   * the old month, leaving no tabindex="0" cell in the grid.
+   * Updates the active cell after month navigation (prev/next buttons).
+   * Always moves the active cell to the first enabled date in the newly
+   * visible months so that tabbing back to the grid lands on an enabled cell.
    * @private
    * @returns {void}
    */
   updateActiveCellForVisibleMonth() {
-    // Skip the dateFrom shortcut so the active cell lands in the newly
-    // visible month rather than jumping back to the selected date's month.
-    this.activeCellDate = this.computeActiveDate({ skipDateFrom: true });
-    this.updateComplete.then(() => {
-      if (this.activeCellDate != null) {
-        this.setActiveCell(this.activeCellDate);
-      }
+    // Use double-rAF to ensure child month/cell components have fully
+    // rendered and cached their button references before we set tabindex.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const newDate = this.computeActiveDate({ skipDateFrom: true });
+
+        if (newDate !== null && newDate !== undefined) {
+          this.activeCellDate = newDate;
+          this.setActiveCell(this.activeCellDate);
+        }
+      });
     });
   }
 
@@ -368,7 +409,9 @@ export class AuroCalendar extends RangeDatepicker {
    */
   focusCloseButton() {
     const bibtemplate = this.shadowRoot.querySelector(this.bibtemplateTag._$litStatic$);
-    if (bibtemplate) bibtemplate.focusCloseButton();
+    if (bibtemplate) {
+      bibtemplate.focusCloseButton();
+    }
   }
 
   /**
@@ -397,7 +440,7 @@ export class AuroCalendar extends RangeDatepicker {
   getAllFocusableCells() {
     const months = this.getMonthComponents();
     let cells = [];
-    months.forEach(month => {
+    months.forEach((month) => {
       cells = cells.concat(month.getFocusableCells());
     });
     return cells;
@@ -405,36 +448,84 @@ export class AuroCalendar extends RangeDatepicker {
 
   /**
    * Sets the active cell across all months. Only one cell has tabindex="0" at a time.
+   * Uses imperative DOM manipulation — no Lit re-render triggered.
+   * Also updates ariaActiveDescendantElement on the grid wrapper so
+   * screen readers announce the active cell without moving DOM focus.
    * @param {Number} date - Unix timestamp of the cell to activate.
    * @returns {void}
    */
   setActiveCell(date) {
     const allCells = this.getAllFocusableCells();
 
-    allCells.forEach(cell => {
-      cell.active = cell.day && cell.day.date === date;
+    let newActiveCell = null;
+    allCells.forEach((cell) => {
+      if (cell.day && cell.day.date === date) {
+        cell.setActive();
+        newActiveCell = cell;
+      } else if (cell.active) {
+        cell.clearActive();
+      }
     });
 
     this.activeCellDate = date;
+
+    // Apply activeCell ring only when the grid currently has focus.
+    if (newActiveCell && this._gridHasFocus) {
+      const btn = newActiveCell._cachedButton || newActiveCell.shadowRoot.querySelector('button.day');
+      if (btn) {
+        btn.classList.add('activeCell');
+      }
+    }
   }
 
   /**
-   * Focuses the currently active cell. If activeCellDate is set but no cell
-   * has the active attribute yet, sets it first. Waits for the cell's render
-   * to complete so the focused button is the final DOM element.
+   * Focuses the calendar grid wrapper and sets the active cell.
+   * DOM focus stays on the grid wrapper; the aria-live region
+   * tells the screen reader which cell is "active".
    * @returns {void}
    */
   focusActiveCell() {
-    if (this.activeCellDate != null) {
+    if (this.activeCellDate !== null && this.activeCellDate !== undefined) {
       this.setActiveCell(this.activeCellDate);
     }
 
-    const allCells = this.getAllFocusableCells();
-    const activeCell = allCells.find(cell => cell.active);
+    const gridWrapper = this.shadowRoot.querySelector('#calendarGrid');
+    if (gridWrapper) {
+      gridWrapper.focus({ preventScroll: true,
+        focusVisible: true });
+    }
+  }
+
+  /**
+   * Shows the activeCell ring when the grid gains focus.
+   * @private
+   * @returns {void}
+   */
+  handleGridFocusIn() {
+    this._gridHasFocus = true;
+    const activeCell = this.getAllFocusableCells().find((cell) => cell.active);
     if (activeCell) {
-      activeCell.updateComplete.then(() => {
-        activeCell.focusButton();
-      });
+      const btn = activeCell._cachedButton || activeCell.shadowRoot.querySelector('button.day');
+      if (btn) {
+        btn.classList.add('activeCell');
+      }
+    }
+  }
+
+  /**
+   * Hides the activeCell ring when the grid loses focus.
+   * @private
+   * @returns {void}
+   */
+  handleGridFocusOut() {
+    this._gridHasFocus = false;
+    // Remove activeCell from ALL cells to prevent stale rings.
+    const allCells = this.getAllFocusableCells();
+    for (const cell of allCells) {
+      const btn = cell._cachedButton || cell.shadowRoot.querySelector('button.day');
+      if (btn) {
+        btn.classList.remove('activeCell');
+      }
     }
   }
 
@@ -449,7 +540,7 @@ export class AuroCalendar extends RangeDatepicker {
    *   5b. First enabled date scanning forward from finite min (unbounded max)
    *   5c. First enabled date scanning backward from finite max (unbounded min)
    *   6. First in-range date (even if blackout) so focus can land somewhere
-   *   7. undefined — no valid target
+   *   7. Undefined — no valid target.
    *
    * @private
    * @param {Object} [options] - Optional settings.
@@ -464,12 +555,15 @@ export class AuroCalendar extends RangeDatepicker {
     /**
      * Adds days to a timestamp using Date arithmetic to handle DST correctly.
      * Returns a local-midnight-aligned timestamp in seconds.
+     * @param {Number} ts - Unix timestamp in seconds.
+     * @param {Number} days - Number of days to add.
+     * @returns {Number} The adjusted timestamp in seconds.
      */
     const addDays = (ts, days) => {
-      const d = new Date(ts * 1000);
-      d.setDate(d.getDate() + days);
-      d.setHours(0, 0, 0, 0);
-      return Math.floor(d.getTime() / 1000);
+      const date = new Date(ts * 1000);
+      date.setDate(date.getDate() + days);
+      date.setHours(0, 0, 0, 0);
+      return Math.floor(date.getTime() / 1000);
     };
 
     const rawMin = Number(this.min);
@@ -480,9 +574,7 @@ export class AuroCalendar extends RangeDatepicker {
     const maxTs = Number.isFinite(rawMax) ? rawMax : Infinity;
 
     // Build a Set of blackout timestamps for O(1) lookup.
-    const blackoutSet = new Set(
-      (this.disabledDays || []).map(d => parseInt(d, 10))
-    );
+    const blackoutSet = new Set((this.disabledDays || []).map((day) => parseInt(day, 10)));
 
     // Also include ISO-format blackoutDates from the datepicker if available.
     // Parse YYYY-MM-DD as local date to avoid UTC shift issues.
@@ -491,19 +583,25 @@ export class AuroCalendar extends RangeDatepicker {
       for (const isoStr of isoBlackouts) {
         const parts = isoStr.split('-');
         const ts = Math.floor(new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10)).getTime() / 1000);
-        if (Number.isFinite(ts)) blackoutSet.add(ts);
+        if (Number.isFinite(ts)) {
+          blackoutSet.add(ts);
+        }
       }
     }
 
     /**
      * A date (unix timestamp in seconds, midnight-aligned) is "enabled" when
      * it is within [min, max] AND not a blackout day.
+     * @param {Number} ts - Unix timestamp in seconds.
+     * @returns {boolean} True if the date is enabled.
      */
     const isEnabled = (ts) => ts >= minTs && ts <= maxTs && !blackoutSet.has(ts);
 
     /**
      * A date is "in range" (focusable in the grid) when it is within [min, max].
      * Blackout dates are focusable but not selectable.
+     * @param {Number} ts - Unix timestamp in seconds.
+     * @returns {boolean} True if the date is in range.
      */
     const isInRange = (ts) => ts >= minTs && ts <= maxTs;
 
@@ -512,7 +610,9 @@ export class AuroCalendar extends RangeDatepicker {
     //    the newly visible month rather than the (possibly off-screen) selection.
     if (!options.skipDateFrom && this.dateFrom) {
       const parsedFrom = parseInt(this.dateFrom, 10);
-      if (Number.isFinite(parsedFrom) && isInRange(parsedFrom)) return parsedFrom;
+      if (Number.isFinite(parsedFrom) && isInRange(parsedFrom)) {
+        return parsedFrom;
+      }
     }
 
     // 2. Today's date (midnight-aligned) if enabled.
@@ -542,23 +642,33 @@ export class AuroCalendar extends RangeDatepicker {
         const endTs = Math.floor(visibleEnd.getTime() / 1000);
         const daysInMonth = visibleEnd.getDate();
 
-        for (let idx = 0; idx < daysInMonth; idx++) {
+        for (let idx = 0; idx < daysInMonth; idx += 1) {
           const ts = addDays(startTs, idx);
-          if (ts > endTs) break;
-          if (isEnabled(ts)) return ts;
+          if (ts > endTs) {
+            break;
+          }
+          if (isEnabled(ts)) {
+            return ts;
+          }
         }
 
         // No enabled date in the visible month — fall back to first in-range
         // date in the month so focus still lands on a focusable cell.
-        for (let idx = 0; idx < daysInMonth; idx++) {
+        for (let idx = 0; idx < daysInMonth; idx += 1) {
           const ts = addDays(startTs, idx);
-          if (ts > endTs) break;
-          if (isInRange(ts)) return ts;
+          if (ts > endTs) {
+            break;
+          }
+          if (isInRange(ts)) {
+            return ts;
+          }
         }
       }
     }
 
-    if (isEnabled(now)) return now;
+    if (isEnabled(now)) {
+      return now;
+    }
 
     // When a centralDate is configured (or inferred), constrain the scan to the
     // rendered month(s) first so a single-month calendar does not pick a date
@@ -577,40 +687,58 @@ export class AuroCalendar extends RangeDatepicker {
     const visDays = Math.round((visEndTs - visStartTs) / 86400) + 1;
 
     // Scan visible months for an enabled date.
-    for (let idx = 0; idx < visDays; idx++) {
+    for (let idx = 0; idx < visDays; idx += 1) {
       const ts = addDays(visStartTs, idx);
-      if (ts > visEndTs) break;
-      if (isEnabled(ts)) return ts;
+      if (ts > visEndTs) {
+        break;
+      }
+      if (isEnabled(ts)) {
+        return ts;
+      }
     }
 
     // No enabled date in visible months — try an in-range (focusable) date so
     // keyboard focus still has a tabindex="0" target.
-    for (let idx = 0; idx < visDays; idx++) {
+    for (let idx = 0; idx < visDays; idx += 1) {
       const ts = addDays(visStartTs, idx);
-      if (ts > visEndTs) break;
-      if (isInRange(ts)) return ts;
+      if (ts > visEndTs) {
+        break;
+      }
+      if (isInRange(ts)) {
+        return ts;
+      }
     }
 
     // 3. First future enabled date (scan forward from tomorrow, capped by max and MAX_SCAN_DAYS).
-    for (let idx = 1; idx <= MAX_SCAN_DAYS; idx++) {
+    for (let idx = 1; idx <= MAX_SCAN_DAYS; idx += 1) {
       const ts = addDays(now, idx);
-      if (Number.isFinite(maxTs) && ts > maxTs) break;
-      if (isEnabled(ts)) return ts;
+      if (Number.isFinite(maxTs) && ts > maxTs) {
+        break;
+      }
+      if (isEnabled(ts)) {
+        return ts;
+      }
     }
 
     // 4. First previous enabled date (scan backward from yesterday, capped by min and MAX_SCAN_DAYS).
-    for (let idx = 1; idx <= MAX_SCAN_DAYS; idx++) {
+    for (let idx = 1; idx <= MAX_SCAN_DAYS; idx += 1) {
       const ts = addDays(now, -idx);
-      if (Number.isFinite(minTs) && ts < minTs) break;
-      if (isEnabled(ts)) return ts;
+      if (Number.isFinite(minTs) && ts < minTs) {
+        break;
+      }
+      if (isEnabled(ts)) {
+        return ts;
+      }
     }
 
     // 5. If scans missed (e.g. min/max range is far from today), fall back to
     //    the first enabled date in the [min, max] range.
     if (Number.isFinite(minTs) && Number.isFinite(maxTs)) {
       let ts = minTs;
-      for (let idx = 0; ts <= maxTs; idx++) {
-        if (isEnabled(ts)) return ts;
+      for (let idx = 0; ts <= maxTs; idx += 1) {
+        if (isEnabled(ts)) {
+          return ts;
+        }
         ts = addDays(minTs, idx + 1);
       }
     }
@@ -618,27 +746,183 @@ export class AuroCalendar extends RangeDatepicker {
     // 5b. Finite min with unbounded max (e.g. minDate far in the future):
     //     scan forward from min for up to MAX_SCAN_DAYS.
     if (Number.isFinite(minTs) && !Number.isFinite(maxTs)) {
-      for (let idx = 0; idx <= MAX_SCAN_DAYS; idx++) {
+      for (let idx = 0; idx <= MAX_SCAN_DAYS; idx += 1) {
         const ts = addDays(minTs, idx);
-        if (isEnabled(ts)) return ts;
+        if (isEnabled(ts)) {
+          return ts;
+        }
       }
     }
 
     // 5c. Unbounded min with a finite max far in the past (e.g. birth-date picker):
     //     scan backward from max for up to MAX_SCAN_DAYS.
     if (!Number.isFinite(minTs) && Number.isFinite(maxTs)) {
-      for (let idx = 0; idx <= MAX_SCAN_DAYS; idx++) {
+      for (let idx = 0; idx <= MAX_SCAN_DAYS; idx += 1) {
         const ts = addDays(maxTs, -idx);
-        if (isEnabled(ts)) return ts;
+        if (isEnabled(ts)) {
+          return ts;
+        }
       }
     }
 
     // 6. All dates are blackout — fall back to the first in-range date so focus
     //    still lands on a focusable (but not selectable) cell.
-    if (Number.isFinite(minTs) && isInRange(minTs)) return minTs;
-    if (isInRange(now)) return now;
+    if (Number.isFinite(minTs) && isInRange(minTs)) {
+      return minTs;
+    }
+    if (isInRange(now)) {
+      return now;
+    }
 
     return undefined;
+  }
+
+  /**
+   * Checks if a target date (unix seconds) is within the configured [min, max] range.
+   * Returns false if the date falls outside the range, preventing navigation
+   * to months where all dates are disabled.
+   * @private
+   * @param {Number} targetTs - Unix timestamp in seconds.
+   * @returns {Boolean} True if the date is within range.
+   */
+  isDateInRange(targetTs) {
+    const rawMin = Number(this.min);
+    const rawMax = Number(this.max);
+    if (Number.isFinite(rawMin) && targetTs < rawMin) {
+      return false;
+    }
+    if (Number.isFinite(rawMax) && targetTs > rawMax) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Handles arrow key navigation on the calendar grid wrapper.
+   * Focus stays on the grid wrapper; only ariaActiveDescendantElement
+   * and the visual active-cell indicator change.
+   * @private
+   * @param {KeyboardEvent} event - The keyboard event.
+   * @returns {void}
+   */
+  handleGridKeyDown(event) {
+    const { key } = event;
+    const actionKeys = [
+      'ArrowRight',
+      'ArrowLeft',
+      'ArrowDown',
+      'ArrowUp',
+      'Enter',
+      ' '
+    ];
+
+    if (!actionKeys.includes(key)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const allCells = this.getAllFocusableCells();
+    if (allCells.length === 0) {
+      return;
+    }
+
+    const activeCell = allCells.find((cell) => cell.active);
+    if (!activeCell) {
+      return;
+    }
+
+    // Handle Enter/Space to select the active cell
+    if (key === 'Enter' || key === ' ') {
+      activeCell.handleTap();
+      return;
+    }
+
+    const activeIndex = allCells.indexOf(activeCell);
+
+    if (key === 'ArrowRight' || key === 'ArrowLeft') {
+      const direction = key === 'ArrowRight' ? 1 : -1;
+      const targetIndex = activeIndex + direction;
+
+      if (targetIndex >= 0 && targetIndex < allCells.length) {
+        // Target cell exists in rendered months
+        this.setActiveCell(allCells[targetIndex].day.date);
+        this.scrollToActiveCell();
+        // Dispatch focus event for the cell so live region + range preview update
+        this.handleCellFocused({ detail: { date: allCells[targetIndex].day.date } });
+      } else {
+        // At boundary — need to navigate to next/prev month
+        const navDir = direction === 1 ? 'next' : 'prev';
+        const targetDate = new Date(activeCell.day.date * 1000);
+        targetDate.setDate(targetDate.getDate() + direction);
+        targetDate.setHours(0, 0, 0, 0);
+        const targetTs = Math.floor(targetDate.getTime() / 1000);
+
+        if (this.isDateInRange(targetTs) && ((navDir === 'next' && this.showNextMonthBtn) || (navDir === 'prev' && this.showPrevMonthBtn))) { // eslint-disable-line no-extra-parens
+
+          if (navDir === 'next') {
+            this.handleNextMonth({ skipActiveUpdate: true });
+          } else {
+            this.handlePrevMonth({ skipActiveUpdate: true });
+          }
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const cells = this.getAllFocusableCells();
+              const target = cells.find((cell) => cell.day && cell.day.date === targetTs);
+              if (target) {
+                this.setActiveCell(target.day.date);
+                this.handleCellFocused({ detail: { date: target.day.date } });
+              } else if (cells.length > 0) {
+                const fallback = navDir === 'next' ? cells[cells.length - 1] : cells[0];
+                this.setActiveCell(fallback.day.date);
+                this.handleCellFocused({ detail: { date: fallback.day.date } });
+              }
+              // Re-focus grid wrapper after month change re-render
+              this.focusActiveCell();
+            });
+          });
+        }
+      }
+    } else if (key === 'ArrowDown' || key === 'ArrowUp') {
+      const increment = key === 'ArrowDown' ? 7 : -7;
+      const currentDate = new Date(activeCell.day.date * 1000);
+      currentDate.setDate(currentDate.getDate() + increment);
+      currentDate.setHours(0, 0, 0, 0);
+      const targetDate = Math.floor(currentDate.getTime() / 1000);
+
+      const targetCell = allCells.find((cell) => cell.day && cell.day.date === targetDate);
+
+      if (targetCell) {
+        this.setActiveCell(targetCell.day.date);
+        this.scrollToActiveCell();
+        this.handleCellFocused({ detail: { date: targetCell.day.date } });
+      } else if (this.isDateInRange(targetDate)) {
+        // Target might be in an unrendered month
+        const navDirection = key === 'ArrowDown' ? 'next' : 'prev';
+        if ((navDirection === 'next' && this.showNextMonthBtn) || (navDirection === 'prev' && this.showPrevMonthBtn)) { // eslint-disable-line no-extra-parens
+          if (navDirection === 'next') {
+            this.handleNextMonth({ skipActiveUpdate: true });
+          } else {
+            this.handlePrevMonth({ skipActiveUpdate: true });
+          }
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const cells = this.getAllFocusableCells();
+              const target = cells.find((cell) => cell.day && cell.day.date === targetDate);
+              if (target) {
+                this.setActiveCell(target.day.date);
+                this.handleCellFocused({ detail: { date: target.day.date } });
+              } else if (cells.length > 0) {
+                const nearest = navDirection === 'next' ? cells[0] : cells[cells.length - 1];
+                this.setActiveCell(nearest.day.date);
+                this.handleCellFocused({ detail: { date: nearest.day.date } });
+              }
+              this.focusActiveCell();
+            });
+          });
+        }
+      }
+    }
   }
 
   /**
@@ -653,15 +937,15 @@ export class AuroCalendar extends RangeDatepicker {
     if (key === 'ArrowRight' || key === 'ArrowLeft') {
       // Linear navigation: find adjacent focusable cell across months
       const allCells = this.getAllFocusableCells();
-      const currentIndex = allCells.findIndex(cell => cell.day && cell.day.date === fromDate);
+      const currentIndex = allCells.findIndex((cell) => cell.day && cell.day.date === fromDate);
 
-      if (currentIndex === -1) return;
+      if (currentIndex === -1) {
+        return;
+      }
 
-      let targetIndex;
+      let targetIndex = -1;
       if (direction === 'next') {
         targetIndex = currentIndex + 1;
-      } else {
-        targetIndex = currentIndex - 1;
       }
 
       if (targetIndex >= 0 && targetIndex < allCells.length) {
@@ -679,11 +963,15 @@ export class AuroCalendar extends RangeDatepicker {
         nextDate.setHours(0, 0, 0, 0);
         const nextTs = Math.floor(nextDate.getTime() / 1000);
 
-        this.handleNextMonth();
+        if (!this.isDateInRange(nextTs)) {
+          return;
+        }
+
+        this.handleNextMonth({ skipActiveUpdate: true });
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const cells = this.getAllFocusableCells();
-            const target = cells.find(cell => cell.day && cell.day.date === nextTs);
+            const target = cells.find((cell) => cell.day && cell.day.date === nextTs);
             if (target) {
               this.setActiveCell(target.day.date);
               this.focusActiveCell();
@@ -701,11 +989,15 @@ export class AuroCalendar extends RangeDatepicker {
         prevDate.setHours(0, 0, 0, 0);
         const prevTs = Math.floor(prevDate.getTime() / 1000);
 
-        this.handlePrevMonth();
+        if (!this.isDateInRange(prevTs)) {
+          return;
+        }
+
+        this.handlePrevMonth({ skipActiveUpdate: true });
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const cells = this.getAllFocusableCells();
-            const target = cells.find(cell => cell.day && cell.day.date === prevTs);
+            const target = cells.find((cell) => cell.day && cell.day.date === prevTs);
             if (target) {
               this.setActiveCell(target.day.date);
               this.focusActiveCell();
@@ -727,25 +1019,25 @@ export class AuroCalendar extends RangeDatepicker {
       const targetDate = Math.floor(currentDate.getTime() / 1000);
 
       const allCells = this.getAllFocusableCells();
-      let targetCell = allCells.find(cell => cell.day && cell.day.date === targetDate);
+      const targetCell = allCells.find((cell) => cell.day && cell.day.date === targetDate);
 
       if (targetCell) {
         this.setActiveCell(targetCell.day.date);
         this.scrollToActiveCell();
         this.focusActiveCell();
-      } else {
+      } else if (this.isDateInRange(targetDate)) {
         // Target might be in an unrendered month, navigate there
         const navDirection = key === 'ArrowDown' ? 'next' : 'prev';
-        if ((navDirection === 'next' && this.showNextMonthBtn) || (navDirection === 'prev' && this.showPrevMonthBtn)) {
+        if ((navDirection === 'next' && this.showNextMonthBtn) || (navDirection === 'prev' && this.showPrevMonthBtn)) { // eslint-disable-line no-extra-parens
           if (navDirection === 'next') {
-            this.handleNextMonth();
+            this.handleNextMonth({ skipActiveUpdate: true });
           } else {
-            this.handlePrevMonth();
+            this.handlePrevMonth({ skipActiveUpdate: true });
           }
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               const cells = this.getAllFocusableCells();
-              const target = cells.find(cell => cell.day && cell.day.date === targetDate);
+              const target = cells.find((cell) => cell.day && cell.day.date === targetDate);
               if (target) {
                 this.setActiveCell(target.day.date);
                 this.focusActiveCell();
@@ -771,7 +1063,191 @@ export class AuroCalendar extends RangeDatepicker {
   handleCellActivate(event) {
     const { date } = event.detail;
     this.setActiveCell(date);
-    this.focusActiveCell();
+
+    // Don't call focusActiveCell() here. The tap/click already placed
+    // focus on the cell button, and moving it to #calendarGrid would
+    // trigger focusout on the button, closing any open popover on the
+    // cell. Keyboard events are composed and still bubble through
+    // shadow DOM boundaries to the grid's @keydown handler, so
+    // subsequent keyboard navigation continues to work.
+  }
+
+  /**
+   * Handles focus events from calendar cells.
+   * Updates the live region with an SR announcement and triggers
+   * the imperative range preview if applicable.
+   * @private
+   * @param {CustomEvent} event - The calendar-cell-focused event.
+   * @returns {void}
+   */
+  handleCellFocused(event) {
+    const { date } = event.detail;
+    if (date === null) {
+      return;
+    }
+
+    // With aria-activedescendant, the button no longer receives native focus,
+    // so we use the debounced live region for the full context announcement.
+    const announcement = this.buildFocusAnnouncement(date);
+    this.announceFocusDebounced(announcement);
+
+    // Update the range preview imperatively if in range-preview mode.
+    this.updateRangePreview(date);
+  }
+
+  /**
+   * Builds a full SR announcement string for a focused cell date.
+   * Includes the localized date, range position, popover content,
+   * and blackout status.
+   * @private
+   * @param {Number} date - Unix timestamp (seconds) of the focused cell.
+   * @returns {String} The announcement string.
+   */
+  buildFocusAnnouncement(date) {
+    let label = this.formatAnnouncementDate(date);
+
+    // Append date slot content (e.g. prices) if present.
+    const dateObj = new Date(date * 1000);
+    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const dd = String(dateObj.getDate()).padStart(2, '0');
+    const yyyy = dateObj.getFullYear();
+    const dateStr = `${mm}_${dd}_${yyyy}`;
+    const dateSlotEl = this.datepicker?.querySelector(`[slot="date_${dateStr}"]`);
+    if (dateSlotEl) {
+      const text = dateSlotEl.innerText?.trim();
+      if (text) {
+        label += `, ${text}`;
+      }
+    }
+
+    // Append popover content if present.
+    const popoverEl = this.datepicker?.querySelector(`[slot="popover_${dateStr}"]`);
+    if (popoverEl) {
+      const text = popoverEl.innerText?.trim();
+      if (text) {
+        label += `, ${text}`;
+      }
+    }
+
+    // Append range position context.
+    if (this.datepicker?.hasAttribute('range')) {
+      const rangeLabel = this.getRangePositionLabel(date);
+      if (rangeLabel) {
+        label += `, ${rangeLabel}`;
+      }
+    }
+
+    // Append blackout label.
+    if (this.isDateBlackout(date)) {
+      label += `, ${this.datepicker?.blackoutLabel || 'unavailable'}`;
+    }
+
+    return label;
+  }
+
+  /**
+   * Determines the range position label for a given date.
+   * @private
+   * @param {Number} date - Unix timestamp (seconds).
+   * @returns {String|null} The range position label, or null.
+   */
+  getRangePositionLabel(date) {
+    const parsedFrom = Number.parseInt(this.dateFrom, 10);
+    if (!Number.isFinite(parsedFrom)) {
+      return null;
+    }
+
+    const departTs = startOfDay(parsedFrom * 1000) / 1000;
+    const parsedTo = Number.parseInt(this.dateTo, 10);
+    const hasTo = Number.isFinite(parsedTo);
+    const returnTs = hasTo ? startOfDay(parsedTo * 1000) / 1000 : null;
+
+    if (date === departTs) {
+      return this.datepicker.rangeLabelStart || 'range start';
+    }
+    if (hasTo && date === returnTs) {
+      return this.datepicker.rangeLabelEnd || 'range end';
+    }
+    if (date < departTs) {
+      return this.datepicker.rangeLabelBeforeRange || 'before range';
+    }
+    if (hasTo && date > departTs && date < returnTs) {
+      return this.datepicker.rangeLabelInRange || 'in range';
+    }
+    return this.datepicker.rangeLabelAfterRange || 'after range';
+  }
+
+  /**
+   * Checks whether a given date is a blackout date.
+   * @private
+   * @param {Number} dateTs - Unix timestamp (seconds).
+   * @returns {Boolean} True if the date is blacked out.
+   */
+  isDateBlackout(dateTs) {
+    // Check legacy disabledDays.
+    if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0) {
+      if (this.disabledDays.findIndex((day) => parseInt(day, 10) === dateTs) !== -1) {
+        return true;
+      }
+    }
+
+    // Check ISO blackoutDates.
+    const blackoutDates = this.datepicker?.blackoutDates;
+    if (Array.isArray(blackoutDates) && blackoutDates.length > 0) {
+      const date = new Date(dateTs * 1000);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      if (blackoutDates.includes(`${yyyy}-${mm}-${dd}`)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Updates the range preview classes imperatively across all cells.
+   * Only active when in range mode with dateFrom set and dateTo not yet set.
+   * @private
+   * @param {Number} hoveredDate - Unix timestamp of the hovered/focused date.
+   * @returns {void}
+   */
+  updateRangePreview(hoveredDate) {
+    if (this.noRange || !this.dateFrom || this.dateTo) {
+      return;
+    }
+
+    const parsedDateFrom = parseInt(this.dateFrom, 10);
+    const allCells = this.getAllFocusableCells();
+
+    allCells.forEach((cell) => {
+      cell.updateRangePreviewClasses(hoveredDate, parsedDateFrom);
+    });
+  }
+
+  /**
+   * Clears range preview classes from all cells.
+   * @private
+   * @returns {void}
+   */
+  clearRangePreview() {
+    const allCells = this.getAllFocusableCells();
+    allCells.forEach((cell) => {
+      cell.clearRangePreviewClasses();
+    });
+  }
+
+  /**
+   * Overrides the base class handler to prevent setting `this.hoveredDate`
+   * as a reactive property. Instead, handles the range preview imperatively.
+   * @private
+   * @param {CustomEvent} event - The hovered-date-changed event from a month.
+   * @returns {void}
+   */
+  hoveredDateChanged(event) {
+    const hoveredDate = event.detail.value;
+    this.updateRangePreview(hoveredDate);
   }
 
   /**
@@ -780,7 +1256,9 @@ export class AuroCalendar extends RangeDatepicker {
    * @returns {void}
    */
   scrollToActiveCell() {
-    if (this.activeCellDate == null) return;
+    if (this.activeCellDate === null || this.activeCellDate === undefined) {
+      return;
+    }
 
     const date = new Date(this.activeCellDate * 1000);
     const month = date.getMonth() + 1;
@@ -790,25 +1268,138 @@ export class AuroCalendar extends RangeDatepicker {
 
     if (monthElem) {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      monthElem.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion ? 'instant' : 'smooth' });
+      monthElem.scrollIntoView({ block: 'nearest',
+        behavior: prefersReducedMotion ? 'instant' : 'smooth' });
     }
   }
 
   /**
-   * Announces a date selection via the live region.
+   * Returns (and lazily creates) an aria-live region inside the dropdown's
+   * <dialog> element. This placement is critical for two reasons:
+   *
+   * 1. Inside the dialog's accessible scope — dialog.showModal() makes
+   *    everything outside the top-layer dialog inert, and desktop modal
+   *    mode uses _setPageInert() on document.body siblings. A live region
+   *    on document.body would be invisible to screen readers in both cases.
+   *
+   * 2. Not nested in shadow DOM — Chrome inconsistently observes aria-live
+   *    mutations inside shadow DOM across machines and versions. The dialog
+   *    element is only one shadow root deep (the dropdown bib's shadow DOM),
+   *    which Chrome handles reliably. The calendar's own shadow DOM (nested
+   *    inside the bib via slotting) is two+ levels deep and unreliable.
+   *
+   * @private
+   * @returns {HTMLElement} The live region element.
+   */
+  getOrCreateLiveRegion() {
+    if (this._liveRegion && this._liveRegion.isConnected) {
+      return this._liveRegion;
+    }
+
+    // Access the dialog element inside the dropdown bib's shadow DOM.
+    const dialog = this.dropdown?.bibContent?.shadowRoot?.querySelector('dialog');
+    if (!dialog) {
+      return null;
+    }
+
+    // Check if we already created one for this calendar instance.
+    const regionId = `auro-calendar-live-${this._calendarInstanceId}`;
+    const existing = dialog.querySelector(`#${regionId}`);
+    if (existing) {
+      this._liveRegion = existing;
+      return existing;
+    }
+
+    const el = document.createElement('div');
+    el.id = regionId;
+    el.setAttribute('aria-live', 'assertive');
+    el.setAttribute('aria-atomic', 'true');
+    el.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+    dialog.appendChild(el);
+
+    this._liveRegion = el;
+    return el;
+  }
+
+  /**
+   * Removes the live region when this calendar is disconnected.
+   * @private
+   * @returns {void}
+   */
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    // Cancel any pending announcements so they don't fire after teardown.
+    if (this._announceRafId) {
+      cancelAnimationFrame(this._announceRafId);
+      this._announceRafId = null;
+    }
+    if (this._focusAnnounceTimer) {
+      clearTimeout(this._focusAnnounceTimer);
+      this._focusAnnounceTimer = null;
+    }
+
+    if (this._liveRegion && this._liveRegion.isConnected) {
+      this._liveRegion.remove();
+    }
+    this._liveRegion = null;
+  }
+
+  /**
+   * Announces a date selection or focus change via the live region.
+   * Uses requestAnimationFrame to ensure the clear and set happen in
+   * separate rendering frames — Chrome may coalesce synchronous or
+   * microtask-deferred mutations into a single accessibility tree update.
    * @private
    * @param {String} dateStr - The localized date string to announce.
    * @returns {void}
    */
   announceSelection(dateStr) {
-    const liveRegion = this.shadowRoot.querySelector('#calendar-live-region');
-    if (liveRegion) {
-      liveRegion.textContent = '';
-      // Use microtask to ensure SR picks up the change
-      Promise.resolve().then(() => {
-        liveRegion.textContent = dateStr;
-      });
+    // Cancel any previously queued rAF announcement so a rapid
+    // sequence of calls (e.g. bib open → month nav) only announces
+    // the last one.
+    if (this._announceRafId) {
+      cancelAnimationFrame(this._announceRafId);
     }
+    const liveRegion = this.getOrCreateLiveRegion();
+    if (!liveRegion) {
+      return;
+    }
+
+    // Double-rAF: clear in frame N, set in frame N+1. Chrome batches
+    // accessibility tree mutations within a single animation frame, so
+    // a same-frame clear+set can be coalesced into a no-op if the new
+    // value matches a recently announced string. Splitting across two
+    // frames guarantees Chrome sees two distinct tree states and fires
+    // a new accessibility event for the content change.
+    liveRegion.textContent = '';
+    this._announceRafId = requestAnimationFrame(() => {
+      this._announceRafId = requestAnimationFrame(() => {
+        liveRegion.textContent = dateStr;
+        this._announceRafId = null;
+      });
+    });
+  }
+
+  /**
+   * Debounced version of announceSelection for focus navigation.
+   * Uses the assertive live region with a 150ms debounce so only the
+   * final cell after rapid arrow-key traversal is announced. We
+   * originally tried aria-live="polite" here, but VoiceOver treats
+   * polite as "wait until idle" — which never happens during active
+   * keyboard navigation — so the announcements were silently dropped.
+   * @private
+   * @param {String} dateStr - The localized date string to announce.
+   * @returns {void}
+   */
+  announceFocusDebounced(dateStr) {
+    if (this._focusAnnounceTimer) {
+      clearTimeout(this._focusAnnounceTimer);
+    }
+    this._focusAnnounceTimer = setTimeout(() => {
+      this.announceSelection(dateStr);
+      this._focusAnnounceTimer = null;
+    }, 150);
   }
 
   /**
@@ -821,12 +1412,16 @@ export class AuroCalendar extends RangeDatepicker {
     const date = new Date(parseInt(timestamp, 10) * 1000);
     const localeCode = this.locale?.code || undefined;
     const formatter = new Intl.DateTimeFormat(localeCode, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
     return formatter.format(date);
   }
 
   firstUpdated() {
+
     this.addEventListener('date-from-changed', () => {
       this.dispatchEvent(new CustomEvent('auroCalendar-dateSelected', {
         bubbles: true,
@@ -855,6 +1450,11 @@ export class AuroCalendar extends RangeDatepicker {
     this.addEventListener('calendar-cell-activate', (event) => {
       this.handleCellActivate(event);
     });
+
+    // Listen for cell focus events (SR announcements + range preview)
+    this.addEventListener('calendar-cell-focused', (event) => {
+      this.handleCellFocused(event);
+    });
   }
 
   injectSlot(slotName, nodes) {
@@ -881,7 +1481,7 @@ export class AuroCalendar extends RangeDatepicker {
     if (changedProperties.has('visible')) {
       if (this.visible) {
         // Compute the active date eagerly from data — no DOM needed.
-        if (this.activeCellDate == null) {
+        if (this.activeCellDate === null || this.activeCellDate === undefined) {
           this.activeCellDate = this.computeActiveDate();
         }
 
@@ -949,7 +1549,7 @@ export class AuroCalendar extends RangeDatepicker {
           </button>
           ` : undefined}
         </div>
-        <div class="calendars">
+        <div id="calendarGrid" class="calendars" role="group" tabindex="0" @keydown="${this.handleGridKeyDown}" @focusin="${this.handleGridFocusIn}" @focusout="${this.handleGridFocusOut}">
           ${this.renderAllCalendars()}
         </div>
       </div>
