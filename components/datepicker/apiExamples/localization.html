@@ -1,5 +1,12 @@
-<auro-datepicker format="yyyy/mm/dd" id="localizationExample">
-  <span slot="bib.fullscreen.headline">Localization Headline</span>
-  <span slot="fromLabel">Choose a date</span>
-  <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+<auro-datepicker range
+  rangeLabelStart="fecha de salida"
+  rangeLabelEnd="fecha de regreso"
+  rangeLabelBeforeRange="antes de la salida"
+  rangeLabelInRange="entre vuelos"
+  rangeLabelAfterRange="después del regreso"
+  navLabelPrevMonth="Ir al mes anterior"
+  navLabelNextMonth="Ir al mes siguiente"
+  id="localizationExample">
+  <span slot="fromLabel">Salida</span>
+  <span slot="toLabel">Regreso</span>
 </auro-datepicker>
