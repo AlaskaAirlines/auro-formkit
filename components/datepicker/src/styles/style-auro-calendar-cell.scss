@@ -53,9 +53,18 @@
 
   user-select: none;
 
+  &:focus-visible {
+    outline: 2px solid var(--ds-basic-color-border-default, #{v.$ds-basic-color-border-default});
+    outline-offset: 2px;
+  }
+
   &.disabled {
     cursor: default !important;
     pointer-events: none;
+  }
+
+  &.blackout {
+    cursor: default;
   }
 
   &.reference {
@@ -101,6 +110,23 @@
 .dateSlot {
   display: flex;
   flex-direction: column;
+}
+
+.srOnly {
+  position: absolute;
+
+  overflow: hidden;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+
+  border: 0;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
 }
 
 ::slotted([slot^="date_"]) {

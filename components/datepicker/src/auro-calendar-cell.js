@@ -1,4 +1,4 @@
-import { LitElement } from "lit";
+import { LitElement, nothing } from "lit";
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { format, startOfDay } from 'date-fns';
@@ -36,6 +36,8 @@ export class AuroCalendarCell extends LitElement {
     this._locale = null;
     this.dateStr = null;
     this.renderForDateSlot = false; // When false, the numerical date will render vertically centered. When true, the date will render off-center to the top and leave room below for the slot content.
+    this.active = false;
+    this.hasPopoverContent = false;
 
     this.runtimeUtils = new AuroLibraryRuntimeUtils();
 
@@ -69,7 +71,12 @@ export class AuroCalendarCell extends LitElement {
       isCurrentDate: { type: Boolean },
       locale:        { type: Object },
       dateStr:       { type: String },
-      renderForDateSlot: { type: Boolean }
+      renderForDateSlot: { type: Boolean },
+      active:        {
+        type: Boolean,
+        reflect: true
+      },
+      hasPopoverContent: { type: Boolean }
     };
   }
 
@@ -128,13 +135,23 @@ export class AuroCalendarCell extends LitElement {
    * @returns {void}
    */
   handleTap() {
-    if (!this.disabled) {
+    if (!this.disabled && !this.isBlackout()) {
       this.datepicker.handleCellClick(this.day.date);
+    }
+
+    // Set this cell as the active cell regardless of blackout status
+    if (this.day) {
+      this.dispatchEvent(new CustomEvent('calendar-cell-activate', {
+        bubbles: true,
+        composed: true,
+        detail: { date: this.day.date }
+      }));
     }
   }
 
   /**
    * Handles user hover events and dispatches a custom event.
+   * Always dispatches for range pickers so the preview updates correctly.
    * @private
    * @returns {void}
    */
@@ -148,7 +165,61 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is a valid date depending on the min and max values.
+   * Checks if the current date is outside the valid min/max range.
+   * Out-of-range cells are not focusable and are hidden from screen readers.
+   * @private
+   * @param {Object} day - An object containing the dateFrom and day of month values.
+   * @param {Number} min - The minimum date value.
+   * @param {Number} max - The maximum date value.
+   * @returns {Boolean} - True if the date is out of range.
+   */
+  isOutOfRange(day, min, max) {
+    if (day && day.date != null) {
+      return day.date < min || day.date > max;
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the current date is a blackout date (in disabledDays but within range).
+   * Blackout cells are focusable but not selectable.
+   * @private
+   * @returns {Boolean} - True if the date is a blackout date.
+   */
+  isBlackout() {
+    if (!this.day || this.day.date == null || this.isOutOfRange(this.day, this.min, this.max)) {
+      return false;
+    }
+
+    // Check against disabledDays timestamps (legacy path)
+    if (Array.isArray(this.disabledDays) && this.disabledDays.length > 0) {
+      if (this.disabledDays.findIndex(d => parseInt(d, 10) === this.day.date) !== -1) {
+        return true;
+      }
+    }
+
+    // Check against blackoutDates (ISO format YYYY-MM-DD) on the datepicker
+    const blackoutDates = this.datepicker?.blackoutDates;
+
+    if (Array.isArray(blackoutDates) && blackoutDates.length > 0) {
+      const date = new Date(this.day.date * 1000);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      const cellDate = `${yyyy}-${mm}-${dd}`;
+      if (blackoutDates.includes(cellDate)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Checks if the current date is disabled based on min/max range or the
+   * legacy disabledDays timestamp list.  Sets the `disabled` attribute on the
+   * host when the date falls outside the allowed range or appears in
+   * disabledDays. Note: blackout dates are handled separately by `isBlackout()`.
    * @private
    * @param {Object} day - An object containing the dateFrom and day of month values.
    * @param {Number} min - The minimum date value.
@@ -166,6 +237,91 @@ export class AuroCalendarCell extends LitElement {
       }
     }
     return false;
+  }
+
+  /**
+   * Generates a unique cell ID in the format cell-YYYY-MM-DD.
+   * @private
+   * @returns {String} The unique cell ID.
+   */
+  getCellId() {
+    if (!this.day || !this.day.date) return '';
+    const date = new Date(this.day.date * 1000);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `cell-${year}-${month}-${day}`;
+  }
+
+  /**
+   * Generates a localized aria-label for the cell button using Intl.DateTimeFormat.
+   * Includes range position and blackout status.
+   * @private
+   * @returns {String} The aria-label string.
+   */
+  getAriaLabel() {
+    if (!this.day || this.day.date === undefined) return '';
+
+    const date = new Date(this.day.date * 1000);
+
+    // Generate localized full date string using the configured locale
+    const localeCode = this.locale?.code || undefined;
+    const dateFormatter = new Intl.DateTimeFormat(localeCode, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    let label = dateFormatter.format(date);
+
+    // appending popover content here so that it gets read in a logical order with the other date content.
+    if (this.hasPopoverContent) {
+      label += `, ${this.querySelector(`[slot="popover_${this.dateStr}"]`).innerText.trim()}`;
+    }
+
+    // Append range position if in range mode
+    const rangePosition = this.getRangePosition();
+    if (rangePosition) {
+      label += `, ${rangePosition}`;
+    }
+
+    // Append blackout label for blackout cells
+    if (this.isBlackout()) {
+      label += `, ${this.datepicker?.blackoutLabel || 'unavailable'}`;
+    }
+
+    return label;
+  }
+
+  /**
+   * Determines the range position of this cell relative to the current selection.
+   * @private
+   * @returns {String|null} Range position label or null if not in range mode.
+   */
+  getRangePosition() {
+    if (!this.datepicker || !this.datepicker.hasAttribute('range')) return null;
+
+    const parsedDateFrom = Number.parseInt(this.dateFrom, 10);
+    if (!Number.isFinite(parsedDateFrom)) return null;
+
+    const departTimestamp = startOfDay(parsedDateFrom * 1000) / 1000;
+    const dayDate = this.day.date;
+
+    const parsedDateTo = Number.parseInt(this.dateTo, 10);
+    const hasDateTo = Number.isFinite(parsedDateTo);
+    const returnTimestamp = hasDateTo ? startOfDay(parsedDateTo * 1000) / 1000 : null;
+
+    if (dayDate === departTimestamp) return this.datepicker.rangeLabelStart || 'range start';
+
+    if (hasDateTo && dayDate === returnTimestamp) return this.datepicker.rangeLabelEnd || 'range end';
+
+    if (dayDate < departTimestamp) return this.datepicker.rangeLabelBeforeRange || 'before range';
+
+    if (hasDateTo && dayDate > departTimestamp && dayDate < returnTimestamp) return this.datepicker.rangeLabelInRange || 'in range';
+
+    // After start date, no end date yet, or after end date
+    return this.datepicker.rangeLabelAfterRange || 'after range';
   }
 
   /**
@@ -330,9 +486,9 @@ export class AuroCalendarCell extends LitElement {
 
       if (popoverSlotContent) {
         this.appendChild(popoverSlotContent.cloneNode(true));
-        this.auroPopover.removeAttribute('disabled');
+        this.hasPopoverContent = true;
       } else {
-        this.auroPopover.setAttribute('disabled', true);
+        this.hasPopoverContent = false;
       }
     } catch (err) { // eslint-disable-line no-unused-vars
       // Error handling goes here
@@ -348,13 +504,41 @@ export class AuroCalendarCell extends LitElement {
       return;
     }
     this.datepicker = calendar.datepicker;
-    this.datepicker.addEventListener('auroDatePicker-newSlotContent', () => {
+    this._slotContentHandler = () => {
       this.handleSlotContent();
-    });
+      // Force re-render so isBlackout()/aria-disabled reflect updated blackoutDates.
+      this.requestUpdate();
+    };
+    this.datepicker.addEventListener('auroDatePicker-newSlotContent', this._slotContentHandler);
 
+    // Trigger an initial update now that `this.datepicker` is assigned so
+    // cells reflect blackout/slot state that was configured before first render.
+    this.requestUpdate();
+
+    this.calendarMonth = calendarMonth;
+    this.configurePopover();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.datepicker && this._slotContentHandler) {
+      this.datepicker.removeEventListener('auroDatePicker-newSlotContent', this._slotContentHandler);
+    }
+  }
+
+  /**
+   * Configures the popover instance with the calendar month boundary.
+   * Called from firstUpdated and updated because the popover element is only
+   * rendered after hasPopoverContent becomes true (set by handleSlotContent).
+   * @private
+   * @returns {void}
+   */
+  configurePopover() {
     this.auroPopover = this.shadowRoot.querySelector(this.popoverTag._$litStatic$);
 
-    this.auroPopover.boundary = calendarMonth;
+    if (this.auroPopover && this.calendarMonth) {
+      this.auroPopover.boundary = this.calendarMonth;
+    }
   }
 
   updated(properties) {
@@ -362,46 +546,88 @@ export class AuroCalendarCell extends LitElement {
       this.dateChanged(this.dateFrom, this.dateTo, this.hoveredDate, this.day);
     }
 
-    this.setDateSlotName();
-    this.handleSlotContent();
+    if (this.day) {
+      this.setDateSlotName();
+      this.handleSlotContent();
+    }
+
+    // Configure popover when it first becomes rendered
+    if (properties.has('hasPopoverContent') && this.hasPopoverContent) {
+      this.updateComplete.then(() => this.configurePopover());
+    }
   }
 
-  render() {
+  /**
+   * Programmatically focuses the cell's interactive button element.
+   * @returns {void}
+   */
+  focusButton() {
+    const button = this.shadowRoot.querySelector('button:not([aria-hidden])');
+    if (button) {
+      button.focus();
+    }
+  }
+
+  renderCellButton() {
+    const outOfRange = this.isOutOfRange(this.day, this.min, this.max);
+    const role = outOfRange ? 'presentation' : 'gridcell';
+    const blackout = this.isBlackout();
+
     const buttonClasses = {
       'day': true,
       'body-lg': true,
-      'currentDate': this.currentDate,
+      'currentDate': this.isCurrentDate,
       'selected': this.selected,
-      'inRange': this.hovered && this.isInRange(this.day, this.dateFrom, this.dateTo),
+      'inRange': this.datepicker?.hasAttribute('range') && this.hovered && this.isInRange(this.day, this.dateFrom, this.dateTo),
       'lastHoveredDate': this.isLastHoveredDate(this.day, this.dateFrom, this.dateTo, this.hoveredDate) && this.datepicker && this.datepicker.hasAttribute('range'),
-      'disabled': this.isEnabled(this.day, this.min, this.max, this.disabledDays),
-      'rangeDepartDate': this.isDepartDate(this.day, this.dateFrom) && (this.hoveredDate > this.dateFrom || this.dateTo),
-      'rangeReturnDate': this.isReturnDate(this.day, this.dateFrom, this.dateTo),
+      'disabled': outOfRange,
+      'blackout': blackout,
+      'rangeDepartDate': this.datepicker?.hasAttribute('range') && this.isDepartDate(this.day, this.dateFrom) && (this.hoveredDate > this.dateFrom || this.dateTo),
+      'rangeReturnDate': this.datepicker?.hasAttribute('range') && this.isReturnDate(this.day, this.dateFrom, this.dateTo),
       'reference': this.isReferenceDate(this.dateStr),
-      'sameDateTrip': this.dateFrom === this.dateTo
+      'sameDateTrip': this.datepicker?.hasAttribute('range') && this.dateFrom === this.dateTo
     };
 
-    let _a, _b;
     return html`
-      <${this.popoverTag}>
-        <slot name="popover_${this.dateStr}"></slot>
-        <button
-          slot="trigger"
-          @click="${this.handleTap}"
-          @mouseover="${this.handleHover}"
-          @focus="${this.handleHover}"
-          class="${classMap(buttonClasses)}"
-          ?disabled="${this.disabled}"
-          title="${this.getTitle((_a = this.day) === null || _a === void 0 ? void 0 : _a.date)}"
-          tabindex="-1">
-          <div class="buttonWrapper">
-            <div class="currentDayMarker">${(_b = this.day) === null || _b === void 0 ? void 0 : _b.title}</div>
-            <div class="dateSlot body-2xs" part="dateSlot">
-              <slot name="date_${this.dateStr}"></slot>
-            </div>
-          </div>
-        </button>
-      </${this.popoverTag}>
+      <button
+        slot="trigger"
+        id="${this.getCellId()}"
+        role="${role}"
+        @click="${outOfRange ? undefined : this.handleTap}"
+        @mouseover="${outOfRange ? undefined : this.handleHover}"
+        @focus="${outOfRange ? undefined : this.handleHover}"
+        class="${classMap(buttonClasses)}"
+        ?disabled="${outOfRange}"
+        aria-disabled="${blackout ? 'true' : nothing}"
+        aria-hidden="${outOfRange ? 'true' : nothing}"
+        aria-selected="${this.selected ? 'true' : 'false'}"
+        aria-current="${this.isCurrentDate ? 'date' : nothing}"
+        tabindex="${this.active ? '0' : '-1'}">
+        <span class="srOnly">${this.getAriaLabel()}</span>
+        <div class="buttonWrapper" aria-hidden="true">
+          <div class="currentDayMarker">${this.day?.title || nothing}</div>
+        </div>
+        <div class="dateSlot body-2xs" part="dateSlot" ?hidden="${!this.renderForDateSlot}">
+          <slot name="date_${this.dateStr}"></slot>
+        </div>
+      </button>
+    `;
+  }
+
+  render() {
+    const hasPopoverContent = this.hasPopoverContent;
+
+    if (hasPopoverContent) {
+      return html`
+        <${this.popoverTag}>
+          <span aria-hidden="true"><slot name="popover_${this.dateStr}"></slot></span>
+          ${this.renderCellButton()}
+        </${this.popoverTag}>
+      `;
+    }
+
+    return html`
+      ${this.renderCellButton()}
     `;
   }
 }

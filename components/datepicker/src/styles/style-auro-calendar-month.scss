@@ -109,6 +109,10 @@ $calendar-padding-desktop: var(--ds-size-200, vac.$ds-size-200);
 
   align-items: center;
   justify-content: center;
+
+  abbr {
+    text-decoration: none;
+  }
 }
 
 .tbody {
