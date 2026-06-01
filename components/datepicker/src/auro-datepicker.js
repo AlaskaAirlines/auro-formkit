@@ -13,6 +13,8 @@ import AuroFormValidation from '@aurodesignsystem/form-validation';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 import { dateFormatter } from '@aurodesignsystem/auro-library/scripts/runtime/dateUtilities/dateFormatter.mjs';
+import { DomHandler } from '@aurodesignsystem/auro-library/scripts/runtime/domHandler';
+import { getDateFormatFromLocale } from '@aurodesignsystem/auro-input/src/utilities.js';
 import { AuroDatepickerUtilities } from './utilities.js';
 import { UtilitiesCalendarRender } from './utilitiesCalendarRender.js';
 
@@ -87,6 +89,7 @@ export class AuroDatePicker extends AuroElement {
       delegatesFocus: true,
     };
   }
+
   constructor() {
     super();
 
@@ -99,6 +102,11 @@ export class AuroDatePicker extends AuroElement {
      * @private
      */
     this.calendarRenderUtil = new UtilitiesCalendarRender();
+
+    /**
+     *  @private
+     */
+    this.domHandler = new DomHandler();
 
     // If `calendarStartDate` is set, use that as the central date. Otherwise, use the current date.
     this.calendarRenderUtil.updateCentralDate(this, this.calendarStartDateObject ?? new Date());
@@ -118,7 +126,6 @@ export class AuroDatePicker extends AuroElement {
     this.calendarStartDate = undefined;
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
-    this.format = 'mm/dd/yyyy';
     this.fullscreenBreakpoint = 'sm';
     this.monthNames = [
       'January',
@@ -342,6 +349,14 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
+       * Defines the locale of the element. Used to derive the date format when `format` is not explicitly set.
+       */
+      locale: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * Defines the screen size breakpoint at which the dropdown switches to fullscreen mode on mobile. `disabled` indicates a dropdown should _never_ enter fullscreen.
        *
        * When expanded, the dropdown will automatically display in fullscreen mode
@@ -401,13 +416,6 @@ export class AuroDatePicker extends AuroElement {
        */
       monthNames: {
         type: Array
-      },
-
-      /**
-       * @private
-       */
-      monthFirst: {
-        type: Boolean
       },
 
       /**
@@ -686,8 +694,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * @private
    * Common display value wrapper classes.
+   * @private
+   * @return {Object} - An object containing the common classes for the display value wrapper.
    */
   get commonDisplayValueWrapperClasses() {
     return {
@@ -1046,7 +1055,6 @@ export class AuroDatePicker extends AuroElement {
   configureCalendar() {
     this.calendar = this.shadowRoot.querySelector('auro-formkit-calendar');
     this.calendar.datepicker = this;
-    this.calendar.format = this.format;
     this.calendar.dropdown = this.dropdown;
 
     this.calendar.addEventListener('auroCalendar-dateSelected', () => {
@@ -1262,10 +1270,14 @@ export class AuroDatePicker extends AuroElement {
   }
 
   updated(changedProperties) {
-    if (changedProperties.has('format')) {
-      this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    if (changedProperties.has('locale')) {
+      if (!changedProperties.has('format')) {
+        const previousLocaleFormat = getDateFormatFromLocale(changedProperties.get('locale'));
+        if (!this.format || this.format.toLowerCase() === previousLocaleFormat) {
+          this.format = getDateFormatFromLocale(this.locale);
+        }
+      }
     }
-
 
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
@@ -1509,7 +1521,15 @@ export class AuroDatePicker extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.monthFirst = this.format.indexOf('mm') < this.format.indexOf('yyyy');
+    this.locale = this.domHandler.getLocale(this);
+
+    // Derive format eagerly so the first render has a valid format.
+    // updated() handles locale changes after the initial render, but runs
+    // after render(), so without this a preset value would briefly display
+    // as a raw ISO string in the fullscreen bib.
+    if (!this.format) {
+      this.format = getDateFormatFromLocale(this.locale);
+    }
   }
 
   // layout render methods
@@ -1688,7 +1708,8 @@ export class AuroDatePicker extends AuroElement {
           ?disabled="${this.disabled}"
           ?required="${this.required}"
           ?hideLabelVisually="${this.layout !== 'classic'}"
-          .format="${this.format}"
+          format="${this.format}"
+          locale="${this.locale}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
           .placeholder="${this.placeholder}"
@@ -1733,6 +1754,7 @@ export class AuroDatePicker extends AuroElement {
             ?required="${this.required}"
             ?hideLabelVisually="${this.layout !== 'classic'}"
             .format="${this.format}"
+            locale="${this.locale}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
@@ -1775,7 +1797,7 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Handles click on the clear button.
    * @private
-   * @param {MouseEvent} event
+   * @param {MouseEvent} event - The click event object.
    * @returns {void}
    */
   handleClearClick(event) {
@@ -1895,7 +1917,7 @@ export class AuroDatePicker extends AuroElement {
         ?largeFullscreenHeadline="${this.largeFullscreenHeadline}"
         ?noRange="${!this.range}"
         .format="${this.format}"
-        .monthFirst="${this.monthFirst}"
+        .monthFirst="${this.format.indexOf('mm') < this.format.indexOf('yyyy')}"
         .maxDate="${this.maxDate}"
         .minDate="${this.minDate}"
         .monthNames="${this.monthNames}"
@@ -1907,8 +1929,8 @@ export class AuroDatePicker extends AuroElement {
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.toLabel" name="bib.fullscreen.toLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.fromLabel" name="bib.fullscreen.fromLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-        <span slot="bib.fullscreen.fromStr">${AuroInputUtil.toFormattedValue(this.value, this.valueObject, this.format) || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>
-        ${this.range ? html`<span slot="bib.fullscreen.toStr">${AuroInputUtil.toFormattedValue(this.valueEnd, this.valueEndObject, this.format) || html`<span class="placeholderDate">${this.format.toUpperCase()}</span>`}</span>` : undefined}
+        <span slot="bib.fullscreen.fromStr">${AuroInputUtil.toFormattedValue(this.value, this.valueObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>
+        ${this.range ? html`<span slot="bib.fullscreen.toStr">${AuroInputUtil.toFormattedValue(this.valueEnd, this.valueEndObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>` : undefined}
       </auro-formkit-calendar>
     `;
   }

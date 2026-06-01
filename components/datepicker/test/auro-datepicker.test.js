@@ -578,12 +578,57 @@ function runFullTest(mobileView) {
     });
 
     describe('format', () => {
+      it('should default to mm/dd/yyyy when no format or locale is set', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+        await expect(el.format).to.equal('mm/dd/yyyy');
+      });
+
+      it('should set monthFirst true for mm/dd/yyyy format', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        await elementUpdated(calendar);
+        await expect(calendar.monthFirst).to.be.true;
+      });
+
+      it('should set monthFirst from explicit format attribute in connectedCallback without extra update cycle', async () => {
+        // monthFirst must be derived eagerly in connectedCallback even when format is pre-set.
+        // Without this, the first calendar render receives monthFirst=undefined and shows the
+        // month/year header in the wrong order until updated() corrects it.
+        const el = await fixture(html`<auro-datepicker format="yyyy/mm/dd"></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        await elementUpdated(calendar);
+        await expect(calendar.monthFirst).to.be.false;
+      });
+
+      it('should not override an explicit format attribute set before connection', async () => {
+        const el = await fixture(html`<auro-datepicker format="dd/mm/yyyy"></auro-datepicker>`);
+        await expect(el.format).to.equal('dd/mm/yyyy');
+      });
+
+      it('should display a preset value in the derived format without waiting for updated()', async () => {
+        const el = await fixture(html`<auro-datepicker value="2024-03-25"></auro-datepicker>`);
+        await elementUpdated(el);
+        // must show formatted value, not raw ISO string
+        await expect(getInput(el, 0).inputElement.value).to.equal('03/25/2024');
+        await expect(getInput(el, 0).inputElement.value).to.not.equal('2024-03-25');
+      });
+
+      it('should reflect the format attribute', async () => {
+        const el = await fixture(html`<auro-datepicker format="dd/mm/yyyy"></auro-datepicker>`);
+        await elementUpdated(el);
+        await expect(el.getAttribute('format')).to.equal('dd/mm/yyyy');
+      });
+
       it('should accept ISO value and display it in the configured format', async() => {
         const el = await fixture(html`
           <auro-datepicker format="yyyy/mm/dd"></auro-datepicker>
         `);
 
-        el.value = "1999-08-15"; // always ISO regardless of format
+        // value is always ISO regardless of display format
+        el.value = "1999-08-15";
         el.validate();
         await elementUpdated(el);
 
@@ -594,6 +639,142 @@ function runFullTest(mobileView) {
         await expect(el.getAttribute('validity')).to.be.equal('valid');
       });
 
+      it('should display value in dd/mm/yyyy format', async () => {
+        const el = await fixture(html`<auro-datepicker format="dd/mm/yyyy"></auro-datepicker>`);
+        el.value = '2024-03-25';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('25/03/2024');
+      });
+
+      it('should display value in dd.mm.yyyy format', async () => {
+        const el = await fixture(html`<auro-datepicker format="dd.mm.yyyy"></auro-datepicker>`);
+        el.value = '2024-03-25';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('25.03.2024');
+      });
+
+      it('should update the displayed value when format changes', async () => {
+        const el = await fixture(html`<auro-datepicker format="mm/dd/yyyy"></auro-datepicker>`);
+        el.value = '2024-03-25';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('03/25/2024');
+
+        el.format = 'yyyy/mm/dd';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('2024/03/25');
+      });
+
+      it('should apply format to both inputs in range mode', async () => {
+        const el = await fixture(html`<auro-datepicker range format="dd/mm/yyyy"></auro-datepicker>`);
+        el.value = '2024-03-01';
+        el.valueEnd = '2024-03-15';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('01/03/2024');
+        await expect(getInput(el, 1).inputElement.value).to.equal('15/03/2024');
+      });
+
+      it('should use explicit format over locale-derived format when both are set', async () => {
+        const el = await fixture(html`<auro-datepicker locale="ja-JP" format="mm/dd/yyyy"></auro-datepicker>`);
+        await elementUpdated(el);
+        await expect(el.format).to.equal('mm/dd/yyyy');
+        el.value = '2024-03-25';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('03/25/2024');
+      });
+    });
+
+    describe('locale', () => {
+      it('should keep default mm/dd/yyyy format when locale is en-US', async () => {
+        const el = await fixture(html`<auro-datepicker locale="en-US"></auro-datepicker>`);
+        await elementUpdated(el);
+        await expect(el.format).to.equal('mm/dd/yyyy');
+      });
+
+      it('should derive dd/mm/yyyy format for fr-FR locale and display value correctly', async () => {
+        const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+        await elementUpdated(el);
+        await expect(el.format).to.equal('dd/mm/yyyy');
+        el.value = '2024-03-25';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('25/03/2024');
+      });
+
+      it('should inherit locale from nearest data-locale ancestor when no locale attribute is set', async () => {
+        const el = await fixture(html`
+          <div data-locale="fr-FR">
+            <auro-datepicker></auro-datepicker>
+          </div>
+        `);
+        const datepicker = el.querySelector('auro-datepicker');
+        await elementUpdated(datepicker);
+        await expect(datepicker.locale).to.equal('fr-FR');
+        await expect(datepicker.format).to.equal('dd/mm/yyyy');
+      });
+
+      it('should derive dd.mm.yyyy format for de-DE locale', async () => {
+        const el = await fixture(html`<auro-datepicker locale="de-DE"></auro-datepicker>`);
+        await elementUpdated(el);
+        await expect(el.format).to.equal('dd.mm.yyyy');
+      });
+
+      it('should derive yyyy/mm/dd format for ja-JP locale', async () => {
+        const el = await fixture(html`<auro-datepicker locale="ja-JP"></auro-datepicker>`);
+        await elementUpdated(el);
+        await expect(el.format).to.equal('yyyy/mm/dd');
+      });
+
+      it('should display value in the locale-derived format', async () => {
+        const el = await fixture(html`<auro-datepicker locale="ja-JP"></auro-datepicker>`);
+        el.value = '1999-08-15';
+        await elementUpdated(el);
+        await expect(getInput(el, 0).inputElement.value).to.equal('1999/08/15');
+      });
+
+      it('should forward locale to child auro-input elements', async () => {
+        const el = await fixture(html`<auro-datepicker locale="de-DE"></auro-datepicker>`);
+        await elementUpdated(el);
+        await elementUpdated(getInput(el, 0));
+        await expect(getInput(el, 0).locale).to.equal('de-DE');
+        await expect(getInput(el, 0).format).to.equal('dd.mm.yyyy');
+      });
+
+      it('should forward locale to both child inputs in range mode', async () => {
+        const el = await fixture(html`<auro-datepicker range locale="zh-CN"></auro-datepicker>`);
+        await elementUpdated(el);
+        await elementUpdated(getInput(el, 0));
+        await elementUpdated(getInput(el, 1));
+        await expect(getInput(el, 0).locale).to.equal('zh-CN');
+        await expect(getInput(el, 1).locale).to.equal('zh-CN');
+      });
+
+      it('should keep monthFirst in sync with format after locale change', async () => {
+        const el = await fixture(html`<auro-datepicker locale="en-US"></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        await elementUpdated(calendar);
+        await expect(el.format).to.equal('mm/dd/yyyy');
+        await expect(calendar.monthFirst).to.be.true;
+
+        el.locale = 'ja-JP';
+        await elementUpdated(el);
+        await elementUpdated(calendar);
+        await expect(el.format).to.equal('yyyy/mm/dd');
+        await expect(calendar.monthFirst).to.be.false;
+      });
+
+      it('should keep monthFirst in sync when locale changes to a month-first format', async () => {
+        const el = await fixture(html`<auro-datepicker locale="ja-JP"></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        await elementUpdated(calendar);
+        await expect(calendar.monthFirst).to.be.false;
+
+        el.locale = 'en-US';
+        await elementUpdated(el);
+        await elementUpdated(calendar);
+        await expect(el.format).to.equal('mm/dd/yyyy');
+        await expect(calendar.monthFirst).to.be.true;
+      });
     });
 
     describe('fullscreenBreakpoint', () => {
