@@ -87,6 +87,7 @@ export class AuroDatePicker extends AuroElement {
       delegatesFocus: true,
     };
   }
+
   constructor() {
     super();
 
@@ -254,7 +255,7 @@ export class AuroDatePicker extends AuroElement {
 
       /**
        * Defines whether the component will be on lighter or darker backgrounds.
-       * @property {'default', 'inverse'}
+       * @type {'default' | 'inverse'}
        * @default 'default'
        */
       appearance: {
@@ -773,8 +774,9 @@ export class AuroDatePicker extends AuroElement {
   }
 
   /**
-   * @private
    * Common display value wrapper classes.
+   * @private
+   * @returns {Object} Class map for Lit's classMap directive.
    */
   get commonDisplayValueWrapperClasses() {
     return {
@@ -942,7 +944,7 @@ export class AuroDatePicker extends AuroElement {
       }
 
       // Compute and mark the active cell
-      if (this.calendar.activeCellDate == null) {
+      if (this.calendar.activeCellDate === null || this.calendar.activeCellDate === undefined) {
         this.calendar.activeCellDate = this.calendar.computeActiveDate();
       }
       if (this.calendar.activeCellDate !== undefined) {
@@ -951,29 +953,37 @@ export class AuroDatePicker extends AuroElement {
 
       // If no cell matched (e.g. centralDate month differs from the rendered
       // range on mobile), fall back to the first rendered enabled cell.
-      let activeCell = allCells.find(cell => cell.active);
+      let activeCell = allCells.find((cell) => cell.active);
       if (!activeCell && allCells.length) {
-        const fallback = allCells[0];
+        const [fallback] = allCells;
         if (fallback.day) {
           this.calendar.activeCellDate = fallback.day.date;
           this.calendar.setActiveCell(this.calendar.activeCellDate);
-          activeCell = allCells.find(cell => cell.active);
+          activeCell = allCells.find((cell) => cell.active);
         }
       }
 
-      // Wait for the cell's Lit render to complete so the button's tabindex
-      // reflects the active state before we attempt to focus.
+      // Focus the calendar grid wrapper (aria-activedescendant handles
+      // the SR announcement for the active cell).
       if (activeCell) {
-        activeCell.updateComplete.then(() => {
-          activeCell.hovered = true;
-          const btn = activeCell.shadowRoot.querySelector('button:not([aria-hidden])');
-          if (btn) {
-            btn.setAttribute('tabindex', '0');
-            btn.focus({ focusVisible: true });
-          } else if (attempts < MAX_ATTEMPTS) {
-            requestAnimationFrame(tryFocus);
-          }
-        });
+        this.calendar.focusActiveCell();
+
+        // Announce the initial active cell via the live region.
+        // Delay the announcement so it arrives after VoiceOver finishes
+        // speaking the focus-change announcement for the grid wrapper.
+        // Without this delay, VoiceOver drops the live region update
+        // because it's already mid-announcement from the focus move.
+        const announcement = this.calendar.buildFocusAnnouncement(activeCell.day.date);
+        setTimeout(() => {
+          this.calendar.announceSelection(announcement);
+        }, 500);
+
+        // On mobile fullscreen, scroll the month list so the active cell's
+        // month is visible. Without this, the list stays scrolled to the
+        // calendarStartDate month which may be far from the active cell.
+        if (this.dropdown.isBibFullscreen) {
+          this.calendar.scrollToActiveCell();
+        }
       } else if (attempts < MAX_ATTEMPTS) {
         requestAnimationFrame(tryFocus);
       }
@@ -1372,12 +1382,14 @@ export class AuroDatePicker extends AuroElement {
     }
 
     const formatted = this.util.toNorthAmericanFormat(dateStr, this.format);
-    if (!this.util.validDateStr(dateStr, this.format)) return false;
+    if (!this.util.validDateStr(dateStr, this.format)) {
+      return false;
+    }
 
-    const d = new Date(formatted);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
+    const dt = new Date(formatted);
+    const yyyy = dt.getFullYear();
+    const mm = String(dt.getMonth() + 1).padStart(2, '0');
+    const dd = String(dt.getDate()).padStart(2, '0');
     return this.blackoutDates.includes(`${yyyy}-${mm}-${dd}`);
   }
 
@@ -1395,7 +1407,7 @@ export class AuroDatePicker extends AuroElement {
 
     // After standard validation, check blackout dates for typed input
     if (this.validity !== 'customError') {
-      if (this.isBlackoutDate(this.value) || (this.range && this.isBlackoutDate(this.valueEnd))) {
+      if (this.isBlackoutDate(this.value) || (this.range && this.isBlackoutDate(this.valueEnd))) { // eslint-disable-line no-extra-parens
         const msg = this.setCustomValidityCustomError || 'Selected date is unavailable';
         this.validity = 'customError';
         this.errorMessage = msg;
@@ -1441,7 +1453,7 @@ export class AuroDatePicker extends AuroElement {
       // backward compatibility for old format of referenceDates which is a stringified array with - instead of / as separator, e.g. ["10-22-2025","10-23-2025"]
       const stringfiedDates = JSON.stringify(this.referenceDates);
       if (stringfiedDates.includes('-')) {
-        this.referenceDates = this.referenceDates.map(date => date.replace(/-/gu, '/' ));
+        this.referenceDates = this.referenceDates.map((date) => date.replace(/-/gu, '/'));
       }
     }
 
@@ -2030,7 +2042,7 @@ export class AuroDatePicker extends AuroElement {
   /**
    * Handles click on the clear button.
    * @private
-   * @param {MouseEvent} event
+   * @param {MouseEvent} event - The mouse event from the clear button click.
    * @returns {void}
    */
   handleClearClick(event) {

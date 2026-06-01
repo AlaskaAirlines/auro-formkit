@@ -24,6 +24,12 @@
   display: flex;
 
   flex-direction: row;
+
+  // Suppress the default focus outline on the grid wrapper.
+  // Visual focus is shown via the .activeCell class on the active cell button.
+  &:focus {
+    outline: none;
+  }
 }
 
 .calendarNavButtons {
