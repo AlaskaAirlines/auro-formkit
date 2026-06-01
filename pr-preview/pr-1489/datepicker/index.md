@@ -232,8 +232,9 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/blackout-label.html) -->
 <!-- The below content is automatically added from ./../apiExamples/blackout-label.html -->
-<auro-datepicker id="blackoutLabelExample" blackoutLabel="sold out">
-<span slot="fromLabel">Choose a date</span>
+<auro-datepicker id="blackoutLabelExample" range blackoutLabel="sold out">
+<span slot="fromLabel">Choose a start date</span>
+<span slot="toLabel">Choose an end date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -242,8 +243,9 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/blackout-label.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/blackout-label.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker id="blackoutLabelExample" blackoutLabel="sold out"&gt;
-  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker id="blackoutLabelExample" range blackoutLabel="sold out"&gt;
+  &lt;span slot="fromLabel"&gt;Choose a start date&lt;/span&gt;
+  &lt;span slot="toLabel"&gt;Choose an end date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
