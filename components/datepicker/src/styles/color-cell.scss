@@ -23,8 +23,10 @@
     background-color: var(--ds-auro-calendar-cell-container-color);
     color: var(--ds-auro-calendar-cell-text-color);
 
-    &:focus-visible:not(.selected) {
+    &.activeCell:not(.selected) {
       --ds-auro-calendar-cell-container-color: var(--ds-auro-calendar-cell-in-range-color);
+      border-color: var(--ds-advanced-color-state-selected);
+      outline-color: var(--ds-auro-calendar-cell-container-color);
     }
   
     &.selected {

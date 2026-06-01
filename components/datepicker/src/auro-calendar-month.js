@@ -116,7 +116,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
    */
   renderDayOfWeek(dayOfWeek, index) {
     const fullName = this.dayFullNames ? this.dayFullNames[index] : dayOfWeek;
-    return html`<div class="th body-default" role="columnheader"><abbr title="${fullName}">${dayOfWeek}</abbr></div>`;
+    return html`<div class="th body-default"><abbr title="${fullName}">${dayOfWeek}</abbr></div>`;
   }
 
   /**
@@ -125,10 +125,26 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
    */
   getFocusableCells() {
     const cells = Array.from(this.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
-    return cells.filter(cell => {
-      if (!cell.day) return false;
+    return cells.filter((cell) => {
+      if (!cell.day) {
+        return false;
+      }
       return !cell.isOutOfRange(cell.day, cell.min, cell.max);
     });
+  }
+
+  /**
+   * Overrides the base class handler to prevent setting `this.hoveredDate`
+   * as a reactive property. Instead, just dispatches the event upward so
+   * the calendar can handle range preview imperatively.
+   * @private
+   * @param {CustomEvent} event - The date-is-hovered event from a cell.
+   * @returns {void}
+   */
+  handleDateHovered(event) {
+    this.dispatchEvent(new CustomEvent('hovered-date-changed', {
+      detail: { value: event.detail.date },
+    }));
   }
 
   /**
@@ -140,18 +156,29 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
    */
   handleGridKeyDown(event) {
     const { key } = event;
-    const arrowKeys = ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'];
+    const arrowKeys = [
+      'ArrowRight',
+      'ArrowLeft',
+      'ArrowDown',
+      'ArrowUp'
+    ];
 
-    if (!arrowKeys.includes(key)) return;
+    if (!arrowKeys.includes(key)) {
+      return;
+    }
 
     event.preventDefault();
 
     const focusableCells = this.getFocusableCells();
-    if (focusableCells.length === 0) return;
+    if (focusableCells.length === 0) {
+      return;
+    }
 
     // Find the currently active cell within this month
-    const activeCell = focusableCells.find(cell => cell.active);
-    if (!activeCell) return;
+    const activeCell = focusableCells.find((cell) => cell.active);
+    if (!activeCell) {
+      return;
+    }
 
     const activeIndex = focusableCells.indexOf(activeCell);
     let targetCell = null;
@@ -164,7 +191,9 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
         this.dispatchEvent(new CustomEvent('calendar-month-boundary', {
           bubbles: true,
           composed: true,
-          detail: { direction: 'next', fromDate: activeCell.day.date, key }
+          detail: { direction: 'next',
+            fromDate: activeCell.day.date,
+            key }
         }));
         return;
       }
@@ -176,7 +205,9 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
         this.dispatchEvent(new CustomEvent('calendar-month-boundary', {
           bubbles: true,
           composed: true,
-          detail: { direction: 'prev', fromDate: activeCell.day.date, key }
+          detail: { direction: 'prev',
+            fromDate: activeCell.day.date,
+            key }
         }));
         return;
       }
@@ -190,7 +221,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
       const targetDate = Math.floor(currentDate.getTime() / 1000);
 
       // Look for the target date in this month's focusable cells
-      targetCell = focusableCells.find(cell => cell.day.date === targetDate);
+      targetCell = focusableCells.find((cell) => cell.day.date === targetDate);
 
       if (!targetCell) {
         // Target is in another month or all cells in that direction are disabled
@@ -198,7 +229,9 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
         this.dispatchEvent(new CustomEvent('calendar-month-boundary', {
           bubbles: true,
           composed: true,
-          detail: { direction, fromDate: activeCell.day.date, key }
+          detail: { direction,
+            fromDate: activeCell.day.date,
+            key }
         }));
         return;
       }
@@ -229,7 +262,6 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
                 .min="${this.min}"
                 .max="${this.max}"
                 .month="${this.month}"
-                .hoveredDate="${this.hoveredDate}"
                 .dateTo="${this.dateTo}"
                 .dateFrom="${this.dateFrom}"
                 .locale="${this.locale}"
@@ -254,7 +286,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
       <div aria-labelledby="${this.getHeadingId()}">
         <div class="header">
           ${this.renderPrevButton()}
-          <div class="headerTitle heading-xs" id="${this.getHeadingId()}" aria-live="polite" aria-atomic="true">
+          <div class="headerTitle heading-xs" id="${this.getHeadingId()}" aria-hidden="true">
             ${this.monthFirst ? html`
               <div>${this.computeCurrentMonthName(this.month)}</div>
               <div>${this.renderYear()}</div>
@@ -266,9 +298,9 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
           ${this.renderNextButton()}
         </div>
 
-        <div class="table" role="grid" aria-labelledby="${this.getHeadingId()}" @keydown="${this.handleGridKeyDown}">
-          <div class="thead" role="rowgroup">
-            <div class="tr" role="row">
+        <div class="table" role="grid" aria-labelledby="${this.getHeadingId()}">
+          <div class="thead" aria-hidden="true">
+            <div class="tr">
               ${(_a = this.dayNamesOfTheWeek) === null || _a === void 0 ? void 0 : _a.map((dayNameOfWeek, index) => this.renderDayOfWeek(dayNameOfWeek, index))}
             </div>
           </div>
