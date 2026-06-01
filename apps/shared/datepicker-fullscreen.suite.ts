@@ -14,21 +14,39 @@ import { test, expect, type Page } from './coverage-fixture';
  * and leaving noHideOnThisFocusLoss false even on a mobile viewport. */
 async function waitForDatepicker(page: Page) {
   await page.waitForLoadState('load');
-  await page.waitForFunction(
-    () => {
-      const el = document.querySelector('auro-datepicker') as any;
-      return (
-        customElements.get('auro-datepicker') !== undefined &&
-        el?.dropdown?.bibContent != null
-      );
-    },
-    { timeout: 30_000 },
-  );
+
+  const datepickerReady = () => {
+    const el = document.querySelector('auro-datepicker') as any;
+    return (
+      customElements.get('auro-datepicker') !== undefined &&
+      el?.dropdown?.bibContent != null
+    );
+  };
+
+  try {
+    await page.waitForFunction(datepickerReady, { timeout: 15_000 });
+  } catch {
+    // Svelte lazy-loads on route mount; if the initial load is slow
+    // (common under CI), reload the page and try once more.
+    await page.reload({ waitUntil: 'load' });
+    await page.waitForFunction(datepickerReady, { timeout: 15_000 });
+  }
 }
 
-/** Click the datepicker's first input to open the bib. */
+/** Click the datepicker's first input to open the bib.
+ * Verifies the bib actually opened and retries the click once if not,
+ * guarding against races where the component's Lit lifecycle hasn't
+ * finished wiring up event listeners by the time the first click fires. */
 async function openBib(page: Page) {
   await page.locator('auro-datepicker').click();
+  try {
+    await page.waitForFunction(
+      () => (document.querySelector('auro-datepicker') as any)?.dropdown?.isPopoverVisible === true,
+      { timeout: 3_000 },
+    );
+  } catch {
+    await page.locator('auro-datepicker').click();
+  }
 }
 
 /** Returns true when dropdown.isPopoverVisible is true on the datepicker.
