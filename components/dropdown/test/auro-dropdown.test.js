@@ -768,6 +768,166 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('desktopModal', () => {
+      it('should default to false', async () => {
+        const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.desktopModal).to.be.false;
+      });
+
+      it('should reflect the desktopModal attribute', async () => {
+        const el = await fixture(html`<auro-dropdown desktopmodal><div slot="trigger">Trigger</div></auro-dropdown>`);
+        await expect(el.desktopModal).to.be.true;
+        await expect(el.hasAttribute('desktopmodal')).to.be.true;
+      });
+
+      it('should set siblings inert when opened in desktopModal mode', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        await expect(sibling.inert).to.not.be.true;
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        await expect(sibling.inert).to.be.true;
+      });
+
+      it('should clear sibling inert when closed', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        el.hide();
+        await elementUpdated(el);
+        await expectPopoverHidden(el);
+
+        await expect(sibling.inert).to.not.be.true;
+      });
+
+      it('should clear sibling inert on disconnectedCallback', async () => {
+        const wrapper = await fixture(html`
+          <div>
+            <div id="sibling">Sibling content</div>
+            <auro-dropdown desktopmodal>
+              <div slot="trigger">Trigger</div>
+              <div slot="popover">Popover content</div>
+            </auro-dropdown>
+          </div>
+        `);
+
+        const el = wrapper.querySelector('auro-dropdown');
+        const sibling = wrapper.querySelector('#sibling');
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+        await expect(sibling.inert).to.be.true;
+
+        wrapper.removeChild(el);
+        await elementUpdated(wrapper);
+
+        await expect(sibling.inert).to.not.be.true;
+      });
+
+      it('should trap Tab focus within the bib when open', async () => {
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div>
+              <button id="bibBtn1">First</button>
+              <button id="bibBtn2">Second</button>
+              <button id="bibBtn3">Third</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        // Wait for the initial focus move into the bib
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Tab should cycle through bib elements — dispatch Tab keydown
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // After another Tab, focus should still be inside the bib (not escape to trigger)
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // Walk the active-element chain — focus must still be inside the bib
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        const bibContent = el.bibContent;
+        const isInsideBib = bibContent?.contains(active) ||
+          el.querySelectorAll('button')[0]?.getRootNode() === active?.getRootNode();
+        await expect(isInsideBib || el.contains(active)).to.be.true;
+      });
+
+      it('should trap Shift+Tab focus within the bib when open', async () => {
+        const el = await fixture(html`
+          <auro-dropdown desktopmodal>
+            <div slot="trigger">Trigger</div>
+            <div>
+              <button id="bibBtn1">First</button>
+              <button id="bibBtn2">Second</button>
+            </div>
+          </auro-dropdown>
+        `);
+        await elementUpdated(el);
+
+        el.show();
+        await elementUpdated(el);
+        await expectPopoverShown(el);
+
+        // Wait for initial focus into the bib
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        // Shift+Tab should wrap backward within the bib
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        // Focus must still be inside the component (bib), not escaped
+        let active = document.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+          active = active.shadowRoot.activeElement;
+        }
+        await expect(el.contains(active) || el.shadowRoot.contains(active)).to.be.true;
+      });
+    });
+
     describe('offset', () => {
       it('should default to 0', async () => {
         const el = await fixture(html`<auro-dropdown><div slot="trigger">Trigger</div></auro-dropdown>`);
@@ -1447,8 +1607,16 @@ function runFullTest(mobileView) {
         }
       };
 
-      // Should not throw — catch block absorbs the error
-      el.handleTriggerContentSlotChange(mockEvent);
+      // Suppress the expected console.warn from the catch block
+      const originalWarn = console.warn;
+      console.warn = () => {};
+
+      try {
+        // Should not throw — catch block absorbs the error
+        el.handleTriggerContentSlotChange(mockEvent);
+      } finally {
+        console.warn = originalWarn;
+      }
       await elementUpdated(el);
     });
 

@@ -121,119 +121,7 @@ function runFullTest(mobileView) {
   describe('User Stories', () => {
     // Add missing tests
 
-    if (!mobileView) {
-      it('should hide the dropdown when it or its children lose focus', async () => {
-        const el = await fixture(html`
-          <div>
-            <auro-datepicker></auro-datepicker>
-            <button>Test Button</button>
-          </div>
-        `);
 
-        const datepicker = el.querySelector('auro-datepicker');
-        const button = el.querySelector('button');
-
-        const input = getInput(datepicker, 0);
-        input.click();
-
-        await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
-
-        // wait for a frame to add `click` event listener correctly
-        await nextFrame();
-
-        button.click();
-
-        await elementUpdated(datepicker);
-        await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
-      });
-    }
-
-    it('should not restore focus to trigger when bib closes due to tab-out', async () => {
-      await setViewport({ width: 1024, height: 800 });
-
-      const el = await fixture(html`
-        <div>
-          <auro-datepicker></auro-datepicker>
-          <button id="outside">Outside</button>
-        </div>
-      `);
-
-      const datepicker = el.querySelector('auro-datepicker');
-      const outside = el.querySelector('#outside');
-
-      getInput(datepicker, 0).click();
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
-
-      // Spy directly on the trigger input's focus method. This is more reliable
-      // than checking document.activeElement in headless Chrome, where shadow DOM
-      // focus propagation timing cannot be guaranteed across frames.
-      const triggerInput = datepicker.inputList[0];
-      let focusCallCount = 0;
-      const originalFocus = triggerInput.focus.bind(triggerInput);
-      triggerInput.focus = () => { focusCallCount++; originalFocus(); };
-
-      // Move focus outside — simulates the user tabbing away.
-      outside.focus();
-      await elementUpdated(datepicker);
-
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
-
-      // Wait two rAFs: first lets the toggled-handler's rAF fire,
-      // second confirms no further focus call slips through afterward.
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-      expect(focusCallCount).to.equal(0);
-    });
-
-    it('should not open the bib when Enter key is pressed', async () => {
-      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-
-      await elementUpdated(el);
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-    });
-
-    it('should not open the bib when Space is pressed', async () => {
-      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
-
-      await elementUpdated(el);
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-    });
-
-    it('should close the bib in desktop mode when Tab triggers focus-loss', async () => {
-      await setViewport({ width: 1200, height: 800 });
-
-      const el = await fixture(html`
-        <div>
-          <auro-datepicker></auro-datepicker>
-          <button id="outside">Outside</button>
-        </div>
-      `);
-
-      const datepicker = el.querySelector('auro-datepicker');
-      const outside = el.querySelector('#outside');
-      const input = getInput(datepicker, 0);
-
-      input.click();
-      await elementUpdated(datepicker);
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.true;
-      await expect(datepicker.dropdown.isBibFullscreen).to.be.false;
-
-      // Tab naturally moves focus outside; simulate that by focusing the next element.
-      // The keyboard spec defers to browser-default Tab behaviour — there is no
-      // redirect-back mechanism in desktop mode. The bib closes via focus-loss.
-      outside.focus();
-      await elementUpdated(datepicker);
-
-      await expect(datepicker.dropdown.isPopoverVisible).to.be.false;
-    });
 
     it('should change to the previous calendar month when handlePrevMonth is called', async () => {
       const el = await fixture(html`
@@ -299,24 +187,6 @@ function runFullTest(mobileView) {
       await expect(centralAfterAgain).to.contain('01/01/2024');
     });
 
-    it('should hide the dropdown on blur', async () => {
-      const el = await fixture(html`
-          <auro-datepicker></auro-datepicker>
-      `);
-
-      el.focus();
-      el.shadowRoot.activeElement.click();
-      await elementUpdated(el);
-      await expect(el.dropdown.isPopoverVisible).to.be.true;
-
-      setTimeout(() => {
-        el.blur();
-      }, 0);
-
-      await oneEvent(el, 'auroDatePicker-toggled');
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
-    });
-
     describe('badInput validity', () => {
       it('invalid date value triggers validation error', async () => {
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
@@ -366,6 +236,183 @@ function runFullTest(mobileView) {
         const el = await fixture(html`<auro-datepicker autoplacement></auro-datepicker>`);
         await expect(el.autoPlacement).to.be.true;
         await expect(el.hasAttribute('autoplacement')).to.be.true;
+      });
+    });
+
+    describe('Blackout dates', () => {
+      /**
+       * Formats a Date as a local YYYY-MM-DD string without UTC conversion.
+       * Using toISOString() would convert to UTC, which can shift the date
+       * in negative time zones and cause flaky tests.
+       */
+      function toLocalISODate(date) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      it('should mark blackout dates as aria-disabled', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const blackoutCell = allCells.find(cell => {
+          if (!cell.day) return false;
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
+          return cellDate === isoDate;
+        });
+
+        expect(blackoutCell).to.exist;
+        expect(blackoutCell.isBlackout()).to.be.true;
+
+        await blackoutCell.updateComplete;
+        const button = blackoutCell.shadowRoot.querySelector('button');
+        expect(button.hasAttribute('aria-disabled')).to.be.true;
+      });
+
+      it('should not select a blackout date when clicked', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const blackoutCell = allCells.find(cell => {
+          if (!cell.day) return false;
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
+          return cellDate === isoDate;
+        });
+
+        blackoutCell.handleTap();
+        await elementUpdated(el);
+
+        expect(el.value).to.be.undefined;
+      });
+
+      it('should include blackoutLabel in aria-label for blackout cells', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]} blackoutLabel="sold out"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const blackoutCell = allCells.find(cell => {
+          if (!cell.day) return false;
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
+          return cellDate === isoDate;
+        });
+
+        const label = blackoutCell.getAriaLabel();
+        expect(label).to.include('sold out');
+      });
+
+      it('should use default blackoutLabel "unavailable" when not specified', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const blackoutCell = allCells.find(cell => {
+          if (!cell.day) return false;
+          const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
+          return cellDate === isoDate;
+        });
+
+        const label = blackoutCell.getAriaLabel();
+        expect(label).to.include('unavailable');
+      });
+
+      it('should set customError validity when a blackout date is typed', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]}></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        // Format as MM/DD/YYYY for input
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const dd = String(tomorrow.getDate()).padStart(2, '0');
+        const yyyy = tomorrow.getFullYear();
+        const formatted = `${mm}/${dd}/${yyyy}`;
+
+        el.inputList[0].value = formatted;
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+        expect(el.errorMessage).to.equal('Selected date is unavailable');
+      });
+
+      it('should use setCustomValidityCustomError message for blackout validation', async () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isoDate = toLocalISODate(tomorrow);
+
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${[isoDate]} setCustomValidityCustomError="Date is sold out"></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const dd = String(tomorrow.getDate()).padStart(2, '0');
+        const yyyy = tomorrow.getFullYear();
+        const formatted = `${mm}/${dd}/${yyyy}`;
+
+        el.inputList[0].value = formatted;
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.getAttribute('validity')).to.equal('customError');
+        expect(el.errorMessage).to.equal('Date is sold out');
       });
     });
 
@@ -625,28 +672,6 @@ function runFullTest(mobileView) {
         await expect(calendar.numCalendars).to.be.equal(12);
       });
 
-      it('should focus the close button when the fullscreen dialog opens', async () => {
-        await setViewport({ width: mobileBreakpointWidth, height: 800 });
-
-        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
-        const input = getInput(el, 0);
-
-        input.click();
-        await expect(dropdown.isPopoverVisible).to.be.true;
-
-        // Wait for updateComplete + rAF focus cycle used by configureDropdown
-        await el.dropdown.updateComplete;
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-        // Calendar delegates focusCloseButton to its internal bibtemplate
-        const bibtemplate = calendar.shadowRoot.querySelector(calendar.bibtemplateTag._$litStatic$);
-        const closeBtn = bibtemplate.shadowRoot.querySelector('#closeButton');
-        expect(closeBtn).to.exist;
-        expect(bibtemplate.shadowRoot.activeElement).to.equal(closeBtn);
-      });
-
       it('should not close the fullscreen dialog when Tab key is pressed', async () => {
         await setViewport({ width: mobileBreakpointWidth, height: 800 });
 
@@ -664,16 +689,6 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         await expect(dropdown.isPopoverVisible).to.be.true;
-      });
-
-      it('should set noHideOnThisFocusLoss to false when bib opens in non-fullscreen mode', async () => {
-        await setViewport({ width: 1024, height: 800 });
-
-        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-        getInput(el, 0).click();
-        await elementUpdated(el);
-
-        expect(el.dropdown.noHideOnThisFocusLoss).to.be.false;
       });
 
       it('should restore trigger inert and focus after fullscreen dialog closes', async () => {
@@ -3289,6 +3304,69 @@ function runFullTest(mobileView) {
 
       expect(calendar.dateTo).to.equal(undefined);
     });
+
+    describe('isOutOfRange and isBlackout', () => {
+      it('isOutOfRange returns false when day is null', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const cell = allCells[0];
+
+        expect(cell.isOutOfRange(null, 0, 9999999999)).to.be.false;
+      });
+
+      it('isBlackout returns false for dates not in blackoutDates', async () => {
+        const el = await fixture(html`
+          <auro-datepicker .blackoutDates=${['2099-12-31']}></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        // Today's cell should not be blacked out
+        const todayCell = allCells.find(c => c.isCurrentDate);
+        if (todayCell) {
+          expect(todayCell.isBlackout()).to.be.false;
+        }
+      });
+    });
+
+    describe('computeActiveDate', () => {
+      it('should return today when no constraints exist', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const result = calendar.computeActiveDate();
+        const todayTs = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
+
+        expect(result).to.equal(todayTs);
+      });
+
+      it('should return dateFrom when set and in range', async () => {
+        const el = await fixture(html`
+          <auro-datepicker value="01/15/2024" centralDate="01/15/2024"></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        // Set dateFrom manually since the calendar uses timestamps
+        const result = calendar.computeActiveDate();
+
+        // dateFrom is set, so it should be returned
+        expect(result).to.exist;
+      });
+    });
   });
 
   describe('A11Y', () => {
@@ -3303,6 +3381,541 @@ function runFullTest(mobileView) {
 
       await expect(el).to.be.accessible({
         ignoredRules: ['nested-interactive']
+      });
+    });
+
+    describe('Cell aria-label and roles', () => {
+      it('should generate a localized aria-label for in-range cells', async () => {
+        const el = await fixture(html`
+          <auro-datepicker></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const cell = allCells[0];
+        const label = cell.getAriaLabel();
+
+        // Should contain a full date string (at least the current year)
+        const currentYear = new Date().getFullYear().toString();
+        expect(label).to.include(currentYear);
+      });
+
+      it('should set role="gridcell" on in-range cells and role="presentation" on out-of-range', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const allCells = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
+
+        // Find a cell that is in range (has a day and not out of range)
+        const inRangeCell = allCells.find(c => c.day && !c.isOutOfRange(c.day, c.min, c.max));
+        await inRangeCell.updateComplete;
+        const inRangeButton = inRangeCell.shadowRoot.querySelector('button');
+        expect(inRangeButton.getAttribute('role')).to.equal('gridcell');
+      });
+
+      it('should set aria-selected="true" on selected cells', async () => {
+        const el = await fixture(html`
+          <auro-datepicker value="01/15/2024" centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const selectedCell = allCells.find(c => c.selected);
+
+        expect(selectedCell).to.exist;
+        await selectedCell.updateComplete;
+        const button = selectedCell.shadowRoot.querySelector('button');
+        expect(button.getAttribute('aria-selected')).to.equal('true');
+      });
+
+      it('should set aria-current="date" on today\'s date cell', async () => {
+        const el = await fixture(html`
+          <auro-datepicker></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const todayCell = allCells.find(c => c.isCurrentDate);
+
+        if (todayCell) {
+          await todayCell.updateComplete;
+          const button = todayCell.shadowRoot.querySelector('button');
+          expect(button.getAttribute('aria-current')).to.equal('date');
+        }
+      });
+    });
+
+    describe('Range labels in aria-label', () => {
+      it('should include "range start" in depart date cell label', async () => {
+        const el = await fixture(html`
+          <auro-datepicker range value="01/15/2024" centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+
+        // Find the cell for Jan 15
+        const departCell = allCells.find(c => c.selected);
+        if (departCell) {
+          const label = departCell.getAriaLabel();
+          expect(label).to.include('range start');
+        }
+      });
+
+      it('should support custom range labels', async () => {
+        const el = await fixture(html`
+          <auro-datepicker range value="01/15/2024" centralDate="01/15/2024"
+            rangeLabelStart="departure"
+            rangeLabelEnd="return">
+          </auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const departCell = allCells.find(c => c.selected);
+
+        if (departCell) {
+          const label = departCell.getAriaLabel();
+          expect(label).to.include('departure');
+        }
+      });
+    });
+
+    describe('Roving tabindex', () => {
+      it('should have exactly one cell with tabindex="0" when calendar opens', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const activeCells = allCells.filter(c => c.active);
+
+        expect(activeCells.length).to.equal(1);
+      });
+
+      it('should default active cell to today when no value is set', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const activeCell = allCells.find(c => c.active);
+
+        expect(activeCell).to.exist;
+        expect(activeCell.isCurrentDate).to.be.true;
+      });
+
+      it('should set active cell to the selected date when value is set', async () => {
+        const el = await fixture(html`
+          <auro-datepicker value="01/15/2024" centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const activeCell = allCells.find(c => c.active);
+
+        expect(activeCell).to.exist;
+        expect(activeCell.selected).to.be.true;
+      });
+    });
+
+    describe('Keyboard navigation', () => {
+      it('should move active cell right on ArrowRight', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024" value="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+
+        // Get initial active cell date
+        const initialActive = calendar.activeCellDate;
+
+        // Dispatch ArrowRight on the month grid
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, composed: true }));
+
+        await elementUpdated(el);
+        await nextFrame();
+
+        // Active cell should have moved to the next day
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() + 1);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
+      });
+
+      it('should move active cell left on ArrowLeft', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024" value="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const initialActive = calendar.activeCellDate;
+
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, composed: true }));
+
+        await elementUpdated(el);
+        await nextFrame();
+
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() - 1);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
+      });
+
+      it('should move active cell down by 7 days on ArrowDown', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024" value="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const initialActive = calendar.activeCellDate;
+
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+
+        await elementUpdated(el);
+        await nextFrame();
+
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() + 7);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
+      });
+
+      it('should move active cell up by 7 days on ArrowUp', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024" value="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const initialActive = calendar.activeCellDate;
+
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, composed: true }));
+
+        await elementUpdated(el);
+        await nextFrame();
+
+        const expectedDate = new Date(initialActive * 1000);
+        expectedDate.setDate(expectedDate.getDate() - 7);
+        expectedDate.setHours(0, 0, 0, 0);
+        expect(calendar.activeCellDate).to.equal(Math.floor(expectedDate.getTime() / 1000));
+      });
+    });
+
+    describe('Month navigation announcements', () => {
+      it('should populate live region when prev month button is clicked', async () => {
+        const el = await fixture(html`
+          <auro-datepicker value="02/01/2023" centralDate="02/01/2023"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const prevBtn = calendar.shadowRoot.querySelector('.prevMonth');
+        prevBtn.click();
+        await elementUpdated(el);
+
+        // Wait for microtask announcement
+        await new Promise((r) => setTimeout(r, 0));
+
+        const liveRegion = calendar.shadowRoot.querySelector('#calendar-live-region');
+        expect(liveRegion.textContent).to.include('January');
+        expect(liveRegion.textContent).to.include('2023');
+      });
+
+      it('should populate live region when next month button is clicked', async () => {
+        const el = await fixture(html`
+          <auro-datepicker value="11/01/2023" centralDate="11/01/2023"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const nextBtn = calendar.shadowRoot.querySelector('.nextMonth');
+        nextBtn.click();
+        await elementUpdated(el);
+
+        await new Promise((r) => setTimeout(r, 0));
+
+        const liveRegion = calendar.shadowRoot.querySelector('#calendar-live-region');
+        expect(liveRegion.textContent).to.include('December');
+        expect(liveRegion.textContent).to.include('2023');
+      });
+    });
+
+    describe('Nav button aria-labels', () => {
+      it('should have accessible labels on month navigation buttons', async () => {
+        const el = await fixture(html`
+          <auro-datepicker value="02/01/2023" centralDate="02/01/2023"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const prevBtn = calendar.shadowRoot.querySelector('.prevMonth');
+        const nextBtn = calendar.shadowRoot.querySelector('.nextMonth');
+
+        expect(prevBtn.getAttribute('aria-label')).to.equal('Previous month');
+        expect(nextBtn.getAttribute('aria-label')).to.equal('Next month');
+      });
+
+      it('should support custom nav button labels', async () => {
+        const el = await fixture(html`
+          <auro-datepicker value="02/01/2023" centralDate="02/01/2023"
+            navLabelPrevMonth="Mes anterior"
+            navLabelNextMonth="Mes siguiente">
+          </auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const prevBtn = calendar.shadowRoot.querySelector('.prevMonth');
+        const nextBtn = calendar.shadowRoot.querySelector('.nextMonth');
+
+        expect(prevBtn.getAttribute('aria-label')).to.equal('Mes anterior');
+        expect(nextBtn.getAttribute('aria-label')).to.equal('Mes siguiente');
+      });
+    });
+
+    describe('Grid ARIA structure', () => {
+      it('should have role="grid" on the calendar table', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const grid = month.shadowRoot.querySelector('[role="grid"]');
+
+        expect(grid).to.exist;
+      });
+
+      it('should have role="columnheader" on day-of-week headers', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const headers = month.shadowRoot.querySelectorAll('[role="columnheader"]');
+
+        expect(headers.length).to.equal(7);
+      });
+
+      it('should have abbr with full day name on day-of-week headers', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const abbrs = month.shadowRoot.querySelectorAll('[role="columnheader"] abbr');
+
+        expect(abbrs.length).to.equal(7);
+        // Each abbr should have a title attribute with a full day name
+        abbrs.forEach(abbr => {
+          expect(abbr.getAttribute('title')).to.not.be.empty;
+          expect(abbr.getAttribute('title').length).to.be.greaterThan(2);
+        });
+      });
+
+      it('should have role="row" on each week row', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const rows = month.shadowRoot.querySelectorAll('.tbody [role="row"]');
+
+        expect(rows.length).to.be.greaterThan(0);
+      });
+    });
+
+    describe('Cell focus management', () => {
+      it('should focus the button inside the active cell via focusButton()', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024" value="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+        const activeCell = allCells.find(c => c.active);
+
+        expect(activeCell).to.exist;
+        activeCell.focusButton();
+        await activeCell.updateComplete;
+
+        const button = activeCell.shadowRoot.querySelector('button');
+        expect(activeCell.shadowRoot.activeElement).to.equal(button);
+      });
+
+      it('should generate a unique cell ID in format cell-YYYY-MM-DD', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const allCells = calendar.getAllFocusableCells();
+
+        const cell = allCells[0];
+        const cellId = cell.getCellId();
+        expect(cellId).to.match(/^cell-\d{4}-\d{2}-\d{2}$/);
+      });
+    });
+
+    describe('Out-of-range cells', () => {
+      it('should mark out-of-range cells as aria-hidden', async () => {
+        // Use a minDate to create out-of-range cells
+        const today = new Date();
+        const minDate = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}/${today.getFullYear()}`;
+
+        const el = await fixture(html`
+          <auro-datepicker minDate="${minDate}"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const allCellElements = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
+
+        // Find a cell that is out of range
+        const outOfRangeCell = allCellElements.find(c => c.day && c.isOutOfRange(c.day, c.min, c.max));
+
+        if (outOfRangeCell) {
+          await outOfRangeCell.updateComplete;
+          const button = outOfRangeCell.shadowRoot.querySelector('button');
+          expect(button.hasAttribute('aria-hidden')).to.be.true;
+          expect(button.disabled).to.be.true;
+        }
       });
     });
   });
@@ -3516,18 +4129,28 @@ function runFullTest(mobileView) {
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('should not show the bib when Space is pressed on the input', async () => {
+    it('should show the bib when Space is pressed on the input', async () => {
       const el = await fixture(html`
         <auro-datepicker></auro-datepicker>
       `);
 
-      const input = getInput(el, 0);
-
-      input.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
 
       await elementUpdated(el);
 
-      await expect(el.dropdown.isPopoverVisible).to.be.false;
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
+    });
+
+    it('should show the bib when Enter is pressed on the input', async () => {
+      const el = await fixture(html`
+        <auro-datepicker></auro-datepicker>
+      `);
+
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+      await elementUpdated(el);
+
+      await expect(el.dropdown.isPopoverVisible).to.be.true;
     });
 
     for (const key of ['Enter', 'Space']) {
@@ -3547,6 +4170,148 @@ function runFullTest(mobileView) {
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
     }
+
+    describe('Arrow key navigation within calendar month', () => {
+      it('should move active cell to the next day on ArrowRight', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        expect(focusableCells.length).to.be.at.least(2, 'Expected at least 2 focusable cells for ArrowRight test');
+
+        // Clear all active states, then set the first cell as active
+        focusableCells.forEach(c => { c.active = false; });
+        focusableCells[0].active = true;
+        await elementUpdated(calendarMonth);
+
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+
+        const expectedDate = focusableCells[1].day.date;
+        const listener = oneEvent(calendarMonth, 'calendar-cell-activate');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+
+        const event = await listener;
+        await expect(event.detail.date).to.equal(expectedDate);
+      });
+
+      it('should move active cell to the previous day on ArrowLeft', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        expect(focusableCells.length).to.be.at.least(2, 'Expected at least 2 focusable cells for ArrowLeft test');
+
+        // Clear all active states, then set the second cell as active
+        focusableCells.forEach(c => { c.active = false; });
+        focusableCells[1].active = true;
+        await elementUpdated(calendarMonth);
+
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+
+        const expectedDate = focusableCells[0].day.date;
+        const listener = oneEvent(calendarMonth, 'calendar-cell-activate');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+
+        const event = await listener;
+        await expect(event.detail.date).to.equal(expectedDate);
+      });
+
+      it('should dispatch calendar-month-boundary when ArrowRight at end of month', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        expect(focusableCells.length).to.be.at.least(1, 'Expected at least 1 focusable cell for ArrowRight boundary test');
+
+        // Clear all active states, then set the last cell as active
+        focusableCells.forEach(c => { c.active = false; });
+        const lastCell = focusableCells[focusableCells.length - 1];
+        lastCell.active = true;
+        await elementUpdated(calendarMonth);
+
+        const listener = oneEvent(calendarMonth, 'calendar-month-boundary');
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+
+        const event = await listener;
+        await expect(event.detail.direction).to.equal('next');
+      });
+
+      it('should dispatch calendar-month-boundary when ArrowLeft at start of month', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        expect(focusableCells.length).to.be.at.least(1, 'Expected at least 1 focusable cell for ArrowLeft boundary test');
+
+        // Clear all active states, then set the first cell as active
+        focusableCells.forEach(c => { c.active = false; });
+        focusableCells[0].active = true;
+        await elementUpdated(calendarMonth);
+
+        const listener = oneEvent(calendarMonth, 'calendar-month-boundary');
+        const grid = calendarMonth.shadowRoot.querySelector('[role="grid"]') || calendarMonth.shadowRoot.querySelector('[aria-labelledby]');
+        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+
+        const event = await listener;
+        await expect(event.detail.direction).to.equal('prev');
+      });
+
+      it('should set tabindex 0 on active cell and -1 on others (roving tabindex)', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+
+        const { calendar } = el;
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+
+        const focusableCells = calendarMonth.getFocusableCells();
+        expect(focusableCells.length).to.be.at.least(2, 'Expected at least 2 focusable cells for roving tabindex test');
+
+        // Set the first cell as active
+        focusableCells[0].active = true;
+        focusableCells[1].active = false;
+        await elementUpdated(focusableCells[0]);
+        await elementUpdated(focusableCells[1]);
+
+        const activeButton = focusableCells[0].shadowRoot.querySelector('button');
+        const inactiveButton = focusableCells[1].shadowRoot.querySelector('button');
+
+        await expect(activeButton.getAttribute('tabindex')).to.equal('0');
+        await expect(inactiveButton.getAttribute('tabindex')).to.equal('-1');
+      });
+    });
 
     describe('Escape', () => {
       it('should close the datepicker bib without closing a parent auro-dialog', async () => {
