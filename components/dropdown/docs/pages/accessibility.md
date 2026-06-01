@@ -28,6 +28,16 @@
         </ol>
       </section>
       <section>
+        <auro-header level="2" id="desktopModal">Desktop Modal</auro-header>
+        <p>When the <code>desktopModal</code> attribute is set, the dropdown behaves as a modal dialog on desktop viewports:</p>
+        <ul>
+          <li>All sibling elements on the page are marked <code>inert</code>, preventing interaction with content outside the dropdown.</li>
+          <li>Focus is trapped within the bib content using a Tab-key handler.</li>
+          <li>The <code>inert</code> state and focus trap are automatically cleaned up when the bib is closed or the component is disconnected.</li>
+        </ul>
+        <p>In fullscreen mode, the native <code>&lt;dialog&gt;</code> <code>showModal()</code> API provides equivalent behavior, so <code>desktopModal</code> only applies to desktop-sized viewports.</p>
+      </section>
+      <section>
         <auro-header level="2" id="tabBehavior">Tab Behavior</auro-header>
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/tabindex.md) -->
         <!-- AURO-GENERATED-CONTENT:END -->
