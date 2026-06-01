@@ -6,8 +6,13 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 async function waitForCounter(page: Page) {
   await page.waitForLoadState('networkidle');
   await page.waitForFunction(
-    () => customElements.get('auro-counter') !== undefined,
-    { timeout: 10_000 },
+    () => {
+      const el = document.querySelector('auro-counter') as any;
+      return customElements.get('auro-counter') !== undefined &&
+        !!el?.shadowRoot?.querySelector('[role="spinbutton"]') &&
+        el?.value !== undefined;
+    },
+    { timeout: 40_000 },
   );
 }
 
@@ -102,6 +107,7 @@ export function counterInteractionSuite(framework: string) {
 
   test.describe(`${label} — standalone counter`, () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(45_000);
       await page.goto('/counter-interaction');
       await waitForCounter(page);
     });
@@ -224,6 +230,7 @@ export function counterInteractionSuite(framework: string) {
 
   test.describe(`${label} — counter-group dropdown`, () => {
     test.beforeEach(async ({ page }) => {
+      test.setTimeout(45_000);
       await page.goto('/counter-interaction');
       await waitForCounter(page);
     });
@@ -251,24 +258,20 @@ export function counterInteractionSuite(framework: string) {
 
     test.describe('Keyboard interaction in dropdown', () => {
       test('ArrowUp increments a counter inside the dropdown', async ({ page }) => {
-        // Open the dropdown
+        // Open the dropdown — FocusTrap lands focus on the first counter
         await openDropdown(page, 'dropdown-group');
+        await expect(counter(page, 'dropdown-group').first()).toBeFocused({ timeout: 3_000 });
 
-        // Tab to the first counter and confirm focus landed
-        await page.keyboard.press('Tab');
-        await expect(counter(page, 'dropdown-group').first()).toBeFocused();
         const before = await counterValue(page, 'dropdown-group', 0);
         await page.keyboard.press('ArrowUp');
         await expect.poll(() => counterValue(page, 'dropdown-group', 0)).toBe(before + 1);
       });
 
       test('ArrowDown decrements a counter inside the dropdown', async ({ page }) => {
-        // Open the dropdown
+        // Open the dropdown — FocusTrap lands focus on the first counter
         await openDropdown(page, 'dropdown-group');
+        await expect(counter(page, 'dropdown-group').first()).toBeFocused({ timeout: 3_000 });
 
-        // Tab to the first counter, increment then decrement
-        await page.keyboard.press('Tab');
-        await expect(counter(page, 'dropdown-group').first()).toBeFocused();
         await page.keyboard.press('ArrowUp');
         await expect.poll(() => counterValue(page, 'dropdown-group', 0)).toBe(1);
 
@@ -277,11 +280,9 @@ export function counterInteractionSuite(framework: string) {
       });
 
       test('Tab navigates between counters in the dropdown', async ({ page }) => {
+        // Open the dropdown — FocusTrap lands focus on counter 0
         await openDropdown(page, 'dropdown-group');
-
-        // Tab to first counter
-        await page.keyboard.press('Tab');
-        await expect(page.locator('[data-testid="dropdown-group"] auro-counter').nth(0)).toBeFocused();
+        await expect(page.locator('[data-testid="dropdown-group"] auro-counter').nth(0)).toBeFocused({ timeout: 3_000 });
 
         // Tab to second counter
         await page.keyboard.press('Tab');

@@ -155,6 +155,46 @@ function runFullTest(mobileView) {
         await expect(header.getAttribute('display')).to.equal('600');
       });
     });
+
+    describe('showFooter', () => {
+      it('should default to falsy', async () => {
+        const el = await fixture(html`<auro-bibtemplate>Content</auro-bibtemplate>`);
+        await expect(el.showFooter).to.not.be.true;
+      });
+
+      it('should reflect the showFooter attribute', async () => {
+        const el = await fixture(html`
+          <auro-bibtemplate showFooter>
+            Content
+            <span slot="footer">Footer</span>
+          </auro-bibtemplate>
+        `);
+        await expect(el.showFooter).to.be.true;
+        await expect(el.hasAttribute('showfooter')).to.be.true;
+      });
+
+      it('should render footer when showFooter is true without isFullscreen', async () => {
+        const el = await fixture(html`
+          <auro-bibtemplate showFooter>
+            Content
+            <span slot="footer">Footer</span>
+          </auro-bibtemplate>
+        `);
+        const footerContainer = el.shadowRoot.querySelector('#footerContainer');
+        await expect(footerContainer).to.exist;
+      });
+
+      it('should not render footer when neither showFooter nor isFullscreen is set', async () => {
+        const el = await fixture(html`
+          <auro-bibtemplate>
+            Content
+            <span slot="footer">Footer</span>
+          </auro-bibtemplate>
+        `);
+        const footerContainer = el.shadowRoot.querySelector('#footerContainer');
+        await expect(footerContainer).to.not.exist;
+      });
+    });
   });
 
   describe('Slots', () => {

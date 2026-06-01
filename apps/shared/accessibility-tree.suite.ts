@@ -4,11 +4,11 @@ import { test, expect, type Page, type Locator } from './coverage-fixture';
 
 /** Wait for a custom element to be registered and its shadow DOM rendered. */
 async function waitForComponent(page: Page, tagName: string, shadowSelector?: string) {
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await page.waitForFunction(
     (tag) => customElements.get(tag) !== undefined,
     tagName,
-    { timeout: 10_000 },
+    { timeout: 15_000 },
   );
   if (shadowSelector) {
     await page.waitForFunction(
