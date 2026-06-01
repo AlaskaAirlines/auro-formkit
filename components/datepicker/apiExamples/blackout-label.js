@@ -11,13 +11,24 @@ export function blackoutLabelExample() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Set min to 1 week before today, max to 1 week after today
-    const minDate = new Date(today);
-    minDate.setDate(today.getDate() - 7);
+    // Calendar starts 6 months in the future
+    const startDate = new Date(today);
+    startDate.setMonth(today.getMonth() + 6);
 
-    const maxDate = new Date(today);
-    maxDate.setDate(today.getDate() + 7);
+    // Calendar ends 6 months in the future
+    const endDate = new Date(today);
+    endDate.setMonth(today.getMonth() + 12);
 
+    // Min date is 2 months after the start date
+    const minDate = new Date(startDate);
+    minDate.setMonth(startDate.getMonth() + 2);
+
+    // Max date is 1 week after min date
+    const maxDate = new Date(minDate);
+    maxDate.setDate(minDate.getDate() + 75);
+
+    blackoutDP.setAttribute('calendarStartDate', formatMMDDYYYY(startDate));
+    blackoutDP.setAttribute('calendarEndDate', formatMMDDYYYY(endDate));
     blackoutDP.setAttribute('minDate', formatMMDDYYYY(minDate));
     blackoutDP.setAttribute('maxDate', formatMMDDYYYY(maxDate));
 

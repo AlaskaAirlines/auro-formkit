@@ -41,9 +41,11 @@
 <p>When the clear button is focused, VoiceOver announces the <code>aria-label</code> from the <code>ariaLabel.input.clear</code> slot (or the default i18n text), followed by <em>"button"</em>.</p>
 
 <auro-header level="3" id="voiceOverCalendarNavigation">Calendar Navigation</auro-header>
-<p>When the calendar bib is open, users can navigate calendar cells using VoiceOver gestures (swipe left/right) or arrow keys. Each cell announces:</p>
+<p>When the calendar bib is open, DOM focus stays on the calendar grid wrapper while <code>aria-activedescendant</code> points to a proxy element that mirrors the active cell's ARIA attributes. This prevents duplicate screen reader announcements during rapid arrow-key navigation. A debounced live region (150 ms) announces the full context after the user pauses.</p>
+<p>Users can navigate calendar cells using VoiceOver gestures (swipe left/right) or arrow keys. Each cell announces:</p>
 <ul>
   <li>The full localized date (e.g. <em>"Thursday, May 14, 2026"</em>)</li>
+  <li>Date slot content when present (e.g. prices)</li>
   <li>Range position when in range mode (e.g. <em>", range start"</em>, <em>", in range"</em>, <em>", before range"</em>)</li>
   <li><em>", unavailable"</em> for blackout dates (dates within the min/max range that are explicitly disabled)</li>
   <li><em>"current date"</em> for today's date (via <code>aria-current="date"</code>)</li>
@@ -77,7 +79,7 @@
 <ol>
   <li><strong>Focus</strong> — Tab to the datepicker input.</li>
   <li><strong>Type a date</strong> — Enter a date value directly, or press Enter/Space to open the calendar.</li>
-  <li><strong>Calendar opens</strong> — Focus moves to the active date cell inside the calendar grid. Navigate dates with VoiceOver gestures (swipe) or arrow keys.</li>
+  <li><strong>Calendar opens</strong> — Focus moves to the calendar grid wrapper, with <code>aria-activedescendant</code> pointing to the active date. VoiceOver announces the active date. Navigate dates with VoiceOver gestures (swipe) or arrow keys.</li>
   <li><strong>Select a date</strong> — Activate a calendar cell (double-tap with VoiceOver, or Enter/Space with keyboard) to select the date. The selected date is announced via a live region and populates the input. The calendar remains open; close it by pressing Escape or activating the Done button.</li>
 </ol>
 
@@ -86,7 +88,7 @@
 <ol>
   <li><strong>Focus</strong> — Tab or swipe to the datepicker input.</li>
   <li>
-    <strong>Open:</strong> The fullscreen modal dialog opens. VoiceOver announces the dialog name (e.g. <em>"Departure date, dialog"</em>). Focus is moved to the active date cell inside the calendar grid.
+    <strong>Open:</strong> The fullscreen modal dialog opens. VoiceOver announces the dialog name (e.g. <em>"Departure date, dialog"</em>). Focus is moved to the calendar grid wrapper, with <code>aria-activedescendant</code> pointing to the active date.
   </li>
   <li><strong>Navigate dates</strong> — Swipe through calendar cells or use arrow keys.</li>
   <li>

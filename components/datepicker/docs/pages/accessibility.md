@@ -41,19 +41,21 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 | `role="rowgroup"` | Header / body groups | Groups the day-of-week header row and the week rows. |
 | `role="row"` | Week row | Groups each week of date cells. |
 | `role="columnheader"` | Day-of-week header | Each day-of-week abbreviation. Rendered as an `<abbr>` element with the full day name in the `title` attribute so screen readers can announce the expanded form. |
-| `role="gridcell"` | In-range date cell | Each selectable date cell. Includes `aria-selected`, `aria-current="date"` (for today), and a visually-hidden text label. |
+| `role="gridcell"` | In-range date cell, active-descendant proxy | Each selectable date cell. Includes `aria-selected`, `aria-current="date"` (for today), and a visually-hidden text label. A proxy `<span>` inside the calendar grid wrapper mirrors the active cell's ARIA attributes for `aria-activedescendant`. |
 | `role="presentation"` | Out-of-range date cell | Cells outside the valid min/max range. Also receive `aria-hidden="true"` and `tabindex="-1"` to remove them from both the accessibility tree and the tab order. |
 | `aria-disabled="true"` | Blackout date cell | Cells matching the `blackout` dates list. Unlike out-of-range cells, blackout cells **remain focusable** via arrow-key navigation so screen reader users can discover them. The cell's label includes ", unavailable" to communicate that the date cannot be selected. |
 | `aria-selected` | Date cell button | `"true"` for the selected date(s), `"false"` for all other in-range cells. |
-| Accessible name | Date cell button | Provided via visually-hidden text content (not an `aria-label` attribute). Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus the range position label (e.g., "range start") and availability status (", unavailable" for blackout dates). |
+| Accessible name | Date cell button | Provided via visually-hidden text content (not an `aria-label` attribute). Localized label built from `Intl.DateTimeFormat` (weekday, month, day, year), plus any date slot content (e.g. prices), the range position label (e.g., "range start"), and availability status (", unavailable" for blackout dates). |
 
 <auro-header level="2" id="focusManagement">Focus Management</auro-header>
 
 The component uses `delegatesFocus: true` on its shadow root, meaning focus is automatically delegated to the first focusable element inside the component (the date input).
 
-<auro-header level="3" id="rovingTabindex">Roving Tabindex</auro-header>
+<auro-header level="3" id="ariaActivedescendant">aria-activedescendant</auro-header>
 
-The calendar grid uses a **roving tabindex** pattern. Only one date cell across the entire calendar has `tabindex="0"` at a time — all other cells have `tabindex="-1"`. Arrow keys move the active cell without wrapping; when a boundary is reached the calendar navigates to the adjacent month.
+The calendar grid uses an **`aria-activedescendant`** pattern for keyboard navigation. DOM focus remains on a wrapper element (`#calendarGrid`) while `aria-activedescendant` points to a proxy `<span>` that mirrors the active cell's ARIA attributes (`aria-label`, `aria-selected`, `aria-current`, `aria-disabled`). This approach keeps the screen reader in sync with the visually active cell without moving DOM focus on every keystroke, which prevents duplicate announcements during rapid arrow-key navigation.
+
+The active cell receives a `.visualFocus` CSS class to display a visible focus ring, since the native `:focus-visible` pseudo-class applies to the grid wrapper (which holds actual DOM focus), not to individual cells.
 
 The initial active cell is determined in priority order:
 
@@ -64,12 +66,13 @@ The initial active cell is determined in priority order:
 
 <auro-header level="3" id="focusOnOpen">Focus on Open</auro-header>
 
-When the calendar bib opens, focus moves to the active date cell inside the calendar grid. This applies to both desktop and fullscreen modes.
+When the calendar bib opens, focus moves to the calendar grid wrapper (`#calendarGrid`). The `aria-activedescendant` attribute points to a proxy element that carries the active date cell's label, so screen readers announce the active date. This applies to both desktop and fullscreen modes.
 
 <auro-header level="2" id="screenReaderAnnouncements">Screen Reader Announcements</auro-header>
 
 - **Date selection** — When a date is selected, the calendar's live region (`aria-live="assertive"`) announces the formatted date (e.g., "Wednesday, January 15, 2025"). For range datepickers, both the start and end date selections are announced.
-- **Date cell labels** — Each date cell contains a visually-hidden `<span class="srOnly">` with the full localized label. VoiceOver reads this content instead of `aria-label`, which iOS VoiceOver does not reliably announce on buttons.
+- **Debounced navigation announcement** — During arrow-key navigation, a debounced live region (150 ms) announces the full date context (date, slot content, range position, availability) after the user pauses. This prevents overlapping announcements during rapid navigation.
+- **Date cell labels** — Each date cell contains a visually-hidden `<span class="srOnly">` with the full localized label, including any date slot content (e.g. prices). VoiceOver reads this content instead of `aria-label`, which iOS VoiceOver does not reliably announce on buttons.
 - **Validation errors** — When a validation error occurs, the error message is rendered with `role="alert"` and `aria-live="assertive"`, causing it to be announced immediately without requiring focus.
 - **Help text** — The help text content is associated with the input so that screen readers announce it as part of the element description when focused.
 
