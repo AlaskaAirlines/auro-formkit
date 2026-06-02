@@ -147,6 +147,19 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     }));
   }
 
+  /**
+   * Dispatches a bubbling event when the mouse leaves the date grid body
+   * so the parent calendar can clear the range hover preview.
+   * @private
+   * @returns {void}
+   */
+  handleTbodyMouseLeave() {
+    this.dispatchEvent(new CustomEvent('calendar-month-mouseleave', {
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
   renderWeek(week) {
     return html`
       <div class="tr" role="row">${week.map((day) => this.renderDay(day))}</div>
@@ -205,7 +218,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
               ${(_a = this.dayNamesOfTheWeek) === null || _a === void 0 ? void 0 : _a.map((dayNameOfWeek, index) => this.renderDayOfWeek(dayNameOfWeek, index))}
             </div>
           </div>
-          <div class="tbody" role="rowgroup">
+          <div class="tbody" role="rowgroup" @mouseleave="${this.handleTbodyMouseLeave}">
             ${(_b = this.daysOfMonth) === null || _b === void 0 ? void 0 : _b.map(week => this.renderWeek(week))}
           </div>
         </div>

@@ -139,4 +139,10 @@ $calendar-padding-desktop: var(--ds-size-200, vac.$ds-size-200);
   flex-direction: row;
 
   width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+
+  &:not(:last-of-type) {
+    margin-bottom: var(--ds-size-100, vac.$ds-size-100);
+  }
 }
