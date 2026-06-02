@@ -534,4 +534,124 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
       await expect.poll(() => isBibVisible(page, 'default')).toBe(false);
     });
   });
+
+  // ─── Viewport resize tests ─────────────────────────────────────────────────
+
+  test.describe(`${label} — viewport resize`, () => {
+    test.use({ viewport: { width: 1280, height: 800 } });
+
+    test.beforeEach(async ({ page }) => {
+      await page.goto(route);
+      await waitForDatepicker(page, 'default');
+    });
+
+    test('resizing from desktop to mobile switches calendar to fullscreen', async ({ page }) => {
+      // Open bib on desktop
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      // Verify desktop mode
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(false);
+
+      // Resize to mobile width
+      await page.setViewportSize({ width: 390, height: 844 });
+
+      // Calendar should switch to fullscreen
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(true);
+
+      // Calendar isFullscreen should be updated
+      await expect.poll(async () => {
+        return dp(page, 'default').evaluate((el: any) => {
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          return calendar?.isFullscreen;
+        });
+      }, { timeout: 5_000 }).toBe(true);
+    });
+
+    test('resizing from mobile to desktop switches calendar from fullscreen', async ({ page }) => {
+      // Resize to mobile first
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForTimeout(100);
+
+      // Open bib in fullscreen mode
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 5_000 }).toBe(true);
+
+      // Resize back to desktop
+      await page.setViewportSize({ width: 1280, height: 800 });
+
+      // Calendar should switch out of fullscreen
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(false);
+
+      // Calendar isFullscreen should be updated
+      await expect.poll(async () => {
+        return dp(page, 'default').evaluate((el: any) => {
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          return calendar?.isFullscreen;
+        });
+      }, { timeout: 5_000 }).toBe(false);
+    });
+
+    test('trigger inert is toggled when resizing between desktop and mobile', async ({ page }) => {
+      // Open bib on desktop
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      // Trigger should not be inert on desktop
+      const triggerInertDesktop = await dp(page, 'default').evaluate((el: any) => {
+        return el.dropdown.trigger.inert;
+      });
+      expect(triggerInertDesktop).toBe(false);
+
+      // Resize to mobile
+      await page.setViewportSize({ width: 390, height: 844 });
+
+      // Wait for fullscreen and trigger to become inert
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(true);
+      await expect.poll(async () =>
+        dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
+        { timeout: 5_000 },
+      ).toBe(true);
+
+      // Resize back to desktop
+      await page.setViewportSize({ width: 1280, height: 800 });
+
+      // Trigger should no longer be inert
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(false);
+      await expect.poll(async () =>
+        dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
+        { timeout: 5_000 },
+      ).toBe(false);
+    });
+
+    test('bib remains open after resizing from desktop to mobile', async ({ page }) => {
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      await page.setViewportSize({ width: 390, height: 844 });
+
+      // Bib should still be open after resize
+      await expect.poll(() => isBibVisible(page, 'default'), { timeout: 5_000 }).toBe(true);
+    });
+
+    test('active cell exists after resizing from desktop to mobile', async ({ page }) => {
+      await openBib(page, 'default');
+      await waitForBibOpen(page, 'default');
+
+      // Resize to mobile
+      await page.setViewportSize({ width: 390, height: 844 });
+      await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(true);
+
+      // An active cell should exist after resize + re-render
+      await expect.poll(async () => {
+        return dp(page, 'default').evaluate((el: any) => {
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+          if (!calendar) return false;
+          const allCells = calendar.getAllFocusableCells();
+          return allCells.some((cell: any) => cell.active);
+        });
+      }, { timeout: 8_000 }).toBe(true);
+    });
+  });
 }

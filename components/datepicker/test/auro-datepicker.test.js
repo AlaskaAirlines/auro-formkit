@@ -1,4 +1,4 @@
-/* eslint-disable max-lines, no-undef, prefer-destructuring, no-use-before-define, no-magic-numbers, no-unused-vars, no-await-in-loop */
+/* eslint-disable max-lines, no-undef, no-inline-comments, line-comment-position, prefer-destructuring, no-magic-numbers, no-unused-vars, no-await-in-loop, no-unused-expressions */
 
 import { fixture, html, expect, elementUpdated, nextFrame, oneEvent } from '@open-wc/testing';
 import { setViewport, sendKeys } from '@web/test-runner-commands';
@@ -17,7 +17,13 @@ const mobileBreakpointWidth = parseInt(designTokens['ds-grid-breakpoint-sm'], 10
  */
 function runFullTest(mobileView) {
   before(async () => {
-    await setViewport(mobileView ? { width: mobileBreakpointWidth, height: 800 } : { width: 800, height: 800 });
+    await setViewport(mobileView ? {
+      width: mobileBreakpointWidth,
+      height: 800
+    } : {
+      width: 800,
+      height: 800
+    });
   });
 
   describe('Rendering', () => {
@@ -119,10 +125,6 @@ function runFullTest(mobileView) {
   });
 
   describe('User Stories', () => {
-    // Add missing tests
-
-
-
     it('should change to the previous calendar month when handlePrevMonth is called', async () => {
       const el = await fixture(html`
         <auro-datepicker value="02/01/2023"></auro-datepicker>
@@ -194,7 +196,10 @@ function runFullTest(mobileView) {
 
         // Set an invalid date string
         el.inputList[0].value = '13/45/2024';
-        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        el.inputList[0].dispatchEvent(new Event('input', {
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
 
         // Force validation
@@ -240,10 +245,13 @@ function runFullTest(mobileView) {
     });
 
     describe('Blackout dates', () => {
+
       /**
        * Formats a Date as a local YYYY-MM-DD string without UTC conversion.
        * Using toISOString() would convert to UTC, which can shift the date
        * in negative time zones and cause flaky tests.
+       * @param {Date} date - The date to format.
+       * @returns {string} The formatted YYYY-MM-DD string.
        */
       function toLocalISODate(date) {
         const yyyy = date.getFullYear();
@@ -268,8 +276,10 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const blackoutCell = allCells.find(cell => {
-          if (!cell.day) return false;
+        const blackoutCell = allCells.find((cell) => {
+          if (!cell.day) {
+            return false;
+          }
           const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
@@ -298,8 +308,10 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const blackoutCell = allCells.find(cell => {
-          if (!cell.day) return false;
+        const blackoutCell = allCells.find((cell) => {
+          if (!cell.day) {
+            return false;
+          }
           const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
@@ -326,8 +338,10 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const blackoutCell = allCells.find(cell => {
-          if (!cell.day) return false;
+        const blackoutCell = allCells.find((cell) => {
+          if (!cell.day) {
+            return false;
+          }
           const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
@@ -352,8 +366,10 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const blackoutCell = allCells.find(cell => {
-          if (!cell.day) return false;
+        const blackoutCell = allCells.find((cell) => {
+          if (!cell.day) {
+            return false;
+          }
           const cellDate = toLocalISODate(new Date(cell.day.date * 1000));
           return cellDate === isoDate;
         });
@@ -379,7 +395,10 @@ function runFullTest(mobileView) {
         const formatted = `${mm}/${dd}/${yyyy}`;
 
         el.inputList[0].value = formatted;
-        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        el.inputList[0].dispatchEvent(new Event('input', {
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
 
         el.validate(true);
@@ -405,7 +424,10 @@ function runFullTest(mobileView) {
         const formatted = `${mm}/${dd}/${yyyy}`;
 
         el.inputList[0].value = formatted;
-        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        el.inputList[0].dispatchEvent(new Event('input', {
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
 
         el.validate(true);
@@ -673,7 +695,10 @@ function runFullTest(mobileView) {
       });
 
       it('should not close the fullscreen dialog when Tab key is pressed', async () => {
-        await setViewport({ width: mobileBreakpointWidth, height: 800 });
+        await setViewport({
+          width: mobileBreakpointWidth,
+          height: 800
+        });
 
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -683,7 +708,7 @@ function runFullTest(mobileView) {
         await expect(dropdown.isPopoverVisible).to.be.true;
 
         await el.dropdown.updateComplete;
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
         await elementUpdated(el);
@@ -692,7 +717,10 @@ function runFullTest(mobileView) {
       });
 
       it('should restore trigger inert and focus after fullscreen dialog closes', async () => {
-        await setViewport({ width: mobileBreakpointWidth, height: 800 });
+        await setViewport({
+          width: mobileBreakpointWidth,
+          height: 800
+        });
 
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -702,7 +730,7 @@ function runFullTest(mobileView) {
         await expect(dropdown.isPopoverVisible).to.be.true;
 
         await el.dropdown.updateComplete;
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         // Trigger should be inert while fullscreen is open
         expect(dropdown.trigger.inert).to.be.true;
@@ -712,14 +740,17 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // Wait for rAF focus restoration
-        await new Promise((r) => requestAnimationFrame(r));
+        await new Promise((resolve) => requestAnimationFrame(resolve));
 
         expect(dropdown.trigger.inert).to.be.false;
         expect(dropdown.isPopoverVisible).to.be.false;
       });
 
       it('should not cycle through content in fullscreen bib when Tab is pressed', async () => {
-        await setViewport({ width: mobileBreakpointWidth, height: 800 });
+        await setViewport({
+          width: mobileBreakpointWidth,
+          height: 800
+        });
 
         const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
@@ -729,13 +760,18 @@ function runFullTest(mobileView) {
         await expect(dropdown.isPopoverVisible).to.be.true;
 
         await el.dropdown.updateComplete;
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         // Tab dispatched from within the bib should not close the bib (the old
         // strategy closed on Tab; the new behavior keeps it open).
         const bibEl = el.dropdown.bibElement?.value;
         if (bibEl) {
-          bibEl.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true, cancelable: true }));
+          bibEl.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'Tab',
+            bubbles: true,
+            composed: true,
+            cancelable: true
+          }));
           await elementUpdated(el);
         }
 
@@ -743,7 +779,10 @@ function runFullTest(mobileView) {
       });
 
       it('should never open fullscreen when fullscreenBreakpoint is set to disabled', async () => {
-        await setViewport({ width: mobileBreakpointWidth, height: 800 });
+        await setViewport({
+          width: mobileBreakpointWidth,
+          height: 800
+        });
 
         const el = await fixture(html`
           <auro-datepicker fullscreenBreakpoint="disabled"></auro-datepicker>
@@ -760,6 +799,132 @@ function runFullTest(mobileView) {
         await expect(dropdown.isBibFullscreen).to.be.false;
       });
     });
+
+    if (!mobileView) {
+      describe('strategy-change re-render', () => {
+        it('should update calendar isFullscreen to true when strategy changes to fullscreen', async () => {
+          await setViewport({
+            width: 800,
+            height: 800
+          });
+
+          const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+          // Open on desktop
+          getInput(el, 0).click();
+          await expect(dropdown.isPopoverVisible).to.be.true;
+          await elementUpdated(calendar);
+          await nextFrame();
+
+          // Verify starting state
+          await expect(calendar.isFullscreen).to.not.be.true;
+
+          // Stop autoUpdate to prevent ResizeObserver interference
+          if (typeof dropdown.cleanup === 'function') {
+            dropdown.cleanup();
+          }
+
+          // Simulate strategy change to fullscreen
+          dropdown.isBibFullscreen = true;
+          await elementUpdated(dropdown);
+
+          dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
+          await dropdown.updateComplete;
+          await calendar.updateComplete;
+          await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+
+          await expect(calendar.isFullscreen).to.be.true;
+        });
+
+        it('should update calendar isFullscreen to false when strategy changes from fullscreen', async () => {
+          await setViewport({
+            width: 800,
+            height: 800
+          });
+
+          const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+          const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+          // Open on desktop
+          getInput(el, 0).click();
+          await expect(dropdown.isPopoverVisible).to.be.true;
+          await elementUpdated(calendar);
+          await nextFrame();
+
+          // Stop autoUpdate to prevent ResizeObserver interference
+          if (typeof dropdown.cleanup === 'function') {
+            dropdown.cleanup();
+          }
+
+          // Force into fullscreen state first
+          dropdown.isBibFullscreen = true;
+          await elementUpdated(dropdown);
+          dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
+          await dropdown.updateComplete;
+          await calendar.updateComplete;
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          await expect(calendar.isFullscreen).to.be.true;
+
+          // Now simulate strategy change back to floating
+          dropdown.isBibFullscreen = false;
+          await elementUpdated(dropdown);
+          dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
+          await dropdown.updateComplete;
+          await calendar.updateComplete;
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+          await expect(calendar.isFullscreen).to.be.false;
+        });
+
+        it('should set trigger inert when strategy changes to fullscreen and restore on floating', async () => {
+          await setViewport({
+            width: 800,
+            height: 800
+          });
+          await nextFrame();
+
+          const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+          const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+
+          // Open the bib
+          getInput(el, 0).click();
+          await expect(dropdown.isPopoverVisible).to.be.true;
+          await elementUpdated(el);
+          await nextFrame();
+
+          // Stop autoUpdate to prevent ResizeObserver interference
+          if (typeof dropdown.cleanup === 'function') {
+            dropdown.cleanup();
+          }
+
+          // Ensure we start in non-fullscreen state
+          dropdown.isBibFullscreen = false;
+          dropdown.trigger.inert = false;
+          await elementUpdated(dropdown);
+
+          // Simulate strategy change to fullscreen
+          dropdown.isBibFullscreen = true;
+          await elementUpdated(dropdown);
+          dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
+          await dropdown.updateComplete;
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+          await expect(dropdown.trigger.inert).to.be.true;
+
+          // Simulate strategy change back to floating
+          dropdown.isBibFullscreen = false;
+          await elementUpdated(dropdown);
+          dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
+          await dropdown.updateComplete;
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+          await expect(dropdown.trigger.inert).to.be.false;
+        });
+      });
+    }
 
     describe('inputmode', () => {
       it('should pass the inputmode attribute to the inner input element', async () => {
@@ -1122,7 +1287,10 @@ function runFullTest(mobileView) {
       });
 
       it('should render two calendars when range attribute is present', async () => {
-        await setViewport({ width: 1200, height: 800 });
+        await setViewport({
+          width: 1200,
+          height: 800
+        });
 
         const el = await fixture(html`
           <auro-datepicker range></auro-datepicker>
@@ -1175,7 +1343,9 @@ function runFullTest(mobileView) {
         const calendarMonths = calendar.shadowRoot.querySelectorAll('auro-formkit-calendar-month');
 
         // Guard Clause: Ensure we have months to work with
-        if (!calendarMonths.length) return;
+        if (!calendarMonths.length) {
+          return;
+        }
 
         // Get the first rendered month
         const firstMonth = calendarMonths[0];
@@ -1962,7 +2132,10 @@ function runFullTest(mobileView) {
         });
 
         el.value = '01/15/2024';
-        el.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        el.dispatchEvent(new Event('input', {
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
 
         expect(inputFired).to.be.true;
@@ -1978,7 +2151,10 @@ function runFullTest(mobileView) {
 
         // Simulate typing a date into the inner input
         innerInput.value = '03/15/2025';
-        innerInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        innerInput.dispatchEvent(new Event('input', {
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
 
         expect(el.value).to.equal('03/15/2025');
@@ -1990,14 +2166,20 @@ function runFullTest(mobileView) {
 
         // Type the start date
         el.inputList[0].value = '03/15/2025';
-        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        el.inputList[0].dispatchEvent(new Event('input', {
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
 
         expect(el.value).to.equal('03/15/2025');
 
         // Type the end date
         el.inputList[1].value = '03/20/2025';
-        el.inputList[1].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        el.inputList[1].dispatchEvent(new Event('input', {
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
 
         expect(el.valueEnd).to.equal('03/20/2025');
@@ -2270,8 +2452,12 @@ function runFullTest(mobileView) {
       let openCalledWith = null;
 
       const mockBibEl = {
-        close: () => { closeCalled = true; },
-        open: (val) => { openCalledWith = val; }
+        close: () => {
+          closeCalled = true;
+        },
+        open: (val) => {
+          openCalledWith = val;
+        }
       };
 
       // Stub focusCloseButton to avoid errors
@@ -2283,9 +2469,14 @@ function runFullTest(mobileView) {
       const fullscreenDesc = Object.getOwnPropertyDescriptor(proto, 'isBibFullscreen');
 
       // Override at instance level to bypass Lit reactivity
-      Object.defineProperty(dropdown, 'isPopoverVisible', { value: true, writable: true, configurable: true });
-      Object.defineProperty(dropdown, 'isBibFullscreen', { value: true, writable: true, configurable: true });
-      Object.defineProperty(dropdown, 'updateComplete', { value: Promise.resolve(), configurable: true });
+      Object.defineProperty(dropdown, 'isPopoverVisible', { value: true,
+        writable: true,
+        configurable: true });
+      Object.defineProperty(dropdown, 'isBibFullscreen', {value: true,
+        writable: true,
+        configurable: true });
+      Object.defineProperty(dropdown, 'updateComplete', { value: Promise.resolve(),
+        configurable: true });
       dropdown.bibElement = { value: mockBibEl };
 
       dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));
@@ -2294,7 +2485,7 @@ function runFullTest(mobileView) {
       expect(dropdown.trigger.inert).to.be.true;
 
       // Allow microtask (.then callback) to complete
-      await new Promise((r) => setTimeout(r, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(closeCalled).to.be.true;
       expect(openCalledWith).to.be.true;
@@ -2343,7 +2534,9 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
 
       let validateCalled = false;
-      el.validate = () => { validateCalled = true; };
+      el.validate = () => {
+        validateCalled = true;
+      };
 
       // Focus then blur the input to trigger focusout
       el.inputList[0].focus();
@@ -2479,7 +2672,10 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
 
       // Set a narrow viewport so window.innerWidth < mobileBreakpoint
-      await setViewport({ width: 360, height: 640 });
+      await setViewport({
+        width: 360,
+        height: 640
+      });
 
       // Set mobileBreakpoint high enough to trigger mobile layout
       el.calendar.mobileBreakpoint = 660;
@@ -2488,7 +2684,9 @@ function runFullTest(mobileView) {
       let scrollCalled = false;
       const mockMonthElem = document.createElement('div');
       mockMonthElem.id = 'month-6-2025';
-      mockMonthElem.scrollIntoView = () => { scrollCalled = true; };
+      mockMonthElem.scrollIntoView = () => {
+        scrollCalled = true;
+      };
 
       // Stub the calendar's shadowRoot.querySelector to return our mock
       const origQuery = el.calendar.shadowRoot.querySelector.bind(el.calendar.shadowRoot);
@@ -2505,7 +2703,10 @@ function runFullTest(mobileView) {
 
       // Restore
       el.calendar.shadowRoot.querySelector = origQuery;
-      await setViewport({ width: 1024, height: 800 });
+      await setViewport({
+        width: 1024,
+        height: 800
+      });
     });
 
     it('handleMonthChange falls back to firstRenderedMonth when centralDate is invalid', async () => {
@@ -2845,7 +3046,10 @@ function runFullTest(mobileView) {
       const origLocale = calendarMonth.locale;
       calendarMonth.locale = {
         ...origLocale,
-        options: { ...origLocale.options, weekStartsOn: 1 },
+        options: {
+          ...origLocale.options,
+          weekStartsOn: 1
+        },
         localize: origLocale.localize,
       };
       calendarMonth.localeChanged();
@@ -2934,9 +3138,9 @@ function runFullTest(mobileView) {
       const origDay = cell.day;
       cell.day = null;
 
-      let eventDetail;
-      cell.addEventListener('date-is-hovered', (e) => {
-        eventDetail = e.detail;
+      let eventDetail = null;
+      cell.addEventListener('date-is-hovered', (event) => {
+        eventDetail = event.detail;
       });
 
       cell.handleHover();
@@ -3000,7 +3204,9 @@ function runFullTest(mobileView) {
 
       // Restore
       cell.datepicker.referenceDates = origReferenceDates;
-      if (!hadAttr) cell.datepicker.removeAttribute('referenceDates');
+      if (!hadAttr) {
+        cell.datepicker.removeAttribute('referenceDates');
+      }
     });
 
     // ─── lastHoveredDate class applied when isLastHoveredDate is true on range ─
@@ -3042,7 +3248,10 @@ function runFullTest(mobileView) {
       await elementUpdated(el);
 
       // Click on the element (not on the input itself)
-      el.handleClick({ target: el, composedPath: () => [el] });
+      el.handleClick({
+        target: el,
+        composedPath: () => [el]
+      });
       await elementUpdated(el);
 
       // Should not throw and component should still be functional
@@ -3334,7 +3543,7 @@ function runFullTest(mobileView) {
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
         // Today's cell should not be blacked out
-        const todayCell = allCells.find(c => c.isCurrentDate);
+        const todayCell = allCells.find((cell) => cell.isCurrentDate);
         if (todayCell) {
           expect(todayCell.isBlackout()).to.be.false;
         }
@@ -3401,7 +3610,7 @@ function runFullTest(mobileView) {
         const label = cell.getAriaLabel();
 
         // Should contain a full date string (at least the current year)
-        const currentYear = new Date().getFullYear().toString();
+        const currentYear = String(new Date().getFullYear());
         expect(label).to.include(currentYear);
       });
 
@@ -3420,7 +3629,7 @@ function runFullTest(mobileView) {
         const allCells = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
 
         // Find a cell that is in range (has a day and not out of range)
-        const inRangeCell = allCells.find(c => c.day && !c.isOutOfRange(c.day, c.min, c.max));
+        const inRangeCell = allCells.find((cell) => cell.day && !cell.isOutOfRange(cell.day, cell.min, cell.max));
         await inRangeCell.updateComplete;
         expect(inRangeCell.getAttribute('role')).to.equal('gridcell');
       });
@@ -3437,7 +3646,7 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const selectedCell = allCells.find(c => c.selected);
+        const selectedCell = allCells.find((cell) => cell.selected);
 
         expect(selectedCell).to.exist;
         await selectedCell.updateComplete;
@@ -3456,7 +3665,7 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const todayCell = allCells.find(c => c.isCurrentDate);
+        const todayCell = allCells.find((cell) => cell.isCurrentDate);
 
         if (todayCell) {
           await todayCell.updateComplete;
@@ -3481,7 +3690,7 @@ function runFullTest(mobileView) {
         const allCells = calendar.getAllFocusableCells();
 
         // Find the cell for Jan 15
-        const departCell = allCells.find(c => c.selected);
+        const departCell = allCells.find((cell) => cell.selected);
         if (departCell) {
           const label = departCell.getAriaLabel();
           expect(label).to.include('range start');
@@ -3503,7 +3712,7 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const departCell = allCells.find(c => c.selected);
+        const departCell = allCells.find((cell) => cell.selected);
 
         if (departCell) {
           const label = departCell.getAriaLabel();
@@ -3520,11 +3729,11 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const activeCells = allCells.filter(c => c.active);
+        const activeCells = allCells.filter((cell) => cell.active);
 
         expect(activeCells.length).to.equal(1);
       });
@@ -3536,11 +3745,11 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const activeCell = allCells.find(c => c.active);
+        const activeCell = allCells.find((cell) => cell.active);
 
         expect(activeCell).to.exist;
         expect(activeCell.isCurrentDate).to.be.true;
@@ -3555,11 +3764,11 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const activeCell = allCells.find(c => c.active);
+        const activeCell = allCells.find((cell) => cell.active);
 
         expect(activeCell).to.exist;
         expect(activeCell.selected).to.be.true;
@@ -3576,7 +3785,7 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
@@ -3585,7 +3794,10 @@ function runFullTest(mobileView) {
 
         // Dispatch ArrowRight on the calendar grid wrapper
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowRight',
+          bubbles: true
+        }));
 
         await elementUpdated(el);
         await nextFrame();
@@ -3606,13 +3818,16 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const initialActive = calendar.activeCellDate;
 
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowLeft',
+          bubbles: true
+        }));
 
         await elementUpdated(el);
         await nextFrame();
@@ -3632,13 +3847,16 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const initialActive = calendar.activeCellDate;
 
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          bubbles: true
+        }));
 
         await elementUpdated(el);
         await nextFrame();
@@ -3658,13 +3876,16 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const initialActive = calendar.activeCellDate;
 
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          bubbles: true
+        }));
 
         await elementUpdated(el);
         await nextFrame();
@@ -3687,7 +3908,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // Wait for focusActiveCellWhenReady rAF chain to fully settle
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const prevBtn = calendar.shadowRoot.querySelector('.prevMonth');
@@ -3695,7 +3916,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // Wait for double-rAF-deferred announcement to land
-        await new Promise((r) => setTimeout(r, 150));
+        await new Promise((resolve) => setTimeout(resolve, 150));
 
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
         const dialog = dropdown.bibContent.shadowRoot.querySelector('dialog');
@@ -3715,7 +3936,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // Wait for focusActiveCellWhenReady rAF chain to fully settle
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const nextBtn = calendar.shadowRoot.querySelector('.nextMonth');
@@ -3723,7 +3944,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         // Wait for double-rAF-deferred announcement to land
-        await new Promise((r) => setTimeout(r, 150));
+        await new Promise((resolve) => setTimeout(resolve, 150));
 
         const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
         const dialog = dropdown.bibContent.shadowRoot.querySelector('dialog');
@@ -3829,7 +4050,7 @@ function runFullTest(mobileView) {
 
         expect(abbrs.length).to.equal(7);
         // Each abbr should have a title attribute with a full day name
-        abbrs.forEach(abbr => {
+        abbrs.forEach((abbr) => {
           expect(abbr.getAttribute('title')).to.not.be.empty;
           expect(abbr.getAttribute('title').length).to.be.greaterThan(2);
         });
@@ -3863,11 +4084,11 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const allCells = calendar.getAllFocusableCells();
-        const activeCell = allCells.find(c => c.active);
+        const activeCell = allCells.find((cell) => cell.active);
 
         expect(activeCell).to.exist;
         activeCell.focusButton();
@@ -3892,7 +4113,7 @@ function runFullTest(mobileView) {
 
         const cell = allCells[0];
         const cellId = cell.getCellId();
-        expect(cellId).to.match(/^cell-\d{4}-\d{2}-\d{2}$/);
+        expect(cellId).to.match(/^cell-\d{4}-\d{2}-\d{2}$/u);
       });
     });
 
@@ -3916,7 +4137,7 @@ function runFullTest(mobileView) {
         const allCellElements = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
 
         // Find a cell that is out of range
-        const outOfRangeCell = allCellElements.find(c => c.day && c.isOutOfRange(c.day, c.min, c.max));
+        const outOfRangeCell = allCellElements.find((cell) => cell.day && cell.isOutOfRange(cell.day, cell.min, cell.max));
 
         if (outOfRangeCell) {
           await outOfRangeCell.updateComplete;
@@ -4147,7 +4368,11 @@ function runFullTest(mobileView) {
         <auro-datepicker></auro-datepicker>
       `);
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+      el.dispatchEvent(new KeyboardEvent('keydown', {
+        key: ' ',
+        bubbles: true,
+        composed: true
+      }));
 
       await elementUpdated(el);
 
@@ -4159,14 +4384,21 @@ function runFullTest(mobileView) {
         <auro-datepicker></auro-datepicker>
       `);
 
-      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      el.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true
+      }));
 
       await elementUpdated(el);
 
       await expect(el.dropdown.isPopoverVisible).to.be.true;
     });
 
-    for (const key of ['Enter', 'Space']) {
+    for (const key of [
+      'Enter',
+      'Space'
+    ]) {
       it(`should not open the bib when ${key} is pressed on the clear button`, async () => {
         const el = await fixture(html`
           <auro-datepicker value="02/14/2028"></auro-datepicker>
@@ -4174,11 +4406,11 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await el.focus();
 
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         await sendKeys({ press: 'Tab' });
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         await sendKeys({ press: key });
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         await expect(el.value).to.be.undefined;
         await expect(el.dropdown.isPopoverVisible).to.be.false;
       });
@@ -4192,13 +4424,17 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const initialActive = calendar.activeCellDate;
 
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowRight',
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
         await nextFrame();
 
@@ -4215,13 +4451,17 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const initialActive = calendar.activeCellDate;
 
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowLeft',
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
         await nextFrame();
 
@@ -4238,13 +4478,16 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const initialActive = calendar.activeCellDate;
 
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowRight',
+          bubbles: true
+        }));
         await elementUpdated(el);
         await nextFrame();
 
@@ -4262,15 +4505,19 @@ function runFullTest(mobileView) {
         input.click();
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
 
         const grid = calendar.shadowRoot.querySelector('#calendarGrid');
-        grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+        grid.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowLeft',
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
         await nextFrame();
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         // Should navigate to Dec 31, 2023 (prev month boundary)
         expect(calendar.activeCellDate).to.exist;
@@ -4319,7 +4566,11 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Escape',
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         await elementUpdated(el);
@@ -4341,7 +4592,11 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         await expect(el.dropdown.isPopoverVisible).to.be.true;
 
-        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
+        el.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'Escape',
+          bubbles: true,
+          composed: true
+        }));
         await elementUpdated(el);
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         await elementUpdated(el);
