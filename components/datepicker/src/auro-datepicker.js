@@ -1133,14 +1133,31 @@ export class AuroDatePicker extends AuroElement {
           if (bibEl && this.dropdown.isPopoverVisible) {
             bibEl.close();
             bibEl.open(true);
+          }
+
+          // Re-render the calendar with the new fullscreen layout,
+          // then restore focus after the re-render completes.
+          this.calendar.isFullscreen = true;
+          this.calendar.updateComplete.then(() => {
             doubleRaf(() => {
               this.focusActiveCellWhenReady();
             });
-          }
+          });
         });
       } else if (!this.dropdown.isBibFullscreen) {
         // Switching from fullscreen to floating — restore trigger accessibility
         this.dropdown.trigger.inert = false;
+
+        // Re-render the calendar with the desktop layout,
+        // then restore focus after the re-render completes.
+        this.dropdown.updateComplete.then(() => {
+          this.calendar.isFullscreen = false;
+          this.calendar.updateComplete.then(() => {
+            doubleRaf(() => {
+              this.focusActiveCellWhenReady();
+            });
+          });
+        });
       }
     });
   }
