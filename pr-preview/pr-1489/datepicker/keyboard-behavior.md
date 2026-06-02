@@ -13,7 +13,7 @@
 <div class="note">
 <p><strong>Note:</strong> The datepicker supports full interaction via touch, click, VoiceOver, and keyboard. The trigger input accepts typed dates, and the calendar bib supports arrow-key navigation between date cells, Enter/Space to select, and Escape to close.</p>
 </div>
-<auro-header level="3" id="keyEventsCounterGroup">Key Events</auro-header>
+<auro-header level="3" id="keyEventsDatepicker">Key Events</auro-header>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/keyEvents.md) -->
 <!-- The below content is automatically added from ./../docs/partials/keyEvents.md -->
 <auro-header level="3" id="keyEvents-trigger">Trigger input</auro-header>
