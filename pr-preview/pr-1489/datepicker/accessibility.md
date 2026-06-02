@@ -62,7 +62,7 @@ When the calendar bib opens, focus moves to the calendar grid wrapper (`#calenda
 <auro-header level="2" id="screenReaderAnnouncements">Screen Reader Announcements</auro-header>
 - **Date selection** — When a date is selected, the calendar's live region (`aria-live="assertive"`) announces the formatted date (e.g., "Wednesday, January 15, 2025"). For range datepickers, both the start and end date selections are announced.
 - **Debounced navigation announcement** — During arrow-key navigation, a debounced live region (150 ms) announces the full date context (date, slot content, range position, availability) after the user pauses. This prevents overlapping announcements during rapid navigation.
-- **Date cell labels** — Each date cell contains a visually-hidden `<span class="srOnly">` with the full localized label, including any date slot content (e.g. prices). VoiceOver reads this content instead of `aria-label`, which iOS VoiceOver does not reliably announce on buttons.
+- **Date cell labels** — Each date cell has an `aria-label` on the host element with the full localized label, including any date slot content (e.g. prices). VoiceOver reads this content instead of `aria-label`, which iOS VoiceOver does not reliably announce on buttons.
 - **Validation errors** — When a validation error occurs, the error message is rendered with `role="alert"` and `aria-live="assertive"`, causing it to be announced immediately without requiring focus.
 - **Help text** — The help text content is associated with the input so that screen readers announce it as part of the element description when focused.
 
