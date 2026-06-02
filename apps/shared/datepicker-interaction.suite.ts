@@ -593,21 +593,22 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
       }, { timeout: 5_000 }).toBe(false);
     });
 
-    test('trigger inert is toggled when resizing between desktop and mobile', async ({ page }) => {
-      // Open bib on desktop
+    test('trigger remains inert across desktop/mobile resize while bib is open', async ({ page }) => {
+      // Open bib on desktop. The datepicker dropdown is a desktopModal, so the
+      // trigger is inert whenever the bib is open — on both desktop and mobile.
       await openBib(page, 'default');
       await waitForBibOpen(page, 'default');
 
-      // Trigger should not be inert on desktop
-      const triggerInertDesktop = await dp(page, 'default').evaluate((el: any) => {
-        return el.dropdown.trigger.inert;
-      });
-      expect(triggerInertDesktop).toBe(false);
+      // Trigger should be inert on desktop (desktopModal)
+      await expect.poll(async () =>
+        dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
+        { timeout: 5_000 },
+      ).toBe(true);
 
       // Resize to mobile
       await page.setViewportSize({ width: 390, height: 844 });
 
-      // Wait for fullscreen and trigger to become inert
+      // Trigger should remain inert in fullscreen
       await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(true);
       await expect.poll(async () =>
         dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
@@ -617,12 +618,12 @@ export function datepickerInteractionSuite(framework: string, options?: SuiteOpt
       // Resize back to desktop
       await page.setViewportSize({ width: 1280, height: 800 });
 
-      // Trigger should no longer be inert
+      // Trigger should still be inert after returning to desktop
       await expect.poll(() => isBibFullscreen(page, 'default'), { timeout: 8_000 }).toBe(false);
       await expect.poll(async () =>
         dp(page, 'default').evaluate((el: any) => el.dropdown.trigger.inert),
         { timeout: 5_000 },
-      ).toBe(false);
+      ).toBe(true);
     });
 
     test('bib remains open after resizing from desktop to mobile', async ({ page }) => {

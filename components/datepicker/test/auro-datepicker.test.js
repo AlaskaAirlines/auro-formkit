@@ -1074,7 +1074,10 @@ function runFullTest(mobileView) {
 
           await expect(dropdown.trigger.inert).to.be.true;
 
-          // Simulate strategy change back to floating
+          // Simulate strategy change back to floating. The datepicker hardcodes
+          // desktopModal on the dropdown, which keeps the trigger inert while the
+          // bib is open — temporarily disable it to exercise the restore path.
+          dropdown.desktopModal = false;
           dropdown.isBibFullscreen = false;
           await elementUpdated(dropdown);
           dropdown.dispatchEvent(new CustomEvent('auroDropdown-strategy-change'));

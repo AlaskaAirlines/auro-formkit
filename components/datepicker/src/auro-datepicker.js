@@ -1145,8 +1145,12 @@ export class AuroDatePicker extends AuroElement {
           });
         });
       } else if (!this.dropdown.isBibFullscreen) {
-        // Switching from fullscreen to floating — restore trigger accessibility
-        this.dropdown.trigger.inert = false;
+        // Switching from fullscreen to floating — only restore trigger accessibility
+        // when the bib is closed or the desktop layout is not a modal. A desktopModal
+        // dropdown keeps the trigger inert while open, matching the desktop-open path.
+        if (!this.dropdown.isPopoverVisible || !this.dropdown.desktopModal) {
+          this.dropdown.trigger.inert = false;
+        }
 
         // Re-render the calendar with the desktop layout,
         // then restore focus after the re-render completes.
