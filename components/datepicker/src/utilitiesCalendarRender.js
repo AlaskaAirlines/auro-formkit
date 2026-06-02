@@ -91,11 +91,7 @@ export class UtilitiesCalendarRender {
 
     // 3. If we didn't get a count early, restrict based on min/max date.
     if (!calendarCount && elem.minDate && elem.maxDate) {
-      const monthsInRange = this.util.monthDiff(new Date(elem.minDate), new Date(elem.maxDate));
-
-      if (monthsInRange < maxRenderableMonths) {
-        calendarCount = monthsInRange;
-      }
+      calendarCount = this.util.monthDiff(new Date(elem.minDate), new Date(elem.maxDate));
     }
 
     if (elem.numCalendars !== calendarCount) {

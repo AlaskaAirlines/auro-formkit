@@ -84,6 +84,12 @@ export class AuroCalendar extends RangeDatepicker {
     this.calendarRangeMonths = null;
 
     /**
+     * Legacy array of disabled-date timestamps.
+     * @private
+     */
+    this.disabledDays = [];
+
+    /**
      * @private
      */
     this.numCalendars = undefined;
@@ -574,7 +580,7 @@ export class AuroCalendar extends RangeDatepicker {
     const maxTs = Number.isFinite(rawMax) ? rawMax : Infinity;
 
     // Build a Set of blackout timestamps for O(1) lookup.
-    const blackoutSet = new Set((this.disabledDays || []).map((day) => parseInt(day, 10)));
+    const blackoutSet = new Set(this.disabledDays.map((day) => parseInt(day, 10)));
 
     // Also include ISO-format blackoutDates from the datepicker if available.
     // Parse YYYY-MM-DD as local date to avoid UTC shift issues.
@@ -639,14 +645,10 @@ export class AuroCalendar extends RangeDatepicker {
         const visibleEnd = new Date(centralYear, centralMonth + 1, 0); // last day of month
         visibleEnd.setHours(0, 0, 0, 0);
         const startTs = Math.floor(visibleStart.getTime() / 1000);
-        const endTs = Math.floor(visibleEnd.getTime() / 1000);
         const daysInMonth = visibleEnd.getDate();
 
         for (let idx = 0; idx < daysInMonth; idx += 1) {
           const ts = addDays(startTs, idx);
-          if (ts > endTs) {
-            break;
-          }
           if (isEnabled(ts)) {
             return ts;
           }
@@ -656,9 +658,6 @@ export class AuroCalendar extends RangeDatepicker {
         // date in the month so focus still lands on a focusable cell.
         for (let idx = 0; idx < daysInMonth; idx += 1) {
           const ts = addDays(startTs, idx);
-          if (ts > endTs) {
-            break;
-          }
           if (isInRange(ts)) {
             return ts;
           }
@@ -674,7 +673,7 @@ export class AuroCalendar extends RangeDatepicker {
     // rendered month(s) first so a single-month calendar does not pick a date
     // that has no DOM cell. Determine the visible range based on centralDate and
     // the number of rendered months.
-    const renderedMonths = this.numCalendars || 1;
+    const renderedMonths = Math.max(this.numCalendars, 1);
     const visibleAnchor = centralDateValue && !isNaN(centralDateValue.getTime())
       ? centralDateValue
       : new Date(now * 1000);
@@ -689,9 +688,6 @@ export class AuroCalendar extends RangeDatepicker {
     // Scan visible months for an enabled date.
     for (let idx = 0; idx < visDays; idx += 1) {
       const ts = addDays(visStartTs, idx);
-      if (ts > visEndTs) {
-        break;
-      }
       if (isEnabled(ts)) {
         return ts;
       }
@@ -701,9 +697,6 @@ export class AuroCalendar extends RangeDatepicker {
     // keyboard focus still has a tabindex="0" target.
     for (let idx = 0; idx < visDays; idx += 1) {
       const ts = addDays(visStartTs, idx);
-      if (ts > visEndTs) {
-        break;
-      }
       if (isInRange(ts)) {
         return ts;
       }
@@ -913,7 +906,13 @@ export class AuroCalendar extends RangeDatepicker {
                 this.setActiveCell(target.day.date);
                 this.handleCellFocused({ detail: { date: target.day.date } });
               } else if (cells.length > 0) {
-                const nearest = navDirection === 'next' ? cells[0] : cells[cells.length - 1];
+                let nearest = null;
+
+                if (navDirection === 'next') {
+                  [nearest] = cells;
+                } else {
+                  nearest = cells[cells.length - 1];
+                }
                 this.setActiveCell(nearest.day.date);
                 this.handleCellFocused({ detail: { date: nearest.day.date } });
               }
@@ -1481,7 +1480,7 @@ export class AuroCalendar extends RangeDatepicker {
     if (changedProperties.has('visible')) {
       if (this.visible) {
         // Compute the active date eagerly from data — no DOM needed.
-        if (this.activeCellDate === null || this.activeCellDate === undefined) {
+        if (this.activeCellDate == null) { // eslint-disable-line no-eq-null, eqeqeq
           this.activeCellDate = this.computeActiveDate();
         }
 
