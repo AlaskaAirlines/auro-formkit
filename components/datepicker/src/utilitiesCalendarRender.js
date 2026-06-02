@@ -89,7 +89,8 @@ export class UtilitiesCalendarRender {
     // 2. Start by assuming we can render the max number of months.
     let calendarCount = maxRenderableMonths;
 
-    // 3. If we didn't get a count early, restrict based on min/max date.
+    // 3. If maximumRenderableMonths() returns 0 (e.g. an invalid/empty defined range),
+    //    fall back to the min/max date range so something is rendered.
     if (!calendarCount && elem.minDate && elem.maxDate) {
       calendarCount = this.util.monthDiff(new Date(elem.minDate), new Date(elem.maxDate));
     }
