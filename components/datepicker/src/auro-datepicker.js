@@ -273,6 +273,22 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
+       * Array of dates that cannot be selected. Dates should be in ISO format (YYYY-MM-DD).
+       */
+      blackoutDates: {
+        type: Array,
+        reflect: true
+      },
+
+      /**
+       * Label announced for blackout (disabled but in-range) date cells.
+       */
+      blackoutLabel: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * The last date that may be displayed in the calendar.
        */
       calendarEndDate: {
@@ -327,27 +343,6 @@ export class AuroDatePicker extends AuroElement {
         reflect: true
       },
 
-      hasFocus: {
-        type: Boolean,
-        reflect: false,
-      },
-
-      /**
-       * @private
-       */
-      hasValue: {
-        type: Boolean,
-        reflect: false,
-      },
-
-      /**
-       * @private
-       */
-      hasAllValues: {
-        type: Boolean,
-        reflect: false
-      },
-
       /**
        * Specifies the date format. The default is `mm/dd/yyyy`.
        */
@@ -367,6 +362,27 @@ export class AuroDatePicker extends AuroElement {
       fullscreenBreakpoint: {
         type: String,
         reflect: true
+      },
+
+      /**
+       * @private
+       */
+      hasAllValues: {
+        type: Boolean,
+        reflect: false
+      },
+
+      hasFocus: {
+        type: Boolean,
+        reflect: false,
+      },
+
+      /**
+       * @private
+       */
+      hasValue: {
+        type: Boolean,
+        reflect: false,
       },
 
       /** Exposes inputmode attribute for input. */
@@ -412,13 +428,6 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Names of all 12 months to render in the calendar, used for localization of date string in mobile layout.
-       */
-      monthNames: {
-        type: Array
-      },
-
-      /**
        * @private
        */
       monthFirst: {
@@ -426,18 +435,33 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * If declared, the bib will NOT flip to an alternate position
-       * when there isn't enough space in the specified `placement`.
+       * Names of all 12 months to render in the calendar, used for localization of date string in mobile layout.
        */
-      noFlip: {
-        type: Boolean,
+      monthNames: {
+        type: Array
+      },
+
+      /**
+       * Accessible label for the next month navigation button.
+       */
+      navLabelNextMonth: {
+        type: String,
         reflect: true
       },
 
       /**
-       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       * Accessible label for the previous month navigation button.
        */
-      shift: {
+      navLabelPrevMonth: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * If declared, the bib will NOT flip to an alternate position
+       * when there isn't enough space in the specified `placement`.
+       */
+      noFlip: {
         type: Boolean,
         reflect: true
       },
@@ -504,17 +528,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for the range start date cell.
+       * Label announced for cells after the range (or after start when no end is selected).
        */
-      rangeLabelStart: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * Label announced for the range end date cell.
-       */
-      rangeLabelEnd: {
+      rangeLabelAfterRange: {
         type: String,
         reflect: true
       },
@@ -528,6 +544,14 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
+       * Label announced for the range end date cell.
+       */
+      rangeLabelEnd: {
+        type: String,
+        reflect: true
+      },
+
+      /**
        * Label announced for cells within the selected range.
        */
       rangeLabelInRange: {
@@ -536,41 +560,9 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Label announced for cells after the range (or after start when no end is selected).
+       * Label announced for the range start date cell.
        */
-      rangeLabelAfterRange: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * Array of dates that cannot be selected. Dates should be in ISO format (YYYY-MM-DD).
-       */
-      blackoutDates: {
-        type: Array,
-        reflect: true
-      },
-
-      /**
-       * Label announced for blackout (disabled but in-range) date cells.
-       */
-      blackoutLabel: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * Accessible label for the previous month navigation button.
-       */
-      navLabelPrevMonth: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * Accessible label for the next month navigation button.
-       */
-      navLabelNextMonth: {
+      rangeLabelStart: {
         type: String,
         reflect: true
       },
@@ -629,11 +621,29 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
+       * If declared, the dropdown will shift its position to avoid being cut off by the viewport.
+       */
+      shift: {
+        type: Boolean,
+        reflect: true
+      },
+
+      /**
        * Set true to make datepicker stacked style.
        */
       stacked: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * Indicates whether the datepicker is in a dirty state (has been interacted with).
+       * @private
+       */
+      touched: {
+        type: Boolean,
+        reflect: true,
+        attribute: false
       },
 
       /**
@@ -656,16 +666,6 @@ export class AuroDatePicker extends AuroElement {
        */
       valueEnd: {
         type: String
-      },
-
-      /**
-       * Indicates whether the datepicker is in a dirty state (has been interacted with).
-       * @private
-       */
-      touched: {
-        type: Boolean,
-        reflect: true,
-        attribute: false
       }
     };
   }
@@ -1471,6 +1471,12 @@ export class AuroDatePicker extends AuroElement {
       const stringfiedDates = JSON.stringify(this.referenceDates);
       if (stringfiedDates.includes('-')) {
         this.referenceDates = this.referenceDates.map((date) => date.replace(/-/gu, '/'));
+      }
+
+      // Force calendar cells to re-render with updated reference date state.
+      if (this.calendar) {
+        this.calendar.requestUpdate();
+        this.dispatchEvent(new CustomEvent('auroDatePicker-newSlotContent'));
       }
     }
 

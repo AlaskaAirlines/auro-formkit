@@ -12,6 +12,7 @@
       <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
       <auro-anchorlink fluid href="#popoverSlot" class="level2 body-xs">Date Popover</auro-anchorlink>
       <auro-anchorlink fluid href="#blackoutDates" class="level2 body-xs">Blackout Dates</auro-anchorlink>
+      <auro-anchorlink fluid href="#referenceDates" class="level2 body-xs">Reference Dates</auro-anchorlink>
       <auro-anchorlink fluid href="#viewportSize" class="level2 body-xs">Viewport Size</auro-anchorlink>
     </auro-nav>
   </nav>

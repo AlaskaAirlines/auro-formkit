@@ -407,12 +407,12 @@ export class AuroCalendarCell extends LitElement {
   }
 
   /**
-   * Checks if the current date is a highlighted date.
+   * Checks if the current date is a referenced date.
    * @param {Object} dateStr - The date string in MM_DD_YYYY format.
-   * @returns Boolean - True if the date is a highlighted date.
+   * @returns Boolean - True if the date is a referenced date.
    */
   isReferenceDate(dateStr) {
-    // If the datepicker has highlighted dates specified
+    // If the datepicker has referenced dates specified
     if (this.datepicker && this.datepicker.hasAttribute('referenceDates')) {
 
       // Get the referenceDates attribute from the datepicker
