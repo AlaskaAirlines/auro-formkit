@@ -12,6 +12,7 @@
 <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
 <auro-anchorlink fluid href="#popoverSlot" class="level2 body-xs">Date Popover</auro-anchorlink>
 <auro-anchorlink fluid href="#blackoutDates" class="level2 body-xs">Blackout Dates</auro-anchorlink>
+<auro-anchorlink fluid href="#referenceDates" class="level2 body-xs">Reference Dates</auro-anchorlink>
 <auro-anchorlink fluid href="#viewportSize" class="level2 body-xs">Viewport Size</auro-anchorlink>
 </auro-nav>
 </nav>
@@ -246,6 +247,31 @@
 <pre class="language-html"><code class="language-html">&lt;auro-datepicker id="blackoutLabelExample" range blackoutLabel="sold out"&gt;
   &lt;span slot="fromLabel"&gt;Choose a start date&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Choose an end date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="referenceDates">Reference dates</auro-header>
+<p>Use the <code>referenceDates</code> attribute to highlight specific dates on the calendar. Reference dates are displayed with a distinct visual treatment to draw attention to dates of interest, such as the cheapest travel dates or dates with special availability.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reference-dates.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reference-dates.html -->
+<auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/02/2025" range>
+<span slot="ariaLabel.bib.close">Close Calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="fromLabel">Choose a date</span>
+<span slot="bib.fullscreen.fromLabel">Choose a date</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reference-dates.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reference-dates.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/02/2025" range&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
