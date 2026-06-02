@@ -283,7 +283,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
     var _a, _b;
 
     return html `
-      <div aria-labelledby="${this.getHeadingId()}">
+      <div>
         <div class="header">
           ${this.renderPrevButton()}
           <div class="headerTitle heading-xs" id="${this.getHeadingId()}" aria-hidden="true">
@@ -298,7 +298,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
           ${this.renderNextButton()}
         </div>
 
-        <div class="table" role="grid" aria-labelledby="${this.getHeadingId()}">
+        <div class="table" role="grid">
           <div class="thead" aria-hidden="true">
             <div class="tr">
               ${(_a = this.dayNamesOfTheWeek) === null || _a === void 0 ? void 0 : _a.map((dayNameOfWeek, index) => this.renderDayOfWeek(dayNameOfWeek, index))}

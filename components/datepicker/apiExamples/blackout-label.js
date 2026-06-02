@@ -15,7 +15,7 @@ export function blackoutLabelExample() {
     const startDate = new Date(today);
     startDate.setMonth(today.getMonth() + 6);
 
-    // Calendar ends 6 months in the future
+    // Calendar ends 12 months in the future
     const endDate = new Date(today);
     endDate.setMonth(today.getMonth() + 12);
 
@@ -23,7 +23,7 @@ export function blackoutLabelExample() {
     const minDate = new Date(startDate);
     minDate.setMonth(startDate.getMonth() + 2);
 
-    // Max date is 1 week after min date
+    // Max date is 75 days after min date
     const maxDate = new Date(minDate);
     maxDate.setDate(minDate.getDate() + 75);
 
