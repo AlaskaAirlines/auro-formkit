@@ -19,15 +19,15 @@
 @mixin in-range-pseudo-elem {
   position: absolute;
   z-index: -1;
-  top: 50%;
-  left: 50%;
+  top: -2px;
+  left: -2px;
 
   display: block;
-  width: calc(100vw / 7);
-  height: var(--ds-size-600, vac.$ds-size-600);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  box-sizing: content-box;
 
   content: '';
-  transform: translate(-50%, -50%);
 }
 
 :host {
@@ -40,14 +40,14 @@
 .day {
   position: relative;
 
-  width: 48px; // var(--ds-size-500, vac.$ds-size-500);
-  height: 56px;// calc(var(--ds-size-700, vac.$ds-size-700) - 2px);
+  width: 48px;
+  height: 56px;
 
   padding: 0;
 
   border-width: 2px;
   border-style: solid;
-  border-radius: 10px; // var(--ds-size-300, vac.$ds-size-300);
+  border-radius: 10px;
 
   cursor: pointer;
 
@@ -70,45 +70,46 @@
   }
 
   &.blackout {
-    cursor: default;
+    cursor: pointer;
   }
 
   &.reference {
     box-shadow: inset 0 0 0 2px var(--ds-advanced-color-shared-background, #{v.$ds-advanced-color-shared-background});
   }
 
-  &.inRange::before {
-    @include in-range-pseudo-elem;
-
-    @include vb.auro_grid-breakpoint--sm {
-      width: var(--ds-size-600, vac.$ds-size-600);
+  &.inRange {
+    &::before {
+      @include in-range-pseudo-elem;
     }
   }
 
   &.rangeDepartDate {
     &::before {
       @include in-range-pseudo-elem;
-
-      width: calc(calc(100vw / 7) / 2);
-
-      transform: translate(0%, -50%);
-
-      @include vb.auro_grid-breakpoint--sm {
-        width: calc(var(--ds-size-600, vac.$ds-size-600) / 2);
-      }
     }
   }
 
-  &.rangeReturnDate::before,
-  &.lastHoveredDate::before {
-    @include in-range-pseudo-elem;
+  &.rangeReturnDate,
+  &.lastHoveredDate {
+    &::before {
+      @include in-range-pseudo-elem;
 
-    width: calc(calc(100vw / 7) / 2);
+      border-radius: 0 10px 10px 0;
+      overflow: hidden;
+    }
+  }
 
-    transform: translate(-100%, -50%);
+  &.firstDayOfMonth {
+    &::before {
+      border-radius: 10px 0 0 10px;
+      overflow: hidden;
+    }
+  }
 
-    @include vb.auro_grid-breakpoint--sm {
-      width: calc(var(--ds-size-600, vac.$ds-size-600) / 2);
+  &.lastDayOfMonth {
+    &::before {
+      border-radius: 0 10px 10px 0;
+      overflow: hidden;
     }
   }
 }
@@ -125,22 +126,22 @@
   display: block;
 }
 
-.srOnly {
-  position: absolute;
+// .srOnly {
+//   position: absolute;
 
-  overflow: hidden;
+//   overflow: hidden;
 
-  width: 1px;
-  height: 1px;
+//   width: 1px;
+//   height: 1px;
 
-  padding: 0;
+//   padding: 0;
 
-  border: 0;
+//   border: 0;
 
-  clip: rect(0, 0, 0, 0);
+//   clip: rect(0, 0, 0, 0);
 
-  white-space: nowrap;
-}
+//   white-space: nowrap;
+// }
 
 ::slotted([slot^="date_"]) {
   width: 100%;

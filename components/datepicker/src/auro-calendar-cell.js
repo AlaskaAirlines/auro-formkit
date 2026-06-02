@@ -706,6 +706,12 @@ export class AuroCalendarCell extends LitElement {
     // (inRange, lastHoveredDate, rangeDepartDate during preview) are
     // managed imperatively via updateRangePreviewClasses() to avoid
     // O(N) Lit re-renders on every focus/hover event.
+    const isFirstDay = this.day?.title === 1;
+    const isLastDay = this.day?.date && (() => {
+      const dt = new Date(this.day.date * 1000);
+      return dt.getDate() === new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate();
+    })();
+
     const buttonClasses = {
       'day': true,
       'body-default': true,
@@ -717,7 +723,9 @@ export class AuroCalendarCell extends LitElement {
       'rangeDepartDate': this.datepicker?.hasAttribute('range') && this.isDepartDate(this.day, this.dateFrom) && this.dateTo,
       'rangeReturnDate': this.datepicker?.hasAttribute('range') && this.isReturnDate(this.day, this.dateFrom, this.dateTo),
       'reference': this.isReferenceDate(this.dateStr),
-      'sameDateTrip': this.datepicker?.hasAttribute('range') && this.dateFrom === this.dateTo
+      'sameDateTrip': this.datepicker?.hasAttribute('range') && this.dateFrom === this.dateTo,
+      'firstDayOfMonth': isFirstDay,
+      'lastDayOfMonth': isLastDay,
     };
 
     return html`

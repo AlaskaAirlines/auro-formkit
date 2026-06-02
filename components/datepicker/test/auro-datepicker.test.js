@@ -3411,6 +3411,30 @@ function runFullTest(mobileView) {
       cell.day = origDay;
     });
 
+    // ─── handleTbodyMouseLeave dispatches calendar-month-mouseleave ───
+    it('dispatches calendar-month-mouseleave when mouse leaves the tbody', async () => {
+      const el = await fixture(html`<auro-datepicker centralDate="01/15/2024"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      const tbody = calendarMonth.shadowRoot.querySelector('.tbody');
+
+      let eventFired = false;
+      calendarMonth.addEventListener('calendar-month-mouseleave', () => {
+        eventFired = true;
+      });
+
+      tbody.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+      expect(eventFired).to.be.true;
+    });
+
     // ─── isLastHoveredDate returns true when all conditions met ────────
     it('isLastHoveredDate returns true when hoveredDate matches day and no dateTo', async () => {
       const el = await fixture(html`
