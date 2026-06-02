@@ -1565,6 +1565,40 @@ function runFullTest(mobileView) {
         ]);
       });
 
+      // Verify updating referenceDates triggers a calendar re-render so cells reflect the change.
+      it('should re-render calendar cells when referenceDates is updated dynamically', async () => {
+        const el = await fixture(html`
+          <auro-datepicker centralDate="10/10/2025"></auro-datepicker>
+        `);
+        await elementUpdated(el);
+
+        el.showBib();
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const firstMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(firstMonth);
+
+        // Initially no reference dates
+        const cellsBefore = Array.from(firstMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
+        const refBefore = cellsBefore.filter((cell) => cell.shadowRoot.querySelector('button.reference'));
+        expect(refBefore.length).to.equal(0);
+
+        // Dynamically set referenceDates
+        el.referenceDates = [
+          '10/05/2025',
+          '10/15/2025'
+        ];
+        await elementUpdated(el);
+        await nextFrame();
+        await elementUpdated(firstMonth);
+
+        const cellsAfter = Array.from(firstMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
+        const refAfter = cellsAfter.filter((cell) => cell.shadowRoot.querySelector('button.reference'));
+        expect(refAfter.length).to.equal(2);
+      });
+
     });
 
     describe('required', () => {
