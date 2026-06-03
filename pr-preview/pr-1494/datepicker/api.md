@@ -74,6 +74,7 @@ The `auro-datepicker` component provides users with a way to select a date or da
 | `showBib`                     | `(): void`                             | Shows the dropdown bib if there are options to show. |
 | `updateComponentArchitecture` | `(): void`                             |                                                  |
 | `validate`                    | `(force?: boolean \| undefined): void` | Validates value.<br /><br />**force**: Whether to force validation. |
+| `willUpdate`                  | `(changedProperties: any): void`       |                                                  |
 
 ## Events
 
