@@ -202,7 +202,7 @@
       <td>Collapsed or Expanded</td>
       <td>Trigger element</td>
       <td>
-        Overrides the inherited Space behavior while a type-ahead buffer is active: instead of toggling the bib, Space extends the buffer — the <code>focused</code> option advances if the buffer matches an enabled option, and the bib state is unchanged. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+        When the type-ahead buffer is empty, Space behaves as documented in the inherited Space row below. While the buffer is active, Space extends the buffer instead — the <code>focused</code> option advances if the buffer matches an enabled option, and the bib state is unchanged. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
       </td>
     </tr>
     <tr>
