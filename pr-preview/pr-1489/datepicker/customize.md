@@ -759,6 +759,8 @@
   id="localizationExample">
 <span slot="fromLabel">Salida</span>
 <span slot="toLabel">Regreso</span>
+<span slot="bib.fullscreen.fromLabel">Salida</span>
+<span slot="bib.fullscreen.toLabel">Regreso</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -778,6 +780,8 @@
   id="localizationExample"&gt;
   &lt;span slot="fromLabel"&gt;Salida&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Regreso&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Salida&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.toLabel"&gt;Regreso&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
