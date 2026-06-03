@@ -216,6 +216,21 @@ export class AuroCalendar extends RangeDatepicker {
       visible: {
         type: Boolean,
         reflect: false
+      },
+
+      /**
+       * BCP 47 locale tag (such as `en-US`) for calendar localization.
+       * as wc-range-datepicker expects a `locale` prop, we use `localeCode` to avoid conflicts and pass the locale down to calendar-month elements.
+       */
+      localeCode: {
+        type: String
+      },
+
+      /**
+       * Names of all 12 months. When omitted, names are derived from `localeCode`.
+       */
+      monthNames: {
+        type: Array
       }
     };
   }

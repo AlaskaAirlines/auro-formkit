@@ -41,6 +41,7 @@ export class UtilitiesCalendarRender {
   determineDefinedCalendarRange(elem) {
     if (elem.getAttribute('calendarStartDate') && elem.getAttribute('calendarEndDate')) {
       // if we have a defined range of months, use that
+      // prop is not in sync with attribute yet, use attribute value
       elem.calendarRangeMonths = elem.util.monthDiff(dateFormatter.stringToDateInstance(elem.getAttribute('calendarStartDate')), dateFormatter.stringToDateInstance(elem.getAttribute('calendarEndDate')));
     } else {
       // if we don't have a defined range of months, use undefined
@@ -157,6 +158,7 @@ export class UtilitiesCalendarRender {
         .dateTo="${elem.dateTo}"
         .dateFrom="${elem.dateFrom}"
         .locale="${elem.locale}"
+        .localeCode="${elem.localeCode}"
         .monthNames="${elem.monthNames}"
         month="${month}"
         year="${year}"
