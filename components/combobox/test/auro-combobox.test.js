@@ -3188,8 +3188,13 @@ function runFullTest(mobileView) {
         await sendKeys({ press: 'o' });
 
         await elementUpdated(el);
+        // Wait for the bib to reopen and the active option to update before
+        // pressing Tab — without this CI can race and select the previously
+        // active option instead of the one matching the new input.
+        await waitUntil(() => el.dropdown.isPopoverVisible);
 
         await sendKeys({ press: 'Tab' });
+        await elementUpdated(el);
 
         await expect(el.value).to.be.equal(options[1].textContent);
       });
