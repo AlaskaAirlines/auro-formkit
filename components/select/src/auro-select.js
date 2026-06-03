@@ -904,6 +904,7 @@ export class AuroSelect extends AuroElement {
     this.addEventListener('blur', () => {
       this.validate();
       this.hasFocus = false;
+      this._clearTypeaheadBuffer();
     });
   }
 
@@ -927,6 +928,20 @@ export class AuroSelect extends AuroElement {
    */
   _getOptionDisplayText(option) {
     return (option.innerText || option.textContent || '').trim().toLowerCase();
+  }
+
+  /**
+   * Empties the type-ahead buffer and cancels any pending reset timeout.
+   * Called when focus leaves the component, when Escape closes the bib, and on disconnect
+   * so a stale buffer never bridges into a fresh interaction.
+   * @private
+   */
+  _clearTypeaheadBuffer() {
+    if (this._typeaheadTimeout) {
+      clearTimeout(this._typeaheadTimeout);
+      this._typeaheadTimeout = null;
+    }
+    this.typeaheadBuffer = '';
   }
 
   /**
@@ -1098,11 +1113,7 @@ export class AuroSelect extends AuroElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
-    if (this._typeaheadTimeout) {
-      clearTimeout(this._typeaheadTimeout);
-      this._typeaheadTimeout = null;
-    }
+    this._clearTypeaheadBuffer();
   }
 
   // lifecycle runs only after the element's DOM has been updated the first time

@@ -3760,6 +3760,56 @@ function runTest(mobileView) {
 
           await expect(el.dropdown.isPopoverVisible).to.be.false;
         });
+
+        it('should clear the type-ahead buffer when Escape is pressed', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Seed a buffer mid-typeahead.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Escape clears the buffer (in addition to closing the bib).
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Next keystroke starts a fresh match — 'b' alone activates 'Bananas',
+          // not 'ab' (which would have no match).
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('Bananas');
+        });
+
+        it('should clear the type-ahead buffer when the component loses focus', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          el.dispatchEvent(new Event('blur'));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+        });
+
+        it('should cancel a pending buffer-reset timeout when cleared', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 50;
+          await elementUpdated(el);
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el._typeaheadTimeout).to.not.equal(null);
+
+          el._clearTypeaheadBuffer();
+          expect(el._typeaheadTimeout).to.equal(null);
+          expect(el.typeaheadBuffer).to.equal('');
+        });
       });
     });
   });
