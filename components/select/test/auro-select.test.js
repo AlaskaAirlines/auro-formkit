@@ -3795,6 +3795,53 @@ function runTest(mobileView) {
           expect(el.typeaheadBuffer).to.equal('');
         });
 
+        it('should skip options with the hidden attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" hidden>Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          // Hidden Apple must not become the active option.
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('apricot');
+        });
+
+        it('should skip options with the static attribute (including nomatch placeholders)', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption static nomatch>No results</auro-menuoption>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // 'n' is the first letter of the static "No results" placeholder
+          // (the only option whose displayed text starts with 'n').
+          // Type-ahead must NOT activate that row.
+          el.updateActiveOptionBasedOnKey('n');
+          await elementUpdated(el);
+
+          if (el.menu.optionActive) {
+            await expect(el.menu.optionActive.hasAttribute('static')).to.be.false;
+          }
+        });
+
         it('should not mutate the buffer when all options are disabled', async () => {
           const el = await fixture(html`
             <auro-select>

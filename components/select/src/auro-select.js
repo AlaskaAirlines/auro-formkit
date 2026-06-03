@@ -960,10 +960,12 @@ export class AuroSelect extends AuroElement {
       return;
     }
 
-    // No enabled options to match against — clear any stale buffer/timer so
+    // No selectable options to match against — clear any stale buffer/timer so
     // Space stays a bib toggle and the next keystroke after fresh options load
-    // starts cleanly. Checked BEFORE mutating the buffer.
-    const options = (this.menu && this.menu.options ? this.menu.options : []).filter((option) => !option.disabled);
+    // starts cleanly. Uses auro-menuoption's `isActive` getter, which excludes
+    // disabled, hidden, and static options (e.g. `static nomatch` placeholders).
+    // Checked BEFORE mutating the buffer.
+    const options = (this.menu && this.menu.options ? this.menu.options : []).filter((option) => option.isActive);
     if (!options.length) {
       this._clearTypeaheadBuffer();
       return;
