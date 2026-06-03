@@ -1,8 +1,11 @@
 import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { format, startOfDay } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+const startOfDay = (ms) => {
+  const date = new Date(ms);
+  date.setHours(0, 0, 0, 0);
+  return date.getTime();
+};
 
 import styleCss from './styles/style-auro-calendar-cell-css.js';
 import colorCss from './styles/color-cell-css.js';
@@ -67,14 +70,14 @@ export class AuroCalendarCell extends LitElement {
       disabledDays:  { type: Array },
       hoveredDate:   { type: String },
       isCurrentDate: { type: Boolean },
-      locale:        { type: Object },
+      locale:        { type: String },
       dateStr:       { type: String },
       renderForDateSlot: { type: Boolean }
     };
   }
 
   get locale() {
-    return this._locale ? this._locale : enUS;
+    return this._locale || 'en-US';
   }
 
   set locale(value) {
@@ -269,9 +272,12 @@ export class AuroCalendarCell extends LitElement {
     if (date === undefined) {
       return '';
     }
-    return format(date * 1000, 'PPPP', {
-      locale: this.locale,
-    });
+    return new Intl.DateTimeFormat(this.locale, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(new Date(date * 1000));
   }
 
   /**

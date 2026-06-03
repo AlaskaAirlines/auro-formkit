@@ -127,21 +127,6 @@ export class AuroDatePicker extends AuroElement {
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
     this.fullscreenBreakpoint = 'sm';
-    this.monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -412,7 +397,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Names of all 12 months to render in the calendar, used for localization of date string in mobile layout.
+       * Names of all 12 months to render in the calendar.
+       * When omitted, month names will be automatically populated from the active `locale` (falling back to `en-US`).
        */
       monthNames: {
         type: Array
@@ -1921,6 +1907,7 @@ export class AuroDatePicker extends AuroElement {
         .maxDate="${this.maxDate}"
         .minDate="${this.minDate}"
         .monthNames="${this.monthNames}"
+        .localeCode="${this.locale}"
         .mobileBreakpoint="${this.mobileBreakpoint}"
         part="calendar"
       >

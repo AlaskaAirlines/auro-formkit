@@ -11,6 +11,32 @@ import './auro-calendar-cell.js';
 
 /* eslint-disable no-magic-numbers, dot-location */
 
+const getMonthNamesFromLocale = (locale) => {
+  const fmt = new Intl.DateTimeFormat(locale || 'en-US', { month: 'long' });
+  return Array.from({ length: 12 }, (_, i) => fmt.format(new Date(2000, i, 1)));
+};
+
+/**
+ * Generates the localized short names for each day of the week.
+ * The list always starts with the day that corresponds to Sunday in the target locale.
+ * @private
+ * @param {String} locale - The BCP 47 language tag for localization (e.g. "en-US").
+ * @returns {Array} An array of seven localized narrow weekday names, starting from Sunday.
+ */
+const getWeekdayNames = (locale) => {
+  const fmt = new Intl.DateTimeFormat(locale|| 'en-US', { weekday: 'narrow' });
+  // Jan 5 2025 is a known Sunday; iterate to get all 7 narrow day names starting from Sunday
+  const sundayMs = new Date(2025, 0, 5).getTime();
+  const msPerDay = 864e5;
+  const allDays = [];
+  for (let day = 0; day < 7; day += 1) {
+    const offsetMs = day * msPerDay;
+    allDays.push(fmt.format(new Date(sundayMs + offsetMs)));
+  }
+  return allDays;
+}
+
+
 export class AuroCalendarMonth extends RangeDatepickerCalendar {
   static get styles() {
     return [
@@ -30,6 +56,14 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
       monthFirst: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * BCP 47 locale tag (such as `en-US`) for calendar localization.
+       * as wc-range-datepicker expects a `locale` prop, we use `localeCode` to avoid conflicts.
+       */
+      localeCode: {
+        type: String
       }
     };
   }
@@ -63,7 +97,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
    * @returns {String} The name of the month.
    */
   computeCurrentMonthName(month) {
-    return this.monthNames[month - 1];
+    return this.monthNames?.[month - 1] || getMonthNamesFromLocale(this.localeCode)[month - 1] || '';
   }
 
   /**
@@ -72,20 +106,20 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
    * @private
    * @returns {void}
    */
-  localeChanged() {
-    const dayNamesOfTheWeek = [];
-    for (let int = 0; int < 7; int += 1) {
-      dayNamesOfTheWeek.push(this.locale.localize.day(int, { width: 'narrow' }));
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('localeCode')) {
+      this.localeChanged();
     }
-    const firstDayOfWeek = this.locale.options.weekStartsOn
-      ? this.locale.options.weekStartsOn
-      : 0;
-    const tmp = dayNamesOfTheWeek.slice().splice(0, firstDayOfWeek);
-    const newDayNamesOfTheWeek = dayNamesOfTheWeek
-      .slice()
-      .splice(firstDayOfWeek, dayNamesOfTheWeek.length)
-      .concat(tmp);
-    this.dayNamesOfTheWeek = newDayNamesOfTheWeek;
+  }
+
+  localeChanged() {
+    // get localized weekday names based on current locale and store in a property for use in day name rendering
+    const allDays = getWeekdayNames(this.localeCode);
+
+    // Week starts on Sunday (index 0)
+    const firstDayOfWeek = this.locale?.options?.weekStartsOn || 0;
+    this.dayNamesOfTheWeek = allDays.slice(firstDayOfWeek).concat(allDays.slice(0, firstDayOfWeek));
   }
 
   renderDay(day) {
@@ -101,7 +135,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
                 .hoveredDate="${this.hoveredDate}"
                 .dateTo="${this.dateTo}"
                 .dateFrom="${this.dateFrom}"
-                .locale="${this.locale}"
+                .locale="${this.localeCode}"
                 .day="${day}"
                 ?isCurrentDate="${this.isCurrentDate(day)}"
                 @date-is-selected="${this.handleDateSelected}"
