@@ -91,15 +91,24 @@ export const selectKeyboardStrategy = {
   },
 
   default(component, evt, ctx) {
-    component.updateActiveOptionBasedOnKey(evt.key);
+    // Space resolves to either typeahead-buffer extension or bib toggle
+    // depending on whether a type-ahead buffer is active. Mirrors native
+    // <select> and the WAI-ARIA APG Listbox guidance: mid-typeahead space
+    // is a search character (e.g. "San Francisco"); otherwise it toggles.
     if (evt.key === ' ') {
       evt.preventDefault();
       evt.stopPropagation();
-      if (ctx.isExpanded) {
-        component.dropdown.hide();
+      if (component.typeaheadBuffer && component.typeaheadBuffer.length > 0) {
+        component.updateActiveOptionBasedOnKey(evt.key);
         return;
       }
-      component.dropdown.show();
+      if (ctx.isExpanded) {
+        component.dropdown.hide();
+      } else {
+        component.dropdown.show();
+      }
+      return;
     }
+    component.updateActiveOptionBasedOnKey(evt.key);
   },
 };
