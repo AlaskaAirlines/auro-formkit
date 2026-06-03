@@ -22,6 +22,7 @@
       <auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
       <auro-anchorlink fluid href="#customBehavior">Behavior</auro-anchorlink>
       <auro-anchorlink fluid href="#autoComplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
+      <auro-anchorlink fluid href="#typeAhead" class="level2 body-xs">Type-Ahead</auro-anchorlink>
       <auro-anchorlink fluid href="#disableComponent" class="level2 body-xs">Disable Component</auro-anchorlink>
       <auro-anchorlink fluid href="#disableOptions" class="level2 body-xs">Disable Option(s)</auro-anchorlink>
       <auro-anchorlink fluid href="#requireSelection" class="level2 body-xs">Require Selection</auro-anchorlink>
@@ -217,6 +218,18 @@
         <auro-accordion alignRight>
         <span slot="trigger">See code</span>
         <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/autocomplete.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </auro-accordion>
+        <auro-header level="3" id="typeAhead">Type-Ahead</auro-header>
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/typeahead.md) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        <div class="exampleWrapper">
+        <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/typeahead.html) -->
+        <!-- AURO-GENERATED-CONTENT:END -->
+        </div>
+        <auro-accordion alignRight>
+        <span slot="trigger">See code</span>
+        <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/typeahead.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
         <auro-header level="3" id="disableComponent">Disable Component</auro-header>

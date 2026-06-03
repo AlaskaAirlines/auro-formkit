@@ -1521,27 +1521,6 @@ function runTest(mobileView) {
         expect(el.optionSelected).to.equal(undefined);
       });
 
-      // ─── updateActiveOptionBasedOnKey option.value fallback to empty string ─
-      it('updateActiveOptionBasedOnKey uses empty string when option has no value', async () => {
-        const el = await defaultFixture();
-        await elementUpdated(el);
-
-        // Add an option with no value attribute so option.value is empty
-        const menu = el.querySelector('auro-menu');
-        const noValueOption = document.createElement('auro-menuoption');
-        noValueOption.textContent = 'No Value';
-        menu.appendChild(noValueOption);
-        await elementUpdated(el);
-
-        // Call the method — the option with no value uses '' fallback
-        // Press 'z' which won't match anything, but the filter still runs on all options
-        el.updateActiveOptionBasedOnKey('z');
-        await elementUpdated(el);
-
-        // Should not throw; no match expected
-        expect(el).to.exist;
-      });
-
       // ─── setMenuValue returns early when menu is null ───────────────
       it('setMenuValue returns early when menu is null', async () => {
         const el = await defaultFixture();
@@ -3517,6 +3496,269 @@ function runTest(mobileView) {
           await expect(el.menu.optionActive).to.exist;
           await expect(el.menu.optionActive.value).to.equal('apple');
           await expect(el.menu.optionActive.textContent.trim()).to.equal('Apple');
+        });
+
+        it('should match a multi-character prefix across rapid keystrokes', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          el.updateActiveOptionBasedOnKey('p');
+          el.updateActiveOptionBasedOnKey('r');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('apricot');
+        });
+
+        it('should reset the buffer after typeaheadTimeoutMs of inactivity', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="pear">Pear</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 20;
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('apple');
+
+          await new Promise((resolve) => setTimeout(resolve, 50));
+
+          // Buffer should have reset — 'p' alone matches 'pear', not 'ap'
+          el.updateActiveOptionBasedOnKey('p');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive.value).to.equal('pear');
+        });
+
+        it('should skip disabled options when matching', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" disabled>Apple</auro-menuoption>
+                <auro-menuoption value="apricot">Apricot</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('apricot');
+        });
+
+        it('should match an option that has no value attribute via its display text', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption>Cherry</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('c');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.textContent.trim()).to.equal('Cherry');
+        });
+
+        it('should reflect typeaheadTimeoutMs to its attribute', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 750;
+          await elementUpdated(el);
+
+          await expect(el.getAttribute('typeaheadtimeoutms')).to.equal('750');
+        });
+
+        it('should open a closed dropdown when a match is found', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple">Apple</auro-menuoption>
+                <auro-menuoption value="banana">Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+          el.dropdown.hide();
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+        });
+
+        it('should ignore non-printable keys', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          const beforeActive = el.menu.optionActive;
+          el.updateActiveOptionBasedOnKey('Shift');
+          el.updateActiveOptionBasedOnKey('ArrowDown');
+          await elementUpdated(el);
+
+          await expect(el.menu.optionActive).to.equal(beforeActive);
+        });
+
+        it('should treat Space as a buffer character mid-typeahead without toggling the bib', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="san-diego">San Diego</auro-menuoption>
+                <auro-menuoption value="san-francisco">San Francisco</auro-menuoption>
+                <auro-menuoption value="seattle">Seattle</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // Open the bib with a keystroke so we are mid-typeahead.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 's' }));
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'n' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+          await expect(el.menu.optionActive.value).to.equal('san-diego');
+
+          // Space mid-typeahead extends the buffer; bib must stay open.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'f' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+          await expect(el.menu.optionActive.value).to.equal('san-francisco');
+        });
+
+        it('should toggle the bib when Space is pressed with an empty buffer', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Sanity: bib closed, buffer empty.
+          el.dropdown.hide();
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Space opens the bib.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+          // Buffer must remain empty — space did not get buffered.
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Space again closes the bib.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+
+        it('should resume toggling the bib once the buffer clears via timeout', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.typeaheadTimeoutMs = 20;
+          await elementUpdated(el);
+
+          // Build a buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Wait for the buffer to timeout.
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          expect(el.typeaheadBuffer).to.equal('');
+
+          // Bib should be open from the 'a' keystroke; space now closes it.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+        });
+
+        // Locks in the ADO ticket assertion (AB#1567365): matching is against the
+        // displayed text of each option, not the `value` attribute. The fixture
+        // pairs an option whose value starts with a different letter than its
+        // label so the two strategies cannot both pass.
+        it('should match displayed text rather than the value attribute', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Airport</span>
+              <auro-menu>
+                <auro-menuoption value="ord">Chicago</auro-menuoption>
+                <auro-menuoption value="lax">Los Angeles</auro-menuoption>
+                <auro-menuoption value="sea">Seattle</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          // 'c' matches the displayed text "Chicago" even though no value starts with 'c'.
+          el.updateActiveOptionBasedOnKey('c');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive).to.exist;
+          await expect(el.menu.optionActive.value).to.equal('ord');
+          await expect(el.menu.optionActive.textContent.trim()).to.equal('Chicago');
+
+          // Buffer must clear between the two assertions or 'o' would extend "c" → "co".
+          el.typeaheadBuffer = '';
+
+          // 'o' must NOT activate Chicago — no displayed text starts with 'o',
+          // even though the value "ord" does.
+          const beforeActive = el.menu.optionActive;
+          el.updateActiveOptionBasedOnKey('o');
+          await elementUpdated(el);
+          await expect(el.menu.optionActive).to.equal(beforeActive);
+        });
+
+        it('should not open a closed dropdown when no match is found', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          el.dropdown.hide();
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+          el.updateActiveOptionBasedOnKey('z');
+          await elementUpdated(el);
+
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
         });
       });
     });

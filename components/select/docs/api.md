@@ -35,6 +35,7 @@ The `auro-select` element is a wrapper for auro-dropdown and auro-menu to create
 | `shape`                         | `shape`                         | `'classic' \| 'pill' \| 'pill-left' \| 'pill-right' \| 'snowflake'` |                  | Determines the shape of the dropdown bib.        |
 | `shift`                         | `shift`                         | `boolean`                                        | false            | If set, the dropdown will shift its position to avoid being cut off by the viewport. |
 | `size`                          | `size`                          | `'lg' \| 'xl'`                                   |                  | Determines the size of the dropdown bib. Only the `emphasized` layout supports size=`xl`, while all other layouts support size=`lg`. |
+| `typeaheadTimeoutMs`            | `typeaheadTimeoutMs`            | `number`                                         | "500"            | Milliseconds of keyboard inactivity before the type-ahead buffer resets.<br />Increase for users who type slowly. |
 | `validity`                      | `validity`                      | `string`                                         |                  | Specifies the `validityState` this element is in. |
 | `value`                         | `value`                         | `string`                                         |                  | Value selected for the component.                |
 
