@@ -3795,6 +3795,75 @@ function runTest(mobileView) {
           expect(el.typeaheadBuffer).to.equal('');
         });
 
+        it('should not mutate the buffer when all options are disabled', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" disabled>Apple</auro-menuoption>
+                <auro-menuoption value="banana" disabled>Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+
+          // Buffer must stay empty so Space keeps its toggle semantics.
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+        });
+
+        it('should leave Space as a bib toggle when there are no enabled options', async () => {
+          const el = await fixture(html`
+            <auro-select>
+              <span slot="bib.fullscreen.headline">Bib Headline</span>
+              <span slot="label">Name</span>
+              <auro-menu>
+                <auro-menuoption value="apple" disabled>Apple</auro-menuoption>
+                <auro-menuoption value="banana" disabled>Banana</auro-menuoption>
+              </auro-menu>
+            </auro-select>
+          `);
+          await elementUpdated(el);
+          el.dropdown.hide();
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.false;
+
+          // A type-ahead keystroke arrives but cannot match — must not arm the buffer.
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+          await elementUpdated(el);
+
+          // Now Space must still toggle the bib open (would fail if 'a' had armed the buffer).
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+          await elementUpdated(el);
+          await expect(el.dropdown.isPopoverVisible).to.be.true;
+        });
+
+        it('should clear a pre-existing buffer when options become unavailable mid-typing', async () => {
+          const el = await defaultFixture();
+          await elementUpdated(el);
+
+          // Seed a buffer with options present.
+          el.updateActiveOptionBasedOnKey('a');
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('a');
+
+          // Disable every option, then send another keystroke.
+          const menu = el.querySelector('auro-menu');
+          menu.querySelectorAll('auro-menuoption').forEach((opt) => {
+            opt.setAttribute('disabled', '');
+          });
+          await elementUpdated(el);
+
+          el.updateActiveOptionBasedOnKey('p');
+          await elementUpdated(el);
+          expect(el.typeaheadBuffer).to.equal('');
+          expect(el._typeaheadTimeout).to.equal(null);
+        });
+
         it('should cancel a pending buffer-reset timeout when cleared', async () => {
           const el = await defaultFixture();
           await elementUpdated(el);

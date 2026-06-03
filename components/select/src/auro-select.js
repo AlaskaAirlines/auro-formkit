@@ -960,6 +960,15 @@ export class AuroSelect extends AuroElement {
       return;
     }
 
+    // No enabled options to match against — clear any stale buffer/timer so
+    // Space stays a bib toggle and the next keystroke after fresh options load
+    // starts cleanly. Checked BEFORE mutating the buffer.
+    const options = (this.menu && this.menu.options ? this.menu.options : []).filter((option) => !option.disabled);
+    if (!options.length) {
+      this._clearTypeaheadBuffer();
+      return;
+    }
+
     const key = _key.toLowerCase();
 
     // Reset the buffer after a period of inactivity
@@ -972,11 +981,6 @@ export class AuroSelect extends AuroElement {
     }, this.typeaheadTimeoutMs);
 
     this.typeaheadBuffer += key;
-
-    const options = (this.menu && this.menu.options ? this.menu.options : []).filter((option) => !option.disabled);
-    if (!options.length) {
-      return;
-    }
 
     const isRepeatedChar = this.typeaheadBuffer.length > 1 && new Set(this.typeaheadBuffer).size === 1;
 
