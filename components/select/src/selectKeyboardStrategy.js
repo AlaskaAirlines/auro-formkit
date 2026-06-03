@@ -1,4 +1,4 @@
-/* eslint-disable new-cap */
+/* eslint-disable new-cap, no-underscore-dangle */
 import { navigateArrow } from '@aurodesignsystem/utils';
 import { getEnabledOptions } from './selectUtils.js';
 
@@ -32,6 +32,12 @@ export const selectKeyboardStrategy = {
   },
 
   Escape(component, evt, ctx) {
+    // Always clear the type-ahead buffer — Escape is a universal cancel.
+    // Safe to call when the buffer is empty.
+    if (typeof component._clearTypeaheadBuffer === 'function') {
+      component._clearTypeaheadBuffer();
+    }
+
     if (!ctx.isExpanded) {
       return;
     }

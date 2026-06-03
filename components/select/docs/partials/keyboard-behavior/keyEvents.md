@@ -197,12 +197,21 @@
       </td>
     </tr>
     <tr>
-      <td>Printable character</td>
+      <td>Space</td>
       <td>-</td>
       <td>Collapsed or Expanded</td>
       <td>Trigger element</td>
       <td>
-        Activates type-ahead navigation. Opens the bib if collapsed, then advances the <code>focused</code> option to the first enabled option whose displayed text starts with the buffered keystrokes. Repeated keystrokes within <code>typeaheadTimeoutMs</code> extend the buffer; pressing the same character repeatedly cycles through matching options. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+        Overrides the inherited Space behavior while a type-ahead buffer is active: instead of toggling the bib, Space extends the buffer — the <code>focused</code> option advances if the buffer matches an enabled option, and the bib state is unchanged. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+      </td>
+    </tr>
+    <tr>
+      <td>Any printable character (other than Space)</td>
+      <td>-</td>
+      <td>Collapsed or Expanded</td>
+      <td>Trigger element</td>
+      <td>
+        Extends the type-ahead buffer. When the buffer matches an enabled option's displayed text, the <code>focused</code> option advances to that option and the bib opens if it was collapsed. A keystroke that does not match any option leaves the bib state unchanged. Repeated keystrokes within <code>typeaheadTimeoutMs</code> extend the buffer; pressing the same character repeatedly cycles through matching options. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
       </td>
     </tr>
   </tbody>
