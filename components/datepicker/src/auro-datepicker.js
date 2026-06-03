@@ -127,21 +127,7 @@ export class AuroDatePicker extends AuroElement {
     this.calendarEndDate = undefined;
     this.calendarFocusDate = this.value;
     this.fullscreenBreakpoint = 'sm';
-    this.monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-
+    this._validLocale = 'en-US';
     // floaterConfig
     this.placement = 'bottom-start';
     this.offset = 0;
@@ -412,7 +398,8 @@ export class AuroDatePicker extends AuroElement {
       },
 
       /**
-       * Names of all 12 months to render in the calendar, used for localization of date string in mobile layout.
+       * Names of all 12 months to render in the calendar.
+       * When omitted, month names will be automatically populated from the active `locale` (falling back to `en-US`).
        */
       monthNames: {
         type: Array
@@ -1269,16 +1256,32 @@ export class AuroDatePicker extends AuroElement {
     return this.validity !== undefined && this.validity !== 'valid';
   }
 
-  updated(changedProperties) {
+  /**
+   * lifecycle method to check if the locale is valid.
+   * @ignore
+   * @param {Map} changedProperties - The map of properties that have changed since the last update.
+   * @returns {void}
+   */
+  willUpdate(changedProperties) {
     if (changedProperties.has('locale')) {
-      if (!changedProperties.has('format')) {
-        const previousLocaleFormat = getDateFormatFromLocale(changedProperties.get('locale'));
-        if (!this.format || this.format.toLowerCase() === previousLocaleFormat) {
-          this.format = getDateFormatFromLocale(this.locale);
-        }
+      try {
+        // eslint-disable-next-line no-new
+        new Intl.DateTimeFormat(this.locale);
+        this._validLocale = this.locale;
+      } catch {
+        this._validLocale = 'en-US';
+      }
+
+      // if there was not an explicit format set, or the format set matches the previous locale's default format,
+      // update to the new locale's default format
+      const previousLocaleFormat = getDateFormatFromLocale(changedProperties.get('locale'));
+      if (!changedProperties.has('format') && (!this.format || this.format.toLowerCase() === previousLocaleFormat)) {
+        this.format = getDateFormatFromLocale(this._validLocale);
       }
     }
+  }
 
+  updated(changedProperties) {
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.previousTabIndex = this.getAttribute('tabindex');
@@ -1522,14 +1525,6 @@ export class AuroDatePicker extends AuroElement {
     super.connectedCallback();
 
     this.locale = this.domHandler.getLocale(this);
-
-    // Derive format eagerly so the first render has a valid format.
-    // updated() handles locale changes after the initial render, but runs
-    // after render(), so without this a preset value would briefly display
-    // as a raw ISO string in the fullscreen bib.
-    if (!this.format) {
-      this.format = getDateFormatFromLocale(this.locale);
-    }
   }
 
   // layout render methods
@@ -1709,7 +1704,7 @@ export class AuroDatePicker extends AuroElement {
           ?required="${this.required}"
           ?hideLabelVisually="${this.layout !== 'classic'}"
           format="${this.format}"
-          locale="${this.locale}"
+          locale="${this._validLocale}"
           .max="${this.maxDate}"
           .min="${this.minDate}"
           .placeholder="${this.placeholder}"
@@ -1754,7 +1749,7 @@ export class AuroDatePicker extends AuroElement {
             ?required="${this.required}"
             ?hideLabelVisually="${this.layout !== 'classic'}"
             .format="${this.format}"
-            locale="${this.locale}"
+            locale="${this._validLocale}"
             .max="${this.maxDate}"
             .min="${this.minDate}"
             .placeholder="${this.placeholderEndDate || this.placeholder}"
@@ -1921,6 +1916,7 @@ export class AuroDatePicker extends AuroElement {
         .maxDate="${this.maxDate}"
         .minDate="${this.minDate}"
         .monthNames="${this.monthNames}"
+        .localeCode="${this._validLocale}"
         .mobileBreakpoint="${this.mobileBreakpoint}"
         part="calendar"
       >

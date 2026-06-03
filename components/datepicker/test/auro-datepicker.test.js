@@ -777,6 +777,74 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('monthNames', () => {
+      const getCalendarMonth = async (el) => {
+        const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+        await dropdown.querySelector('[auro-input]').click();
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        await elementUpdated(calendar.shadowRoot);
+        await nextFrame();
+        const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        await elementUpdated(calendarMonth);
+        return calendarMonth;
+      };
+
+      it('should auto-populate 12 month names from en-US locale by default', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendarMonth = await getCalendarMonth(el);
+        await expect(calendarMonth.computeCurrentMonthName(1)).to.equal('January');
+        await expect(calendarMonth.computeCurrentMonthName(12)).to.equal('December');
+      });
+
+      it('should auto-populate month names in the active locale', async () => {
+        const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendarMonth = await getCalendarMonth(el);
+        await expect(calendarMonth.computeCurrentMonthName(1)).to.equal('janvier');
+        await expect(calendarMonth.computeCurrentMonthName(12)).to.equal('d\u00e9cembre');
+      });
+
+      it('should update calendar month names when locale changes after first render', async () => {
+        const el = await fixture(html`<auro-datepicker locale="en-US"></auro-datepicker>`);
+        await elementUpdated(el);
+        const calendarMonth = await getCalendarMonth(el);
+        await expect(calendarMonth.computeCurrentMonthName(1)).to.equal('January');
+
+        el.locale = 'fr-FR';
+        await elementUpdated(el);
+        await elementUpdated(calendarMonth);
+        await expect(calendarMonth.computeCurrentMonthName(1)).to.equal('janvier');
+      });
+
+      it('should use explicit monthNames over locale-derived names', async () => {
+        const customNames = [
+          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+        const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+        await elementUpdated(el);
+        el.monthNames = customNames;
+        await elementUpdated(el);
+        const calendarMonth = await getCalendarMonth(el);
+        await expect(calendarMonth.computeCurrentMonthName(1)).to.equal('Jan');
+      });
+
+      it('should preserve explicit monthNames when locale changes', async () => {
+        const customNames = [
+          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+        const el = await fixture(html`<auro-datepicker locale="en-US"></auro-datepicker>`);
+        await elementUpdated(el);
+        el.monthNames = customNames;
+        el.locale = 'fr-FR';
+        await elementUpdated(el);
+        const calendarMonth = await getCalendarMonth(el);
+        await expect(calendarMonth.computeCurrentMonthName(1)).to.equal('Jan');
+      });
+    });
+
     describe('fullscreenBreakpoint', () => {
       it('should render twelve calendars in mobile version', async () => {
         await setViewport({
@@ -1163,16 +1231,6 @@ function runFullTest(mobileView) {
         await expect(el.valueEnd).to.equal('2025-03-25');
         await expect(el.minDate).to.equal('2025-03-22');
         await expect(el.getAttribute('validity')).to.be.equal('rangeUnderflow');
-      });
-    });
-
-    describe('monthNames', () => {
-      it('should default to English month names', async () => {
-        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
-        await expect(el.monthNames).to.be.an('array');
-        await expect(el.monthNames.length).to.equal(12);
-        await expect(el.monthNames[0]).to.equal('January');
-        await expect(el.monthNames[11]).to.equal('December');
       });
     });
 
@@ -2961,37 +3019,73 @@ function runFullTest(mobileView) {
       await expect(helpText.getAttribute('appearance')).to.equal('inverse');
     });
 
-    // ─── localeChanged uses weekStartsOn when non-zero ─────────────────
-    it('localeChanged uses weekStartsOn when locale starts week on Monday', async () => {
-      const el = await fixture(html`
-        <auro-datepicker></auro-datepicker>
-      `);
+    // ─── localeChanged derives day names via Intl and always starts on Sunday ──
+    it('localeChanged populates 7 day names using Intl and starts the week on Sunday', async () => {
+      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
       await elementUpdated(el);
 
       const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
       const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-
       await dropdown.querySelector('[auro-input]').click();
       await elementUpdated(calendar.shadowRoot);
       await nextFrame();
 
       const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      await expect(calendarMonth.dayNamesOfTheWeek).to.have.lengthOf(7);
 
-      // Save original locale and set one with weekStartsOn = 1 (Monday)
-      const origLocale = calendarMonth.locale;
-      calendarMonth.locale = {
-        ...origLocale,
-        options: { ...origLocale.options, weekStartsOn: 1 },
-        localize: origLocale.localize,
-      };
-      calendarMonth.localeChanged();
+      const sundayNarrow = new Intl.DateTimeFormat('en-US', { weekday: 'narrow' }).format(new Date(2025, 0, 5));
+      await expect(calendarMonth.dayNamesOfTheWeek[0]).to.equal(sundayNarrow);
+    });
 
-      // Monday-start locale should have day names shifted so first is not Sunday
-      const sundayName = origLocale.localize.day(0, { width: 'narrow' });
-      await expect(calendarMonth.dayNamesOfTheWeek[0]).to.not.equal(sundayName);
+    it('localeChanged uses locale-specific narrow day names when localeCode changes', async () => {
+      const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+      await elementUpdated(el);
 
-      // Restore
-      calendarMonth.locale = origLocale;
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      const sundayNarrowFr = new Intl.DateTimeFormat('fr-FR', { weekday: 'narrow' }).format(new Date(2025, 0, 5));
+      const saturdayNarrowFr = new Intl.DateTimeFormat('fr-FR', { weekday: 'narrow' }).format(new Date(2025, 0, 11));
+      await expect(calendarMonth.dayNamesOfTheWeek[0]).to.equal(sundayNarrowFr);
+      await expect(calendarMonth.dayNamesOfTheWeek[6]).to.equal(saturdayNarrowFr);
+    });
+
+    it('week always starts on Sunday regardless of locale', async () => {
+      const el = await fixture(html`<auro-datepicker locale="de-DE"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      const sundayNarrowDe = new Intl.DateTimeFormat('de-DE', { weekday: 'narrow' }).format(new Date(2025, 0, 5));
+      const saturdayNarrowDe = new Intl.DateTimeFormat('de-DE', { weekday: 'narrow' }).format(new Date(2025, 0, 11));
+      await expect(calendarMonth.dayNamesOfTheWeek[0]).to.equal(sundayNarrowDe);
+      await expect(calendarMonth.dayNamesOfTheWeek[6]).to.equal(saturdayNarrowDe);
+    });
+
+    it('localeCode flows from datepicker through calendar to calendar-cell', async () => {
+      const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      await expect(calendar.localeCode).to.equal('fr-FR');
+      const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      await expect(calendarMonth.localeCode).to.equal('fr-FR');
+      const cell = [...calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell')][0];
+      await expect(cell.locale).to.equal('fr-FR');
     });
 
     // ─── calendar-month renders safely when dayNamesOfTheWeek is null ──
@@ -3314,6 +3408,43 @@ function runFullTest(mobileView) {
       const cell = cells[0];
 
       expect(cell.getTitle(undefined)).to.equal('');
+    });
+
+    it('getTitle returns an en-US formatted date string by default', async () => {
+      const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      const cell = [...calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell')][0];
+
+      const timestamp = new Date(2000, 0, 15).getTime() / 1000;
+      const title = cell.getTitle(timestamp);
+      expect(title).to.include('January');
+      expect(title).to.include('2000');
+    });
+
+    it('getTitle returns a locale-specific date string when locale is set', async () => {
+      const el = await fixture(html`<auro-datepicker locale="fr-FR"></auro-datepicker>`);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      const calendarMonth = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+      const cell = [...calendarMonth.shadowRoot.querySelectorAll('auro-formkit-calendar-cell')][0];
+
+      const timestamp = new Date(2000, 0, 15).getTime() / 1000;
+      const title = cell.getTitle(timestamp);
+      expect(title).to.include('janvier');
     });
 
     it('cells respond to auroDatePicker-newSlotContent event by calling handleSlotContent', async () => {

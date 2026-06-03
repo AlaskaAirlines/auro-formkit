@@ -1,8 +1,6 @@
 import { LitElement } from "lit";
 import { html } from 'lit/static-html.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { format, startOfDay } from 'date-fns';
-import { enUS } from 'date-fns/locale';
 
 import styleCss from './styles/style-auro-calendar-cell-css.js';
 import colorCss from './styles/color-cell-css.js';
@@ -14,6 +12,12 @@ import { AuroPopover } from '@aurodesignsystem/auro-popover/class';
 import popoverVersion from './popoverVersion.js';
 
 import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/utils/runtimeUtils.mjs';
+
+const startOfDay = (ms) => {
+  const date = new Date(ms);
+  date.setHours(0, 0, 0, 0);
+  return date.getTime();
+};
 
 /* eslint-disable curly, max-lines, no-underscore-dangle, no-magic-numbers, no-underscore-dangle, max-params, no-void, init-declarations, no-extra-parens, arrow-parens, max-lines, line-comment-position, no-inline-comments, lit/binding-positions, lit/no-invalid-html */
 
@@ -67,14 +71,14 @@ export class AuroCalendarCell extends LitElement {
       disabledDays:  { type: Array },
       hoveredDate:   { type: String },
       isCurrentDate: { type: Boolean },
-      locale:        { type: Object },
+      locale:        { type: String },
       dateStr:       { type: String },
       renderForDateSlot: { type: Boolean }
     };
   }
 
   get locale() {
-    return this._locale ? this._locale : enUS;
+    return this._locale || 'en-US';
   }
 
   set locale(value) {
@@ -269,9 +273,16 @@ export class AuroCalendarCell extends LitElement {
     if (date === undefined) {
       return '';
     }
-    return format(date * 1000, 'PPPP', {
-      locale: this.locale,
-    });
+    if (!this._titleFormatter || this._titleFormatterLocale !== this.locale) {
+      this._titleFormatter = new Intl.DateTimeFormat(this.locale, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      this._titleFormatterLocale = this.locale;
+    }
+    return this._titleFormatter.format(new Date(date * 1000));
   }
 
   /**

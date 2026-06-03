@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import styleCss from "./styles/style-auro-calendar-month-css.js";
 import colorCss from "./styles/color-month-css.js";
 import tokensCss from "./styles/tokens-css.js";
@@ -10,6 +11,37 @@ import './auro-calendar-cell.js';
 // See https://git.io/JJ6SJ for "How to document your components using JSDoc"
 
 /* eslint-disable no-magic-numbers, dot-location */
+
+
+const getMonthNamesFromLocale = (locale) => {
+  const fmt = new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    timeZone: 'UTC'
+  });
+  // eslint-disable-next-line id-length
+  return Array.from({ length: 12 }, (_, i) => fmt.format(Date.UTC(2000, i, 1)));
+};
+
+/**
+ * Generates the localized narrow names for each day of the week, starting from Sunday.
+ * Uses UTC dates to avoid DST-related day drift across timezones.
+ * @private
+ * @param {String} locale - The BCP 47 language tag for localization (e.g. "en-US").
+ * @returns {Array} An array of seven localized narrow weekday names, starting from Sunday.
+ */
+const getWeekdayNames = (locale) => {
+  const fmt = new Intl.DateTimeFormat(locale, {
+    weekday: 'narrow',
+    timeZone: 'UTC'
+  });
+  // Jan 5 2025 is a known Sunday; use Date.UTC to avoid DST-related day drift
+  const allDays = [];
+  for (let day = 0; day < 7; day += 1) {
+    allDays.push(fmt.format(Date.UTC(2025, 0, 5 + day)));
+  }
+  return allDays;
+};
+
 
 export class AuroCalendarMonth extends RangeDatepickerCalendar {
   static get styles() {
@@ -30,6 +62,21 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
       monthFirst: {
         type: Boolean,
         reflect: true
+      },
+
+      /**
+       * BCP 47 locale tag (such as `en-US`) for calendar localization.
+       * as wc-range-datepicker expects a `locale` prop, we use `localeCode` to avoid conflicts.
+       */
+      localeCode: {
+        type: String
+      },
+
+      /**
+       * Names of all 12 months. When omitted, names are derived from `localeCode`.
+       */
+      monthNames: {
+        type: Array
       }
     };
   }
@@ -63,29 +110,33 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
    * @returns {String} The name of the month.
    */
   computeCurrentMonthName(month) {
-    return this.monthNames[month - 1];
+    if (this.monthNames?.[month - 1]) {
+      return this.monthNames[month - 1];
+    }
+    if (!this._cachedMonthNames || this._cachedMonthNamesLocale !== this.localeCode) {
+      this._cachedMonthNames = getMonthNamesFromLocale(this.localeCode);
+      this._cachedMonthNamesLocale = this.localeCode;
+    }
+    return this._cachedMonthNames[month - 1] || '';
   }
 
   /**
    * Determines the current month name based on locale.
    * This is a rewrite of the function used in the class RangeDatepickerCalendar and should not be removed from here.
    * @private
+   * @param {Object} changedProperties - The properties that have changed since the last update.
    * @returns {void}
    */
-  localeChanged() {
-    const dayNamesOfTheWeek = [];
-    for (let int = 0; int < 7; int += 1) {
-      dayNamesOfTheWeek.push(this.locale.localize.day(int, { width: 'narrow' }));
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('localeCode')) {
+      this.localeChanged();
     }
-    const firstDayOfWeek = this.locale.options.weekStartsOn
-      ? this.locale.options.weekStartsOn
-      : 0;
-    const tmp = dayNamesOfTheWeek.slice().splice(0, firstDayOfWeek);
-    const newDayNamesOfTheWeek = dayNamesOfTheWeek
-      .slice()
-      .splice(firstDayOfWeek, dayNamesOfTheWeek.length)
-      .concat(tmp);
-    this.dayNamesOfTheWeek = newDayNamesOfTheWeek;
+  }
+
+  localeChanged() {
+    // Week always starts on Sunday; use Intl-derived names directly without rotation
+    this.dayNamesOfTheWeek = getWeekdayNames(this.localeCode);
   }
 
   renderDay(day) {
@@ -101,7 +152,7 @@ export class AuroCalendarMonth extends RangeDatepickerCalendar {
                 .hoveredDate="${this.hoveredDate}"
                 .dateTo="${this.dateTo}"
                 .dateFrom="${this.dateFrom}"
-                .locale="${this.locale}"
+                .locale="${this.localeCode}"
                 .day="${day}"
                 ?isCurrentDate="${this.isCurrentDate(day)}"
                 @date-is-selected="${this.handleDateSelected}"
