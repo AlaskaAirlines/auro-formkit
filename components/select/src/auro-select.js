@@ -919,15 +919,13 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
-   * Returns the lowercase, trimmed display text of a menu option.
-   * Uses the rendered text so matching mirrors what the user sees and what screen readers announce,
-   * matching native HTML <select> behavior.
+   * Returns the lowercase, trimmed text content of a menu option.
    * @private
    * @param {HTMLElement} option - The menu option element.
    * @returns {string}
    */
   _getOptionDisplayText(option) {
-    return (option.innerText || option.textContent || '').trim().toLowerCase();
+    return (option.textContent || '').trim().toLowerCase();
   }
 
   /**
