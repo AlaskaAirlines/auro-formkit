@@ -229,7 +229,16 @@
 </td>
 </tr>
 <tr>
-<td>Printable character</td>
+<td>Space</td>
+<td>-</td>
+<td>Collapsed or Expanded</td>
+<td>Trigger element</td>
+<td>
+            Overrides the inherited Space behavior while a type-ahead buffer is active: instead of toggling the bib, Space extends the buffer — the <code>focused</code> option advances if the buffer matches an enabled option, and the bib state is unchanged. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+</td>
+</tr>
+<tr>
+<td>Any printable character (other than Space)</td>
 <td>-</td>
 <td>Collapsed or Expanded</td>
 <td>Trigger element</td>
