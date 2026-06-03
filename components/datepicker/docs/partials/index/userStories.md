@@ -81,6 +81,18 @@
 <auro-header level="3" id="skipSelection">Skip selection</auro-header>
 <p>The datepicker does not force the user to select a date. If no selection is made and the field is not <code>required</code>, the user can move past the datepicker without entering a value.</p>
 <p>If the field is <code>required</code>, moving focus away without selecting a date triggers validation and renders the <code>valueMissing</code> error state.</p>
+<auro-header level="3" id="regionalDateFormat">Regional date format support</auro-header>
+<p>People around the world write dates differently. A traveler in the United States expects to see <strong>12/25/2025</strong>, while someone in Germany expects <strong>25.12.2025</strong>, and someone in Japan expects <strong>2025/12/25</strong>. Showing the wrong format causes confusion and mistakes.</p>
+<p>When the datepicker knows the user's region via the <code>locale</code> attribute, it automatically displays dates in the format that looks natural to them — no extra setup required.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale-single.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+  <span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale-single.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="viewportSize">Viewport size</auro-header>
 <p>The datepicker automatically adapts its presentation based on viewport size. On larger screens, the calendar opens in a floating popover anchored to the trigger. On smaller screens, the calendar opens in a fullscreen dialog.</p>
 <p>The breakpoint at which the fullscreen behavior activates is controlled by the <code>fullscreenBreakpoint</code> attribute. The default value is <code>sm</code>. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>.</p>

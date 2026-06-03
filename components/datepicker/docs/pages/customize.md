@@ -19,7 +19,7 @@
     <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
     <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
     <auro-anchorlink fluid href="#minMaxDate" class="level2 body-xs">Min/Max Date</auro-anchorlink>
-    <auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
+    <auro-anchorlink fluid href="#regionalDate" class="level2 body-xs">Regional Date</auro-anchorlink>
   </auro-nav>
 </nav>
 <div class="mainContent">
@@ -198,14 +198,17 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="localization">Localization</auro-header>
-<p>Use the <code>centralDate</code>, locale, and related attributes to configure the datepicker for different regions and languages.</p>
+<auro-header level="4" id="regionalDate">Regional Date</auro-header>
+<p>When the <code>locale</code> attribute is set, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
+<p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
+<p>If no <code>locale</code> attribute is set on the element, the component walks up the DOM looking for the nearest ancestor with a <code>data-locale</code> attribute and uses that value. If none is found, it defaults to <code>en-US</code>.</p>
 <div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization.html) -->
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization.html) -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 </section>

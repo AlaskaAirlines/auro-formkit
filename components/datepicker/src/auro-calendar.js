@@ -104,6 +104,7 @@ export class AuroCalendar extends RangeDatepicker {
 
   static get properties() {
     return {
+
       /**
        * The last month that may be displayed in the calendar.
        */
@@ -193,6 +194,8 @@ export class AuroCalendar extends RangeDatepicker {
       },
 
       /**
+       * If true, the month will be displayed before the year in the calendar header.
+       * Passed to AuroCalendarMonth via utilitesCalendarRender.
        * @private
        */
       monthFirst: {
@@ -343,7 +346,9 @@ export class AuroCalendar extends RangeDatepicker {
    */
   focusCloseButton() {
     const bibtemplate = this.shadowRoot.querySelector(this.bibtemplateTag._$litStatic$);
-    if (bibtemplate) bibtemplate.focusCloseButton();
+    if (bibtemplate) {
+      bibtemplate.focusCloseButton();
+    }
   }
 
   /**
