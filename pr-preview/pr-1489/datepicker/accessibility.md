@@ -31,10 +31,10 @@ The calendar uses the WAI-ARIA grid pattern for screen reader navigation:
 
 | Attribute | Applied to | Description |
 |---|---|---|
-| `role="grid"` | Calendar table | Identifies the calendar as a grid. `aria-labelledby` points to the month heading. |
-| `role="rowgroup"` | Header / body groups | Groups the day-of-week header row and the week rows. |
+| `role="grid"` | Calendar table | Identifies the calendar as a grid. The month heading is rendered as visible text adjacent to the grid but is excluded from the accessibility tree (announcements are handled via the live region described below). |
+| `role="rowgroup"` | Body group | Groups the week rows. The day-of-week header row is `aria-hidden="true"` (see below). |
 | `role="row"` | Week row | Groups each week of date cells. |
-| `role="columnheader"` | Day-of-week header | Each day-of-week abbreviation. Rendered as an `<abbr>` element with the full day name in the `title` attribute so screen readers can announce the expanded form. |
+| Day-of-week header | Day-of-week row | Rendered as visible `<abbr>` elements with the full day name in the `title` attribute, but the row is `aria-hidden="true"` since the per-cell accessible name already includes the weekday name. |
 | `role="gridcell"` | In-range date cell, active-descendant proxy | Each selectable date cell. Includes `aria-selected`, `aria-current="date"` (for today), and a visually-hidden text label. A proxy `<span>` inside the calendar grid wrapper mirrors the active cell's ARIA attributes for `aria-activedescendant`. |
 | `role="presentation"` | Out-of-range date cell | Cells outside the valid min/max range. Also receive `aria-hidden="true"` and `tabindex="-1"` to remove them from both the accessibility tree and the tab order. |
 | `aria-disabled="true"` | Blackout date cell | Cells matching the `blackout` dates list. Unlike out-of-range cells, blackout cells **remain focusable** via arrow-key navigation so screen reader users can discover them. The cell's label includes ", unavailable" to communicate that the date cannot be selected. |
@@ -47,7 +47,7 @@ The component uses `delegatesFocus: true` on its shadow root, meaning focus is a
 <auro-header level="3" id="ariaActivedescendant">aria-activedescendant</auro-header>
 The calendar grid uses an **`aria-activedescendant`** pattern for keyboard navigation. DOM focus remains on a wrapper element (`#calendarGrid`) while `aria-activedescendant` points to a proxy `<span>` that mirrors the active cell's ARIA attributes (`aria-label`, `aria-selected`, `aria-current`, `aria-disabled`). This approach keeps the screen reader in sync with the visually active cell without moving DOM focus on every keystroke, which prevents duplicate announcements during rapid arrow-key navigation.
 
-The active cell receives a `.visualFocus` CSS class to display a visible focus ring, since the native `:focus-visible` pseudo-class applies to the grid wrapper (which holds actual DOM focus), not to individual cells.
+The active cell receives an `.activeCell` CSS class to display a visible focus ring, since the native `:focus-visible` pseudo-class applies to the grid wrapper (which holds actual DOM focus), not to individual cells.
 
 The initial active cell is determined in priority order:
 
