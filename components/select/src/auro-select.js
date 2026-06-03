@@ -129,6 +129,16 @@ export class AuroSelect extends AuroElement {
      * @private
      */
     this.hasDisplayValueContent = false;
+
+    /**
+     * @private
+     */
+    this.typeaheadBuffer = '';
+
+    /**
+     * @private
+     */
+    this._typeaheadTimeout = null;
   }
 
   /**
@@ -141,6 +151,7 @@ export class AuroSelect extends AuroElement {
     this.fullscreenBreakpoint = 'sm';
     this.onDark = false;
     this.isPopoverVisible = false;
+    this.typeaheadTimeoutMs = 500;
 
     // Layout Config
     this.layout = 'classic';
@@ -442,6 +453,16 @@ export class AuroSelect extends AuroElement {
         type: Boolean,
         reflect: true,
         attribute: false
+      },
+
+      /**
+       * Milliseconds of keyboard inactivity before the type-ahead buffer resets.
+       * Increase for users who type slowly.
+       * @default 500
+       */
+      typeaheadTimeoutMs: {
+        type: Number,
+        reflect: true
       },
 
       /**
@@ -897,40 +918,71 @@ export class AuroSelect extends AuroElement {
   }
 
   /**
+   * Returns the lowercase, trimmed display text of a menu option.
+   * Uses the rendered text so matching mirrors what the user sees and what screen readers announce,
+   * matching native HTML <select> behavior.
+   * @private
+   * @param {HTMLElement} option - The menu option element.
+   * @returns {string}
+   */
+  _getOptionDisplayText(option) {
+    return (option.innerText || option.textContent || '').trim().toLowerCase();
+  }
+
+  /**
    * Updates the active option in the menu based on keyboard input.
+   *
+   * Implements the WAI-ARIA APG Listbox type-ahead pattern: accumulates printable
+   * keystrokes into a buffer that resets after `typeaheadTimeoutMs` of inactivity.
+   * A multi-character buffer matches the first option whose displayed text starts
+   * with the buffer; repeating a single character cycles through options that start
+   * with that character.
    * @private
    * @param {string} _key - The key pressed by the user.
    * @returns {void}
    */
   updateActiveOptionBasedOnKey(_key) {
+    // Ignore non-printable keys (Shift, ArrowDown, Tab, etc.)
+    if (typeof _key !== 'string' || _key.length !== 1) {
+      return;
+    }
 
-    // Get a lowercase version of the key pressed
     const key = _key.toLowerCase();
 
-    // Calculate how many times the same letter has been pressed
-    this.sameLetterTimes = key === this.lastLetter ? this.sameLetterTimes + 1 : 0;
+    // Reset the buffer after a period of inactivity
+    if (this._typeaheadTimeout) {
+      clearTimeout(this._typeaheadTimeout);
+    }
+    this._typeaheadTimeout = setTimeout(() => {
+      this.typeaheadBuffer = '';
+      this._typeaheadTimeout = null;
+    }, this.typeaheadTimeoutMs);
 
-    // Set last letter for tracking
-    this.lastLetter = key;
+    this.typeaheadBuffer += key;
 
-    // Get all the options that start with the last letter pressed
-    const letterOptions = this.menu.options.filter((option) => {
-      const optionText = option.value || '';
-      return optionText.toLowerCase().startsWith(this.lastLetter);
-    });
+    const options = (this.menu && this.menu.options ? this.menu.options : []).filter((option) => !option.disabled);
+    if (!options.length) {
+      return;
+    }
 
-    // If we have options that match the letter pressed
-    if (letterOptions.length) {
+    const isRepeatedChar = this.typeaheadBuffer.length > 1 && new Set(this.typeaheadBuffer).size === 1;
 
-      // Show the dropdown if it is not already visible
-      this.dropdown.show();
+    let match = null;
+    if (isRepeatedChar) {
+      const matches = options.filter((option) => this._getOptionDisplayText(option).startsWith(key));
+      if (matches.length) {
+        const cycleIndex = (this.typeaheadBuffer.length - 1) % matches.length;
+        match = matches[cycleIndex];
+      }
+    } else {
+      match = options.find((option) => this._getOptionDisplayText(option).startsWith(this.typeaheadBuffer));
+    }
 
-      // Get the index we're after based on how many times the letter has been pressed and the length of the letterOptions array
-      const index = this.sameLetterTimes < letterOptions.length ? this.sameLetterTimes : this.sameLetterTimes % letterOptions.length;
-
-      // Select the new option in the menu
-      const newOption = letterOptions[index];
-      this.menu.updateActiveOption(newOption);
+    if (match) {
+      if (!this.dropdown.isPopoverVisible) {
+        this.dropdown.show();
+      }
+      this.menu.updateActiveOption(match);
     }
   }
 
@@ -1041,6 +1093,15 @@ export class AuroSelect extends AuroElement {
 
     if (this.noCheckmark) {
       this.menu.setAttribute('nocheckmark', '');
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    if (this._typeaheadTimeout) {
+      clearTimeout(this._typeaheadTimeout);
+      this._typeaheadTimeout = null;
     }
   }
 

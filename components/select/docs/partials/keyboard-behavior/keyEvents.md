@@ -196,5 +196,14 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <td>Printable character</td>
+      <td>-</td>
+      <td>Collapsed or Expanded</td>
+      <td>Trigger element</td>
+      <td>
+        Activates type-ahead navigation. Opens the bib if collapsed, then advances the <code>focused</code> option to the first enabled option whose displayed text starts with the buffered keystrokes. Repeated keystrokes within <code>typeaheadTimeoutMs</code> extend the buffer; pressing the same character repeatedly cycles through matching options. See the <a href="customize.html#typeAhead">Type-Ahead</a> section on the Customize page.
+      </td>
+    </tr>
   </tbody>
 </table>

@@ -1,0 +1,5 @@
+<p>Type-ahead lets a guest jump to an option by typing. As keys are pressed, the active option advances to the first enabled option whose <strong>displayed text</strong> starts with the buffered keystrokes — following the <auro-hyperlink href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/">WAI-ARIA Listbox pattern</auro-hyperlink>, and mirroring native HTML <code>&lt;select></code> behavior. Matching uses the rendered text rather than the <code>value</code> attribute.</p>
+<p>The <code>typeaheadTimeoutMs</code> attribute (default <code>500</code>) controls how long the buffer persists between keystrokes. Repeating the same character cycles through every enabled option starting with it; disabled options are skipped.</p>
+<div class="note">
+  <strong>Note:</strong> The <kbd>Space</kbd> key is context-sensitive. When the type-ahead buffer is empty it toggles the bib open or closed, matching the rest of <code>&lt;auro-select></code>. When the buffer is active it extends the buffer instead, so multi-word options such as "San Francisco" can be matched by typing <kbd>s</kbd>, <kbd>a</kbd>, <kbd>n</kbd>, <kbd>Space</kbd>, <kbd>f</kbd>.
+</div>
