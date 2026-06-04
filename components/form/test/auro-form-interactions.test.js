@@ -286,6 +286,27 @@ function runFullTest(mobileView) {
 
       await expect(form.value.selectExample).to.deep.equal(JSON.stringify(['stops']));
     });
+
+    it('should store multi-select value as a string when assigned a pre-stringified array', async () => {
+      const form = await fixture(componentTemplate);
+      const [select] = form._elements;
+      select.multiSelect = true;
+      await elementUpdated(select);
+
+      const selectEvent = new Promise((resolve) => {
+        select.addEventListener('input', (event) => {
+          if (event.target.getAttribute('name') === 'selectExample') {
+            resolve(event);
+          }
+        });
+      });
+
+      select.value = JSON.stringify(['stops']);
+      await selectEvent;
+      await elementUpdated(form);
+
+      await expect(form.value.selectExample).to.deep.equal(JSON.stringify(['stops']));
+    });
   });
 }
 
