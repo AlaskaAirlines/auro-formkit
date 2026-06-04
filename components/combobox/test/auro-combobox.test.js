@@ -172,7 +172,7 @@ function runFullTest(mobileView) {
       await expect(el.availableOptions).to.not.include(staticOption);
     });
 
-    it('should exclude static options when input is empty and bib is open', async () => {
+    it('should include static options when input is empty and bib is open', async () => {
       const el = await fixture(html`
         <auro-combobox>
           <span slot="label">Name</span>
@@ -183,7 +183,9 @@ function runFullTest(mobileView) {
         </auro-combobox>
       `);
 
-      // With empty input, all non-static options are shown
+      // With empty input, static options are surfaced (per the documented
+      // behavior — they let consumers display headers / "add new" rows when
+      // no filter is active). Typed input excludes them again.
       setInputValue(el, '');
       el.showBib();
       await elementUpdated(el);
@@ -191,7 +193,7 @@ function runFullTest(mobileView) {
       const menu = el.querySelector('auro-menu');
       const staticOption = menu.querySelector('#option-static');
 
-      await expect(el.availableOptions).to.not.include(staticOption);
+      await expect(el.availableOptions.includes(staticOption)).to.be.true;
     });
 
     it('should report static options as not active via isActive', async () => {
@@ -204,6 +206,11 @@ function runFullTest(mobileView) {
           </auro-menu>
         </auro-combobox>
       `);
+
+      // Type a matching character so availableOptions is populated and the
+      // first non-static option becomes active.
+      setInputValue(el, 'a');
+      await elementUpdated(el);
 
       const menu = el.querySelector('auro-menu');
       const staticOption = menu.querySelector('#option-static');
@@ -406,11 +413,17 @@ function runFullTest(mobileView) {
       await expect(el.dropdown.isPopoverVisible).to.be.false;
     });
 
-    it('should set the first menu option as active when the dropdown opens without a selection', async () => {
+    it('should set the first menu option as active when the dropdown opens with a matching filter', async () => {
       const el = await defaultFixture(mobileView);
       const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
 
-      // Simulate dropdown opening with no value set
+      // Type a matching character so options populate. Pre-5.9 combobox only
+      // surfaces options that match the typed input — opening the bib with an
+      // empty input intentionally shows no options.
+      setInputValue(el, 'a');
+      await elementUpdated(el);
+
+      // Simulate dropdown opening
       el.dropdown.dispatchEvent(new CustomEvent('auroDropdown-toggled', {
         detail: { expanded: true }
       }));
@@ -419,8 +432,13 @@ function runFullTest(mobileView) {
       await new Promise((res) => setTimeout(res, 200));
       await elementUpdated(el);
 
-      await expect(el.optionActive).to.equal(menuOptions[0]);
+      // Under the pre-5.9 menu, programmatic index assignment sets
+      // menu.index synchronously but does not fire auroMenu-activatedOption
+      // until the user interacts (arrow key, click). menu.index is the
+      // source of truth for the active slot; optionActive is the cached
+      // event payload, which stays null until the menu emits.
       await expect(el.menu.index).to.equal(0);
+      await expect(el.availableOptions[0] === menuOptions[0], 'first available option should be menuOptions[0]').to.be.true;
     });
 
     it('should preserve leading space — " a" does not match options', async () => {
@@ -631,6 +649,160 @@ function runFullTest(mobileView) {
       await expect(right.value).to.equal('a');
       await expect(left.input.value).to.equal('b');
       await expect(right.input.value).to.equal('a');
+    });
+
+    // Regression: programmatic value/input mutations in noFilter + persistInput
+    // + suggestion mode (the dynamic-menu apiExample swap pattern) used to pump
+    // a ~125-update cascade between handleInputValueChange and the
+    // auroMenu-selectedOption listener, pinning the main thread for seconds.
+    it('should not cascade when value and input diverge across matching menu options', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const el = await fixture(html`
+        <auro-combobox noFilter persistInput value="A">
+          <span slot="label">Test</span>
+          <auro-menu>
+            <auro-menuoption value="A">Alpha</auro-menuoption>
+            <auro-menuoption value="B">Bravo</auro-menuoption>
+            <auro-menuoption value="C">Charlie</auro-menuoption>
+          </auro-menu>
+        </auro-combobox>
+      `);
+      await elementUpdated(el);
+
+      let updateCount = 0;
+      const origPerformUpdate = el.performUpdate.bind(el);
+      // Circuit-break inside the spy so a regression surfaces as a thrown
+      // error in <50 updates rather than hitting WTR's 120s testsFinishTimeout
+      // (which reports "0 passed, 0 failed" and looks like infra flakiness).
+      el.performUpdate = function() {
+        updateCount += 1;
+        if (updateCount > 50) {
+          throw new Error(`cascade: performUpdate ran ${updateCount} times`);
+        }
+        return origPerformUpdate();
+      };
+
+      // Reproduce the dynamic-menu swap shape: value and input.value point at
+      // different menu options simultaneously.
+      el.value = 'B';
+      el.input.value = 'C';
+      await elementUpdated(el);
+      await el.menu.updateComplete;
+      // Lit can swallow throws from performUpdate and resolve updateComplete
+      // before queued cascade updates run. The macrotask wait lets them drain.
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Pre-fix this would trip the circuit breaker. Bounded at 20 to leave
+      // headroom for legitimate update batching.
+      expect(updateCount).to.be.below(20);
+    });
+
+    // Regression: after a programmatic value swap, the bib's availableOptions
+    // would stay frozen at the pre-swap input.value because
+    // updateTriggerTextDisplay and the value-branch ELSE write set input.value
+    // with _syncingDisplayValue, which made handleInputValueChange bail
+    // without re-running updateFilter.
+    it('should refresh availableOptions after a programmatic value swap', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const wrapper = await swapFixture(mobileView);
+      const left = wrapper.querySelector('#left');
+      const right = wrapper.querySelector('#right');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Left ends with a matching option; right ends with a non-matching
+      // freeform value (suggestion mode allows it).
+      setInputValue(left, 'Apples');
+      setInputValue(right, 'xyz');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Swap values the way the apiExample button does.
+      const leftVal = left.value;
+      const rightVal = right.value;
+      left.value = rightVal;
+      right.value = leftVal;
+      await elementUpdated(left);
+      await elementUpdated(right);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // After swap: left holds 'xyz' (no match), right holds 'Apples' (match).
+      // The filter must follow the input.value, not stay frozen at pre-swap.
+      expect(left.availableOptions.length).to.equal(0);
+      expect(right.availableOptions.some((o) => o.value === 'Apples')).to.be.true;
+    });
+
+    // Regression: the filter-refresh introduced for the swap pattern was
+    // pushing reactive availableOptions changes through updated()'s
+    // availableOptions branch, which would auto-open the bib for the no-match
+    // case (availableOptions.length === 0 && noMatchOption fires showBib
+    // unconditionally). The _programmaticFilterRefresh flag suppresses that
+    // side effect since the user hasn't interacted.
+    it('should not auto-open the bib for a no-match input after a programmatic swap', async () => {
+      if (mobileView) {
+        await setViewport({ width: 500, height: 800 });
+      } else {
+        await setViewport({ width: 800, height: 800 });
+      }
+
+      const wrapper = await fixture(html`
+        <div>
+          <auro-combobox id="left">
+            <span slot="label">Left</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption static nomatch>No matching option</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+          <auro-combobox id="right">
+            <span slot="label">Right</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">Apples</auro-menuoption>
+              <auro-menuoption value="Oranges">Oranges</auro-menuoption>
+              <auro-menuoption static nomatch>No matching option</auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        </div>
+      `);
+      const left = wrapper.querySelector('#left');
+      const right = wrapper.querySelector('#right');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Type a matching value in left, a non-matching freeform value in right.
+      setInputValue(left, 'Apples');
+      setInputValue(right, 'xyz');
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Move focus off both before the swap so neither bib is interactive.
+      document.body.focus();
+      await elementUpdated(left);
+      await elementUpdated(right);
+
+      // Swap programmatically.
+      const leftVal = left.value;
+      const rightVal = right.value;
+      left.value = rightVal;
+      right.value = leftVal;
+      await elementUpdated(left);
+      await elementUpdated(right);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Neither bib should auto-open — the user didn't interact.
+      expect(left.dropdown.isPopoverVisible).to.be.false;
+      expect(right.dropdown.isPopoverVisible).to.be.false;
     });
 
     // These tests require fullscreen (mobile) mode
@@ -1644,6 +1816,32 @@ function runFullTest(mobileView) {
 
         await expect(slotContent).to.exist;
       });
+
+      // Regression: optionSelected.textContent was assigned to input.value
+      // verbatim, so HTML-indentation whitespace and the displayValue slot's
+      // text (e.g. emoji icons) leaked into the input.
+      it('should not leak displayValue slot text or HTML indentation into input.value', async () => {
+        const el = await fixture(html`
+          <auro-combobox value="Apples">
+            <span slot="label">Name</span>
+            <auro-menu>
+              <auro-menuoption value="Apples">
+                Apples
+                <span slot="displayValue">🍎</span>
+              </auro-menuoption>
+              <auro-menuoption value="Oranges">
+                Oranges
+                <span slot="displayValue">🍊</span>
+              </auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el.input.value).to.equal('Apples');
+      });
     });
 
   });
@@ -1777,6 +1975,41 @@ function runFullTest(mobileView) {
 
         await expect(el.menu.value).to.equal('Oranges');
       });
+
+      it('should not propagate the menu-selection echo back to value', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        el.setMenuValue('Oranges');
+        // Flag is armed synchronously by setMenuValue.
+        await expect(el._pendingMenuValueSync).to.be.true;
+
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+
+        // Listener consumes the flag on the echo event so the writeback to
+        // this.value is skipped (the closing edge of the cascade loop).
+        await expect(el._pendingMenuValueSync).to.be.false;
+      });
+
+      it('should clear the menu-sync flag even when the menu does not fire selectedOption', async () => {
+        const el = await defaultFixture(mobileView);
+        await elementUpdated(el);
+
+        // Setting menu.value to a string that matches no option fires
+        // auroMenu-selectValueFailure instead of auroMenu-selectedOption, so
+        // the listener never runs and never consumes the flag. The
+        // setTimeout(0) backup clear in setMenuValue must still release it
+        // before the next user-click selection arrives.
+        el.setMenuValue('NotAnOption');
+        await expect(el._pendingMenuValueSync).to.be.true;
+
+        await elementUpdated(el);
+        await el.menu.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el._pendingMenuValueSync).to.be.false;
+      });
     });
 
     describe('reset', () => {
@@ -1839,6 +2072,37 @@ function runFullTest(mobileView) {
 
         await expect(el.hasAttribute('validity')).to.be.false;
       });
+
+      // Regression: typing a partial credit-card digit triggered the input's
+      // tooShort validity, but selecting a full-length option from the bib
+      // didn't re-run validation, so the error message persisted on the
+      // trigger even though the new input.value passed the length check.
+      it('should re-run input validation when a fresh user selection lands', async () => {
+        const el = await fixture(html`
+          <auro-combobox type="credit-card">
+            <span slot="label">Card</span>
+            <auro-menu>
+              <auro-menuoption value="4500000000000000" id="opt-cc">
+                4000 0000 0000 0000
+              </auro-menuoption>
+            </auro-menu>
+          </auro-combobox>
+        `);
+        await elementUpdated(el);
+
+        setInputValue(el, '4');
+        el.input.validate(true);
+        await elementUpdated(el);
+        await expect(el.input.validity).to.equal('tooShort');
+
+        const option = el.menu.options.find((o) => o.id === 'opt-cc');
+        option.click();
+        await elementUpdated(el);
+        await el.input.updateComplete;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        await expect(el.input.validity).to.equal('valid');
+      });
     });
 
     describe('updateActiveOption', () => {
@@ -1853,7 +2117,7 @@ function runFullTest(mobileView) {
         el.updateActiveOption(0);
         await elementUpdated(el);
 
-        await expect(el.optionActive).to.equal(el.availableOptions[0]);
+        await expect(el.optionActive === el.availableOptions[0], `expected el.optionActive to equal el.availableOptions[0]`).to.be.true;
       });
     });
 
@@ -2338,10 +2602,12 @@ function runFullTest(mobileView) {
       const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
-      // Clear input value and remove menu options so the guard passes
+      // Clear input value and remove menu options from the DOM so the guard passes
       el.input.value = undefined;
-      const origOptions = el.menu.options;
-      el.menu.options = [];
+      const menu = el.querySelector('auro-menu');
+      const removedOptions = [...menu.querySelectorAll('auro-menuoption')];
+      removedOptions.forEach((opt) => opt.remove());
+      await elementUpdated(el);
 
       // Set value to trigger updated() with changedProperties containing 'value'
       el.value = 'programmatic-value';
@@ -2350,7 +2616,7 @@ function runFullTest(mobileView) {
       expect(el.input.value).to.equal('programmatic-value');
 
       // Restore
-      el.menu.options = origOptions;
+      removedOptions.forEach((opt) => menu.appendChild(opt));
     });
 
     it('updated calls clear() in filter mode when value is set to falsy', async () => {
@@ -3858,7 +4124,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(el.optionActive === menuOptions[0], `expected el.optionActive to equal menuOptions[0]`).to.be.true;
       });
 
       it('should activate the first enabled option with Meta+ArrowUp', async () => {
@@ -3888,7 +4154,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(el.optionActive === menuOptions[0], `expected el.optionActive to equal menuOptions[0]`).to.be.true;
       });
 
       it('should activate the first enabled option with Ctrl+ArrowUp', async () => {
@@ -3918,7 +4184,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption');
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(el.optionActive === menuOptions[0], `expected el.optionActive to equal menuOptions[0]`).to.be.true;
       });
 
       it('should open the bib when ArrowUp is pressed and bib is closed', async () => {
@@ -4039,7 +4305,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
-        await expect(el.optionActive).to.equal(enabledOptions[0]);
+        await expect(el.optionActive === enabledOptions[0], `expected el.optionActive to equal enabledOptions[0]`).to.be.true;
         await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
 
@@ -4068,7 +4334,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
-        await expect(el.optionActive).to.equal(enabledOptions[0]);
+        await expect(el.optionActive === enabledOptions[0], `expected el.optionActive to equal enabledOptions[0]`).to.be.true;
         await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
 
@@ -4097,7 +4363,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const enabledOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
-        await expect(el.optionActive).to.equal(enabledOptions[0]);
+        await expect(el.optionActive === enabledOptions[0], `expected el.optionActive to equal enabledOptions[0]`).to.be.true;
         await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
     });
@@ -4132,7 +4398,7 @@ function runFullTest(mobileView) {
         }));
         await elementUpdated(el);
 
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(el.optionActive === menuOptions[0], `expected el.optionActive to equal menuOptions[0]`).to.be.true;
         await expect(el.dropdown.isPopoverVisible).to.be.true;
       });
 
@@ -4161,7 +4427,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
 
         const menuOptions = el.querySelector('auro-menu').querySelectorAll('auro-menuoption:not([disabled])');
-        await expect(el.optionActive).to.equal(menuOptions[0]);
+        await expect(el.optionActive === menuOptions[0], `expected el.optionActive to equal menuOptions[0]`).to.be.true;
         await expect(el.optionActive.hasAttribute('disabled')).to.be.false;
       });
 
