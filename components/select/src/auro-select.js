@@ -1056,7 +1056,7 @@ export class AuroSelect extends AuroElement {
 
   setMenuValue(value) {
     if (!this.menu) return;
-    this.menu.value = value;
+    this.menu.selectByValue(value);
   }
 
   /**
