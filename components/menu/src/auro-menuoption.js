@@ -153,11 +153,15 @@ export class AuroMenuOption extends AuroElement {
   firstUpdated() {
     this.runtimeUtils.handleComponentTagRename(this, 'auro-menuoption');
 
+    // firstUpdated can fire on an option that was detached before the first
+    // render completed (e.g. dynamic-menu rebuilds clear and repopulate the
+    // menu mid-cycle). parentElement is null in that case — fall back to
+    // defaults; the next render after re-attachment will pick up real values.
     if (!this.hasAttribute('size')) {
-      this.size = this.parentElement.getAttribute('size') || 'sm';
+      this.size = this.parentElement ? this.parentElement.getAttribute('size') || 'sm' : 'sm';
     }
     if (!this.hasAttribute('shape')) {
-      this.shape = this.parentElement.getAttribute('shape') || 'box';
+      this.shape = this.parentElement ? this.parentElement.getAttribute('shape') || 'box' : 'box';
     }
 
     if (!this.id) {

@@ -30,6 +30,21 @@ function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
   return isFocused;
 }
 
+/**
+ * Reconcile the menu `_index` from `optionActive` so subsequent `makeSelection` calls find the correct option after async clearSelection has reset it.
+ * @param {Object} menu - The menu component.
+ */
+function reconcileMenuIndex(menu) {
+  // eslint-disable-next-line no-underscore-dangle
+  if (menu._index < 0 && menu.optionActive && menu.items) {
+    const idx = menu.items.indexOf(menu.optionActive);
+    if (idx >= 0) {
+      // eslint-disable-next-line no-underscore-dangle
+      menu._index = idx;
+    }
+  }
+}
+
 export const comboboxKeyboardStrategy = {
   ArrowDown(component, evt, ctx) {
     // If the clear button has focus, let the browser handle ArrowDown normally.
@@ -93,6 +108,7 @@ export const comboboxKeyboardStrategy = {
       // block the browser's built-in "Enter activates focused button" behavior.
       evt.stopPropagation();
     } else if (ctx.isExpanded && component.menu.optionActive) {
+      reconcileMenuIndex(component.menu);
       component.menu.makeSelection();
 
       if (ctx.isModal) {
@@ -140,6 +156,7 @@ export const comboboxKeyboardStrategy = {
       // When the clear button is focused, Tab events do not bubble out of
       // its shadow DOM, so this handler only fires when the clear button
       // is NOT focused. In that case, select the active option and close.
+      reconcileMenuIndex(component.menu);
       component.menu.makeSelection();
       component.hideBib();
 
