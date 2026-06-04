@@ -254,7 +254,7 @@ export class AuroCalendar extends RangeDatepicker {
    */
   handlePrevMonth(options) {
     const opts = options instanceof Event ? {} : options || {};
-    this.clearRangePreview();
+    this.clearRangePreview({ force: true });
     this.utilCal.handleMonthChange(this, 'prev');
     if (!opts.skipActiveUpdate) {
       this.updateActiveCellForVisibleMonth();
@@ -272,7 +272,7 @@ export class AuroCalendar extends RangeDatepicker {
    */
   handleNextMonth(options) {
     const opts = options instanceof Event ? {} : options || {};
-    this.clearRangePreview();
+    this.clearRangePreview({ force: true });
     this.utilCal.handleMonthChange(this, 'next');
     if (!opts.skipActiveUpdate) {
       this.updateActiveCellForVisibleMonth();
@@ -1230,10 +1230,16 @@ export class AuroCalendar extends RangeDatepicker {
   /**
    * Clears range preview classes from all cells.
    * @private
+   * @param {Object} [options] - Optional settings.
+   * @param {boolean} [options.force=false] - When true, clears classes even
+   *   when both dateFrom and dateTo are set. Used by month nav handlers
+   *   since the subsequent re-render re-applies classMap-managed classes,
+   *   while `lastHoveredDate` (not in classMap) would otherwise persist.
    * @returns {void}
    */
-  clearRangePreview() {
-    if (this.dateFrom && this.dateTo) {
+  clearRangePreview(options) {
+    const opts = options instanceof Event ? {} : options || {};
+    if (!opts.force && this.dateFrom && this.dateTo) {
       return;
     }
 
