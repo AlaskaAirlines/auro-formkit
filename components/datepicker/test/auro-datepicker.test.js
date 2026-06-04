@@ -3562,6 +3562,83 @@ function runFullTest(mobileView) {
       cell.clearRangePreviewClasses();
     });
 
+    // ─── lastHoveredDate class is cleared on next/prev month nav ───────
+    // Regression: after completing a range selection, the just-clicked
+    // dateTo cell retains lastHoveredDate (imperative, not in classMap).
+    // Without {force: true}, clearRangePreview early-exits because both
+    // dates are set and the class lingers across month navigation.
+    it('clears lastHoveredDate class when next/prev month is clicked after a range selection', async () => {
+      const el = await fixture(html`
+        <auro-datepicker range value="01/10/2024" valueEnd="01/20/2024"></auro-datepicker>
+      `);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      // Simulate the imperative lastHoveredDate class lingering on a cell
+      // after both dateFrom and dateTo are set.
+      const getTargetButton = () => {
+        const cell = calendar.getAllFocusableCells().find((focusable) => focusable._cachedButton || focusable.shadowRoot.querySelector('button.day'));
+        return cell?._cachedButton || cell?.shadowRoot.querySelector('button.day');
+      };
+
+      let btn = getTargetButton();
+      expect(btn).to.exist;
+      btn.classList.add('lastHoveredDate');
+
+      const nextMonthBtn = calendar.shadowRoot.querySelector('.nextMonth');
+      nextMonthBtn.click();
+      await elementUpdated(calendar);
+      await nextFrame();
+
+      btn = getTargetButton();
+      expect(btn.classList.contains('lastHoveredDate')).to.be.false;
+
+      // Repeat for prev month navigation.
+      btn.classList.add('lastHoveredDate');
+
+      const prevMonthBtn = calendar.shadowRoot.querySelector('.prevMonth');
+      prevMonthBtn.click();
+      await elementUpdated(calendar);
+      await nextFrame();
+
+      btn = getTargetButton();
+      expect(btn.classList.contains('lastHoveredDate')).to.be.false;
+    });
+
+    // ─── clearRangePreview respects guard unless forced ────────────────
+    it('clearRangePreview retains classes when both dates are set unless forced', async () => {
+      const el = await fixture(html`
+        <auro-datepicker range value="01/10/2024" valueEnd="01/20/2024"></auro-datepicker>
+      `);
+      await elementUpdated(el);
+
+      const dropdown = el.shadowRoot.querySelector('[auro-dropdown]');
+      const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+
+      await dropdown.querySelector('[auro-input]').click();
+      await elementUpdated(calendar.shadowRoot);
+      await nextFrame();
+
+      const allCells = calendar.getAllFocusableCells();
+      const targetCell = allCells.find((cell) => cell._cachedButton);
+      expect(targetCell).to.exist;
+
+      // Without force: guard short-circuits, class persists.
+      targetCell._cachedButton.classList.add('lastHoveredDate');
+      calendar.clearRangePreview();
+      expect(targetCell._cachedButton.classList.contains('lastHoveredDate')).to.be.true;
+
+      // With force: class is removed.
+      calendar.clearRangePreview({ force: true });
+      expect(targetCell._cachedButton.classList.contains('lastHoveredDate')).to.be.false;
+    });
+
     // ─── handleClick for snowflake layout focuses first input ──────────
     it('handleClick focuses first input for snowflake layout', async () => {
       const el = await fixture(html`
