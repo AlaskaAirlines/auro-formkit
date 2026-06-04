@@ -246,6 +246,11 @@
         <td>"Next month"</td>
         <td>Accessible label for the next month navigation button.</td>
       </tr>
+      <tr>
+        <td><code>calendarGridLabel</code></td>
+        <td>"Calendar days of the month"</td>
+        <td>Accessible label for the calendar grid containing the days of the month.</td>
+      </tr>
     </tbody>
   </table>
 </auro-table>

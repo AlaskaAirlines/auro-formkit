@@ -125,6 +125,7 @@ export class AuroDatePicker extends AuroElement {
     this.blackoutLabel = 'unavailable';
     this.navLabelPrevMonth = 'Previous month';
     this.navLabelNextMonth = 'Next month';
+    this.calendarGridLabel = 'Calendar days of the month';
     this.stacked = false;
     this.noValidate = false;
     this.validity = undefined;
@@ -292,6 +293,14 @@ export class AuroDatePicker extends AuroElement {
        * The last date that may be displayed in the calendar.
        */
       calendarEndDate: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * Accessible label for the calendar grid containing the days of the month.
+       */
+      calendarGridLabel: {
         type: String,
         reflect: true
       },

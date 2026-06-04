@@ -1554,7 +1554,7 @@ export class AuroCalendar extends RangeDatepicker {
           </button>
           ` : undefined}
         </div>
-        <div id="calendarGrid" class="calendars" role="group" tabindex="0" @keydown="${this.handleGridKeyDown}" @focusin="${this.handleGridFocusIn}" @focusout="${this.handleGridFocusOut}" @calendar-month-mouseleave="${this.clearRangePreview}">
+        <div id="calendarGrid" class="calendars" role="group" tabindex="0" aria-label="${this.datepicker?.calendarGridLabel}" @keydown="${this.handleGridKeyDown}" @focusin="${this.handleGridFocusIn}" @focusout="${this.handleGridFocusOut}" @calendar-month-mouseleave="${this.clearRangePreview}">
           ${this.renderAllCalendars()}
         </div>
       </div>

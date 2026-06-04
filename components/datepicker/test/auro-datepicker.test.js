@@ -7553,8 +7553,8 @@ function runFullTest(mobileView) {
         expect(grid).to.exist;
       });
 
-      // Verify grid aria structure has aria-hidden day-of-week headers that are not exposed to screen readers.
-      it('should have aria-hidden day-of-week headers that are not exposed to screen readers', async () => {
+      // Verify day-of-week headers expose the full day name to screen readers via role="columnheader" + aria-label.
+      it('should have day-of-week headers with role="columnheader" and aria-label', async () => {
         const el = await fixture(html`
           <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
         `);
@@ -7567,33 +7567,13 @@ function runFullTest(mobileView) {
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
         const thead = month.shadowRoot.querySelector('.thead');
-
-        expect(thead.getAttribute('aria-hidden')).to.equal('true');
-        // Should still render 7 day-of-week header cells visually
         const headers = thead.querySelectorAll('.th');
+
         expect(headers.length).to.equal(7);
-      });
-
-      // Verify grid aria structure has abbr with full day name on day-of-week headers.
-      it('should have abbr with full day name on day-of-week headers', async () => {
-        const el = await fixture(html`
-          <auro-datepicker centralDate="01/15/2024"></auro-datepicker>
-        `);
-
-        const input = getInput(el, 0);
-        input.click();
-        await elementUpdated(el);
-        await nextFrame();
-
-        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
-        const abbrs = month.shadowRoot.querySelectorAll('.th abbr');
-
-        expect(abbrs.length).to.equal(7);
-        // Each abbr should have a title attribute with a full day name
-        abbrs.forEach((abbr) => {
-          expect(abbr.getAttribute('title')).to.not.be.empty;
-          expect(abbr.getAttribute('title').length).to.be.greaterThan(2);
+        headers.forEach((header) => {
+          expect(header.getAttribute('role')).to.equal('columnheader');
+          expect(header.getAttribute('aria-label')).to.not.be.empty;
+          expect(header.getAttribute('aria-label').length).to.be.greaterThan(2);
         });
       });
 
