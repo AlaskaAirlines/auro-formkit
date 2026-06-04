@@ -733,6 +733,14 @@ export class AuroMenu extends AuroElement {
    * @param {HTMLElement} menu - Root menu element.
    */
   handleNestedMenus(menu) {
+    // Slot changes can fire on a menu mid-teardown (e.g. while a parent menu
+    // is removing children to rebuild its content). In that window the menu
+    // is detached and parentElement is null. Skip — handleNestedMenus will
+    // run again when the menu is reattached.
+    if (!menu.parentElement) {
+      return;
+    }
+
     menu.level = menu.parentElement.level >= 0 ? menu.parentElement.level + 1 : 0;
 
     if (menu.level > 0) {
