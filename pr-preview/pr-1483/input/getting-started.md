@@ -328,14 +328,14 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <p>Converts an ISO string from <code>.value</code> into a display format string (e.g. <code>'01/15/2024'</code>). Returns <code>undefined</code> for empty or invalid input. See <a href="customize">Customize</a> for full examples.</p>
 <auro-header level="3" id="auroInputUtilToIso">toISOFormatString(date)</auro-header>
 <p>Converts a <code>Date</code> instance to an ISO string suitable for setting <code>input.value</code> programmatically. Throws for invalid input. See <a href="customize">Customize</a> for full examples.</p>
-<auro-header level="3" id="auroInputUtilToFormattedValue">toFormattedValue(value, valueObject, format)</auro-header>
-<p>Converts a model value to a display-formatted string. For <code>type="date"</code> with a full date <code>format</code> (e.g. <code>mm/dd/yyyy</code>), it converts the ISO model value into the configured display format. Returns the value unchanged for non-date types or partial formats. Returns an empty string when the ISO value is structurally valid but contains an out-of-range date (e.g. month 99).</p>
+<auro-header level="3" id="auroInputUtilToFormattedValue">toFormattedValue(valueObject, format)</auro-header>
+<p>Converts a date instance to a display-formatted string. For <code>type="date"</code> with a full date <code>format</code> (e.g. <code>mm/dd/yyyy</code>), it converts the ISO model value into the configured display format. Returns the value unchanged for non-date types or partial formats. Returns an empty string when the ISO value is structurally valid but contains an out-of-range date (e.g. month 99).</p>
+<p>This function is helpful when the datepicker value needs to be used in an API that only supports a specific date format. Regardless of the locale date format the user types, the value can be extracted in the necessary format.</p>
 <ul>
-<li><strong>value</strong> — The ISO model value string (e.g. <code>'2024-01-15'</code>).</li>
 <li><strong>valueObject</strong> — Pre-computed <code>Date</code> instance for the value (use <code>input.valueObject</code>).</li>
 <li><strong>format</strong> — The display format string (e.g. <code>'mm/dd/yyyy'</code>).</li>
 </ul>
-<p>This helper is used internally by datepicker to render display values in fullscreen mobile mode. Use it when you need to display a date in a specific format while keeping <code>.value</code> in ISO form.</p>
+        <pre><code>AuroInputUtil.toFormattedValue(auroInput.valueObject, 'dd/mm/yyyy'); // returns '15/01/2024' for an ISO value of '2024-01-15'</code></pre>
 </section>
 </div>
 </div>
