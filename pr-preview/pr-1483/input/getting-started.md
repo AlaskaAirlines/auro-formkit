@@ -334,7 +334,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <li><strong>valueObject</strong> — Pre-computed <code>Date</code> instance for the value (use <code>input.valueObject</code>).</li>
 <li><strong>format</strong> — The display format string (e.g. <code>'mm/dd/yyyy'</code>).</li>
 </ul>
-        <pre><code>AuroInputUtil.toFormattedValue(auroInput.valueObject, 'dd/mm/yyyy'); // returns '15/01/2024' for an ISO value of '2024-01-15'</code></pre>
+        <pre class="language-js"><code class="language-js">AuroInputUtil.toFormattedValue(auroInput.valueObject, 'dd/mm/yyyy'); // returns '15/01/2024' for an ISO value of '2024-01-15'</code></pre>
 </section>
 </div>
 </div>
