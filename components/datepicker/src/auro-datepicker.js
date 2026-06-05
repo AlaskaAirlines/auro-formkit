@@ -765,42 +765,66 @@ export class AuroDatePicker extends AuroElement {
    */
   // ─── Read-only *Object properties ─────────────────────────────────────────
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `value`. Returns `undefined` when `value` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get valueObject() {
     return this.value && dateFormatter.isValidDate(this.value) ? dateFormatter.stringToDateInstance(this.value) : undefined;
   }
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `valueEnd`. Returns `undefined` when `valueEnd` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get valueEndObject() {
     return this.valueEnd && dateFormatter.isValidDate(this.valueEnd) ? dateFormatter.stringToDateInstance(this.valueEnd) : undefined;
   }
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `minDate`. Returns `undefined` when `minDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get minDateObject() {
     return this.minDate && dateFormatter.isValidDate(this.minDate) ? dateFormatter.stringToDateInstance(this.minDate) : undefined;
   }
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `maxDate`. Returns `undefined` when `maxDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get maxDateObject() {
     return this.maxDate && dateFormatter.isValidDate(this.maxDate) ? dateFormatter.stringToDateInstance(this.maxDate) : undefined;
   }
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `calendarStartDate`. Returns `undefined` when `calendarStartDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get calendarStartDateObject() {
     return this.calendarStartDate && dateFormatter.isValidDate(this.calendarStartDate) ? dateFormatter.stringToDateInstance(this.calendarStartDate) : undefined;
   }
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `calendarEndDate`. Returns `undefined` when `calendarEndDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get calendarEndDateObject() {
     return this.calendarEndDate && dateFormatter.isValidDate(this.calendarEndDate) ? dateFormatter.stringToDateInstance(this.calendarEndDate) : undefined;
   }
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `centralDate`. Returns `undefined` when `centralDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get centralDateObject() {
     return this.centralDate && dateFormatter.isValidDate(this.centralDate) ? dateFormatter.stringToDateInstance(this.centralDate) : undefined;
   }
 
-  /** @returns {Date|undefined} */
+  /**
+   * Read-only `Date` object derived from `calendarFocusDate`. Returns `undefined` when `calendarFocusDate` is empty or not a valid date.
+   * @returns {Date|undefined}
+   */
   get calendarFocusDateObject() {
     return this.calendarFocusDate && dateFormatter.isValidDate(this.calendarFocusDate) ? dateFormatter.stringToDateInstance(this.calendarFocusDate) : undefined;
   }
@@ -1252,6 +1276,10 @@ export class AuroDatePicker extends AuroElement {
     this.hasAllValues = (this.value && this.value.length > 0) && (this.valueEnd && this.valueEnd.length > 0); // eslint-disable-line no-extra-parens
   }
 
+  /**
+   * Returns `true` when the datepicker has an active validation error.
+   * @returns {boolean}
+   */
   get hasError() {
     return this.validity !== undefined && this.validity !== 'valid';
   }
@@ -1925,8 +1953,8 @@ export class AuroDatePicker extends AuroElement {
         <slot slot="bib.fullscreen.dateLabel" name="bib.fullscreen.dateLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.toLabel" name="bib.fullscreen.toLabel" @slotchange="${this.handleSlotToSlot}"></slot>
         <slot slot="bib.fullscreen.fromLabel" name="bib.fullscreen.fromLabel" @slotchange="${this.handleSlotToSlot}"></slot>
-        <span slot="bib.fullscreen.fromStr">${AuroInputUtil.toFormattedValue(this.value, this.valueObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>
-        ${this.range ? html`<span slot="bib.fullscreen.toStr">${AuroInputUtil.toFormattedValue(this.valueEnd, this.valueEndObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>` : undefined}
+        <span slot="bib.fullscreen.fromStr">${AuroInputUtil.toFormattedValue(this.valueObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>
+        ${this.range ? html`<span slot="bib.fullscreen.toStr">${AuroInputUtil.toFormattedValue(this.valueEndObject, this.format) || html`<span class="placeholderDate">${(this.format || 'mm/dd/yyyy').toUpperCase()}</span>`}</span>` : undefined}
       </auro-formkit-calendar>
     `;
   }

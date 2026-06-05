@@ -19,7 +19,8 @@
     <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
     <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
     <auro-anchorlink fluid href="#minMaxDate" class="level2 body-xs">Min/Max Date</auro-anchorlink>
-    <auro-anchorlink fluid href="#regionalDate" class="level2 body-xs">Regional Date</auro-anchorlink>
+    <auro-anchorlink fluid href="#monthNames" class="level2 body-xs">Month Names</auro-anchorlink>
+    <auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
   </auro-nav>
 </nav>
 <div class="mainContent">
@@ -202,6 +203,15 @@
 <p>When the <code>locale</code> attribute is set, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
 <p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
 <p>If no <code>locale</code> attribute is set on the element, the component walks up the DOM looking for the nearest ancestor with a <code>data-locale</code> attribute and uses that value. If none is found, it defaults to <code>en-US</code>.</p>
+<auro-header level="4" id="monthNames">Month Names</auro-header>
+<p>The <code>monthNames</code> attribute accepts an array of 12 month name strings displayed in the calendar header. When <code>monthNames</code> is <strong>not</strong> set, the component automatically derives localized month names from the active <code>locale</code> (falling back to <code>en-US</code> if no locale is set).</p>
+<p>Use <code>monthNames</code> only when you need to override the locale-derived names — for example, to supply translated names that differ from the browser's built-in <code>Intl</code> output, or to support a locale the browser does not recognize.</p>
+<pre><code>// Override month names (all 12 required, starting with January)
+datepicker.monthNames = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+</code></pre>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->

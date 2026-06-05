@@ -22,8 +22,8 @@
       <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
       <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
       <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
-      <auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
       <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
+      <auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
       <auro-anchorlink fluid href="#max" class="level2 body-xs">Max</auro-anchorlink>
       <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
       <auro-anchorlink fluid href="#min" class="level2 body-xs">Min</auro-anchorlink>
@@ -37,9 +37,6 @@
       <auro-anchorlink fluid href="#type" class="level2 body-xs">Type</auro-anchorlink>
       <auro-anchorlink fluid href="#validateOnInput" class="level2 body-xs">Validate on Input</auro-anchorlink>
       <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
-      <auro-anchorlink fluid href="#auroInputUtil">AuroInputUtil</auro-anchorlink>
-      <auro-anchorlink fluid href="#auroInputUtilFormatIso" class="level2 body-xs">Format ISO value</auro-anchorlink>
-      <auro-anchorlink fluid href="#auroInputUtilToIso" class="level2 body-xs">Date to ISO</auro-anchorlink>
     </auro-nav>
   </nav>
   <div class="mainContent">
@@ -241,7 +238,7 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format.html) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-        <auro-header level="3" id="regionalDateFormat">Regional Date Format Support</auro-header>
+        <auro-header level="3" id="localization">Localization</auro-header>
         <p>When <code>type="date"</code> is used with the <code>locale</code> attribute, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
         <p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
         <div class="exampleWrapper">
@@ -408,6 +405,7 @@
           <li><strong><code>setCustomValidityRangeUnderflow</code></strong> — Displayed when the value is below the <code>min</code> constraint.</li>
           <li><strong><code>setCustomValidityTooLong</code></strong> — Displayed when the value exceeds the <code>maxlength</code> constraint.</li>
           <li><strong><code>setCustomValidityTooShort</code></strong> — Displayed when the value is shorter than the <code>minlength</code> constraint.</li>
+          <li><strong><code>setCustomValidityPatternMismatch</code></strong> — Displayed when the value does not match the declared <code>pattern</code>, or when <code>type="date"</code> and the entered date is not a valid calendar date (e.g. month/day values out of range). Falls back to <code>"Invalid Date Format Entered"</code> if not set.</li>
         </ul>
         <p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message.</p>
         <p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using these properties.</p>
@@ -673,33 +671,6 @@
           <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/swap-value.js) -->
           <!-- AURO-GENERATED-CONTENT:END -->
         </auro-accordion>
-      </section>
-      <section>
-        <auro-header level="2" id="auroInputUtil">AuroInputUtil</auro-header>
-        <p>When <code>type="date"</code> is used, the <code>.value</code> property always stores and returns the date in ISO format (<code>YYYY-MM-DD</code>) regardless of the displayed locale or <code>format</code> attribute. Use the <code>AuroInputUtil</code> helper to convert between ISO and any display format in your application code.</p>
-        <auro-header level="3" id="auroInputUtilFormatIso">formatISODate — ISO to display format</auro-header>
-        <p>Use <code>AuroInputUtil.formatISODate(isoStr, format)</code> to convert the ISO value read from the input into any display string. The format argument uses the same tokens as the <code>format</code> attribute (<code>mm</code>, <code>dd</code>, <code>yyyy</code>, <code>yy</code>).</p>
-        <p>Returns <code>undefined</code> when either argument is empty or the ISO string is not a valid date.</p>
-        <div class="exampleWrapper">
-          <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/format-iso-value.html) -->
-          <!-- AURO-GENERATED-CONTENT:END -->
-        </div>
-        <auro-accordion alignRight>
-          <span slot="trigger">See code</span>
-          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format-iso-value.html) -->
-          <!-- AURO-GENERATED-CONTENT:END -->
-          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/auro-input-util-format-iso.js) -->
-          <!-- AURO-GENERATED-CONTENT:END -->
-        </auro-accordion>
-      </section>
-      <section>
-
-        <auro-header level="3" id="auroInputUtilToIso">toISOFormatString — Date instance to ISO</auro-header>
-        <p>Use <code>AuroInputUtil.toISOFormatString(date)</code> to convert a JavaScript <code>Date</code> instance into an ISO string suitable for setting <code>input.value</code>.</p>
-        <p>Throws when the argument is not a valid <code>Date</code> instance.</p>
-
-          <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/auro-input-util-to-iso.js) -->
-          <!-- AURO-GENERATED-CONTENT:END -->
       </section>
     </div>
   </div>

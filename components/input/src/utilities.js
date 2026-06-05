@@ -255,27 +255,17 @@ export class AuroInputUtilities {
    * Converts a model value to a display value for the input element.
    * For full date formats, converts an ISO model value to the configured display format.
    * @private
-   * @param {string} value - The model value (ISO string for date types).
    * @param {Date|undefined} valueObject - Date object representation of value.
    * @param {string} format - The date format string.
-   * @returns {string}
+   * @returns {string | undefined}
    */
-  toFormattedValue(value, valueObject, format) {
-    if (!this.isFullDateFormat('date', format) || !value) {
-      return value;
-    }
-
-    if (!dateFormatter.isValidDate(value)) {
-      // For ISO-pattern strings that fail range validation (e.g. '2024-99-99'),
-      // return '' so inputElement stays empty and format-based validation is not triggered.
-      return (/^\d{4}-\d{2}-\d{2}$/u).test(value) ? '' : value;
-    }
-
+  toFormattedValue(valueObject, format) {
     const normalizedFormat = format.toLowerCase();
     const maskOptions = this.getMaskOptions('date', normalizedFormat);
 
     if (!(valueObject instanceof Date) || Number.isNaN(valueObject.getTime()) || !maskOptions || typeof maskOptions.format !== 'function') {
-      return value;
+      console.debug('Invalid date object or mask options for formatting', { valueObject, maskOptions }); // eslint-disable-line no-console
+      return undefined;
     }
 
     return maskOptions.format(valueObject);

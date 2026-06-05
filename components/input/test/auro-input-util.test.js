@@ -4,9 +4,9 @@ import { expect } from '@open-wc/testing';
 import { AuroInputUtil } from '../src/auro-input-util.js';
 import { AuroInputUtilities } from '../src/utilities.js';
 
-const { formatISODate, toISOFormatString } = AuroInputUtil;
+const { formatISODate, toISOFormatString, toFormattedValue } = AuroInputUtil;
 
-describe('formatISODate', () => {
+describe('AuroInputUtil', () => {
   describe('Public Functions', () => {
     describe('formatISODate', () => {
       describe('full date formats', () => {
@@ -41,15 +41,15 @@ describe('formatISODate', () => {
         it('pads single-digit month and day with leading zero', () => {
           expect(formatISODate('2025-01-05', 'mm/dd/yyyy')).to.equal('01/05/2025');
         });
+
+        it('yyyy replaces before yy so four-digit year is not double-replaced', () => {
+          expect(formatISODate('2025-06-15', 'yyyy/mm/dd')).to.equal('2025/06/15');
+        });
       });
 
       describe('two-digit year (yy)', () => {
         it('mm/yy — uses last two digits of year', () => {
           expect(formatISODate('2025-12-25', 'mm/yy')).to.equal('12/25');
-        });
-
-        it('yyyy replaces before yy so four-digit year is not double-replaced', () => {
-          expect(formatISODate('2025-06-15', 'yyyy/mm/dd')).to.equal('2025/06/15');
         });
       });
 
@@ -76,6 +76,42 @@ describe('formatISODate', () => {
 
         it('returns undefined for an impossible date', () => {
           expect(formatISODate('2025-13-99', 'mm/dd/yyyy')).to.be.undefined;
+        });
+      });
+    });
+
+    describe('toFormattedValue', () => {
+      describe('full date format — converts ISO to display string', () => {
+        it('mm/dd/yyyy — US month-first format', () => {
+          expect(toFormattedValue(new Date(2024, 0, 15), 'mm/dd/yyyy')).to.equal('01/15/2024');
+        });
+
+        it('dd/mm/yyyy — European day-first format', () => {
+          expect(toFormattedValue(new Date(2024, 11, 25), 'dd/mm/yyyy')).to.equal('25/12/2024');
+        });
+
+        it('yyyy/mm/dd — year-first format', () => {
+          expect(toFormattedValue(new Date(2024, 5, 1), 'yyyy/mm/dd')).to.equal('2024/06/01');
+        });
+
+        it('dd.mm.yyyy — dot separator (German style)', () => {
+          expect(toFormattedValue(new Date(2024, 2, 8), 'dd.mm.yyyy')).to.equal('08.03.2024');
+        });
+      });
+
+      describe('invalid date value', () => {
+        it('returns undefined for a structurally valid ISO string that is not a real date', () => {
+          expect(toFormattedValue(undefined, 'mm/dd/yyyy')).to.be.undefined;
+        });
+      });
+
+      describe('is a function exported directly on AuroInputUtil', () => {
+        it('toFormattedValue is a function', () => {
+          expect(toFormattedValue).to.be.a('function');
+        });
+
+        it('is the same bound function as AuroInputUtil.toFormattedValue', () => {
+          expect(toFormattedValue).to.equal(AuroInputUtil.toFormattedValue);
         });
       });
     });
@@ -143,12 +179,6 @@ describe('formatISODate', () => {
         expect(result).to.equal('xx/xx/xxxx');
       });
 
-      it('toFormattedValue returns the value when valueObject is not a Date', () => {
-        const util = new AuroInputUtilities({ locale: 'en-US' });
-        const result = util.toFormattedValue('2024-01-15', undefined, 'mm/dd/yyyy');
-        expect(result).to.equal('2024-01-15');
-      });
-
       it('getDateMaskFromLocale uses locale parameter when this.locale is falsy', () => {
         const util = new AuroInputUtilities({ locale: 'en-US' });
         util.locale = '';
@@ -162,6 +192,42 @@ describe('formatISODate', () => {
         util.getDateMaskFromLocale = () => '';
         const opts = util.getMaskOptions('date', undefined);
         expect(opts.pattern).to.equal('mm/dd/yyyy');
+      });
+
+      describe('toDateFnsMask', () => {
+        let util;
+
+        before(() => {
+          util = new AuroInputUtilities({ locale: 'en-US' });
+        });
+
+        it('converts mm/DD/YYYY (US IMask) to MM/dd/yyyy (date-fns)', () => {
+          expect(util.toDateFnsMask('mm/DD/YYYY')).to.equal('MM/dd/yyyy');
+        });
+
+        it('converts DD/mm/YYYY (European IMask) to dd/MM/yyyy (date-fns)', () => {
+          expect(util.toDateFnsMask('DD/mm/YYYY')).to.equal('dd/MM/yyyy');
+        });
+
+        it('converts YYYY/mm/DD (ISO-display IMask) to yyyy/MM/dd (date-fns)', () => {
+          expect(util.toDateFnsMask('YYYY/mm/DD')).to.equal('yyyy/MM/dd');
+        });
+
+        it('converts DD.mm.YYYY (dot-separator IMask) to dd.MM.yyyy (date-fns)', () => {
+          expect(util.toDateFnsMask('DD.mm.YYYY')).to.equal('dd.MM.yyyy');
+        });
+
+        it('converts two-digit year YY to yy', () => {
+          expect(util.toDateFnsMask('mm/YY')).to.equal('MM/yy');
+        });
+
+        it('leaves separators unchanged', () => {
+          expect(util.toDateFnsMask('mm-DD-YYYY')).to.equal('MM-dd-yyyy');
+        });
+
+        it('is idempotent on an already-converted date-fns mask', () => {
+          expect(util.toDateFnsMask('MM/dd/yyyy')).to.equal('MM/dd/yyyy');
+        });
       });
     });
   });

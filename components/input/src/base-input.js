@@ -808,7 +808,17 @@ export default class BaseInput extends AuroElement {
         this.hasValue = false;
       }
 
-      const formattedValue = this.type === 'date' ? this.util.toFormattedValue(this.value, this.valueObject, this.format) : this.value;
+      let formattedValue = this.value;
+      if (this.type === 'date') {
+        const formattedDate = this.util.toFormattedValue(this.valueObject, this.format);
+        if (!formattedDate) {
+          // if user entered unrecognized date format that cannot be parsed into a Date object,
+          // keep the raw value in the input so they can edit it instead of overwriting with an empty string
+          formattedValue = this.value;
+        } else {
+          formattedValue = formattedDate;
+        }
+      }
 
       if (formattedValue !== this.inputElement.value) {
         this.skipNextProgrammaticInputEvent = true;

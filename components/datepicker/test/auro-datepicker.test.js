@@ -328,6 +328,34 @@ function runFullTest(mobileView) {
         expect(el.validity).to.not.be.undefined;
       });
     });
+
+    describe('invalidDate validity key (removed)', () => {
+      it('validity is never set to "invalidDate" for an out-of-range date value', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.inputList[0].value = '13/45/2024';
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.not.equal('invalidDate');
+      });
+
+      it('validity is never set to "invalidDate" for a structurally correct but impossible date', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        el.inputList[0].value = '02/30/2024';
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+        el.validate(true);
+        await elementUpdated(el);
+
+        expect(el.validity).to.not.equal('invalidDate');
+      });
+    });
   });
 
   describe('Properties', () => {
@@ -1902,6 +1930,79 @@ function runFullTest(mobileView) {
       });
     });
 
+    describe('valueObject / valueEndObject', () => {
+      it('valueObject is undefined when value is not set', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+        expect(el.valueObject).to.be.undefined;
+      });
+
+      it('valueObject is a Date instance for a valid ISO value', async () => {
+        const el = await fixture(html`<auro-datepicker value="2024-06-15"></auro-datepicker>`);
+        await elementUpdated(el);
+        expect(el.valueObject).to.be.instanceOf(Date);
+        expect(el.valueObject.getFullYear()).to.equal(2024);
+        expect(el.valueObject.getMonth()).to.equal(5);
+        expect(el.valueObject.getDate()).to.equal(15);
+      });
+
+      it('valueObject is undefined for an invalid ISO string', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+        el.value = 'not-a-date';
+        await elementUpdated(el);
+        expect(el.valueObject).to.be.undefined;
+      });
+
+      it('valueObject is read-only — assigning it does not change value', async () => {
+        const el = await fixture(html`<auro-datepicker value="2024-06-15"></auro-datepicker>`);
+        await elementUpdated(el);
+        const originalValue = el.value;
+        try {
+          el.valueObject = new Date(2000, 0, 1);
+        } catch (_e) {
+          // strict mode throws on assignment to getter-only — that is expected
+        }
+        expect(el.value).to.equal(originalValue);
+      });
+
+      it('valueEndObject is undefined when valueEnd is not set', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+        expect(el.valueEndObject).to.be.undefined;
+      });
+
+      it('valueEndObject is a Date instance when valueEnd is set in range mode', async () => {
+        const el = await fixture(html`<auro-datepicker range value="2024-06-01" valueEnd="2024-06-20"></auro-datepicker>`);
+        await elementUpdated(el);
+        expect(el.valueEndObject).to.be.instanceOf(Date);
+        expect(el.valueEndObject.getFullYear()).to.equal(2024);
+        expect(el.valueEndObject.getMonth()).to.equal(5);
+        expect(el.valueEndObject.getDate()).to.equal(20);
+      });
+
+      it('valueEndObject becomes undefined when valueEnd is cleared', async () => {
+        const el = await fixture(html`<auro-datepicker range value="2024-06-01" valueEnd="2024-06-20"></auro-datepicker>`);
+        await elementUpdated(el);
+        expect(el.valueEndObject).to.be.instanceOf(Date);
+        el.valueEnd = undefined;
+        await elementUpdated(el);
+        expect(el.valueEndObject).to.be.undefined;
+      });
+
+      it('valueEndObject is read-only — assigning it does not change valueEnd', async () => {
+        const el = await fixture(html`<auro-datepicker range value="2024-06-01" valueEnd="2024-06-20"></auro-datepicker>`);
+        await elementUpdated(el);
+        const originalValueEnd = el.valueEnd;
+        try {
+          el.valueEndObject = new Date(2000, 0, 1);
+        } catch (_e) {
+          // strict mode throws on assignment to getter-only — that is expected
+        }
+        expect(el.valueEnd).to.equal(originalValueEnd);
+      });
+    });
+
   });
 
   describe('Slots', () => {
@@ -2393,6 +2494,39 @@ function runFullTest(mobileView) {
 
         const event = await eventPromise;
         await expect(event).to.exist;
+      });
+    });
+
+    describe('auroDatePicker-valueSet (removed)', () => {
+      it('does NOT fire auroDatePicker-valueSet when value is set programmatically', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        let fired = false;
+        el.addEventListener('auroDatePicker-valueSet', () => {
+          fired = true;
+        });
+
+        el.value = '2024-03-15';
+        await elementUpdated(el);
+
+        expect(fired).to.be.false;
+      });
+
+      it('does NOT fire auroDatePicker-valueSet when value is set via inner input', async () => {
+        const el = await fixture(html`<auro-datepicker></auro-datepicker>`);
+        await elementUpdated(el);
+
+        let fired = false;
+        el.addEventListener('auroDatePicker-valueSet', () => {
+          fired = true;
+        });
+
+        el.inputList[0].value = '2024-03-15';
+        el.inputList[0].dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        await elementUpdated(el);
+
+        expect(fired).to.be.false;
       });
     });
   });

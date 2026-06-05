@@ -1,26 +1,36 @@
 <div data-locale="de-DE">
+
+  <auro-header level="4" >en-US Example</auro-header>
   <auro-datepicker locale="en-US">
     <span slot="fromLabel">en-US Date</span>
     <span slot="helpText">Help Text</span>
   </auro-datepicker>
 
+  <auro-header level="4" >de-DE Example</auro-header>
   <auro-datepicker locale="de-DE">
-    <span slot="fromLabel">de-DE Date</span>
-    <span slot="helpText">Help Text</span>
+    <span slot="fromLabel">Deutsches Datum</span>
+    <span slot="helpText">Hilfetext</span>
+    <span slot="optionalLabel">(freiwillig)</span>
   </auro-datepicker>
 
+  <auro-header level="4" >zh-CN Example</auro-header>
   <auro-datepicker locale="zh-CN">
-    <span slot="fromLabel">zh-CN Date</span>
-    <span slot="helpText">Help Text</span>
+    <span slot="fromLabel">中文日期</span>
+    <span slot="helpText">帮助文本</span>
+    <span slot="optionalLabel">（可选）</span>
   </auro-datepicker>
 
+  <auro-header level="4">Inherited de-DE date-locale Example</auro-header>
   <auro-datepicker>
-    <span slot="fromLabel">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
-    <span slot="helpText">Help Text</span>
+    <span slot="fromLabel">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+    <span slot="helpText">Hilfetext</span>
+    <span slot="optionalLabel">(freiwillig)</span>
   </auro-datepicker>
 
+  <auro-header level="4" >ja-JP with `mm/dd/yyyy` format Example</auro-header>
   <auro-datepicker locale="ja-JP" format="mm/dd/yyyy">
-    <span slot="fromLabel">ja-JP locale with explicit mm/dd/yyyy format</span>
-    <span slot="helpText">Help Text</span>
+    <span slot="fromLabel">明示的な mm/dd/yyyy 形式の ja-JP ロケール</span>
+    <span slot="helpText">ヘルプテキスト</span>
+    <span slot="optionalLabel">（任意）</span>
   </auro-datepicker>
 </div>
