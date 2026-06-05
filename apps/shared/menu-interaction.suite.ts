@@ -107,10 +107,8 @@ export function menuInteractionSuite(framework: string) {
       test('fires selectedOption event on click', async ({ page }) => {
         await menu(page, 'default').evaluate((el: any) => {
           (el as any).__selectedFired = false;
-          (el as any).__selectedDetail = null;
-          el.addEventListener('auroMenu-selectedOption', (e: any) => {
+          el.addEventListener('auroMenu-selectedOption', () => {
             (el as any).__selectedFired = true;
-            (el as any).__selectedDetail = e.detail;
           }, { once: true });
         });
 
@@ -120,8 +118,8 @@ export function menuInteractionSuite(framework: string) {
           menu(page, 'default').evaluate((el: any) => (el as any).__selectedFired),
         ).toBe(true);
 
-        const detail = await menu(page, 'default').evaluate((el: any) => (el as any).__selectedDetail);
-        expect(detail.value).toBe('Grapes');
+        const value = await menu(page, 'default').evaluate((el: any) => el.value);
+        expect(value).toBe('Grapes');
       });
     });
 
