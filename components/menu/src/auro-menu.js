@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle, no-magic-numbers, max-lines, no-extra-parens */
+/* eslint-disable no-underscore-dangle, no-magic-numbers, max-lines, no-extra-parens, max-depth */
 // Copyright (c) 2025 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
@@ -417,14 +417,21 @@ export class AuroMenu extends AuroElement {
 
         // If no matching options were found in either mode
         if (!newSelected || (Array.isArray(newSelected) && newSelected.length === 0)) {
-          // Clear state BEFORE dispatching so synchronous listeners (e.g. auro-select's
-          // updateDisplayedValue) read fresh `optionSelected` rather than the stale prior
-          // selection and re-render the old label.
-          if (this.optionSelected !== undefined) {
-            this.optionSelected = undefined;
+          // Defer failure when no options are loaded yet (async pattern: parent sets
+          // value before slotted options render). handleSlotChange re-runs matching
+          // once items arrive. Without this guard, a valid preselected value gets
+          // cleared by the failure listener before options ever exist to match against.
+          const hasItemsToMatch = this.items && this.items.length > 0;
+          if (hasItemsToMatch) {
+            // Clear state BEFORE dispatching so synchronous listeners (e.g. auro-select's
+            // updateDisplayedValue) read fresh `optionSelected` rather than the stale prior
+            // selection and re-render the old label.
+            if (this.optionSelected !== undefined) {
+              this.optionSelected = undefined;
+            }
+            this._index = -1;
+            dispatchMenuEvent(this, 'auroMenu-selectValueFailure');
           }
-          this._index = -1;
-          dispatchMenuEvent(this, 'auroMenu-selectValueFailure');
         } else if (!this.selectionEquals(this.optionSelected, newSelected)) {
           this.optionSelected = newSelected;
         }
@@ -890,6 +897,16 @@ export class AuroMenu extends AuroElement {
     // Nested menus must also reinitialize so items, level, role="group", and aria-label refresh on content changes.
     // Root-specific attributes (listbox/root/aria-multiselectable) remain gated by `rootMenu` inside initializeMenu.
     this.initializeMenu();
+
+    // When options arrive after `value` was set (async option load), re-run matching
+    // against the now-populated items. The earlier updated('value') call deferred
+    // the failure dispatch because items were empty; this triggers the match now.
+    const hasPendingValue = this.value !== undefined &&
+      this.value !== null &&
+      !(typeof this.value === 'string' && this.value.trim() === '');
+    if (hasPendingValue && this.items && this.items.length > 0 && this.optionSelected === undefined) {
+      this.requestUpdate('value', undefined);
+    }
   }
 
   /**

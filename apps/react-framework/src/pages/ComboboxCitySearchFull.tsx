@@ -171,7 +171,7 @@ export function ComboboxFullWrapper({ initialValue = '', initialTypedValue = '' 
         setCustomValidityValueMissing={MISSING_FIELD_ERROR}
       >
         <span slot="label">From</span>
-        <auro-menu ref={menuRef} hasLoadingPlaceholder>
+        <auro-menu ref={menuRef}>
           {stations.map((city) => (
             <Fragment key={city.code}>
               <auro-menuoption value={city.code}>
