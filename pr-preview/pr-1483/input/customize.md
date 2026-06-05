@@ -22,8 +22,8 @@
 <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
 <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
 <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
-<auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
 <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
+<auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
 <auro-anchorlink fluid href="#max" class="level2 body-xs">Max</auro-anchorlink>
 <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
 <auro-anchorlink fluid href="#min" class="level2 body-xs">Min</auro-anchorlink>
@@ -37,9 +37,6 @@
 <auro-anchorlink fluid href="#type" class="level2 body-xs">Type</auro-anchorlink>
 <auro-anchorlink fluid href="#validateOnInput" class="level2 body-xs">Validate on Input</auro-anchorlink>
 <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
-<auro-anchorlink fluid href="#auroInputUtil">AuroInputUtil</auro-anchorlink>
-<auro-anchorlink fluid href="#auroInputUtilFormatIso" class="level2 body-xs">Format ISO value</auro-anchorlink>
-<auro-anchorlink fluid href="#auroInputUtilToIso" class="level2 body-xs">Date to ISO</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -531,33 +528,40 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="regionalDateFormat">Regional Date Format Support</auro-header>
+<auro-header level="3" id="localization">Localization</auro-header>
 <p>When <code>type="date"</code> is used with the <code>locale</code> attribute, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
 <p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/locale.html) -->
 <!-- The below content is automatically added from ../apiExamples/locale.html -->
 <div data-locale="de-DE">
+<auro-header level="4">en-GB Example</auro-header>
 <auro-input type="date" locale="en-GB">
 <span slot="ariaLabel.clear">Clear All</span>
 <span slot="label">en-GB Date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
+<auro-header level="4">en-US Example</auro-header>
 <auro-input type="date" locale="en-US">
 <span slot="ariaLabel.clear">Clear All</span>
 <span slot="label">en-US Date</span>
 <span slot="helpText">Help Text</span>
 </auro-input>
+<auro-header level="4">zh-CN Example</auro-header>
 <auro-input type="date" locale="zh-CN">
-<span slot="ariaLabel.clear">Clear All</span>
-<span slot="label">zh-CN Date</span>
-<span slot="helpText">Help Text</span>
+<span slot="ariaLabel.clear">全部清除</span>
+<span slot="label">中文日期</span>
+<span slot="helpText">帮助文本</span>
+<span slot="optionalLabel">（可选）</span>
 </auro-input>
+<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
 <auro-input type="date">
-<span slot="ariaLabel.clear">Clear All</span>
-<span slot="label">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
-<span slot="helpText">Help Text</span>
+<span slot="ariaLabel.clear">Alles löschen</span>
+<span slot="label">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
 </auro-input>
+<auro-header level="4">en-US with `yyyy.mm.dd` format Example</auro-header>
 <auro-input type="date" locale="en-US" format="yyyy.mm.dd">
 <span slot="ariaLabel.clear">Clear All</span>
 <span slot="label">en-US with yyyy.mm.dd format</span>
@@ -570,26 +574,33 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/locale.html) -->
 <!-- The below code snippet is automatically added from ../apiExamples/locale.html -->
 <pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
+  &lt;auro-header level="4"&gt;en-GB Example&lt;/auro-header&gt;
   &lt;auro-input type="date" locale="en-GB"&gt;
     &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
     &lt;span slot="label"&gt;en-GB Date&lt;/span&gt;
     &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
   &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;en-US Example&lt;/auro-header&gt;
   &lt;auro-input type="date" locale="en-US"&gt;
     &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
     &lt;span slot="label"&gt;en-US Date&lt;/span&gt;
     &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
   &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;zh-CN Example&lt;/auro-header&gt;
   &lt;auro-input type="date" locale="zh-CN"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;zh-CN Date&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+    &lt;span slot="ariaLabel.clear"&gt;全部清除&lt;/span&gt;
+    &lt;span slot="label"&gt;中文日期&lt;/span&gt;
+    &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
   &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
   &lt;auro-input type="date"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;Nearest `data-locale` attribute format (`de-DE` in this case)&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Alles löschen&lt;/span&gt;
+    &lt;span slot="label"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;en-US with `yyyy.mm.dd` format Example&lt;/auro-header&gt;
   &lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
     &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
     &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
@@ -1437,96 +1448,6 @@
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-</section>
-<section>
-<auro-header level="2" id="auroInputUtil">AuroInputUtil</auro-header>
-<p>When <code>type="date"</code> is used, the <code>.value</code> property always stores and returns the date in ISO format (<code>YYYY-MM-DD</code>) regardless of the displayed locale or <code>format</code> attribute. Use the <code>AuroInputUtil</code> helper to convert between ISO and any display format in your application code.</p>
-<auro-header level="3" id="auroInputUtilFormatIso">formatISODate — ISO to display format</auro-header>
-<p>Use <code>AuroInputUtil.formatISODate(isoStr, format)</code> to convert the ISO value read from the input into any display string. The format argument uses the same tokens as the <code>format</code> attribute (<code>mm</code>, <code>dd</code>, <code>yyyy</code>, <code>yy</code>).</p>
-<p>Returns <code>undefined</code> when either argument is empty or the ISO string is not a valid date.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/format-iso-value.html) -->
-<!-- The below content is automatically added from ../apiExamples/format-iso-value.html -->
-<auro-input id="formatIsoExample" type="date" locale="en-US" value="2024-01-15">
-<span slot="label">Date</span>
-<span slot="helpText">The <code>.value</code> property always stores the date as ISO (YYYY-MM-DD)</span>
-</auro-input>
-<br />
-<table>
-<thead>
-<tr><th>Property / Method</th><th>Result</th></tr>
-</thead>
-<tbody>
-<tr><td><code>.value</code> (ISO)</td><td><code id="isoVal">2024-01-15</code></td></tr>
-<tr><td><code>formatISODate(value, 'mm/dd/yyyy')</code></td><td><code id="fmtUs">01/15/2024</code></td></tr>
-<tr><td><code>formatISODate(value, 'dd/mm/yyyy')</code></td><td><code id="fmtGb">15/01/2024</code></td></tr>
-<tr><td><code>formatISODate(value, 'yyyy/mm/dd')</code></td><td><code id="fmtIso">2024/01/15</code></td></tr>
-</tbody>
-</table>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/format-iso-value.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/format-iso-value.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input id="formatIsoExample" type="date" locale="en-US" value="2024-01-15"&gt;
-  &lt;span slot="label"&gt;Date&lt;/span&gt;
-  &lt;span slot="helpText"&gt;The &lt;code&gt;.value&lt;/code&gt; property always stores the date as ISO (YYYY-MM-DD)&lt;/span&gt;
-&lt;/auro-input&gt;
-&lt;br /&gt;
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;&lt;th&gt;Property / Method&lt;/th&gt;&lt;th&gt;Result&lt;/th&gt;&lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;&lt;td&gt;&lt;code&gt;.value&lt;/code&gt; (ISO)&lt;/td&gt;&lt;td&gt;&lt;code id="isoVal"&gt;2024-01-15&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;&lt;code&gt;formatISODate(value, 'mm/dd/yyyy')&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code id="fmtUs"&gt;01/15/2024&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;&lt;code&gt;formatISODate(value, 'dd/mm/yyyy')&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code id="fmtGb"&gt;15/01/2024&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;&lt;code&gt;formatISODate(value, 'yyyy/mm/dd')&lt;/code&gt;&lt;/td&gt;&lt;td&gt;&lt;code id="fmtIso"&gt;2024/01/15&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/auro-input-util-format-iso.js) -->
-<!-- The below code snippet is automatically added from ../apiExamples/auro-input-util-format-iso.js -->
-<pre class="language-js"><code class="language-js">import { AuroInputUtil } from '@aurodesignsystem/auro-formkit/input';
-​
-const input = document.querySelector('auro-input');
-​
-// .value is always ISO, regardless of locale or format attribute
-const iso = input.value; // e.g. '2024-01-15'
-​
-// Date string that's converted to user's locale and format.
-AuroInputUtil.formatISODate(iso, input.format);
-​
-// Examples with explicit format:
-AuroInputUtil.formatISODate(iso, 'mm/dd/yyyy'); // → '01/15/2024'
-AuroInputUtil.formatISODate(iso, 'dd/mm/yyyy'); // → '15/01/2024'
-AuroInputUtil.formatISODate(iso, 'yyyy/mm/dd'); // → '2024/01/15'
-AuroInputUtil.formatISODate(iso, 'dd.mm.yyyy'); // → '15.01.2024'
-​
-// Returns undefined for empty or invalid input
-AuroInputUtil.formatISODate(undefined, 'mm/dd/yyyy'); // → undefined
-AuroInputUtil.formatISODate('not-a-date', 'mm/dd/yyyy'); // → undefined</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-</section>
-<section>
-<auro-header level="3" id="auroInputUtilToIso">toISOFormatString — Date instance to ISO</auro-header>
-<p>Use <code>AuroInputUtil.toISOFormatString(date)</code> to convert a JavaScript <code>Date</code> instance into an ISO string suitable for setting <code>input.value</code>.</p>
-<p>Throws when the argument is not a valid <code>Date</code> instance.</p>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/auro-input-util-to-iso.js) -->
-<!-- The below code snippet is automatically added from ../apiExamples/auro-input-util-to-iso.js -->
-<pre class="language-js"><code class="language-js">import { AuroInputUtil } from '@aurodesignsystem/auro-formkit/input';
-​
-const input = document.querySelector('auro-input');
-​
-// Convert a Date to ISO, then set it on the input
-const today = new Date();
-input.value = AuroInputUtil.toISOFormatString(today); // e.g. '2024-01-15'
-​
-// Convert a specific date
-AuroInputUtil.toISOFormatString(new Date(2024, 0, 15)); // → '2024-01-15'</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
 </section>
 </div>
 </div>

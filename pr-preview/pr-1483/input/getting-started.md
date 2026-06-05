@@ -325,8 +325,10 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <p><code>AuroInputUtil</code> is a standalone utility exported from the package for working with date values. When <code>type="date"</code> is used, <code>.value</code> always stores the date as ISO (<code>YYYY-MM-DD</code>). Use these helpers to convert between ISO and any display format in your application.</p>
 <auro-header level="4" id="auroInputUtilFormatIso">formatISODate(isoStr, format)</auro-header>
 <p>Converts an ISO string from <code>.value</code> into a display format string (e.g. <code>'01/15/2024'</code>). Returns <code>undefined</code> for empty or invalid input. See <a href="customize">Customize</a> for full examples.</p>
+        <pre class="language-js"><code class="language-js">AuroInputUtil.formatISODate('2024-01-15', 'dd/mm/yyyy'); // returns '15/01/2024</code></pre>
 <auro-header level="4" id="auroInputUtilToIso">toISOFormatString(date)</auro-header>
 <p>Converts a <code>Date</code> instance to an ISO string suitable for setting <code>input.value</code> programmatically. Throws for invalid input. See <a href="customize">Customize</a> for full examples.</p>
+        <pre class="language-js"><code class="language-js">AuroInputUtil.toISOFormatString(new Date('2024/01/15')); // returns '2024-01-15</code></pre>
 <auro-header level="4" id="auroInputUtilToFormattedValue">toFormattedValue(valueObject, format)</auro-header>
 <p>Converts a date instance to a display-formatted string. For <code>type="date"</code> with a full date <code>format</code> (e.g. <code>mm/dd/yyyy</code>), it converts the ISO model value into the configured display format. Returns the value unchanged for non-date types or partial formats. Returns an empty string when the ISO value is structurally valid but contains an out-of-range date (e.g. month 99).</p>
 <p>This function is helpful when the datepicker value needs to be used in an API that only supports a specific date format. Regardless of the locale date format the user types, the value can be extracted in the necessary format.</p>

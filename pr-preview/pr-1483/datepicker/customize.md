@@ -19,8 +19,8 @@
 <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#minMaxDate" class="level2 body-xs">Min/Max Date</auro-anchorlink>
-<auro-anchorlink fluid href="#regionalDate" class="level2 body-xs">Regional Date</auro-anchorlink>
 <auro-anchorlink fluid href="#monthNames" class="level2 body-xs">Month Names</auro-anchorlink>
+<auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -711,25 +711,34 @@ datepicker.monthNames = [
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
 <!-- The below content is automatically added from ./../apiExamples/locale.html -->
 <div data-locale="de-DE">
+<auro-header level="4" >en-US Example</auro-header>
 <auro-datepicker locale="en-US">
 <span slot="fromLabel">en-US Date</span>
 <span slot="helpText">Help Text</span>
 </auro-datepicker>
+<auro-header level="4" >de-DE Example</auro-header>
 <auro-datepicker locale="de-DE">
-<span slot="fromLabel">de-DE Date</span>
-<span slot="helpText">Help Text</span>
+<span slot="fromLabel">Deutsches Datum</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
 </auro-datepicker>
+<auro-header level="4" >zh-CN Example</auro-header>
 <auro-datepicker locale="zh-CN">
-<span slot="fromLabel">zh-CN Date</span>
-<span slot="helpText">Help Text</span>
+<span slot="fromLabel">中文日期</span>
+<span slot="helpText">帮助文本</span>
+<span slot="optionalLabel">（可选）</span>
 </auro-datepicker>
+<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
 <auro-datepicker>
-<span slot="fromLabel">Nearest `data-locale` attribute format (`de-DE` in this case)</span>
-<span slot="helpText">Help Text</span>
+<span slot="fromLabel">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
 </auro-datepicker>
+<auro-header level="4" >ja-JP with `mm/dd/yyyy` format Example</auro-header>
 <auro-datepicker locale="ja-JP" format="mm/dd/yyyy">
-<span slot="fromLabel">ja-JP locale with explicit mm/dd/yyyy format</span>
-<span slot="helpText">Help Text</span>
+<span slot="fromLabel">明示的な mm/dd/yyyy 形式の ja-JP ロケール</span>
+<span slot="helpText">ヘルプテキスト</span>
+<span slot="optionalLabel">（任意）</span>
 </auro-datepicker>
 </div>
 <!-- AURO-GENERATED-CONTENT:END -->
@@ -740,25 +749,34 @@ datepicker.monthNames = [
 <!-- The below code snippet is automatically added from ./../apiExamples/locale.html -->
 
 <pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
+  &lt;auro-header level="4" &gt;en-US Example&lt;/auro-header&gt;
   &lt;auro-datepicker locale="en-US"&gt;
     &lt;span slot="fromLabel"&gt;en-US Date&lt;/span&gt;
     &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
   &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4" &gt;de-DE Example&lt;/auro-header&gt;
   &lt;auro-datepicker locale="de-DE"&gt;
-    &lt;span slot="fromLabel"&gt;de-DE Date&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;Deutsches Datum&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4" &gt;zh-CN Example&lt;/auro-header&gt;
   &lt;auro-datepicker locale="zh-CN"&gt;
-    &lt;span slot="fromLabel"&gt;zh-CN Date&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;中文日期&lt;/span&gt;
+    &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
   &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
   &lt;auro-datepicker&gt;
-    &lt;span slot="fromLabel"&gt;Nearest `data-locale` attribute format (`de-DE` in this case)&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
   &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4" &gt;ja-JP with `mm/dd/yyyy` format Example&lt;/auro-header&gt;
   &lt;auro-datepicker locale="ja-JP" format="mm/dd/yyyy"&gt;
-    &lt;span slot="fromLabel"&gt;ja-JP locale with explicit mm/dd/yyyy format&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+    &lt;span slot="fromLabel"&gt;明示的な mm/dd/yyyy 形式の ja-JP ロケール&lt;/span&gt;
+    &lt;span slot="helpText"&gt;ヘルプテキスト&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;（任意）&lt;/span&gt;
   &lt;/auro-datepicker&gt;
 &lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
