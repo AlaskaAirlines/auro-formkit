@@ -610,16 +610,7 @@ export class AuroCombobox extends AuroElement {
   updateFilter() {
     // Reset available options if noFilter is set to false after being true.
     if (this.noFilter) {
-      // nomatch options have no purpose when filtering is delegated to the
-      // consumer — exclude them so "No matching option" rows don't surface
-      // alongside the real results.
-      this.availableOptions = this.options.filter((option) => {
-        if (option.hasAttribute('nomatch')) {
-          option.setAttribute('hidden', '');
-          return false;
-        }
-        return true;
-      });
+      this.availableOptions = [...this.options];
       return;
     }
 
@@ -1213,6 +1204,7 @@ export class AuroCombobox extends AuroElement {
     // stale option. Safe from re-entrancy because any resulting
     // input.value changes dispatch isProgrammatic events.
     this.menu.addEventListener('auroMenu-selectValueFailure', () => {
+      this.value = undefined;
       this.optionSelected = undefined;
     });
 
@@ -1580,6 +1572,12 @@ export class AuroCombobox extends AuroElement {
       // Sync menu.value only when an option actually matches; otherwise clear it.
       if (this.menu.options && this.menu.options.length > 0) {
         if (this.menu.options.some((opt) => opt.value === this.value)) {
+          this.setMenuValue(this.value);
+        } else if (this.behavior === 'filter') {
+          // In filter mode, freeform values aren't allowed. Push the unmatched
+          // value through setMenuValue so menu dispatches auroMenu-selectValueFailure
+          // and the listener at line 1206 clears combobox.value (mirrors select's
+          // pattern). Bypassing setMenuValue here would skip the failure cascade.
           this.setMenuValue(this.value);
         } else {
           if (this.menu.value) {
