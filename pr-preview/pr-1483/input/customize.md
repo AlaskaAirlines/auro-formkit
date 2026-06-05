@@ -899,6 +899,7 @@
 <li><strong><code>setCustomValidityRangeUnderflow</code></strong> — Displayed when the value is below the <code>min</code> constraint.</li>
 <li><strong><code>setCustomValidityTooLong</code></strong> — Displayed when the value exceeds the <code>maxlength</code> constraint.</li>
 <li><strong><code>setCustomValidityTooShort</code></strong> — Displayed when the value is shorter than the <code>minlength</code> constraint.</li>
+<li><strong><code>setCustomValidityPatternMismatch</code></strong> — Displayed when the value does not match the declared <code>pattern</code>, or when <code>type="date"</code> and the entered date is not a valid calendar date (e.g. month/day values out of range). Falls back to <code>"Invalid Date Format Entered"</code> if not set.</li>
 </ul>
 <p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message.</p>
 <p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using these properties.</p>
