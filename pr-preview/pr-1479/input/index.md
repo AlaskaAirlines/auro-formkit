@@ -11,6 +11,7 @@
 <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
 <auro-anchorlink fluid href="#passwordToggle" class="level2 body-xs">Password Input</auro-anchorlink>
 <auro-anchorlink fluid href="#formattedInput" class="level2 body-xs">Formatted Input</auro-anchorlink>
+<auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -130,9 +131,9 @@
 <li><strong><code>type="tel"</code></strong> — Formats the input as a phone number. The default format is <code>+1 (000) 000-0000</code>. A custom format may be specified using the <code>format</code> attribute.</li>
 <li><strong><code>type="date"</code></strong> — Formats the input as a date. The default format is <code>mm/dd/yyyy</code>. Custom date formats may be specified using the <code>format</code> attribute with any combination of <code>mm</code>, <code>dd</code>, <code>yyyy</code>, or <code>yy</code>.</li>
 </ul>
-<div class="note">
-          Custom masking is also available via the <code>format</code> attribute using <a href="https://imask.js.org/">IMask</a> definitions: <code>0</code> for digit, <code>a</code> for letter, <code>*</code> for any character.
-</div>
+<p class="note">
+<strong>Note:</strong> custom masking is also available via the <code>format</code> attribute using <auro-hyperlink href="https://imask.js.org/">iMask</auro-hyperlink> definitions: <code>0</code> for digit, <code>a</code> for letter, <code>*</code> for any character.
+</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/credit-card-icon.html) -->
 <!-- The below content is automatically added from ./../apiExamples/credit-card-icon.html -->
@@ -176,6 +177,30 @@
 <!-- The below code snippet is automatically added from ./../apiExamples/month-day-year.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-input type="date"&gt;
   &lt;span slot="label"&gt;Arrival date&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4" id="regionalDateFormat">Regional date format support</auro-header>
+<p>People around the world write dates differently. A traveler in the United States expects to see <strong>12/25/2025</strong>, while someone in Germany expects <strong>25.12.2025</strong>, and someone in Japan expects <strong>2025/12/25</strong>. Showing the wrong format causes confusion and mistakes.</p>
+<p>When a date input knows the user's region, it automatically displays dates in the format that looks natural to them — no extra setup required. The input handles all the formatting behind the scenes.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale-single.html) -->
+<!-- The below content is automatically added from ./../apiExamples/locale-single.html -->
+<auro-input type="date" locale="zh-CN">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">zh-CN Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale-single.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/locale-single.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" locale="zh-CN"&gt;
+  &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="label"&gt;zh-CN Date&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
