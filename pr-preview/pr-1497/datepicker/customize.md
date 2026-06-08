@@ -695,6 +695,62 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="localization">Localization</auro-header>
+<p>Use the <code>centralDate</code>, locale, and related attributes to configure the datepicker for different regions and languages.</p>
+<auro-header level="4" id="rangeLabels">Screen Reader Labels</auro-header>
+<p>The following attributes customize the labels announced by screen readers when navigating the calendar. Range labels apply when the <code>range</code> attribute is set; navigation labels apply to all configurations.</p>
+<auro-table>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rangeLabelStart</code></td>
+<td>"range start"</td>
+<td>Announced on the departure/start date cell.</td>
+</tr>
+<tr>
+<td><code>rangeLabelEnd</code></td>
+<td>"range end"</td>
+<td>Announced on the return/end date cell.</td>
+</tr>
+<tr>
+<td><code>rangeLabelBeforeRange</code></td>
+<td>"before range"</td>
+<td>Announced on cells before the start date.</td>
+</tr>
+<tr>
+<td><code>rangeLabelInRange</code></td>
+<td>"in range"</td>
+<td>Announced on cells between the start and end dates.</td>
+</tr>
+<tr>
+<td><code>rangeLabelAfterRange</code></td>
+<td>"after range"</td>
+<td>Announced on cells after the end date (or after start when no end is selected).</td>
+</tr>
+<tr>
+<td><code>navLabelPrevMonth</code></td>
+<td>"Previous month"</td>
+<td>Accessible label for the previous month navigation button.</td>
+</tr>
+<tr>
+<td><code>navLabelNextMonth</code></td>
+<td>"Next month"</td>
+<td>Accessible label for the next month navigation button.</td>
+</tr>
+<tr>
+<td><code>calendarGridLabel</code></td>
+<td>"Calendar days of the month"</td>
+<td>Accessible label for the calendar grid containing the days of the month.</td>
+</tr>
+</tbody>
+</table>
+</auro-table>
 <auro-header level="4" id="regionalDate">Regional Date</auro-header>
 <p>When the <code>locale</code> attribute is set, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
 <p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>

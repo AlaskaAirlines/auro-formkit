@@ -35,11 +35,13 @@
 </li>
 </ul>
 <auro-header level="4" id="calendar">Calendar</auro-header>
-<p>The calendar displays one or more months in a grid layout. Users interact with the calendar by clicking on individual date cells. The calendar supports:</p>
+<p>The calendar displays one or more months in a grid layout. Users interact with the calendar by clicking, tapping, or using arrow keys to navigate date cells and Enter/Space to select. The calendar supports:</p>
 <ul>
 <li>Navigating between months using previous/next arrows.</li>
+<li>Arrow-key navigation between date cells with automatic cross-month boundary handling.</li>
 <li>Date range highlighting when <code>range</code> is set.</li>
 <li>Disabled dates outside the <code>minDate</code>/<code>maxDate</code> bounds.</li>
+<li>Blackout dates that are focusable but not selectable.</li>
 <li>Custom cell content via the <code>date_MM_DD_YYYY</code> slot.</li>
 <li>Cell popovers via the <code>popover_MM_DD_YYYY</code> slot.</li>
 </ul>

@@ -434,7 +434,7 @@ Ensure your `tsconfig.json` uses `"moduleResolution": "bundler"` so TypeScript c
 <!-- AURO-GENERATED-CONTENT:END -->
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reset-state.js) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/reset-state.js -->
-<pre class="language-js"><code class="language-js">export function resetStateExample() {
+<pre class="language-js"><code class="language-js">export async function resetStateExample() {
   const elem = document.querySelector('#resetStateExample');
 ​
   document.querySelector('#resetStateBtn').addEventListener('click', () =&gt; {
