@@ -496,14 +496,20 @@ export class AuroMenu extends AuroElement {
       });
     }
 
-    // Handle layout propagation to all menus and options
+    // Handle layout propagation to all menus and options.
+    // Skip elements that had size/shape set by the author (marked in initItems);
+    // explicit per-option overrides must survive menu-level propagation.
     const propagationTargets = this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]');
     [
       'size',
       'shape'
     ].forEach((prop) => {
       if (changedProperties.has(prop)) {
+        const explicitKey = prop === 'size' ? '_explicitSize' : '_explicitShape';
         propagationTargets.forEach((el) => {
+          if (el[explicitKey]) {
+            return;
+          }
           el.setAttribute(prop, this[prop]);
         });
       }
@@ -611,6 +617,18 @@ export class AuroMenu extends AuroElement {
   initItems() {
     const found = Array.from(this.querySelectorAll('auro-menuoption, [auro-menuoption]'));
     this.items = found.length > 0 ? found : undefined;
+
+    // Record whether each propagation target had an author-set size/shape attribute
+    // BEFORE menu has had a chance to propagate. Marker is set once per element so a
+    // later menu-driven setAttribute doesn't re-flag the element as "explicit".
+    this.querySelectorAll('auro-menu, [auro-menu], auro-menuoption, [auro-menuoption]').forEach((el) => {
+      if (el._explicitSize === undefined) {
+        el._explicitSize = el.hasAttribute('size');
+      }
+      if (el._explicitShape === undefined) {
+        el._explicitShape = el.hasAttribute('shape');
+      }
+    });
 
     if (this.noCheckmark) {
       this.updateItemsState(new Map([
