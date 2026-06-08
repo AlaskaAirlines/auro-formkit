@@ -2,8 +2,12 @@
 
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { generateGroupedStory } from '@aurodesignsystem/utils';
+import { AuroMenu, AuroMenuOption } from '../../menu/src/index.js';
 import '../../menu/src/registered';
 import '../src/registered';
+
+AuroMenu.register('cusom-menu');
+AuroMenuOption.register('custom-menuoption');
 
 // Import all HTML files from apiExamples
 const apiExamples = import.meta.glob('../apiExamples/*.html', { query: '?raw', import: 'default', eager: true });
