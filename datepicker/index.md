@@ -10,6 +10,9 @@
 <auro-anchorlink fluid href="#selectRange" class="level2 body-xs">Select a Range</auro-anchorlink>
 <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
 <auro-anchorlink fluid href="#skipSelection" class="level2 body-xs">Skip Selection</auro-anchorlink>
+<auro-anchorlink fluid href="#popoverSlot" class="level2 body-xs">Date Popover</auro-anchorlink>
+<auro-anchorlink fluid href="#blackoutDates" class="level2 body-xs">Blackout Dates</auro-anchorlink>
+<auro-anchorlink fluid href="#referenceDates" class="level2 body-xs">Reference Dates</auro-anchorlink>
 <auro-anchorlink fluid href="#viewportSize" class="level2 body-xs">Viewport Size</auro-anchorlink>
 </auro-nav>
 </nav>
@@ -38,15 +41,21 @@
             Click the input or press <kbd>Enter</kbd> / <kbd>Space</kbd> to open the calendar
 <div class="note">
 <p>
-                The calendar bib opens and displays the current month. Focus moves into the calendar on the current date or, if a <code>calendarFocusDate</code> is set, on that date.
+                The calendar bib opens and displays the current month. The focused cell is determined in the following priority order:
 </p>
+<ol>
+<li>The currently selected date (if one exists and is within the valid min/max range).</li>
+<li>Today's date (if it is enabled — within the min/max range).</li>
+<li>The first future enabled date.</li>
+<li>The first past enabled date.</li>
+</ol>
 </div>
 </li>
 <li>
             Select a date by clicking a calendar cell or by typing a date directly into the input
 <div class="note">
 <p>
-                When a valid date is selected, the <code>value</code> property is updated and the calendar closes (on desktop). If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
+                When a valid date is selected, the <code>value</code> property is updated. The calendar remains open so additional dates can be reviewed. Close the calendar by pressing Escape or activating the Done button. If the user types a date, it must match the configured <code>format</code> (default <code>mm/dd/yyyy</code>).
 </p>
 </div>
 </li>
@@ -167,6 +176,108 @@
 <auro-header level="3" id="skipSelection">Skip selection</auro-header>
 <p>The datepicker does not force the user to select a date. If no selection is made and the field is not <code>required</code>, the user can move past the datepicker without entering a value.</p>
 <p>If the field is <code>required</code>, moving focus away without selecting a date triggers validation and renders the <code>valueMissing</code> error state.</p>
+<auro-header level="3" id="popoverSlot">Popover slot</auro-header>
+<p>Use the <code>popover_MM_DD_YYYY</code> slot to display additional information when the user hovers over a calendar cell. This is useful for showing pricing, availability, or other contextual details for specific dates.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/popover-slot.html) -->
+<!-- The below content is automatically added from ./../apiExamples/popover-slot.html -->
+<auro-datepicker centralDate="12/03/2023" calendarStartDate="12/01/2023" calendarEndDate="12/31/2023" minDate="12/02/2023" maxDate="12/09/2023">
+<span slot="bib.fullscreen.headline">Popover Slot Example</span>
+<span slot="fromLabel">Choose a date</span>
+<span slot="bib.fullscreen.fromLabel">Choose a date</span>
+<span slot="popover_12_03_2023">Tickets for this day are sold out</span>
+<span slot="date_12_03_2023">$560</span>
+<span slot="popover_12_04_2023">34 seats available</span>
+<span slot="date_12_04_2023">$245</span>
+<span slot="popover_12_05_2023">18 seats available</span>
+<span slot="date_12_05_2023">$312</span>
+<span slot="popover_12_06_2023">Tickets for this day are sold out</span>
+<span slot="date_12_06_2023">$489</span>
+<span slot="popover_12_07_2023">52 seats available</span>
+<span slot="date_12_07_2023">$198</span>
+<span slot="popover_12_08_2023">7 seats available</span>
+<span slot="date_12_08_2023">$375</span>
+<span slot="popover_12_09_2023">41 seats available</span>
+<span slot="date_12_09_2023">$220</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/popover-slot.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/popover-slot.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker centralDate="12/03/2023" calendarStartDate="12/01/2023" calendarEndDate="12/31/2023" minDate="12/02/2023" maxDate="12/09/2023"&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Popover Slot Example&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="popover_12_03_2023"&gt;Tickets for this day are sold out&lt;/span&gt;
+  &lt;span slot="date_12_03_2023"&gt;$560&lt;/span&gt;
+  &lt;span slot="popover_12_04_2023"&gt;34 seats available&lt;/span&gt;
+  &lt;span slot="date_12_04_2023"&gt;$245&lt;/span&gt;
+  &lt;span slot="popover_12_05_2023"&gt;18 seats available&lt;/span&gt;
+  &lt;span slot="date_12_05_2023"&gt;$312&lt;/span&gt;
+  &lt;span slot="popover_12_06_2023"&gt;Tickets for this day are sold out&lt;/span&gt;
+  &lt;span slot="date_12_06_2023"&gt;$489&lt;/span&gt;
+  &lt;span slot="popover_12_07_2023"&gt;52 seats available&lt;/span&gt;
+  &lt;span slot="date_12_07_2023"&gt;$198&lt;/span&gt;
+  &lt;span slot="popover_12_08_2023"&gt;7 seats available&lt;/span&gt;
+  &lt;span slot="date_12_08_2023"&gt;$375&lt;/span&gt;
+  &lt;span slot="popover_12_09_2023"&gt;41 seats available&lt;/span&gt;
+  &lt;span slot="date_12_09_2023"&gt;$220&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="blackoutDates">Blackout dates with custom label</auro-header>
+<p>Use the <code>blackoutLabel</code> attribute to customize the screen reader announcement for blackout (disabled but in-range) dates. The default label is <code>"unavailable"</code>. This is useful when you want to provide more context about why a date cannot be selected, such as <code>"sold out"</code>.</p>
+<p>When a user types a blackout date into the input, the datepicker validates the entry and displays a <code>customError</code> message. The default message is <code>"Selected date is unavailable"</code>. Use the <code>setCustomValidityCustomError</code> attribute to provide a custom error message, for example <code>setCustomValidityCustomError="That date is sold out"</code>.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/blackout-label.html) -->
+<!-- The below content is automatically added from ./../apiExamples/blackout-label.html -->
+<auro-datepicker id="blackoutLabelExample" range blackoutLabel="sold out">
+<span slot="fromLabel">Choose a start date</span>
+<span slot="toLabel">Choose an end date</span>
+<span slot="bib.fullscreen.fromLabel">Choose a date</span>
+<span slot="bib.fullscreen.toLabel">Choose an end date</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/blackout-label.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/blackout-label.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker id="blackoutLabelExample" range blackoutLabel="sold out"&gt;
+  &lt;span slot="fromLabel"&gt;Choose a start date&lt;/span&gt;
+  &lt;span slot="toLabel"&gt;Choose an end date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.toLabel"&gt;Choose an end date&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="3" id="referenceDates">Reference dates</auro-header>
+<p>Use the <code>referenceDates</code> attribute to highlight specific dates on the calendar. Reference dates are displayed with a distinct visual treatment to draw attention to dates of interest, such as the cheapest travel dates or dates with special availability.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reference-dates.html) -->
+<!-- The below content is automatically added from ./../apiExamples/reference-dates.html -->
+<auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/02/2025" range>
+<span slot="ariaLabel.bib.close">Close Calendar</span>
+<span slot="bib.fullscreen.headline">Datepicker Headline</span>
+<span slot="fromLabel">Choose a date</span>
+<span slot="bib.fullscreen.fromLabel">Choose a date</span>
+</auro-datepicker>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reference-dates.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/reference-dates.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/02/2025" range&gt;
+  &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
+  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
+&lt;/auro-datepicker&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="viewportSize">Viewport size</auro-header>
 <p>The datepicker automatically adapts its presentation based on viewport size. On larger screens, the calendar opens in a floating popover anchored to the trigger. On smaller screens, the calendar opens in a fullscreen dialog.</p>
 <p>The breakpoint at which the fullscreen behavior activates is controlled by the <code>fullscreenBreakpoint</code> attribute. The default value is <code>sm</code>. Supported values are <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, and <code>disabled</code>.</p>

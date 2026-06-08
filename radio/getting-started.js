@@ -9,7 +9,7 @@ AuroRadioGroup.register();
 AuroRadio.register('custom-radio');
 AuroRadioGroup.register('custom-radio-group');
 
-export function initExamples(initCount) {
+export async function initExamples(initCount) {
   initCount = initCount || 0;
 
   try {
