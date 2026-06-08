@@ -42,8 +42,8 @@
 <li>Date range highlighting when <code>range</code> is set.</li>
 <li>Disabled dates outside the <code>minDate</code>/<code>maxDate</code> bounds.</li>
 <li>Blackout dates that are focusable but not selectable.</li>
-<li>Custom cell content via the <code>date_MM_DD_YYYY</code> slot.</li>
-<li>Cell popovers via the <code>popover_MM_DD_YYYY</code> slot.</li>
+<li>Custom cell content via the <code>date_YYYY_MM_DD</code> slot.</li>
+<li>Cell popovers via the <code>popover_YYYY_MM_DD</code> slot.</li>
 </ul>
 <auro-header level="4" id="helpText">Help Text</auro-header>
 <p>Help text is not required. However, consideration should be given to how users will understand the full context of the component instance, particularly users reliant on accessibility tools like screen readers.</p>

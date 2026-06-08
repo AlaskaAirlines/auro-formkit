@@ -13,6 +13,7 @@
 <auro-anchorlink fluid href="#popoverSlot" class="level2 body-xs">Date Popover</auro-anchorlink>
 <auro-anchorlink fluid href="#blackoutDates" class="level2 body-xs">Blackout Dates</auro-anchorlink>
 <auro-anchorlink fluid href="#referenceDates" class="level2 body-xs">Reference Dates</auro-anchorlink>
+<auro-anchorlink fluid href="#regionalDateFormat" class="level2 body-xs">Regional Date</auro-anchorlink>
 <auro-anchorlink fluid href="#viewportSize" class="level2 body-xs">Viewport Size</auro-anchorlink>
 </auro-nav>
 </nav>
@@ -130,7 +131,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/preset-value.html) -->
 <!-- The below content is automatically added from ./../apiExamples/preset-value.html -->
-<auro-datepicker value="06/15/2026">
+<auro-datepicker value="2026-06-15">
 <span slot="bib.fullscreen.headline">Preset Date</span>
 <span slot="fromLabel">Departure</span>
 <span slot="bib.fullscreen.fromLabel">Departure</span>
@@ -141,7 +142,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/preset-value.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/preset-value.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker value="06/15/2026"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker value="2026-06-15"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Preset Date&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Departure&lt;/span&gt;
@@ -151,7 +152,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/preset-value-range.html) -->
 <!-- The below content is automatically added from ./../apiExamples/preset-value-range.html -->
-<auro-datepicker range value="06/15/2026" valueEnd="06/22/2026">
+<auro-datepicker range value="2026-06-15" valueEnd="2026-06-22">
 <span slot="bib.fullscreen.headline">Preset Range</span>
 <span slot="fromLabel">Departure</span>
 <span slot="toLabel">Return</span>
@@ -164,7 +165,7 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/preset-value-range.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/preset-value-range.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker range value="06/15/2026" valueEnd="06/22/2026"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker range value="2026-06-15" valueEnd="2026-06-22"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Preset Range&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
   &lt;span slot="toLabel"&gt;Return&lt;/span&gt;
@@ -177,28 +178,28 @@
 <p>The datepicker does not force the user to select a date. If no selection is made and the field is not <code>required</code>, the user can move past the datepicker without entering a value.</p>
 <p>If the field is <code>required</code>, moving focus away without selecting a date triggers validation and renders the <code>valueMissing</code> error state.</p>
 <auro-header level="3" id="popoverSlot">Popover slot</auro-header>
-<p>Use the <code>popover_MM_DD_YYYY</code> slot to display additional information when the user hovers over a calendar cell. This is useful for showing pricing, availability, or other contextual details for specific dates.</p>
+<p>Use the <code>popover_YYYY_MM_DD</code> slot to display additional information when the user hovers over a calendar cell. This is useful for showing pricing, availability, or other contextual details for specific dates.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/popover-slot.html) -->
 <!-- The below content is automatically added from ./../apiExamples/popover-slot.html -->
-<auro-datepicker centralDate="12/03/2023" calendarStartDate="12/01/2023" calendarEndDate="12/31/2023" minDate="12/02/2023" maxDate="12/09/2023">
+<auro-datepicker centralDate="2023-12-03" calendarStartDate="2023-12-01" calendarEndDate="2023-12-31" minDate="2023-12-02" maxDate="2023-12-09">
 <span slot="bib.fullscreen.headline">Popover Slot Example</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
-<span slot="popover_12_03_2023">Tickets for this day are sold out</span>
-<span slot="date_12_03_2023">$560</span>
-<span slot="popover_12_04_2023">34 seats available</span>
-<span slot="date_12_04_2023">$245</span>
-<span slot="popover_12_05_2023">18 seats available</span>
-<span slot="date_12_05_2023">$312</span>
-<span slot="popover_12_06_2023">Tickets for this day are sold out</span>
-<span slot="date_12_06_2023">$489</span>
-<span slot="popover_12_07_2023">52 seats available</span>
-<span slot="date_12_07_2023">$198</span>
-<span slot="popover_12_08_2023">7 seats available</span>
-<span slot="date_12_08_2023">$375</span>
-<span slot="popover_12_09_2023">41 seats available</span>
-<span slot="date_12_09_2023">$220</span>
+<span slot="popover_2023_12_03">Tickets for this day are sold out</span>
+<span slot="date_2023_12_03">$560</span>
+<span slot="popover_2023_12_04">34 seats available</span>
+<span slot="date_2023_12_04">$245</span>
+<span slot="popover_2023_12_05">18 seats available</span>
+<span slot="date_2023_12_05">$312</span>
+<span slot="popover_2023_12_06">Tickets for this day are sold out</span>
+<span slot="date_2023_12_06">$489</span>
+<span slot="popover_2023_12_07">52 seats available</span>
+<span slot="date_2023_12_07">$198</span>
+<span slot="popover_2023_12_08">7 seats available</span>
+<span slot="date_2023_12_08">$375</span>
+<span slot="popover_2023_12_09">41 seats available</span>
+<span slot="date_2023_12_09">$220</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -206,24 +207,24 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/popover-slot.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/popover-slot.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker centralDate="12/03/2023" calendarStartDate="12/01/2023" calendarEndDate="12/31/2023" minDate="12/02/2023" maxDate="12/09/2023"&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker centralDate="2023-12-03" calendarStartDate="2023-12-01" calendarEndDate="2023-12-31" minDate="2023-12-02" maxDate="2023-12-09"&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Popover Slot Example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="popover_12_03_2023"&gt;Tickets for this day are sold out&lt;/span&gt;
-  &lt;span slot="date_12_03_2023"&gt;$560&lt;/span&gt;
-  &lt;span slot="popover_12_04_2023"&gt;34 seats available&lt;/span&gt;
-  &lt;span slot="date_12_04_2023"&gt;$245&lt;/span&gt;
-  &lt;span slot="popover_12_05_2023"&gt;18 seats available&lt;/span&gt;
-  &lt;span slot="date_12_05_2023"&gt;$312&lt;/span&gt;
-  &lt;span slot="popover_12_06_2023"&gt;Tickets for this day are sold out&lt;/span&gt;
-  &lt;span slot="date_12_06_2023"&gt;$489&lt;/span&gt;
-  &lt;span slot="popover_12_07_2023"&gt;52 seats available&lt;/span&gt;
-  &lt;span slot="date_12_07_2023"&gt;$198&lt;/span&gt;
-  &lt;span slot="popover_12_08_2023"&gt;7 seats available&lt;/span&gt;
-  &lt;span slot="date_12_08_2023"&gt;$375&lt;/span&gt;
-  &lt;span slot="popover_12_09_2023"&gt;41 seats available&lt;/span&gt;
-  &lt;span slot="date_12_09_2023"&gt;$220&lt;/span&gt;
+  &lt;span slot="popover_2023_12_03"&gt;Tickets for this day are sold out&lt;/span&gt;
+  &lt;span slot="date_2023_12_03"&gt;$560&lt;/span&gt;
+  &lt;span slot="popover_2023_12_04"&gt;34 seats available&lt;/span&gt;
+  &lt;span slot="date_2023_12_04"&gt;$245&lt;/span&gt;
+  &lt;span slot="popover_2023_12_05"&gt;18 seats available&lt;/span&gt;
+  &lt;span slot="date_2023_12_05"&gt;$312&lt;/span&gt;
+  &lt;span slot="popover_2023_12_06"&gt;Tickets for this day are sold out&lt;/span&gt;
+  &lt;span slot="date_2023_12_06"&gt;$489&lt;/span&gt;
+  &lt;span slot="popover_2023_12_07"&gt;52 seats available&lt;/span&gt;
+  &lt;span slot="date_2023_12_07"&gt;$198&lt;/span&gt;
+  &lt;span slot="popover_2023_12_08"&gt;7 seats available&lt;/span&gt;
+  &lt;span slot="date_2023_12_08"&gt;$375&lt;/span&gt;
+  &lt;span slot="popover_2023_12_09"&gt;41 seats available&lt;/span&gt;
+  &lt;span slot="date_2023_12_09"&gt;$220&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -255,14 +256,19 @@
 </auro-accordion>
 <auro-header level="3" id="referenceDates">Reference dates</auro-header>
 <p>Use the <code>referenceDates</code> attribute to highlight specific dates on the calendar. Reference dates are displayed with a distinct visual treatment to draw attention to dates of interest, such as the cheapest travel dates or dates with special availability.</p>
+<p class="note"><strong>NOTE:</strong> it is recommended to provide popover slot content for reference dates to give context for why the date is marked <code>reference</code>.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/reference-dates.html) -->
 <!-- The below content is automatically added from ./../apiExamples/reference-dates.html -->
-<auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/02/2025" range>
+<auro-datepicker referenceDates='["2025-10-05", "2025-10-15", "2025-10-20", "2025-10-22"]' minDate="2025-10-12" range>
 <span slot="ariaLabel.bib.close">Close Calendar</span>
 <span slot="bib.fullscreen.headline">Datepicker Headline</span>
 <span slot="fromLabel">Choose a date</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
+<span slot="popover_2025_10_05">Explanation for why this is a reference date.</span>
+<span slot="popover_2025_10_15">Explanation for why this is a reference date.</span>
+<span slot="popover_2025_10_20">Explanation for why this is a reference date.</span>
+<span slot="popover_2025_10_22">Explanation for why this is a reference date.</span>
 </auro-datepicker>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -270,11 +276,15 @@
 <span slot="trigger">See code</span>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/reference-dates.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/reference-dates.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker referenceDates='["10/05/2025", "10/15/2025", "10/20/2025", "10/22/2025"]' minDate="10/02/2025" range&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker referenceDates='["2025-10-05", "2025-10-15", "2025-10-20", "2025-10-22"]' minDate="2025-10-12" range&gt;
   &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Headline&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
+  &lt;span slot="popover_2025_10_05"&gt;Explanation for why this is a reference date.&lt;/span&gt;
+  &lt;span slot="popover_2025_10_15"&gt;Explanation for why this is a reference date.&lt;/span&gt;
+  &lt;span slot="popover_2025_10_20"&gt;Explanation for why this is a reference date.&lt;/span&gt;
+  &lt;span slot="popover_2025_10_22"&gt;Explanation for why this is a reference date.&lt;/span&gt;
 &lt;/auro-datepicker&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
