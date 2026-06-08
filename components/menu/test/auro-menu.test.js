@@ -2007,6 +2007,54 @@ function runFullTest(mobileView) {
     });
   });
 
+  describe('size/shape propagation', () => {
+    it('should propagate size and shape from menu to menuoptions that have neither set', async () => {
+      const el = await fixture(html`
+        <auro-menu size="md" shape="rounded" aria-label="test">
+          <auro-menuoption value="opt1">Opt 1</auro-menuoption>
+          <auro-menuoption value="opt2">Opt 2</auro-menuoption>
+        </auro-menu>
+      `);
+      await elementUpdated(el);
+
+      const options = el.querySelectorAll('auro-menuoption');
+      options.forEach((opt) => {
+        expect(opt.getAttribute('size')).to.equal('md');
+        expect(opt.getAttribute('shape')).to.equal('rounded');
+      });
+    });
+
+    it('should not override size/shape on a menuoption that already has them set', async () => {
+      const el = await fixture(html`
+        <auro-menu size="md" shape="rounded" aria-label="test">
+          <auro-menuoption value="opt1" size="lg" shape="pill">Opt 1</auro-menuoption>
+          <auro-menuoption value="opt2">Opt 2</auro-menuoption>
+        </auro-menu>
+      `);
+      await elementUpdated(el);
+
+      const [explicit, inherited] = el.querySelectorAll('auro-menuoption');
+
+      // Author-set values are preserved
+      expect(explicit.getAttribute('size')).to.equal('lg');
+      expect(explicit.getAttribute('shape')).to.equal('pill');
+
+      // Siblings without explicit values still inherit from the menu
+      expect(inherited.getAttribute('size')).to.equal('md');
+      expect(inherited.getAttribute('shape')).to.equal('rounded');
+
+      // Subsequent menu-level changes still skip the explicit option
+      el.size = 'xl';
+      el.shape = 'box';
+      await elementUpdated(el);
+
+      expect(explicit.getAttribute('size')).to.equal('lg');
+      expect(explicit.getAttribute('shape')).to.equal('pill');
+      expect(inherited.getAttribute('size')).to.equal('xl');
+      expect(inherited.getAttribute('shape')).to.equal('box');
+    });
+  });
+
   describe('noCheckmark property propagation', () => {
     it('should propagate noCheckmark to child options when set via property', async () => {
       const el = await fixture(html`
