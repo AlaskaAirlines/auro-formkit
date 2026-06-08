@@ -19,6 +19,7 @@
 <auro-anchorlink fluid href="#customValidation" class="level2 body-xs">Custom Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#noValidate" class="level2 body-xs">No Validation</auro-anchorlink>
 <auro-anchorlink fluid href="#minMaxDate" class="level2 body-xs">Min/Max Date</auro-anchorlink>
+<auro-anchorlink fluid href="#monthNames" class="level2 body-xs">Month Names</auro-anchorlink>
 <auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
 </auro-nav>
 </nav>
@@ -105,7 +106,7 @@
 </div>
 <div style="width: 600px; padding-top: 1em;">
 <p>Range bottom-start with 20px offset, noFlip and shift enabled</p>
-<auro-datepicker range offset="20" placement="bottom-start" shift noFlip minDate="07/08/2025">
+<auro-datepicker range offset="20" placement="bottom-start" shift noFlip minDate="2025-07-08">
 <span slot="ariaLabel.bib.close">Close Calendar</span>
 <span slot="bib.fullscreen.headline">Datepicker Range Headline</span>
 <span slot="fromLabel">Departure</span>
@@ -142,7 +143,7 @@
 &lt;/div&gt;
 &lt;div style="width: 600px; padding-top: 1em;"&gt;
   &lt;p&gt;Range bottom-start with 20px offset, noFlip and shift enabled&lt;/p&gt;
-  &lt;auro-datepicker range offset="20" placement="bottom-start" shift noFlip minDate="07/08/2025"&gt;
+  &lt;auro-datepicker range offset="20" placement="bottom-start" shift noFlip minDate="2025-07-08"&gt;
     &lt;span slot="ariaLabel.bib.close"&gt;Close Calendar&lt;/span&gt;
     &lt;span slot="bib.fullscreen.headline"&gt;Datepicker Range Headline&lt;/span&gt;
     &lt;span slot="fromLabel"&gt;Departure&lt;/span&gt;
@@ -652,7 +653,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/min-date.html) -->
 <!-- The below content is automatically added from ./../apiExamples/min-date.html -->
-<auro-datepicker minDate="03/25/2028" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date.">
+<auro-datepicker minDate="2028-03-25" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date.">
 <span slot="bib.fullscreen.headline">minDate Example</span>
 <span slot="fromLabel">Choose a date - minDate</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
@@ -664,7 +665,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/min-date.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/min-date.html -->
 
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker minDate="03/25/2028" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker minDate="2028-03-25" setCustomValidityRangeUnderflow="Selected date is earlier than the minimum date."&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;minDate Example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date - minDate&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
@@ -674,7 +675,7 @@
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/max-date.html) -->
 <!-- The below content is automatically added from ./../apiExamples/max-date.html -->
-<auro-datepicker maxDate="03/25/2023" setCustomValidityRangeOverflow="Selected date is later than maximum date.">
+<auro-datepicker maxDate="2023-03-25" setCustomValidityRangeOverflow="Selected date is later than maximum date.">
 <span slot="bib.fullscreen.headline">maxDate Example</span>
 <span slot="fromLabel">Choose a date - maxDate</span>
 <span slot="bib.fullscreen.fromLabel">Choose a date</span>
@@ -686,7 +687,7 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/max-date.html) -->
 <!-- The below code snippet is automatically added from ./../apiExamples/max-date.html -->
 
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker maxDate="03/25/2023" setCustomValidityRangeOverflow="Selected date is later than maximum date."&gt;
+<pre class="language-html"><code class="language-html">&lt;auro-datepicker maxDate="2023-03-25" setCustomValidityRangeOverflow="Selected date is later than maximum date."&gt;
   &lt;span slot="bib.fullscreen.headline"&gt;maxDate Example&lt;/span&gt;
   &lt;span slot="fromLabel"&gt;Choose a date - maxDate&lt;/span&gt;
   &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
@@ -695,26 +696,145 @@
 </auro-accordion>
 <auro-header level="3" id="localization">Localization</auro-header>
 <p>Use the <code>centralDate</code>, locale, and related attributes to configure the datepicker for different regions and languages.</p>
+<auro-header level="4" id="rangeLabels">Screen Reader Labels</auro-header>
+<p>The following attributes customize the labels announced by screen readers when navigating the calendar. Range labels apply when the <code>range</code> attribute is set; navigation labels apply to all configurations.</p>
+<auro-table>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rangeLabelStart</code></td>
+<td>"range start"</td>
+<td>Announced on the departure/start date cell.</td>
+</tr>
+<tr>
+<td><code>rangeLabelEnd</code></td>
+<td>"range end"</td>
+<td>Announced on the return/end date cell.</td>
+</tr>
+<tr>
+<td><code>rangeLabelBeforeRange</code></td>
+<td>"before range"</td>
+<td>Announced on cells before the start date.</td>
+</tr>
+<tr>
+<td><code>rangeLabelInRange</code></td>
+<td>"in range"</td>
+<td>Announced on cells between the start and end dates.</td>
+</tr>
+<tr>
+<td><code>rangeLabelAfterRange</code></td>
+<td>"after range"</td>
+<td>Announced on cells after the end date (or after start when no end is selected).</td>
+</tr>
+<tr>
+<td><code>navLabelPrevMonth</code></td>
+<td>"Previous month"</td>
+<td>Accessible label for the previous month navigation button.</td>
+</tr>
+<tr>
+<td><code>navLabelNextMonth</code></td>
+<td>"Next month"</td>
+<td>Accessible label for the next month navigation button.</td>
+</tr>
+<tr>
+<td><code>calendarGridLabel</code></td>
+<td>"Calendar days of the month"</td>
+<td>Accessible label for the calendar grid containing the days of the month.</td>
+</tr>
+</tbody>
+</table>
+</auro-table>
+<auro-header level="4" id="regionalDate">Regional Date</auro-header>
+<p>When the <code>locale</code> attribute is set, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
+<p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
+<p>If no <code>locale</code> attribute is set on the element, the component walks up the DOM looking for the nearest ancestor with a <code>data-locale</code> attribute and uses that value. If none is found, it defaults to <code>en-US</code>.</p>
+<auro-header level="4" id="monthNames">Month Names</auro-header>
+<p>The <code>monthNames</code> attribute accepts an array of 12 month name strings displayed in the calendar header. When <code>monthNames</code> is <strong>not</strong> set, the component automatically derives localized month names from the active <code>locale</code> (falling back to <code>en-US</code> if no locale is set).</p>
+<p>Use <code>monthNames</code> only when you need to override the locale-derived names — for example, to supply translated names that differ from the browser's built-in <code>Intl</code> output, or to support a locale the browser does not recognize.</p>
+<pre><code>// Override month names (all 12 required, starting with January)
+datepicker.monthNames = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];</code></pre>
 <div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization.html) -->
-<!-- The below content is automatically added from ./../apiExamples/localization.html -->
-<auro-datepicker format="yyyy/mm/dd" id="localizationExample">
-<span slot="bib.fullscreen.headline">Localization Headline</span>
-<span slot="fromLabel">Choose a date</span>
-<span slot="bib.fullscreen.fromLabel">Choose a date</span>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
+<!-- The below content is automatically added from ./../apiExamples/locale.html -->
+<div data-locale="de-DE">
+<auro-header level="4" >en-US Example</auro-header>
+<auro-datepicker locale="en-US">
+<span slot="fromLabel">en-US Date</span>
+<span slot="helpText">Help Text</span>
 </auro-datepicker>
+<auro-header level="4" >de-DE Example</auro-header>
+<auro-datepicker locale="de-DE">
+<span slot="fromLabel">Deutsches Datum</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
+</auro-datepicker>
+<auro-header level="4" >zh-CN Example</auro-header>
+<auro-datepicker locale="zh-CN">
+<span slot="fromLabel">中文日期</span>
+<span slot="helpText">帮助文本</span>
+<span slot="optionalLabel">（可选）</span>
+</auro-datepicker>
+<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
+<auro-datepicker>
+<span slot="fromLabel">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
+</auro-datepicker>
+<auro-header level="4" >ja-JP with `mm/dd/yyyy` format Example</auro-header>
+<auro-datepicker locale="ja-JP" format="mm/dd/yyyy">
+<span slot="fromLabel">明示的な mm/dd/yyyy 形式の ja-JP ロケール</span>
+<span slot="helpText">ヘルプテキスト</span>
+<span slot="optionalLabel">（任意）</span>
+</auro-datepicker>
+</div>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/localization.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/localization.html -->
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/locale.html -->
 
-<pre class="language-html"><code class="language-html">&lt;auro-datepicker format="yyyy/mm/dd" id="localizationExample"&gt;
-  &lt;span slot="bib.fullscreen.headline"&gt;Localization Headline&lt;/span&gt;
-  &lt;span slot="fromLabel"&gt;Choose a date&lt;/span&gt;
-  &lt;span slot="bib.fullscreen.fromLabel"&gt;Choose a date&lt;/span&gt;
-&lt;/auro-datepicker&gt;</code></pre>
+<pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
+  &lt;auro-header level="4" &gt;en-US Example&lt;/auro-header&gt;
+  &lt;auro-datepicker locale="en-US"&gt;
+    &lt;span slot="fromLabel"&gt;en-US Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4" &gt;de-DE Example&lt;/auro-header&gt;
+  &lt;auro-datepicker locale="de-DE"&gt;
+    &lt;span slot="fromLabel"&gt;Deutsches Datum&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+  &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4" &gt;zh-CN Example&lt;/auro-header&gt;
+  &lt;auro-datepicker locale="zh-CN"&gt;
+    &lt;span slot="fromLabel"&gt;中文日期&lt;/span&gt;
+    &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
+  &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
+  &lt;auro-datepicker&gt;
+    &lt;span slot="fromLabel"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+  &lt;/auro-datepicker&gt;
+  &lt;auro-header level="4" &gt;ja-JP with `mm/dd/yyyy` format Example&lt;/auro-header&gt;
+  &lt;auro-datepicker locale="ja-JP" format="mm/dd/yyyy"&gt;
+    &lt;span slot="fromLabel"&gt;明示的な mm/dd/yyyy 形式の ja-JP ロケール&lt;/span&gt;
+    &lt;span slot="helpText"&gt;ヘルプテキスト&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;（任意）&lt;/span&gt;
+  &lt;/auro-datepicker&gt;
+&lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 </section>

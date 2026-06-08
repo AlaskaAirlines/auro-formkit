@@ -23,6 +23,7 @@
 <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
 <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
 <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
+<auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
 <auro-anchorlink fluid href="#max" class="level2 body-xs">Max</auro-anchorlink>
 <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
 <auro-anchorlink fluid href="#min" class="level2 body-xs">Min</auro-anchorlink>
@@ -527,6 +528,86 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="3" id="localization">Localization</auro-header>
+<p>When <code>type="date"</code> is used with the <code>locale</code> attribute, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
+<p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/locale.html) -->
+<!-- The below content is automatically added from ../apiExamples/locale.html -->
+<div data-locale="de-DE">
+<auro-header level="4">en-GB Example</auro-header>
+<auro-input type="date" locale="en-GB">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-GB Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-header level="4">en-US Example</auro-header>
+<auro-input type="date" locale="en-US">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-US Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-header level="4">zh-CN Example</auro-header>
+<auro-input type="date" locale="zh-CN">
+<span slot="ariaLabel.clear">全部清除</span>
+<span slot="label">中文日期</span>
+<span slot="helpText">帮助文本</span>
+<span slot="optionalLabel">（可选）</span>
+</auro-input>
+<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
+<auro-input type="date">
+<span slot="ariaLabel.clear">Alles löschen</span>
+<span slot="label">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
+</auro-input>
+<auro-header level="4">en-US with `yyyy.mm.dd` format Example</auro-header>
+<auro-input type="date" locale="en-US" format="yyyy.mm.dd">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-US with yyyy.mm.dd format</span>
+<span slot="helpText">Help Text</span>
+</div>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/locale.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/locale.html -->
+<pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
+  &lt;auro-header level="4"&gt;en-GB Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="en-GB"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-GB Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;en-US Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="en-US"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-US Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;zh-CN Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="zh-CN"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;全部清除&lt;/span&gt;
+    &lt;span slot="label"&gt;中文日期&lt;/span&gt;
+    &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
+  &lt;auro-input type="date"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Alles löschen&lt;/span&gt;
+    &lt;span slot="label"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+  &lt;/auro-input&gt;
+  &lt;auro-header level="4"&gt;en-US with `yyyy.mm.dd` format Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="inputMode">Input Mode</auro-header>
 <p>Set the <code>inputmode</code> for the input.</p>
 <p><strong>IMPORTANT</strong>: If you are also passing a <code>type</code>, most browsers will use the <code>type</code> attribute to determine what keyboard to display on mobile devices and ignore the <code>inputmode</code> attribute.</p>
@@ -829,6 +910,7 @@
 <li><strong><code>setCustomValidityRangeUnderflow</code></strong> — Displayed when the value is below the <code>min</code> constraint.</li>
 <li><strong><code>setCustomValidityTooLong</code></strong> — Displayed when the value exceeds the <code>maxlength</code> constraint.</li>
 <li><strong><code>setCustomValidityTooShort</code></strong> — Displayed when the value is shorter than the <code>minlength</code> constraint.</li>
+<li><strong><code>setCustomValidityPatternMismatch</code></strong> — Displayed when the value does not match the declared <code>pattern</code>, or when <code>type="date"</code> and the entered date is not a valid calendar date (e.g. month/day values out of range). Falls back to <code>"Invalid Date Format Entered"</code> if not set.</li>
 </ul>
 <p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message.</p>
 <p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using these properties.</p>
