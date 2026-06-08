@@ -105,11 +105,11 @@ The `auro-datepicker` component provides users with a way to select a date or da
 | `bib.fullscreen.fromLabel` | Defines the content to display above the first input in the mobile layout. |
 | `bib.fullscreen.headline`  | Defines the headline to display above bib.fullscreen.dateLabels in the mobile layout. |
 | `bib.fullscreen.toLabel`   | Defines the content to display above the second input in the mobile layout when `range` is true. |
-| `date_MM_DD_YYYY`          | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |
+| `date_YYYY_MM_DD`          | Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot. |
 | `fromLabel`                | Defines the label content for the first input.   |
 | `helpText`                 | Defines the content of the helpText.             |
 | `label`                    | Defines the label content for the entire datepicker when `layout="snowflake"`. |
-| `popover_MM_DD_YYYY`       | Defines the content to display in the auro-calendar-cell popover for the specified date. |
+| `popover_YYYY_MM_DD`       | Defines the content to display in the auro-calendar-cell popover for the specified date. |
 | `toLabel`                  | Defines the label content for the second input when the `range` attribute is used. |
 
 ## CSS Shadow Parts
