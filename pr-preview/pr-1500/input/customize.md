@@ -235,7 +235,6 @@
 <p>The component supports complete localization, including visible strings, screen reader announcements and locale based date formatting.</p>
 <auro-header level="4" id="localizationVisibleStrings">Visible strings</auro-header>
 <p>The visible strings rendered in the input are not derived from <code>locale</code> — they are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
-</auro-table>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-visible-strings.html -->
 <auro-input locale="ja-JP">
@@ -249,7 +248,6 @@
 <!-- AURO-GENERATED-CONTENT:END -->
 <auro-header level="4" id="localizationA11yStrings">Screen reader strings</auro-header>
 <p>Assistive-technology announcements that are not visible in the UI are also exposed as named slots so they can be translated independently. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
-</auro-table>
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-screenreader-strings.html) -->
 <!-- The below content is automatically added from ./../apiExamples/localization-screenreader-strings.html -->
 
