@@ -213,9 +213,8 @@ function runFullTest(mobileView) {
         el.value = '36';
         await elementUpdated(el);
         const icon = el.shadowRoot.querySelector('.accentIcon');
-        // Diners Club may show as cc-diners or credit-card depending on implementation
         expect(icon).to.exist;
-        expect(icon.getAttribute('name')).to.be.oneOf(['cc-diners', 'credit-card']);
+        expect(icon.getAttribute('name')).to.equal('cc-dinersclub');
       });
 
       it('should identify card starting with "38" as Diners Club', async () => {
@@ -227,7 +226,7 @@ function runFullTest(mobileView) {
         await elementUpdated(el);
         const icon = el.shadowRoot.querySelector('.accentIcon');
         expect(icon).to.exist;
-        expect(icon.getAttribute('name')).to.be.oneOf(['cc-diners', 'credit-card']);
+        expect(icon.getAttribute('name')).to.equal('cc-dinersclub');
       });
 
       it('should apply Amex mask format for American Express cards', async () => {
@@ -242,6 +241,90 @@ function runFullTest(mobileView) {
         expect(el.shadowRoot.querySelector('.accentIcon')).to.have.attribute('name', 'cc-amex');
         // The value should contain the Amex number
         expect(el.value.replace(/\s/g, '').length).to.be.greaterThan(0);
+      });
+
+      it('should identify card starting with "30" as Diners Club (legacy 300-305 range)', async () => {
+        const el = await fixture(html`
+          <auro-input id="format-ccLegacyDiners" type="credit-card" icon label="Credit Card Number with Icon" required></auro-input>
+        `);
+
+        el.value = '3000';
+        await elementUpdated(el);
+
+        const icon = el.shadowRoot.querySelector('.accentIcon');
+        expect(icon).to.exist;
+        expect(icon.getAttribute('name')).to.equal('cc-dinersclub');
+        expect(el.format).to.equal('0000 000000 0000');
+      });
+
+      it('does not throw or warn when value is set programmatically across format changes', async () => {
+        // Locks in the imask cursorPos throw fix (re-entrancy guard on
+        // configureAutoFormatting) and the patched-setter early-return that
+        // suppresses synthetic input events while the mask is being built.
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        const errors = [];
+        const warnings = [];
+        const onError = (e) => errors.push(e.error || e.reason || e.message);
+        const origWarn = console.warn;
+        console.warn = (...args) => warnings.push(args.join(' '));
+        window.addEventListener('error', onError);
+        window.addEventListener('unhandledrejection', onError);
+
+        try {
+          // Switch formats by value: triggers processCreditCard → format change →
+          // configureAutoFormatting. Pre-fix this throw'd inside imask alignCursor.
+          el.value = '3400 000000 00000';
+          await elementUpdated(el);
+          el.value = '3000 000000 0000';
+          await elementUpdated(el);
+          el.value = '4000 0000 0000 0000';
+          await elementUpdated(el);
+        } finally {
+          window.removeEventListener('error', onError);
+          window.removeEventListener('unhandledrejection', onError);
+          console.warn = origWarn;
+        }
+
+        expect(errors, `unexpected errors: ${errors.join(' | ')}`).to.have.lengthOf(0);
+        const maskWarnings = warnings.filter((w) => w.includes('changed outside of mask'));
+        expect(maskWarnings, `unexpected mask warnings: ${maskWarnings.join(' | ')}`).to.have.lengthOf(0);
+      });
+
+      it('keeps mask displayValue in lock-step with el.value after a programmatic write', async () => {
+        // Locks in the updated() change that routes credit-card value writes
+        // through maskInstance.value instead of el.value directly.
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        el.value = '4111111111111111';
+        await elementUpdated(el);
+        await elementUpdated(el);
+
+        const nativeInput = el.shadowRoot.querySelector('input');
+        expect(el.maskInstance, 'mask instance should exist').to.exist;
+        expect(el.maskInstance.displayValue).to.equal(nativeInput.value);
+      });
+
+      it('configureAutoFormatting is re-entrancy safe', async () => {
+        const el = await fixture(html`
+          <auro-input type="credit-card" label="CC"></auro-input>
+        `);
+        await elementUpdated(el);
+
+        const first = el.maskInstance;
+        // Simulate the re-entrant call that used to happen via the synthetic
+        // input event from imask's internal updateControl. The guard should
+        // make the second call a no-op so the first call's mask survives.
+        el._configuringMask = true;
+        el.configureAutoFormatting();
+        el._configuringMask = false;
+        expect(el.maskInstance).to.equal(first);
       });
     });
 
