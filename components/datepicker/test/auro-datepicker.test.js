@@ -8241,12 +8241,9 @@ function runFullTest(mobileView) {
     describe('Out-of-range cells', () => {
       // Verify out-of-range cells marks out-of-range cells as aria-hidden.
       it('should mark out-of-range cells as aria-hidden', async () => {
-        // Use a minDate to create out-of-range cells
-        const today = new Date();
-        const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
+        // centralDate shows June 2024; minDate=June 15 makes June 1-14 unconditionally out-of-range
         const el = await fixture(html`
-          <auro-datepicker minDate="${minDate}"></auro-datepicker>
+          <auro-datepicker centralDate="2024-06-15" minDate="2024-06-15"></auro-datepicker>
         `);
 
         const input = getInput(el, 0);
@@ -8256,15 +8253,51 @@ function runFullTest(mobileView) {
 
         const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
         const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
-        const allCellElements = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
+        const allCells = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
 
-        // Find a cell that is out of range
-        const outOfRangeCell = allCellElements.find((cell) => cell.day && cell.isOutOfRange(cell.day, cell.min, cell.max));
+        // June 1-14 are before minDate — assert they exist so the test never silently passes
+        const minTs = new Date('2024-06-15').getTime() / 1000;
+        const outOfRangeCells = allCells.filter((cell) => cell.day && cell.day.date < minTs);
 
-        if (outOfRangeCell) {
-          await outOfRangeCell.updateComplete;
-          const button = outOfRangeCell.shadowRoot.querySelector('button');
+        expect(outOfRangeCells.length).to.be.greaterThan(0);
+
+        for (const cell of outOfRangeCells) {
+          await cell.updateComplete;
+          const button = cell.shadowRoot.querySelector('button');
           expect(button.hasAttribute('aria-hidden')).to.be.true;
+          expect(button.disabled).to.be.true;
+        }
+      });
+
+      // Verify cells become disabled when minDate is set after the calendar is already open.
+      it('should disable cells when minDate is set dynamically after open', async () => {
+        // Open with no minDate so all June 2024 cells are enabled
+        const el = await fixture(html`
+          <auro-datepicker centralDate="2024-06-15"></auro-datepicker>
+        `);
+
+        const input = getInput(el, 0);
+        input.click();
+        await elementUpdated(el);
+        await nextFrame();
+
+        // Now set minDate through the real datepicker API
+        el.minDate = '2024-06-15';
+        await elementUpdated(el);
+        await nextFrame();
+
+        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
+        const month = calendar.shadowRoot.querySelector('auro-formkit-calendar-month');
+        const allCells = Array.from(month.shadowRoot.querySelectorAll('auro-formkit-calendar-cell'));
+
+        const minTs = new Date('2024-06-15').getTime() / 1000;
+        const cellsBeforeMin = allCells.filter((cell) => cell.day && cell.day.date < minTs);
+
+        expect(cellsBeforeMin.length).to.be.greaterThan(0);
+
+        for (const cell of cellsBeforeMin) {
+          await cell.updateComplete;
+          const button = cell.shadowRoot.querySelector('button');
           expect(button.disabled).to.be.true;
         }
       });
@@ -9347,28 +9380,6 @@ function runFullTest(mobileView) {
 
         await expect(cell.hasAttribute('role')).to.be.false;
         await expect(cell.hasAttribute('aria-label')).to.be.false;
-        cell.min = savedMin;
-      });
-
-      // Verify renderCellButton renders button as disabled and aria-hidden when cell is out of range.
-      it('should render button as disabled and aria-hidden when cell is out of range', async () => {
-        const el = await fixture(html`<auro-datepicker centralDate="2024-01-15" value="2024-01-15"></auro-datepicker>`);
-        const input = getInput(el, 0);
-        input.click();
-        await elementUpdated(el);
-        await nextFrame();
-
-        const calendar = el.shadowRoot.querySelector('auro-formkit-calendar');
-        const cell = calendar.getAllFocusableCells()[0];
-
-        const savedMin = cell.min;
-        cell.min = 9999999999;
-        await elementUpdated(cell);
-        await nextFrame();
-
-        const button = cell.shadowRoot.querySelector('button');
-        await expect(button.hasAttribute('aria-hidden')).to.be.true;
-        await expect(button.disabled).to.be.true;
         cell.min = savedMin;
       });
     });
