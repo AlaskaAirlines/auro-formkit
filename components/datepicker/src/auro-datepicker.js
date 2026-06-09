@@ -852,7 +852,7 @@ export class AuroDatePicker extends AuroElement {
    * @returns {Number} Simplified number.
    */
   convertToWcValidTime(date) {
-    return new Date(date).getTime() / 1000;
+    return date?.getTime() / 1000;
   }
 
   /**
@@ -1899,7 +1899,7 @@ export class AuroDatePicker extends AuroElement {
           <div class="${classMap(this.commonDisplayValueWrapperClasses)}">
             <slot name="displayValue" @slotchange=${this.checkDisplayValueSlotChange}>
               <span>
-                ${this.formatShortDate(this.value)}${this.range ? html`–${this.formatShortDate(this.valueEnd)}` : undefined}
+                ${this.formatShortDate(this.valueObject)}${this.range ? html`–${this.formatShortDate(this.valueEndObject)}` : undefined}
               </span>
             </slot>
           </div>
@@ -1973,7 +1973,7 @@ export class AuroDatePicker extends AuroElement {
    * Simple formatter that ONLY WORKS FOR US DATES.
    * Returns formatted date like Apr 21 or Dec 25.
    * @private
-   * @param {string} date - Date format should be in a format Date constructor accepts, like '2023-04-21' or '2023/04/21'.
+   * @param {Date} date - Date format should be in a format Date constructor accepts, like '2023-04-21' or '2023/04/21'.
    * @returns {string}
    */
   formatShortDate(date) {
@@ -1983,16 +1983,16 @@ export class AuroDatePicker extends AuroElement {
       day: '2-digit'
     };
 
-    return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
+    return date?.toLocaleDateString(this.locale, options).replace(',', '');
   }
 
   /**
    * Format and render the provided date value.
    * @private
-   * @param {string} dateValue - The date value to format and render.
+   * @param {Date} date - The date value to format and render.
    * @returns {import('lit').TemplateResult}
    */
-  renderDisplayTextDate(dateValue) {
+  renderDisplayTextDate(date) {
     const displayTextClasses = {
       'displayValueText': true,
       'body-lg': true
@@ -2001,8 +2001,8 @@ export class AuroDatePicker extends AuroElement {
     return html`
         <div>
           <div class="${classMap(displayTextClasses)}">
-            ${dateValue && dateFormatter.isValidDate(dateValue)
-        ? this.formatShortDate(dateValue)
+            ${date
+        ? this.formatShortDate(date)
         : undefined
       }
           </div>
@@ -2051,7 +2051,7 @@ export class AuroDatePicker extends AuroElement {
           ${this.layout !== "classic"
         ? html`
               <span slot="displayValue">
-                ${this.renderDisplayTextDate(this.value)}
+                ${this.renderDisplayTextDate(this.valueObject)}
               </span>
             `
         : undefined
@@ -2095,7 +2095,7 @@ export class AuroDatePicker extends AuroElement {
             ${this.layout !== "classic"
           ? html`
               <span slot="displayValue">
-                ${this.renderDisplayTextDate(this.valueEnd)}
+                ${this.renderDisplayTextDate(this.valueEndObject)}
               </span>
             `
           : undefined
