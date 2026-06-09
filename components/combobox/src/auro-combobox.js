@@ -1424,6 +1424,16 @@ export class AuroCombobox extends AuroElement {
         return;
       }
 
+      // Ignore dispatches from the bib (fullscreen) input. It's re-validated
+      // inside this.validate()'s auroInputElements loop with its own
+      // (often undefined) validity, and the event is composed/bubbles up to
+      // this listener with `target` retargeted to the combobox. Letting it
+      // through would overwrite the trigger input's correct validity with
+      // the bib input's stale one (e.g. wiping `tooShort` during typing).
+      if (this.inputInBib && evt.composedPath()[0] === this.inputInBib && this.inputInBib !== this.input) {
+        return;
+      }
+
       this.input.validity = evt.detail.validity;
       this.input.errorMessage = evt.detail.message;
       this.validity = evt.detail.validity;
@@ -1511,6 +1521,15 @@ export class AuroCombobox extends AuroElement {
     this.menu.value = undefined;
     this.validation.reset(this);
     this.touched = false;
+    // Force validity back to the cleared state. validation.reset() calls
+    // validate() at the end, and (post-credit-card-fix) the trigger input's
+    // residual validity may still be copied into the combobox by the
+    // auroInputElements loop. Explicitly clear here so reset() actually
+    // leaves the component in a "no validity" state.
+    this.validity = undefined;
+    this.errorMessage = '';
+    this.input.validity = undefined;
+    this.input.errorMessage = '';
   }
 
   /**
