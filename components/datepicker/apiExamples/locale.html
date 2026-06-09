@@ -1,34 +1,64 @@
 <div data-locale="de-DE">
-
-  <auro-header level="4" >en-US Example</auro-header>
-  <auro-datepicker locale="en-US">
-    <span slot="fromLabel">en-US Date</span>
-    <span slot="helpText">Help Text</span>
-  </auro-datepicker>
-
   <auro-header level="4" >de-DE Example</auro-header>
-  <auro-datepicker locale="de-DE">
+  <auro-datepicker
+    locale="de-DE"
+    range
+    rangeLabelStart="Startdatum"
+    rangeLabelEnd="Enddatum"
+    rangeLabelBeforeRange="vor dem Zeitraum"
+    rangeLabelInRange="im Zeitraum"
+    rangeLabelAfterRange="nach dem Zeitraum"
+    navLabelPrevMonth="Vorheriger Monat"
+    navLabelNextMonth="Nächster Monat"
+    calendarGridLabel="Kalendertage des Monats">
     <span slot="fromLabel">Deutsches Datum</span>
     <span slot="helpText">Hilfetext</span>
     <span slot="optionalLabel">(freiwillig)</span>
   </auro-datepicker>
-
   <auro-header level="4" >zh-CN Example</auro-header>
-  <auro-datepicker locale="zh-CN">
+  <auro-datepicker
+    locale="zh-CN"
+    range
+    rangeLabelStart="开始日期"
+    rangeLabelEnd="结束日期"
+    rangeLabelBeforeRange="在此期间之前"
+    rangeLabelInRange="在此期间内"
+    rangeLabelAfterRange="在此期间之后"
+    navLabelPrevMonth="上个月"
+    navLabelNextMonth="下个月"
+    calendarGridLabel="本月的日历天数">
     <span slot="fromLabel">中文日期</span>
     <span slot="helpText">帮助文本</span>
     <span slot="optionalLabel">（可选）</span>
   </auro-datepicker>
-
   <auro-header level="4">Inherited de-DE date-locale Example</auro-header>
-  <auro-datepicker>
+  <auro-datepicker
+    range
+    rangeLabelStart="Startdatum"
+    rangeLabelEnd="Enddatum"
+    rangeLabelBeforeRange="vor dem Zeitraum"
+    rangeLabelInRange="im Zeitraum"
+    rangeLabelAfterRange="nach dem Zeitraum"
+    navLabelPrevMonth="Vorheriger Monat"
+    navLabelNextMonth="Nächster Monat"
+    calendarGridLabel="Kalendertage des Monats">
     <span slot="fromLabel">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
     <span slot="helpText">Hilfetext</span>
     <span slot="optionalLabel">(freiwillig)</span>
   </auro-datepicker>
-
   <auro-header level="4" >ja-JP with `mm/dd/yyyy` format Example</auro-header>
-  <auro-datepicker locale="ja-JP" format="mm/dd/yyyy">
+  <auro-datepicker
+    locale="ja-JP"
+    format="mm/dd/yyyy"
+    range
+    rangeLabelStart="開始日"
+    rangeLabelEnd="終了日"
+    rangeLabelBeforeRange="この期間の前"
+    rangeLabelInRange="この期間内"
+    rangeLabelAfterRange="この期間の後"
+    navLabelPrevMonth="前の月"
+    navLabelNextMonth="次の月"
+    calendarGridLabel="カレンダーの日付">
     <span slot="fromLabel">明示的な mm/dd/yyyy 形式の ja-JP ロケール</span>
     <span slot="helpText">ヘルプテキスト</span>
     <span slot="optionalLabel">（任意）</span>
