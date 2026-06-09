@@ -186,6 +186,16 @@ describe('AuroInputUtil', () => {
         expect(mask).to.be.a('string').and.not.empty;
       });
 
+      it('getDateMaskFromLocale does not start or end with a special character', () => {
+        const locales = ['en-US', 'en-GB', 'de-DE', 'ja-JP', 'zh-CN', 'fr-FR', 'ko-KR'];
+        locales.forEach((locale) => {
+          const util = new AuroInputUtilities({ locale });
+          const mask = util.getDateMaskFromLocale(locale);
+          expect(mask).to.match(/^[A-Z0-9]/, `mask for ${locale} should not start with a special character`);
+          expect(mask).to.match(/[A-Z0-9]$/, `mask for ${locale} should not end with a special character`);
+        });
+      });
+
       it('getMaskOptions date falls back to mm/dd/yyyy when format, overrideFormat, and pattern are all falsy', () => {
         const util = new AuroInputUtilities({ locale: 'en-US' });
         util.overrideFormat = undefined;
