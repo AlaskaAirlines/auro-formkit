@@ -789,6 +789,15 @@ export class AuroDropdown extends AuroElement {
       this.focusTrap = undefined;
     }
 
+    // Restore any focus-loss suppression we installed for a prior trap state.
+    // The desktopModal trap moves focus into the bib via RAF, which would
+    // otherwise trip AuroFloatingUI.handleFocusLoss (a popover-top-layer
+    // timing issue makes its :focus-within guard miss the focused button).
+    if (this._priorNoHideOnFocusLoss !== undefined) {
+      this.noHideOnThisFocusLoss = this._priorNoHideOnFocusLoss;
+      this._priorNoHideOnFocusLoss = undefined;
+    }
+
     if (this.isPopoverVisible) {
       if (!this.isBibFullscreen) {
         if (this.desktopModal) {
@@ -863,6 +872,14 @@ export class AuroDropdown extends AuroElement {
             }
           };
           this.addEventListener('keydown', this._bibTabHandler);
+
+          // Suppress AuroFloatingUI's auto-hide-on-focus-loss while the
+          // desktopModal trap owns focus management. Without this, the very
+          // first focus move into the bib (from the RAF below) triggers
+          // handleFocusLoss → hideBib, tearing down the trap before the
+          // user can press Tab.
+          this._priorNoHideOnFocusLoss = this.noHideOnThisFocusLoss;
+          this.noHideOnThisFocusLoss = true;
 
           // Move initial focus into the bib content, matching FocusTrap behavior
           requestAnimationFrame(() => {

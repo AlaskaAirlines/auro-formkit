@@ -2390,19 +2390,22 @@ function runFullTest(mobileView) {
       setInputValue(el, 'Apples');
       await elementUpdated(el);
 
-      // Focus a menuoption so querySelector(":focus") returns it
       const menuoption = el.querySelector('auro-menuoption');
-      menuoption.setAttribute('tabindex', '0');
-      menuoption.focus();
-      await elementUpdated(el);
 
       // Spy on setClearBtnFocus and validate
       let setClearBtnFocusCalled = false;
       let validateCalledWithForce = false;
       const origSetClearBtnFocus = el.setClearBtnFocus;
       const origValidate = el.validate;
+      const origQuerySelector = el.querySelector.bind(el);
       el.setClearBtnFocus = () => { setClearBtnFocusCalled = true; };
       el.validate = (force) => { if (force) validateCalledWithForce = true; };
+
+      // The combobox's focusin handler always redirects focus to the input
+      // (so querySelector(':focus') wouldn't naturally find the menuoption
+      // even after menuoption.focus()). Stub querySelector for the :focus
+      // case so the branch under test gets the menuoption it expects.
+      el.querySelector = (sel) => (sel === ':focus' ? menuoption : origQuerySelector(sel));
 
       // Mock input as not having focus so the else-if branch is entered
       Object.defineProperty(el.input, 'componentHasFocus', { value: false, writable: true, configurable: true });
@@ -2418,6 +2421,7 @@ function runFullTest(mobileView) {
       // Cleanup
       el.setClearBtnFocus = origSetClearBtnFocus;
       el.validate = origValidate;
+      el.querySelector = origQuerySelector;
       delete el.input.componentHasFocus;
       delete el.dropdown.isBibFullscreen;
     });
