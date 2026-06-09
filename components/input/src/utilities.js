@@ -99,7 +99,11 @@ export class AuroInputUtilities {
             return part.value;
         }
       })
-      .join("");
+      .join("")
+      // Remove whitespace and leading/trailing special characters for IMask compatibility
+      // for example, ko-KR's format is `YYYY. MM. DD.` which causes issues with IMask if we don't remove the trailing period.
+      .replace(/\s/gu, '')
+      .replace(/^[^A-Z0-9]+|[^A-Z0-9]+$/gu, '');
   }
 
   /**
