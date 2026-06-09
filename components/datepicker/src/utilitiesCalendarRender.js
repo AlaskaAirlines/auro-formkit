@@ -148,8 +148,8 @@ export class UtilitiesCalendarRender {
       <auro-formkit-calendar-month
         id="${`month-${month}-${year}`}"
         .disabledDays="${elem.disabledDays}"
-        .min="${elem.min}"
-        .max="${elem.max}"
+        .min="${elem.minDateObject?.getTime() / 1000}"
+        .max="${elem.maxDateObject?.getTime() / 1000}"
         ?noRange="${elem.noRange}"
         .monthFirst="${elem.monthFirst}"
         .dateTo="${elem.dateTo}"
