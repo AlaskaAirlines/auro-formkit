@@ -882,6 +882,14 @@ export class AuroDropdown extends AuroElement {
           };
           this.addEventListener('keydown', this._bibTabHandler);
 
+          // Suppress AuroFloatingUI's auto-hide-on-focus-loss while the
+          // desktopModal trap owns focus management. Without this, the very
+          // first focus move into the bib (from the RAF below) triggers
+          // handleFocusLoss → hideBib, tearing down the trap before the
+          // user can press Tab.
+          this._priorNoHideOnFocusLoss = this.noHideOnThisFocusLoss;
+          this.noHideOnThisFocusLoss = true;
+
           // Move initial focus into the bib content, matching FocusTrap behavior
           requestAnimationFrame(() => {
             const focusables = getFocusableElements(this.bibContent);
