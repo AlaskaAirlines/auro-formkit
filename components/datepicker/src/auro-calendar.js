@@ -329,8 +329,7 @@ export class AuroCalendar extends RangeDatepicker {
     }
 
     const date = this.centralDateObject;
-    const localeCode = this.locale?.code || undefined;
-    const formatter = new Intl.DateTimeFormat(localeCode, { month: 'long',
+    const formatter = new Intl.DateTimeFormat(this.localeCode, { month: 'long',
       year: 'numeric' });
     this.announceSelection(formatter.format(date));
   }
@@ -1451,8 +1450,7 @@ export class AuroCalendar extends RangeDatepicker {
    */
   formatAnnouncementDate(timestamp) {
     const date = new Date(parseInt(timestamp, 10) * 1000);
-    const localeCode = this.locale?.code || undefined;
-    const formatter = new Intl.DateTimeFormat(localeCode, {
+    const formatter = new Intl.DateTimeFormat(this.localeCode, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
