@@ -270,8 +270,7 @@ export class AuroCalendarCell extends LitElement {
     const date = new Date(this.day.date * 1000);
 
     // Generate localized full date string using the configured locale
-    const localeCode = this.locale?.code || undefined;
-    const dateFormatter = new Intl.DateTimeFormat(localeCode, {
+    const dateFormatter = new Intl.DateTimeFormat(this.locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
