@@ -918,14 +918,8 @@ export class AuroCombobox extends AuroElement {
         const len = nativeInput.value.length;
         nativeInput.setSelectionRange(len, len);
       }
-    } else if (!this.input.componentHasFocus) {
-      const focusedEl = this.querySelector(":focus");
+    } else {
       this.input.focus();
-      // current focus is on a menuoption, after clicking on it.
-      if (this.persistInput && focusedEl && (focusedEl.tagName.toLowerCase() === 'auro-menuoption' || focusedEl.hasAttribute('auro-menuoption'))) {
-        this.setClearBtnFocus();
-        this.validate(true);
-      }
     }
   }
 
