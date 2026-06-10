@@ -6,24 +6,25 @@
 <span slot="mobileToggleExpanded">View Less</span>
 <auro-anchorlink fluid href="#appearance">Appearance</auro-anchorlink>
 <auro-anchorlink fluid href="#activeLabel" class="level2 body-xs">Active Label</auro-anchorlink>
+<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
 <auro-anchorlink fluid href="#dvInputOnly" class="level2 body-xs">Display Value Input Only</auro-anchorlink>
 <auro-anchorlink fluid href="#icon" class="level2 body-xs">Icon</auro-anchorlink>
 <auro-anchorlink fluid href="#lightDarkBackground" class="level2 body-xs">Light vs. Dark Background</auro-anchorlink>
-<auro-anchorlink fluid href="#placeholder" class="level2 body-xs">Placeholder</auro-anchorlink>
-<auro-anchorlink fluid href="#optionalFlag" class="level2 body-xs">Optional Flag</auro-anchorlink>
-<auro-anchorlink fluid href="#simple" class="level2 body-xs">Simple</auro-anchorlink>
+<auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
 <auro-anchorlink fluid href="#nested" class="level2 body-xs">Nested</auro-anchorlink>
+<auro-anchorlink fluid href="#optionalFlag" class="level2 body-xs">Optional Flag</auro-anchorlink>
+<auro-anchorlink fluid href="#placeholder" class="level2 body-xs">Placeholder</auro-anchorlink>
+<auro-anchorlink fluid href="#simple" class="level2 body-xs">Simple</auro-anchorlink>
 <auro-anchorlink fluid href="#cssTokens" class="level2 body-xs">Tokens</auro-anchorlink>
-<auro-anchorlink fluid href="#cssParts" class="level2 body-xs">CSS Shadow Parts</auro-anchorlink>
 <auro-anchorlink fluid href="#behavior">Behavior</auro-anchorlink>
 <auro-anchorlink fluid href="#autocapitalize" class="level2 body-xs">Autocapitalize</auro-anchorlink>
 <auro-anchorlink fluid href="#autocomplete" class="level2 body-xs">Autocomplete</auro-anchorlink>
 <auro-anchorlink fluid href="#autocorrect" class="level2 body-xs">Autocorrect</auro-anchorlink>
+<auro-anchorlink fluid href="#setCustomValidity" class="level2 body-xs">Custom Validation Messages</auro-anchorlink>
 <auro-anchorlink fluid href="#disabled" class="level2 body-xs">Disabled</auro-anchorlink>
 <auro-anchorlink fluid href="#error" class="level2 body-xs">Error</auro-anchorlink>
 <auro-anchorlink fluid href="#format" class="level2 body-xs">Format</auro-anchorlink>
 <auro-anchorlink fluid href="#inputMode" class="level2 body-xs">Input Mode</auro-anchorlink>
-<auro-anchorlink fluid href="#localization" class="level2 body-xs">Localization</auro-anchorlink>
 <auro-anchorlink fluid href="#max" class="level2 body-xs">Max</auro-anchorlink>
 <auro-anchorlink fluid href="#maxLength" class="level2 body-xs">Max Length</auro-anchorlink>
 <auro-anchorlink fluid href="#min" class="level2 body-xs">Min</auro-anchorlink>
@@ -33,7 +34,6 @@
 <auro-anchorlink fluid href="#pattern" class="level2 body-xs">Pattern</auro-anchorlink>
 <auro-anchorlink fluid href="#readonly" class="level2 body-xs">Readonly</auro-anchorlink>
 <auro-anchorlink fluid href="#required" class="level2 body-xs">Required</auro-anchorlink>
-<auro-anchorlink fluid href="#setCustomValidity" class="level2 body-xs">Custom Validation Messages</auro-anchorlink>
 <auro-anchorlink fluid href="#type" class="level2 body-xs">Type</auro-anchorlink>
 <auro-anchorlink fluid href="#validateOnInput" class="level2 body-xs">Validate on Input</auro-anchorlink>
 <auro-anchorlink fluid href="#value" class="level2 body-xs">Value</auro-anchorlink>
@@ -61,6 +61,78 @@
 <pre class="language-html"><code class="language-html">&lt;auro-input activeLabel&gt;
   &lt;span slot="label"&gt;Address&lt;/span&gt;
   &lt;span slot="helpText"&gt;Please enter your home address.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/css-parts.md) -->
+<!-- The below content is automatically added from ./../docs/partials/customize/css-parts.md -->
+<auro-header level="3" id="cssParts">CSS Shadow Parts</auro-header>
+<p>CSS Shadow Parts allow you to style elements inside a web component's shadow DOM using the <code>::part()</code> pseudo-element. The following parts are exposed by <code>&lt;auro-input&gt;</code>.</p>
+<table class="auro_table">
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>wrapper</code></td><td>The root wrapper element of the input.</td></tr>
+<tr><td><code>label</code></td><td>The label element.</td></tr>
+<tr><td><code>helpText</code></td><td>The help text element.</td></tr>
+<tr><td><code>input</code></td><td>The native input element.</td></tr>
+<tr><td><code>accentIcon</code></td><td>The accent icon element (e.g. credit card icon, calendar icon).</td></tr>
+<tr><td><code>iconContainer</code></td><td>The icon container (e.g. X icon for clearing input value).</td></tr>
+<tr><td><code>accent-left</code></td><td>The left accent element.</td></tr>
+<tr><td><code>accent-right</code></td><td>The right accent element.</td></tr>
+<tr><td><code>displayValue</code></td><td>The display value element.</td></tr>
+<tr><td><code>inputHelpText</code></td><td>The input help text wrapper.</td></tr>
+</tbody>
+</table>
+<!-- AURO-GENERATED-CONTENT:END -->
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
+<!-- The below content is automatically added from ../apiExamples/css-parts.html -->
+<style>
+            auro-input.css-parts-demo::part(wrapper) {
+              border-color: orange;
+            }
+            auro-input.css-parts-demo::part(label) {
+              color: purple;
+            }
+            auro-input.css-parts-demo::part(helpText) {
+              color: green;
+            }
+            auro-input.css-parts-demo::part(input) {
+              font-style: italic;
+            }
+</style>
+<auro-input class="css-parts-demo" required>
+<span slot="label">CSS Parts Example</span>
+<span slot="helpText">This input has custom styles applied via CSS Shadow Parts.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/css-parts.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/css-parts.html -->
+<pre class="language-html"><code class="language-html">&lt;style&gt;
+  auro-input.css-parts-demo::part(wrapper) {
+    border-color: orange;
+  }
+  auro-input.css-parts-demo::part(label) {
+    color: purple;
+  }
+  auro-input.css-parts-demo::part(helpText) {
+    color: green;
+  }
+  auro-input.css-parts-demo::part(input) {
+    font-style: italic;
+  }
+&lt;/style&gt;
+&lt;auro-input class="css-parts-demo" required&gt;
+  &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
+  &lt;span slot="helpText"&gt;This input has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -157,24 +229,175 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="placeholder">Placeholder</auro-header>
-<p>Use the <code>placeholder</code> attribute to add a custom placeholder message within the element.</p>
+<auro-header level="3" id="localization">Localization</auro-header>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/localization.md) -->
+<!-- The below content is automatically added from ./../docs/partials/customize/localization.md -->
+<p>The component supports complete localization, including visible strings, screen reader announcements and locale based date formatting.</p>
+<auro-header level="4" id="localizationVisibleStrings">Visible strings</auro-header>
+<p>The visible strings rendered in the input are not derived from <code>locale</code> — they are projected through named slots so each language can supply its own translation. Pass a <code>&lt;span&gt;</code> with the matching <code>slot</code> attribute for every string you need to localize.</p>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-visible-strings.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-visible-strings.html -->
+<auro-input locale="ja-JP">
+<span slot="label">出発日</span>
+<span slot="helpText">日付を選択してください</span>
+<span slot="optionalLabel">（任意）</span>
+<span slot="ariaLabel.clear">入力をクリア</span>
+<span slot="ariaLabel.password.show">パスワードを表示</span>
+<span slot="ariaLabel.password.hide">パスワードを非表示</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+<auro-header level="4" id="localizationA11yStrings">Screen reader strings</auro-header>
+<p>Assistive-technology announcements that are not visible in the UI are also exposed as named slots so they can be translated independently. These strings are not derived from <code>locale</code>; supply translated values for every language you support.</p>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-screenreader-strings.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-screenreader-strings.html -->
+
+<pre class="language-diff"><code class="language-diff">  &lt;auro-input locale="de-DE" type="password" value="geheim"&gt;
+    &lt;span slot="label"&gt;Passwort&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Geben Sie Ihr Passwort ein&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
++   &lt;span slot="ariaLabel.clear"&gt;Eingabe löschen&lt;/span&gt;
++   &lt;span slot="ariaLabel.password.show"&gt;Passwort anzeigen&lt;/span&gt;
++   &lt;span slot="ariaLabel.password.hide"&gt;Passwort verbergen&lt;/span&gt;
+  &lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<p class="note"><strong>Note:</strong> Custom validation messages set via <code>setCustomValidity*</code> attributes are also not localized — supply translated strings yourself when using those properties.</p>
+<auro-header level="4" id="localizationDateFormatting">Date formatting</auro-header>
+<p>When <code>type="date"</code> is set, the <code>locale</code> attribute drives the date format used by the input mask. Setting <code>locale</code> automatically selects the regional format (for example <code>en-US</code> → <code>mm/dd/yyyy</code>, <code>de-DE</code> → <code>dd.mm.yyyy</code>, <code>ja-JP</code> → <code>yyyy/mm/dd</code>), derived from the browser's <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl" target="_blank">Intl</auro-hyperlink> API, so <code>format</code> does not need to be set manually.</p>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-locale.html -->
+
+<pre class="language-diff"><code class="language-diff">- &lt;auro-input&gt;
++ &lt;auro-input locale="de-DE"&gt;
+    &lt;span slot="label"&gt;Abreisedatum&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Wählen Sie ein Datum&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+  &lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<p>If no <code>locale</code> attribute is present, the component walks up the DOM looking for the nearest ancestor with a <code>data-locale</code> attribute; if none is found, it defaults to <code>en-US</code>.</p>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale-inherited.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-locale-inherited.html -->
+
+<pre class="language-diff"><code class="language-diff">+ &lt;div data-locale="de-DE"&gt;
+    &lt;div&gt;
+      &lt;auro-input&gt;
+        &lt;span slot="label"&gt;Abreisedatum&lt;/span&gt;
+        &lt;span slot="helpText"&gt;Wählen Sie ein Datum&lt;/span&gt;
+        &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+      &lt;/auro-input&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+<p>If <code>format</code> is set alongside <code>locale</code>, <code>format</code> always wins.</p>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/localization-locale-formatted.html) -->
+<!-- The below content is automatically added from ./../apiExamples/localization-locale-formatted.html -->
+
+<pre class="language-diff"><code class="language-diff">- &lt;auro-input locale="de-DE"&gt;
++ &lt;auro-input locale="de-DE" format="MM/DD/YYYY"&gt;
+    &lt;span slot="label"&gt;Abreisedatum&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Wählen Sie ein Datum&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+  &lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
 <div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/placeholder.html) -->
-<!-- The below content is automatically added from ../apiExamples/placeholder.html -->
-<auro-input placeholder="John Doe" required>
-<span slot="label">Full name</span>
-<span slot="helpText">Please enter your full name.</span>
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/locale.html) -->
+<!-- The below content is automatically added from ./../apiExamples/locale.html -->
+<div data-locale="de-DE">
+<auro-header level="4">en-GB Example</auro-header>
+<auro-input type="date" locale="en-GB">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-GB Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-header level="4">en-US Example</auro-header>
+<auro-input type="date" locale="en-US">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-US Date</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<auro-header level="4">zh-CN Example</auro-header>
+<auro-input type="date" locale="zh-CN">
+<span slot="ariaLabel.clear">全部清除</span>
+<span slot="label">中文日期</span>
+<span slot="helpText">帮助文本</span>
+<span slot="optionalLabel">（可选）</span>
+</auro-input>
+<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
+<auro-input type="date">
+<span slot="ariaLabel.clear">Alles löschen</span>
+<span slot="label">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+<span slot="helpText">Hilfetext</span>
+<span slot="optionalLabel">(freiwillig)</span>
+</auro-input>
+<auro-header level="4">en-US with `yyyy.mm.dd` format Example</auro-header>
+<auro-input type="date" locale="en-US" format="yyyy.mm.dd">
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="label">en-US with yyyy.mm.dd format</span>
+<span slot="helpText">Help Text</span>
+</div>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/locale.html -->
+<pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
+  &lt;auro-header level="4"&gt;en-GB Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="en-GB"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-GB Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+​
+  &lt;auro-header level="4"&gt;en-US Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="en-US"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-US Date&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+  &lt;/auro-input&gt;
+​
+  &lt;auro-header level="4"&gt;zh-CN Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="zh-CN"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;全部清除&lt;/span&gt;
+    &lt;span slot="label"&gt;中文日期&lt;/span&gt;
+    &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
+  &lt;/auro-input&gt;
+​
+  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
+  &lt;auro-input type="date"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Alles löschen&lt;/span&gt;
+    &lt;span slot="label"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
+    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
+  &lt;/auro-input&gt;
+​
+  &lt;auro-header level="4"&gt;en-US with `yyyy.mm.dd` format Example&lt;/auro-header&gt;
+  &lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
+    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+    &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
+    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<!-- AURO-GENERATED-CONTENT:END -->
+<auro-header level="3" id="nested">Nested</auro-header>
+<p>Use the <code>nested</code> attribute to render the input without borders, help text, error text, or accents. This is intended for use when the input is embedded inside the trigger of an auro-droopdown.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested.html) -->
+<!-- The below content is automatically added from ./../apiExamples/nested.html -->
+<auro-input nested>
+<span slot="label">Nested Input</span>
+<span slot="helpText">Help Text</span>
 </auro-input>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
 <auro-accordion alignRight>
 <span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/placeholder.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/placeholder.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input placeholder="John Doe" required&gt;
-  &lt;span slot="label"&gt;Full name&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nested.html) -->
+<!-- The below code snippet is automatically added from ./../apiExamples/nested.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input nested&gt;
+  &lt;span slot="label"&gt;Nested Input&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -202,6 +425,27 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="3" id="placeholder">Placeholder</auro-header>
+<p>Use the <code>placeholder</code> attribute to add a custom placeholder message within the element.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/placeholder.html) -->
+<!-- The below content is automatically added from ../apiExamples/placeholder.html -->
+<auro-input placeholder="John Doe" required>
+<span slot="label">Full name</span>
+<span slot="helpText">Please enter your full name.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/placeholder.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/placeholder.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input placeholder="John Doe" required&gt;
+  &lt;span slot="label"&gt;Full name&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="simple">Simple</auro-header>
 <p>Use the <code>simple</code> attribute to render the input without a border. This is intended for use when the input is embedded inside the trigger of an auro-droopdown.</p>
 <div class="exampleWrapper">
@@ -223,29 +467,6 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="nested">Nested</auro-header>
-<p>Use the <code>nested</code> attribute to render the input without borders, help text, error text, or accents. This is intended for use when the input is embedded inside the trigger of an auro-droopdown.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/nested.html) -->
-<!-- The below content is automatically added from ./../apiExamples/nested.html -->
-<auro-input nested>
-<span slot="label">Nested Input</span>
-<span slot="helpText">Help Text</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/nested.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/nested.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input nested&gt;
-  &lt;span slot="label"&gt;Nested Input&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-</section>
-<section>
 <auro-header level="3" id="cssTokens">Tokens</auro-header>
 <p>The component may be restyled by changing the values of the following token(s).</p>
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../src/styles/tokens.scss) -->
@@ -280,80 +501,6 @@
   --ds-auro-input-outline-color: transparent;
 }</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
-</section>
-<section>
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../docs/partials/customize/css-parts.md) -->
-<!-- The below content is automatically added from ./../docs/partials/customize/css-parts.md -->
-<auro-header level="3" id="cssParts">CSS Shadow Parts</auro-header>
-<p>CSS Shadow Parts allow you to style elements inside a web component's shadow DOM using the <code>::part()</code> pseudo-element. The following parts are exposed by <code>&lt;auro-input&gt;</code>.</p>
-<table class="auro_table">
-<thead>
-<tr>
-<th>Part</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr><td><code>wrapper</code></td><td>The root wrapper element of the input.</td></tr>
-<tr><td><code>label</code></td><td>The label element.</td></tr>
-<tr><td><code>helpText</code></td><td>The help text element.</td></tr>
-<tr><td><code>input</code></td><td>The native input element.</td></tr>
-<tr><td><code>accentIcon</code></td><td>The accent icon element (e.g. credit card icon, calendar icon).</td></tr>
-<tr><td><code>iconContainer</code></td><td>The icon container (e.g. X icon for clearing input value).</td></tr>
-<tr><td><code>accent-left</code></td><td>The left accent element.</td></tr>
-<tr><td><code>accent-right</code></td><td>The right accent element.</td></tr>
-<tr><td><code>displayValue</code></td><td>The display value element.</td></tr>
-<tr><td><code>inputHelpText</code></td><td>The input help text wrapper.</td></tr>
-</tbody>
-</table>
-<!-- AURO-GENERATED-CONTENT:END -->
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/css-parts.html) -->
-<!-- The below content is automatically added from ../apiExamples/css-parts.html -->
-<style>
-            auro-input.css-parts-demo::part(wrapper) {
-              border-color: orange;
-            }
-            auro-input.css-parts-demo::part(label) {
-              color: purple;
-            }
-            auro-input.css-parts-demo::part(helpText) {
-              color: green;
-            }
-            auro-input.css-parts-demo::part(input) {
-              font-style: italic;
-            }
-</style>
-<auro-input class="css-parts-demo" required>
-<span slot="label">CSS Parts Example</span>
-<span slot="helpText">This input has custom styles applied via CSS Shadow Parts.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/css-parts.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/css-parts.html -->
-<pre class="language-html"><code class="language-html">&lt;style&gt;
-  auro-input.css-parts-demo::part(wrapper) {
-    border-color: orange;
-  }
-  auro-input.css-parts-demo::part(label) {
-    color: purple;
-  }
-  auro-input.css-parts-demo::part(helpText) {
-    color: green;
-  }
-  auro-input.css-parts-demo::part(input) {
-    font-style: italic;
-  }
-&lt;/style&gt;
-&lt;auro-input class="css-parts-demo" required&gt;
-  &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
-  &lt;span slot="helpText"&gt;This input has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
 </section>
 <section>
 <auro-header level="2" id="behavior">Behavior</auro-header>
@@ -436,6 +583,189 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="3" id="setCustomValidity">Custom Validation Messages</auro-header>
+<p>The input provides several properties to customize the error messages displayed for different validation states. When a validation error occurs, the component checks for a state-specific message first, then falls back to the general <code>setCustomValidity</code> message.</p>
+<ul>
+<li><strong><code>setCustomValidity</code></strong> — Sets a fallback error message displayed for any validation error. This message is used when no state-specific message is defined.</li>
+<li><strong><code>setCustomValidityValueMissing</code></strong> — Displayed when the component is <code>required</code> and the user leaves it empty.</li>
+<li><strong><code>setCustomValidityForType</code></strong> — Displayed when the value does not match the expected format for the declared <code>type</code> (e.g. invalid email, phone number).</li>
+<li><strong><code>setCustomValidityBadInput</code></strong> — Displayed when the browser considers the input value to be malformed (e.g. non-numeric characters in a <code>number</code> field).</li>
+<li><strong><code>setCustomValidityRangeOverflow</code></strong> — Displayed when the value exceeds the <code>max</code> constraint.</li>
+<li><strong><code>setCustomValidityRangeUnderflow</code></strong> — Displayed when the value is below the <code>min</code> constraint.</li>
+<li><strong><code>setCustomValidityTooLong</code></strong> — Displayed when the value exceeds the <code>maxlength</code> constraint.</li>
+<li><strong><code>setCustomValidityTooShort</code></strong> — Displayed when the value is shorter than the <code>minlength</code> constraint.</li>
+<li><strong><code>setCustomValidityPatternMismatch</code></strong> — Displayed when the value does not match the declared <code>pattern</code>, or when <code>type="date"</code> and the entered date is not a valid calendar date (e.g. month/day values out of range). Falls back to <code>"Invalid Date Format Entered"</code> if not set.</li>
+</ul>
+<p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message.</p>
+<p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using these properties.</p>
+<auro-header level="4">Bad Input</auro-header>
+<p>Use <code>setCustomValidityBadInput</code> to customize the message when the browser considers the input malformed.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-bad-input.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity-bad-input.html -->
+<auro-input type="number" minlength="1" setCustomValidityBadInput="Please enter a valid whole number.">
+<span slot="label">Quantity</span>
+<span slot="helpText">Enter the number of items.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-bad-input.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-bad-input.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="number" minlength="1" setCustomValidityBadInput="Please enter a valid whole number."&gt;
+  &lt;span slot="label"&gt;Quantity&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Enter the number of items.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4">Fallback Message</auro-header>
+<p>Use <code>setCustomValidity</code> to set a single message for all validation states.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity.html -->
+<auro-input required minlength="3" setCustomValidity="Sorry, please enter your first and last name (one space required).">
+<span slot="label">Full Name</span>
+<span slot="helpText">Please enter your full name.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input required minlength="3" setCustomValidity="Sorry, please enter your first and last name (one space required)."&gt;
+  &lt;span slot="label"&gt;Full Name&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4">Range Overflow</auro-header>
+<p>Use <code>setCustomValidityRangeOverflow</code> to customize the message when the value exceeds the <code>max</code> constraint.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
+<auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025.">
+<span slot="label">Event Date</span>
+<span slot="helpText">Enter a date no later than 12/31/2025.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025."&gt;
+  &lt;span slot="label"&gt;Event Date&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Enter a date no later than 12/31/2025.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4">Range Underflow</auro-header>
+<p>Use <code>setCustomValidityRangeUnderflow</code> to customize the message when the value is below the <code>min</code> constraint.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
+<auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024.">
+<span slot="label">Start Date</span>
+<span slot="helpText">Enter a date no earlier than 01/01/2024.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024."&gt;
+  &lt;span slot="label"&gt;Start Date&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Enter a date no earlier than 01/01/2024.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4">Too Long</auro-header>
+<p>Use <code>setCustomValidityTooLong</code> to customize the message when the value exceeds the <code>maxlength</code> constraint.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-too-long.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity-too-long.html -->
+<auro-input maxlength="10" setCustomValidityTooLong="Please shorten your entry to 10 characters or fewer.">
+<span slot="label">Username</span>
+<span slot="helpText">Maximum 10 characters.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-too-long.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-too-long.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input maxlength="10" setCustomValidityTooLong="Please shorten your entry to 10 characters or fewer."&gt;
+  &lt;span slot="label"&gt;Username&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Maximum 10 characters.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4">Too Short</auro-header>
+<p>Use <code>setCustomValidityTooShort</code> to customize the message when the value is shorter than the <code>minlength</code> constraint.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-too-short.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity-too-short.html -->
+<auro-input minlength="3" setCustomValidityTooShort="Please enter at least 3 characters.">
+<span slot="label">Nickname</span>
+<span slot="helpText">Minimum 3 characters.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-too-short.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-too-short.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input minlength="3" setCustomValidityTooShort="Please enter at least 3 characters."&gt;
+  &lt;span slot="label"&gt;Nickname&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Minimum 3 characters.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4">Type Validation</auro-header>
+<p>Use <code>setCustomValidityForType</code> to customize the message when the value doesn't match the declared <code>type</code> format.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-for-type.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity-for-type.html -->
+<auro-input type="email" setCustomValidityForType="Please provide a valid email address (e.g. name@example.com).">
+<span slot="label">Email Address</span>
+<span slot="helpText">We'll use this to send your confirmation.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-for-type.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-for-type.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="email" setCustomValidityForType="Please provide a valid email address (e.g. name@example.com)."&gt;
+  &lt;span slot="label"&gt;Email Address&lt;/span&gt;
+  &lt;span slot="helpText"&gt;We'll use this to send your confirmation.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4">Value Missing</auro-header>
+<p>Use <code>setCustomValidityValueMissing</code> to customize the message when a <code>required</code> field is left empty.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-value-missing.html) -->
+<!-- The below content is automatically added from ../apiExamples/set-custom-validity-value-missing.html -->
+<auro-input required setCustomValidityValueMissing="Please enter your name to continue.">
+<span slot="label">Full Name</span>
+<span slot="helpText">Enter your legal first and last name.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-value-missing.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-value-missing.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input required setCustomValidityValueMissing="Please enter your name to continue."&gt;
+  &lt;span slot="label"&gt;Full Name&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Enter your legal first and last name.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
 <auro-header level="3" id="disabled">Disabled</auro-header>
 <p>Use the <code>disable</code> attribute to prevent the user from interacting with the input.</p>
 <div class="exampleWrapper">
@@ -508,7 +838,7 @@
 <li>a : letter</li>
 <li>* : any character</li>
 </ul>
-<p>See <a href="https://imask.js.org/">IMask</a> for more information on how to configure a mask.</p>
+<p>See <auro-hyperlink href="https://imask.js.org/">IMask</auro-hyperlink> for more information on how to configure a mask.</p>
 <div class="exampleWrapper">
 <!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/format.html) -->
 <!-- The below content is automatically added from ../apiExamples/format.html -->
@@ -526,86 +856,6 @@
   &lt;span slot="label"&gt;Custom format&lt;/span&gt;
   &lt;span slot="helpText"&gt;Format is: 47440000&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="3" id="localization">Localization</auro-header>
-<p>When <code>type="date"</code> is used with the <code>locale</code> attribute, the component automatically derives the correct date format for that region — no need to set <code>format</code> manually. For example, <code>locale="en-US"</code> produces <code>mm/dd/yyyy</code>, <code>locale="de-DE"</code> produces <code>dd.mm.yyyy</code>, and <code>locale="ja-JP"</code> produces <code>yyyy/mm/dd</code>.</p>
-<p>If <code>format</code> is explicitly set alongside <code>locale</code>, <code>format</code> always wins. Use this when a specific format is required regardless of region.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/locale.html) -->
-<!-- The below content is automatically added from ../apiExamples/locale.html -->
-<div data-locale="de-DE">
-<auro-header level="4">en-GB Example</auro-header>
-<auro-input type="date" locale="en-GB">
-<span slot="ariaLabel.clear">Clear All</span>
-<span slot="label">en-GB Date</span>
-<span slot="helpText">Help Text</span>
-</auro-input>
-<auro-header level="4">en-US Example</auro-header>
-<auro-input type="date" locale="en-US">
-<span slot="ariaLabel.clear">Clear All</span>
-<span slot="label">en-US Date</span>
-<span slot="helpText">Help Text</span>
-</auro-input>
-<auro-header level="4">zh-CN Example</auro-header>
-<auro-input type="date" locale="zh-CN">
-<span slot="ariaLabel.clear">全部清除</span>
-<span slot="label">中文日期</span>
-<span slot="helpText">帮助文本</span>
-<span slot="optionalLabel">（可选）</span>
-</auro-input>
-<auro-header level="4">Inherited de-DE date-locale Example</auro-header>
-<auro-input type="date">
-<span slot="ariaLabel.clear">Alles löschen</span>
-<span slot="label">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
-<span slot="helpText">Hilfetext</span>
-<span slot="optionalLabel">(freiwillig)</span>
-</auro-input>
-<auro-header level="4">en-US with `yyyy.mm.dd` format Example</auro-header>
-<auro-input type="date" locale="en-US" format="yyyy.mm.dd">
-<span slot="ariaLabel.clear">Clear All</span>
-<span slot="label">en-US with yyyy.mm.dd format</span>
-<span slot="helpText">Help Text</span>
-</div>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/locale.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/locale.html -->
-<pre class="language-html"><code class="language-html">&lt;div data-locale="de-DE"&gt;
-  &lt;auro-header level="4"&gt;en-GB Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="en-GB"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;en-GB Date&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-  &lt;/auro-input&gt;
-  &lt;auro-header level="4"&gt;en-US Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="en-US"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;en-US Date&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-  &lt;/auro-input&gt;
-  &lt;auro-header level="4"&gt;zh-CN Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="zh-CN"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;全部清除&lt;/span&gt;
-    &lt;span slot="label"&gt;中文日期&lt;/span&gt;
-    &lt;span slot="helpText"&gt;帮助文本&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;（可选）&lt;/span&gt;
-  &lt;/auro-input&gt;
-  &lt;auro-header level="4"&gt;Inherited de-DE date-locale Example&lt;/auro-header&gt;
-  &lt;auro-input type="date"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Alles löschen&lt;/span&gt;
-    &lt;span slot="label"&gt;Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Hilfetext&lt;/span&gt;
-    &lt;span slot="optionalLabel"&gt;(freiwillig)&lt;/span&gt;
-  &lt;/auro-input&gt;
-  &lt;auro-header level="4"&gt;en-US with `yyyy.mm.dd` format Example&lt;/auro-header&gt;
-  &lt;auro-input type="date" locale="en-US" format="yyyy.mm.dd"&gt;
-    &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-    &lt;span slot="label"&gt;en-US with yyyy.mm.dd format&lt;/span&gt;
-    &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-&lt;/div&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
 <auro-header level="3" id="inputMode">Input Mode</auro-header>
@@ -899,263 +1149,7 @@
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
-<auro-header level="3" id="setCustomValidity">Custom Validation Messages</auro-header>
-<p>The input provides several properties to customize the error messages displayed for different validation states. When a validation error occurs, the component checks for a state-specific message first, then falls back to the general <code>setCustomValidity</code> message.</p>
-<ul>
-<li><strong><code>setCustomValidity</code></strong> — Sets a fallback error message displayed for any validation error. This message is used when no state-specific message is defined.</li>
-<li><strong><code>setCustomValidityValueMissing</code></strong> — Displayed when the component is <code>required</code> and the user leaves it empty.</li>
-<li><strong><code>setCustomValidityForType</code></strong> — Displayed when the value does not match the expected format for the declared <code>type</code> (e.g. invalid email, phone number).</li>
-<li><strong><code>setCustomValidityBadInput</code></strong> — Displayed when the browser considers the input value to be malformed (e.g. non-numeric characters in a <code>number</code> field).</li>
-<li><strong><code>setCustomValidityRangeOverflow</code></strong> — Displayed when the value exceeds the <code>max</code> constraint.</li>
-<li><strong><code>setCustomValidityRangeUnderflow</code></strong> — Displayed when the value is below the <code>min</code> constraint.</li>
-<li><strong><code>setCustomValidityTooLong</code></strong> — Displayed when the value exceeds the <code>maxlength</code> constraint.</li>
-<li><strong><code>setCustomValidityTooShort</code></strong> — Displayed when the value is shorter than the <code>minlength</code> constraint.</li>
-<li><strong><code>setCustomValidityPatternMismatch</code></strong> — Displayed when the value does not match the declared <code>pattern</code>, or when <code>type="date"</code> and the entered date is not a valid calendar date (e.g. month/day values out of range). Falls back to <code>"Invalid Date Format Entered"</code> if not set.</li>
-</ul>
-<p>The priority order for error messages is: state-specific property &gt; <code>setCustomValidity</code> &gt; default browser message.</p>
-<p class="note"><strong>Note:</strong> Custom strings are NOT localized. It is the responsibility of the element consumer to provide localized strings when using these properties.</p>
-<auro-header level="4">Fallback Message</auro-header>
-<p>Use <code>setCustomValidity</code> to set a single message for all validation states.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity.html -->
-<auro-input required minlength="3" setCustomValidity="Sorry, please enter your first and last name (one space required).">
-<span slot="label">Full Name</span>
-<span slot="helpText">Please enter your full name.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input required minlength="3" setCustomValidity="Sorry, please enter your first and last name (one space required)."&gt;
-  &lt;span slot="label"&gt;Full Name&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Please enter your full name.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4">Value Missing</auro-header>
-<p>Use <code>setCustomValidityValueMissing</code> to customize the message when a <code>required</code> field is left empty.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-value-missing.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity-value-missing.html -->
-<auro-input required setCustomValidityValueMissing="Please enter your name to continue.">
-<span slot="label">Full Name</span>
-<span slot="helpText">Enter your legal first and last name.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-value-missing.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-value-missing.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input required setCustomValidityValueMissing="Please enter your name to continue."&gt;
-  &lt;span slot="label"&gt;Full Name&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Enter your legal first and last name.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4">Type Validation</auro-header>
-<p>Use <code>setCustomValidityForType</code> to customize the message when the value doesn't match the declared <code>type</code> format.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-for-type.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity-for-type.html -->
-<auro-input type="email" setCustomValidityForType="Please provide a valid email address (e.g. name@example.com).">
-<span slot="label">Email Address</span>
-<span slot="helpText">We'll use this to send your confirmation.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-for-type.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-for-type.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="email" setCustomValidityForType="Please provide a valid email address (e.g. name@example.com)."&gt;
-  &lt;span slot="label"&gt;Email Address&lt;/span&gt;
-  &lt;span slot="helpText"&gt;We'll use this to send your confirmation.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4">Bad Input</auro-header>
-<p>Use <code>setCustomValidityBadInput</code> to customize the message when the browser considers the input malformed.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-bad-input.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity-bad-input.html -->
-<auro-input type="number" minlength="1" setCustomValidityBadInput="Please enter a valid whole number.">
-<span slot="label">Quantity</span>
-<span slot="helpText">Enter the number of items.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-bad-input.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-bad-input.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="number" minlength="1" setCustomValidityBadInput="Please enter a valid whole number."&gt;
-  &lt;span slot="label"&gt;Quantity&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Enter the number of items.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4">Range Overflow</auro-header>
-<p>Use <code>setCustomValidityRangeOverflow</code> to customize the message when the value exceeds the <code>max</code> constraint.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
-<auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025.">
-<span slot="label">Event Date</span>
-<span slot="helpText">Enter a date no later than 12/31/2025.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-overflow.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-overflow.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" max="12/31/2025" setCustomValidityRangeOverflow="Date must be on or before 12/31/2025."&gt;
-  &lt;span slot="label"&gt;Event Date&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Enter a date no later than 12/31/2025.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4">Range Underflow</auro-header>
-<p>Use <code>setCustomValidityRangeUnderflow</code> to customize the message when the value is below the <code>min</code> constraint.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
-<auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024.">
-<span slot="label">Start Date</span>
-<span slot="helpText">Enter a date no earlier than 01/01/2024.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-range-underflow.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-range-underflow.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="date" min="01/01/2024" setCustomValidityRangeUnderflow="Date must be on or after 01/01/2024."&gt;
-  &lt;span slot="label"&gt;Start Date&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Enter a date no earlier than 01/01/2024.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4">Too Long</auro-header>
-<p>Use <code>setCustomValidityTooLong</code> to customize the message when the value exceeds the <code>maxlength</code> constraint.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-too-long.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity-too-long.html -->
-<auro-input maxlength="10" setCustomValidityTooLong="Please shorten your entry to 10 characters or fewer.">
-<span slot="label">Username</span>
-<span slot="helpText">Maximum 10 characters.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-too-long.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-too-long.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input maxlength="10" setCustomValidityTooLong="Please shorten your entry to 10 characters or fewer."&gt;
-  &lt;span slot="label"&gt;Username&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Maximum 10 characters.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4">Too Short</auro-header>
-<p>Use <code>setCustomValidityTooShort</code> to customize the message when the value is shorter than the <code>minlength</code> constraint.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/set-custom-validity-too-short.html) -->
-<!-- The below content is automatically added from ../apiExamples/set-custom-validity-too-short.html -->
-<auro-input minlength="3" setCustomValidityTooShort="Please enter at least 3 characters.">
-<span slot="label">Nickname</span>
-<span slot="helpText">Minimum 3 characters.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/set-custom-validity-too-short.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/set-custom-validity-too-short.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input minlength="3" setCustomValidityTooShort="Please enter at least 3 characters."&gt;
-  &lt;span slot="label"&gt;Nickname&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Minimum 3 characters.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
 <auro-header level="3" id="type">Type</auro-header>
-<auro-header level="4" id="typePassword">Password</auro-header>
-<p>Use the <code>type="password"</code> attribute for a password style input. The hide/show password feature will automatically appear once a user begins to enter data.</p>
-<p>Default help text will be added to the input <code>type="password"</code> if custom help text is not provided.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/password.html) -->
-<!-- The below content is automatically added from ../apiExamples/password.html -->
-<auro-input type="password" required>
-<span slot="ariaLabel.clear">Clear All</span>
-<span slot="ariaLabel.password.show">Show</span>
-<span slot="ariaLabel.password.hide">Hide</span>
-<span slot="label">Password</span>
-<span slot="helpText">Please enter a secure password.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/password.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/password.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="password" required&gt;
-  &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
-  &lt;span slot="ariaLabel.password.show"&gt;Show&lt;/span&gt;
-  &lt;span slot="ariaLabel.password.hide"&gt;Hide&lt;/span&gt;
-  &lt;span slot="label"&gt;Password&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Please enter a secure password.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4" id="typeEmail">Email</auro-header>
-<p>Use the <code>type="email"</code> attribute for an email style input. These examples illustrate the default error messaging per that browser. Content may vary.</p>
-<p>Default help text will be added to the input <code>type="email"</code> if custom help text is not provided.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/email.html) -->
-<!-- The below content is automatically added from ../apiExamples/email.html -->
-<auro-input type="email" required>
-<span slot="label">Email address</span>
-<span slot="helpText">Please enter your email address.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/email.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/email.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="email" required&gt;
-  &lt;span slot="label"&gt;Email address&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Please enter your email address.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4" id="typeNumber">Number</auro-header>
-<p>Use the <code>type="number"</code> attribute for a numeric style input and invoke a numeric virtual keyboard on handheld devices.</p>
-<p>This <code>number</code> input type should only be used for incremental numeric values, meaning values with decimals will be considered invalid. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number">MDN Web Docs</a> for more information.</p>
-<p class="note"><strong>Note:</strong> We recommend using <code>type="number"</code> with <code>inputmode="numeric"</code> for the best mobile experience.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/number.html) -->
-<!-- The below content is automatically added from ../apiExamples/number.html -->
-<auro-input type="number" required>
-<span slot="label">Number of Passengers</span>
-<span slot="helpText">Please enter the number of passengers.</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/number.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/number.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="number" required&gt;
-  &lt;span slot="label"&gt;Number of Passengers&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Please enter the number of passengers.&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
 <auro-header level="4" id="typeCreditCard">Credit Card</auro-header>
 <p>Use the <code>type="credit-card"</code> attribute for a credit card formatted input.</p>
 <p>Default help text will be added to the input <code>type="credit-card"</code> if custom help text is not provided.</p>
@@ -1195,48 +1189,6 @@
 <pre class="language-html"><code class="language-html">&lt;auro-input icon type="credit-card" required&gt;
   &lt;span slot="label"&gt;Card number&lt;/span&gt;
   &lt;span slot="helpText"&gt;Valid credit card numbers must include 16 digits (15 for Amex).&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="4" id="typePhone">Phone Number</auro-header>
-<p>Use the <code>type="tel"</code> attribute for a phone number formatted input. The default format is <code>+1 (000) 000-0000</code>.</p>
-<p class="note"><strong>Note:</strong> We recommend using <code>type="tel"</code> with <code>inputmode="tel"</code> for the best mobile experience.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/tel.html) -->
-<!-- The below content is automatically added from ../apiExamples/tel.html -->
-<auro-input type="tel">
-<span slot="label">Telephone</span>
-<span slot="helpText">Help Text</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/tel.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/tel.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="tel"&gt;
-  &lt;span slot="label"&gt;Telephone&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
-&lt;/auro-input&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<p>Use the <code>format</code> attribute to set a custom phone number format.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/tel-format.html) -->
-<!-- The below content is automatically added from ../apiExamples/tel-format.html -->
-<auro-input type="tel" format="+00 000 00 0000">
-<span slot="label">Telephone</span>
-<span slot="helpText">Help Text</span>
-</auro-input>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/tel-format.html) -->
-<!-- The below code snippet is automatically added from ../apiExamples/tel-format.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-input type="tel" format="+00 000 00 0000"&gt;
-  &lt;span slot="label"&gt;Telephone&lt;/span&gt;
-  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
@@ -1315,6 +1267,121 @@
 <!-- The below code snippet is automatically added from ../apiExamples/day.html -->
 <pre class="language-html"><code class="language-html">&lt;auro-input type="date" format="dd"&gt;
   &lt;span slot="label"&gt;Day&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4" id="typeEmail">Email</auro-header>
+<p>Use the <code>type="email"</code> attribute for an email style input. These examples illustrate the default error messaging per that browser. Content may vary.</p>
+<p>Default help text will be added to the input <code>type="email"</code> if custom help text is not provided.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/email.html) -->
+<!-- The below content is automatically added from ../apiExamples/email.html -->
+<auro-input type="email" required>
+<span slot="label">Email address</span>
+<span slot="helpText">Please enter your email address.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/email.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/email.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="email" required&gt;
+  &lt;span slot="label"&gt;Email address&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Please enter your email address.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4" id="typeNumber">Number</auro-header>
+<p>Use the <code>type="number"</code> attribute for a numeric style input and invoke a numeric virtual keyboard on handheld devices.</p>
+<p>This <code>number</code> input type should only be used for incremental numeric values, meaning values with decimals will be considered invalid. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number">MDN Web Docs</a> for more information.</p>
+<p class="note"><strong>Note:</strong> We recommend using <code>type="number"</code> with <code>inputmode="numeric"</code> for the best mobile experience.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/number.html) -->
+<!-- The below content is automatically added from ../apiExamples/number.html -->
+<auro-input type="number" required>
+<span slot="label">Number of Passengers</span>
+<span slot="helpText">Please enter the number of passengers.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/number.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/number.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="number" required&gt;
+  &lt;span slot="label"&gt;Number of Passengers&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Please enter the number of passengers.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4" id="typePassword">Password</auro-header>
+<p>Use the <code>type="password"</code> attribute for a password style input. The hide/show password feature will automatically appear once a user begins to enter data.</p>
+<p>Default help text will be added to the input <code>type="password"</code> if custom help text is not provided.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/password.html) -->
+<!-- The below content is automatically added from ../apiExamples/password.html -->
+<auro-input type="password" required>
+<span slot="ariaLabel.clear">Clear All</span>
+<span slot="ariaLabel.password.show">Show</span>
+<span slot="ariaLabel.password.hide">Hide</span>
+<span slot="label">Password</span>
+<span slot="helpText">Please enter a secure password.</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/password.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/password.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="password" required&gt;
+  &lt;span slot="ariaLabel.clear"&gt;Clear All&lt;/span&gt;
+  &lt;span slot="ariaLabel.password.show"&gt;Show&lt;/span&gt;
+  &lt;span slot="ariaLabel.password.hide"&gt;Hide&lt;/span&gt;
+  &lt;span slot="label"&gt;Password&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Please enter a secure password.&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<auro-header level="4" id="typePhone">Phone Number</auro-header>
+<p>Use the <code>type="tel"</code> attribute for a phone number formatted input. The default format is <code>+1 (000) 000-0000</code>.</p>
+<p class="note"><strong>Note:</strong> We recommend using <code>type="tel"</code> with <code>inputmode="tel"</code> for the best mobile experience.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/tel.html) -->
+<!-- The below content is automatically added from ../apiExamples/tel.html -->
+<auro-input type="tel">
+<span slot="label">Telephone</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/tel.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/tel.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="tel"&gt;
+  &lt;span slot="label"&gt;Telephone&lt;/span&gt;
+  &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
+&lt;/auro-input&gt;</code></pre>
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
+<p>Use the <code>format</code> attribute to set a custom phone number format.</p>
+<div class="exampleWrapper">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=../apiExamples/tel-format.html) -->
+<!-- The below content is automatically added from ../apiExamples/tel-format.html -->
+<auro-input type="tel" format="+00 000 00 0000">
+<span slot="label">Telephone</span>
+<span slot="helpText">Help Text</span>
+</auro-input>
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=../apiExamples/tel-format.html) -->
+<!-- The below code snippet is automatically added from ../apiExamples/tel-format.html -->
+<pre class="language-html"><code class="language-html">&lt;auro-input type="tel" format="+00 000 00 0000"&gt;
+  &lt;span slot="label"&gt;Telephone&lt;/span&gt;
   &lt;span slot="helpText"&gt;Help Text&lt;/span&gt;
 &lt;/auro-input&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
