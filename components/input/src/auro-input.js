@@ -375,10 +375,6 @@ export class AuroInput extends BaseInput {
       return i18n(this.lang, this.type);
     }
 
-    if (this.type === 'date') {
-      return i18n(this.lang, this.dateFormatMap[this.format] || 'dateMMDDYYYY');
-    }
-
     return '';
   }
 
