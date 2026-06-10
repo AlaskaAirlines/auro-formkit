@@ -268,7 +268,6 @@ export class AuroInputUtilities {
     const maskOptions = this.getMaskOptions('date', normalizedFormat);
 
     if (!(valueObject instanceof Date) || Number.isNaN(valueObject.getTime()) || !maskOptions || typeof maskOptions.format !== 'function') {
-      console.debug('Invalid date object or mask options for formatting', { valueObject, maskOptions }); // eslint-disable-line no-console
       return undefined;
     }
 
