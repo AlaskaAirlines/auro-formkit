@@ -1663,7 +1663,9 @@ export class AuroDatePicker extends AuroElement {
       // update the calendar
       if (this.valueEndObject) {
         this.calendar.dateTo = this.convertToWcValidTime(this.valueEndObject);
-        this.calendarRenderUtil.updateCentralDate(this, this.valueEndObject);
+        if (!(this.wasCellClick && this.range)) {
+          this.calendarRenderUtil.updateCentralDate(this, this.valueEndObject);
+        }
       } else {
         if (this.inputList[1].value !== this.valueEnd) {
           this.inputList[1].value = this.valueEnd || '';
