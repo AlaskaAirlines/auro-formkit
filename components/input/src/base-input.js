@@ -592,7 +592,7 @@ export default class BaseInput extends AuroElement {
    * @returns {Date|undefined}
    */
   get valueObject() {
-    return this._valueObject;
+    return this._valueObject || this._computeDateObjectFallback(this.value);
   }
 
   /**
@@ -600,7 +600,7 @@ export default class BaseInput extends AuroElement {
    * @returns {Date|undefined}
    */
   get minObject() {
-    return this._minObject;
+    return this._minObject || this._computeDateObjectFallback(this.min);
   }
 
   /**
@@ -608,7 +608,31 @@ export default class BaseInput extends AuroElement {
    * @returns {Date|undefined}
    */
   get maxObject() {
-    return this._maxObject;
+    return this._maxObject || this._computeDateObjectFallback(this.max);
+  }
+
+  /**
+   * Parses a date string into a Date object when the corresponding `_*Object`
+   * field hasn't been synced yet by `updated()`. Returns undefined when the
+   * input type/format isn't a full date or the string is not a valid date.
+   *
+   * Why this exists: a parent (datepicker) can call `inputN.validate()` from
+   * inside its own `updated()` before this input's `updated()` has run
+   * `syncDateValues()` — so `_valueObject`/`_maxObject` are still `undefined`
+   * and range checks would otherwise silently no-op (flipping the result to
+   * `valid` or `patternMismatch`).
+   * @private
+   * @param {string|undefined} dateStr - ISO date string from `value`/`min`/`max`.
+   * @returns {Date|undefined}
+   */
+  _computeDateObjectFallback(dateStr) {
+    if (!dateStr || !this.util || !this.util.isFullDateFormat(this.type, this.format)) {
+      return undefined;
+    }
+    if (!dateFormatter.isValidDate(dateStr)) {
+      return undefined;
+    }
+    return dateFormatter.stringToDateInstance(dateStr);
   }
 
   /**
@@ -633,8 +657,30 @@ export default class BaseInput extends AuroElement {
   connectedCallback() {
     super.connectedCallback();
 
+    // Mark for query selectors when registered under a versioned tag (e.g. inside
+    // a datepicker/combobox). Must run before parent components call validate() on
+    // their inner inputs — the validation framework matches via tag-or-attribute,
+    // and parents trigger validation during their own updated() cycle, which can
+    // precede this input's firstUpdated().
+    if (this.tagName.toLowerCase() !== 'auro-input' && !this.hasAttribute('auro-input')) {
+      this.setAttribute('auro-input', '');
+    }
+
     this.locale = this.domHandler.getLocale(this);
     notifyOnLangChange(this);
+
+    // Pre-compute lengthForType and date-object fields so a parent (e.g. datepicker)
+    // calling our validate() synchronously during its own updated() cycle sees
+    // populated values. Without this, range validation silently no-ops because
+    // `max.length === lengthForType` fails when lengthForType is still undefined.
+    // Rebuild util here (constructor seeded with en-US default) so configureDataForType's
+    // locale-derived format lookup uses the actual locale just resolved above.
+    this.util = new AuroInputUtilities({
+      locale: this.locale,
+      format: this.format
+    });
+    this.configureDataForType();
+    this.syncDateValues();
   }
 
   disconnectedCallback() {
@@ -655,8 +701,8 @@ export default class BaseInput extends AuroElement {
     }
 
     // add attribute for query selectors when auro-input is registered under a custom name
-    if (this.tagName.toLowerCase() !== 'auro-input') {
-      this.setAttribute('auro-input', true);
+    if (this.tagName.toLowerCase() !== 'auro-input' && !this.hasAttribute('auro-input')) {
+      this.setAttribute('auro-input', '');
     }
     this.inputId = this.id ? `${this.id}-input` : window.crypto.randomUUID();
 
