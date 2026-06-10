@@ -2382,48 +2382,88 @@ function runFullTest(mobileView) {
       delete el.dropdown.isBibFullscreen;
     });
 
-    it('setInputFocus calls setClearBtnFocus and validate when persistInput and menuoption focused', async () => {
-      const el = await persistInputFixture(mobileView);
+    // Regression: clicking the trigger to reopen the bib lands on auro-input's
+    // floating <label for="…"> overlay; Chrome resets the native input's
+    // selectionStart/End to 0 on label-focus before any JS runs. setInputFocus()
+    // must restore the caret to end-of-text every time it runs in the
+    // non-fullscreen branch — including when componentHasFocus is true, since
+    // the bug enters with the input already focused.
+    it('setInputFocus parks the trigger native input caret at end-of-text in the non-fullscreen branch', async () => {
+      const el = await defaultFixture(mobileView);
       await elementUpdated(el);
 
-      // Type a value to open the dropdown and populate options
-      setInputValue(el, 'Apples');
-      await elementUpdated(el);
-
-      const menuoption = el.querySelector('auro-menuoption');
-
-      // Spy on setClearBtnFocus and validate
-      let setClearBtnFocusCalled = false;
-      let validateCalledWithForce = false;
-      const origSetClearBtnFocus = el.setClearBtnFocus;
-      const origValidate = el.validate;
-      const origQuerySelector = el.querySelector.bind(el);
-      el.setClearBtnFocus = () => { setClearBtnFocusCalled = true; };
-      el.validate = (force) => { if (force) validateCalledWithForce = true; };
-
-      // The combobox's focusin handler always redirects focus to the input
-      // (so querySelector(':focus') wouldn't naturally find the menuoption
-      // even after menuoption.focus()). Stub querySelector for the :focus
-      // case so the branch under test gets the menuoption it expects.
-      el.querySelector = (sel) => (sel === ':focus' ? menuoption : origQuerySelector(sel));
-
-      // Mock input as not having focus so the else-if branch is entered
+      Object.defineProperty(el.dropdown, 'isBibFullscreen', { value: false, writable: true, configurable: true });
       Object.defineProperty(el.input, 'componentHasFocus', { value: false, writable: true, configurable: true });
 
-      // Mock dropdown as not fullscreen so isBibFullscreen branch is skipped
-      Object.defineProperty(el.dropdown, 'isBibFullscreen', { value: false, writable: true, configurable: true });
+      const triggerNative = el.input.inputElement;
+      triggerNative.value = 'Oranges';
+      triggerNative.setSelectionRange(0, 0);
 
       el.setInputFocus();
 
-      expect(setClearBtnFocusCalled).to.be.true;
-      expect(validateCalledWithForce).to.be.true;
+      expect(triggerNative.selectionStart).to.equal(7);
+      expect(triggerNative.selectionEnd).to.equal(7);
 
-      // Cleanup
-      el.setClearBtnFocus = origSetClearBtnFocus;
-      el.validate = origValidate;
-      el.querySelector = origQuerySelector;
-      delete el.input.componentHasFocus;
       delete el.dropdown.isBibFullscreen;
+      delete el.input.componentHasFocus;
+    });
+
+    it('setInputFocus restores trigger caret even when componentHasFocus is already true', async () => {
+      // This is the Chrome label-click reset path: the trigger native is
+      // already focused (componentHasFocus=true), the focus call is skipped,
+      // but the caret must still be parked at end. Regression guard for the
+      // hoisting of the caret block outside the componentHasFocus gate.
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      Object.defineProperty(el.dropdown, 'isBibFullscreen', { value: false, writable: true, configurable: true });
+      Object.defineProperty(el.input, 'componentHasFocus', { value: true, writable: true, configurable: true });
+
+      const triggerNative = el.input.inputElement;
+      triggerNative.value = 'Peaches';
+      triggerNative.setSelectionRange(0, 0);
+
+      let focusCalled = false;
+      const origFocus = el.input.focus;
+      el.input.focus = () => { focusCalled = true; };
+
+      el.setInputFocus();
+
+      expect(focusCalled, 'input.focus should be skipped while componentHasFocus is true').to.be.false;
+      expect(triggerNative.selectionStart).to.equal(7);
+      expect(triggerNative.selectionEnd).to.equal(7);
+
+      el.input.focus = origFocus;
+      delete el.dropdown.isBibFullscreen;
+      delete el.input.componentHasFocus;
+    });
+
+    it('setInputFocus leaves caret untouched when trigger native input is empty', async () => {
+      // The setSelectionRange call is gated on triggerNativeInput.value being
+      // truthy — empty inputs should not receive a programmatic caret move.
+      const el = await defaultFixture(mobileView);
+      await elementUpdated(el);
+
+      Object.defineProperty(el.dropdown, 'isBibFullscreen', { value: false, writable: true, configurable: true });
+      Object.defineProperty(el.input, 'componentHasFocus', { value: false, writable: true, configurable: true });
+
+      const triggerNative = el.input.inputElement;
+      triggerNative.value = '';
+
+      let setSelectionCalled = false;
+      const origSetSelectionRange = triggerNative.setSelectionRange.bind(triggerNative);
+      triggerNative.setSelectionRange = (...args) => {
+        setSelectionCalled = true;
+        return origSetSelectionRange(...args);
+      };
+
+      el.setInputFocus();
+
+      expect(setSelectionCalled, 'setSelectionRange should not be called on an empty input').to.be.false;
+
+      triggerNative.setSelectionRange = origSetSelectionRange;
+      delete el.dropdown.isBibFullscreen;
+      delete el.input.componentHasFocus;
     });
 
     it('updateMenuShapeSize returns early when menu is not set', async () => {

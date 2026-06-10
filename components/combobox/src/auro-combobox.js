@@ -875,6 +875,14 @@ export class AuroCombobox extends AuroElement {
         // keyboard navigation continues from the correct place in the page
         if (this.dropdown.isBibFullscreen) {
           restoreTriggerAfterClose(this.dropdown, this.input);
+
+          // After the rAF inside restoreTriggerAfterClose() refocuses the
+          // trigger, park the caret at end-of-text. Without this, the trigger
+          // shows the new value (e.g. "Peaches") but its caret sits at [0, 0]
+          // because nothing wrote to the native input between close and focus.
+          doubleRaf(() => {
+            this.setInputFocus();
+          });
         }
       }
 
@@ -914,6 +922,16 @@ export class AuroCombobox extends AuroElement {
           doubleRaf(() => {
             this.setInputFocus();
             this._inFullscreenTransition = false;
+          });
+        } else {
+          // Desktop popover-open: restore the trigger caret to end-of-text.
+          // Clicking the trigger lands on auro-input's floating <label for="…">
+          // overlay; Chrome resets the native input's selection to [0, 0] on
+          // label-focus before any JS runs. setInputFocus()'s non-fullscreen
+          // branch parks the caret at end. doubleRaf lets the dropdown layout
+          // settle first, matching the fullscreen branch timing.
+          doubleRaf(() => {
+            this.setInputFocus();
           });
         }
       }
@@ -1019,13 +1037,24 @@ export class AuroCombobox extends AuroElement {
         const len = nativeInput.value.length;
         nativeInput.setSelectionRange(len, len);
       }
-    } else if (!this.input.componentHasFocus) {
-      const focusedEl = this.querySelector(":focus");
-      this.input.focus();
-      // current focus is on a menuoption, after clicking on it.
-      if (this.persistInput && focusedEl && (focusedEl.tagName.toLowerCase() === 'auro-menuoption' || focusedEl.hasAttribute('auro-menuoption'))) {
-        this.setClearBtnFocus();
-        this.validate(true);
+    } else {
+      // Safety net for the strategy-change setTimeout: a viewport-crossing
+      // fullscreen→floating switch can close the dialog and leave focus on
+      // body. Every other Branch 2 callsite already has focus on the input
+      // via the focusin → this.focus() redirect (L1448-1452), so this is a
+      // no-op in the common case.
+      if (!this.input.componentHasFocus) {
+        this.input.focus();
+      }
+
+      // Park the trigger native input's caret at end-of-text every time the
+      // popover opens. Chrome focuses the native via the floating <label for="…">
+      // overlay on click and resets selection to [0, 0]; no JS fires between
+      // mousedown and selectionchange, so we restore the caret here.
+      const triggerNativeInput = this.input.inputElement;
+      if (triggerNativeInput && triggerNativeInput.value) {
+        const len = triggerNativeInput.value.length;
+        triggerNativeInput.setSelectionRange(len, len);
       }
     }
   }
