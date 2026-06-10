@@ -875,6 +875,14 @@ export class AuroCombobox extends AuroElement {
         // keyboard navigation continues from the correct place in the page
         if (this.dropdown.isBibFullscreen) {
           restoreTriggerAfterClose(this.dropdown, this.input);
+
+          // After the rAF inside restoreTriggerAfterClose() refocuses the
+          // trigger, park the caret at end-of-text. Without this, the trigger
+          // shows the new value (e.g. "Peaches") but its caret sits at [0, 0]
+          // because nothing wrote to the native input between close and focus.
+          doubleRaf(() => {
+            this.setInputFocus();
+          });
         }
       }
 
@@ -914,6 +922,16 @@ export class AuroCombobox extends AuroElement {
           doubleRaf(() => {
             this.setInputFocus();
             this._inFullscreenTransition = false;
+          });
+        } else {
+          // Desktop popover-open: restore the trigger caret to end-of-text.
+          // Clicking the trigger lands on auro-input's floating <label for="…">
+          // overlay; Chrome resets the native input's selection to [0, 0] on
+          // label-focus before any JS runs. setInputFocus()'s non-fullscreen
+          // branch parks the caret at end. doubleRaf lets the dropdown layout
+          // settle first, matching the fullscreen branch timing.
+          doubleRaf(() => {
+            this.setInputFocus();
           });
         }
       }
