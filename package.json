@@ -75,6 +75,7 @@
     "test:watch": "turbo run test:watch",
     "test:wtr": "turbo run test --concurrency=3 --continue",
     "test:wtr:force": "npm run test:wtr -- --force",
+    "test:dist": "node ./test/check-bundled-imports.mjs",
     "update-stories": "node ./packages/utils/update-stories.js",
     "test:global": "wtr --config \"./packages/config/src/web-test-runner.config-global.mjs\" --coverage --port 7725",
     "test:global:watch": "wtr --config \"./packages/config/src/web-test-runner.config-global.mjs\" --watch --port 7725"
@@ -160,6 +161,7 @@
     "core-js": "^3.49.0",
     "cross-env": "^10.1.0",
     "date-fns": "^4.1.0",
+    "es-module-lexer": "^1.7.0",
     "eslint": "^10.2.1",
     "eslint-plugin-jsdoc": "^62.9.0",
     "eslint-plugin-storybook": "^10.3.5",

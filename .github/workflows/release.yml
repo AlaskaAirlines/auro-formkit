@@ -13,7 +13,7 @@ jobs:
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     with:
-      additional-build-command: 'npx playwright install chromium'
+      additional-build-command: 'npx playwright install chromium && npm run test:dist'
       cache-dirs: |
         ./components/**/dist
         ./components/**/demo
