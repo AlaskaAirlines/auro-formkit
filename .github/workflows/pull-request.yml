@@ -13,7 +13,7 @@ jobs:
     with:
       demo-dir: './auro-formkit-demo'
       demo-build-command: 'npm run local-demo'
-      additional-build-command: 'npx playwright install chromium'
+      additional-build-command: 'npx playwright install chromium && npm run test:dist'
       cache-dirs: |
         ./components/**/dist
         ./components/**/demo
