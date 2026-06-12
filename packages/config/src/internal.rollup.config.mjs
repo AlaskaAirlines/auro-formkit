@@ -23,7 +23,7 @@ const createConfig = (input, output) => ({
         'lit-element',
         'lit-html'
       ],
-      preferBuiltins: false,
+      preferBuiltins: true,
       moduleDirectories: ['node_modules']
     })
   ]
