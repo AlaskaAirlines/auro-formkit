@@ -15,7 +15,7 @@
 /* stylelint-disable selector-class-pattern, property-no-vendor-prefix, order/properties-order, no-descending-specificity, color-function-notation, max-line-length, declaration-empty-line-before */
 
 $calendar-width: 336px;
-$calendar-height: 336px;
+$calendar-height: 376px; // height is fixed so the UI stays consistent regardless of the number of weeks in the month
 $calendar-padding-desktop: var(--ds-size-200, vac.$ds-size-200);
 
 :host {
@@ -123,7 +123,7 @@ $calendar-padding-desktop: var(--ds-size-200, vac.$ds-size-200);
   transform: translateX(0);
 
   @include vb.auro_grid-breakpoint--sm {
-    height: $calendar-height; // height is fixed to always leave room for months spanning 6 rows
+    height: $calendar-height; // height is fixed so the UI stays consistent regardless of the number of weeks in the month
   }
 }
 
