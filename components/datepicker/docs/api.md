@@ -106,6 +106,8 @@ The `auro-datepicker` component provides users with a way to select a date or da
 | `fromLabel`                | Defines the label content for the first input.   |
 | `helpText`                 | Defines the content of the helpText.             |
 | `label`                    | Defines the label content for the entire datepicker when `layout="snowflake"`. |
+| `optionalFromLabel`        | Overrides the "(optional)" text rendered next to the first input's label when the datepicker is not `required`. |
+| `optionalToLabel`          | Overrides the "(optional)" text rendered next to the second input's label when `range` is set and the datepicker is not `required`. |
 | `popover_YYYY_MM_DD`       | Defines the content to display in the auro-calendar-cell popover for the specified date. |
 | `toLabel`                  | Defines the label content for the second input when the `range` attribute is used. |
 

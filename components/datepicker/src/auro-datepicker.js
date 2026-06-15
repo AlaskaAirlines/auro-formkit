@@ -68,6 +68,8 @@ import { datepickerKeyboardStrategy } from './datepickerKeyboardStrategy.js';
  * @slot label - Defines the label content for the entire datepicker when `layout="snowflake"`.
  * @slot toLabel - Defines the label content for the second input when the `range` attribute is used.
  * @slot fromLabel - Defines the label content for the first input.
+ * @slot optionalFromLabel - Overrides the "(optional)" text rendered next to the first input's label when the datepicker is not `required`.
+ * @slot optionalToLabel - Overrides the "(optional)" text rendered next to the second input's label when `range` is set and the datepicker is not `required`.
  * @slot date_YYYY_MM_DD - Defines the content to display in the auro-calendar-cell for the specified date. The content text is colored using the success state token when the `highlight` attribute is applied to the slot.
  * @slot popover_YYYY_MM_DD - Defines the content to display in the auro-calendar-cell popover for the specified date.
  * @csspart dropdown - Use for customizing the style of the dropdown.
@@ -2060,6 +2062,7 @@ export class AuroDatePicker extends AuroElement {
       }
           <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
           <span slot="label"><slot name="fromLabel"></slot></span>
+          <span slot="optionalLabel"><slot name="optionalFromLabel"> (optional)</slot></span>
         </${this.inputTag}>
       </div>
 
@@ -2104,6 +2107,7 @@ export class AuroDatePicker extends AuroElement {
         }
             <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
             <span slot="label"><slot name="toLabel"></slot></span>
+            <span slot="optionalLabel"><slot name="optionalToLabel"> (optional)</slot></span>
           </${this.inputTag}>
         </div>
       ` : undefined}
