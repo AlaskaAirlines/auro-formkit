@@ -43,3 +43,15 @@
 <!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/locale.html) -->
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
+<auro-header level="4" id="localizationSnowflake">Layout Interaction</auro-header>
+<p>Locale-driven formatting applies across both the <code>classic</code> and <code>snowflake</code> layouts. In the snowflake layout, the localized value renders via <code>Intl.DateTimeFormat</code> using the active <code>locale</code>, so the visible date adapts automatically.</p>
+<p>The localized value is a compact summary — by design it uses a fixed <code>{ month: 'short', day: '2-digit' }</code> shape and does <strong>not</strong> reflect the <code>format</code> attribute. <code>format</code> governs the input mask only. To render it differently (for example, to include the year or honor a custom format), project content into the <code>displayValue</code> slot.</p>
+<div class="exampleWrapper--ondark">
+<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/snowflake-locale.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</div>
+<auro-accordion alignRight>
+<span slot="trigger">See code</span>
+<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/snowflake-locale.html) -->
+<!-- AURO-GENERATED-CONTENT:END -->
+</auro-accordion>
