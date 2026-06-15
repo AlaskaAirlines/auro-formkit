@@ -1,5 +1,5 @@
 <div data-locale="de-DE">
-  <auro-header level="4" >de-DE Example</auro-header>
+  <p class="body-sm"><strong>de-DE</strong></p>
   <auro-datepicker
     locale="de-DE"
     range
@@ -11,11 +11,15 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
-    <span slot="fromLabel">Deutsches Datum</span>
+    <span slot="fromLabel">Abreisedatum</span>
+    <span slot="toLabel">Rückkehrdatum</span>
     <span slot="helpText">Hilfetext</span>
     <span slot="optionalLabel">(freiwillig)</span>
+    <span slot="bib.fullscreen.headline">Datum auswählen</span>
+    <span slot="bib.fullscreen.fromLabel">Abreisedatum</span>
+    <span slot="bib.fullscreen.toLabel">Rückkehrdatum</span>
   </auro-datepicker>
-  <auro-header level="4" >zh-CN Example</auro-header>
+  <p class="body-sm"><strong>zh-CN</strong></p>
   <auro-datepicker
     locale="zh-CN"
     range
@@ -27,11 +31,15 @@
     navLabelPrevMonth="上个月"
     navLabelNextMonth="下个月"
     calendarGridLabel="本月的日历天数">
-    <span slot="fromLabel">中文日期</span>
+    <span slot="fromLabel">出发日期</span>
+    <span slot="toLabel">返回日期</span>
     <span slot="helpText">帮助文本</span>
     <span slot="optionalLabel">（可选）</span>
+    <span slot="bib.fullscreen.headline">选择日期</span>
+    <span slot="bib.fullscreen.fromLabel">出发日期</span>
+    <span slot="bib.fullscreen.toLabel">返回日期</span>
   </auro-datepicker>
-  <auro-header level="4">Inherited de-DE date-locale Example</auro-header>
+  <p class="body-sm"><strong>Inherited de-DE (via <code>data-locale</code>)</strong></p>
   <auro-datepicker
     range
     rangeLabelStart="Startdatum"
@@ -42,11 +50,15 @@
     navLabelPrevMonth="Vorheriger Monat"
     navLabelNextMonth="Nächster Monat"
     calendarGridLabel="Kalendertage des Monats">
-    <span slot="fromLabel">Nächstes `data-locale`-Attributformat (`de-DE` in diesem Fall)</span>
+    <span slot="fromLabel">Abreisedatum (geerbt aus `data-locale="de-DE"`)</span>
+    <span slot="toLabel">Rückkehrdatum</span>
     <span slot="helpText">Hilfetext</span>
     <span slot="optionalLabel">(freiwillig)</span>
+    <span slot="bib.fullscreen.headline">Datum auswählen</span>
+    <span slot="bib.fullscreen.fromLabel">Abreisedatum</span>
+    <span slot="bib.fullscreen.toLabel">Rückkehrdatum</span>
   </auro-datepicker>
-  <auro-header level="4" >ja-JP with `mm/dd/yyyy` format Example</auro-header>
+  <p class="body-sm"><strong>ja-JP with explicit <code>format="mm/dd/yyyy"</code></strong></p>
   <auro-datepicker
     locale="ja-JP"
     format="mm/dd/yyyy"
@@ -59,8 +71,12 @@
     navLabelPrevMonth="前の月"
     navLabelNextMonth="次の月"
     calendarGridLabel="カレンダーの日付">
-    <span slot="fromLabel">明示的な mm/dd/yyyy 形式の ja-JP ロケール</span>
+    <span slot="fromLabel">出発日</span>
+    <span slot="toLabel">帰国日</span>
     <span slot="helpText">ヘルプテキスト</span>
     <span slot="optionalLabel">（任意）</span>
+    <span slot="bib.fullscreen.headline">日付を選択</span>
+    <span slot="bib.fullscreen.fromLabel">出発日</span>
+    <span slot="bib.fullscreen.toLabel">帰国日</span>
   </auro-datepicker>
 </div>
