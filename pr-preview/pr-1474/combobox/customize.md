@@ -546,9 +546,11 @@
 <auro-combobox class="css-parts-demo">
 <span slot="label">CSS Parts Example</span>
 <span slot="helpText">This combobox has custom styles applied via CSS Shadow Parts.</span>
+<auro-menu>
 <auro-menuoption value="one">Option One</auro-menuoption>
 <auro-menuoption value="two">Option Two</auro-menuoption>
 <auro-menuoption value="three">Option Three</auro-menuoption>
+</auro-menu>
 </auro-combobox>
 <!-- AURO-GENERATED-CONTENT:END -->
 </div>
@@ -573,9 +575,11 @@
 &lt;auro-combobox class="css-parts-demo"&gt;
   &lt;span slot="label"&gt;CSS Parts Example&lt;/span&gt;
   &lt;span slot="helpText"&gt;This combobox has custom styles applied via CSS Shadow Parts.&lt;/span&gt;
-  &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;auro-menu&gt;
+    &lt;auro-menuoption value="one"&gt;Option One&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="two"&gt;Option Two&lt;/auro-menuoption&gt;
+    &lt;auro-menuoption value="three"&gt;Option Three&lt;/auro-menuoption&gt;
+  &lt;/auro-menu&gt;
 &lt;/auro-combobox&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
