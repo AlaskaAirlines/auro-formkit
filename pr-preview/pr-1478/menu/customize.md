@@ -18,7 +18,6 @@
 <auro-anchorlink fluid href="#presetValue" class="level2 body-xs">Preset Value</auro-anchorlink>
 <auro-anchorlink fluid href="#presetValueMultiselect" class="level2 body-xs">Preset Value (Multi)</auro-anchorlink>
 <auro-anchorlink fluid href="#preselect" class="level2 body-xs">Pre-Selected</auro-anchorlink>
-<auro-anchorlink fluid href="#allowDeselect" class="level2 body-xs">Allow Deselect</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -601,33 +600,6 @@
   &lt;auro-menuoption value="share" disabled&gt;Share&lt;/auro-menuoption&gt;
   &lt;hr&gt;
   &lt;auro-menuoption value="print"&gt;Print&lt;/auro-menuoption&gt;
-&lt;/auro-menu&gt;</code></pre>
-<!-- AURO-GENERATED-CONTENT:END -->
-</auro-accordion>
-<auro-header level="3" id="allowDeselect">Allow Deselect</auro-header>
-<p>Use the <code>allowDeselect</code> attribute to allow users to click a selected option again to deselect it in single-select mode. In multi-select mode, deselection is always available regardless of this attribute.</p>
-<div class="exampleWrapper">
-<!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/allow-deselect.html) -->
-<!-- The below content is automatically added from ./../apiExamples/allow-deselect.html -->
-<auro-menu allowDeselect>
-<auro-menuoption value="stops">Stops</auro-menuoption>
-<auro-menuoption value="price">Price</auro-menuoption>
-<auro-menuoption value="duration">Duration</auro-menuoption>
-<auro-menuoption value="departure">Departure</auro-menuoption>
-<auro-menuoption value="arrival">Arrival</auro-menuoption>
-</auro-menu>
-<!-- AURO-GENERATED-CONTENT:END -->
-</div>
-<auro-accordion alignRight>
-<span slot="trigger">See code</span>
-<!-- AURO-GENERATED-CONTENT:START (CODE:src=./../apiExamples/allow-deselect.html) -->
-<!-- The below code snippet is automatically added from ./../apiExamples/allow-deselect.html -->
-<pre class="language-html"><code class="language-html">&lt;auro-menu allowDeselect&gt;
-  &lt;auro-menuoption value="stops"&gt;Stops&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="price"&gt;Price&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="duration"&gt;Duration&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="departure"&gt;Departure&lt;/auro-menuoption&gt;
-  &lt;auro-menuoption value="arrival"&gt;Arrival&lt;/auro-menuoption&gt;
 &lt;/auro-menu&gt;</code></pre>
 <!-- AURO-GENERATED-CONTENT:END -->
 </auro-accordion>
