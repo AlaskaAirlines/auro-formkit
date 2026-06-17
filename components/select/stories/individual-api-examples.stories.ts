@@ -121,7 +121,6 @@ export const WithIcons = stories.WithIcons;
 export const WithSubmenus = stories.WithSubmenus;
 export const DisplayValue = stories.DisplayValue;
 export const DisabledOptions = stories.DisabledOptions;
-export const DuplicateValues = stories.DuplicateValues;
 export const NoValidate = stories.NoValidate;
 export const Size = stories.Size;
 export const Placement = stories.Placement;

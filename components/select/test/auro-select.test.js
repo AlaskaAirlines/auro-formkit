@@ -510,6 +510,30 @@ function runTest(mobileView) {
           await expect(el.optionSelected.length).to.equal(0);
         });
 
+        it('should not leak external mutation of select.optionSelected back into menu state', async () => {
+          // Regression: select.optionSelected must be a cloned array in multiselect
+          // mode so consumers mutating it cannot reach back into menu.optionSelected
+          // through a shared reference.
+          const el = await multiSelectFixture();
+          const menu = el.querySelector('auro-menu');
+
+          el.value = '["Apples", "Bananas"]';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          expect(Array.isArray(el.optionSelected)).to.be.true;
+          expect(el.optionSelected.length).to.equal(2);
+          expect(menu.optionSelected.length).to.equal(2);
+          expect(el.optionSelected).to.not.equal(menu.optionSelected);
+
+          // Mutate the consumer-visible array.
+          el.optionSelected.push('intruder');
+          el.optionSelected.pop();
+          el.optionSelected.splice(0, 1);
+
+          expect(menu.optionSelected.length, 'menu state must be insulated from external mutation').to.equal(2);
+        });
+
       });
 
       describe('name', () => {
@@ -966,6 +990,26 @@ function runTest(mobileView) {
 
           await expect(el.value).to.eql('Apples');
           await expect(el.optionSelected).to.equal(selectedOption);
+        });
+
+        it('should clear the trigger label when value changes to a non-matching string', async () => {
+          // Regression: a runtime value change with no matching option must not
+          // leave the previous selection's label rendered in the trigger.
+          const el = await defaultFixture();
+          const menu = el.querySelector('auro-menu');
+
+          el.value = 'Apples';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          const triggerValueEl = el.shadowRoot.querySelector('#value');
+          expect(triggerValueEl.textContent.trim(), 'precondition: trigger shows prior selection').to.equal('Apples');
+
+          el.value = 'non-existent-value';
+          await elementUpdated(el);
+          await elementUpdated(menu);
+
+          expect(triggerValueEl.textContent.trim()).to.equal('');
         });
 
         it('should apply value from host attribute on initial render', async () => {
@@ -2935,19 +2979,12 @@ function runTest(mobileView) {
           await expect(selectedOption.selected).to.be.true;
 
           const valueBefore = el.value;
-          let deselectPreventedEvent = null;
-
-          menu.addEventListener('auroMenu-deselectPrevented', (event) => {
-            deselectPreventedEvent = event;
-          }, { once: true });
 
           el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
           await elementUpdated(menu);
+          await new Promise((resolve) => setTimeout(resolve, 0));
           await elementUpdated(el);
-          await waitUntil(() => !!deselectPreventedEvent);
 
-          await expect(deselectPreventedEvent).to.exist;
-          await expect(deselectPreventedEvent.detail.values[0]).to.equal(selectedOption);
           await expect(selectedOption.selected).to.be.true;
           await expect(el.value).to.equal(valueBefore);
           await expect(dropdown.isPopoverVisible).to.be.false;

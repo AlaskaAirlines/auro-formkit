@@ -20,6 +20,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
+import { getEnabledOptions } from './selectUtils.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -575,7 +576,7 @@ export class AuroSelect extends AuroElement {
             this.menu.updateActiveOption(this.optionSelected[0]);
           } else {
             // If no activeOption has yet to be set, then make the first enabled option active by default
-            const firstActive = this.menu.menuService.menuOptions.find((option) => !option.disabled);
+            const [firstActive] = getEnabledOptions(this.menu);
             this.menu.updateActiveOption(firstActive);
           }
         }
@@ -799,12 +800,23 @@ export class AuroSelect extends AuroElement {
       this.menu.multiSelect = this.multiSelect;
     }
 
+    // Menu's items are populated by initItems() during its firstUpdated/slotchange.
+    // Since the parent select's firstUpdated runs before the child menu's, call initItems()
+    // here so renderNativeSelect can render the native <option> list on first paint.
+    if (typeof this.menu.initItems === 'function') {
+      this.menu.initItems();
+    }
     this.options = this.menu.options;
     this.updateOptionPositions();
     this.menu.addEventListener("auroMenu-loadingChange", (event) => this.handleMenuLoadingChange(event));
 
-    this.menu.addEventListener("auroMenu-deselectPrevented", () => {
-      this.hideBib();
+    this.menu.addEventListener("auroMenu-selectValueFailure", () => {
+      this.value = undefined;
+      this.optionSelected = this.multiSelect ? [] : undefined;
+      // The trigger label is rendered imperatively into #value, so a property
+      // change alone won't clear it. Refresh so stale text doesn't linger when
+      // a runtime value change fails to match any option.
+      this.updateDisplayedValue();
     });
 
     this.menu.addEventListener('auroMenu-activatedOption', (evt) => {
@@ -826,16 +838,20 @@ export class AuroSelect extends AuroElement {
       }
     });
 
-    this.menu.addEventListener('auroMenu-selectedOption', (event) => {
+    this.menu.addEventListener('auroMenu-selectedOption', () => {
 
       // Update the displayed value
       this.updateDisplayedValue();
 
-      const options = event.detail.options || [];
+      this.value = this.menu.value;
 
-      this.value = event.detail.stringValue;
-
-      this.optionSelected = this.multiSelect ? options : options[0];
+      // Clone the multiselect array so external mutation of select.optionSelected
+      // can't reach back into menu's internal state through a shared reference.
+      let nextSelected = this.menu.optionSelected;
+      if (this.multiSelect) {
+        nextSelected = Array.isArray(nextSelected) ? [...nextSelected] : [];
+      }
+      this.optionSelected = nextSelected;
 
       if (this.dropdown.isPopoverVisible && !this.multiSelect) {
         this.dropdown.hide();
@@ -844,7 +860,7 @@ export class AuroSelect extends AuroElement {
 
       // Announce the selection after the dropdown closes so it isn't
       // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
-      const selectedValue = event.detail.stringValue;
+      const selectedValue = this.menu.currentLabel;
       const announcementDelay = 300;
       setTimeout(() => {
         announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
@@ -1040,7 +1056,7 @@ export class AuroSelect extends AuroElement {
 
   setMenuValue(value) {
     if (!this.menu) return;
-    this.menu.value = value;
+    this.menu.selectByValue(value);
   }
 
   /**

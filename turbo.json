@@ -126,6 +126,13 @@
         "@aurodesignsystem/auro-menu#build"
       ]
     },
+    "@aurodesignsystem/auro-counter#build": {
+      "dependsOn": [
+        "@aurodesignsystem/auro-bibtemplate#build",
+        "@aurodesignsystem/auro-dropdown#build",
+        "@aurodesignsystem/auro-helptext#build"
+      ]
+    },
     "test:framework": {
       "dependsOn": ["^build"],
       "cache": false,
