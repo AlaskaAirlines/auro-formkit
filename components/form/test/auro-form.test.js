@@ -232,6 +232,27 @@ function runFullTest(mobileView) {
       await expect(el._elements).to.have.length(0);
       await expect(el.formState).to.not.have.keys('testInput');
     });
+
+    // initializeState() prunes _initialValues of fields that no longer exist
+    // in formState — otherwise apps that conditionally render fields would
+    // leak captured initials indefinitely as field sets churn.
+    it('prunes _initialValues when a tracked field is removed from the DOM', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="willBeRemoved" value="initial"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+
+      expect(el._initialValues).to.have.property('willBeRemoved');
+
+      const inputEl = el.querySelector('auro-input[name="willBeRemoved"]');
+      el.removeChild(inputEl);
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      expect(el._initialValues).to.not.have.property('willBeRemoved');
+    });
   });
 
   describe('when auro-buttons are present', () => {
@@ -1112,6 +1133,78 @@ function runFullTest(mobileView) {
       const [resetButton] = el.resetElements;
       expect(resetButton.hasAttribute('disabled')).to.be.false;
     });
+
+    // Slot-moves and framework reconciliation cycle the form through
+    // disconnect/reconnect on the same element instance. The captured
+    // baseline (`_initialValues`) must survive that cycle — otherwise the
+    // next initializeState would re-baseline against the user's current
+    // values and silently flip the form back to its initial state.
+    it('preserves _initialValues across a disconnect/reconnect cycle', async () => {
+      const el = document.createElement('auro-form');
+      const inputEl = document.createElement('auro-input');
+      inputEl.setAttribute('name', 'testInput');
+      inputEl.setAttribute('value', 'captured');
+      el.appendChild(inputEl);
+      document.body.appendChild(el);
+      await elementUpdated(el);
+
+      expect(el._initialValues).to.have.property('testInput');
+      const beforeDisconnect = { ...el._initialValues };
+
+      document.body.removeChild(el);
+      document.body.appendChild(el);
+
+      // The bug being pinned: `disconnectedCallback` previously wiped
+      // _initialValues on disconnect, which would erase the captured
+      // baseline before any reconnect-driven re-init could see it.
+      expect(el._initialValues).to.deep.equal(beforeDisconnect);
+
+      // Cleanup
+      document.body.removeChild(el);
+    });
+
+    // When the `name` attribute is removed entirely (rather than renamed),
+    // the rename handler must drop the orphan key explicitly — otherwise
+    // it would leak in _initialValues indefinitely.
+    it('drops _initialValues for a field whose name attribute is removed', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="willLoseName" value="original"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+      expect(el._initialValues).to.have.property('willLoseName');
+
+      const inputEl = el.querySelector('auro-input[name="willLoseName"]');
+      inputEl.removeAttribute('name');
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      expect(el._initialValues).to.not.have.property('willLoseName');
+      expect(el.value).to.not.have.property('willLoseName');
+    });
+
+    // Renaming a field to an existing name is a collision edge case. The
+    // primary contract being pinned here is that no orphan key (the old
+    // pre-rename name) is left in _initialValues afterwards.
+    it('does not leak _initialValues when a rename creates a name collision', async () => {
+      const el = await fixture(html`
+        <auro-form>
+          <auro-input name="a" value="A-value"></auro-input>
+          <auro-input name="b" value="B-value"></auro-input>
+        </auro-form>
+      `);
+      await elementUpdated(el);
+      expect(Object.keys(el._initialValues).sort()).to.deep.equal(['a', 'b']);
+
+      const inputB = el.querySelector('auro-input[name="b"]');
+      inputB.setAttribute('name', 'a');
+      await elementUpdated(el);
+      await el.updateComplete;
+
+      expect(el._initialValues).to.not.have.property('b');
+      expect(Object.keys(el._initialValues)).to.deep.equal(['a']);
+    });
   });
 
   describe('Slots', () => {
@@ -1152,6 +1245,37 @@ function runFullTest(mobileView) {
 
         await expect(el.isInitialState).to.be.true;
       });
+
+      // Regression: `_setInitialState` used to unconditionally write
+      // `resetElement.disabled = false`, which inside reset() caused a
+      // visible flicker — the button briefly switched on before the
+      // deferred `setDisabledStateOnButtons` decided it should be off.
+      // `setDisabledStateOnButtons` is the single source of truth for
+      // button state; `_setInitialState` must not touch buttons.
+      it('does not flicker reset button enablement during reset()', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput"></auro-input>
+            <auro-button type="reset">Reset</auro-button>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        const [resetButton] = el.resetElements;
+
+        // Force the reset button into a disabled sentinel state. If
+        // _setInitialState re-acquires the bad habit of writing
+        // `resetElement.disabled = false`, this sentinel flips and the
+        // assertion below fails.
+        resetButton.disabled = true;
+        await elementUpdated(el);
+        expect(resetButton.hasAttribute('disabled')).to.be.true;
+
+        el._setInitialState();
+        await elementUpdated(el);
+
+        expect(resetButton.hasAttribute('disabled')).to.be.true;
+      });
     });
 
     describe('submit', () => {
@@ -1188,6 +1312,33 @@ function runFullTest(mobileView) {
         await el.submit();
 
         await expect(submitFired).to.be.false;
+      });
+
+      // A form whose every field is disabled has nothing to validate and
+      // nothing to submit — but it should still successfully dispatch the
+      // submit event with an empty payload. Disabled fields are excluded
+      // from constraint validation per the HTML spec, so a `required`
+      // disabled field must not block dispatch.
+      it('handles all-disabled form: empty value, valid validity, submit fires with empty payload', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="testInput" required disabled></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        expect(el.value).to.deep.equal({});
+        expect(el._isFormValid()).to.be.true;
+
+        let submitDetail = null;
+        el.addEventListener('submit', (event) => {
+          submitDetail = event.detail;
+        });
+
+        await el.submit();
+
+        expect(submitDetail).to.not.be.null;
+        expect(submitDetail.value).to.deep.equal({});
       });
     });
 
