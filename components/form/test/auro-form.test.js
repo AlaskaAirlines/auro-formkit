@@ -551,12 +551,14 @@ function runFullTest(mobileView) {
           testInput: {
             value: null,
             validity: null,
-            required: true
+            required: true,
+            disabled: false
           },
           dateExample: {
             value: null,
             validity: null,
-            required: true
+            required: true,
+            disabled: false
           }
         };
 
@@ -586,7 +588,8 @@ function runFullTest(mobileView) {
           testInput: {
             value: "some-preset-value",
             validity: "valid",
-            required: true
+            required: true,
+            disabled: false
           }
         };
 
@@ -614,7 +617,8 @@ function runFullTest(mobileView) {
           testInput: {
             value: "zzz",
             validity: "valid",
-            required: true
+            required: true,
+            disabled: false
           }
         };
 

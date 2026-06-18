@@ -43,7 +43,7 @@
       </section>
       <section>
         <auro-header level="2" id="fieldState">Field State</auro-header>
-        <p>Per the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled">HTML spec</a>, form controls with the <code>disabled</code> attribute are excluded from form submission and are not validated. <code>auro-form</code> mirrors that behavior.</p>
+        <p>Per the <auro-hyperlink href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled" target="_blank">HTML spec</auro-hyperlink>, form controls with the <code>disabled</code> attribute are excluded from form submission and are not validated. <code>auro-form</code> mirrors that behavior.</p>
         <auro-header level="3" id="disabledFields">Disabled Fields</auro-header>
         <p>When a child form element has the <code>disabled</code> attribute:</p>
         <ul>
@@ -51,7 +51,7 @@
           <li>It does not contribute to <code>validity</code> — a disabled <code>required</code> field will not block submission.</li>
           <li>A disabled field carrying its <strong>default</strong> (attribute-declared) value does not taint <code>isInitialState</code> — the form is still in its initial state. However, a field that the user has already edited and then becomes disabled <em>does</em> still count toward the form being non-initial. Disabling a field does not clear its dirty state, matching HTML's <code>dirtyValueFlag</code> semantics.</li>
         </ul>
-        <p>In the example below the Mileage Plan number is preset and disabled. Fill in the remaining required fields and submit the form — the output region below the form will show the contents of the <code>submit</code> event's <code>detail.value</code>. Notice that only <code>firstName</code> and <code>lastName</code> appear; <code>loyaltyNumber</code> is omitted even though the field has a value. See the <a href="#behaviorChangesV6">Behavior changes in v6</a> section below for the full set of migration notes, including the recommended replacement for using <code>disabled</code> to carry values through to submission.</p>
+        <p>In the example below the Mileage Plan number is preset and disabled. Fill in the remaining required fields and submit the form — the output region below the form will show the contents of the <code>submit</code> event's <code>detail.value</code>. Notice that only <code>firstName</code> and <code>lastName</code> appear; <code>loyaltyNumber</code> is omitted even though the field has a value. See the <auro-hyperlink href="#behaviorChangesV6">Behavior changes in v6</auro-hyperlink> section below for the full set of migration notes, including the recommended replacement for using <code>disabled</code> to carry values through to submission.</p>
         <div class="exampleWrapper">
         <!-- AURO-GENERATED-CONTENT:START (FILE:src=./../apiExamples/disabled.html) -->
         <!-- AURO-GENERATED-CONTENT:END -->

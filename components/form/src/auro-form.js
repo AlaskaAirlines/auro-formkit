@@ -1,6 +1,6 @@
-/* eslint-disable no-underscore-dangle, max-lines, object-property-newline */
+/* eslint-disable no-underscore-dangle, max-lines, object-property-newline, dot-location */
 
-// Copyright (c) 2024 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
+// Copyright (c) 2026 Alaska Airlines. All right reserved. Licensed under the Apache-2.0 license
 // See LICENSE in the project root for license information.
 
 // ---------------------------------------------------------------------
@@ -219,18 +219,17 @@ export class AuroForm extends LitElement {
    * See `_isDisabled` for the HTML-spec rationale behind excluding disabled
    * controls from form state.
    *
-   * Performance note: this is called once per `formState` key per read of
-   * `value` / `validity` / `isInitialState`, producing O(n²) work where n is
-   * the number of tracked fields. Acceptable for typical forms (< ~50 fields).
-   * For larger forms, a future refactor should store disabled state on each
-   * `formState` entry and update it from the attribute observer instead.
+   * Reads a cached flag on `formState[name]` populated by `_addElementToState`
+   * at registration and refreshed by `_handleAttributeMutations` whenever the
+   * element's `disabled` attribute toggles. The cache is fed by the same
+   * `hasAttribute('disabled')` read as `_isDisabled`, so the "future form-element
+   * type without attribute reflection" caveat documented there applies here too.
    * @param {string} name - The `name` attribute used to register the element.
    * @returns {boolean}
    * @private
    */
   _isNameDisabled(name) {
-    const element = this._elements.find((el) => el.getAttribute('name') === name);
-    return this._isDisabled(element);
+    return Boolean(this.formState[name]?.disabled);
   }
 
   /**
@@ -316,9 +315,20 @@ export class AuroForm extends LitElement {
       }
 
       const formKey = this.formState[key];
-      // these are NOT extra parens
-      // eslint-disable-next-line no-extra-parens
-      return (formKey.validity !== 'valid' && formKey.required) || (formKey.validity !== 'valid' && formKey.value !== null);
+      // `null` validity means "not yet validated" — auro-input doesn't
+      // re-validate on every keystroke, so validity stays `null` between
+      // input events until blur. Treating `null` as invalid disables Submit
+      // the moment a user types into any field, which is the wrong UX.
+      // We treat a field as invalid in two cases:
+      //   1. validity is known-bad (non-null, non-'valid')
+      //   2. it's `required` and structurally empty — `valueMissing` is
+      //      certain even without a validation pass.
+      // `submit()` calls `validate(true)` on every enabled field before
+      // reading `_isFormValid()`, so any not-yet-validated field that turns
+      // out to fail another constraint still blocks dispatch.
+      const knownInvalid = formKey.validity !== null && formKey.validity !== 'valid';
+      const requiredAndEmpty = formKey.required && this._normalizeEmpty(formKey.value) === null;
+      return knownInvalid || requiredAndEmpty;
     });
   }
 
@@ -343,10 +353,32 @@ export class AuroForm extends LitElement {
       if (this._isNameDisabled(key)) {
         return false;
       }
-      const current = this.formState[key].value;
-      const initial = this._initialValues[key] ?? null;
+      const current = this._normalizeEmpty(this.formState[key].value);
+      const initial = this._normalizeEmpty(this._initialValues[key]);
       return current !== null || initial !== null;
     });
+  }
+
+  /**
+   * Collapse empty representations to a single canonical `null`.
+   *
+   * `_addElementToState` captures `null` for a field that mounts without a
+   * `value` attribute (`element.value || element.getAttribute('value')` is
+   * falsy → resolves to `null`), but `sharedInputListener` later stores the
+   * raw `event.target.value` — which is `''` for a user-cleared text input.
+   * Without this normalization, backspacing back to empty would taint the
+   * form forever (`'' !== null`) and Reset would stay enabled with nothing
+   * to actually reset.
+   *
+   * Only `''` and `undefined` collapse to `null`. Genuine values — including
+   * `0`, `false`, and non-empty strings — pass through unchanged so number
+   * and boolean fields still compare correctly.
+   * @param {*} value - Value to normalize.
+   * @returns {*}
+   * @private
+   */
+  _normalizeEmpty(value) {
+    return value === '' || value === undefined ? null : value;
   }
 
   /**
@@ -395,18 +427,22 @@ export class AuroForm extends LitElement {
    */
   _setInitialState() {
     const anyTainted = Object.keys(this.formState).some((key) => {
-      const initialValue = this._initialValues[key] ?? null;
-      const currentValue = this.formState[key].value;
+      // Normalize empty values so a freshly-captured `null` (no `value`
+      // attribute at mount) and a user-cleared `''` (input emptied via
+      // backspace) compare equal. Without this, backspacing back to an
+      // empty field leaves the form permanently tainted.
+      const initialValue = this._normalizeEmpty(this._initialValues[key]);
+      const currentValue = this._normalizeEmpty(this.formState[key].value);
       const fieldValidity = this.formState[key].validity;
       // eslint-disable-next-line no-extra-parens
       return currentValue !== initialValue || (fieldValidity !== null && fieldValidity !== 'valid');
     });
 
     this._isInitialState = !anyTainted;
-
-    this._resetElements.forEach((resetElement) => {
-      resetElement.disabled = false;
-    });
+    // Button state is owned by setDisabledStateOnButtons (called from updated()
+    // and reset()). Touching resetElement.disabled here causes a visible flicker
+    // in reset(), where the final setDisabledStateOnButtons is deferred behind
+    // an extra updateComplete.
   }
 
   /**
@@ -482,6 +518,7 @@ export class AuroForm extends LitElement {
       value: element.value || element.getAttribute('value'),
       validity: element.validity || null,
       required: element.hasAttribute('required'),
+      disabled: element.hasAttribute('disabled'),
     };
 
     // Capture the initial (default) value once per name. Use `in` rather
@@ -528,6 +565,15 @@ export class AuroForm extends LitElement {
         this._resetElements.push(element);
       }
     });
+
+    // Drop captured initial values for fields that no longer exist in the form.
+    // Rename migration in _handleAttributeMutations has already re-keyed surviving
+    // fields, so anything left here is a field that was removed from the DOM.
+    for (const key of Object.keys(this._initialValues)) {
+      if (!(key in this.formState)) {
+        delete this._initialValues[key];
+      }
+    }
 
     this.dispatchEvent(new Event('change', {
       bubbles: true,
@@ -657,7 +703,14 @@ export class AuroForm extends LitElement {
       this._addElementToState(event.target);
     }
 
-    this.formState[targetName].validity = event.detail.validity;
+    // `auroFormElement-validated` can fire with `detail.validity === undefined`
+    // when auro-input's updated() lifecycle invokes `validate()` mid-edit but
+    // the validation framework's gating conditions (not focused, touched-or-
+    // has-value) aren't met — the dispatch still fires, just with the current
+    // (untouched) validity. Normalize to `null` so the rest of the form treats
+    // "no known status" identically whether it came from `_addElementToState`
+    // at mount or from this passthrough mid-typing.
+    this.formState[targetName].validity = event.detail.validity ?? null;
     this._calculateValidity();
     this.requestUpdate('formState');
   }
@@ -736,7 +789,16 @@ export class AuroForm extends LitElement {
       renameMutations.forEach((mutation) => {
         const oldName = mutation.oldValue;
         const newName = mutation.target.getAttribute('name');
-        if (oldName && newName && oldName !== newName && oldName in this._initialValues) {
+        if (!oldName || oldName === newName) {
+          return;
+        }
+        if (newName === null) {
+          // `name` attribute removed — field will fall out of formState on re-init.
+          // Drop its captured initial so it doesn't leak in _initialValues.
+          delete this._initialValues[oldName];
+          return;
+        }
+        if (oldName in this._initialValues) {
           this._initialValues[newName] = this._initialValues[oldName];
           delete this._initialValues[oldName];
         }
@@ -752,6 +814,18 @@ export class AuroForm extends LitElement {
       this._attachEventListeners();
       return;
     }
+
+    // Refresh the cached `disabled` flag on each affected formState entry
+    // before the re-render, so getters that read `_isNameDisabled` see the
+    // current attribute state in the same tick.
+    relevant
+      .filter((mutation) => mutation.attributeName === 'disabled')
+      .forEach((mutation) => {
+        const name = mutation.target.getAttribute('name');
+        if (name && this.formState[name]) {
+          this.formState[name].disabled = mutation.target.hasAttribute('disabled');
+        }
+      });
 
     this.requestUpdate('formState');
     this.setDisabledStateOnButtons();
@@ -791,7 +865,10 @@ export class AuroForm extends LitElement {
     this._attributeObserver?.disconnect();
     this.mutationObservers.forEach((observer) => observer.disconnect());
     this.mutationObservers = [];
-    this._initialValues = {};
+    // Intentionally do NOT clear _initialValues here. Slot-moves trigger a
+    // disconnect/reconnect cycle; clearing would cause the next initializeState
+    // to capture the user's edited values as the new "initial" and silently
+    // flip the form back to its initial state.
 
     super.disconnectedCallback();
   }
