@@ -20,7 +20,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
 
 import { announceToScreenReader, doubleRaf, guardTouchPassthrough, restoreTriggerAfterClose, applyKeyboardStrategy } from '@aurodesignsystem/utils';
 import { selectKeyboardStrategy } from './selectKeyboardStrategy.js';
-import { getEnabledOptions } from './selectUtils.js';
+import { getActiveOptions, getEnabledOptions } from './selectUtils.js';
 
 import { AuroDependencyVersioning } from '@aurodesignsystem/auro-library/scripts/runtime/dependencyTagVersioning.mjs';
 
@@ -962,10 +962,10 @@ export class AuroSelect extends AuroElement {
 
     // No selectable options to match against — clear any stale buffer/timer so
     // Space stays a bib toggle and the next keystroke after fresh options load
-    // starts cleanly. Uses auro-menuoption's `isActive` getter, which excludes
-    // disabled, hidden, and static options (e.g. `static nomatch` placeholders).
-    // Checked BEFORE mutating the buffer.
-    const options = (this.menu && this.menu.options ? this.menu.options : []).filter((option) => option.isActive);
+    // starts cleanly. `getActiveOptions` excludes disabled, hidden, and static
+    // options (e.g. `static nomatch` placeholders). Checked BEFORE mutating
+    // the buffer.
+    const options = getActiveOptions(this.menu);
     if (!options.length) {
       this._clearTypeaheadBuffer();
       return;
