@@ -12,3 +12,18 @@
 export function getEnabledOptions(menu) {
   return (menu?.options || []).filter((option) => !option.disabled);
 }
+
+/**
+ * Returns the active (selectable + visible) options for type-ahead navigation.
+ *
+ * Uses auro-menuoption's `isActive` getter, which excludes disabled, hidden,
+ * and static options (e.g. `static nomatch` placeholders) so the type-ahead
+ * cursor never lands on a non-actionable item. Same empty-safe handling as
+ * `getEnabledOptions`.
+ *
+ * @param {HTMLElement | null | undefined} menu - The auro-menu element.
+ * @returns {Array<HTMLElement>} Active options, empty array when none.
+ */
+export function getActiveOptions(menu) {
+  return (menu?.options || []).filter((option) => option.isActive);
+}
