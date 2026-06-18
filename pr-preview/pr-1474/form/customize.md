@@ -11,6 +11,7 @@
 <auro-anchorlink fluid href="#disabledFields" class="level2 body-xs">Disabled Fields</auro-anchorlink>
 <auro-anchorlink fluid href="#disableAfterEdit" class="level2 body-xs">Disabling After User Edits</auro-anchorlink>
 <auro-anchorlink fluid href="#behaviorChangesV6" class="level2 body-xs">Behavior Changes in v6</auro-anchorlink>
+<auro-anchorlink fluid href="#runtimeMutations" class="level2 body-xs">Runtime DOM Mutations</auro-anchorlink>
 </auro-nav>
 </nav>
 <div class="mainContent">
@@ -382,6 +383,14 @@
 <li><strong><code>isInitialState</code> uses a dirty-value-flag model.</strong> A field taints the form only when its current value diverges from its captured initial value (or enters an error validity state). A pre-filled form whose user has not yet edited anything reports <code>isInitialState === true</code>; previously, any non-null value would mark the form as non-initial. Disabling a previously-edited field does <em>not</em> clear the dirty flag — the form correctly remains non-initial. <em>Migration:</em> if you were using <code>isInitialState === false</code> as a proxy for "user has interacted with the form," use a per-field <code>touched</code> signal on each <code>auro-input</code> instead.</li>
 <li><strong>Submit availability depends on validity alone.</strong> The Submit button is enabled when no enabled field has an unmet constraint, regardless of <code>isInitialState</code>. Pre-filled valid forms (for example, forms pre-populated from a logged-in user's profile) can be submitted on first render without a prior user edit. Empty forms with only optional fields also have Submit enabled at first render. Previously both cases would have been blocked.</li>
 <li><strong>Focus/blur on an optional field no longer taints the form.</strong> Tabbing through an optional field that the user did not edit no longer flips <code>isInitialState</code> to <code>false</code>. Required fields are unaffected — focusing then blurring an empty required field still taints, because the resulting <code>'valueMissing'</code> validity is an error state. <em>Migration:</em> if you needed "user has engaged with the form" as a signal, use per-field <code>touched</code> state on each <code>auro-input</code>.</li>
+</ul>
+<auro-header level="3" id="runtimeMutations">Runtime DOM mutations</auro-header>
+<p><code>auro-form</code> tracks its child form elements through a subtree <code>MutationObserver</code> on <code>name</code> and <code>disabled</code> attributes, plus a slot-change listener. The following runtime patterns are supported without any consumer-side reinitialization:</p>
+<ul>
+<li><strong>Runtime renames.</strong> Changing the <code>name</code> attribute on a tracked field re-keys <code>formState</code> and migrates the captured initial value to the new key, preserving <code>isInitialState</code> semantics across the rename. <code>form.value</code> reflects the new key on the next render. Removing the <code>name</code> attribute drops the field from <code>formState</code> and prunes its captured initial.</li>
+<li><strong>Late name attachment.</strong> An element that initially renders without a <code>name</code> is invisible to <code>auro-form</code> (it queries via <code>form</code>). When the consumer adds a <code>name</code> attribute later, the field is picked up automatically — both <code>formState</code> registration and the <code>input</code>/<code>auroFormElement-validated</code>/<code>keydown</code> listeners are wired up via the same attribute observer.</li>
+<li><strong>Reset gating.</strong> The Reset button is enabled whenever the form is dirty (<code>isInitialState === false</code>), or any non-disabled field carries a current or default value. A disabled field carrying only its captured initial value does <em>not</em> enable Reset; a previously-edited field that has since been disabled <em>does</em> (the dirty flag persists across disabling, so the user always has a UI path back to the initial state).</li>
+<li><strong>Enter-to-submit on disabled fields.</strong> Pressing Enter inside a disabled form field never submits the form, matching native HTML behavior. Disabled controls do not dispatch the implicit submit, so the user must move focus to an enabled field (or click Submit) to trigger submission.</li>
 </ul>
 </section>
 </div>
