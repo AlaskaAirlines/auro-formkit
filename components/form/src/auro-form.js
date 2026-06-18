@@ -17,6 +17,7 @@ import AuroLibraryRuntimeUtils from '@aurodesignsystem/auro-library/scripts/util
  * @property {string | number | boolean | string[] | null} value - The value of the form element.
  * @property {ValidityState} validity - The validity state of the form element, stored when fired from the form element.
  * @property {boolean} required - Whether the form element is required or not.
+ * @property {boolean} disabled - Whether the form element is currently disabled. Cached from the live attribute via the MutationObserver in `connectedCallback` and refreshed from `_handleAttributeMutations`.
  */
 
 /**
@@ -370,15 +371,24 @@ export class AuroForm extends LitElement {
    * form forever (`'' !== null`) and Reset would stay enabled with nothing
    * to actually reset.
    *
-   * Only `''` and `undefined` collapse to `null`. Genuine values — including
-   * `0`, `false`, and non-empty strings — pass through unchanged so number
-   * and boolean fields still compare correctly.
+   * `''`, `undefined`, and `[]` all collapse to `null`. The empty-array case
+   * covers checkbox-group, radio-group, and multiselect, where `[]` means
+   * "no selection" — semantically the same as `null`/`''`. Genuine values
+   * — including `0`, `false`, non-empty strings, and non-empty arrays —
+   * pass through unchanged so number, boolean, and populated multi-value
+   * fields still compare correctly.
    * @param {*} value - Value to normalize.
    * @returns {*}
    * @private
    */
   _normalizeEmpty(value) {
-    return value === '' || value === undefined ? null : value;
+    if (value === '' || value === undefined) {
+      return null;
+    }
+    if (Array.isArray(value) && value.length === 0) {
+      return null;
+    }
+    return value;
   }
 
   /**
