@@ -978,8 +978,7 @@ export class AuroSelect extends AuroElement {
       clearTimeout(this._typeaheadTimeout);
     }
     this._typeaheadTimeout = setTimeout(() => {
-      this.typeaheadBuffer = '';
-      this._typeaheadTimeout = null;
+      this._clearTypeaheadBuffer();
     }, this.typeaheadTimeoutMs);
 
     this.typeaheadBuffer += key;

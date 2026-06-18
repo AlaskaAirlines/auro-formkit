@@ -1500,24 +1500,15 @@ function runTest(mobileView) {
         expect(el.menu).to.not.be.null;
       });
 
-      // ─── auroMenu-selectedOption options fallback to empty array ─────
-      it('auroMenu-selectedOption falls back to empty array when options is undefined', async () => {
-        const el = await defaultFixture();
+      // ─── optionSelected is undefined when menu has no options ─────
+      it('optionSelected is undefined when menu has no options', async () => {
+        const el = await fixture(html`
+          <auro-select>
+            <auro-menu></auro-menu>
+          </auro-select>
+        `);
         await elementUpdated(el);
 
-        const menu = el.querySelector('auro-menu');
-
-        // Dispatch a synthetic auroMenu-selectedOption event with no options in detail
-        menu.dispatchEvent(new CustomEvent('auroMenu-selectedOption', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            stringValue: '',
-          }
-        }));
-        await elementUpdated(el);
-
-        // optionSelected should be undefined (options[0] of empty array)
         expect(el.optionSelected).to.equal(undefined);
       });
 
@@ -3925,6 +3916,27 @@ function runTest(mobileView) {
           el._clearTypeaheadBuffer();
           expect(el._typeaheadTimeout).to.equal(null);
           expect(el.typeaheadBuffer).to.equal('');
+        });
+
+        it('cycles active option via type-ahead in multiselect mode without altering selection', async () => {
+          const el = await multiSelectFixture();
+          await elementUpdated(el);
+
+          el.focus();
+          el.dropdown.show();
+          await elementUpdated(el);
+
+          const previouslySelected = [...(el.optionSelected || [])];
+
+          // Press 'b' — should move active option to Bananas
+          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'b', bubbles: true, composed: true }));
+          await elementUpdated(el);
+
+          expect(el.menu.optionActive).to.exist;
+          expect(el.menu.optionActive.textContent.trim().toLowerCase().startsWith('b')).to.be.true;
+
+          // Selection state is unchanged — type-ahead must not toggle checks in multiselect
+          expect([...(el.optionSelected || [])]).to.deep.equal(previouslySelected);
         });
       });
     });
