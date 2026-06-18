@@ -263,7 +263,7 @@
 <br />
 <auro-button type="submit">Submit</auro-button>
 </auro-form>
-<output id="disabledExampleOutput" form="disabledExampleForm" aria-live="polite">Submit the form to see what data gets stored.</output>
+<output id="disabledExampleOutput" aria-live="polite">Submit the form to see what data gets stored.</output>
 <style>
           #disabledExampleOutput {
             display: block;
@@ -299,7 +299,7 @@
   &lt;br /&gt;
   &lt;auro-button type="submit"&gt;Submit&lt;/auro-button&gt;
 &lt;/auro-form&gt;
-&lt;output id="disabledExampleOutput" form="disabledExampleForm" aria-live="polite"&gt;Submit the form to see what data gets stored.&lt;/output&gt;
+&lt;output id="disabledExampleOutput" aria-live="polite"&gt;Submit the form to see what data gets stored.&lt;/output&gt;
 &lt;style&gt;
   #disabledExampleOutput {
     display: block;
@@ -329,7 +329,7 @@
 <auro-button type="submit">Submit</auro-button>
 <auro-button type="reset">Reset</auro-button>
 </auro-form>
-<output id="disableAfterEditOutput" form="disableAfterEditForm" aria-live="polite">Type something, then click "Disable field". The form correctly reports as non-initial, Reset stays enabled, and the field is excluded from the submit payload.</output>
+<output id="disableAfterEditOutput" aria-live="polite">Type something, then click "Disable field". The form correctly reports as non-initial, Reset stays enabled, and the field is excluded from the submit payload.</output>
 <style>
           #disableAfterEditOutput {
             display: block;
@@ -358,7 +358,7 @@
   &lt;auro-button type="submit"&gt;Submit&lt;/auro-button&gt;
   &lt;auro-button type="reset"&gt;Reset&lt;/auro-button&gt;
 &lt;/auro-form&gt;
-&lt;output id="disableAfterEditOutput" form="disableAfterEditForm" aria-live="polite"&gt;Type something, then click "Disable field". The form correctly reports as non-initial, Reset stays enabled, and the field is excluded from the submit payload.&lt;/output&gt;
+&lt;output id="disableAfterEditOutput" aria-live="polite"&gt;Type something, then click "Disable field". The form correctly reports as non-initial, Reset stays enabled, and the field is excluded from the submit payload.&lt;/output&gt;
 &lt;style&gt;
   #disableAfterEditOutput {
     display: block;
