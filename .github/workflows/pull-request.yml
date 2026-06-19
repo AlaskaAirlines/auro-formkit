@@ -13,6 +13,9 @@ jobs:
     with:
       demo-dir: './auro-formkit-demo'
       demo-build-command: 'npm run local-demo'
+      # test:dist reads components/*/dist/, so auro-actions must run
+      # additional-build-command AFTER `npm run build`. If that order
+      # changes upstream, the check stops catching anything.
       additional-build-command: 'npx playwright install chromium && npm run test:dist'
       cache-dirs: |
         ./components/**/dist
