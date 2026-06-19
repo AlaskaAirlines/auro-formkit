@@ -883,8 +883,13 @@ export default class BaseInput extends AuroElement {
     this._configuringMask = true;
     try {
       // Destroy any prior mask so IMask can attach fresh under the new format.
+      // Null the reference too — if the new maskOptions.mask is falsy (e.g.
+      // type switched from credit-card to text) the IMask() reassignment
+      // below is skipped, and downstream writes at line ~823 would otherwise
+      // route through the destroyed instance.
       if (this.maskInstance) {
         this.maskInstance.destroy();
+        this.maskInstance = null;
       }
 
       this.util.updateFormat(this.format);
