@@ -290,8 +290,8 @@ export class AuroMenu extends AuroElement {
         // Malformed JSON (e.g. a literal string that happens to start with "[") falls back
         // to a single-item array rather than throwing during render.
         try {
-          const parsed = JSON.parse(this.value);
-          return Array.isArray(parsed) ? parsed : [this.value];
+          // any valid JSON starting with `[` ALWAYS parses to an array
+          return JSON.parse(this.value);
         } catch {
           return [this.value];
         }
