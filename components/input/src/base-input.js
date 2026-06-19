@@ -41,10 +41,8 @@ export default class BaseInput extends AuroElement {
     this.layout = 'classic';
     this.locale = 'en-US';
     this.max = undefined;
-    this._maxObject = undefined;
     this.maxLength = undefined;
     this.min = undefined;
-    this._minObject = undefined;
     this.minLength = undefined;
     this.required = false;
     this.onDark = false;
@@ -52,7 +50,6 @@ export default class BaseInput extends AuroElement {
     this.size = 'lg';
     this.shape = 'classic';
     this.value = undefined;
-    this._valueObject = undefined;
 
     this._initializePrivateDefaults();
   }
@@ -592,7 +589,7 @@ export default class BaseInput extends AuroElement {
    * @returns {Date|undefined}
    */
   get valueObject() {
-    return this._valueObject || this._computeDateObjectFallback(this.value);
+    return this.value && dateFormatter.isValidDate(this.value) ? dateFormatter.stringToDateInstance(this.value) : undefined;
   }
 
   /**
@@ -600,7 +597,7 @@ export default class BaseInput extends AuroElement {
    * @returns {Date|undefined}
    */
   get minObject() {
-    return this._minObject || this._computeDateObjectFallback(this.min);
+    return this.min && dateFormatter.isValidDate(this.min) ? dateFormatter.stringToDateInstance(this.min) : undefined;
   }
 
   /**
@@ -608,50 +605,7 @@ export default class BaseInput extends AuroElement {
    * @returns {Date|undefined}
    */
   get maxObject() {
-    return this._maxObject || this._computeDateObjectFallback(this.max);
-  }
-
-  /**
-   * Parses a date string into a Date object when the corresponding `_*Object`
-   * field hasn't been synced yet by `updated()`. Returns undefined when the
-   * input type/format isn't a full date or the string is not a valid date.
-   *
-   * Why this exists: a parent (datepicker) can call `inputN.validate()` from
-   * inside its own `updated()` before this input's `updated()` has run
-   * `syncDateValues()` — so `_valueObject`/`_maxObject` are still `undefined`
-   * and range checks would otherwise silently no-op (flipping the result to
-   * `valid` or `patternMismatch`).
-   * @private
-   * @param {string|undefined} dateStr - ISO date string from `value`/`min`/`max`.
-   * @returns {Date|undefined}
-   */
-  _computeDateObjectFallback(dateStr) {
-    if (!dateStr || !this.util || !this.util.isFullDateFormat(this.type, this.format)) {
-      return undefined;
-    }
-    if (!dateFormatter.isValidDate(dateStr)) {
-      return undefined;
-    }
-    return dateFormatter.stringToDateInstance(dateStr);
-  }
-
-  /**
-   * Internal setter for readonly date object properties.
-   * @private
-   * @param {'valueObject'|'minObject'|'maxObject'} propertyName - Public object property name.
-   * @param {Date|undefined} propertyValue - Value to assign.
-   * @returns {void}
-   */
-  setDateObjectProperty(propertyName, propertyValue) {
-    const internalPropertyName = `_${propertyName}`;
-    const previousValue = this[internalPropertyName];
-
-    if (previousValue === propertyValue) {
-      return;
-    }
-
-    this[internalPropertyName] = propertyValue;
-    this.requestUpdate(propertyName, previousValue);
+    return this.max && dateFormatter.isValidDate(this.max) ? dateFormatter.stringToDateInstance(this.max) : undefined;
   }
 
   connectedCallback() {
@@ -680,7 +634,6 @@ export default class BaseInput extends AuroElement {
       format: this.format
     });
     this.configureDataForType();
-    this.syncDateValues();
   }
 
   disconnectedCallback() {
@@ -710,7 +663,6 @@ export default class BaseInput extends AuroElement {
     this.setCustomHelpTextMessage();
     this.configureAutoFormatting();
     this.configureDataForType();
-    this.syncDateValues();
   }
 
   /**
@@ -847,8 +799,6 @@ export default class BaseInput extends AuroElement {
       this.configureDataForType();
     }
 
-    this.syncDateValues(changedProperties);
-
     if (changedProperties.has('value')) {
       if (this.value && this.value.length > 0) {
         this.hasValue = true;
@@ -919,69 +869,6 @@ export default class BaseInput extends AuroElement {
     }));
   }
 
-
-  /**
-   * Synchronizes the ISO string values and Date object representations for date-related properties.
-   * This keeps the model and display values aligned when either side changes.
-   *
-   * When a full date format is in use, this method updates `value`, `min`, and `max` from their corresponding
-   * Date objects or vice versa, based on which properties have changed. It only runs when the current configuration
-   * represents a full year/month/day date format.
-   *
-   * @param {Map<string, unknown>|undefined} [changedProperties=undefined] - Optional map of changed properties used to limit which values are synchronized.
-   * @returns {void}
-   * @private
-   */
-  syncDateValues(changedProperties = undefined) {
-    if (!this.util.isFullDateFormat(this.type, this.format)) {
-      return;
-    }
-
-    this.syncSingleDateValue(changedProperties, 'valueObject', 'value');
-    this.syncSingleDateValue(changedProperties, 'minObject', 'min');
-    this.syncSingleDateValue(changedProperties, 'maxObject', 'max');
-  }
-
-  /**
-   * Synchronizes one date object/string property pair.
-   * @private
-   * @param {Map<string, unknown>|undefined} changedProperties - Map of changed properties from Lit.
-   * @param {string} objectProperty - Date object property name.
-   * @param {string} valueProperty - ISO string property name.
-   * @returns {void}
-   */
-  syncSingleDateValue(changedProperties, objectProperty, valueProperty) {
-    const objectPropertyChanged = !changedProperties || changedProperties.has(objectProperty);
-
-    // objectProperty wins over valueProperty when both changed
-    if (objectPropertyChanged && this[objectProperty]) {
-      this[valueProperty] = dateFormatter.toISOFormatString(this[objectProperty]);
-      return;
-    }
-
-    const valuePropertyChanged = !changedProperties || changedProperties.has(valueProperty);
-    if (!valuePropertyChanged) {
-      return;
-    }
-
-    // when value is newly set to the same ISO string that corresponds to the existing Date object, do not clear the Date object (avoid unnecessary updates)
-    if (
-      changedProperties &&
-      valueProperty === 'value' &&
-      changedProperties.get('value') === undefined &&
-      this[objectProperty] instanceof Date &&
-      this[valueProperty] === dateFormatter.toISOFormatString(this[objectProperty])
-    ) {
-      return;
-    }
-
-    if (dateFormatter.isValidDate(this[valueProperty])) {
-      this.setDateObjectProperty(objectProperty, dateFormatter.stringToDateInstance(this[valueProperty]));
-    } else {
-      this.setDateObjectProperty(objectProperty, undefined);
-    }
-  }
-
   /**
    * Sets up IMasks and logic based on auto-formatting requirements.
    * @private
@@ -1018,9 +905,7 @@ export default class BaseInput extends AuroElement {
         if (
           this.util.isFullDateFormat(this.type, this.format) &&
           this.value &&
-          dateFormatter.isValidDate(this.value) &&
-          this.valueObject instanceof Date &&
-          !Number.isNaN(this.valueObject.getTime()) &&
+          this.valueObject &&
           typeof maskOptions.format === 'function'
         ) {
           existingValue = maskOptions.format(this.valueObject);
@@ -1225,7 +1110,6 @@ export default class BaseInput extends AuroElement {
    */
   reset() {
     this.value = undefined;
-    this.setDateObjectProperty('valueObject', undefined);
     this.validation.reset(this);
   }
 
@@ -1234,7 +1118,6 @@ export default class BaseInput extends AuroElement {
    */
   clear() {
     this.value = undefined;
-    this.setDateObjectProperty('valueObject', undefined);
   }
 
   /**
