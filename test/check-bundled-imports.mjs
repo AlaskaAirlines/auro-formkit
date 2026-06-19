@@ -6,40 +6,32 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { init, parse } from 'es-module-lexer';
 import { EXTERNAL_PACKAGE_NAMES } from '@aurodesignsystem/config/internal.rollup';
+import {
+  buildAllowlist,
+  findUnbundledImports,
+  initUnbundledImports,
+} from '@aurodesignsystem/utils';
 
 const ENTRY_FILES = ['index.js', 'registered.js'];
 const COMPONENTS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../components');
-
-// A specifier is allowed if it exactly matches an EXTERNAL_PACKAGE_NAMES entry
-// (`lit`) or is a subpath of one (`lit/static-html.js`, `@lit/context`).
-const ALLOWED = EXTERNAL_PACKAGE_NAMES.map((name) => new RegExp(`^${name}(?:/.+)?$`));
+const ALLOWED = buildAllowlist(EXTERNAL_PACKAGE_NAMES);
 
 const listComponentDirs = () => readdirSync(COMPONENTS_DIR, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map(({ name }) => name);
-
-// Returns specifiers rollup should have inlined but didn't. Uses the same ESM
-// lexer Vite/Rollup use, so no false positives from comments or `import()`.
-function findUnbundledImports(source) {
-  const [imports] = parse(source);
-  return [...new Set(imports.map((i) => source.slice(i.s, i.e)))]
-    .filter((s) => !s.startsWith('.') && !s.startsWith('/'))
-    .filter((s) => !ALLOWED.some((re) => re.test(s)));
-}
 
 // Returns a failure object, or null if the file is clean.
 function checkEntryFile(componentName, entryFile) {
   const filePath = join(COMPONENTS_DIR, componentName, 'dist', entryFile);
   const label = `${componentName}/dist/${entryFile}`;
   if (!existsSync(filePath)) return { label, reason: 'missing — run `npm run build` first' };
-  const offenders = findUnbundledImports(readFileSync(filePath, 'utf8'));
+  const offenders = findUnbundledImports(readFileSync(filePath, 'utf8'), ALLOWED);
   return offenders.length ? { label, reason: `unbundled imports: ${offenders.join(', ')}` } : null;
 }
 
 // es-module-lexer's parser must finish initializing before parse() runs.
-await init;
+await initUnbundledImports;
 
 const failures = [];
 let scanned = 0;
