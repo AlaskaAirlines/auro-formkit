@@ -19,7 +19,10 @@ const createConfig = (input, output) => ({
     dir: output,
     entryFileNames: '[name].js'
   },
-  external: EXTERNAL_PACKAGE_NAMES.map((name) => new RegExp(`node_modules/${name}`)),
+  // Anchor the package name to a path boundary so e.g. `lit` doesn't also
+  // externalize a hypothetical `lit-vaadin-helpers`. test/check-bundled-imports
+  // uses an anchored regex on the same allowlist; keep both gates aligned.
+  external: EXTERNAL_PACKAGE_NAMES.map((name) => new RegExp(`node_modules/${name}(?:/|$)`)),
   // Rollup warns and externalizes unresolved imports by default; for published
   // bundles, that means silently shipping broken dist files.
   onwarn(warning, warn) {
