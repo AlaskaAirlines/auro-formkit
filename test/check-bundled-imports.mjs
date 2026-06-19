@@ -3,8 +3,8 @@
 // packages/config/src/internal.rollup.config.mjs. Any other bare specifier
 // means rollup failed to inline code we meant to ship.
 
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { readFileSync, existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { EXTERNAL_PACKAGE_NAMES } from '@aurodesignsystem/config/internal.rollup';
 import {
@@ -13,45 +13,83 @@ import {
   initUnbundledImports,
 } from '@aurodesignsystem/utils';
 
-const ENTRY_FILES = ['index.js', 'registered.js'];
-const COMPONENTS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../components');
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const ALLOWED = buildAllowlist(EXTERNAL_PACKAGE_NAMES);
+const COMPONENT_DIST_RE = /^\.\/components\/[^/]+\/dist\/.+\.js$/u;
 
-const listComponentDirs = () => readdirSync(COMPONENTS_DIR, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
-  .map(({ name }) => name);
+// Walks the root package.json `exports` map and collects every component dist
+// file we publish. Using exports (rather than a hardcoded list) means the
+// check tracks reality whenever a new entry point is added to the package.
+function collectPublishedEntries(exportsField) {
+  const found = new Set();
+  const visit = (value) => {
+    if (typeof value === 'string') {
+      if (COMPONENT_DIST_RE.test(value)) found.add(value);
+    } else if (value && typeof value === 'object') {
+      for (const child of Object.values(value)) visit(child);
+    }
+  };
+  visit(exportsField);
+  return [...found].sort();
+}
 
-// Returns a failure object, or null if the file is clean.
-function checkEntryFile(componentName, entryFile) {
-  const filePath = join(COMPONENTS_DIR, componentName, 'dist', entryFile);
-  const label = `${componentName}/dist/${entryFile}`;
-  if (!existsSync(filePath)) return { label, reason: 'missing — run `npm run build` first' };
+// Returns a failure object, or null if the file is clean. `kind` lets the
+// summary tailor the hint to the actual failure (missing file vs leaky import).
+function checkEntry(relativePath) {
+  const filePath = resolve(REPO_ROOT, relativePath);
+  const label = relativePath.replace(/^\.\//u, '');
+  if (!existsSync(filePath)) {
+    return {
+      label,
+      kind: 'missing',
+      reason: 'declared in root package.json `exports` but not present on disk',
+    };
+  }
   const offenders = findUnbundledImports(readFileSync(filePath, 'utf8'), ALLOWED);
-  return offenders.length ? { label, reason: `unbundled imports: ${offenders.join(', ')}` } : null;
+  return offenders.length
+    ? { label, kind: 'unbundled', reason: `unbundled imports: ${offenders.join(', ')}` }
+    : null;
 }
 
 // es-module-lexer's parser must finish initializing before parse() runs.
 await initUnbundledImports;
 
+const rootPkg = JSON.parse(readFileSync(resolve(REPO_ROOT, 'package.json'), 'utf8'));
+const entries = collectPublishedEntries(rootPkg.exports);
+
 const failures = [];
-let scanned = 0;
-for (const componentName of listComponentDirs()) {
-  for (const entry of ENTRY_FILES) {
-    scanned++;
-    const failure = checkEntryFile(componentName, entry);
-    if (failure) failures.push(failure);
-  }
+for (const entry of entries) {
+  const failure = checkEntry(entry);
+  if (failure) failures.push(failure);
 }
 
 if (failures.length) {
   console.error(`✗ bundled-imports check failed (${failures.length} issue${failures.length === 1 ? '' : 's'}):\n`);
   for (const { label, reason } of failures) console.error(`  ${label}\n    ${reason}\n`);
-  console.error(
-    'These specifiers should have been inlined by rollup. Update\n' +
-    'EXTERNAL_PACKAGE_NAMES in packages/config/src/internal.rollup.config.mjs\n' +
-    'if the change is intentional.\n'
-  );
+  if (failures.some((f) => f.kind === 'missing')) {
+    console.error(
+      'Missing files: run `npm run build` to produce them, or update the\n' +
+      '`exports` field in package.json if the entry is stale.\n'
+    );
+  }
+  if (failures.some((f) => f.kind === 'unbundled')) {
+    console.error(
+      'Unbundled imports: these specifiers should have been inlined by rollup.\n' +
+      'Update EXTERNAL_PACKAGE_NAMES in packages/config/src/internal.rollup.config.mjs\n' +
+      'if the change is intentional.\n'
+    );
+  }
   process.exit(1);
 }
 
-console.log(`✓ bundled-imports check passed (${scanned} files scanned)`);
+const byComponent = new Map();
+for (const entry of entries) {
+  const [, component, file] = entry.match(/^\.\/components\/([^/]+)\/dist\/(.+)$/u);
+  if (!byComponent.has(component)) byComponent.set(component, []);
+  byComponent.get(component).push(file);
+}
+
+console.log(`✓ bundled-imports check passed (${entries.length} files scanned)`);
+for (const [component, files] of byComponent) {
+  console.log(`  ${component}: ${files.join(', ')}`);
+}
