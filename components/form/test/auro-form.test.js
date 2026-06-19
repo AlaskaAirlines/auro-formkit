@@ -1314,6 +1314,45 @@ function runFullTest(mobileView) {
         await expect(submitFired).to.be.false;
       });
 
+      // Regression guard for the `_isFormValid()` rewrite that now blocks
+      // only on `knownInvalid || (required && empty)` and treats `null`
+      // validity as "not known invalid". The risk: an OPTIONAL field with
+      // a malformed but non-empty value could slip through if its validity
+      // stays `null` after submit()'s `validate(true)` pass.
+      //
+      // auro-input flips `type="email"` with a bad value to
+      // `validity='patternMismatch'` during its updated() lifecycle, which
+      // means `knownInvalid` should be true by the time `_isFormValid()`
+      // reads it. If this test ever fails, the new gate is too permissive
+      // and the prior shape should be restored:
+      //   (validity !== 'valid' && required)
+      //     || (validity !== 'valid' && value !== null)
+      it('does not submit when an optional field has invalid (non-empty) input', async () => {
+        const el = await fixture(html`
+          <auro-form>
+            <auro-input name="optionalEmail" type="email" value="not-an-email"></auro-input>
+          </auro-form>
+        `);
+        await elementUpdated(el);
+
+        let submitFired = false;
+        el.addEventListener('submit', () => {
+          submitFired = true;
+        });
+
+        await el.submit();
+
+        expect(
+          submitFired,
+          'submit should be blocked on optional field with invalid value'
+        ).to.be.false;
+
+        expect(
+          el._isFormValid(),
+          '_isFormValid should reject the malformed value'
+        ).to.be.false;
+      });
+
       // A form whose every field is disabled has nothing to validate and
       // nothing to submit — but it should still successfully dispatch the
       // submit event with an empty payload. Disabled fields are excluded
