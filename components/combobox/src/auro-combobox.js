@@ -1187,11 +1187,15 @@ export class AuroCombobox extends AuroElement {
 
         // Announce the selection after the dropdown closes so it isn't
         // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
+        // Skip when there's no selected value (e.g. menu.clearSelection() from
+        // the unmatched-value path), otherwise VoiceOver reads "undefined".
         const selectedValue = this.menu.value;
-        const announcementDelay = 300;
-        setTimeout(() => {
-          announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
-        }, announcementDelay);
+        if (selectedValue) {
+          const announcementDelay = 300;
+          setTimeout(() => {
+            announceToScreenReader(this._getAnnouncementRoot(), `${selectedValue}, selected`);
+          }, announcementDelay);
+        }
       }
 
       // Programmatic value syncs leave availableOptions stale because
@@ -1612,8 +1616,12 @@ export class AuroCombobox extends AuroElement {
         if (this.menu.options.some((opt) => opt.value === this.value) || this.behavior === 'filter') {
           this.setMenuValue(this.value);
         } else {
-          if (this.menu.value) {
-            this.menu.value = undefined;
+          // Clear menu.value AND menu.optionSelected together. Clearing only
+          // menu.value leaves the previously-selected option element pinned
+          // as menu.optionSelected; a later auroMenu-selectedOption event
+          // would then write its stale .value back into combobox.value.
+          if (this.menu.value || this.menu.optionSelected) {
+            this.menu.clearSelection();
           }
           // Suggestion-mode freeform value: sync the trigger + bib to show it,
           // then refresh the filter once the inputs flush (handleInputValueChange
