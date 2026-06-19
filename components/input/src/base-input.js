@@ -856,14 +856,14 @@ export default class BaseInput extends AuroElement {
 
       if (formattedValue !== this.inputElement.value) {
         this.skipNextProgrammaticInputEvent = true;
-        if (this.maskInstance && this.type === 'credit-card') {
+        if (this.maskInstance && this.type !== 'date') {
           // Route through the mask so its _value and el.value stay in lock-step
           // (set value calls updateControl which writes el.value = displayValue).
           // Writing el.value directly leaves the mask thinking displayValue is
-          // stale; _saveSelection on the next focus/click then warns. Scoped to
-          // credit-card so date's own formattedValue (raw ISO when calendar-invalid)
-          // isn't re-masked through the mm/dd/yyyy mask, which would truncate it
-          // and flip validity from patternMismatch to tooShort.
+          // stale; _saveSelection on the next focus/click then warns. Date is
+          // excluded because its formattedValue can be raw ISO when the calendar
+          // is invalid, and re-masking through mm/dd/yyyy would truncate it and
+          // flip validity from patternMismatch to tooShort.
           this.maskInstance.value = formattedValue || '';
         } else if (formattedValue) {
           this.inputElement.value = formattedValue;
@@ -974,31 +974,33 @@ export default class BaseInput extends AuroElement {
    * @returns {void}
    */
   configureAutoFormatting() {
-    // Re-entrancy guard. The patched-setter's synthetic input event (suppressed
-    // by _configuringMask above) could otherwise trigger handleInput →
-    // processCreditCard → configureAutoFormatting before the outer call's
-    // set value has finished its alignCursor pass.
+    // _configuringMask gates two things: external re-entry into this method
+    // while setup is mid-flight (from property changes that call back here),
+    // and the accept/complete listeners below — both need to ignore the mask
+    // events fired by our own value-restore step.
     if (this._configuringMask) return;
     this._configuringMask = true;
     try {
+      // Destroy any prior mask so IMask can attach fresh under the new format.
       if (this.maskInstance) {
         this.maskInstance.destroy();
       }
 
-      // Pass new format to util
       this.util.updateFormat(this.format);
 
       const maskOptions = this.util.getMaskOptions(this.type, this.format);
 
       if (this.inputElement && maskOptions.mask) {
-
-        // Stash and clear any existing value before IMask init.
-        // IMask's constructor processes the current input value which requires
-        // selection state — clearing first avoids that scenario entirely.
-        // When the format changes (e.g. locale switch) and we have a valid ISO
-        // model value, compute the display string for the NEW format instead of
-        // re-using the old display string, which may be invalid in the new mask.
+        // Capture the current display so it can be re-applied after IMask
+        // attaches. The restore at the bottom goes through maskInstance.value
+        // (not inputElement.value directly) so the mask's internal state and
+        // the input's displayed text stay in lock-step.
         let existingValue = this.inputElement.value;
+
+        // Format-change case (e.g. locale switch): existingValue is the OLD
+        // mask's display string and may not parse under the new mask. When
+        // we have a valid date model, rebuild the display from valueObject
+        // (the canonical source) using the new mask's format function.
         if (
           this.util.isFullDateFormat(this.type, this.format) &&
           this.value &&
@@ -1010,15 +1012,18 @@ export default class BaseInput extends AuroElement {
           existingValue = maskOptions.format(this.valueObject);
         }
 
+        // Clear before IMask attaches so the constructor seeds an empty
+        // internal value. Otherwise IMask reads the stale unmasked string
+        // and emits a spurious 'accept' before the restore below runs.
         this.skipNextProgrammaticInputEvent = true;
         this.inputElement.value = '';
 
         this.maskInstance = IMask(this.inputElement, maskOptions);
 
+        // Mask fires 'accept' on every value change, including the restore
+        // step below. Skip events fired during configureAutoFormatting so
+        // we don't overwrite a value the parent just pushed.
         this.maskInstance.on('accept', () => {
-          // Suppress propagation during configureAutoFormatting's own value-restoration
-          // (line below) — the mask emits 'accept' on every value-set, including ours,
-          // and we don't want to overwrite a value the parent just pushed.
           if (this._configuringMask) return;
           this.value = this.util.toModelValue(this.maskInstance.value, this.format);
           if (this.type === "date") {
@@ -1026,6 +1031,8 @@ export default class BaseInput extends AuroElement {
           }
         });
 
+        // Mask fires 'complete' on the restore step below for any value that
+        // happens to be a complete match. Same setup-suppression as 'accept'.
         this.maskInstance.on('complete', () => {
           if (this._configuringMask) return;
           this.value = this.util.toModelValue(this.maskInstance.value, this.format);
@@ -1034,7 +1041,9 @@ export default class BaseInput extends AuroElement {
           }
         });
 
-        // Restore the stashed value through IMask so it's properly masked
+        // Write existingValue through the mask (not the input directly) so
+        // the mask reformats it under the new rules and keeps its internal
+        // _value aligned with the input's displayed text.
         if (existingValue) {
           this.maskInstance.value = existingValue;
         }

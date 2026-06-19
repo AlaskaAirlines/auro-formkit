@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { navigateArrow } from '@aurodesignsystem/utils';
 
 /**
@@ -35,11 +36,9 @@ function isClearBtnFocused(ctx, clearBtn = getClearBtn(ctx)) {
  * @param {Object} menu - The menu component.
  */
 function reconcileMenuIndex(menu) {
-  // eslint-disable-next-line no-underscore-dangle
   if (menu._index < 0 && menu.optionActive && menu.items) {
     const idx = menu.items.indexOf(menu.optionActive);
     if (idx >= 0) {
-      // eslint-disable-next-line no-underscore-dangle
       menu._index = idx;
     }
   }
