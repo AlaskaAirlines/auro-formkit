@@ -1181,6 +1181,11 @@ export class AuroCombobox extends AuroElement {
           this.hideBib();
         }
 
+        // Move focus to the clear button when the user makes a selection.
+        if (!isEcho) {
+          this.setClearBtnFocus();
+        }
+
         // Announce the selection after the dropdown closes so it isn't
         // overridden by VoiceOver's "collapsed" announcement from aria-expanded.
         // Skip when there's no selected value (e.g. menu.clearSelection() from
