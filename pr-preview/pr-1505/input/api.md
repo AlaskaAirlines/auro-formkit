@@ -92,7 +92,7 @@ The `auro-input` element provides users a way to enter data into a text field.
 | `displayValue`            | Allows custom HTML content to display in place of the value when the input is not focused. |
 | `helpText`                | Sets the help text displayed below the input.    |
 | `label`                   | Sets the label text for the input.               |
-| `optionalLabel`           | Allows overriding the optional display text "(optional)", which appears next to the label. |
+| `optionalLabel`           | Allows overriding the optional display text " (optional)", which appears next to the label. |
 
 ## CSS Shadow Parts
 
