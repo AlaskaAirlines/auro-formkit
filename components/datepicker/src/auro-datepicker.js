@@ -1665,7 +1665,7 @@ export class AuroDatePicker extends AuroElement {
       // update the calendar
       if (this.valueEndObject) {
         this.calendar.dateTo = this.convertToWcValidTime(this.valueEndObject);
-        if (!(this.wasCellClick && this.range)) {
+        if (!this.wasCellClick) {
           this.calendarRenderUtil.updateCentralDate(this, this.valueEndObject);
         }
       } else {
@@ -2062,7 +2062,7 @@ export class AuroDatePicker extends AuroElement {
       }
           <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
           <span slot="label"><slot name="fromLabel"></slot></span>
-          <span slot="optionalLabel"><slot name="optionalFromLabel"> (optional)</slot></span>
+          <slot name="optionalFromLabel" slot="optionalLabel"> (optional)</slot>
         </${this.inputTag}>
       </div>
 
@@ -2107,7 +2107,7 @@ export class AuroDatePicker extends AuroElement {
         }
             <span slot="ariaLabel.clear">${this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || this.runtimeUtils.getSlotText(this, 'ariaLabel.input.clear') || i18n(this.lang, 'clearInput')}</span>
             <span slot="label"><slot name="toLabel"></slot></span>
-            <span slot="optionalLabel"><slot name="optionalToLabel"> (optional)</slot></span>
+            <slot name="optionalToLabel" slot="optionalLabel"> (optional)</slot>
           </${this.inputTag}>
         </div>
       ` : undefined}
